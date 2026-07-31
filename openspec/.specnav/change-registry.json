@@ -1,15 +1,17 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-07-31T14:22:54.301Z",
-  "current_focus": "build-thesisforge-v1-core",
+  "generated_at": "2026-07-31T14:32:11.178Z",
+  "current_focus": null,
   "changes": [
     {
       "id": "build-thesisforge-v1-core",
-      "stage": "prototype",
-      "status": "active",
-      "branch": null,
+      "stage": "archived",
+      "status": "archived",
+      "branch": "main",
       "created_at": null,
-      "last_active_at": null
+      "last_active_at": "2026-07-31",
+      "archived_at": "2026-07-31T14:32:11.156Z",
+      "archive_path": "openspec/changes/archive/2026-07-31-build-thesisforge-v1-core"
     }
   ]
 }
