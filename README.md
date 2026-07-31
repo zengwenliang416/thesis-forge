@@ -114,16 +114,30 @@ thesis-forge/
 
 ## 5. 快速开始
 
-当前仓库是**可开发骨架**：已经放入 Parser / Validator / AST / Template Model / DOCX smoke renderer 的最小实现，高级 Word 对象后续按里程碑补齐。
+当前仓库已完成 ThesisForge V1 核心编译链。`inspect`、`validate` 和 `build`
+均可在无网络、无 AI API Key 的环境中运行；完整示例覆盖本地图、三线表、可编辑
+OMML 公式、Word 字段、交叉引用、脚注、多 Section、页眉页脚、BibTeX 引用和参考文献。
 
 ```bash
-python -m venv .venv
-source .venv/bin/activate
-pip install -e ".[dev]"
+python3.12 -m venv .venv
+.venv/bin/python -m pip install --upgrade pip
+make install
 
-thesisforge inspect examples/bachelor-thesis/thesis.md
-thesisforge validate examples/bachelor-thesis/thesis.md
+make inspect
+make validate
+make build-example
 ```
+
+也可以直接使用安装后的命令：
+
+```bash
+.venv/bin/thesisforge inspect examples/bachelor-thesis/thesis.md
+.venv/bin/thesisforge validate examples/bachelor-thesis/thesis.md
+.venv/bin/thesisforge build examples/bachelor-thesis/thesis.md -o output/thesis.docx
+```
+
+学校模板可通过 Front Matter 的 `render.template_id` 选择，也可使用
+`--template path/to/template.yaml` 显式覆盖。
 
 ## 6. Markdown 示例
 
@@ -221,17 +235,33 @@ M10 AI 扩展
 
 详细计划见 `docs/V1_PLAN.md`。
 
-## 11. 许可证
+## 11. 测试、打包与维护
 
-本骨架暂未替项目选择开源许可证。发布前请根据商业/开源计划明确许可证，并对第三方依赖与参考代码做许可证审查。
-## 12. 初始化为你的 Git 仓库
+完整维护门禁：
 
 ```bash
-cd thesis-forge
-git init
-git add .
-git commit -m "chore: initialize ThesisForge scaffold"
+make verify
 ```
+
+该命令执行完整 pytest、Ruff、依赖一致性、wheel/sdist 构建、隔离 wheel
+安装与离线 CLI 回归、严格 OpenSpec 校验和 Git whitespace 检查。
+
+只构建并验证安装包：
+
+```bash
+make verify-dist
+```
+
+wheel 内置基础模板和示例学校模板。安装验证会从仓库外运行完整示例，确保不依赖
+checkout 中的 `src/`、`templates/` 或父开发环境 `site-packages`。详细维护流程见
+`docs/MAINTENANCE.md`。
+
+## 12. 许可证
+
+项目尚未选择开源许可证。当前 wheel/sdist 仅用于本地安装与验收；公开发布前必须
+明确项目许可证，并完成第三方依赖与参考实现审查。
+
+## 13. 参考仓库
 
 如需把参考仓库拉到本地研究：
 
@@ -240,4 +270,3 @@ git commit -m "chore: initialize ThesisForge scaffold"
 ```
 
 这些仓库会进入 `references/external/`，默认不会被提交。
-

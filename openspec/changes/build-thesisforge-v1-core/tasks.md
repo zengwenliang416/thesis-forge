@@ -113,7 +113,7 @@ automated package checks and opens successfully in a supported Office client.
 **User outcome:** A new contributor can install, test, package and maintain ThesisForge
 using repository documentation that matches verified behavior.
 
-- [ ] 9.1 A contributor can reproduce the full `pytest`, `ruff`, package-build and OpenSpec validation suites.
-- [ ] 9.2 A contributor can rely on README, architecture, Markdown/template specifications and third-party notes matching implemented behavior.
-- [ ] 9.3 A reviewer can inspect final task reports, independent spec reviews, quality reviews, validation ledgers and drift checks.
-- [ ] 9.4 A reviewer can verify the SpecNav development handoff contract before six-domain verification starts.
+- [x] 9.1 A contributor can reproduce the full `pytest`, `ruff`, package-build and OpenSpec validation suites.
+- [x] 9.2 A contributor can rely on README, architecture, Markdown/template specifications and third-party notes matching implemented behavior.
+- [x] 9.3 A reviewer can inspect final task reports, independent spec reviews, quality reviews, validation ledgers and drift checks.
+- [x] 9.4 A reviewer can verify the SpecNav development handoff contract before six-domain verification starts.

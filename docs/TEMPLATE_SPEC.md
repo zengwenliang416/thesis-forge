@@ -15,6 +15,16 @@
 找不到或同一优先级内一个 ID 匹配多个文件都会产生结构化校验错误。解析结果
 不依赖进程当前工作目录，模板解析也不访问网络。
 
+发行 wheel 内置：
+
+```text
+thesis_forge/template_data/base/bachelor.yaml
+thesis_forge/template_data/schools/example-university/2026.yaml
+```
+
+因此安装后的 CLI 可以在仓库外按模板 ID 构建完整示例。项目本地 `templates/`
+优先级更高，便于学校模板覆盖和独立维护。
+
 ## 完整结构
 
 ```yaml
@@ -188,8 +198,10 @@ Renderer 不再搜索 YAML，也不重新计算编号、bookmark、引用目标�
 - `Normal` 正文字体、字号、对齐、首行缩进和行距；
 - `Heading 1-3` 的字体、字号、强调、对齐、段前段后和分页行为。
 
-图表真实对象、Word fields、OMML、多个 section、页眉页脚和页码由对应后续能力
-在同一 `RenderPlan` 合同上继续实现。
+V1 后续阶段已经在同一 `RenderPlan` 合同上实现真实图表、Word fields、OMML、
+footnote、多个 section、页眉页脚和页码。Template Model 仍只描述规则；
+Compiler 解析编号、书签、引用和 section policy，DOCX focused helpers 写入真实
+Word/OOXML 对象。
 
 ## 校验结果
 

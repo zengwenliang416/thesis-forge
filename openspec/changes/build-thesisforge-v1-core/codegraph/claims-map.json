@@ -1,6 +1,6 @@
 {
   "schema": "specnav.codegraph.claims.v1",
-  "generated_at": "2026-07-31T09:28:32.792Z",
+  "generated_at": "2026-07-31T13:14:57.997Z",
   "active_change": "build-thesisforge-v1-core",
   "claims": [
     {
@@ -367,6 +367,7 @@
         "src/thesis_forge/core/render_plan.py",
         "src/thesis_forge/core/compiler.py",
         "src/thesis_forge/renderers/docx/cover.py",
+        "src/thesis_forge/renderers/docx/figures.py",
         "src/thesis_forge/renderers/docx/renderer.py",
         "tests/test_acceptance.py",
         "tests/test_compiler.py",
@@ -380,6 +381,66 @@
       ],
       "query_ids": [
         "development:task-008-complete-thesis-acceptance:evidence"
+      ]
+    },
+    {
+      "id": "development:task-009-installation-and-maintenance-handoff",
+      "kind": "development-task",
+      "stage": "development",
+      "task_id": "009-installation-and-maintenance-handoff",
+      "text": "Turn the completed V1 core into a reproducible local contributor workflow:",
+      "required": true,
+      "source": "specnav-codegraph-plan",
+      "source_paths": [
+        "openspec/changes/build-thesisforge-v1-core/development/tasks/009-installation-and-maintenance-handoff/brief.md",
+        "openspec/changes/build-thesisforge-v1-core/development/tasks/009-installation-and-maintenance-handoff/context.json"
+      ],
+      "expected_evidence": [
+        "Observed missing-build-module RED evidence",
+        "Focused distribution build and installed-wheel regression",
+        "Wheel and sdist content inventory with hashes",
+        "Temporary no-index/no-deps prefix installation outside the checkout without changing the parent editable package",
+        "Offline installed inspect, validate and build using bundled templates",
+        "Full pytest, Ruff, pip check, package build, strict OpenSpec and git diff checks",
+        "Documentation-to-implementation audit",
+        "Complete task report, review, ledger, drift and validation artifact audit",
+        "CodeGraph claim evidence",
+        "Independent spec review and independent quality review",
+        "SpecNav development handoff contract ok:true"
+      ],
+      "allowed_files": [
+        "pyproject.toml",
+        "Makefile",
+        "README.md",
+        "docs/ARCHITECTURE.md",
+        "docs/MARKDOWN_SPEC.md",
+        "docs/TEMPLATE_SPEC.md",
+        "docs/THIRD_PARTY_NOTES.md",
+        "docs/MAINTENANCE.md",
+        "scripts/verify_distribution.py",
+        "tests/test_distribution.py",
+        "openspec/changes/build-thesisforge-v1-core/tasks.md",
+        "openspec/changes/build-thesisforge-v1-core/development/task-context.jsonl",
+        "openspec/changes/build-thesisforge-v1-core/development/task-ledger.jsonl",
+        "openspec/changes/build-thesisforge-v1-core/development/drift-check.jsonl",
+        "openspec/changes/build-thesisforge-v1-core/development/validation-log.jsonl",
+        "openspec/changes/build-thesisforge-v1-core/development/handoff-to-verify.md",
+        "openspec/changes/build-thesisforge-v1-core/development/tasks/009-installation-and-maintenance-handoff/brief.md",
+        "openspec/changes/build-thesisforge-v1-core/development/tasks/009-installation-and-maintenance-handoff/context.json",
+        "openspec/changes/build-thesisforge-v1-core/development/tasks/009-installation-and-maintenance-handoff/report.md",
+        "openspec/changes/build-thesisforge-v1-core/development/tasks/009-installation-and-maintenance-handoff/spec-review.md",
+        "openspec/changes/build-thesisforge-v1-core/development/tasks/009-installation-and-maintenance-handoff/quality-review.md",
+        "openspec/changes/build-thesisforge-v1-core/codegraph/claims-map.json",
+        "openspec/changes/build-thesisforge-v1-core/codegraph/evidence-query-plan.json",
+        "openspec/changes/build-thesisforge-v1-core/codegraph/evidence-index.json",
+        "openspec/changes/build-thesisforge-v1-core/codegraph/claims-report.json",
+        "openspec/changes/build-thesisforge-v1-core/codegraph/guard-report.json",
+        "openspec/changes/build-thesisforge-v1-core/codegraph/status.json",
+        "openspec/changes/build-thesisforge-v1-core/codegraph/drift-report.json",
+        "openspec/.specnav/change-registry.json"
+      ],
+      "query_ids": [
+        "development:task-009-installation-and-maintenance-handoff:evidence"
       ]
     }
   ]

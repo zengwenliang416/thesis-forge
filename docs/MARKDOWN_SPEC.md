@@ -18,6 +18,11 @@ render:
 ---
 ```
 
+V1 完整示例还使用 `university`、`advisor`、`dates` 及更多 `thesis`、`author`
+字段生成封面可见文本。这些元数据保持普通 YAML 映射；Parser 不写入学校字体或
+Word 样式。`render.template_id`、`render.bibliography` 和
+`render.citation_style` 是当前编译链读取的渲染配置。
+
 ## Heading
 
 ```markdown
@@ -83,6 +88,9 @@ caption: "实验结果"
 
 :::
 ```
+
+分隔行必须使用 Markdown 对齐标记；每个数据行的列数必须与表头一致。无效分隔行
+或列数不一致会在编译阶段明确失败，不会生成伪表格。
 
 ## Equation
 

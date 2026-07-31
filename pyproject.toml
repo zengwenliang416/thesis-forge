@@ -20,7 +20,13 @@ dependencies = [
 [project.optional-dependencies]
 bibliography = ["citeproc-py>=0.8,<1"]
 ui = ["PySide6>=6.7,<7"]
-dev = ["pytest>=8.2,<9", "ruff>=0.5,<1"]
+dev = [
+  "build>=1.2,<2",
+  "hatchling>=1.25,<2",
+  "packaging>=24,<27",
+  "pytest>=8.2,<9",
+  "ruff>=0.5,<1",
+]
 
 [project.scripts]
 thesisforge = "thesis_forge.cli:app"
@@ -32,6 +38,21 @@ exclude = ["**/._*"]
 [tool.hatch.build.targets.wheel.force-include]
 "templates/base/bachelor.yaml" = "thesis_forge/template_data/base/bachelor.yaml"
 "templates/schools/example-university/2026.yaml" = "thesis_forge/template_data/schools/example-university/2026.yaml"
+
+[tool.hatch.build.targets.sdist]
+include = [
+  "/AGENTS.md",
+  "/Makefile",
+  "/README.md",
+  "/docs",
+  "/examples",
+  "/pyproject.toml",
+  "/scripts",
+  "/src",
+  "/templates",
+  "/tests",
+]
+exclude = ["**/._*", "**/__pycache__", "**/*.pyc"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
