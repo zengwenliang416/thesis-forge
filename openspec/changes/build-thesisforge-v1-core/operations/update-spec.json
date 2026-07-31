@@ -1,0 +1,22 @@
+{
+  "schema": "specnav.ops.updateSpec.v1",
+  "change": "build-thesisforge-v1-core",
+  "status": "written_back",
+  "learning_items": [
+    "The repository has no project license, so V1 release is local-only and public redistribution remains prohibited.",
+    "Installed-wheel verification must run outside the checkout with network blocked and bundled templates available.",
+    "TOC and page fields are real Word fields but require refresh in the target Office client.",
+    "GB/T bibliography formatting and LaTeX-to-OMML conversion remain explicit V1 subsets."
+  ],
+  "writeback_evidence": [
+    "README.md",
+    "docs/MAINTENANCE.md",
+    "docs/ARCHITECTURE.md",
+    "docs/BIBLIOGRAPHY_SPEC.md",
+    "docs/MATH_SPEC.md",
+    "operations/release-plan.md",
+    "operations/release-notes.md"
+  ],
+  "unresolved_items": [],
+  "promoted_checks": []
+}

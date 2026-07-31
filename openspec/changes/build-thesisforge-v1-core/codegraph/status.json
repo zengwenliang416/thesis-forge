@@ -1,22 +1,22 @@
 {
   "schema": "specnav.codegraph.status.v1",
   "ok": true,
-  "generated_at": "2026-07-31T14:15:32.947Z",
+  "generated_at": "2026-07-31T14:32:10.197Z",
   "project_root": "/Volumes/zwl/open_sources/thesis-forge",
   "active_change": "build-thesisforge-v1-core",
   "policy": {
     "enabled": true,
     "profile": "active_dev",
     "mode": "advisory",
-    "stage": "verification",
+    "stage": "operations",
     "required_for_stage": false,
     "disabled_reason": null
   },
   "execution_surface": "cli",
   "decision": {
-    "stage": "verification",
+    "stage": "operations",
     "result": "pass",
-    "reason": "CodeGraph policy satisfied for verification."
+    "reason": "CodeGraph policy satisfied for operations."
   },
   "cli": {
     "available": true,
@@ -38,10 +38,10 @@
     "initialized": true,
     "projectPath": "/Volumes/zwl/open_sources/thesis-forge",
     "indexPath": "/Volumes/zwl/open_sources/thesis-forge/.codegraph",
-    "lastIndexed": "2026-07-31T13:14:59.043Z",
-    "fileCount": 66,
+    "lastIndexed": "2026-07-31T14:31:13.124Z",
+    "fileCount": 67,
     "nodeCount": 969,
-    "edgeCount": 2736,
+    "edgeCount": 2756,
     "pendingChanges": {
       "added": 0,
       "modified": 0,
@@ -57,11 +57,11 @@
     "version": "1.3.1",
     "projectPath": "/Volumes/zwl/open_sources/thesis-forge",
     "indexPath": "/Volumes/zwl/open_sources/thesis-forge/.codegraph",
-    "lastIndexed": "2026-07-31T13:14:59.043Z",
-    "fileCount": 66,
+    "lastIndexed": "2026-07-31T14:31:13.124Z",
+    "fileCount": 67,
     "nodeCount": 969,
-    "edgeCount": 2736,
-    "dbSizeBytes": 2699264,
+    "edgeCount": 2756,
+    "dbSizeBytes": 3461120,
     "backend": "node-sqlite",
     "journalMode": "wal",
     "nodesByKind": {

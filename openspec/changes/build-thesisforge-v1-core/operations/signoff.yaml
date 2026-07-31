@@ -1,0 +1,15 @@
+schema: specnav.ops.signoff.v1
+change: build-thesisforge-v1-core
+decision: accepted
+accepted_scope: local-only
+accepted_by: project-owner
+recorded_at: "2026-07-31"
+statement: >-
+  The verification receipt residual risks are accepted for local repository
+  closure and local installation only. This signoff does not authorize public
+  redistribution, package publication, marketplace release, or deployment.
+residual_risks:
+  - No project license exists.
+  - GB/T bibliography formatting and LaTeX conversion are documented V1 subsets.
+  - TOC and page fields require refresh in the target Office client.
+  - Sensory verification is not a full WCAG or cross-platform Office certification.
