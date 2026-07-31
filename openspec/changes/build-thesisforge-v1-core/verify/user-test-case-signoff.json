@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "change_id": "build-thesisforge-v1-core",
+  "status": "approved",
+  "user_decision": "The user approved the complete 20-case verification set and instructed execution to begin on July 31, 2026.",
+  "approved_case_ids": [
+    "utc-01-inspect-semantic-inventory",
+    "utc-02-parser-malformed-and-boundaries",
+    "utc-03-validation-diagnostic-coverage",
+    "utc-04-validation-exit-and-ordering",
+    "utc-05-template-resolution-and-schema",
+    "utc-06-compiler-renderplan-determinism",
+    "utc-07-basic-docx-layout",
+    "utc-08-numbered-figures-and-tables",
+    "utc-09-equations-fields-and-crossrefs",
+    "utc-10-footnotes-sections-and-pagination",
+    "utc-11-local-citations-and-bibliography",
+    "utc-12-failed-build-preserves-output",
+    "utc-13-repeatable-semantic-builds",
+    "utc-14-complete-offline-example",
+    "utc-15-docx-package-and-office-acceptance",
+    "utc-16-wheel-sdist-content",
+    "utc-17-hermetic-installed-wheel",
+    "utc-18-maintainer-documentation-and-evidence",
+    "utc-19-prototype-desktop-workbench",
+    "utc-20-prototype-mobile-states-accessibility"
+  ],
+  "rejected_case_ids": [],
+  "notes": [
+    "Approval covers the detailed JSON case definitions and their six-domain mappings.",
+    "Any later scope addition requires a new user decision and an updated signoff."
+  ]
+}

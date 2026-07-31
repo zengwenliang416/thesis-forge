@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "runtime": "Google Chrome via Playwright",
+  "desktop_viewport": {
+    "width": 1440,
+    "status": "pass"
+  },
+  "mobile_viewport": {
+    "width": 390,
+    "status": "pass"
+  },
+  "states": [
+    "populated",
+    "loading",
+    "empty",
+    "error",
+    "disabled",
+    "permission"
+  ],
+  "mobile_panels": [
+    "outline",
+    "editor",
+    "preview",
+    "diagnostics"
+  ],
+  "keyboard": {
+    "ctrl_k_focus": "code-editor",
+    "ctrl_b_build_status_aria_hidden": "false"
+  },
+  "accessibility": {
+    "aria_live_regions": 4,
+    "aria_labelled_elements": 26,
+    "role_tabs": 5,
+    "reduced_motion_matched": true
+  },
+  "artifact_refs": [
+    "prototype/evidence/browser-verification.json",
+    "prototype/evidence/desktop-populated.png",
+    "prototype/evidence/mobile-preview.png",
+    "prototype/evidence/mobile-permission.png"
+  ],
+  "status": "pass"
+}

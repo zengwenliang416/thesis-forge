@@ -1,0 +1,93 @@
+{
+  "schema_version": 1,
+  "change_id": "build-thesisforge-v1-core",
+  "risk_tier": "standard",
+  "required_domains": [
+    "facticity",
+    "static",
+    "unit",
+    "redteam",
+    "e2e",
+    "sensory"
+  ],
+  "inputs": [
+    "requirements.md",
+    "acceptance.md",
+    "acceptance.json",
+    "scope.json",
+    "tasks.md",
+    "prototype/handoff.md",
+    "development/handoff-to-verify.md",
+    "codegraph/claims-map.json",
+    "codegraph/evidence-query-plan.json"
+  ],
+  "user_test_case_gate": {
+    "required": true,
+    "cases": "verify/user-test-cases.json",
+    "signoff": "verify/user-test-case-signoff.json",
+    "domain_matrix": "verify/domain-case-matrix.json"
+  },
+  "runtime_evidence_gate": {
+    "required": true,
+    "evidence": "verify/runtime-evidence.json",
+    "required_surfaces": [
+      "runtime",
+      "browser"
+    ],
+    "database_surface_required_when": "development/migrations/manifest.json required=true"
+  },
+  "changed_files": [
+    "Makefile",
+    "README.md",
+    "docs/ARCHITECTURE.md",
+    "docs/MAINTENANCE.md",
+    "docs/MARKDOWN_SPEC.md",
+    "docs/TEMPLATE_SPEC.md",
+    "docs/THIRD_PARTY_NOTES.md",
+    "openspec/.specnav/change-registry.json",
+    "openspec/changes/build-thesisforge-v1-core/codegraph/claims-map.json",
+    "openspec/changes/build-thesisforge-v1-core/codegraph/claims-report.json",
+    "openspec/changes/build-thesisforge-v1-core/codegraph/evidence-index.json",
+    "openspec/changes/build-thesisforge-v1-core/codegraph/evidence-query-plan.json",
+    "openspec/changes/build-thesisforge-v1-core/codegraph/evidence.jsonl",
+    "openspec/changes/build-thesisforge-v1-core/codegraph/guard-report.json",
+    "openspec/changes/build-thesisforge-v1-core/codegraph/status.json",
+    "openspec/changes/build-thesisforge-v1-core/development/drift-check.jsonl",
+    "openspec/changes/build-thesisforge-v1-core/development/handoff-to-verify.md",
+    "openspec/changes/build-thesisforge-v1-core/development/task-context.jsonl",
+    "openspec/changes/build-thesisforge-v1-core/development/task-ledger.jsonl",
+    "openspec/changes/build-thesisforge-v1-core/development/tasks/008-complete-thesis-acceptance/context.json",
+    "openspec/changes/build-thesisforge-v1-core/development/tasks/008-complete-thesis-acceptance/quality-review.md",
+    "openspec/changes/build-thesisforge-v1-core/development/tasks/008-complete-thesis-acceptance/report.md",
+    "openspec/changes/build-thesisforge-v1-core/development/tasks/008-complete-thesis-acceptance/spec-review.md",
+    "openspec/changes/build-thesisforge-v1-core/development/tasks/009-installation-and-maintenance-handoff/brief.md",
+    "openspec/changes/build-thesisforge-v1-core/development/tasks/009-installation-and-maintenance-handoff/context.json",
+    "openspec/changes/build-thesisforge-v1-core/development/tasks/009-installation-and-maintenance-handoff/quality-review.md",
+    "openspec/changes/build-thesisforge-v1-core/development/tasks/009-installation-and-maintenance-handoff/report.md",
+    "openspec/changes/build-thesisforge-v1-core/development/tasks/009-installation-and-maintenance-handoff/spec-review.md",
+    "openspec/changes/build-thesisforge-v1-core/development/validation-log.jsonl",
+    "openspec/changes/build-thesisforge-v1-core/tasks.md",
+    "pyproject.toml",
+    "scripts/verify_distribution.py",
+    "src/thesis_forge/renderers/docx/cover.py",
+    "tests/test_acceptance.py",
+    "tests/test_distribution.py",
+    "tests/test_docx_renderer.py"
+  ],
+  "commands": [
+    "make verify",
+    ".venv/bin/python -m pytest tests/test_architecture.py tests/test_validator.py tests/test_compiler.py tests/test_docx_renderer.py",
+    ".venv/bin/python -m pytest tests/test_application_services.py tests/test_acceptance.py tests/test_prototype_acceptance.py tests/test_distribution.py",
+    ".venv/bin/python -m thesis_forge.cli inspect examples/bachelor-thesis/thesis.md",
+    ".venv/bin/python -m thesis_forge.cli validate examples/bachelor-thesis/thesis.md",
+    ".venv/bin/python -m thesis_forge.cli build examples/bachelor-thesis/thesis.md -o <verification-output.docx>",
+    "node openspec/changes/build-thesisforge-v1-core/prototype/logic/harness.js",
+    "OPENSPEC_TELEMETRY=0 openspec validate build-thesisforge-v1-core --strict --no-interactive"
+  ],
+  "manual_reviews": [
+    "Generated DOCX and LibreOffice PDF page review",
+    "Fresh Chrome desktop, mobile, state, keyboard, focus and reduced-motion review",
+    "Documentation and third-party boundary audit",
+    "Independent sensory review"
+  ]
+}

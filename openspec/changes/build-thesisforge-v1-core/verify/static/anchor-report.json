@@ -1,0 +1,13 @@
+{
+  "schema": "specnav.verify.anchorReport.v1",
+  "change": "build-thesisforge-v1-core",
+  "policy_present": false,
+  "enforcement": null,
+  "anchor_pattern": "@ai-anchor",
+  "diff_ok": true,
+  "scanned": [],
+  "coverage_ratio": 1,
+  "uncovered": [],
+  "blockers": [],
+  "ok": true
+}

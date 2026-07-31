@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "verified_at": "2026-07-31T14:13:00Z",
+  "domain": "redteam",
+  "verdict": "green",
+  "required": true,
+  "evidence": [
+    "verify/redteam/threat-model.md",
+    "verify/redteam/probes.jsonl",
+    "tests/test_application_services.py",
+    "tests/test_cli.py",
+    "tests/test_validator.py",
+    "tests/test_distribution.py"
+  ],
+  "commands": [
+    "focused hostile-input and package-regression pytest selection",
+    "1 MiB Markdown inspect probe",
+    "symlink resource escape probe",
+    "prototype mobile/state/keyboard/reduced-motion browser probes"
+  ],
+  "findings": [],
+  "required_fixes": [],
+  "residual_risk": [
+    "This local compiler has no authentication, tenant, or remote database surface to penetration-test.",
+    "Fuzzing was targeted rather than coverage-guided or continuous."
+  ],
+  "blocker_class": null
+}

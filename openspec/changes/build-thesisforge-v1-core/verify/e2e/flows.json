@@ -1,0 +1,84 @@
+{
+  "schema_version": 1,
+  "change_id": "build-thesisforge-v1-core",
+  "flows": [
+    {
+      "id": "flow-cli-offline-thesis",
+      "case_ids": [
+        "utc-01-inspect-semantic-inventory",
+        "utc-02-parser-malformed-and-boundaries",
+        "utc-03-validation-diagnostic-coverage",
+        "utc-04-validation-exit-and-ordering",
+        "utc-05-template-resolution-and-schema",
+        "utc-06-compiler-renderplan-determinism",
+        "utc-14-complete-offline-example"
+      ],
+      "steps": [
+        "inspect the complete example",
+        "validate the complete example",
+        "build to a new local output"
+      ],
+      "status": "pass"
+    },
+    {
+      "id": "flow-docx-package-office",
+      "case_ids": [
+        "utc-07-basic-docx-layout",
+        "utc-08-numbered-figures-and-tables",
+        "utc-09-equations-fields-and-crossrefs",
+        "utc-10-footnotes-sections-and-pagination",
+        "utc-11-local-citations-and-bibliography",
+        "utc-13-repeatable-semantic-builds",
+        "utc-15-docx-package-and-office-acceptance"
+      ],
+      "steps": [
+        "inspect DOCX ZIP and XML structures",
+        "reload with python-docx",
+        "convert with LibreOffice",
+        "check PDF syntax and rendered pages"
+      ],
+      "status": "pass"
+    },
+    {
+      "id": "flow-failed-rebuild",
+      "case_ids": [
+        "utc-12-failed-build-preserves-output"
+      ],
+      "steps": [
+        "create a previous valid output",
+        "inject each build-stage and package failure",
+        "compare old bytes and temporary cleanup"
+      ],
+      "status": "pass"
+    },
+    {
+      "id": "flow-distribution-maintainer",
+      "case_ids": [
+        "utc-16-wheel-sdist-content",
+        "utc-17-hermetic-installed-wheel",
+        "utc-18-maintainer-documentation-and-evidence"
+      ],
+      "steps": [
+        "build wheel and sdist",
+        "verify artifact contents",
+        "install with no-index and no-deps into a temporary prefix",
+        "run CLI outside checkout with socket use blocked"
+      ],
+      "status": "pass"
+    },
+    {
+      "id": "flow-prototype-review",
+      "case_ids": [
+        "utc-19-prototype-desktop-workbench",
+        "utc-20-prototype-mobile-states-accessibility"
+      ],
+      "steps": [
+        "open local prototype in Chrome at 1440px",
+        "exercise six states and build flow",
+        "open at 390px and switch all four panels",
+        "verify keyboard, ARIA, and reduced-motion behavior"
+      ],
+      "status": "pass"
+    }
+  ]
+}

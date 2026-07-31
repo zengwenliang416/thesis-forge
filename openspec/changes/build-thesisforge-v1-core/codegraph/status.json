@@ -1,22 +1,22 @@
 {
   "schema": "specnav.codegraph.status.v1",
   "ok": true,
-  "generated_at": "2026-07-31T13:18:56.690Z",
+  "generated_at": "2026-07-31T14:15:32.947Z",
   "project_root": "/Volumes/zwl/open_sources/thesis-forge",
   "active_change": "build-thesisforge-v1-core",
   "policy": {
     "enabled": true,
     "profile": "active_dev",
     "mode": "advisory",
-    "stage": "development",
+    "stage": "verification",
     "required_for_stage": false,
     "disabled_reason": null
   },
   "execution_surface": "cli",
   "decision": {
-    "stage": "development",
+    "stage": "verification",
     "result": "pass",
-    "reason": "CodeGraph policy satisfied for development."
+    "reason": "CodeGraph policy satisfied for verification."
   },
   "cli": {
     "available": true,

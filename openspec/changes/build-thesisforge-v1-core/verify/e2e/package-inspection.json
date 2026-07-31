@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "artifact": "/tmp/thesisforge-verification-20260731/thesis.docx",
+  "size_bytes": 187059,
+  "sha256": "a9120b004a9097d4e6b869150c446e4a2c7f00c56edddce029f4be0cee4fb391",
+  "zip_parts": 23,
+  "duplicate_parts": [],
+  "crc_error": null,
+  "parts": {
+    "media": 1,
+    "headers": 2,
+    "footers": 2
+  },
+  "word_objects": {
+    "toc_fields": 1,
+    "seq_fields": 3,
+    "ref_fields": 8,
+    "page_fields": 4,
+    "numpages_fields": 2,
+    "bookmarks": 23,
+    "sections": 3,
+    "drawings": 1,
+    "tables": 1,
+    "omml": 1,
+    "footnote_references": 1
+  },
+  "python_docx_reload": {
+    "paragraphs": 67,
+    "tables": 1,
+    "status": "pass"
+  },
+  "status": "pass"
+}

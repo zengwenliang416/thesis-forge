@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "change_id": "build-thesisforge-v1-core",
+  "status": "green",
+  "surfaces": [
+    {
+      "surface": "runtime",
+      "required": true,
+      "status": "pass",
+      "command": ".venv/bin/python -m thesis_forge.cli inspect/validate/build examples/bachelor-thesis/thesis.md plus DOCX package and LibreOffice checks",
+      "evidence_refs": [
+        "verify/e2e/run-log.jsonl",
+        "verify/e2e/package-inspection.json",
+        "verify/e2e/office-render.json",
+        "verify/unit/test-map.json"
+      ],
+      "notes": [
+        "Complete example validated and generated a 187059-byte DOCX.",
+        "DOCX reloaded through python-docx and converted to a five-page A4 PDF through LibreOffice.",
+        "Core commands and installed-wheel verification ran without network or AI credentials."
+      ]
+    },
+    {
+      "surface": "browser",
+      "required": true,
+      "status": "pass",
+      "command": "NODE_PATH=/Users/wenliang_zeng/.agents/skills/gstack/node_modules node openspec/changes/build-thesisforge-v1-core/prototype/evidence/verify-ui.cjs plus keyboard/ARIA/reduced-motion probe",
+      "evidence_refs": [
+        "prototype/evidence/browser-verification.json",
+        "verify/e2e/browser-accessibility.json"
+      ],
+      "artifact_refs": [
+        "prototype/evidence/desktop-populated.png",
+        "prototype/evidence/mobile-preview.png",
+        "prototype/evidence/mobile-permission.png"
+      ],
+      "notes": [
+        "Fresh Chrome checks passed at 1440px and 390px.",
+        "All six review states and four mobile panels passed.",
+        "Ctrl+K, Ctrl+B, ARIA live regions and labels, tabs, and reduced-motion behavior passed."
+      ]
+    }
+  ]
+}

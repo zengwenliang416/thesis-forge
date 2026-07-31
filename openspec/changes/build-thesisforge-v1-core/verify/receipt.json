@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "change_id": "build-thesisforge-v1-core",
+  "result": "green",
+  "covered_scope": [
+    "All 20 user-approved test cases across facticity, static, unit, redteam, E2E, and sensory.",
+    "Offline inspect, validate, build, package, distribution, and installed-wheel behavior.",
+    "DOCX OOXML structures, package integrity, python-docx reload, and LibreOffice rendering.",
+    "Desktop/mobile prototype states, build flow, keyboard, ARIA, and reduced motion."
+  ],
+  "uncovered_scope": [],
+  "residual_risk": [
+    "No project license exists, so this receipt does not authorize public redistribution.",
+    "GB/T bibliography formatting and LaTeX conversion remain documented V1 subsets.",
+    "LibreOffice headless does not expand TOC and may display section page fields differently until target-client refresh.",
+    "Sensory evidence is not full WCAG or Word/WPS/LibreOffice cross-platform certification."
+  ],
+  "confidence": "B"
+}

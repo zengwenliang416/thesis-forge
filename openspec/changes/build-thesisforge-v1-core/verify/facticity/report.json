@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "verified_at": "2026-07-31T14:13:00Z",
+  "domain": "facticity",
+  "verdict": "green",
+  "required": true,
+  "evidence": [
+    "verify/facticity/claims.jsonl",
+    "verify/facticity/repo-inventory.json",
+    "verify/traceability-matrix.json",
+    "codegraph/evidence.jsonl",
+    "development/handoff-to-verify.md"
+  ],
+  "commands": [
+    "git diff --name-only 00910ee..eb05612",
+    ".venv/bin/python -m pytest --collect-only -q",
+    "static architecture and offline dependency scans"
+  ],
+  "findings": [],
+  "required_fixes": [],
+  "residual_risk": [
+    "The repository has no project license, so verification does not authorize public redistribution.",
+    "GB/T bibliography formatting and LaTeX conversion intentionally implement documented V1 subsets."
+  ],
+  "blocker_class": null
+}

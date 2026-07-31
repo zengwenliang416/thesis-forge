@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "change_id": "build-thesisforge-v1-core",
+  "baseline_commit": "00910ee",
+  "verified_commit": "eb05612",
+  "changed_files": 36,
+  "approved_user_test_cases": 20,
+  "repository": {
+    "python_source_files": 45,
+    "test_modules": 14,
+    "collected_tests": 124,
+    "template_files": 2,
+    "complete_example_files": 6
+  },
+  "entrypoints": {
+    "console_script": "thesisforge = thesis_forge.cli:app",
+    "commands": [
+      "inspect",
+      "validate",
+      "build"
+    ]
+  },
+  "runtime_dependencies": [
+    "pydantic",
+    "PyYAML",
+    "python-docx",
+    "lxml",
+    "typer",
+    "rich"
+  ],
+  "optional_dependencies": {
+    "bibliography": [
+      "citeproc-py"
+    ],
+    "ui": [
+      "PySide6"
+    ]
+  },
+  "database_effects": "none",
+  "network_services": "none for core commands",
+  "write_boundary": "requested DOCX output and same-directory temporary file only"
+}

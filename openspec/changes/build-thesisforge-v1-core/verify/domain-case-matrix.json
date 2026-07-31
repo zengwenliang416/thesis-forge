@@ -1,0 +1,226 @@
+{
+  "schema_version": 1,
+  "change_id": "build-thesisforge-v1-core",
+  "cases": [
+    {
+      "case_id": "utc-01-inspect-semantic-inventory",
+      "domains": {
+        "facticity": ["Trace the semantic inventory claim to Markdown spec, model, parser, inspect service and current example."],
+        "static": ["Check parser/domain import boundaries, syntax contracts and inspect no-write ownership."],
+        "unit": ["Run parser, inspect CLI and source-location tests for every V1 semantic object."],
+        "redteam": ["Probe empty, reordered, nested and boundary semantic objects without allowing writes or network."],
+        "e2e": ["Run inspect on the complete example outside the distribution checkout and capture ordered output."],
+        "sensory": ["Review inspect output readability, terminology, ordering and actionable source locations."]
+      }
+    },
+    {
+      "case_id": "utc-02-parser-malformed-and-boundaries",
+      "domains": {
+        "facticity": ["Compare parser failure and architecture claims with actual imports, state transitions and tests."],
+        "static": ["Run banned-import and architecture scans for Parser and Domain."],
+        "unit": ["Run malformed Front Matter, container, table, listing, inline and ID-prefix tests."],
+        "redteam": ["Fuzz truncation, unclosed blocks, malformed separators and oversized parser inputs."],
+        "e2e": ["Invoke inspect on representative malformed files and record concise failure behavior."],
+        "sensory": ["Review parser errors for source clarity, no traceback and maintainable state-machine boundaries."]
+      }
+    },
+    {
+      "case_id": "utc-03-validation-diagnostic-coverage",
+      "domains": {
+        "facticity": ["Map every required diagnostic category to validator rule, documentation and test evidence."],
+        "static": ["Check ValidationIssue schema and rule composition without renderer or CLI leakage."],
+        "unit": ["Run duplicate, missing reference/image/citation, metadata, heading and ID-prefix tests."],
+        "redteam": ["Combine multiple faults in one document and verify complete, non-short-circuit reporting."],
+        "e2e": ["Run validate on a multi-error thesis and capture structured issue output."],
+        "sensory": ["Review diagnostic wording, severity, code, line and target actionability."]
+      }
+    },
+    {
+      "case_id": "utc-04-validation-exit-and-ordering",
+      "domains": {
+        "facticity": ["Audit documented exit and ordering claims against CLI and validation service behavior."],
+        "static": ["Inspect centralized exit policy and deterministic sort keys."],
+        "unit": ["Run valid, warning-only, error and repeated-order tests."],
+        "redteam": ["Probe same-line and same-target issue collisions and mixed warning/error sets."],
+        "e2e": ["Execute three validation classes and compare exit codes and repeated output."],
+        "sensory": ["Review shell-facing output stability and suitability for future UI/service adapters."]
+      }
+    },
+    {
+      "case_id": "utc-05-template-resolution-and-schema",
+      "domains": {
+        "facticity": ["Trace all documented template fields and resolution precedence to typed models and resolver code."],
+        "static": ["Run YAML/schema, required-style, unit and path ownership checks."],
+        "unit": ["Run explicit path, metadata ID, installed fallback, invalid unit and missing-template tests."],
+        "redteam": ["Probe path escapes, unknown fields, unsupported units, malformed YAML and missing styles."],
+        "e2e": ["Validate and build with explicit and metadata-selected templates."],
+        "sensory": ["Review field-specific errors and template maintainer documentation for clarity."]
+      }
+    },
+    {
+      "case_id": "utc-06-compiler-renderplan-determinism",
+      "domains": {
+        "facticity": ["Map numbering, bookmark, reference, citation and section claims to compiler and RenderPlan evidence."],
+        "static": ["Check renderer-neutral typed instructions and absence of DOCX objects in Core."],
+        "unit": ["Run compiler, RenderPlan, numbering, collision, forward-reference and citation-order tests."],
+        "redteam": ["Probe duplicate bookmark names, missing targets, cross-chapter counters and reordered citations."],
+        "e2e": ["Compile the complete example twice and record normalized plan semantics."],
+        "sensory": ["Review component cohesion, naming and maintainability across Compiler and RenderPlan."]
+      }
+    },
+    {
+      "case_id": "utc-07-basic-docx-layout",
+      "domains": {
+        "facticity": ["Compare layout documentation and template rules with generated OOXML."],
+        "static": ["Inspect style, font, unit, paragraph and package helper ownership."],
+        "unit": ["Run direct XML tests for page size, margins, fonts, spacing, indentation, alignment and headings."],
+        "redteam": ["Probe extreme valid lengths, mixed scripts, page-break headings and cover-heading pollution."],
+        "e2e": ["Build a template-driven basic DOCX and inspect document/styles XML."],
+        "sensory": ["Review rendered typography, hierarchy, page flow and editable paragraph behavior."]
+      }
+    },
+    {
+      "case_id": "utc-08-numbered-figures-and-tables",
+      "domains": {
+        "facticity": ["Trace width, caption, numbering, bookmark and border claims to compiler and OOXML evidence."],
+        "static": ["Inspect focused figure, caption, bookmark, table and unit helper boundaries."],
+        "unit": ["Run drawing, relationship, media, caption order, bookmark and border XML tests."],
+        "redteam": ["Probe corrupt images, empty/malformed tables, invalid widths and resource path escapes."],
+        "e2e": ["Build local figures and tables, then inspect package media and table XML."],
+        "sensory": ["Review image scaling, caption placement, table readability and three-line appearance."]
+      }
+    },
+    {
+      "case_id": "utc-09-equations-fields-and-crossrefs",
+      "domains": {
+        "facticity": ["Trace OMML and field claims to math converter, compiler instructions and generated XML."],
+        "static": ["Inspect supported LaTeX contract and shared field/bookmark helper ownership."],
+        "unit": ["Run math, OMML, SEQ, REF, TOC, bookmark and updateFields XML tests."],
+        "redteam": ["Probe unsupported commands, malformed equations, missing targets and bookmark collisions."],
+        "e2e": ["Build equation/cross-reference content and inspect real field and OMML structures."],
+        "sensory": ["Review editable equations, displayed numbering, references and documented client update behavior."]
+      }
+    },
+    {
+      "case_id": "utc-10-footnotes-sections-and-pagination",
+      "domains": {
+        "facticity": ["Map footnote, section, header/footer and page-number claims to package parts and XML."],
+        "static": ["Inspect footnote and section helper separation plus template policy ownership."],
+        "unit": ["Run footnotes relationship/content-type, sectPr, header/footer and PAGE/NUMPAGES tests."],
+        "redteam": ["Probe multiple sections, restart formats, missing header/footer refs and footnote citation order."],
+        "e2e": ["Build the complete sectioned thesis and inspect all related package parts."],
+        "sensory": ["Review pagination, running content and footnote visibility in rendered Office output."]
+      }
+    },
+    {
+      "case_id": "utc-11-local-citations-and-bibliography",
+      "domains": {
+        "facticity": ["Trace BibTeX and GB/T supported-subset claims to loader, formatter, docs and golden fixtures."],
+        "static": ["Inspect bibliography layer independence and local-only dependency path."],
+        "unit": ["Run loader, malformed/duplicate/unsupported, missing-key, grouped citation and golden tests."],
+        "redteam": ["Probe malformed records, duplicate keys, unsupported types and footnote-first citation order."],
+        "e2e": ["Validate and build local citations, then inspect body, footnote and bibliography output."],
+        "sensory": ["Review citation readability, bibliography ordering and supported-subset disclosure."]
+      }
+    },
+    {
+      "case_id": "utc-12-failed-build-preserves-output",
+      "domains": {
+        "facticity": ["Audit atomic-output and stage-failure claims against application services and tests."],
+        "static": ["Inspect temporary-file ownership, package validation and CLI delegation."],
+        "unit": ["Run parser, validation, compiler, renderer, package and replacement failure-preservation tests."],
+        "redteam": ["Inject corrupt ZIP, CRC, duplicate parts, missing relationships and replacement failures."],
+        "e2e": ["Create an old valid output, force each failure and compare bytes plus temporary cleanup."],
+        "sensory": ["Review exact stage messages, absence of traceback and recovery clarity."]
+      }
+    },
+    {
+      "case_id": "utc-13-repeatable-semantic-builds",
+      "domains": {
+        "facticity": ["Verify the semantic determinism contract is documented as normalized, not byte-for-byte ZIP equality."],
+        "static": ["Inspect deterministic ordering and generated identifier ownership."],
+        "unit": ["Run repeated-build normalized numbering, bookmark, reference, field and section comparisons."],
+        "redteam": ["Vary ZIP metadata and relationship IDs to ensure normalization detects only semantic drift."],
+        "e2e": ["Build twice from identical inputs and compare normalized package structures."],
+        "sensory": ["Review whether documented determinism boundaries are understandable and non-misleading."]
+      }
+    },
+    {
+      "case_id": "utc-14-complete-offline-example",
+      "domains": {
+        "facticity": ["Map the complete semantic inventory and offline claim to example files and acceptance evidence."],
+        "static": ["Check example/template/BibTeX/image references and optional-AI separation."],
+        "unit": ["Run complete acceptance, CLI and input-immutability tests."],
+        "redteam": ["Remove credentials, clear proxies, block sockets and verify no input mutation."],
+        "e2e": ["Execute inspect, validate and build over the complete example in the restricted environment."],
+        "sensory": ["Review user-visible completeness and whether output matches the documented example."]
+      }
+    },
+    {
+      "case_id": "utc-15-docx-package-and-office-acceptance",
+      "domains": {
+        "facticity": ["Trace package/client acceptance claims to current ZIP/XML, reload and PDF evidence."],
+        "static": ["Validate required parts, relationships, XML parseability and package contracts."],
+        "unit": ["Run package integrity and complete OOXML structure tests."],
+        "redteam": ["Probe CRC corruption, duplicate parts, malformed XML and missing content types/relationships."],
+        "e2e": ["Reload with python-docx, convert with LibreOffice and inspect produced PDF pages."],
+        "sensory": ["Independently review cover, typography, figures, tables, equations, references, pagination and clipping."]
+      }
+    },
+    {
+      "case_id": "utc-16-wheel-sdist-content",
+      "domains": {
+        "facticity": ["Compare package metadata and documented contents with freshly built wheel and sdist inventories."],
+        "static": ["Run build metadata, entry point, package-data and contamination checks."],
+        "unit": ["Run distribution artifact regression and inspect expected file sets."],
+        "redteam": ["Probe missing templates, missing console metadata, AppleDouble/cache contamination and stale dist files."],
+        "e2e": ["Build wheel/sdist from current source and run the distribution verifier."],
+        "sensory": ["Review artifact diagnostics and the no-license/publication boundary."]
+      }
+    },
+    {
+      "case_id": "utc-17-hermetic-installed-wheel",
+      "domains": {
+        "facticity": ["Audit installed-module provenance and dependency closure claims against fresh verifier output."],
+        "static": ["Inspect PEP 508 marker evaluation, prefix paths and python -S launch construction."],
+        "unit": ["Run installed-wheel regression including parent editable path preservation."],
+        "redteam": ["Probe parent site-packages leakage, checkout leakage, missing runtime dependencies and socket use."],
+        "e2e": ["Install no-index/no-deps into a temporary prefix and run full CLI outside checkout."],
+        "sensory": ["Review verifier output for actionable provenance and failure explanations."]
+      }
+    },
+    {
+      "case_id": "utc-18-maintainer-documentation-and-evidence",
+      "domains": {
+        "facticity": ["Cross-check README, architecture/spec docs, task reports and known risks against current behavior."],
+        "static": ["Validate OpenSpec, task packet structure, ledgers, drift records and CodeGraph artifact shape."],
+        "unit": ["Run the documented make targets and focused documentation-linked regressions."],
+        "redteam": ["Search for stale capability claims, hidden publication claims, lost task detail and unsupported guarantees."],
+        "e2e": ["Follow contributor instructions from installation through make verify and handoff validation."],
+        "sensory": ["Independently review maintainability, readability, cohesion and evidence traceability."]
+      }
+    },
+    {
+      "case_id": "utc-19-prototype-desktop-workbench",
+      "domains": {
+        "facticity": ["Confirm desktop panels, controls and review-only scope match requirements, handoff and source."],
+        "static": ["Inspect local HTML/CSS/JS, responsive structure, ARIA metadata and absence of remote backend dependencies."],
+        "unit": ["Run prototype acceptance and logic harness checks for desktop populated behavior."],
+        "redteam": ["Probe long content, scroll boundaries, diagnostics density, template errors and build disabled states."],
+        "e2e": ["Run fresh Chrome automation at 1440px and capture screenshots plus transcript."],
+        "sensory": ["Review visual hierarchy, readability, interaction clarity, focus order and fixture disclosure."]
+      }
+    },
+    {
+      "case_id": "utc-20-prototype-mobile-states-accessibility",
+      "domains": {
+        "facticity": ["Confirm mobile panels, six states, accessibility and deferred-production claims match current artifact."],
+        "static": ["Inspect mobile breakpoints, state attributes, keyboard/focus/ARIA rules and reduced-motion CSS."],
+        "unit": ["Run state transition, mobile panel and safe-build logic tests."],
+        "redteam": ["Probe 390px navigation, permission, disabled, error, empty/loading recovery and reduced-motion."],
+        "e2e": ["Run fresh Chrome mobile automation across all panels and states with screenshots/transcript."],
+        "sensory": ["Independently review mobile readability, navigation, accessibility and static-fixture boundary."]
+      }
+    }
+  ]
+}

@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "verified_at": "2026-07-31T14:13:00Z",
+  "domain": "sensory",
+  "verdict": "green",
+  "required": true,
+  "evidence": [
+    "verify/sensory/reviewer-independence.md",
+    "verify/sensory/review.md",
+    "verify/sensory/findings.jsonl",
+    "verify/sensory/evidence/page-1.png",
+    "verify/sensory/evidence/page-5.png",
+    "prototype/evidence/desktop-populated.png",
+    "prototype/evidence/mobile-preview.png",
+    "prototype/evidence/mobile-permission.png"
+  ],
+  "commands": [
+    "independent review of five rendered Office pages",
+    "independent review of desktop and mobile prototype screenshots",
+    "fresh Chrome state, keyboard, ARIA, and reduced-motion checks",
+    "maintainability and component-boundary review"
+  ],
+  "findings": [
+    "LibreOffice field-refresh difference is documented as an accepted compatibility boundary.",
+    "Full WCAG and multi-client Office certification remain outside this V1 review."
+  ],
+  "required_fixes": [],
+  "residual_risk": [
+    "Sensory review is not a full WCAG audit.",
+    "Only LibreOffice rendering was directly reviewed; Word and WPS parity remains unverified.",
+    "TOC and page fields require target-client refresh."
+  ],
+  "blocker_class": null
+}

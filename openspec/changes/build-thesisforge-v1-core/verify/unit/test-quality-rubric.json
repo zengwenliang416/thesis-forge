@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "checks": {
+    "changed_public_behavior_has_focused_tests": true,
+    "critical_paths_are_covered": true,
+    "edge_cases_are_covered": true,
+    "empty_states_are_covered": true,
+    "error_paths_are_covered": true,
+    "boundary_inputs_are_covered": true,
+    "assertions_verify_behavior": true,
+    "mocks_do_not_replace_behavior_under_test": true,
+    "failure_reasons_are_specific": true,
+    "ooxml_tests_inspect_xml_structure": true,
+    "all_approved_cases_map_to_tests": true
+  },
+  "findings": []
+}

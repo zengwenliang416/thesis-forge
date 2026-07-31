@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "verified_at": "2026-07-31T14:13:00Z",
+  "domain": "unit",
+  "verdict": "green",
+  "required": true,
+  "evidence": [
+    "verify/unit/test-map.json",
+    "verify/unit/test-quality-rubric.json",
+    "verify/unit/coverage-notes.md",
+    "tests"
+  ],
+  "commands": [
+    ".venv/bin/python -m pytest --collect-only -q",
+    ".venv/bin/python -m pytest tests/test_architecture.py tests/test_validator.py tests/test_compiler.py tests/test_docx_renderer.py",
+    ".venv/bin/python -m pytest tests/test_application_services.py tests/test_acceptance.py tests/test_prototype_acceptance.py tests/test_distribution.py",
+    ".venv/bin/python -m pytest tests/test_parser.py tests/test_template.py tests/test_bibliography.py tests/test_math.py tests/test_render_plan.py tests/test_cli.py"
+  ],
+  "findings": [],
+  "required_fixes": [],
+  "residual_risk": [
+    "Line coverage percentage is not collected; sufficiency is judged from behavior and approved-case mapping."
+  ],
+  "blocker_class": null
+}

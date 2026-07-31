@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "verified_at": "2026-07-31T14:13:00Z",
+  "domain": "e2e",
+  "verdict": "green",
+  "required": true,
+  "evidence": [
+    "verify/e2e/flows.json",
+    "verify/e2e/run-log.jsonl",
+    "verify/e2e/package-inspection.json",
+    "verify/e2e/office-render.json",
+    "verify/e2e/browser-accessibility.json",
+    "verify/runtime-evidence.json"
+  ],
+  "commands": [
+    "inspect, validate, and build the complete example",
+    "DOCX ZIP/XML and python-docx inspection",
+    "LibreOffice PDF conversion and qpdf check",
+    "distribution verification outside checkout",
+    "prototype logic harness and Chrome Playwright runs"
+  ],
+  "findings": [],
+  "required_fixes": [],
+  "residual_risk": [
+    "LibreOffice headless does not expand TOC fields and may display section page fields differently until a target Office client refreshes fields."
+  ],
+  "blocker_class": null
+}

@@ -1,0 +1,8 @@
+{
+  "schema_version": 1,
+  "status": "green",
+  "scenarios": [
+    "verify-runs-six-domains"
+  ],
+  "unresolved_blockers": []
+}

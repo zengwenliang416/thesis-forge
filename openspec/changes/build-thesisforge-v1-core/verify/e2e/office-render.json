@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "source_docx": "/tmp/thesisforge-verification-20260731/thesis.docx",
+  "renderer": "LibreOffice 26.2.3.2 AARCH64",
+  "pdf": "/tmp/thesisforge-verification-20260731/thesis.pdf",
+  "pdf_sha256": "2350831f05fea32159a635a1afdbd7283c73dc5edf8877bf686307fb16d31fd1",
+  "pages": 5,
+  "page_size": "A4",
+  "qpdf_status": "pass",
+  "rendered_page_evidence": [
+    "verify/sensory/evidence/page-1.png",
+    "verify/sensory/evidence/page-2.png",
+    "verify/sensory/evidence/page-3.png",
+    "verify/sensory/evidence/page-4.png",
+    "verify/sensory/evidence/page-5.png"
+  ],
+  "observations": [
+    "Cover, body hierarchy, figure, table, equation, bibliography, acknowledgements, and appendix are visible without clipping.",
+    "LibreOffice headless conversion does not expand the TOC field.",
+    "Rendered PAGE/NUMPAGES values use section/page-field semantics and may not equal the physical PDF page count until fields are refreshed in the target Office client."
+  ],
+  "status": "pass"
+}

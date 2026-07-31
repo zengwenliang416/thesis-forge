@@ -6,64 +6,64 @@
       "id": "A1",
       "statement": "inspect, validate, and build run offline without API keys.",
       "verify_via": "e2e",
-      "status": "failing",
-      "evidence_ref": null
+      "status": "passing",
+      "evidence_ref": "verify/e2e/report.json"
     },
     {
       "id": "A2",
       "statement": "Parser produces the required semantic objects and never imports DOCX implementation modules.",
       "verify_via": "unit",
-      "status": "failing",
-      "evidence_ref": null
+      "status": "passing",
+      "evidence_ref": "verify/unit/report.json"
     },
     {
       "id": "A3",
       "statement": "Validation reports duplicate IDs, missing references, images, citations, metadata, and template errors structurally.",
       "verify_via": "unit",
-      "status": "failing",
-      "evidence_ref": null
+      "status": "passing",
+      "evidence_ref": "verify/unit/report.json"
     },
     {
       "id": "A4",
       "statement": "Compiler resolves deterministic numbering, bookmarks, references, citations, and sections before rendering.",
       "verify_via": "unit",
-      "status": "failing",
-      "evidence_ref": null
+      "status": "passing",
+      "evidence_ref": "verify/unit/report.json"
     },
     {
       "id": "A5",
       "statement": "Generated DOCX contains real TOC, SEQ, REF, Bookmark, PAGE, OMML, footnote, section, header, and footer structures.",
       "verify_via": "e2e",
-      "status": "failing",
-      "evidence_ref": null
+      "status": "passing",
+      "evidence_ref": "verify/e2e/package-inspection.json"
     },
     {
       "id": "A6",
       "statement": "A full example thesis builds successfully and opens in a supported Office client.",
       "verify_via": "sensory",
-      "status": "failing",
-      "evidence_ref": null
+      "status": "passing",
+      "evidence_ref": "verify/sensory/report.json"
     },
     {
       "id": "A7",
       "statement": "A failed rebuild preserves the previously valid output file.",
       "verify_via": "redteam",
-      "status": "failing",
-      "evidence_ref": null
+      "status": "passing",
+      "evidence_ref": "verify/redteam/report.json"
     },
     {
       "id": "A8",
       "statement": "Static checks, package tests, architecture checks, and OOXML structure tests pass.",
       "verify_via": "static",
-      "status": "failing",
-      "evidence_ref": null
+      "status": "passing",
+      "evidence_ref": "verify/static/report.json"
     },
     {
       "id": "A9",
       "statement": "A local HTML prototype presents the ThesisForge workbench across desktop, mobile, and required review states.",
       "verify_via": "sensory",
-      "status": "failing",
-      "evidence_ref": null
+      "status": "passing",
+      "evidence_ref": "verify/e2e/browser-accessibility.json"
     }
   ]
 }

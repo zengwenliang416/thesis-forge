@@ -1,0 +1,1285 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-07-31T14:15:32.957Z",
+  "active_change": "build-thesisforge-v1-core",
+  "status": "green",
+  "aggregate": {
+    "schema_version": 1,
+    "generated_at": "2026-07-31T14:15:32.957Z",
+    "change_id": "build-thesisforge-v1-core",
+    "active_change": "build-thesisforge-v1-core",
+    "verdict": "green",
+    "domains": {
+      "facticity": "green",
+      "static": "green",
+      "unit": "green",
+      "redteam": "green",
+      "e2e": "green",
+      "sensory": "green"
+    },
+    "blocking_findings": [],
+    "residual_risk": [],
+    "evidence_receipt": "verify/receipt.json",
+    "behavior_eval_report": "verify/behavior-evals/report.json",
+    "html_report": "verify/aggregate-report.html",
+    "review_style": "claude-warm-editorial",
+    "stale": false,
+    "blockers": [],
+    "warnings": [],
+    "codegraph": {
+      "ok": true,
+      "status": {
+        "schema": "specnav.codegraph.status.v1",
+        "ok": true,
+        "generated_at": "2026-07-31T14:15:32.947Z",
+        "project_root": "/Volumes/zwl/open_sources/thesis-forge",
+        "active_change": "build-thesisforge-v1-core",
+        "policy": {
+          "enabled": true,
+          "profile": "active_dev",
+          "mode": "advisory",
+          "stage": "verification",
+          "required_for_stage": false,
+          "disabled_reason": null
+        },
+        "execution_surface": "cli",
+        "decision": {
+          "stage": "verification",
+          "result": "pass",
+          "reason": "CodeGraph policy satisfied for verification."
+        },
+        "cli": {
+          "available": true,
+          "version": "1.3.1",
+          "path": "/Users/wenliang_zeng/.local/bin/codegraph",
+          "unsupported": false,
+          "error": null
+        },
+        "mcp": {
+          "configured": true,
+          "visible_in_current_session": false,
+          "restart_required": true,
+          "config_files": [
+            "/Users/wenliang_zeng/.claude.json",
+            "/Users/wenliang_zeng/.codex/config.toml"
+          ]
+        },
+        "index": {
+          "initialized": true,
+          "projectPath": "/Volumes/zwl/open_sources/thesis-forge",
+          "indexPath": "/Volumes/zwl/open_sources/thesis-forge/.codegraph",
+          "lastIndexed": "2026-07-31T13:14:59.043Z",
+          "fileCount": 66,
+          "nodeCount": 969,
+          "edgeCount": 2736,
+          "pendingChanges": {
+            "added": 0,
+            "modified": 0,
+            "removed": 0
+          },
+          "reindexRecommended": false,
+          "worktreeMismatch": null
+        },
+        "blockers": [],
+        "warnings": [],
+        "raw_codegraph_status": {
+          "initialized": true,
+          "version": "1.3.1",
+          "projectPath": "/Volumes/zwl/open_sources/thesis-forge",
+          "indexPath": "/Volumes/zwl/open_sources/thesis-forge/.codegraph",
+          "lastIndexed": "2026-07-31T13:14:59.043Z",
+          "fileCount": 66,
+          "nodeCount": 969,
+          "edgeCount": 2736,
+          "dbSizeBytes": 2699264,
+          "backend": "node-sqlite",
+          "journalMode": "wal",
+          "nodesByKind": {
+            "class": 133,
+            "constant": 5,
+            "file": 63,
+            "function": 273,
+            "import": 316,
+            "method": 95,
+            "variable": 84
+          },
+          "languages": [
+            "javascript",
+            "python",
+            "yaml"
+          ],
+          "pendingChanges": {
+            "added": 0,
+            "modified": 0,
+            "removed": 0
+          },
+          "worktreeMismatch": null,
+          "index": {
+            "builtWithVersion": "1.3.1",
+            "builtWithExtractionVersion": 24,
+            "currentExtractionVersion": 24,
+            "reindexRecommended": false,
+            "state": "complete",
+            "pendingRefs": 0
+          }
+        }
+      },
+      "evidence_index": {
+        "schema": "specnav.codegraph.evidence_index.v1",
+        "generated_at": "2026-07-31T14:10:17.184Z",
+        "active_change": "build-thesisforge-v1-core",
+        "source_raw": "openspec/changes/build-thesisforge-v1-core/codegraph/evidence.jsonl",
+        "by_claim": {
+          "development:task-001-offline-thesis-inspection": {
+            "status": "matched",
+            "evidence_ids": [
+              "ev-ms75qwnx"
+            ],
+            "files": [
+              "src/thesis_forge/core/parser.py",
+              "thesis.md",
+              "broken.md",
+              "missing.md",
+              "empty.md",
+              "locations.md"
+            ],
+            "symbols": [],
+            "blockers": []
+          },
+          "development:task-002-actionable-validation": {
+            "status": "matched",
+            "evidence_ids": [
+              "ev-ms75rbps",
+              "ev-ms76jcic",
+              "ev-ms77kd48"
+            ],
+            "files": [
+              "src/thesis_forge/core/validator.py",
+              "src/thesis_forge/core/model.py",
+              "cli.py",
+              "validator.py",
+              "desktop.go",
+              "mobile.go"
+            ],
+            "symbols": [],
+            "blockers": []
+          },
+          "unmapped": {
+            "status": "matched",
+            "evidence_ids": [
+              "ev-ms767qtm"
+            ],
+            "files": [
+              "src/thesis_forge/core/validator.py",
+              "src/thesis_forge/core/compiler.py"
+            ],
+            "symbols": [],
+            "blockers": []
+          },
+          "development:task-003-template-driven-basic-docx": {
+            "status": "matched",
+            "evidence_ids": [
+              "ev-ms78q7o6",
+              "ev-ms79plyr",
+              "ev-ms79z0ze"
+            ],
+            "files": [
+              "src/thesis_forge/renderers/docx/renderer.py",
+              "test_docx_renderer.py",
+              "thesis.md",
+              "templates/schools/example-university/2026.yaml",
+              "templates/base/bachelor.yaml",
+              "desktop.go",
+              "mobile.go",
+              "src/thesis_forge/renderers/docx/lists.py",
+              "src/thesis_forge/core/validator.py",
+              "template.yaml",
+              "school.yaml"
+            ],
+            "symbols": [],
+            "blockers": []
+          },
+          "development:task-004-numbered-figures-and-tables": {
+            "status": "matched",
+            "evidence_ids": [
+              "ev-ms7eai06",
+              "ev-ms7euh9i",
+              "ev-ms7exunz"
+            ],
+            "files": [
+              "tests/test_compiler.py",
+              "src/thesis_forge/core/compiler.py",
+              "src/thesis_forge/renderers/docx/captions.py",
+              "src/thesis_forge/renderers/docx/tables.py",
+              "thesis.md",
+              "templates/schools/example-university/2026.yaml",
+              "templates/base/bachelor.yaml",
+              "src/thesis_forge/renderers/docx/figures.py",
+              "src/thesis_forge/renderers/docx/bookmarks.py",
+              "captions.py"
+            ],
+            "symbols": [],
+            "blockers": []
+          },
+          "development:task-005-equations-references-and-page-structure": {
+            "status": "matched",
+            "evidence_ids": [
+              "ev-ms8bdfhf",
+              "ev-ms8benpt"
+            ],
+            "files": [
+              "templates/base/bachelor.yaml",
+              "thesis.md",
+              "src/thesis_forge/core/math.py",
+              "src/thesis_forge/core/render_plan.py",
+              "src/thesis_forge/core/compiler.py",
+              "tests/test_math.py",
+              "tests/test_compiler.py",
+              "tests/test_docx_renderer.py",
+              "tests/test_cli.py",
+              "tests/test_architecture.py",
+              "src/thesis_forge/renderers/docx/sections.py",
+              "src/thesis_forge/renderers/docx/equations.py",
+              "src/thesis_forge/renderers/docx/renderer.py",
+              "src/thesis_forge/renderers/docx/fields.py"
+            ],
+            "symbols": [],
+            "blockers": []
+          },
+          "development:task-006-local-citations-and-bibliography": {
+            "status": "matched",
+            "evidence_ids": [
+              "ev-ms8lijdt",
+              "ev-ms8mm4y1"
+            ],
+            "files": [
+              "src/thesis_forge/renderers/docx/renderer.py",
+              "src/thesis_forge/bibliography/bibtex.py",
+              "src/thesis_forge/bibliography/formatter.py",
+              "gbt7714-v1.js",
+              "src/thesis_forge/core/validator.py",
+              "src/thesis_forge/bibliography/engine.py",
+              "/tmp/thesis.md",
+              "templates/base/bachelor.yaml"
+            ],
+            "symbols": [],
+            "blockers": []
+          },
+          "development:task-007-safe-and-repeatable-builds": {
+            "status": "matched",
+            "evidence_ids": [
+              "ev-ms8ot2wa",
+              "ev-ms8pgt9s"
+            ],
+            "files": [
+              "src/thesis_forge/cli.py",
+              "src/thesis_forge/application/services.py",
+              "src/thesis_forge/application/output.py",
+              "src/thesis_forge/renderers/docx/package.py",
+              "src/thesis_forge/renderers/docx/renderer.py"
+            ],
+            "symbols": [],
+            "blockers": []
+          },
+          "development:task-008-complete-thesis-acceptance": {
+            "status": "matched",
+            "evidence_ids": [
+              "ev-ms8rsaxu"
+            ],
+            "files": [
+              "src/thesis_forge/renderers/docx/figures.py",
+              "tests/test_prototype_acceptance.py",
+              "tests/test_acceptance.py",
+              "thesis.md"
+            ],
+            "symbols": [],
+            "blockers": []
+          },
+          "development:task-009-installation-and-maintenance-handoff": {
+            "status": "matched",
+            "evidence_ids": [
+              "ev-ms8xvif0",
+              "ev-ms8xvtqo",
+              "ev-ms8yamos",
+              "ev-ms8ykosi"
+            ],
+            "files": [
+              "openspec/changes/build-thesisforge-v1-core/prototype/artifact/app.js",
+              "openspec/changes/build-thesisforge-v1-core/prototype/evidence/verify-ui.cjs",
+              "scripts/verify_distribution.py",
+              "tests/test_distribution.py",
+              "tests/test_acceptance.py",
+              "thesis_forge/template_data/base/bachelor.yaml",
+              "thesis_forge/template_data/schools/example-university/2026.yaml",
+              "README.md",
+              "pyproject.toml",
+              "src/thesis_forge/cli.py",
+              "templates/base/bachelor.yaml",
+              "templates/schools/example-university/2026.yaml",
+              "sitecustomize.py",
+              "thesis.md",
+              "verify_distribution.py",
+              "src/thesis_forge/application/output.py",
+              "offline_cli.py"
+            ],
+            "symbols": [],
+            "blockers": []
+          },
+          "verification:task-001-offline-thesis-inspection": {
+            "status": "matched",
+            "evidence_ids": [
+              "ev-ms90rw3n"
+            ],
+            "files": [
+              "tests/test_prototype_acceptance.py",
+              "src/thesis_forge/core/parser.py",
+              "prefix.rs",
+              "marker.rs",
+              "item_marker.rs"
+            ],
+            "symbols": [],
+            "blockers": []
+          },
+          "verification:task-002-actionable-validation": {
+            "status": "matched",
+            "evidence_ids": [
+              "ev-ms90rwkf"
+            ],
+            "files": [
+              "tests/test_prototype_acceptance.py",
+              "tests/test_acceptance.py",
+              "src/thesis_forge/core/parser.py",
+              "desktop.go",
+              "mobile.go",
+              "thesis.md",
+              "template.yaml",
+              "school.yaml",
+              "templates/base/bachelor.yaml"
+            ],
+            "symbols": [],
+            "blockers": []
+          },
+          "verification:task-003-template-driven-basic-docx": {
+            "status": "matched",
+            "evidence_ids": [
+              "ev-ms90rx0y"
+            ],
+            "files": [
+              "tests/test_validator.py",
+              "src/thesis_forge/core/validator.py",
+              "src/thesis_forge/core/model.py",
+              "tests/test_prototype_acceptance.py",
+              "desktop.go",
+              "mobile.go"
+            ],
+            "symbols": [],
+            "blockers": []
+          },
+          "verification:task-004-numbered-figures-and-tables": {
+            "status": "matched",
+            "evidence_ids": [
+              "ev-ms90rxgw"
+            ],
+            "files": [
+              "tests/test_validator.py",
+              "src/thesis_forge/core/validator.py",
+              "tests/test_prototype_acceptance.py",
+              "src/thesis_forge/core/model.py",
+              "desktop.go",
+              "mobile.go"
+            ],
+            "symbols": [],
+            "blockers": []
+          },
+          "verification:task-005-equations-references-and-page-structure": {
+            "status": "matched",
+            "evidence_ids": [
+              "ev-ms90rxxc"
+            ],
+            "files": [
+              "tests/test_validator.py",
+              "src/thesis_forge/core/validator.py",
+              "tests/test_prototype_acceptance.py",
+              "src/thesis_forge/core/model.py",
+              "src/thesis_forge/core/compiler.py",
+              "desktop.go",
+              "mobile.go",
+              "harness.js",
+              "index.html",
+              "app.js",
+              "styles.cs",
+              "browser-verification.js",
+              "explicit.yaml",
+              "school.yaml",
+              "broken.yaml"
+            ],
+            "symbols": [],
+            "blockers": []
+          },
+          "verification:task-006-local-citations-and-bibliography": {
+            "status": "matched",
+            "evidence_ids": [
+              "ev-ms90rydf"
+            ],
+            "files": [
+              "tests/test_validator.py",
+              "src/thesis_forge/core/validator.py",
+              "src/thesis_forge/templates/resolver.py",
+              "tests/test_prototype_acceptance.py",
+              "src/thesis_forge/core/parser.py",
+              "desktop.go",
+              "mobile.go",
+              "thesis.md",
+              "templates/base/bachelor.yaml",
+              "harness.js",
+              "index.html",
+              "app.js",
+              "styles.cs",
+              "browser-verification.js"
+            ],
+            "symbols": [],
+            "blockers": []
+          },
+          "verification:task-007-safe-and-repeatable-builds": {
+            "status": "matched",
+            "evidence_ids": [
+              "ev-ms90ryt4"
+            ],
+            "files": [
+              "tests/test_prototype_acceptance.py",
+              "tests/test_acceptance.py",
+              "src/thesis_forge/core/model.py",
+              "src/thesis_forge/core/validator.py",
+              "cli.py"
+            ],
+            "symbols": [],
+            "blockers": []
+          },
+          "verification:task-008-complete-thesis-acceptance": {
+            "status": "matched",
+            "evidence_ids": [
+              "ev-ms90rz9g"
+            ],
+            "files": [
+              "tests/test_prototype_acceptance.py",
+              "src/thesis_forge/core/model.py",
+              "desktop.go",
+              "mobile.go",
+              "thesis.md",
+              "template.yaml",
+              "school.yaml",
+              "templates/base/bachelor.yaml"
+            ],
+            "symbols": [],
+            "blockers": []
+          },
+          "verification:task-009-installation-and-maintenance-handoff": {
+            "status": "matched",
+            "evidence_ids": [
+              "ev-ms90rzru"
+            ],
+            "files": [
+              "tests/test_prototype_acceptance.py",
+              "openspec/changes/build-thesisforge-v1-core/prototype/evidence/verify-ui.cjs",
+              "desktop.go",
+              "mobile.go"
+            ],
+            "symbols": [],
+            "blockers": []
+          }
+        },
+        "by_stage": {
+          "development": {
+            "verified": 21,
+            "partial": 0,
+            "missing": 0,
+            "stale": 0,
+            "blocking": 0
+          },
+          "operations": {
+            "verified": 1,
+            "partial": 0,
+            "missing": 0,
+            "stale": 0,
+            "blocking": 0
+          },
+          "verification": {
+            "verified": 9,
+            "partial": 0,
+            "missing": 0,
+            "stale": 0,
+            "blocking": 0
+          }
+        },
+        "blockers": [],
+        "raw_exists": true,
+        "record_count": 31
+      },
+      "claims_report": {
+        "schema": "specnav.codegraph.claims_report.v1",
+        "generated_at": "2026-07-31T14:15:32.947Z",
+        "active_change": "build-thesisforge-v1-core",
+        "claims_file": "openspec/changes/build-thesisforge-v1-core/codegraph/claims-map.json",
+        "evidence_index": "openspec/changes/build-thesisforge-v1-core/codegraph/evidence-index.json",
+        "claims_count": 18,
+        "verified_claims": [
+          "development:task-001-offline-thesis-inspection",
+          "development:task-002-actionable-validation",
+          "development:task-003-template-driven-basic-docx",
+          "development:task-004-numbered-figures-and-tables",
+          "development:task-005-equations-references-and-page-structure",
+          "development:task-006-local-citations-and-bibliography",
+          "development:task-007-safe-and-repeatable-builds",
+          "development:task-008-complete-thesis-acceptance",
+          "development:task-009-installation-and-maintenance-handoff",
+          "verification:task-001-offline-thesis-inspection",
+          "verification:task-002-actionable-validation",
+          "verification:task-003-template-driven-basic-docx",
+          "verification:task-004-numbered-figures-and-tables",
+          "verification:task-005-equations-references-and-page-structure",
+          "verification:task-006-local-citations-and-bibliography",
+          "verification:task-007-safe-and-repeatable-builds",
+          "verification:task-008-complete-thesis-acceptance",
+          "verification:task-009-installation-and-maintenance-handoff"
+        ],
+        "unverified_claims": [],
+        "blockers": [],
+        "warnings": []
+      },
+      "drift": {
+        "schema": "specnav.codegraph.drift.v1",
+        "active_change": "build-thesisforge-v1-core",
+        "drift": [],
+        "blockers": []
+      },
+      "decision": {
+        "schema": "specnav.codegraph.decision.v1",
+        "stage": "verification",
+        "profile": "active_dev",
+        "effective_mode": "advisory",
+        "required_for_stage": false,
+        "execution_surface": "cli",
+        "result": "pass",
+        "blockers": [],
+        "warnings": [],
+        "explanation": "CodeGraph policy satisfied for verification."
+      },
+      "guard_report": {
+        "schema": "specnav.codegraph.guard_report.v1",
+        "generated_at": "2026-07-31T14:15:32.947Z",
+        "active_change": "build-thesisforge-v1-core",
+        "stage": "verification",
+        "ok": true,
+        "status": {
+          "policy": {
+            "enabled": true,
+            "profile": "active_dev",
+            "mode": "advisory",
+            "stage": "verification",
+            "required_for_stage": false,
+            "disabled_reason": null
+          },
+          "execution_surface": "cli",
+          "cli": {
+            "available": true,
+            "version": "1.3.1",
+            "path": "/Users/wenliang_zeng/.local/bin/codegraph",
+            "unsupported": false,
+            "error": null
+          },
+          "mcp": {
+            "configured": true,
+            "visible_in_current_session": false,
+            "restart_required": true,
+            "config_files": [
+              "/Users/wenliang_zeng/.claude.json",
+              "/Users/wenliang_zeng/.codex/config.toml"
+            ]
+          },
+          "index": {
+            "initialized": true,
+            "projectPath": "/Volumes/zwl/open_sources/thesis-forge",
+            "indexPath": "/Volumes/zwl/open_sources/thesis-forge/.codegraph",
+            "lastIndexed": "2026-07-31T13:14:59.043Z",
+            "fileCount": 66,
+            "nodeCount": 969,
+            "edgeCount": 2736,
+            "pendingChanges": {
+              "added": 0,
+              "modified": 0,
+              "removed": 0
+            },
+            "reindexRecommended": false,
+            "worktreeMismatch": null
+          }
+        },
+        "decision": {
+          "schema": "specnav.codegraph.decision.v1",
+          "stage": "verification",
+          "profile": "active_dev",
+          "effective_mode": "advisory",
+          "required_for_stage": false,
+          "execution_surface": "cli",
+          "result": "pass",
+          "blockers": [],
+          "warnings": [],
+          "explanation": "CodeGraph policy satisfied for verification."
+        },
+        "evidence_index": {
+          "schema": "specnav.codegraph.evidence_index.v1",
+          "generated_at": "2026-07-31T14:10:17.184Z",
+          "active_change": "build-thesisforge-v1-core",
+          "source_raw": "openspec/changes/build-thesisforge-v1-core/codegraph/evidence.jsonl",
+          "by_claim": {
+            "development:task-001-offline-thesis-inspection": {
+              "status": "matched",
+              "evidence_ids": [
+                "ev-ms75qwnx"
+              ],
+              "files": [
+                "src/thesis_forge/core/parser.py",
+                "thesis.md",
+                "broken.md",
+                "missing.md",
+                "empty.md",
+                "locations.md"
+              ],
+              "symbols": [],
+              "blockers": []
+            },
+            "development:task-002-actionable-validation": {
+              "status": "matched",
+              "evidence_ids": [
+                "ev-ms75rbps",
+                "ev-ms76jcic",
+                "ev-ms77kd48"
+              ],
+              "files": [
+                "src/thesis_forge/core/validator.py",
+                "src/thesis_forge/core/model.py",
+                "cli.py",
+                "validator.py",
+                "desktop.go",
+                "mobile.go"
+              ],
+              "symbols": [],
+              "blockers": []
+            },
+            "unmapped": {
+              "status": "matched",
+              "evidence_ids": [
+                "ev-ms767qtm"
+              ],
+              "files": [
+                "src/thesis_forge/core/validator.py",
+                "src/thesis_forge/core/compiler.py"
+              ],
+              "symbols": [],
+              "blockers": []
+            },
+            "development:task-003-template-driven-basic-docx": {
+              "status": "matched",
+              "evidence_ids": [
+                "ev-ms78q7o6",
+                "ev-ms79plyr",
+                "ev-ms79z0ze"
+              ],
+              "files": [
+                "src/thesis_forge/renderers/docx/renderer.py",
+                "test_docx_renderer.py",
+                "thesis.md",
+                "templates/schools/example-university/2026.yaml",
+                "templates/base/bachelor.yaml",
+                "desktop.go",
+                "mobile.go",
+                "src/thesis_forge/renderers/docx/lists.py",
+                "src/thesis_forge/core/validator.py",
+                "template.yaml",
+                "school.yaml"
+              ],
+              "symbols": [],
+              "blockers": []
+            },
+            "development:task-004-numbered-figures-and-tables": {
+              "status": "matched",
+              "evidence_ids": [
+                "ev-ms7eai06",
+                "ev-ms7euh9i",
+                "ev-ms7exunz"
+              ],
+              "files": [
+                "tests/test_compiler.py",
+                "src/thesis_forge/core/compiler.py",
+                "src/thesis_forge/renderers/docx/captions.py",
+                "src/thesis_forge/renderers/docx/tables.py",
+                "thesis.md",
+                "templates/schools/example-university/2026.yaml",
+                "templates/base/bachelor.yaml",
+                "src/thesis_forge/renderers/docx/figures.py",
+                "src/thesis_forge/renderers/docx/bookmarks.py",
+                "captions.py"
+              ],
+              "symbols": [],
+              "blockers": []
+            },
+            "development:task-005-equations-references-and-page-structure": {
+              "status": "matched",
+              "evidence_ids": [
+                "ev-ms8bdfhf",
+                "ev-ms8benpt"
+              ],
+              "files": [
+                "templates/base/bachelor.yaml",
+                "thesis.md",
+                "src/thesis_forge/core/math.py",
+                "src/thesis_forge/core/render_plan.py",
+                "src/thesis_forge/core/compiler.py",
+                "tests/test_math.py",
+                "tests/test_compiler.py",
+                "tests/test_docx_renderer.py",
+                "tests/test_cli.py",
+                "tests/test_architecture.py",
+                "src/thesis_forge/renderers/docx/sections.py",
+                "src/thesis_forge/renderers/docx/equations.py",
+                "src/thesis_forge/renderers/docx/renderer.py",
+                "src/thesis_forge/renderers/docx/fields.py"
+              ],
+              "symbols": [],
+              "blockers": []
+            },
+            "development:task-006-local-citations-and-bibliography": {
+              "status": "matched",
+              "evidence_ids": [
+                "ev-ms8lijdt",
+                "ev-ms8mm4y1"
+              ],
+              "files": [
+                "src/thesis_forge/renderers/docx/renderer.py",
+                "src/thesis_forge/bibliography/bibtex.py",
+                "src/thesis_forge/bibliography/formatter.py",
+                "gbt7714-v1.js",
+                "src/thesis_forge/core/validator.py",
+                "src/thesis_forge/bibliography/engine.py",
+                "/tmp/thesis.md",
+                "templates/base/bachelor.yaml"
+              ],
+              "symbols": [],
+              "blockers": []
+            },
+            "development:task-007-safe-and-repeatable-builds": {
+              "status": "matched",
+              "evidence_ids": [
+                "ev-ms8ot2wa",
+                "ev-ms8pgt9s"
+              ],
+              "files": [
+                "src/thesis_forge/cli.py",
+                "src/thesis_forge/application/services.py",
+                "src/thesis_forge/application/output.py",
+                "src/thesis_forge/renderers/docx/package.py",
+                "src/thesis_forge/renderers/docx/renderer.py"
+              ],
+              "symbols": [],
+              "blockers": []
+            },
+            "development:task-008-complete-thesis-acceptance": {
+              "status": "matched",
+              "evidence_ids": [
+                "ev-ms8rsaxu"
+              ],
+              "files": [
+                "src/thesis_forge/renderers/docx/figures.py",
+                "tests/test_prototype_acceptance.py",
+                "tests/test_acceptance.py",
+                "thesis.md"
+              ],
+              "symbols": [],
+              "blockers": []
+            },
+            "development:task-009-installation-and-maintenance-handoff": {
+              "status": "matched",
+              "evidence_ids": [
+                "ev-ms8xvif0",
+                "ev-ms8xvtqo",
+                "ev-ms8yamos",
+                "ev-ms8ykosi"
+              ],
+              "files": [
+                "openspec/changes/build-thesisforge-v1-core/prototype/artifact/app.js",
+                "openspec/changes/build-thesisforge-v1-core/prototype/evidence/verify-ui.cjs",
+                "scripts/verify_distribution.py",
+                "tests/test_distribution.py",
+                "tests/test_acceptance.py",
+                "thesis_forge/template_data/base/bachelor.yaml",
+                "thesis_forge/template_data/schools/example-university/2026.yaml",
+                "README.md",
+                "pyproject.toml",
+                "src/thesis_forge/cli.py",
+                "templates/base/bachelor.yaml",
+                "templates/schools/example-university/2026.yaml",
+                "sitecustomize.py",
+                "thesis.md",
+                "verify_distribution.py",
+                "src/thesis_forge/application/output.py",
+                "offline_cli.py"
+              ],
+              "symbols": [],
+              "blockers": []
+            },
+            "verification:task-001-offline-thesis-inspection": {
+              "status": "matched",
+              "evidence_ids": [
+                "ev-ms90rw3n"
+              ],
+              "files": [
+                "tests/test_prototype_acceptance.py",
+                "src/thesis_forge/core/parser.py",
+                "prefix.rs",
+                "marker.rs",
+                "item_marker.rs"
+              ],
+              "symbols": [],
+              "blockers": []
+            },
+            "verification:task-002-actionable-validation": {
+              "status": "matched",
+              "evidence_ids": [
+                "ev-ms90rwkf"
+              ],
+              "files": [
+                "tests/test_prototype_acceptance.py",
+                "tests/test_acceptance.py",
+                "src/thesis_forge/core/parser.py",
+                "desktop.go",
+                "mobile.go",
+                "thesis.md",
+                "template.yaml",
+                "school.yaml",
+                "templates/base/bachelor.yaml"
+              ],
+              "symbols": [],
+              "blockers": []
+            },
+            "verification:task-003-template-driven-basic-docx": {
+              "status": "matched",
+              "evidence_ids": [
+                "ev-ms90rx0y"
+              ],
+              "files": [
+                "tests/test_validator.py",
+                "src/thesis_forge/core/validator.py",
+                "src/thesis_forge/core/model.py",
+                "tests/test_prototype_acceptance.py",
+                "desktop.go",
+                "mobile.go"
+              ],
+              "symbols": [],
+              "blockers": []
+            },
+            "verification:task-004-numbered-figures-and-tables": {
+              "status": "matched",
+              "evidence_ids": [
+                "ev-ms90rxgw"
+              ],
+              "files": [
+                "tests/test_validator.py",
+                "src/thesis_forge/core/validator.py",
+                "tests/test_prototype_acceptance.py",
+                "src/thesis_forge/core/model.py",
+                "desktop.go",
+                "mobile.go"
+              ],
+              "symbols": [],
+              "blockers": []
+            },
+            "verification:task-005-equations-references-and-page-structure": {
+              "status": "matched",
+              "evidence_ids": [
+                "ev-ms90rxxc"
+              ],
+              "files": [
+                "tests/test_validator.py",
+                "src/thesis_forge/core/validator.py",
+                "tests/test_prototype_acceptance.py",
+                "src/thesis_forge/core/model.py",
+                "src/thesis_forge/core/compiler.py",
+                "desktop.go",
+                "mobile.go",
+                "harness.js",
+                "index.html",
+                "app.js",
+                "styles.cs",
+                "browser-verification.js",
+                "explicit.yaml",
+                "school.yaml",
+                "broken.yaml"
+              ],
+              "symbols": [],
+              "blockers": []
+            },
+            "verification:task-006-local-citations-and-bibliography": {
+              "status": "matched",
+              "evidence_ids": [
+                "ev-ms90rydf"
+              ],
+              "files": [
+                "tests/test_validator.py",
+                "src/thesis_forge/core/validator.py",
+                "src/thesis_forge/templates/resolver.py",
+                "tests/test_prototype_acceptance.py",
+                "src/thesis_forge/core/parser.py",
+                "desktop.go",
+                "mobile.go",
+                "thesis.md",
+                "templates/base/bachelor.yaml",
+                "harness.js",
+                "index.html",
+                "app.js",
+                "styles.cs",
+                "browser-verification.js"
+              ],
+              "symbols": [],
+              "blockers": []
+            },
+            "verification:task-007-safe-and-repeatable-builds": {
+              "status": "matched",
+              "evidence_ids": [
+                "ev-ms90ryt4"
+              ],
+              "files": [
+                "tests/test_prototype_acceptance.py",
+                "tests/test_acceptance.py",
+                "src/thesis_forge/core/model.py",
+                "src/thesis_forge/core/validator.py",
+                "cli.py"
+              ],
+              "symbols": [],
+              "blockers": []
+            },
+            "verification:task-008-complete-thesis-acceptance": {
+              "status": "matched",
+              "evidence_ids": [
+                "ev-ms90rz9g"
+              ],
+              "files": [
+                "tests/test_prototype_acceptance.py",
+                "src/thesis_forge/core/model.py",
+                "desktop.go",
+                "mobile.go",
+                "thesis.md",
+                "template.yaml",
+                "school.yaml",
+                "templates/base/bachelor.yaml"
+              ],
+              "symbols": [],
+              "blockers": []
+            },
+            "verification:task-009-installation-and-maintenance-handoff": {
+              "status": "matched",
+              "evidence_ids": [
+                "ev-ms90rzru"
+              ],
+              "files": [
+                "tests/test_prototype_acceptance.py",
+                "openspec/changes/build-thesisforge-v1-core/prototype/evidence/verify-ui.cjs",
+                "desktop.go",
+                "mobile.go"
+              ],
+              "symbols": [],
+              "blockers": []
+            }
+          },
+          "by_stage": {
+            "development": {
+              "verified": 21,
+              "partial": 0,
+              "missing": 0,
+              "stale": 0,
+              "blocking": 0
+            },
+            "operations": {
+              "verified": 1,
+              "partial": 0,
+              "missing": 0,
+              "stale": 0,
+              "blocking": 0
+            },
+            "verification": {
+              "verified": 9,
+              "partial": 0,
+              "missing": 0,
+              "stale": 0,
+              "blocking": 0
+            }
+          },
+          "blockers": [],
+          "raw_exists": true,
+          "record_count": 31
+        },
+        "claims_report": {
+          "schema": "specnav.codegraph.claims_report.v1",
+          "generated_at": "2026-07-31T14:15:32.947Z",
+          "active_change": "build-thesisforge-v1-core",
+          "claims_file": "openspec/changes/build-thesisforge-v1-core/codegraph/claims-map.json",
+          "evidence_index": "openspec/changes/build-thesisforge-v1-core/codegraph/evidence-index.json",
+          "claims_count": 18,
+          "verified_claims": [
+            "development:task-001-offline-thesis-inspection",
+            "development:task-002-actionable-validation",
+            "development:task-003-template-driven-basic-docx",
+            "development:task-004-numbered-figures-and-tables",
+            "development:task-005-equations-references-and-page-structure",
+            "development:task-006-local-citations-and-bibliography",
+            "development:task-007-safe-and-repeatable-builds",
+            "development:task-008-complete-thesis-acceptance",
+            "development:task-009-installation-and-maintenance-handoff",
+            "verification:task-001-offline-thesis-inspection",
+            "verification:task-002-actionable-validation",
+            "verification:task-003-template-driven-basic-docx",
+            "verification:task-004-numbered-figures-and-tables",
+            "verification:task-005-equations-references-and-page-structure",
+            "verification:task-006-local-citations-and-bibliography",
+            "verification:task-007-safe-and-repeatable-builds",
+            "verification:task-008-complete-thesis-acceptance",
+            "verification:task-009-installation-and-maintenance-handoff"
+          ],
+          "unverified_claims": [],
+          "blockers": [],
+          "warnings": []
+        },
+        "drift": {
+          "schema": "specnav.codegraph.drift.v1",
+          "active_change": "build-thesisforge-v1-core",
+          "drift": [],
+          "blockers": []
+        },
+        "blockers": [],
+        "warnings": []
+      },
+      "artifacts": {
+        "status": "openspec/changes/build-thesisforge-v1-core/codegraph/status.json",
+        "decision": "openspec/changes/build-thesisforge-v1-core/codegraph/decision.json",
+        "guard_report": "openspec/changes/build-thesisforge-v1-core/codegraph/guard-report.json",
+        "evidence_raw": "openspec/changes/build-thesisforge-v1-core/codegraph/evidence.jsonl",
+        "evidence_index": "openspec/changes/build-thesisforge-v1-core/codegraph/evidence-index.json",
+        "claims_map": "openspec/changes/build-thesisforge-v1-core/codegraph/claims-map.json",
+        "claims_report": "openspec/changes/build-thesisforge-v1-core/codegraph/claims-report.json",
+        "drift_report": "openspec/changes/build-thesisforge-v1-core/codegraph/drift-report.json",
+        "impact_report": "openspec/changes/build-thesisforge-v1-core/codegraph/impact-report.json"
+      },
+      "blockers": [],
+      "warnings": []
+    },
+    "lane": "standard",
+    "required_domains": [
+      "facticity",
+      "static",
+      "unit",
+      "redteam",
+      "e2e",
+      "sensory"
+    ],
+    "artifacts": [
+      {
+        "name": "acceptance.json",
+        "path": "openspec/changes/build-thesisforge-v1-core/verify/acceptance.json",
+        "ok": true,
+        "blockers": []
+      },
+      {
+        "name": "plan.md",
+        "path": "openspec/changes/build-thesisforge-v1-core/verify/plan.md",
+        "ok": true,
+        "blockers": []
+      },
+      {
+        "name": "plan.json",
+        "path": "openspec/changes/build-thesisforge-v1-core/verify/plan.json",
+        "ok": true,
+        "blockers": []
+      },
+      {
+        "name": "evidence-index.jsonl",
+        "path": "openspec/changes/build-thesisforge-v1-core/verify/evidence-index.jsonl",
+        "ok": true,
+        "blockers": []
+      },
+      {
+        "name": "traceability-matrix.json",
+        "path": "openspec/changes/build-thesisforge-v1-core/verify/traceability-matrix.json",
+        "ok": true,
+        "blockers": []
+      },
+      {
+        "name": "diff-traceability",
+        "path": "openspec/changes/build-thesisforge-v1-core/verify/diff-traceability",
+        "ok": true,
+        "blockers": []
+      },
+      {
+        "name": "user-test-cases.md",
+        "path": "openspec/changes/build-thesisforge-v1-core/verify/user-test-cases.md",
+        "ok": true,
+        "blockers": []
+      },
+      {
+        "name": "user-test-cases.json",
+        "path": "openspec/changes/build-thesisforge-v1-core/verify/user-test-cases.json",
+        "ok": true,
+        "blockers": []
+      },
+      {
+        "name": "user-test-case-signoff.json",
+        "path": "openspec/changes/build-thesisforge-v1-core/verify/user-test-case-signoff.json",
+        "ok": true,
+        "blockers": []
+      },
+      {
+        "name": "domain-case-matrix.json",
+        "path": "openspec/changes/build-thesisforge-v1-core/verify/domain-case-matrix.json",
+        "ok": true,
+        "blockers": []
+      },
+      {
+        "name": "runtime-evidence.json",
+        "path": "openspec/changes/build-thesisforge-v1-core/verify/runtime-evidence.json",
+        "ok": true,
+        "blockers": []
+      },
+      {
+        "name": "blocker-classification.jsonl",
+        "path": "openspec/changes/build-thesisforge-v1-core/verify/blocker-classification.jsonl",
+        "ok": true,
+        "blockers": []
+      },
+      {
+        "name": "receipt.md",
+        "path": "openspec/changes/build-thesisforge-v1-core/verify/receipt.md",
+        "ok": true,
+        "blockers": []
+      },
+      {
+        "name": "receipt.json",
+        "path": "openspec/changes/build-thesisforge-v1-core/verify/receipt.json",
+        "ok": true,
+        "blockers": []
+      },
+      {
+        "name": "behavior-evals/scenarios.json",
+        "path": "openspec/changes/build-thesisforge-v1-core/verify/behavior-evals/scenarios.json",
+        "ok": true,
+        "blockers": []
+      },
+      {
+        "name": "behavior-evals/report.json",
+        "path": "openspec/changes/build-thesisforge-v1-core/verify/behavior-evals/report.json",
+        "ok": true,
+        "blockers": []
+      },
+      {
+        "name": "behavior-evals/transcripts",
+        "path": "openspec/changes/build-thesisforge-v1-core/verify/behavior-evals/transcripts",
+        "ok": true,
+        "blockers": []
+      },
+      {
+        "name": "behavior-evals/report.md",
+        "path": "openspec/changes/build-thesisforge-v1-core/verify/behavior-evals/report.md",
+        "ok": true,
+        "blockers": []
+      },
+      {
+        "name": "facticity/report.md",
+        "path": "openspec/changes/build-thesisforge-v1-core/verify/facticity/report.md",
+        "ok": true,
+        "blockers": []
+      },
+      {
+        "name": "facticity/report.json",
+        "path": "openspec/changes/build-thesisforge-v1-core/verify/facticity/report.json",
+        "ok": true,
+        "blockers": []
+      },
+      {
+        "name": "static/report.md",
+        "path": "openspec/changes/build-thesisforge-v1-core/verify/static/report.md",
+        "ok": true,
+        "blockers": []
+      },
+      {
+        "name": "static/report.json",
+        "path": "openspec/changes/build-thesisforge-v1-core/verify/static/report.json",
+        "ok": true,
+        "blockers": []
+      },
+      {
+        "name": "unit/report.md",
+        "path": "openspec/changes/build-thesisforge-v1-core/verify/unit/report.md",
+        "ok": true,
+        "blockers": []
+      },
+      {
+        "name": "unit/report.json",
+        "path": "openspec/changes/build-thesisforge-v1-core/verify/unit/report.json",
+        "ok": true,
+        "blockers": []
+      },
+      {
+        "name": "redteam/report.md",
+        "path": "openspec/changes/build-thesisforge-v1-core/verify/redteam/report.md",
+        "ok": true,
+        "blockers": []
+      },
+      {
+        "name": "redteam/report.json",
+        "path": "openspec/changes/build-thesisforge-v1-core/verify/redteam/report.json",
+        "ok": true,
+        "blockers": []
+      },
+      {
+        "name": "e2e/report.md",
+        "path": "openspec/changes/build-thesisforge-v1-core/verify/e2e/report.md",
+        "ok": true,
+        "blockers": []
+      },
+      {
+        "name": "e2e/report.json",
+        "path": "openspec/changes/build-thesisforge-v1-core/verify/e2e/report.json",
+        "ok": true,
+        "blockers": []
+      },
+      {
+        "name": "sensory/report.md",
+        "path": "openspec/changes/build-thesisforge-v1-core/verify/sensory/report.md",
+        "ok": true,
+        "blockers": []
+      },
+      {
+        "name": "sensory/report.json",
+        "path": "openspec/changes/build-thesisforge-v1-core/verify/sensory/report.json",
+        "ok": true,
+        "blockers": []
+      },
+      {
+        "name": "unit/test-quality-rubric.json",
+        "path": "openspec/changes/build-thesisforge-v1-core/verify/unit/test-quality-rubric.json",
+        "ok": true,
+        "blockers": []
+      },
+      {
+        "name": "sensory/reviewer-independence.md",
+        "path": "openspec/changes/build-thesisforge-v1-core/verify/sensory/reviewer-independence.md",
+        "ok": true,
+        "blockers": []
+      },
+      {
+        "name": "root-cause-checks.jsonl",
+        "path": "openspec/changes/build-thesisforge-v1-core/verify/root-cause-checks.jsonl",
+        "ok": true,
+        "blockers": []
+      }
+    ]
+  },
+  "html_report": "verify-report.html",
+  "review_style": "claude-warm-editorial"
+}

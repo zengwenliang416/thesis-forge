@@ -1,0 +1,9 @@
+{"id":"static-01-openspec","command":"OPENSPEC_TELEMETRY=0 openspec validate build-thesisforge-v1-core --strict --no-interactive","status":"pass","exit_code":0,"summary":"Change 'build-thesisforge-v1-core' is valid."}
+{"id":"static-02-ruff","command":".venv/bin/python -m ruff check .","status":"pass","exit_code":0,"summary":"All checks passed."}
+{"id":"static-03-pip","command":".venv/bin/python -m pip check","status":"pass","exit_code":0,"summary":"No broken requirements found."}
+{"id":"static-04-whitespace","command":"git diff --check","status":"pass","exit_code":0,"summary":"No whitespace errors."}
+{"id":"static-05-architecture","command":"scan parser.py and model.py for docx, lxml, Renderer, and AI imports","status":"pass","exit_code":0,"summary":"No banned imports found."}
+{"id":"static-06-offline","command":"scan core, application, and bibliography for requests, httpx, urllib.request, socket.socket, openai, and anthropic","status":"pass","exit_code":0,"summary":"No network or AI client dependency found."}
+{"id":"static-07-yaml","command":"scan src for unsafe yaml.load usage","status":"pass","exit_code":0,"summary":"No unsafe YAML loader found."}
+{"id":"static-08-anchor","command":"SpecNav L3 anchor scan","status":"pass","exit_code":0,"summary":"Advisory policy absent; diff scan passed with no blockers."}
+{"id":"static-09-codegraph","command":"SpecNav CodeGraph verification guard","status":"pass","exit_code":0,"summary":"Verification-stage claims have matched evidence and no blockers."}

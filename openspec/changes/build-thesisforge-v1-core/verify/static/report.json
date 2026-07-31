@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "verified_at": "2026-07-31T14:13:00Z",
+  "domain": "static",
+  "verdict": "green",
+  "required": true,
+  "evidence": [
+    "verify/static/commands.jsonl",
+    "verify/static/anchor-report.json",
+    "verify/traceability-matrix.json",
+    "codegraph/guard-report.json"
+  ],
+  "commands": [
+    "OPENSPEC_TELEMETRY=0 openspec validate build-thesisforge-v1-core --strict --no-interactive",
+    ".venv/bin/python -m ruff check .",
+    ".venv/bin/python -m pip check",
+    "git diff --check",
+    "architecture, offline dependency, and safe YAML scans"
+  ],
+  "findings": [],
+  "required_fixes": [],
+  "residual_risk": [
+    "Static scans cannot prove rendered appearance or every future dependency behavior."
+  ],
+  "blocker_class": null
+}
