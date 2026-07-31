@@ -1,0 +1,90 @@
+{
+  "schema_version": 1,
+  "change_id": "build-thesisforge-desktop-ui",
+  "assertions": [
+    {
+      "id": "A1",
+      "statement": "The optional thesisforge-ui entrypoint opens the local light-theme zh-CN workbench without network access.",
+      "verify_via": "e2e",
+      "status": "failing",
+      "evidence_ref": null
+    },
+    {
+      "id": "A2",
+      "statement": "Opening a source populates outline, editor, preview, and diagnostics from one saved source snapshot.",
+      "verify_via": "e2e",
+      "status": "failing",
+      "evidence_ref": null
+    },
+    {
+      "id": "A3",
+      "statement": "Dirty editor state disables validation and build until an explicit atomic save succeeds.",
+      "verify_via": "unit",
+      "status": "failing",
+      "evidence_ref": null
+    },
+    {
+      "id": "A4",
+      "statement": "Template selection and diagnostics use existing template and validation contracts.",
+      "verify_via": "unit",
+      "status": "failing",
+      "evidence_ref": null
+    },
+    {
+      "id": "A5",
+      "statement": "Build progress is ordered and successful completion reports the final DOCX path.",
+      "verify_via": "e2e",
+      "status": "failing",
+      "evidence_ref": null
+    },
+    {
+      "id": "A6",
+      "statement": "Validation, permission, cancellation, render, and finalize failures preserve prior valid files and expose recovery.",
+      "verify_via": "redteam",
+      "status": "failing",
+      "evidence_ref": null
+    },
+    {
+      "id": "A7",
+      "statement": "UI modules call application services without duplicating compiler behavior or leaking PySide6 into core modules.",
+      "verify_via": "static",
+      "status": "failing",
+      "evidence_ref": null
+    },
+    {
+      "id": "A8",
+      "statement": "Core CLI and package imports remain usable when PySide6 is not installed.",
+      "verify_via": "e2e",
+      "status": "failing",
+      "evidence_ref": null
+    },
+    {
+      "id": "A9",
+      "statement": "Archived prototype contract tests locate stable archived evidence after the source change is archived.",
+      "verify_via": "unit",
+      "status": "failing",
+      "evidence_ref": null
+    },
+    {
+      "id": "A10",
+      "statement": "Controller and view-model tests run headlessly and cover all required workbench states.",
+      "verify_via": "unit",
+      "status": "failing",
+      "evidence_ref": null
+    },
+    {
+      "id": "A11",
+      "statement": "Keyboard, focus, labels, contrast, and resize behavior satisfy the approved desktop workbench contract.",
+      "verify_via": "sensory",
+      "status": "failing",
+      "evidence_ref": null
+    },
+    {
+      "id": "A12",
+      "statement": "All UI workflows remain local and deterministic with sockets blocked and no credentials.",
+      "verify_via": "facticity",
+      "status": "failing",
+      "evidence_ref": null
+    }
+  ]
+}

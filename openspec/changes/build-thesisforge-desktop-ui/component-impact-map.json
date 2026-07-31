@@ -1,0 +1,77 @@
+{
+  "new_components": [
+    "DesktopApplication",
+    "WorkbenchWindow",
+    "ProductBar",
+    "OutlinePanel",
+    "MarkdownEditor",
+    "PaperPreview",
+    "DiagnosticsPanel",
+    "TemplateSelector",
+    "BuildProgress",
+    "WorkspaceController",
+    "WorkspaceViewModel",
+    "PreviewViewModel"
+  ],
+  "reused_components": [
+    "ThesisDocument",
+    "ValidationIssue",
+    "InspectionResult",
+    "ValidationResult",
+    "BuildResult",
+    "BuildStage",
+    "inspect_service",
+    "validation_service",
+    "build_service",
+    "template resolver",
+    "atomic output replacement"
+  ],
+  "extraction_triggers": [
+    "Extract diagnostics localization when a second panel or notification needs the same mapping.",
+    "Extract operation-token and stale-result handling before more than one asynchronous controller action uses it.",
+    "Extract atomic source saving instead of implementing file replacement inside the editor widget.",
+    "Extract preview mapping when outline and paper preview need the same render-plan transformation."
+  ],
+  "forbidden_dependencies": [
+    "core -> ui",
+    "parser -> ui",
+    "validator -> ui",
+    "compiler -> ui",
+    "renderer -> ui",
+    "application -> PySide6",
+    "ui widgets -> python-docx or lxml",
+    "ui widgets -> parser/compiler/renderer private modules"
+  ],
+  "hooks": [
+    "BuildStage progress callback",
+    "operation cancellation token",
+    "stale-result generation token",
+    "diagnostic activation callback",
+    "workspace state changed callback"
+  ],
+  "utilities": [
+    "diagnostics zh-CN presentation mapper",
+    "render-plan preview mapper",
+    "atomic source writer",
+    "archived prototype locator for tests"
+  ],
+  "services": [
+    "WorkspaceController",
+    "inspect_service",
+    "validation_service",
+    "build_service",
+    "template resolver"
+  ],
+  "required_component_tests": [
+    "workspace controller state transitions",
+    "dirty-save-validate-build guard",
+    "progress and cancellation ordering",
+    "stale-result suppression",
+    "diagnostics presentation mapping",
+    "preview view-model mapping",
+    "headless widget keyboard and focus behavior",
+    "archive-safe prototype contract discovery",
+    "optional dependency import boundary"
+  ],
+  "unresolved_gaps": []
+}

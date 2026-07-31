@@ -1,0 +1,61 @@
+{
+  "touched_specs": [
+    "ui-design",
+    "system-architecture",
+    "frontend-backend-data-flow",
+    "component-architecture"
+  ],
+  "ui_rules": [
+    "academic-three-pane",
+    "visible-focus",
+    "severity-color-plus-text",
+    "populated-loading-empty-error-disabled-permission",
+    "minimum-window-responsive-panels"
+  ],
+  "architecture_modules": [
+    "src/thesis_forge/ui",
+    "src/thesis_forge/application",
+    "src/thesis_forge/core",
+    "src/thesis_forge/templates",
+    "src/thesis_forge/renderers/docx"
+  ],
+  "api_contracts": [
+    "inspect_service(source)",
+    "validation_service(source, template_path)",
+    "build_service(source, output, template_path, on_progress)",
+    "thesisforge-ui entrypoint"
+  ],
+  "database_entities": [
+    "none"
+  ],
+  "permissions": [
+    "operating-system read permission for source/template/resources",
+    "operating-system write permission for explicit source and output paths",
+    "no elevated privileges"
+  ],
+  "operational_constraints": [
+    "offline-only",
+    "optional PySide6 dependency",
+    "no database or server",
+    "atomic source and DOCX replacement",
+    "no autosave",
+    "local-only distribution until licensing changes"
+  ],
+  "data_flows": [
+    "FLOW-OPEN-SOURCE",
+    "FLOW-SAVE-SOURCE",
+    "FLOW-INSPECT",
+    "FLOW-VALIDATE",
+    "FLOW-BUILD"
+  ],
+  "theme_modes": [
+    "light-only",
+    "theme-toggle:none"
+  ],
+  "locale_policy": [
+    "i18n:disabled",
+    "locales:zh-CN",
+    "default-locale:zh-CN"
+  ],
+  "unresolved_gaps": []
+}
