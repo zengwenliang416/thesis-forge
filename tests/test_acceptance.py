@@ -207,6 +207,18 @@ def test_complete_example_docx_contains_required_visible_content_and_word_object
         "附录 A",
     ):
         assert expected in document_text
+    heading_texts = {
+        "".join(paragraph.xpath(".//w:t/text()", namespaces=NS))
+        for paragraph in document_xml.xpath(
+            ".//w:p[w:pPr/w:pStyle[starts-with(@w:val, 'Heading')]]",
+            namespaces=NS,
+        )
+    }
+    assert {"摘要", "Abstract", "绪论", "系统设计"} <= heading_texts
+    assert {
+        "XX大学",
+        "基于结构化 Markdown 的本科论文编译系统设计",
+    }.isdisjoint(heading_texts)
 
     fields = _field_instructions(document_xml)
     assert any(field.startswith("TOC ") for field in fields)

@@ -9,21 +9,19 @@ from thesis_forge.core.render_plan import CoverInstruction
 def _centered_paragraph(
     document: DocumentObject,
     text: str,
-    *,
-    style: str | None = None,
 ) -> None:
     if not text:
         return
-    paragraph = document.add_paragraph(style=style)
+    paragraph = document.add_paragraph()
     paragraph.alignment = WD_ALIGN_PARAGRAPH.CENTER
     paragraph.add_run(text)
 
 
 def render_cover(document: DocumentObject, instruction: CoverInstruction) -> None:
-    _centered_paragraph(document, instruction.university, style="Heading 1")
+    _centered_paragraph(document, instruction.university)
     _centered_paragraph(document, instruction.college)
     document.add_paragraph()
-    _centered_paragraph(document, instruction.title, style="Heading 1")
+    _centered_paragraph(document, instruction.title)
     _centered_paragraph(document, instruction.title_en)
     document.add_paragraph()
     for value in (

@@ -102,11 +102,11 @@ previous valid DOCX when a rebuild fails.
 **User outcome:** A thesis author can build a complete example thesis that passes
 automated package checks and opens successfully in a supported Office client.
 
-- [ ] 8.1 A thesis author can use a bachelor-thesis example covering every required V1 semantic and Word capability.
-- [ ] 8.2 A contributor can verify offline `inspect`, `validate` and `build` through end-to-end CLI tests without network or API keys.
-- [ ] 8.3 A reviewer can inspect the generated DOCX package through recorded OOXML verification evidence.
-- [ ] 8.4 A reviewer can open the generated DOCX in Word, WPS or LibreOffice and consult recorded sensory verification results.
-- [ ] 8.5 A reviewer can confirm the approved HTML prototype covers desktop, mobile and all required review states.
+- [x] 8.1 A thesis author can use a bachelor-thesis example covering every required V1 semantic and Word capability.
+- [x] 8.2 A contributor can verify offline `inspect`, `validate` and `build` through end-to-end CLI tests without network or API keys.
+- [x] 8.3 A reviewer can inspect the generated DOCX package through recorded OOXML verification evidence.
+- [x] 8.4 A reviewer can open the generated DOCX in Word, WPS or LibreOffice and consult recorded sensory verification results.
+- [x] 8.5 A reviewer can confirm the approved HTML prototype covers desktop, mobile and all required review states.
 
 ## 9. Installation And Maintenance Handoff
 

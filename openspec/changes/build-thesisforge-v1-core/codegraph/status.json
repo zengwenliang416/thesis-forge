@@ -1,7 +1,7 @@
 {
   "schema": "specnav.codegraph.status.v1",
   "ok": true,
-  "generated_at": "2026-07-31T11:29:49.542Z",
+  "generated_at": "2026-07-31T11:52:14.662Z",
   "project_root": "/Volumes/zwl/open_sources/thesis-forge",
   "active_change": "build-thesisforge-v1-core",
   "policy": {
@@ -38,7 +38,7 @@
     "initialized": true,
     "projectPath": "/Volumes/zwl/open_sources/thesis-forge",
     "indexPath": "/Volumes/zwl/open_sources/thesis-forge/.codegraph",
-    "lastIndexed": "2026-07-31T09:56:29.623Z",
+    "lastIndexed": "2026-07-31T11:50:32.773Z",
     "fileCount": 64,
     "nodeCount": 927,
     "edgeCount": 2664,
@@ -57,7 +57,7 @@
     "version": "1.3.1",
     "projectPath": "/Volumes/zwl/open_sources/thesis-forge",
     "indexPath": "/Volumes/zwl/open_sources/thesis-forge/.codegraph",
-    "lastIndexed": "2026-07-31T09:56:29.623Z",
+    "lastIndexed": "2026-07-31T11:50:32.773Z",
     "fileCount": 64,
     "nodeCount": 927,
     "edgeCount": 2664,

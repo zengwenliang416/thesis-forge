@@ -47,8 +47,8 @@
     "tests/test_acceptance.py",
     "tests/test_prototype_acceptance.py",
     "tests/test_compiler.py",
-    "tests/test_docx_renderer.py"
-    ,"tests/test_template.py"
+    "tests/test_docx_renderer.py",
+    "tests/test_template.py"
   ],
   "non_goals": [
     "Do not implement packaging, installation, release or final maintainer handoff before task 009.",

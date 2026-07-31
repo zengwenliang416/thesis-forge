@@ -155,6 +155,22 @@ def test_docx_renderer_writes_metadata_cover_before_front_matter(tmp_path: Path)
         "绪论",
     ):
         assert value in body_text
+    for cover_text in ("XX大学", "结构化论文编译"):
+        cover_paragraph = document_xml.xpath(
+            f".//w:p[.//w:t[text()='{cover_text}']]",
+            namespaces=NS,
+        )[0]
+        assert not any(
+            style.startswith("Heading")
+            for style in cover_paragraph.xpath(
+                "./w:pPr/w:pStyle/@w:val",
+                namespaces=NS,
+            )
+        )
+    assert document_xml.xpath(
+        ".//w:p[.//w:t[text()='摘要']]/w:pPr/w:pStyle/@w:val",
+        namespaces=NS,
+    ) == ["Heading1"]
     assert len(document_xml.xpath(".//w:sectPr", namespaces=NS)) == 3
     assert document_xml.xpath(".//w:headerReference", namespaces=NS)
     assert document_xml.xpath(".//w:footerReference", namespaces=NS)
