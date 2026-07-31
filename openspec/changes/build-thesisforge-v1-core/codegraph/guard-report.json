@@ -1,0 +1,283 @@
+{
+  "schema": "specnav.codegraph.guard_report.v1",
+  "generated_at": "2026-07-31T11:29:49.543Z",
+  "active_change": "build-thesisforge-v1-core",
+  "stage": "development",
+  "ok": true,
+  "status": {
+    "policy": {
+      "enabled": true,
+      "profile": "active_dev",
+      "mode": "advisory",
+      "stage": "development",
+      "required_for_stage": false,
+      "disabled_reason": null
+    },
+    "execution_surface": "cli",
+    "cli": {
+      "available": true,
+      "version": "1.3.1",
+      "path": "/Users/wenliang_zeng/.local/bin/codegraph",
+      "unsupported": false,
+      "error": null
+    },
+    "mcp": {
+      "configured": true,
+      "visible_in_current_session": false,
+      "restart_required": true,
+      "config_files": [
+        "/Users/wenliang_zeng/.claude.json",
+        "/Users/wenliang_zeng/.codex/config.toml"
+      ]
+    },
+    "index": {
+      "initialized": true,
+      "projectPath": "/Volumes/zwl/open_sources/thesis-forge",
+      "indexPath": "/Volumes/zwl/open_sources/thesis-forge/.codegraph",
+      "lastIndexed": "2026-07-31T09:56:29.623Z",
+      "fileCount": 64,
+      "nodeCount": 927,
+      "edgeCount": 2664,
+      "pendingChanges": {
+        "added": 0,
+        "modified": 0,
+        "removed": 0
+      },
+      "reindexRecommended": false,
+      "worktreeMismatch": null
+    }
+  },
+  "decision": {
+    "schema": "specnav.codegraph.decision.v1",
+    "stage": "development",
+    "profile": "active_dev",
+    "effective_mode": "advisory",
+    "required_for_stage": false,
+    "execution_surface": "cli",
+    "result": "pass",
+    "blockers": [],
+    "warnings": [],
+    "explanation": "CodeGraph policy satisfied for development."
+  },
+  "evidence_index": {
+    "schema": "specnav.codegraph.evidence_index.v1",
+    "generated_at": "2026-07-31T09:58:35.130Z",
+    "active_change": "build-thesisforge-v1-core",
+    "source_raw": "openspec/changes/build-thesisforge-v1-core/codegraph/evidence.jsonl",
+    "by_claim": {
+      "development:task-001-offline-thesis-inspection": {
+        "status": "matched",
+        "evidence_ids": [
+          "ev-ms75qwnx"
+        ],
+        "files": [
+          "src/thesis_forge/core/parser.py",
+          "thesis.md",
+          "broken.md",
+          "missing.md",
+          "empty.md",
+          "locations.md"
+        ],
+        "symbols": [],
+        "blockers": []
+      },
+      "development:task-002-actionable-validation": {
+        "status": "matched",
+        "evidence_ids": [
+          "ev-ms75rbps",
+          "ev-ms76jcic",
+          "ev-ms77kd48"
+        ],
+        "files": [
+          "src/thesis_forge/core/validator.py",
+          "src/thesis_forge/core/model.py",
+          "cli.py",
+          "validator.py",
+          "desktop.go",
+          "mobile.go"
+        ],
+        "symbols": [],
+        "blockers": []
+      },
+      "unmapped": {
+        "status": "matched",
+        "evidence_ids": [
+          "ev-ms767qtm"
+        ],
+        "files": [
+          "src/thesis_forge/core/validator.py",
+          "src/thesis_forge/core/compiler.py"
+        ],
+        "symbols": [],
+        "blockers": []
+      },
+      "development:task-003-template-driven-basic-docx": {
+        "status": "matched",
+        "evidence_ids": [
+          "ev-ms78q7o6",
+          "ev-ms79plyr",
+          "ev-ms79z0ze"
+        ],
+        "files": [
+          "src/thesis_forge/renderers/docx/renderer.py",
+          "test_docx_renderer.py",
+          "thesis.md",
+          "templates/schools/example-university/2026.yaml",
+          "templates/base/bachelor.yaml",
+          "desktop.go",
+          "mobile.go",
+          "src/thesis_forge/renderers/docx/lists.py",
+          "src/thesis_forge/core/validator.py",
+          "template.yaml",
+          "school.yaml"
+        ],
+        "symbols": [],
+        "blockers": []
+      },
+      "development:task-004-numbered-figures-and-tables": {
+        "status": "matched",
+        "evidence_ids": [
+          "ev-ms7eai06",
+          "ev-ms7euh9i",
+          "ev-ms7exunz"
+        ],
+        "files": [
+          "tests/test_compiler.py",
+          "src/thesis_forge/core/compiler.py",
+          "src/thesis_forge/renderers/docx/captions.py",
+          "src/thesis_forge/renderers/docx/tables.py",
+          "thesis.md",
+          "templates/schools/example-university/2026.yaml",
+          "templates/base/bachelor.yaml",
+          "src/thesis_forge/renderers/docx/figures.py",
+          "src/thesis_forge/renderers/docx/bookmarks.py",
+          "captions.py"
+        ],
+        "symbols": [],
+        "blockers": []
+      },
+      "development:task-005-equations-references-and-page-structure": {
+        "status": "matched",
+        "evidence_ids": [
+          "ev-ms8bdfhf",
+          "ev-ms8benpt"
+        ],
+        "files": [
+          "templates/base/bachelor.yaml",
+          "thesis.md",
+          "src/thesis_forge/core/math.py",
+          "src/thesis_forge/core/render_plan.py",
+          "src/thesis_forge/core/compiler.py",
+          "tests/test_math.py",
+          "tests/test_compiler.py",
+          "tests/test_docx_renderer.py",
+          "tests/test_cli.py",
+          "tests/test_architecture.py",
+          "src/thesis_forge/renderers/docx/sections.py",
+          "src/thesis_forge/renderers/docx/equations.py",
+          "src/thesis_forge/renderers/docx/renderer.py",
+          "src/thesis_forge/renderers/docx/fields.py"
+        ],
+        "symbols": [],
+        "blockers": []
+      },
+      "development:task-006-local-citations-and-bibliography": {
+        "status": "matched",
+        "evidence_ids": [
+          "ev-ms8lijdt",
+          "ev-ms8mm4y1"
+        ],
+        "files": [
+          "src/thesis_forge/renderers/docx/renderer.py",
+          "src/thesis_forge/bibliography/bibtex.py",
+          "src/thesis_forge/bibliography/formatter.py",
+          "gbt7714-v1.js",
+          "src/thesis_forge/core/validator.py",
+          "src/thesis_forge/bibliography/engine.py",
+          "/tmp/thesis.md",
+          "templates/base/bachelor.yaml"
+        ],
+        "symbols": [],
+        "blockers": []
+      },
+      "development:task-007-safe-and-repeatable-builds": {
+        "status": "matched",
+        "evidence_ids": [
+          "ev-ms8ot2wa",
+          "ev-ms8pgt9s"
+        ],
+        "files": [
+          "src/thesis_forge/cli.py",
+          "src/thesis_forge/application/services.py",
+          "src/thesis_forge/application/output.py",
+          "src/thesis_forge/renderers/docx/package.py",
+          "src/thesis_forge/renderers/docx/renderer.py"
+        ],
+        "symbols": [],
+        "blockers": []
+      },
+      "development:task-008-complete-thesis-acceptance": {
+        "status": "matched",
+        "evidence_ids": [
+          "ev-ms8rsaxu"
+        ],
+        "files": [
+          "src/thesis_forge/renderers/docx/figures.py",
+          "tests/test_prototype_acceptance.py",
+          "tests/test_acceptance.py",
+          "thesis.md"
+        ],
+        "symbols": [],
+        "blockers": []
+      }
+    },
+    "by_stage": {
+      "development": {
+        "verified": 17,
+        "partial": 0,
+        "missing": 0,
+        "stale": 0,
+        "blocking": 0
+      },
+      "operations": {
+        "verified": 1,
+        "partial": 0,
+        "missing": 0,
+        "stale": 0,
+        "blocking": 0
+      }
+    },
+    "blockers": [],
+    "raw_exists": true,
+    "record_count": 18
+  },
+  "claims_report": {
+    "schema": "specnav.codegraph.claims_report.v1",
+    "generated_at": "2026-07-31T11:29:49.543Z",
+    "active_change": "build-thesisforge-v1-core",
+    "claims_file": "openspec/changes/build-thesisforge-v1-core/codegraph/claims-map.json",
+    "evidence_index": "openspec/changes/build-thesisforge-v1-core/codegraph/evidence-index.json",
+    "claims_count": 8,
+    "verified_claims": [
+      "development:task-001-offline-thesis-inspection",
+      "development:task-002-actionable-validation",
+      "development:task-003-template-driven-basic-docx",
+      "development:task-004-numbered-figures-and-tables",
+      "development:task-005-equations-references-and-page-structure",
+      "development:task-006-local-citations-and-bibliography",
+      "development:task-007-safe-and-repeatable-builds",
+      "development:task-008-complete-thesis-acceptance"
+    ],
+    "unverified_claims": [],
+    "blockers": [],
+    "warnings": []
+  },
+  "drift": {
+    "schema": "specnav.codegraph.drift.v1",
+    "active_change": "build-thesisforge-v1-core",
+    "drift": [],
+    "blockers": []
+  },
+  "blockers": [],
+  "warnings": []
+}

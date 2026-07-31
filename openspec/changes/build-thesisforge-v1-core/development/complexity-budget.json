@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "budgets": [
+    {
+      "area": "domain boundaries",
+      "limit": "zero Word, UI or AI implementation objects in core/model.py and zero renderer imports in parser.py"
+    },
+    {
+      "area": "render instructions",
+      "limit": "new V1 capabilities use typed instructions; compatibility payload dictionaries do not expand across modules"
+    },
+    {
+      "area": "OOXML helpers",
+      "limit": "one focused capability per helper module with direct XML structure tests"
+    },
+    {
+      "area": "application services",
+      "limit": "CLI and future UI adapters call one inspect, validation and build service implementation"
+    },
+    {
+      "area": "parser state",
+      "limit": "deterministic bounded helpers; no dependency on DOCX, template resolution, network or AI"
+    },
+    {
+      "area": "dependencies",
+      "limit": "no required runtime outside Python 3.11+ and declared local package dependencies"
+    }
+  ]
+}

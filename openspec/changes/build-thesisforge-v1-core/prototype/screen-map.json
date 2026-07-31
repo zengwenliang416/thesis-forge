@@ -1,0 +1,57 @@
+{
+  "screens": [
+    {
+      "id": "thesisforge-workbench",
+      "label": "ThesisForge 学术论文编译工作台",
+      "requirements": [
+        "requirements.md#UI Design Impact",
+        "requirements.md#Theme & Locale Capability Impact"
+      ],
+      "acceptance": [
+        "acceptance.md#User-Visible Criteria",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "components": [
+        "product-bar",
+        "template-selector",
+        "build-action",
+        "state-switcher",
+        "mobile-panel-tabs",
+        "outline",
+        "markdown-editor",
+        "word-preview",
+        "diagnostics"
+      ],
+      "visual_evidence": [
+        "visual-inventory.json#project_shell",
+        "visual-inventory.json#business_surface"
+      ],
+      "data_flows": [
+        "FLOW-INSPECT",
+        "FLOW-VALIDATE",
+        "FLOW-BUILD"
+      ],
+      "theme_modes": [
+        "light"
+      ],
+      "locales": [
+        "zh-CN"
+      ],
+      "implementation_files": [
+        "future: src/thesis_forge/ui/workbench.py",
+        "future: src/thesis_forge/ui/controllers/build_controller.py"
+      ]
+    }
+  ],
+  "variants": [
+    "academic-three-pane",
+    "desktop",
+    "mobile-tabs",
+    "populated",
+    "loading",
+    "empty",
+    "error",
+    "disabled",
+    "permission"
+  ]
+}

@@ -1,0 +1,55 @@
+{
+  "ok": true,
+  "verified_at": "2026-07-31",
+  "title": "ThesisForge - 学术论文编译工作台",
+  "shellAnchors": 1,
+  "screenAnchors": 1,
+  "states": {
+    "populated": {
+      "visible": 1,
+      "buildDisabled": false,
+      "shellState": "populated"
+    },
+    "loading": {
+      "visible": 1,
+      "buildDisabled": true,
+      "shellState": "loading"
+    },
+    "empty": {
+      "visible": 1,
+      "buildDisabled": true,
+      "shellState": "empty"
+    },
+    "error": {
+      "visible": 1,
+      "buildDisabled": true,
+      "shellState": "error"
+    },
+    "disabled": {
+      "visible": 1,
+      "buildDisabled": true,
+      "shellState": "disabled"
+    },
+    "permission": {
+      "visible": 1,
+      "buildDisabled": true,
+      "shellState": "permission"
+    }
+  },
+  "buildFirstStage": "正在解析 Markdown",
+  "buildToast": "DOCX 已生成\n本科毕业论文.docx 已写入本地输出目录。\n关闭",
+  "mobilePanels": {
+    "outline": 1,
+    "editor": 1,
+    "preview": 1,
+    "diagnostics": 1
+  },
+  "desktopPanelOpacities": [
+    "1",
+    "1",
+    "1",
+    "1"
+  ],
+  "desktopBodyWidth": 1440,
+  "mobileBodyWidth": 390
+}

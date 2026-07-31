@@ -1,0 +1,76 @@
+{
+  "task_id": "004-numbered-figures-and-tables",
+  "goal": "A thesis author can build real DOCX figures and tables with deterministic captions, bookmarks, template-driven widths, placement and borders.",
+  "must_read": [
+    "openspec/changes/build-thesisforge-v1-core/development/tasks/004-numbered-figures-and-tables/brief.md",
+    "openspec/changes/build-thesisforge-v1-core/requirements.md",
+    "openspec/changes/build-thesisforge-v1-core/acceptance.md",
+    "openspec/changes/build-thesisforge-v1-core/design.md",
+    "openspec/changes/build-thesisforge-v1-core/prototype/handoff.md",
+    "openspec/changes/build-thesisforge-v1-core/prototype/decision.json",
+    "openspec/changes/build-thesisforge-v1-core/prototype/artifact/index.html",
+    "openspec/changes/build-thesisforge-v1-core/spec-map.json",
+    "openspec/changes/build-thesisforge-v1-core/component-impact-map.json",
+    "openspec/specs/ui-design/design.md",
+    "openspec/specs/system-architecture/design.md",
+    "openspec/specs/component-architecture/design.md",
+    "openspec/specs/frontend-backend-data-flow/design.md",
+    "openspec/changes/build-thesisforge-v1-core/specs/render-plan-docx/spec.md",
+    "openspec/changes/build-thesisforge-v1-core/specs/thesis-markdown-model/spec.md",
+    "docs/MARKDOWN_SPEC.md",
+    "docs/TEMPLATE_SPEC.md"
+  ],
+  "allowed_files": [
+    "src/thesis_forge/core/__init__.py",
+    "src/thesis_forge/core/compiler.py",
+    "src/thesis_forge/core/render_plan.py",
+    "src/thesis_forge/renderers/docx/__init__.py",
+    "src/thesis_forge/renderers/docx/bookmarks.py",
+    "src/thesis_forge/renderers/docx/captions.py",
+    "src/thesis_forge/renderers/docx/figures.py",
+    "src/thesis_forge/renderers/docx/tables.py",
+    "src/thesis_forge/renderers/docx/renderer.py",
+    "src/thesis_forge/renderers/docx/units.py",
+    "src/thesis_forge/cli.py",
+    "tests/test_architecture.py",
+    "tests/test_cli.py",
+    "tests/test_compiler.py",
+    "tests/test_docx_renderer.py",
+    "tests/test_render_plan.py"
+  ],
+  "test_paths": [
+    "tests/test_compiler.py",
+    "tests/test_render_plan.py",
+    "tests/test_docx_renderer.py",
+    "tests/test_cli.py",
+    "tests/test_architecture.py"
+  ],
+  "non_goals": [
+    "Do not change Markdown syntax or Parser behavior.",
+    "Do not change Template Model fields or template YAML schema.",
+    "Do not implement SEQ, REF, TOC, PAGE, NUMPAGES, OMML, footnote package parts, sections, headers or footers before task 005.",
+    "Do not implement bibliography behavior before task 006.",
+    "Do not implement atomic output replacement before task 007.",
+    "Do not add UI, network, account or AI dependencies."
+  ],
+  "expected_evidence": [
+    "Observed RED and GREEN Compiler and DOCX XML tests",
+    "Typed table row and cell instruction evidence",
+    "Source-relative figure path and explicit/template width precedence evidence",
+    "Direct image relationship, media part and drawing XML assertions",
+    "Direct caption ordering and bookmark XML assertions",
+    "Direct real table and three-line border XML assertions",
+    "Full pytest, Ruff and pip check output",
+    "Offline example build and generated package inspection",
+    "CodeGraph claim evidence",
+    "Task report, independent spec review and independent quality review"
+  ],
+  "unsafe_assumptions": [
+    "python-docx defaults do not satisfy the selected caption and table policies.",
+    "Renderer must not parse Markdown, resolve paths, calculate numbers or generate bookmark names.",
+    "Figure paths are relative to the thesis source file rather than the process working directory.",
+    "Caption text alone does not prove that a real Word bookmark exists.",
+    "Task 004 must not claim later Word field behavior."
+  ],
+  "stop_condition": "Stop if implementation crosses Parser or Domain boundaries, requires later-slice Word capabilities, edits outside allowed files, or lacks direct XML evidence."
+}

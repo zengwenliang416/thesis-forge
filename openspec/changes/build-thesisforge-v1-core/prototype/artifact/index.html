@@ -1,0 +1,424 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <meta name="description" content="ThesisForge 本地优先学术论文编译工作台评审原型">
+  <title>ThesisForge - 学术论文编译工作台</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div
+    class="app-shell"
+    data-specnav-project-shell="thesisforge-workbench"
+    data-state="populated"
+  >
+    <header class="product-bar" data-specnav-component="product-bar">
+      <div class="brand-block" data-od-id="product-brand">
+        <div class="brand-mark" aria-hidden="true">TF</div>
+        <div>
+          <div class="brand-name">ThesisForge</div>
+          <div class="brand-subtitle">确定性论文编译工作台</div>
+        </div>
+      </div>
+
+      <div class="document-identity" data-od-id="document-identity">
+        <button class="icon-button nav-toggle" type="button" aria-label="打开论文大纲" aria-controls="outline-panel" id="mobile-menu-button">
+          <span></span><span></span><span></span>
+        </button>
+        <div class="document-copy">
+          <strong>本科毕业论文.md</strong>
+          <span id="save-status">本地草稿已保存</span>
+        </div>
+      </div>
+
+      <div class="build-controls">
+        <label class="template-field" data-specnav-component="template-selector" data-od-id="template-selector">
+          <span>学校模板</span>
+          <select id="template-select" aria-label="选择学校论文模板">
+            <option value="scnu-2026">华南师范大学本科论文 2026</option>
+            <option value="generic-bachelor">通用本科毕业论文</option>
+            <option value="engineering">工科论文规范模板</option>
+          </select>
+        </label>
+        <button
+          class="build-button"
+          id="build-button"
+          type="button"
+          data-specnav-component="build-action"
+          data-od-id="build-docx"
+          aria-label="构建 DOCX 文档"
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 3v11m0 0 4-4m-4 4-4-4M5 17v3h14v-3"></path>
+          </svg>
+          <span>构建 DOCX</span>
+        </button>
+      </div>
+    </header>
+
+    <section class="control-strip" aria-label="原型评审控制">
+      <div
+        class="state-switcher"
+        data-specnav-component="state-switcher"
+        data-od-id="state-switcher"
+        role="group"
+        aria-label="切换原型状态"
+      >
+        <span class="control-label">评审状态</span>
+        <button type="button" class="state-button is-active" data-state-target="populated" data-specnav-state="populated" aria-pressed="true">已载入</button>
+        <button type="button" class="state-button" data-state-target="loading" data-specnav-state="loading" aria-pressed="false">加载中</button>
+        <button type="button" class="state-button" data-state-target="empty" data-specnav-state="empty" aria-pressed="false">空白</button>
+        <button type="button" class="state-button" data-state-target="error" data-specnav-state="error" aria-pressed="false">错误</button>
+        <button type="button" class="state-button" data-state-target="disabled" data-specnav-state="disabled" aria-pressed="false">未启用</button>
+        <button type="button" class="state-button" data-state-target="permission" data-specnav-state="permission" aria-pressed="false">权限</button>
+      </div>
+      <div class="pipeline-summary" aria-label="编译链路">
+        <span>Markdown</span><i></i><span>ThesisDocument</span><i></i><span>Validation</span><i></i><span>Template</span><i></i><span>RenderPlan</span><i></i><span>DOCX</span>
+      </div>
+    </section>
+
+    <section class="state-region" aria-live="polite" aria-atomic="true" data-od-id="workspace-state">
+      <div class="state-message is-visible" data-state-view="populated" data-specnav-state="populated">
+        <div>
+          <strong>文稿、模板与预览已同步</strong>
+          <span>所有内容保留在本地。当前显示评审用 RenderPlan 结果。</span>
+        </div>
+        <span class="state-meta">可构建</span>
+      </div>
+      <div class="state-message state-loading" data-state-view="loading" data-specnav-state="loading" hidden>
+        <div>
+          <strong>正在读取本地工作区</strong>
+          <span>正在解析 front matter、引用索引与学校模板清单。</span>
+        </div>
+        <button type="button" class="secondary-action" data-recovery="populated">取消并打开上次草稿</button>
+      </div>
+      <div class="state-message" data-state-view="empty" data-specnav-state="empty" hidden>
+        <div>
+          <strong>当前工作区没有 Markdown 文稿</strong>
+          <span>载入示例论文，或从本地目录选择一个 .md 文件开始评审。</span>
+        </div>
+        <button type="button" class="secondary-action" data-recovery="populated">载入示例论文</button>
+      </div>
+      <div class="state-message state-error" data-state-view="error" data-specnav-state="error" hidden>
+        <div>
+          <strong>模板 manifest 校验失败</strong>
+          <span>SCNU-2026 缺少 heading.2 字号映射，构建已阻止，现有草稿未受影响。</span>
+        </div>
+        <button type="button" class="secondary-action" data-recovery="populated">切回默认模板</button>
+      </div>
+      <div class="state-message" data-state-view="disabled" data-specnav-state="disabled" hidden>
+        <div>
+          <strong>本机 DOCX 构建器尚未启用</strong>
+          <span>仍可编辑与检查文稿，但不能生成 Word 文件。</span>
+        </div>
+        <button type="button" class="secondary-action" data-recovery="populated">重新检测构建器</button>
+      </div>
+      <div class="state-message state-permission" data-state-view="permission" data-specnav-state="permission" hidden>
+        <div>
+          <strong>输出目录仅可读</strong>
+          <span>ThesisForge 无法写入“毕业论文/交付”，请选择一个可写目录。</span>
+        </div>
+        <button type="button" class="secondary-action" data-recovery="populated">重新选择目录</button>
+      </div>
+    </section>
+
+    <nav class="mobile-tabs" role="tablist" data-specnav-component="mobile-panel-tabs" aria-label="工作台面板" data-od-id="mobile-panel-tabs">
+      <button type="button" role="tab" data-panel-target="outline" aria-controls="outline-panel" aria-selected="false">大纲</button>
+      <button type="button" role="tab" class="is-active" data-panel-target="editor" aria-controls="editor-panel" aria-selected="true">编辑</button>
+      <button type="button" role="tab" data-panel-target="preview" aria-controls="preview-panel" aria-selected="false">预览</button>
+      <button type="button" role="tab" data-panel-target="diagnostics" aria-controls="diagnostics-panel" aria-selected="false">诊断 <span>3</span></button>
+    </nav>
+
+    <main
+      class="workbench"
+      data-specnav-screen="thesisforge-workbench"
+      data-specnav-variant="academic-three-pane"
+      data-od-id="thesisforge-workbench"
+    >
+      <aside
+        class="panel outline-panel"
+        id="outline-panel"
+        data-panel="outline"
+        data-specnav-component="outline"
+        data-od-id="outline-panel"
+        aria-label="论文大纲"
+      >
+        <div class="panel-heading">
+          <div>
+            <span class="panel-kicker">文档结构</span>
+            <h2>论文大纲</h2>
+          </div>
+          <button class="icon-button" type="button" aria-label="折叠论文大纲" id="collapse-outline">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m14 7-5 5 5 5"></path></svg>
+          </button>
+        </div>
+        <div class="outline-tree" role="tree" aria-label="论文目录">
+          <button type="button" role="treeitem" class="outline-item root-item is-active" data-line-target="1" aria-current="true">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h8l4 4v14H7zM15 3v5h5"></path></svg>
+            <span><strong>本科毕业论文</strong><small>ThesisDocument</small></span>
+          </button>
+          <button type="button" role="treeitem" class="outline-item level-one" data-line-target="8">
+            <span class="tree-index">1</span>
+            <span><strong>绪论</strong><small>heading.1</small></span>
+          </button>
+          <button type="button" role="treeitem" class="outline-item level-two" data-line-target="10">
+            <span class="tree-index">1.1</span>
+            <span><strong>研究背景</strong><small>heading.2</small></span>
+          </button>
+          <button type="button" role="treeitem" class="outline-item level-two has-issue" data-line-target="15">
+            <span class="tree-index">1.2</span>
+            <span><strong>研究问题</strong><small>1 个格式问题</small></span>
+          </button>
+          <button type="button" role="treeitem" class="outline-item level-one" data-line-target="20">
+            <span class="tree-index">2</span>
+            <span><strong>方法与模型</strong><small>heading.1</small></span>
+          </button>
+          <button type="button" role="treeitem" class="outline-item level-two" data-line-target="23">
+            <span class="tree-index">2.1</span>
+            <span><strong>系统架构</strong><small>fig:model</small></span>
+          </button>
+          <button type="button" role="treeitem" class="outline-item level-two has-issue" data-line-target="29">
+            <span class="tree-index">2.2</span>
+            <span><strong>损失函数</strong><small>eq:loss</small></span>
+          </button>
+          <button type="button" role="treeitem" class="outline-item level-one" data-line-target="35">
+            <span class="tree-index">3</span>
+            <span><strong>实验与分析</strong><small>heading.1</small></span>
+          </button>
+          <button type="button" role="treeitem" class="outline-item level-one" data-line-target="42">
+            <span class="tree-index">4</span>
+            <span><strong>结论</strong><small>heading.1</small></span>
+          </button>
+        </div>
+        <div class="outline-footer">
+          <div><span>引用</span><strong>ref-example-1</strong></div>
+          <div><span>资源</span><strong>1 图 · 1 公式</strong></div>
+        </div>
+      </aside>
+
+      <section
+        class="panel editor-panel is-mobile-active"
+        id="editor-panel"
+        data-panel="editor"
+        data-specnav-component="markdown-editor"
+        data-od-id="markdown-editor"
+        aria-label="Markdown 编辑器"
+      >
+        <div class="panel-heading editor-heading">
+          <div>
+            <span class="panel-kicker">源文稿</span>
+            <h2>Markdown 编辑器</h2>
+          </div>
+          <div class="editor-tools" role="toolbar" aria-label="编辑器工具">
+            <button type="button" aria-label="切换自动换行" class="tool-button is-active">自动换行</button>
+            <button type="button" aria-label="显示命令面板" class="key-button">⌘ K</button>
+          </div>
+        </div>
+        <div class="editor-tabs" role="tablist" aria-label="打开的文件">
+          <button type="button" role="tab" aria-selected="true">
+            <span class="file-status" aria-hidden="true"></span>
+            本科毕业论文.md
+          </button>
+          <span class="editor-position" id="editor-position">第 10 行，第 1 列</span>
+        </div>
+        <div
+          class="code-editor"
+          id="code-editor"
+          tabindex="0"
+          contenteditable="true"
+          spellcheck="false"
+          role="textbox"
+          aria-multiline="true"
+          aria-label="Markdown 文稿内容，可编辑并点击行号定位"
+        >
+          <div class="code-line frontmatter" data-line="1"><span class="line-number">1</span><code>---</code></div>
+          <div class="code-line frontmatter" data-line="2"><span class="line-number">2</span><code><b>title:</b> 基于确定性编译链的本科论文生成研究</code></div>
+          <div class="code-line frontmatter" data-line="3"><span class="line-number">3</span><code><b>author:</b> 曾同学</code></div>
+          <div class="code-line frontmatter" data-line="4"><span class="line-number">4</span><code><b>degree:</b> 工学学士</code></div>
+          <div class="code-line frontmatter" data-line="5"><span class="line-number">5</span><code><b>template:</b> scnu-bachelor-2026</code></div>
+          <div class="code-line frontmatter" data-line="6"><span class="line-number">6</span><code>---</code></div>
+          <div class="code-line" data-line="7"><span class="line-number">7</span><code></code></div>
+          <div class="code-line heading-line" data-line="8"><span class="line-number">8</span><code># 绪论</code></div>
+          <div class="code-line" data-line="9"><span class="line-number">9</span><code></code></div>
+          <div class="code-line heading-line is-selected" data-line="10"><span class="line-number">10</span><code>## 研究背景</code></div>
+          <div class="code-line" data-line="11"><span class="line-number">11</span><code>本科毕业论文不仅承载研究内容，也必须满足学校对</code></div>
+          <div class="code-line" data-line="12"><span class="line-number">12</span><code>标题层级、图表编号、公式引用与版式的一致性要求。</code></div>
+          <div class="code-line" data-line="13"><span class="line-number">13</span><code>传统手工排版容易在多轮修改中产生不可追踪的漂移。</code></div>
+          <div class="code-line" data-line="14"><span class="line-number">14</span><code></code></div>
+          <div class="code-line heading-line has-error" data-line="15"><span class="line-number">15</span><code>### 研究问题</code></div>
+          <div class="code-line" data-line="16"><span class="line-number">16</span><code>本文研究 Markdown 到 DOCX 的确定性编译过程，</code></div>
+          <div class="code-line" data-line="17"><span class="line-number">17</span><code>并通过统一中间模型避免模板细节侵入内容层。</code></div>
+          <div class="code-line" data-line="18"><span class="line-number">18</span><code>相关设计原则参见 [@ref-example-1]。</code></div>
+          <div class="code-line" data-line="19"><span class="line-number">19</span><code></code></div>
+          <div class="code-line heading-line" data-line="20"><span class="line-number">20</span><code># 方法与模型</code></div>
+          <div class="code-line" data-line="21"><span class="line-number">21</span><code></code></div>
+          <div class="code-line heading-line" data-line="22"><span class="line-number">22</span><code>## 系统架构</code></div>
+          <div class="code-line token-line" data-line="23"><span class="line-number">23</span><code>![确定性论文编译链](assets/model.png){#fig:model}</code></div>
+          <div class="code-line" data-line="24"><span class="line-number">24</span><code></code></div>
+          <div class="code-line" data-line="25"><span class="line-number">25</span><code>编译器依次生成 ThesisDocument、ValidationIssue</code></div>
+          <div class="code-line" data-line="26"><span class="line-number">26</span><code>与 RenderPlan，最终由模板驱动输出 DOCX。</code></div>
+          <div class="code-line" data-line="27"><span class="line-number">27</span><code></code></div>
+          <div class="code-line heading-line" data-line="28"><span class="line-number">28</span><code>## 损失函数</code></div>
+          <div class="code-line token-line has-warning" data-line="29"><span class="line-number">29</span><code>$$ L = L_{content} + λL_{layout} $$ {#eq:loss}</code></div>
+          <div class="code-line" data-line="30"><span class="line-number">30</span><code></code></div>
+          <div class="code-line" data-line="31"><span class="line-number">31</span><code>其中，L_{layout} 用于约束模板渲染计划的稳定性。</code></div>
+          <div class="code-line" data-line="32"><span class="line-number">32</span><code></code></div>
+          <div class="code-line" data-line="33"><span class="line-number">33</span><code>[@ref-example-1]: 确定性文档工程方法研究，2025。</code></div>
+          <div class="code-line" data-line="34"><span class="line-number">34</span><code></code></div>
+          <div class="code-line heading-line" data-line="35"><span class="line-number">35</span><code># 实验与分析</code></div>
+          <div class="code-line" data-line="36"><span class="line-number">36</span><code>本节对模板切换、编号稳定性和错误定位进行评审。</code></div>
+          <div class="code-line" data-line="37"><span class="line-number">37</span><code></code></div>
+          <div class="code-line" data-line="38"><span class="line-number">38</span><code>| 检查项 | 结果 |</code></div>
+          <div class="code-line" data-line="39"><span class="line-number">39</span><code>| --- | --- |</code></div>
+          <div class="code-line" data-line="40"><span class="line-number">40</span><code>| 图表交叉引用 | 可追踪 |</code></div>
+          <div class="code-line" data-line="41"><span class="line-number">41</span><code></code></div>
+          <div class="code-line heading-line" data-line="42"><span class="line-number">42</span><code># 结论</code></div>
+          <div class="code-line" data-line="43"><span class="line-number">43</span><code>模板驱动的确定性流程可降低论文排版漂移风险。</code></div>
+        </div>
+        <footer class="editor-statusbar">
+          <span>UTF-8</span>
+          <span>Markdown</span>
+          <span>LF</span>
+          <span>43 行</span>
+          <span class="local-badge">本地模式</span>
+        </footer>
+      </section>
+
+      <section
+        class="panel preview-panel"
+        id="preview-panel"
+        data-panel="preview"
+        data-specnav-component="word-preview"
+        data-od-id="word-preview"
+        aria-label="Word 纸张预览"
+      >
+        <div class="panel-heading preview-heading">
+          <div>
+            <span class="panel-kicker">RenderPlan</span>
+            <h2>Word 预览</h2>
+          </div>
+          <div class="preview-actions">
+            <button type="button" class="tool-button" id="zoom-out" aria-label="缩小预览">−</button>
+            <output id="zoom-level" aria-live="polite">82%</output>
+            <button type="button" class="tool-button" id="zoom-in" aria-label="放大预览">＋</button>
+          </div>
+        </div>
+        <div class="paper-stage">
+          <article class="paper" id="paper" aria-label="本科毕业论文第一页预览">
+            <div class="paper-running-head">本科毕业论文</div>
+            <div class="paper-content">
+              <div class="paper-page-number">1</div>
+              <h1>1 绪论</h1>
+              <h2 data-preview-target="10">1.1 研究背景</h2>
+              <p>本科毕业论文不仅承载研究内容，也必须满足学校对标题层级、图表编号、公式引用与版式的一致性要求。传统手工排版容易在多轮修改中产生不可追踪的漂移。</p>
+              <h3 class="preview-issue" data-preview-target="15">1.1.1 研究问题</h3>
+              <p>本文研究 Markdown 到 DOCX 的确定性编译过程，并通过统一中间模型避免模板细节侵入内容层。相关设计原则参见文献［1］。</p>
+              <h1>2 方法与模型</h1>
+              <h2>2.1 系统架构</h2>
+              <figure data-preview-target="23">
+                <div class="figure-diagram" role="img" aria-label="Markdown 到 DOCX 的确定性编译链示意图">
+                  <span>Markdown</span><b>→</b><span>ThesisDocument</span><b>→</b><span>RenderPlan</span><b>→</b><span>DOCX</span>
+                </div>
+                <figcaption>图 2-1 确定性论文编译链</figcaption>
+              </figure>
+              <h2>2.2 损失函数</h2>
+              <div class="equation preview-warning" data-preview-target="29">
+                <span>L = L<sub>content</sub> + λL<sub>layout</sub></span>
+                <b>（2-1）</b>
+              </div>
+              <p>其中，L<sub>layout</sub> 用于约束模板渲染计划的稳定性。</p>
+            </div>
+          </article>
+        </div>
+        <footer class="preview-statusbar">
+          <span>A4 · 210 × 297 mm</span>
+          <span>宋体 · 小四 · 1.5 倍行距</span>
+          <span>第 1 / 12 页</span>
+        </footer>
+      </section>
+
+      <section
+        class="diagnostics-panel"
+        id="diagnostics-panel"
+        data-panel="diagnostics"
+        data-specnav-component="diagnostics"
+        data-od-id="diagnostics-panel"
+        aria-label="ValidationIssue 诊断"
+      >
+        <div class="diagnostics-heading">
+          <div class="diagnostics-title">
+            <span class="panel-kicker">Validation</span>
+            <h2>诊断</h2>
+            <span class="issue-count">1 错误</span>
+            <span class="warning-count">2 警告</span>
+          </div>
+          <div class="diagnostics-actions">
+            <button type="button" class="tool-button" id="clear-filter">全部问题</button>
+            <button type="button" class="icon-button" id="collapse-diagnostics" aria-label="折叠诊断面板" aria-expanded="true">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m7 14 5-5 5 5"></path></svg>
+            </button>
+          </div>
+        </div>
+        <div class="diagnostics-table" role="table" aria-label="文稿校验问题">
+          <div class="diagnostic-row diagnostic-header" role="row">
+            <span role="columnheader">级别</span>
+            <span role="columnheader">代码与说明</span>
+            <span role="columnheader">目标</span>
+            <span role="columnheader">位置</span>
+            <span role="columnheader">恢复动作</span>
+          </div>
+          <button type="button" class="diagnostic-row" role="row" data-line-target="15">
+            <span role="cell"><i class="severity severity-error">错误</i></span>
+            <span role="cell"><strong>TFV-203 标题层级跳跃</strong><small>heading.2 后直接出现 heading.3，模板目录层级无法稳定映射。</small></span>
+            <span role="cell"><code>heading:研究问题</code></span>
+            <span role="cell"><code>15:1</code></span>
+            <span role="cell"><em>定位并改为二级标题</em></span>
+          </button>
+          <button type="button" class="diagnostic-row" role="row" data-line-target="29">
+            <span role="cell"><i class="severity severity-warning">警告</i></span>
+            <span role="cell"><strong>TFV-411 公式说明缺失</strong><small>eq:loss 已编号，但正文没有在首次出现后解释参数 λ。</small></span>
+            <span role="cell"><code>eq:loss</code></span>
+            <span role="cell"><code>29:1</code></span>
+            <span role="cell"><em>定位公式说明</em></span>
+          </button>
+          <button type="button" class="diagnostic-row" role="row" data-line-target="23">
+            <span role="cell"><i class="severity severity-warning">警告</i></span>
+            <span role="cell"><strong>TFV-322 图片替代文本过短</strong><small>fig:model 的说明不足以支持无障碍导出与图目录生成。</small></span>
+            <span role="cell"><code>fig:model</code></span>
+            <span role="cell"><code>23:1</code></span>
+            <span role="cell"><em>定位图片声明</em></span>
+          </button>
+        </div>
+      </section>
+    </main>
+
+    <div class="build-progress" id="build-progress" role="status" aria-live="polite" aria-hidden="true">
+      <div class="build-progress-head">
+        <div>
+          <span class="panel-kicker">本地构建</span>
+          <strong id="build-progress-title">正在解析 Markdown</strong>
+        </div>
+        <span id="build-progress-count">1 / 5</span>
+      </div>
+      <div class="build-track" aria-hidden="true"><span id="build-track-fill"></span></div>
+      <ol aria-label="DOCX 构建阶段">
+        <li data-build-step="parse" class="is-current">parse</li>
+        <li data-build-step="validate">validate</li>
+        <li data-build-step="compile">compile</li>
+        <li data-build-step="render">render</li>
+        <li data-build-step="finalize">finalize</li>
+      </ol>
+    </div>
+
+    <div class="toast" id="toast" role="status" aria-live="polite" hidden>
+      <strong>DOCX 已生成</strong>
+      <span>本科毕业论文.docx 已写入本地输出目录。</span>
+      <button type="button" aria-label="关闭成功消息">关闭</button>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

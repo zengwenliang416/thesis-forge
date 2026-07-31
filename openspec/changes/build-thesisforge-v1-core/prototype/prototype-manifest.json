@@ -1,0 +1,55 @@
+{
+  "schema": "specnav.prototype.manifest.v1",
+  "version": "1",
+  "type": "ui-html",
+  "entry": "artifact/index.html",
+  "mock_strategy": "Open Design generated static fixtures only; no production compiler or real file writes",
+  "touches_real_data": false,
+  "may_promote": false,
+  "promotion_requirement": "requires verifier-report.json, explicit user approval, and prototype handoff",
+  "visual_context": {
+    "required_for_ui_html": true,
+    "inventory": "visual-inventory.json",
+    "project_shell_required": true,
+    "generic_shell_allowed": false
+  },
+  "dependencies": [],
+  "referenced_foundation_specs": [
+    "ui-design",
+    "system-architecture",
+    "frontend-backend-data-flow",
+    "component-architecture"
+  ],
+  "referenced_requirements": [
+    "requirements.md",
+    "acceptance.md",
+    "spec-map.json",
+    "component-impact-map.json"
+  ],
+  "ui_capabilities": {
+    "theme": {
+      "support": "light-only",
+      "modes": [
+        "light"
+      ],
+      "toggle_in_prototype": false,
+      "source": "openspec/specs/ui-design/design.md#Theme & Internationalization"
+    },
+    "i18n": {
+      "enabled": false,
+      "locales": [
+        "none"
+      ],
+      "default_locale": "none",
+      "locale_switch_in_prototype": false,
+      "fixed_product_copy_locale": "zh-CN",
+      "source": "openspec/specs/ui-design/design.md#Theme & Internationalization"
+    }
+  },
+  "generation": {
+    "system": "Open Design",
+    "project_id": "thesisforge-html-workbench-20260729",
+    "run_id": "b1f13111-e466-489e-9584-129bedea210a",
+    "skill": "design-taste-frontend"
+  }
+}

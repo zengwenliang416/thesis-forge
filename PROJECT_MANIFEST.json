@@ -1,0 +1,11 @@
+{
+  "project": "thesis-forge",
+  "version": "0.1.0-scaffold",
+  "status": "architecture + parser/validator + template model + DOCX smoke renderer skeleton",
+  "entry_docs": [
+    "README.md",
+    "AGENTS.md",
+    "docs/V1_PLAN.md",
+    "docs/REFERENCES.md"
+  ]
+}

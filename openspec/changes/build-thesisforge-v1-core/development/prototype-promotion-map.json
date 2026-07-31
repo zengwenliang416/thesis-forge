@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "promotion_policy": "reimplement_under_development_gate",
+  "allowed_to_copy": [
+    "Concise zh-CN labels approved in prototype handoff",
+    "FLOW-INSPECT, FLOW-VALIDATE and FLOW-BUILD stage names",
+    "Outline, Editor, Preview, Diagnostics and Template Selector information architecture"
+  ],
+  "must_reimplement": [
+    "All Python application services and command orchestration",
+    "All parser, validation, compiler, template, bibliography and DOCX behavior",
+    "Any future PySide6 widgets, state, file access, progress events and side effects"
+  ],
+  "blocked_direct_copies": [
+    "openspec/changes/build-thesisforge-v1-core/prototype/artifact/index.html",
+    "openspec/changes/build-thesisforge-v1-core/prototype/artifact/styles.css",
+    "openspec/changes/build-thesisforge-v1-core/prototype/artifact/app.js",
+    "Prototype fixtures, simulated build timers, fake diagnostics and review-only responsive layout"
+  ],
+  "approved_source": "openspec/changes/build-thesisforge-v1-core/prototype/artifact/index.html",
+  "decision": "openspec/changes/build-thesisforge-v1-core/prototype/decision.json"
+}

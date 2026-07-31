@@ -1,0 +1,386 @@
+{
+  "schema": "specnav.codegraph.claims.v1",
+  "generated_at": "2026-07-31T09:28:32.792Z",
+  "active_change": "build-thesisforge-v1-core",
+  "claims": [
+    {
+      "id": "development:task-001-offline-thesis-inspection",
+      "kind": "development-task",
+      "stage": "development",
+      "task_id": "001-offline-thesis-inspection",
+      "text": "From a clean local Python environment, parse one thesis containing Front Matter,",
+      "required": true,
+      "source": "specnav-codegraph-plan",
+      "source_paths": [
+        "openspec/changes/build-thesisforge-v1-core/development/tasks/001-offline-thesis-inspection/brief.md",
+        "openspec/changes/build-thesisforge-v1-core/development/tasks/001-offline-thesis-inspection/context.json"
+      ],
+      "expected_evidence": [
+        "Project-local virtual environment and editable installation",
+        "Parser and architecture test output",
+        "Ruff output",
+        "Offline inspect command output",
+        "Updated Markdown syntax specification",
+        "Task report, independent spec review and independent quality review"
+      ],
+      "allowed_files": [
+        ".gitignore",
+        "pyproject.toml",
+        "src/thesis_forge/core/__init__.py",
+        "src/thesis_forge/core/model.py",
+        "src/thesis_forge/core/ids.py",
+        "src/thesis_forge/core/parser.py",
+        "src/thesis_forge/cli.py",
+        "tests/test_architecture.py",
+        "tests/test_cli.py",
+        "tests/test_parser.py",
+        "docs/MARKDOWN_SPEC.md"
+      ],
+      "query_ids": [
+        "development:task-001-offline-thesis-inspection:evidence"
+      ]
+    },
+    {
+      "id": "development:task-002-actionable-validation",
+      "kind": "development-task",
+      "stage": "development",
+      "task_id": "002-actionable-validation",
+      "text": "Implement `FLOW-VALIDATE` from CLI input through Parser, template resolution,",
+      "required": true,
+      "source": "specnav-codegraph-plan",
+      "source_paths": [
+        "openspec/changes/build-thesisforge-v1-core/development/tasks/002-actionable-validation/brief.md",
+        "openspec/changes/build-thesisforge-v1-core/development/tasks/002-actionable-validation/context.json"
+      ],
+      "expected_evidence": [
+        "Red and green focused validator, template and CLI tests",
+        "Full pytest and Ruff output",
+        "Offline validate command output",
+        "Field-specific invalid-unit and missing-template evidence",
+        "Updated Template specification",
+        "CodeGraph claim evidence",
+        "Task report, independent spec review and independent quality review"
+      ],
+      "allowed_files": [
+        "src/thesis_forge/core/__init__.py",
+        "src/thesis_forge/core/model.py",
+        "src/thesis_forge/core/validator.py",
+        "src/thesis_forge/templates/__init__.py",
+        "src/thesis_forge/templates/model.py",
+        "src/thesis_forge/templates/resolver.py",
+        "src/thesis_forge/cli.py",
+        "pyproject.toml",
+        "tests/test_validator.py",
+        "tests/test_template.py",
+        "tests/test_cli.py",
+        "docs/TEMPLATE_SPEC.md",
+        "docs/MARKDOWN_SPEC.md",
+        "examples/bachelor-thesis/thesis.md"
+      ],
+      "query_ids": [
+        "development:task-002-actionable-validation:evidence"
+      ]
+    },
+    {
+      "id": "development:task-003-template-driven-basic-docx",
+      "kind": "development-task",
+      "stage": "development",
+      "task_id": "003-template-driven-basic-docx",
+      "text": "Implement the basic `FLOW-BUILD` path from validated `ThesisDocument` and",
+      "required": true,
+      "source": "specnav-codegraph-plan",
+      "source_paths": [
+        "openspec/changes/build-thesisforge-v1-core/development/tasks/003-template-driven-basic-docx/brief.md",
+        "openspec/changes/build-thesisforge-v1-core/development/tasks/003-template-driven-basic-docx/context.json"
+      ],
+      "expected_evidence": [
+        "Red and green RenderPlan, Compiler, DOCX and CLI tests",
+        "Typed instruction coverage for every V1 block type",
+        "Deterministic numbering, bookmark, reference and citation-order evidence",
+        "Direct DOCX package/XML assertions for page, body and heading formatting",
+        "Full pytest, Ruff and pip check output",
+        "Offline build command and generated package inspection",
+        "CodeGraph claim evidence",
+        "Task report, independent spec review and independent quality review"
+      ],
+      "allowed_files": [
+        "src/thesis_forge/core/__init__.py",
+        "src/thesis_forge/core/compiler.py",
+        "src/thesis_forge/core/render_plan.py",
+        "src/thesis_forge/renderers/docx/__init__.py",
+        "src/thesis_forge/renderers/docx/document.py",
+        "src/thesis_forge/renderers/docx/fonts.py",
+        "src/thesis_forge/renderers/docx/lists.py",
+        "src/thesis_forge/renderers/docx/package.py",
+        "src/thesis_forge/renderers/docx/renderer.py",
+        "src/thesis_forge/renderers/docx/styles.py",
+        "src/thesis_forge/renderers/docx/units.py",
+        "src/thesis_forge/cli.py",
+        "tests/test_architecture.py",
+        "tests/test_cli.py",
+        "tests/test_compiler.py",
+        "tests/test_docx_renderer.py",
+        "tests/test_render_plan.py",
+        "docs/TEMPLATE_SPEC.md"
+      ],
+      "query_ids": [
+        "development:task-003-template-driven-basic-docx:evidence"
+      ]
+    },
+    {
+      "id": "development:task-004-numbered-figures-and-tables",
+      "kind": "development-task",
+      "stage": "development",
+      "task_id": "004-numbered-figures-and-tables",
+      "text": "Extend the existing `FLOW-BUILD` path from validated `Figure` and `Table`",
+      "required": true,
+      "source": "specnav-codegraph-plan",
+      "source_paths": [
+        "openspec/changes/build-thesisforge-v1-core/development/tasks/004-numbered-figures-and-tables/brief.md",
+        "openspec/changes/build-thesisforge-v1-core/development/tasks/004-numbered-figures-and-tables/context.json"
+      ],
+      "expected_evidence": [
+        "Observed RED and GREEN Compiler and DOCX XML tests",
+        "Typed table row and cell instruction evidence",
+        "Source-relative figure path and explicit/template width precedence evidence",
+        "Direct image relationship, media part and drawing XML assertions",
+        "Direct caption ordering and bookmark XML assertions",
+        "Direct real table and three-line border XML assertions",
+        "Full pytest, Ruff and pip check output",
+        "Offline example build and generated package inspection",
+        "CodeGraph claim evidence",
+        "Task report, independent spec review and independent quality review"
+      ],
+      "allowed_files": [
+        "src/thesis_forge/core/__init__.py",
+        "src/thesis_forge/core/compiler.py",
+        "src/thesis_forge/core/render_plan.py",
+        "src/thesis_forge/renderers/docx/__init__.py",
+        "src/thesis_forge/renderers/docx/bookmarks.py",
+        "src/thesis_forge/renderers/docx/captions.py",
+        "src/thesis_forge/renderers/docx/figures.py",
+        "src/thesis_forge/renderers/docx/tables.py",
+        "src/thesis_forge/renderers/docx/renderer.py",
+        "src/thesis_forge/renderers/docx/units.py",
+        "src/thesis_forge/cli.py",
+        "tests/test_architecture.py",
+        "tests/test_cli.py",
+        "tests/test_compiler.py",
+        "tests/test_docx_renderer.py",
+        "tests/test_render_plan.py"
+      ],
+      "query_ids": [
+        "development:task-004-numbered-figures-and-tables:evidence"
+      ]
+    },
+    {
+      "id": "development:task-005-equations-references-and-page-structure",
+      "kind": "development-task",
+      "stage": "development",
+      "task_id": "005-equations-references-and-page-structure",
+      "text": "Extend the existing offline `FLOW-BUILD` path from Compiler-resolved equation,",
+      "required": true,
+      "source": "specnav-codegraph-plan",
+      "source_paths": [
+        "openspec/changes/build-thesisforge-v1-core/development/tasks/005-equations-references-and-page-structure/brief.md",
+        "openspec/changes/build-thesisforge-v1-core/development/tasks/005-equations-references-and-page-structure/context.json"
+      ],
+      "expected_evidence": [
+        "Observed RED and GREEN math, Compiler and DOCX XML tests",
+        "Documented renderer-neutral MathConverter contract and supported LaTeX subset",
+        "Direct editable OMML and equation bookmark XML assertions",
+        "Direct complex SEQ, REF, TOC, PAGE and NUMPAGES field assertions",
+        "Document settings update-on-open assertion",
+        "Direct footnotes package part, content type, relationship, definition and reference assertions",
+        "Direct multiple-section, header/footer relationship and page-number format/restart assertions",
+        "Full pytest, Ruff and pip check output",
+        "Offline example build, package inspection, reload and LibreOffice conversion",
+        "CodeGraph claim evidence",
+        "Task report, independent spec review and independent quality review"
+      ],
+      "allowed_files": [
+        "src/thesis_forge/core/__init__.py",
+        "src/thesis_forge/core/compiler.py",
+        "src/thesis_forge/core/math.py",
+        "src/thesis_forge/core/render_plan.py",
+        "src/thesis_forge/renderers/docx/__init__.py",
+        "src/thesis_forge/renderers/docx/bookmarks.py",
+        "src/thesis_forge/renderers/docx/captions.py",
+        "src/thesis_forge/renderers/docx/equations.py",
+        "src/thesis_forge/renderers/docx/errors.py",
+        "src/thesis_forge/renderers/docx/fields.py",
+        "src/thesis_forge/renderers/docx/figures.py",
+        "src/thesis_forge/renderers/docx/footnotes.py",
+        "src/thesis_forge/renderers/docx/inlines.py",
+        "src/thesis_forge/renderers/docx/renderer.py",
+        "src/thesis_forge/renderers/docx/sections.py",
+        "src/thesis_forge/renderers/docx/tables.py",
+        "src/thesis_forge/cli.py",
+        "docs/MATH_SPEC.md",
+        "docs/TEMPLATE_SPEC.md",
+        "tests/test_architecture.py",
+        "tests/test_cli.py",
+        "tests/test_compiler.py",
+        "tests/test_docx_renderer.py",
+        "tests/test_math.py",
+        "tests/test_render_plan.py"
+      ],
+      "query_ids": [
+        "development:task-005-equations-references-and-page-structure:evidence"
+      ]
+    },
+    {
+      "id": "development:task-006-local-citations-and-bibliography",
+      "kind": "development-task",
+      "stage": "development",
+      "task_id": "006-local-citations-and-bibliography",
+      "text": "Extend the existing offline `FLOW-VALIDATE` and `FLOW-BUILD` paths from parsed",
+      "required": true,
+      "source": "specnav-codegraph-plan",
+      "source_paths": [
+        "openspec/changes/build-thesisforge-v1-core/development/tasks/006-local-citations-and-bibliography/brief.md",
+        "openspec/changes/build-thesisforge-v1-core/development/tasks/006-local-citations-and-bibliography/context.json"
+      ],
+      "expected_evidence": [
+        "Observed RED and GREEN BibTeX loader and formatter golden tests",
+        "Renderer-neutral bibliography architecture evidence",
+        "Malformed, duplicate-key and unsupported-type BibTeX errors",
+        "Missing citation key ValidationIssue with source line",
+        "Deterministic grouped inline citation text and first-use order",
+        "Referenced-only bibliography instruction order",
+        "Body and footnote citation DOCX text assertions",
+        "Bibliography paragraph DOCX XML assertions",
+        "Full pytest, Ruff and pip check output",
+        "Offline validate/build, package inspection, reload and LibreOffice conversion",
+        "CodeGraph claim evidence",
+        "Task report, independent spec review and independent quality review"
+      ],
+      "allowed_files": [
+        "src/thesis_forge/bibliography/__init__.py",
+        "src/thesis_forge/bibliography/engine.py",
+        "src/thesis_forge/bibliography/bibtex.py",
+        "src/thesis_forge/bibliography/formatter.py",
+        "src/thesis_forge/core/__init__.py",
+        "src/thesis_forge/core/model.py",
+        "src/thesis_forge/core/parser.py",
+        "src/thesis_forge/core/validator.py",
+        "src/thesis_forge/core/compiler.py",
+        "src/thesis_forge/core/render_plan.py",
+        "src/thesis_forge/renderers/docx/renderer.py",
+        "src/thesis_forge/renderers/docx/footnotes.py",
+        "src/thesis_forge/cli.py",
+        "docs/BIBLIOGRAPHY_SPEC.md",
+        "docs/MARKDOWN_SPEC.md",
+        "tests/fixtures/bibliography/gbt7714-v1.bib",
+        "tests/fixtures/bibliography/gbt7714-v1.json",
+        "tests/test_architecture.py",
+        "tests/test_bibliography.py",
+        "tests/test_cli.py",
+        "tests/test_compiler.py",
+        "tests/test_docx_renderer.py",
+        "tests/test_parser.py",
+        "tests/test_render_plan.py",
+        "tests/test_validator.py"
+      ],
+      "query_ids": [
+        "development:task-006-local-citations-and-bibliography:evidence"
+      ]
+    },
+    {
+      "id": "development:task-007-safe-and-repeatable-builds",
+      "kind": "development-task",
+      "stage": "development",
+      "task_id": "007-safe-and-repeatable-builds",
+      "text": "Extract the existing CLI orchestration into reusable inspect, validation and",
+      "required": true,
+      "source": "specnav-codegraph-plan",
+      "source_paths": [
+        "openspec/changes/build-thesisforge-v1-core/development/tasks/007-safe-and-repeatable-builds/brief.md",
+        "openspec/changes/build-thesisforge-v1-core/development/tasks/007-safe-and-repeatable-builds/context.json"
+      ],
+      "expected_evidence": [
+        "Observed RED and GREEN shared application service tests",
+        "Progress order parse, validate, compile, render and finalize",
+        "Fatal validation proves Compiler and Renderer are not invoked",
+        "Parse, validation, compiler, renderer, package and replacement failure tests preserve old output bytes",
+        "Every failure test proves same-directory temporary output cleanup",
+        "DOCX package validator rejects corrupt ZIP, missing required parts and malformed core XML",
+        "CLI output identifies the exact failing stage without traceback",
+        "Repeated builds have normalized numbering, bookmark, reference and field semantic equivalence",
+        "Architecture tests prove CLI delegates and lower layers do not import adapters",
+        "Full pytest, Ruff and pip check output",
+        "Offline inspect, validate and build command evidence",
+        "DOCX ZIP/XML inspection, python-docx reload and LibreOffice conversion",
+        "CodeGraph claim evidence",
+        "Task report, independent spec review and independent quality review"
+      ],
+      "allowed_files": [
+        "src/thesis_forge/application/__init__.py",
+        "src/thesis_forge/application/contracts.py",
+        "src/thesis_forge/application/output.py",
+        "src/thesis_forge/application/services.py",
+        "src/thesis_forge/cli.py",
+        "src/thesis_forge/renderers/docx/package.py",
+        "tests/test_application_services.py",
+        "tests/test_architecture.py",
+        "tests/test_cli.py"
+      ],
+      "query_ids": [
+        "development:task-007-safe-and-repeatable-builds:evidence"
+      ]
+    },
+    {
+      "id": "development:task-008-complete-thesis-acceptance",
+      "kind": "development-task",
+      "stage": "development",
+      "task_id": "008-complete-thesis-acceptance",
+      "text": "Expand the repository bachelor-thesis example into the complete V1 acceptance",
+      "required": true,
+      "source": "specnav-codegraph-plan",
+      "source_paths": [
+        "openspec/changes/build-thesisforge-v1-core/development/tasks/008-complete-thesis-acceptance/brief.md",
+        "openspec/changes/build-thesisforge-v1-core/development/tasks/008-complete-thesis-acceptance/context.json"
+      ],
+      "expected_evidence": [
+        "Observed RED and GREEN complete-example acceptance tests",
+        "Semantic inventory proves all required V1 objects are present",
+        "Subprocess inspect, validate and build succeed with network connections blocked and AI credentials removed",
+        "Input Markdown, BibTeX, template and image hashes remain unchanged",
+        "Generated DOCX passes ZIP, CRC, required-part and XML parsing checks",
+        "OOXML proves visible cover content and real TOC, SEQ, REF, Bookmark, PAGE, NUMPAGES, OMML, footnote, section, header and footer structures",
+        "OOXML proves real figure media, three-line table, citations, bibliography, acknowledgements and appendix",
+        "Repeated builds have normalized semantic equivalence",
+        "python-docx reload and LibreOffice DOCX-to-PDF conversion",
+        "Rendered PDF page and content inspection",
+        "Prototype logic harness output",
+        "Fresh Chrome desktop/mobile populated and required-state verification output and screenshots",
+        "Full pytest, Ruff, pip check and git diff check output",
+        "CodeGraph claim evidence",
+        "Task report, independent spec review and independent quality review"
+      ],
+      "allowed_files": [
+        "examples/bachelor-thesis/thesis.md",
+        "examples/bachelor-thesis/references.bib",
+        "examples/bachelor-thesis/images/acceptance-architecture.svg",
+        "examples/bachelor-thesis/images/acceptance-architecture.png",
+        "templates/schools/example-university/2026.yaml",
+        "src/thesis_forge/core/render_plan.py",
+        "src/thesis_forge/core/compiler.py",
+        "src/thesis_forge/renderers/docx/cover.py",
+        "src/thesis_forge/renderers/docx/renderer.py",
+        "tests/test_acceptance.py",
+        "tests/test_compiler.py",
+        "tests/test_docx_renderer.py",
+        "tests/test_template.py",
+        "tests/test_prototype_acceptance.py",
+        "openspec/changes/build-thesisforge-v1-core/prototype/evidence/browser-verification.json",
+        "openspec/changes/build-thesisforge-v1-core/prototype/evidence/desktop-populated.png",
+        "openspec/changes/build-thesisforge-v1-core/prototype/evidence/mobile-preview.png",
+        "openspec/changes/build-thesisforge-v1-core/prototype/evidence/mobile-permission.png"
+      ],
+      "query_ids": [
+        "development:task-008-complete-thesis-acceptance:evidence"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-07-31T11:27:59.332Z",
+  "current_focus": "build-thesisforge-v1-core",
+  "changes": [
+    {
+      "id": "build-thesisforge-v1-core",
+      "stage": "prototype",
+      "status": "active",
+      "branch": null,
+      "created_at": null,
+      "last_active_at": null
+    }
+  ]
+}

@@ -1,0 +1,80 @@
+id: example-university-2026
+name: XX大学本科毕业论文示例模板
+year: 2026
+
+page:
+  size: A4
+  orientation: portrait
+  margin:
+    top: 25mm
+    bottom: 25mm
+    left: 30mm
+    right: 25mm
+
+body:
+  font:
+    east_asia: 宋体
+    latin: Times New Roman
+  size: 12pt
+  alignment: justify
+  first_line_indent: 2em
+  line_spacing:
+    type: fixed
+    value: 20pt
+
+heading:
+  level1:
+    font:
+      east_asia: 黑体
+      latin: Times New Roman
+    size: 16pt
+    bold: true
+    alignment: center
+  level2:
+    font:
+      east_asia: 黑体
+      latin: Times New Roman
+    size: 14pt
+    bold: true
+
+figure:
+  numbering: chapter
+  caption:
+    position: bottom
+    prefix: 图
+
+table:
+  style: three_line
+  numbering: chapter
+  caption:
+    position: top
+    prefix: 表
+
+equation:
+  numbering: chapter
+
+sections:
+  cover:
+    start: new_page
+    page_number:
+      format: none
+  front_matter:
+    start: new_page
+    footer:
+      enabled: true
+    page_number:
+      format: roman-lower
+      restart: 1
+  main:
+    start: new_page
+    header:
+      enabled: true
+      text: "XX大学本科毕业论文"
+    footer:
+      enabled: true
+    page_number:
+      format: decimal
+      restart: 1
+
+citation:
+  style: GB-T-7714-2025

@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "active_change": "build-thesisforge-v1-core",
+  "status": "ready",
+  "ok": true,
+  "checked_at": "2026-07-30T02:19:05Z",
+  "requirements": {
+    "status": "approved",
+    "references": [
+      "openspec/changes/build-thesisforge-v1-core/requirements.md",
+      "openspec/changes/build-thesisforge-v1-core/acceptance.md",
+      "openspec/changes/build-thesisforge-v1-core/acceptance.json"
+    ]
+  },
+  "prototype": {
+    "status": "approved",
+    "decision": "openspec/changes/build-thesisforge-v1-core/prototype/decision.json",
+    "entry": "openspec/changes/build-thesisforge-v1-core/prototype/artifact/index.html",
+    "handoff": "openspec/changes/build-thesisforge-v1-core/prototype/handoff.md"
+  },
+  "scope": {
+    "status": "locked",
+    "reference": "openspec/changes/build-thesisforge-v1-core/scope.json"
+  },
+  "architecture_decision": "Python 3.11+ remains the single-process V1 implementation language; Rust, Web APIs and production UI are outside this change.",
+  "blockers": []
+}

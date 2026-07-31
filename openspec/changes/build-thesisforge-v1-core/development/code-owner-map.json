@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "owners": [
+    {
+      "path": "src/thesis_forge/core",
+      "owner": "thesisforge-core"
+    },
+    {
+      "path": "src/thesis_forge/templates",
+      "owner": "thesisforge-template"
+    },
+    {
+      "path": "src/thesis_forge/bibliography",
+      "owner": "thesisforge-bibliography"
+    },
+    {
+      "path": "src/thesis_forge/renderers/docx",
+      "owner": "thesisforge-docx"
+    },
+    {
+      "path": "src/thesis_forge/cli.py",
+      "owner": "thesisforge-application"
+    },
+    {
+      "path": "tests",
+      "owner": "thesisforge-quality"
+    },
+    {
+      "path": "openspec/changes/build-thesisforge-v1-core",
+      "owner": "specnav-development"
+    }
+  ]
+}

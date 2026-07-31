@@ -1,0 +1,68 @@
+{
+  "task_id": "007-safe-and-repeatable-builds",
+  "goal": "A thesis author can run shared offline core services and safely rebuild a DOCX without losing the previous valid output.",
+  "must_read": [
+    "openspec/changes/build-thesisforge-v1-core/development/tasks/007-safe-and-repeatable-builds/brief.md",
+    "openspec/changes/build-thesisforge-v1-core/requirements.md",
+    "openspec/changes/build-thesisforge-v1-core/acceptance.md",
+    "openspec/changes/build-thesisforge-v1-core/acceptance.json",
+    "openspec/changes/build-thesisforge-v1-core/design.md",
+    "openspec/changes/build-thesisforge-v1-core/spec-map.json",
+    "openspec/changes/build-thesisforge-v1-core/component-impact-map.json",
+    "openspec/changes/build-thesisforge-v1-core/prototype/handoff.md",
+    "openspec/changes/build-thesisforge-v1-core/prototype/decision.json",
+    "openspec/changes/build-thesisforge-v1-core/prototype/artifact/index.html",
+    "openspec/changes/build-thesisforge-v1-core/specs/offline-cli-pipeline/spec.md",
+    "openspec/specs/ui-design/design.md",
+    "openspec/specs/system-architecture/design.md",
+    "openspec/specs/component-architecture/design.md",
+    "openspec/specs/frontend-backend-data-flow/design.md"
+  ],
+  "allowed_files": [
+    "src/thesis_forge/application/__init__.py",
+    "src/thesis_forge/application/contracts.py",
+    "src/thesis_forge/application/output.py",
+    "src/thesis_forge/application/services.py",
+    "src/thesis_forge/cli.py",
+    "src/thesis_forge/renderers/docx/package.py",
+    "tests/test_application_services.py",
+    "tests/test_architecture.py",
+    "tests/test_cli.py"
+  ],
+  "test_paths": [
+    "tests/test_application_services.py",
+    "tests/test_cli.py",
+    "tests/test_architecture.py"
+  ],
+  "non_goals": [
+    "Do not expand the complete thesis example or broad Office acceptance before task 008.",
+    "Do not implement packaging and final maintenance documentation before task 009.",
+    "Do not require byte-for-byte identical DOCX archives.",
+    "Do not add watch mode, background work, UI, account, cloud or AI behavior.",
+    "Do not move content rendering, package validation or atomic replacement into Core Domain."
+  ],
+  "expected_evidence": [
+    "Observed RED and GREEN shared application service tests",
+    "Progress order parse, validate, compile, render and finalize",
+    "Fatal validation proves Compiler and Renderer are not invoked",
+    "Parse, validation, compiler, renderer, package and replacement failure tests preserve old output bytes",
+    "Every failure test proves same-directory temporary output cleanup",
+    "DOCX package validator rejects corrupt ZIP, missing required parts and malformed core XML",
+    "CLI output identifies the exact failing stage without traceback",
+    "Repeated builds have normalized numbering, bookmark, reference and field semantic equivalence",
+    "Architecture tests prove CLI delegates and lower layers do not import adapters",
+    "Full pytest, Ruff and pip check output",
+    "Offline inspect, validate and build command evidence",
+    "DOCX ZIP/XML inspection, python-docx reload and LibreOffice conversion",
+    "CodeGraph claim evidence",
+    "Task report, independent spec review and independent quality review"
+  ],
+  "unsafe_assumptions": [
+    "A successful renderer save is not package validation.",
+    "Cross-directory temporary output is not guaranteed to replace atomically.",
+    "Preserving the target is insufficient if temporary files leak.",
+    "DOCX archive bytes may differ while required semantic OOXML remains equivalent.",
+    "A presentation adapter must not duplicate parse, validation, compile or render orchestration."
+  ],
+  "stop_condition": "Stop if implementation edits outside the allowlist, crosses Core or Renderer boundaries, can damage an existing output on failure, leaks temporary files, accepts an invalid DOCX package, or requires task-008 acceptance scope."
+}

@@ -1,0 +1,15 @@
+{
+  "citation": {
+    "keys": ["doe2024", "smith2025"],
+    "ordinals": [1, 2],
+    "locator": "p. 12",
+    "text": "[1,2, p. 12]"
+  },
+  "bibliography": [
+    "[1] DOE J. Structured Academic Documents[M]. Beijing: Example Press, 2024.",
+    "[2] SMITH J, WANG L. Deterministic Thesis Compilation[J]. Journal of Document Engineering, 2025, 12(3): 101-118. DOI:10.1000/tf.2025.001.",
+    "[3] LEE K. Renderer Neutral Compilation Plans[C]//Proceedings of the Document Systems Conference. Shanghai: Science Press, 2023: 20-29.",
+    "[4] CHEN M. Local First Bibliography Pipelines[D]. Beijing: Tsinghua University, 2022.",
+    "[5] LIU W. Deterministic Document Semantics[D]. Beijing: Peking University, 2021."
+  ]
+}

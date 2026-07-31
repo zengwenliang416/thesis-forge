@@ -1,0 +1,64 @@
+{
+  "task_id": "001-offline-thesis-inspection",
+  "goal": "Offline inspect reports every V1 semantic object from a reproducible local Python environment without writes or network access.",
+  "must_read": [
+    "openspec/changes/build-thesisforge-v1-core/development/tasks/001-offline-thesis-inspection/brief.md",
+    "AGENTS.md",
+    "openspec/changes/build-thesisforge-v1-core/requirements.md",
+    "openspec/changes/build-thesisforge-v1-core/acceptance.md",
+    "openspec/changes/build-thesisforge-v1-core/acceptance.json",
+    "openspec/changes/build-thesisforge-v1-core/spec-map.json",
+    "openspec/changes/build-thesisforge-v1-core/component-impact-map.json",
+    "openspec/changes/build-thesisforge-v1-core/prototype/handoff.md",
+    "openspec/changes/build-thesisforge-v1-core/prototype/decision.json",
+    "openspec/changes/build-thesisforge-v1-core/prototype/artifact/index.html",
+    "openspec/specs/ui-design/design.md",
+    "openspec/specs/system-architecture/design.md",
+    "openspec/specs/frontend-backend-data-flow/design.md",
+    "openspec/specs/component-architecture/design.md",
+    "docs/MARKDOWN_SPEC.md",
+    "src/thesis_forge/core/model.py",
+    "src/thesis_forge/core/parser.py",
+    "src/thesis_forge/cli.py",
+    "tests/test_parser.py"
+  ],
+  "allowed_files": [
+    ".gitignore",
+    "pyproject.toml",
+    "src/thesis_forge/core/__init__.py",
+    "src/thesis_forge/core/model.py",
+    "src/thesis_forge/core/ids.py",
+    "src/thesis_forge/core/parser.py",
+    "src/thesis_forge/cli.py",
+    "tests/test_architecture.py",
+    "tests/test_cli.py",
+    "tests/test_parser.py",
+    "docs/MARKDOWN_SPEC.md"
+  ],
+  "test_paths": [
+    "tests/test_architecture.py",
+    "tests/test_cli.py",
+    "tests/test_parser.py"
+  ],
+  "non_goals": [
+    "Do not implement ValidationContext, typed templates, RenderPlan or DOCX capabilities in this slice.",
+    "Do not promote HTML prototype code into production.",
+    "Do not introduce network, API key, database or AI dependencies.",
+    "Do not remove or merge existing detailed tasks."
+  ],
+  "expected_evidence": [
+    "Project-local virtual environment and editable installation",
+    "Parser and architecture test output",
+    "Ruff output",
+    "Offline inspect command output",
+    "Updated Markdown syntax specification",
+    "Task report, independent spec review and independent quality review"
+  ],
+  "unsafe_assumptions": [
+    "Existing parser behavior is correct without expanded tests.",
+    "Parser may calculate final numbering or import rendering modules.",
+    "Global Python tools count as reproducible project-local evidence.",
+    "AppleDouble files may be deleted without a separate cleanup decision."
+  ],
+  "stop_condition": "Stop if implementation needs files outside the allowed list, changes a product or syntax contract without documentation, or couples Parser/Domain to rendering, UI, AI or network behavior."
+}

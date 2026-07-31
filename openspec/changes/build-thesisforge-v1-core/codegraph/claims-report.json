@@ -1,0 +1,21 @@
+{
+  "schema": "specnav.codegraph.claims_report.v1",
+  "generated_at": "2026-07-31T11:29:49.543Z",
+  "active_change": "build-thesisforge-v1-core",
+  "claims_file": "openspec/changes/build-thesisforge-v1-core/codegraph/claims-map.json",
+  "evidence_index": "openspec/changes/build-thesisforge-v1-core/codegraph/evidence-index.json",
+  "claims_count": 8,
+  "verified_claims": [
+    "development:task-001-offline-thesis-inspection",
+    "development:task-002-actionable-validation",
+    "development:task-003-template-driven-basic-docx",
+    "development:task-004-numbered-figures-and-tables",
+    "development:task-005-equations-references-and-page-structure",
+    "development:task-006-local-citations-and-bibliography",
+    "development:task-007-safe-and-repeatable-builds",
+    "development:task-008-complete-thesis-acceptance"
+  ],
+  "unverified_claims": [],
+  "blockers": [],
+  "warnings": []
+}

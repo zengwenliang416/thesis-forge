@@ -1,0 +1,72 @@
+{
+  "task_id": "003-template-driven-basic-docx",
+  "goal": "A thesis author can build an editable template-driven basic DOCX from deterministic renderer-neutral typed instructions.",
+  "must_read": [
+    "openspec/changes/build-thesisforge-v1-core/development/tasks/003-template-driven-basic-docx/brief.md",
+    "openspec/changes/build-thesisforge-v1-core/requirements.md",
+    "openspec/changes/build-thesisforge-v1-core/acceptance.md",
+    "openspec/changes/build-thesisforge-v1-core/design.md",
+    "openspec/changes/build-thesisforge-v1-core/prototype/handoff.md",
+    "openspec/changes/build-thesisforge-v1-core/prototype/decision.json",
+    "openspec/changes/build-thesisforge-v1-core/prototype/artifact/index.html",
+    "openspec/changes/build-thesisforge-v1-core/spec-map.json",
+    "openspec/changes/build-thesisforge-v1-core/component-impact-map.json",
+    "openspec/specs/ui-design/design.md",
+    "openspec/specs/system-architecture/design.md",
+    "openspec/specs/component-architecture/design.md",
+    "openspec/specs/frontend-backend-data-flow/design.md",
+    "docs/TEMPLATE_SPEC.md"
+  ],
+  "allowed_files": [
+    "src/thesis_forge/core/__init__.py",
+    "src/thesis_forge/core/compiler.py",
+    "src/thesis_forge/core/render_plan.py",
+    "src/thesis_forge/renderers/docx/__init__.py",
+    "src/thesis_forge/renderers/docx/document.py",
+    "src/thesis_forge/renderers/docx/fonts.py",
+    "src/thesis_forge/renderers/docx/lists.py",
+    "src/thesis_forge/renderers/docx/package.py",
+    "src/thesis_forge/renderers/docx/renderer.py",
+    "src/thesis_forge/renderers/docx/styles.py",
+    "src/thesis_forge/renderers/docx/units.py",
+    "src/thesis_forge/cli.py",
+    "tests/test_architecture.py",
+    "tests/test_cli.py",
+    "tests/test_compiler.py",
+    "tests/test_docx_renderer.py",
+    "tests/test_render_plan.py",
+    "docs/TEMPLATE_SPEC.md"
+  ],
+  "test_paths": [
+    "tests/test_render_plan.py",
+    "tests/test_compiler.py",
+    "tests/test_docx_renderer.py",
+    "tests/test_cli.py",
+    "tests/test_architecture.py"
+  ],
+  "non_goals": [
+    "Do not implement real figures, table borders or caption fields before task 004.",
+    "Do not implement OMML, Word fields, footnote package parts, multiple sections, headers, footers or page-number fields before task 005.",
+    "Do not load or format bibliography data before task 006.",
+    "Do not implement atomic replacement or failed-build preservation before task 007.",
+    "Do not add UI, network, account or AI dependencies."
+  ],
+  "expected_evidence": [
+    "Red and green RenderPlan, Compiler, DOCX and CLI tests",
+    "Typed instruction coverage for every V1 block type",
+    "Deterministic numbering, bookmark, reference and citation-order evidence",
+    "Direct DOCX package/XML assertions for page, body and heading formatting",
+    "Full pytest, Ruff and pip check output",
+    "Offline build command and generated package inspection",
+    "CodeGraph claim evidence",
+    "Task report, independent spec review and independent quality review"
+  ],
+  "unsafe_assumptions": [
+    "python-docx defaults do not satisfy the selected template.",
+    "Parser and Renderer must not calculate final numbering or bookmark names.",
+    "Core public APIs must not expose python-docx or OOXML implementation objects.",
+    "Duplicate bookmark names must fail explicitly.",
+    "Advanced later-slice behavior must not be claimed from editable fallback text."
+  ],
+  "stop_condition": "Stop if implementation would cross Parser/Domain boundaries, require later-slice advanced Word behavior, or edit outside the allowed files."
+}

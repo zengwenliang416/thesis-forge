@@ -1,0 +1,84 @@
+{
+  "new_components": [
+    "typed-render-instructions",
+    "numbering-resolver",
+    "bookmark-resolver",
+    "reference-resolver",
+    "resource-resolver",
+    "template-resolver",
+    "bibliography-loader-and-formatter",
+    "docx-field-helper",
+    "docx-bookmark-helper",
+    "docx-font-and-unit-helper",
+    "docx-table-helper",
+    "omml-converter",
+    "docx-section-header-footer-helper"
+  ],
+  "reused_components": [
+    "ThesisDocument-domain-model",
+    "parse_markdown",
+    "ValidationIssue",
+    "validate_document",
+    "ThesisTemplate",
+    "load_template",
+    "compile_document",
+    "RenderPlan",
+    "DocxRenderer",
+    "BibliographyEngine"
+  ],
+  "extraction_triggers": [
+    "shared-numbering-across-figure-table-equation",
+    "shared-bookmark-and-ref-field-generation",
+    "shared-length-and-font-conversion",
+    "shared-xml-namespace-and-field-code-creation",
+    "shared-resource-path-validation",
+    "shared-citation-key-ordering",
+    "render-payload-used-by-more-than-one-module"
+  ],
+  "forbidden_dependencies": [
+    "parser->docx",
+    "parser->lxml",
+    "parser->renderer",
+    "domain->word-objects",
+    "compiler->python-docx",
+    "renderer->markdown-parser",
+    "renderer->hard-coded-school-style",
+    "core->ui",
+    "core->ai-provider",
+    "core-command->network"
+  ],
+  "hooks": [
+    "optional-build-progress-events-for-future-ui",
+    "optional-render-warning-collector",
+    "no-required-runtime-hooks-in-v1-cli"
+  ],
+  "utilities": [
+    "stable-id-and-prefix-validation",
+    "source-location-preservation",
+    "length-unit-parser",
+    "bookmark-name-sanitizer",
+    "chapter-number-counter",
+    "atomic-output-writer",
+    "ooxml-xml-test-helpers"
+  ],
+  "services": [
+    "inspect-service",
+    "validation-service",
+    "build-service",
+    "template-loading-service",
+    "bibliography-service",
+    "render-service"
+  ],
+  "required_component_tests": [
+    "parser-semantic-object-tests",
+    "validator-rule-tests",
+    "template-schema-and-unit-tests",
+    "compiler-numbering-and-reference-tests",
+    "render-plan-contract-tests",
+    "bibliography-golden-tests",
+    "ooxml-field-bookmark-omml-section-tests",
+    "atomic-output-failure-test",
+    "full-cli-end-to-end-build-test"
+  ],
+  "unresolved_gaps": []
+}

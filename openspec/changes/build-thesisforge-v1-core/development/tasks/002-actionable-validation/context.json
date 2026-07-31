@@ -1,0 +1,63 @@
+{
+  "task_id": "002-actionable-validation",
+  "goal": "A thesis author can run offline validation and receive complete, deterministic document and template diagnostics with stable exit behavior.",
+  "must_read": [
+    "openspec/changes/build-thesisforge-v1-core/development/tasks/002-actionable-validation/brief.md",
+    "openspec/changes/build-thesisforge-v1-core/requirements.md",
+    "openspec/changes/build-thesisforge-v1-core/acceptance.md",
+    "openspec/changes/build-thesisforge-v1-core/prototype/handoff.md",
+    "openspec/changes/build-thesisforge-v1-core/prototype/decision.json",
+    "openspec/changes/build-thesisforge-v1-core/prototype/artifact/index.html",
+    "openspec/changes/build-thesisforge-v1-core/spec-map.json",
+    "openspec/changes/build-thesisforge-v1-core/component-impact-map.json",
+    "openspec/specs/ui-design/design.md",
+    "openspec/specs/system-architecture/design.md",
+    "openspec/specs/component-architecture/design.md",
+    "openspec/specs/frontend-backend-data-flow/design.md",
+    "docs/TEMPLATE_SPEC.md"
+  ],
+  "allowed_files": [
+    "src/thesis_forge/core/__init__.py",
+    "src/thesis_forge/core/model.py",
+    "src/thesis_forge/core/validator.py",
+    "src/thesis_forge/templates/__init__.py",
+    "src/thesis_forge/templates/model.py",
+    "src/thesis_forge/templates/resolver.py",
+    "src/thesis_forge/cli.py",
+    "pyproject.toml",
+    "tests/test_validator.py",
+    "tests/test_template.py",
+    "tests/test_cli.py",
+    "docs/TEMPLATE_SPEC.md",
+    "docs/MARKDOWN_SPEC.md",
+    "examples/bachelor-thesis/thesis.md"
+  ],
+  "test_paths": [
+    "tests/test_validator.py",
+    "tests/test_template.py",
+    "tests/test_cli.py"
+  ],
+  "non_goals": [
+    "Do not parse BibTeX records or validate individual citation keys before task 006.",
+    "Do not apply template styles in Compiler or DOCX Renderer before task 003.",
+    "Do not add UI, network, persistent storage, account or AI dependencies."
+  ],
+  "expected_evidence": [
+    "Red and green focused validator, template and CLI tests",
+    "Full pytest and Ruff output",
+    "Offline validate command output",
+    "Field-specific invalid-unit and missing-template evidence",
+    "Updated Template specification",
+    "CodeGraph claim evidence",
+    "Task report, independent spec review and independent quality review"
+  ],
+  "unsafe_assumptions": [
+    "A Front Matter template ID does not prove that a matching local YAML exists.",
+    "Template ID lookup must not change with process cwd.",
+    "Local image and bibliography paths must remain inside the configured resource root.",
+    "Warning diagnostics must not be treated as fatal.",
+    "Citation-key validation cannot be claimed until task 006 loads BibTeX.",
+    "Template lengths without supported units must not be normalized silently."
+  ],
+  "stop_condition": "Stop if implementation would cross Parser/Domain architecture boundaries, require bibliography parsing owned by task 006, or edit outside the allowed files."
+}

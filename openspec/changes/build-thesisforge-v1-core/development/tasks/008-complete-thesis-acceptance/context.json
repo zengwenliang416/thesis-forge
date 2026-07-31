@@ -1,0 +1,87 @@
+{
+  "task_id": "008-complete-thesis-acceptance",
+  "goal": "A thesis author can inspect, validate and build one complete bachelor-thesis example offline, while a reviewer can verify the editable DOCX and approved HTML workbench.",
+  "must_read": [
+    "openspec/changes/build-thesisforge-v1-core/development/tasks/008-complete-thesis-acceptance/brief.md",
+    "openspec/changes/build-thesisforge-v1-core/requirements.md",
+    "openspec/changes/build-thesisforge-v1-core/acceptance.md",
+    "openspec/changes/build-thesisforge-v1-core/acceptance.json",
+    "openspec/changes/build-thesisforge-v1-core/design.md",
+    "openspec/changes/build-thesisforge-v1-core/spec-map.json",
+    "openspec/changes/build-thesisforge-v1-core/component-impact-map.json",
+    "openspec/changes/build-thesisforge-v1-core/prototype/handoff.md",
+    "openspec/changes/build-thesisforge-v1-core/prototype/decision.json",
+    "openspec/changes/build-thesisforge-v1-core/prototype/prototype-manifest.json",
+    "openspec/changes/build-thesisforge-v1-core/prototype/artifact/index.html",
+    "openspec/changes/build-thesisforge-v1-core/prototype/evidence/verify-ui.cjs",
+    "openspec/changes/build-thesisforge-v1-core/specs/offline-cli-pipeline/spec.md",
+    "openspec/changes/build-thesisforge-v1-core/specs/render-plan-docx/spec.md",
+    "openspec/changes/build-thesisforge-v1-core/specs/thesis-markdown-model/spec.md",
+    "openspec/specs/ui-design/design.md",
+    "openspec/specs/system-architecture/design.md",
+    "openspec/specs/component-architecture/design.md",
+    "openspec/specs/frontend-backend-data-flow/design.md"
+  ],
+  "allowed_files": [
+    "examples/bachelor-thesis/thesis.md",
+    "examples/bachelor-thesis/references.bib",
+    "examples/bachelor-thesis/images/acceptance-architecture.svg",
+    "examples/bachelor-thesis/images/acceptance-architecture.png",
+    "templates/schools/example-university/2026.yaml",
+    "src/thesis_forge/core/render_plan.py",
+    "src/thesis_forge/core/compiler.py",
+    "src/thesis_forge/renderers/docx/cover.py",
+    "src/thesis_forge/renderers/docx/figures.py",
+    "src/thesis_forge/renderers/docx/renderer.py",
+    "tests/test_acceptance.py",
+    "tests/test_compiler.py",
+    "tests/test_docx_renderer.py",
+    "tests/test_template.py",
+    "tests/test_prototype_acceptance.py",
+    "openspec/changes/build-thesisforge-v1-core/prototype/evidence/browser-verification.json",
+    "openspec/changes/build-thesisforge-v1-core/prototype/evidence/desktop-populated.png",
+    "openspec/changes/build-thesisforge-v1-core/prototype/evidence/mobile-preview.png",
+    "openspec/changes/build-thesisforge-v1-core/prototype/evidence/mobile-permission.png"
+  ],
+  "test_paths": [
+    "tests/test_acceptance.py",
+    "tests/test_prototype_acceptance.py",
+    "tests/test_compiler.py",
+    "tests/test_docx_renderer.py"
+    ,"tests/test_template.py"
+  ],
+  "non_goals": [
+    "Do not implement packaging, installation, release or final maintainer handoff before task 009.",
+    "Do not add new Markdown syntax or Template Model fields.",
+    "Do not build a production PySide6 UI, backend service, account, cloud, market or AI feature.",
+    "Do not hard-code school formatting in Compiler or Renderer.",
+    "Do not require byte-for-byte identical DOCX archives.",
+    "Do not redesign the approved prototype unless fresh verification proves a contract failure."
+  ],
+  "expected_evidence": [
+    "Observed RED and GREEN complete-example acceptance tests",
+    "Semantic inventory proves all required V1 objects are present",
+    "Subprocess inspect, validate and build succeed with network connections blocked and AI credentials removed",
+    "Input Markdown, BibTeX, template and image hashes remain unchanged",
+    "Generated DOCX passes ZIP, CRC, required-part and XML parsing checks",
+    "OOXML proves visible cover content and real TOC, SEQ, REF, Bookmark, PAGE, NUMPAGES, OMML, footnote, section, header and footer structures",
+    "OOXML proves real figure media, three-line table, citations, bibliography, acknowledgements and appendix",
+    "Repeated builds have normalized semantic equivalence",
+    "python-docx reload and LibreOffice DOCX-to-PDF conversion",
+    "Rendered PDF page and content inspection",
+    "Prototype logic harness output",
+    "Fresh Chrome desktop/mobile populated and required-state verification output and screenshots",
+    "Full pytest, Ruff, pip check and git diff check output",
+    "CodeGraph claim evidence",
+    "Task report, independent spec review and independent quality review"
+  ],
+  "unsafe_assumptions": [
+    "A cover section role necessarily renders visible cover content.",
+    "Successful validation proves complete semantic coverage.",
+    "A valid DOCX ZIP proves required Word objects exist.",
+    "Office conversion alone proves acceptable sensory output.",
+    "Static prototype markup alone proves mobile behavior and interactive states.",
+    "Existing screenshots are fresh evidence for the current prototype."
+  ],
+  "stop_condition": "Stop if work leaves the allowlist, requires new syntax or template fields, hard-codes school formatting, substitutes text for real Word objects, cannot reproduce Office/browser evidence, or expands into task 009."
+}

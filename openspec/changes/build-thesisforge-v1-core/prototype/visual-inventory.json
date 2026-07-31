@@ -1,0 +1,124 @@
+{
+  "schema": "specnav.prototype.visualInventory.v1",
+  "version": "1",
+  "discovery_status": "complete",
+  "source_project": "ThesisForge",
+  "evidence": {
+    "screenshots": [
+      "README.md#10 开发里程碑",
+      "docs/V1_PLAN.md#M9 Desktop UI",
+      "openspec/specs/ui-design/design.md#Overview"
+    ],
+    "routes": [
+      "No production UI route exists because the PySide6 desktop adapter is deferred beyond the V1 core"
+    ],
+    "design_specs": [
+      "openspec/specs/ui-design/design.md",
+      "docs/ARCHITECTURE.md#9 UI",
+      "README.md#1 产品原则"
+    ],
+    "component_sources": [
+      "openspec/changes/build-thesisforge-v1-core/component-impact-map.json",
+      "openspec/specs/component-architecture/design.md"
+    ],
+    "domain_sources": [
+      "README.md#4 核心数据流",
+      "docs/V1_PLAN.md",
+      "openspec/changes/build-thesisforge-v1-core/requirements.md",
+      "openspec/changes/build-thesisforge-v1-core/acceptance.md"
+    ],
+    "generation_sources": [
+      "Open Design project thesisforge-html-workbench-20260729",
+      "Open Design run b1f13111-e466-489e-9584-129bedea210a"
+    ],
+    "codegraph_claims": []
+  },
+  "project_shell": {
+    "source": "Future desktop shell defined by README, V1 plan, architecture and approved UI foundation",
+    "required_elements": [
+      "ThesisForge identity and local-first status",
+      "current Markdown document identity",
+      "school template selector",
+      "DOCX build action",
+      "paper outline",
+      "Markdown editor",
+      "Word paper preview",
+      "structured ValidationIssue diagnostics",
+      "deterministic compiler pipeline status"
+    ],
+    "omitted_elements": [
+      "account menu",
+      "tenant selector",
+      "cloud synchronization",
+      "theme switcher",
+      "locale switcher",
+      "AI chat sidebar"
+    ],
+    "theme_policy": "light-only with no theme control",
+    "i18n_policy": "fixed zh-CN product copy with no locale control"
+  },
+  "business_surface": {
+    "screens": [
+      "thesisforge-workbench"
+    ],
+    "fields": [
+      "source Markdown document",
+      "school template",
+      "outline heading hierarchy",
+      "stable semantic IDs",
+      "figure and equation targets",
+      "validation severity",
+      "validation code",
+      "source line",
+      "diagnostic target",
+      "build stage",
+      "output DOCX"
+    ],
+    "actions": [
+      "select school template",
+      "navigate outline",
+      "edit Markdown fixture",
+      "locate diagnostic source line",
+      "zoom Word preview",
+      "switch review state",
+      "run simulated DOCX build",
+      "recover from empty, error, disabled and permission states"
+    ],
+    "states": [
+      "populated",
+      "loading",
+      "empty",
+      "error",
+      "disabled",
+      "permission"
+    ]
+  },
+  "verification_matrix": {
+    "viewports": [
+      "desktop 1440x1000",
+      "mobile 390x844"
+    ],
+    "theme_modes": [
+      "light"
+    ],
+    "locales": [
+      "zh-CN fixed copy"
+    ],
+    "states": [
+      "populated",
+      "loading",
+      "empty",
+      "error",
+      "disabled",
+      "permission"
+    ]
+  },
+  "unsupported_capabilities": [
+    "production persistence",
+    "real DOCX rendering",
+    "dark theme",
+    "theme switching",
+    "runtime locale switching",
+    "cloud services"
+  ]
+}

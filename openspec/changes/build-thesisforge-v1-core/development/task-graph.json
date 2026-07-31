@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "planning_status": "ready",
+  "tasks": [
+    {
+      "task_id": "001-offline-thesis-inspection",
+      "name": "offline-thesis-inspection",
+      "depends_on": []
+    },
+    {
+      "task_id": "002-actionable-validation",
+      "name": "actionable-validation",
+      "depends_on": ["001-offline-thesis-inspection"]
+    },
+    {
+      "task_id": "003-template-driven-basic-docx",
+      "name": "template-driven-basic-docx",
+      "depends_on": ["001-offline-thesis-inspection", "002-actionable-validation"]
+    },
+    {
+      "task_id": "004-numbered-figures-and-tables",
+      "name": "numbered-figures-and-tables",
+      "depends_on": ["003-template-driven-basic-docx"]
+    },
+    {
+      "task_id": "005-equations-references-and-page-structure",
+      "name": "equations-references-and-page-structure",
+      "depends_on": ["003-template-driven-basic-docx"]
+    },
+    {
+      "task_id": "006-local-citations-and-bibliography",
+      "name": "local-citations-and-bibliography",
+      "depends_on": ["002-actionable-validation", "003-template-driven-basic-docx"]
+    },
+    {
+      "task_id": "007-safe-and-repeatable-builds",
+      "name": "safe-and-repeatable-builds",
+      "depends_on": [
+        "003-template-driven-basic-docx",
+        "004-numbered-figures-and-tables",
+        "005-equations-references-and-page-structure",
+        "006-local-citations-and-bibliography"
+      ]
+    },
+    {
+      "task_id": "008-complete-thesis-acceptance",
+      "name": "complete-thesis-acceptance",
+      "depends_on": ["007-safe-and-repeatable-builds"]
+    },
+    {
+      "task_id": "009-installation-and-maintenance-handoff",
+      "name": "installation-and-maintenance-handoff",
+      "depends_on": ["008-complete-thesis-acceptance"]
+    }
+  ]
+}

@@ -1,0 +1,127 @@
+{
+  "schema": "specnav.codegraph.evidence_query_plan.v1",
+  "generated_at": "2026-07-31T09:28:32.792Z",
+  "active_change": "build-thesisforge-v1-core",
+  "queries": [
+    {
+      "id": "development:task-001-offline-thesis-inspection:evidence",
+      "claim_id": "development:task-001-offline-thesis-inspection",
+      "stage": "development",
+      "task_id": "001-offline-thesis-inspection",
+      "status": "planned",
+      "query": "Find the files, symbols, components, routes, services, data flow, and tests that implement \"From a clean local Python environment, parse one thesis containing Front Matter,\" in change \"build-thesisforge-v1-core\". Return concrete file paths, symbols, relationships, and any missing implementation evidence.",
+      "expected_evidence": [
+        "file paths",
+        "symbols",
+        "call relationships",
+        "tests or verification commands"
+      ],
+      "command": "node \"$SPECNAV_CODEGRAPH_ROOT/scripts/codegraph-context.js\" --stage development --claim development:task-001-offline-thesis-inspection --query \"<query>\" --write --json"
+    },
+    {
+      "id": "development:task-002-actionable-validation:evidence",
+      "claim_id": "development:task-002-actionable-validation",
+      "stage": "development",
+      "task_id": "002-actionable-validation",
+      "status": "planned",
+      "query": "Find the files, symbols, components, routes, services, data flow, and tests that implement \"Implement `FLOW-VALIDATE` from CLI input through Parser, template resolution,\" in change \"build-thesisforge-v1-core\". Return concrete file paths, symbols, relationships, and any missing implementation evidence.",
+      "expected_evidence": [
+        "file paths",
+        "symbols",
+        "call relationships",
+        "tests or verification commands"
+      ],
+      "command": "node \"$SPECNAV_CODEGRAPH_ROOT/scripts/codegraph-context.js\" --stage development --claim development:task-002-actionable-validation --query \"<query>\" --write --json"
+    },
+    {
+      "id": "development:task-003-template-driven-basic-docx:evidence",
+      "claim_id": "development:task-003-template-driven-basic-docx",
+      "stage": "development",
+      "task_id": "003-template-driven-basic-docx",
+      "status": "planned",
+      "query": "Find the files, symbols, components, routes, services, data flow, and tests that implement \"Implement the basic `FLOW-BUILD` path from validated `ThesisDocument` and\" in change \"build-thesisforge-v1-core\". Return concrete file paths, symbols, relationships, and any missing implementation evidence.",
+      "expected_evidence": [
+        "file paths",
+        "symbols",
+        "call relationships",
+        "tests or verification commands"
+      ],
+      "command": "node \"$SPECNAV_CODEGRAPH_ROOT/scripts/codegraph-context.js\" --stage development --claim development:task-003-template-driven-basic-docx --query \"<query>\" --write --json"
+    },
+    {
+      "id": "development:task-004-numbered-figures-and-tables:evidence",
+      "claim_id": "development:task-004-numbered-figures-and-tables",
+      "stage": "development",
+      "task_id": "004-numbered-figures-and-tables",
+      "status": "planned",
+      "query": "Find the files, symbols, components, routes, services, data flow, and tests that implement \"Extend the existing `FLOW-BUILD` path from validated `Figure` and `Table`\" in change \"build-thesisforge-v1-core\". Return concrete file paths, symbols, relationships, and any missing implementation evidence.",
+      "expected_evidence": [
+        "file paths",
+        "symbols",
+        "call relationships",
+        "tests or verification commands"
+      ],
+      "command": "node \"$SPECNAV_CODEGRAPH_ROOT/scripts/codegraph-context.js\" --stage development --claim development:task-004-numbered-figures-and-tables --query \"<query>\" --write --json"
+    },
+    {
+      "id": "development:task-005-equations-references-and-page-structure:evidence",
+      "claim_id": "development:task-005-equations-references-and-page-structure",
+      "stage": "development",
+      "task_id": "005-equations-references-and-page-structure",
+      "status": "planned",
+      "query": "Find the files, symbols, components, routes, services, data flow, and tests that implement \"Extend the existing offline `FLOW-BUILD` path from Compiler-resolved equation,\" in change \"build-thesisforge-v1-core\". Return concrete file paths, symbols, relationships, and any missing implementation evidence.",
+      "expected_evidence": [
+        "file paths",
+        "symbols",
+        "call relationships",
+        "tests or verification commands"
+      ],
+      "command": "node \"$SPECNAV_CODEGRAPH_ROOT/scripts/codegraph-context.js\" --stage development --claim development:task-005-equations-references-and-page-structure --query \"<query>\" --write --json"
+    },
+    {
+      "id": "development:task-006-local-citations-and-bibliography:evidence",
+      "claim_id": "development:task-006-local-citations-and-bibliography",
+      "stage": "development",
+      "task_id": "006-local-citations-and-bibliography",
+      "status": "planned",
+      "query": "Find the files, symbols, components, routes, services, data flow, and tests that implement \"Extend the existing offline `FLOW-VALIDATE` and `FLOW-BUILD` paths from parsed\" in change \"build-thesisforge-v1-core\". Return concrete file paths, symbols, relationships, and any missing implementation evidence.",
+      "expected_evidence": [
+        "file paths",
+        "symbols",
+        "call relationships",
+        "tests or verification commands"
+      ],
+      "command": "node \"$SPECNAV_CODEGRAPH_ROOT/scripts/codegraph-context.js\" --stage development --claim development:task-006-local-citations-and-bibliography --query \"<query>\" --write --json"
+    },
+    {
+      "id": "development:task-007-safe-and-repeatable-builds:evidence",
+      "claim_id": "development:task-007-safe-and-repeatable-builds",
+      "stage": "development",
+      "task_id": "007-safe-and-repeatable-builds",
+      "status": "planned",
+      "query": "Find the files, symbols, components, routes, services, data flow, and tests that implement \"Extract the existing CLI orchestration into reusable inspect, validation and\" in change \"build-thesisforge-v1-core\". Return concrete file paths, symbols, relationships, and any missing implementation evidence.",
+      "expected_evidence": [
+        "file paths",
+        "symbols",
+        "call relationships",
+        "tests or verification commands"
+      ],
+      "command": "node \"$SPECNAV_CODEGRAPH_ROOT/scripts/codegraph-context.js\" --stage development --claim development:task-007-safe-and-repeatable-builds --query \"<query>\" --write --json"
+    },
+    {
+      "id": "development:task-008-complete-thesis-acceptance:evidence",
+      "claim_id": "development:task-008-complete-thesis-acceptance",
+      "stage": "development",
+      "task_id": "008-complete-thesis-acceptance",
+      "status": "planned",
+      "query": "Find the files, symbols, components, routes, services, data flow, and tests that implement \"Expand the repository bachelor-thesis example into the complete V1 acceptance\" in change \"build-thesisforge-v1-core\". Return concrete file paths, symbols, relationships, and any missing implementation evidence.",
+      "expected_evidence": [
+        "file paths",
+        "symbols",
+        "call relationships",
+        "tests or verification commands"
+      ],
+      "command": "node \"$SPECNAV_CODEGRAPH_ROOT/scripts/codegraph-context.js\" --stage development --claim development:task-008-complete-thesis-acceptance --query \"<query>\" --write --json"
+    }
+  ]
+}

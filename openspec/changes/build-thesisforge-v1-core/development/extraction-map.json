@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "component_rules": [
+    "Extract stable ID and prefix checks into a renderer-neutral core utility.",
+    "Extract parser container transitions before adding list and footnote syntax.",
+    "Extract composable validator rules behind ValidationContext while preserving validate_document compatibility.",
+    "Extract length and font conversion from DOCX document orchestration.",
+    "Extract numbering, bookmark and reference resolution into compiler services.",
+    "Extract field, bookmark, OMML, footnote and section XML construction into focused DOCX helpers.",
+    "Extract BibTeX loading from citation formatting and DOCX rendering.",
+    "Extract inspect, validation and build flows so CLI and future PySide6 adapters share behavior.",
+    "Extract atomic output writing and package validation from content rendering."
+  ]
+}
