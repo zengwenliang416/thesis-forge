@@ -1,0 +1,22 @@
+{
+  "schema": "specnav.codegraph.evidence_query_plan.v1",
+  "generated_at": "2026-07-31T14:58:49.871Z",
+  "active_change": "build-thesisforge-desktop-ui",
+  "queries": [
+    {
+      "id": "development:task-001-archive-safe-prototype-baseline:evidence",
+      "claim_id": "development:task-001-archive-safe-prototype-baseline",
+      "stage": "development",
+      "task_id": "001-archive-safe-prototype-baseline",
+      "status": "planned",
+      "query": "Find the files, symbols, components, routes, services, data flow, and tests that implement \"Resolve the unique archived `build-thesisforge-v1-core` directory, run its\" in change \"build-thesisforge-desktop-ui\". Return concrete file paths, symbols, relationships, and any missing implementation evidence.",
+      "expected_evidence": [
+        "file paths",
+        "symbols",
+        "call relationships",
+        "tests or verification commands"
+      ],
+      "command": "node \"$SPECNAV_CODEGRAPH_ROOT/scripts/codegraph-context.js\" --stage development --claim development:task-001-archive-safe-prototype-baseline --query \"<query>\" --write --json"
+    }
+  ]
+}

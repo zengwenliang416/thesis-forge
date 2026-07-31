@@ -1,0 +1,45 @@
+{
+  "schema": "specnav.codegraph.evidence_index.v1",
+  "generated_at": "2026-07-31T15:21:05.941Z",
+  "active_change": "build-thesisforge-desktop-ui",
+  "source_raw": "openspec/changes/build-thesisforge-desktop-ui/codegraph/evidence.jsonl",
+  "by_claim": {
+    "development:task-001-archive-safe-prototype-baseline": {
+      "status": "matched",
+      "evidence_ids": [
+        "ev-ms92lwbo",
+        "ev-ms93b24v"
+      ],
+      "files": [
+        "tests/test_prototype_acceptance.py",
+        "marker.js",
+        "harness.js",
+        "index.html",
+        "app.js",
+        "styles.cs",
+        "browser-verification.js",
+        "desktop.go",
+        "mobile.go",
+        "tests/test_acceptance.py",
+        "tests/test_distribution.py",
+        "thesis.md",
+        "sitecustomize.py",
+        "verify_distribution.py"
+      ],
+      "symbols": [],
+      "blockers": []
+    }
+  },
+  "by_stage": {
+    "development": {
+      "verified": 2,
+      "partial": 0,
+      "missing": 0,
+      "stale": 0,
+      "blocking": 0
+    }
+  },
+  "blockers": [],
+  "raw_exists": true,
+  "record_count": 2
+}

@@ -1,8 +1,16 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-07-31T14:32:11.178Z",
-  "current_focus": null,
+  "generated_at": "2026-07-31T14:53:10.486Z",
+  "current_focus": "build-thesisforge-desktop-ui",
   "changes": [
+    {
+      "id": "build-thesisforge-desktop-ui",
+      "stage": "development",
+      "status": "active",
+      "branch": null,
+      "created_at": null,
+      "last_active_at": null
+    },
     {
       "id": "build-thesisforge-v1-core",
       "stage": "archived",
@@ -10,8 +18,8 @@
       "branch": "main",
       "created_at": null,
       "last_active_at": "2026-07-31",
-      "archived_at": "2026-07-31T14:32:11.156Z",
-      "archive_path": "openspec/changes/archive/2026-07-31-build-thesisforge-v1-core"
+      "archive_path": "openspec/changes/archive/2026-07-31-build-thesisforge-v1-core",
+      "archived_at": "2026-07-31T14:32:11.156Z"
     }
   ]
 }

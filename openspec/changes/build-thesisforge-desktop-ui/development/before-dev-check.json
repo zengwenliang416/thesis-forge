@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "active_change": "build-thesisforge-desktop-ui",
+  "status": "ready",
+  "ok": true,
+  "checked_at": "2026-07-31T14:56:08Z",
+  "requirements": {
+    "status": "approved",
+    "references": [
+      "openspec/changes/build-thesisforge-desktop-ui/requirements.md",
+      "openspec/changes/build-thesisforge-desktop-ui/acceptance.md",
+      "openspec/changes/build-thesisforge-desktop-ui/acceptance.json",
+      "openspec/changes/build-thesisforge-desktop-ui/spec-map.json",
+      "openspec/changes/build-thesisforge-desktop-ui/component-impact-map.json"
+    ]
+  },
+  "prototype": {
+    "status": "approved",
+    "decision": "openspec/changes/build-thesisforge-desktop-ui/prototype/decision.json",
+    "entry": "openspec/changes/build-thesisforge-desktop-ui/prototype/artifact/index.html",
+    "handoff": "openspec/changes/build-thesisforge-desktop-ui/prototype/handoff.md"
+  },
+  "scope": {
+    "status": "locked",
+    "reference": "openspec/changes/build-thesisforge-desktop-ui/scope.json"
+  },
+  "architecture_decision": "PySide6 remains an optional adapter under src/thesis_forge/ui; core CLI and application services remain importable and executable without PySide6, network, database, account, AI, or telemetry dependencies.",
+  "blockers": []
+}

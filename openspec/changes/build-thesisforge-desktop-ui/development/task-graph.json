@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "planning_status": "ready",
+  "tasks": [
+    {
+      "task_id": "001-archive-safe-prototype-baseline",
+      "name": "archive-safe-prototype-baseline",
+      "depends_on": []
+    },
+    {
+      "task_id": "002-headless-workspace-state-controller",
+      "name": "headless-workspace-state-controller",
+      "depends_on": ["001-archive-safe-prototype-baseline"]
+    },
+    {
+      "task_id": "003-explicit-source-open-atomic-save",
+      "name": "explicit-source-open-atomic-save",
+      "depends_on": ["002-headless-workspace-state-controller"]
+    },
+    {
+      "task_id": "004-optional-pyside6-workbench-shell",
+      "name": "optional-pyside6-workbench-shell",
+      "depends_on": ["002-headless-workspace-state-controller", "003-explicit-source-open-atomic-save"]
+    },
+    {
+      "task_id": "005-template-selection-structured-diagnostics",
+      "name": "template-selection-structured-diagnostics",
+      "depends_on": ["003-explicit-source-open-atomic-save", "004-optional-pyside6-workbench-shell"]
+    },
+    {
+      "task_id": "006-outline-renderer-neutral-preview",
+      "name": "outline-renderer-neutral-preview",
+      "depends_on": ["002-headless-workspace-state-controller", "005-template-selection-structured-diagnostics"]
+    },
+    {
+      "task_id": "007-safe-background-build-cancellation",
+      "name": "safe-background-build-cancellation",
+      "depends_on": [
+        "002-headless-workspace-state-controller",
+        "003-explicit-source-open-atomic-save",
+        "004-optional-pyside6-workbench-shell",
+        "005-template-selection-structured-diagnostics",
+        "006-outline-renderer-neutral-preview"
+      ]
+    },
+    {
+      "task_id": "008-complete-desktop-acceptance-distribution",
+      "name": "complete-desktop-acceptance-distribution",
+      "depends_on": ["007-safe-background-build-cancellation"]
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "schema": "specnav.codegraph.claims.v1",
+  "generated_at": "2026-07-31T14:58:49.870Z",
+  "active_change": "build-thesisforge-desktop-ui",
+  "claims": [
+    {
+      "id": "development:task-001-archive-safe-prototype-baseline",
+      "kind": "development-task",
+      "stage": "development",
+      "task_id": "001-archive-safe-prototype-baseline",
+      "text": "Resolve the unique archived `build-thesisforge-v1-core` directory, run its",
+      "required": true,
+      "source": "specnav-codegraph-plan",
+      "source_paths": [
+        "openspec/changes/build-thesisforge-desktop-ui/development/tasks/001-archive-safe-prototype-baseline/brief.md",
+        "openspec/changes/build-thesisforge-desktop-ui/development/tasks/001-archive-safe-prototype-baseline/context.json"
+      ],
+      "expected_evidence": [
+        "Observed red baseline from the former active prototype path",
+        "Focused zero-match, ambiguous-match, active-exclusion, missing-evidence and immutability tests",
+        "Existing harness, artifact and browser-evidence tests passing from the archive",
+        "Closest distribution and strict OpenSpec checks",
+        "Task report, spec review and quality review"
+      ],
+      "allowed_files": [
+        "tests/test_prototype_acceptance.py"
+      ],
+      "query_ids": [
+        "development:task-001-archive-safe-prototype-baseline:evidence"
+      ]
+    }
+  ]
+}

@@ -4,12 +4,12 @@
 
 用户结果：完成 V1 归档后，已批准桌面原型的契约测试仍能稳定运行，后续 UI 开发从绿色基线开始。
 
-- [ ] 1.1 Add a deterministic helper that locates the single archived `build-thesisforge-v1-core` prototype.
-- [ ] 1.2 Update prototype harness, artifact, and browser-evidence tests to use the archived location.
-- [ ] 1.3 Add tests for missing archive evidence and ambiguous matching archive directories.
-- [ ] 1.4 Assert the locator never selects an active change or mutates archived evidence.
-- [ ] 1.5 Run `tests/test_prototype_acceptance.py` and the closest archive/OpenSpec checks.
-- [ ] 1.6 Record red-green evidence, spec review, quality review, and extraction decision for slice 001.
+- [x] 1.1 Add a deterministic helper that locates the single archived `build-thesisforge-v1-core` prototype.
+- [x] 1.2 Update prototype harness, artifact, and browser-evidence tests to use the archived location.
+- [x] 1.3 Add tests for missing archive evidence and ambiguous matching archive directories.
+- [x] 1.4 Assert the locator never selects an active change or mutates archived evidence.
+- [x] 1.5 Run `tests/test_prototype_acceptance.py` and the closest archive/OpenSpec checks.
+- [x] 1.6 Record red-green evidence, spec review, quality review, and extraction decision for slice 001.
 
 ## 2. Headless Workspace State And Controller
 

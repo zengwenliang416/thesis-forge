@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "budgets": [
+    {
+      "area": "archive evidence",
+      "limit": "one deterministic test helper locates exactly one archived V1 prototype without writes"
+    },
+    {
+      "area": "headless state",
+      "limit": "controller and immutable view models contain no PySide6, python-docx or lxml imports"
+    },
+    {
+      "area": "widget cohesion",
+      "limit": "each panel renders one user-facing responsibility and delegates orchestration to WorkspaceController"
+    },
+    {
+      "area": "application reuse",
+      "limit": "zero duplicate parser, validator, compiler, numbering, bibliography or renderer implementations in UI modules"
+    },
+    {
+      "area": "async behavior",
+      "limit": "one operation-token contract handles stale-result suppression across inspect, validate and build"
+    },
+    {
+      "area": "filesystem safety",
+      "limit": "one atomic source writer and the existing atomic DOCX finalizer own replacement behavior"
+    },
+    {
+      "area": "preview boundary",
+      "limit": "preview consumes typed domain/render-plan data and never opens DOCX or raw OOXML"
+    },
+    {
+      "area": "optional dependency",
+      "limit": "all PySide6 imports remain under src/thesis_forge/ui or the lazy UI entrypoint"
+    }
+  ]
+}

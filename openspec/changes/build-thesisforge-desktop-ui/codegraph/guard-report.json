@@ -1,0 +1,129 @@
+{
+  "schema": "specnav.codegraph.guard_report.v1",
+  "generated_at": "2026-07-31T15:22:30.226Z",
+  "active_change": "build-thesisforge-desktop-ui",
+  "stage": "development",
+  "ok": true,
+  "status": {
+    "policy": {
+      "enabled": true,
+      "profile": "active_dev",
+      "mode": "advisory",
+      "stage": "development",
+      "required_for_stage": false,
+      "disabled_reason": null
+    },
+    "execution_surface": "cli",
+    "cli": {
+      "available": true,
+      "version": "1.3.1",
+      "path": "/Users/wenliang_zeng/.local/bin/codegraph",
+      "unsupported": false,
+      "error": null
+    },
+    "mcp": {
+      "configured": true,
+      "visible_in_current_session": false,
+      "restart_required": true,
+      "config_files": [
+        "/Users/wenliang_zeng/.claude.json",
+        "/Users/wenliang_zeng/.codex/config.toml"
+      ]
+    },
+    "index": {
+      "initialized": true,
+      "projectPath": "/Volumes/zwl/open_sources/thesis-forge",
+      "indexPath": "/Volumes/zwl/open_sources/thesis-forge/.codegraph",
+      "lastIndexed": "2026-07-31T15:20:52.084Z",
+      "fileCount": 71,
+      "nodeCount": 995,
+      "edgeCount": 2812,
+      "pendingChanges": {
+        "added": 0,
+        "modified": 0,
+        "removed": 0
+      },
+      "reindexRecommended": false,
+      "worktreeMismatch": null
+    }
+  },
+  "decision": {
+    "schema": "specnav.codegraph.decision.v1",
+    "stage": "development",
+    "profile": "active_dev",
+    "effective_mode": "advisory",
+    "required_for_stage": false,
+    "execution_surface": "cli",
+    "result": "pass",
+    "blockers": [],
+    "warnings": [],
+    "explanation": "CodeGraph policy satisfied for development."
+  },
+  "evidence_index": {
+    "schema": "specnav.codegraph.evidence_index.v1",
+    "generated_at": "2026-07-31T15:21:05.941Z",
+    "active_change": "build-thesisforge-desktop-ui",
+    "source_raw": "openspec/changes/build-thesisforge-desktop-ui/codegraph/evidence.jsonl",
+    "by_claim": {
+      "development:task-001-archive-safe-prototype-baseline": {
+        "status": "matched",
+        "evidence_ids": [
+          "ev-ms92lwbo",
+          "ev-ms93b24v"
+        ],
+        "files": [
+          "tests/test_prototype_acceptance.py",
+          "marker.js",
+          "harness.js",
+          "index.html",
+          "app.js",
+          "styles.cs",
+          "browser-verification.js",
+          "desktop.go",
+          "mobile.go",
+          "tests/test_acceptance.py",
+          "tests/test_distribution.py",
+          "thesis.md",
+          "sitecustomize.py",
+          "verify_distribution.py"
+        ],
+        "symbols": [],
+        "blockers": []
+      }
+    },
+    "by_stage": {
+      "development": {
+        "verified": 2,
+        "partial": 0,
+        "missing": 0,
+        "stale": 0,
+        "blocking": 0
+      }
+    },
+    "blockers": [],
+    "raw_exists": true,
+    "record_count": 2
+  },
+  "claims_report": {
+    "schema": "specnav.codegraph.claims_report.v1",
+    "generated_at": "2026-07-31T15:22:30.226Z",
+    "active_change": "build-thesisforge-desktop-ui",
+    "claims_file": "openspec/changes/build-thesisforge-desktop-ui/codegraph/claims-map.json",
+    "evidence_index": "openspec/changes/build-thesisforge-desktop-ui/codegraph/evidence-index.json",
+    "claims_count": 1,
+    "verified_claims": [
+      "development:task-001-archive-safe-prototype-baseline"
+    ],
+    "unverified_claims": [],
+    "blockers": [],
+    "warnings": []
+  },
+  "drift": {
+    "schema": "specnav.codegraph.drift.v1",
+    "active_change": "build-thesisforge-desktop-ui",
+    "drift": [],
+    "blockers": []
+  },
+  "blockers": [],
+  "warnings": []
+}

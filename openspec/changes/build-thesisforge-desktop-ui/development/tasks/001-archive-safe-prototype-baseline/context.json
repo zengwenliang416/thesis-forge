@@ -1,0 +1,47 @@
+{
+  "task_id": "001-archive-safe-prototype-baseline",
+  "goal": "Archived V1 prototype contract tests deterministically locate exactly one immutable archive and fail clearly when evidence is missing or ambiguous.",
+  "must_read": [
+    "openspec/changes/build-thesisforge-desktop-ui/development/tasks/001-archive-safe-prototype-baseline/brief.md",
+    "AGENTS.md",
+    "openspec/changes/build-thesisforge-desktop-ui/requirements.md",
+    "openspec/changes/build-thesisforge-desktop-ui/acceptance.md",
+    "openspec/changes/build-thesisforge-desktop-ui/acceptance.json",
+    "openspec/changes/build-thesisforge-desktop-ui/spec-map.json",
+    "openspec/changes/build-thesisforge-desktop-ui/component-impact-map.json",
+    "openspec/changes/build-thesisforge-desktop-ui/prototype/handoff.md",
+    "openspec/changes/build-thesisforge-desktop-ui/prototype/decision.json",
+    "openspec/changes/build-thesisforge-desktop-ui/prototype/artifact/index.html",
+    "openspec/specs/ui-design/design.md",
+    "openspec/specs/system-architecture/design.md",
+    "openspec/specs/frontend-backend-data-flow/design.md",
+    "openspec/specs/component-architecture/design.md",
+    "tests/test_prototype_acceptance.py"
+  ],
+  "allowed_files": [
+    "tests/test_prototype_acceptance.py"
+  ],
+  "test_paths": [
+    "tests/test_prototype_acceptance.py"
+  ],
+  "non_goals": [
+    "Do not recreate an active build-thesisforge-v1-core change.",
+    "Do not mutate archived or active prototype evidence.",
+    "Do not add production OpenSpec archive-discovery behavior.",
+    "Do not begin PySide6, controller, save, preview, diagnostics, or build work in this slice."
+  ],
+  "expected_evidence": [
+    "Observed red baseline from the former active prototype path",
+    "Focused zero-match, ambiguous-match, active-exclusion, missing-evidence and immutability tests",
+    "Existing harness, artifact and browser-evidence tests passing from the archive",
+    "Closest distribution and strict OpenSpec checks",
+    "Task report, spec review and quality review"
+  ],
+  "unsafe_assumptions": [
+    "The former active-change path still exists after archive.",
+    "Selecting the newest of multiple matching archives is deterministic enough.",
+    "A matching archive directory necessarily contains complete prototype evidence.",
+    "Filesystem discovery may touch archived evidence without affecting its evidentiary value."
+  ],
+  "stop_condition": "Stop if implementation would edit outside tests/test_prototype_acceptance.py, mutate prototype evidence, select active changes, or guess among multiple archives."
+}

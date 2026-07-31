@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "promotion_policy": "reimplement_under_development_gate",
+  "allowed_to_copy": [
+    "Concise zh-CN labels approved in prototype handoff",
+    "FLOW-OPEN-SOURCE, FLOW-SAVE-SOURCE, FLOW-INSPECT, FLOW-VALIDATE and FLOW-BUILD stage names",
+    "Outline, Editor, Preview, Diagnostics, Template Selector and Build information architecture",
+    "Populated, dirty, loading, empty, error, disabled, permission, canceled and success state semantics"
+  ],
+  "must_reimplement": [
+    "All production PySide6 widgets and layout behavior",
+    "Workspace state, service orchestration, task execution and generation-token handling",
+    "Atomic source writes, template resolution, validation, preview mapping, progress, cancellation and output side effects"
+  ],
+  "blocked_direct_copies": [
+    "openspec/changes/build-thesisforge-desktop-ui/prototype/artifact/index.html",
+    "openspec/changes/build-thesisforge-desktop-ui/prototype/artifact/styles.css",
+    "openspec/changes/build-thesisforge-desktop-ui/prototype/artifact/app.js",
+    "Prototype-only fixtures, mock data, simulated timers, fake diagnostics and review-only responsive layout glue"
+  ],
+  "approved_source": "openspec/changes/build-thesisforge-desktop-ui/prototype/artifact/index.html",
+  "decision": "openspec/changes/build-thesisforge-desktop-ui/prototype/decision.json"
+}

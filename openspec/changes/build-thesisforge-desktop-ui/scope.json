@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "change_id": "build-thesisforge-desktop-ui",
+  "stage": "development",
+  "allowed_roots": [
+    "src",
+    "tests",
+    "docs",
+    "openspec/changes/build-thesisforge-desktop-ui/development",
+    "openspec/changes/build-thesisforge-desktop-ui/codegraph",
+    "openspec/changes/build-thesisforge-desktop-ui/tasks.md",
+    "openspec/changes/build-thesisforge-desktop-ui/scope.json",
+    "pyproject.toml",
+    "README.md"
+  ],
+  "denied_roots": [
+    ".git",
+    "node_modules",
+    "dist",
+    "coverage",
+    "openspec/specs",
+    "openspec/changes/build-thesisforge-desktop-ui/prototype",
+    "openspec/changes/archive/2026-07-31-build-thesisforge-v1-core"
+  ],
+  "requires_review_on": [
+    "pyproject.toml",
+    "src/thesis_forge/application",
+    "src/thesis_forge/ui",
+    "src/thesis_forge/renderers/docx",
+    "tests/test_prototype_acceptance.py"
+  ],
+  "allowed_operations": {
+    "create": true,
+    "modify": true,
+    "delete": false,
+    "rename": false
+  },
+  "prototype_sources": [
+    "openspec/changes/build-thesisforge-desktop-ui/prototype/artifact/index.html"
+  ],
+  "expires_when": "verification_started"
+}
