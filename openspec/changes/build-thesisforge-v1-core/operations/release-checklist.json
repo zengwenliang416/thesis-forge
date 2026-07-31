@@ -1,0 +1,32 @@
+{
+  "schema": "specnav.ops.releaseChecklist.v1",
+  "change": "build-thesisforge-v1-core",
+  "release_target": "local-only",
+  "checks": [
+    {
+      "name": "verification green",
+      "status": "pass",
+      "evidence": "verify/aggregate-report.json: all six domains green; make verify: 124 passed"
+    },
+    {
+      "name": "release docs prepared",
+      "status": "pass",
+      "evidence": "operations/changelog.md and operations/release-notes.md"
+    },
+    {
+      "name": "local distribution validated",
+      "status": "pass",
+      "evidence": "verify/e2e/report.json and verify/receipt.json cover wheel, sdist, and installed-wheel behavior"
+    },
+    {
+      "name": "public release prohibited",
+      "status": "pass",
+      "evidence": "README.md license boundary and verify/receipt.json residual risk"
+    },
+    {
+      "name": "tasks complete",
+      "status": "pass",
+      "evidence": "tasks.md contains 65 completed checkbox tasks and no incomplete tasks"
+    }
+  ]
+}
