@@ -13,7 +13,10 @@
     "minimum-window-responsive-panels"
   ],
   "architecture_modules": [
+    "frontend",
+    "src-tauri",
     "src/thesis_forge/ui",
+    "src/thesis_forge/adapters",
     "src/thesis_forge/application",
     "src/thesis_forge/core",
     "src/thesis_forge/templates",
@@ -23,7 +26,9 @@
     "inspect_service(source)",
     "validation_service(source, template_path)",
     "build_service(source, output, template_path, on_progress)",
-    "thesisforge-ui entrypoint"
+    "WorkbenchTransport v1",
+    "Web HTTP adapter",
+    "Tauri command and sidecar adapter"
   ],
   "database_entities": [
     "none"
@@ -34,9 +39,11 @@
     "no elevated privileges"
   ],
   "operational_constraints": [
-    "offline-only",
-    "optional PySide6 dependency",
-    "no database or server",
+    "offline desktop",
+    "shared React TypeScript Vite frontend",
+    "Tauri 2 macOS and Windows wrappers",
+    "versioned Web HTTP adapter",
+    "no database",
     "atomic source and DOCX replacement",
     "no autosave",
     "local-only distribution until licensing changes"
@@ -44,6 +51,8 @@
   "data_flows": [
     "FLOW-OPEN-SOURCE",
     "FLOW-SAVE-SOURCE",
+    "FLOW-WEB-TRANSPORT",
+    "FLOW-TAURI-TRANSPORT",
     "FLOW-INSPECT",
     "FLOW-VALIDATE",
     "FLOW-BUILD"

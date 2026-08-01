@@ -215,7 +215,12 @@ templates/schools/<school>/<year>.yaml
 - lxml：OOXML 低层控制
 - Pandoc：Markdown AST/转换语义参考，可作为可选 parser backend
 - citeproc-py：CSL 引用处理候选
-- PySide6：桌面 UI（V1 后半段）
+- React + TypeScript + Vite：Web、macOS、Windows 共用前端
+- Tauri 2：macOS / Windows 桌面壳与托管 Python sidecar
+
+Web 通过版本化 HTTP adapter 调用 Python application services；macOS 和 Windows
+通过 Tauri command bridge 调用相同 services。Python CLI 不依赖 Node.js、Rust、
+Tauri 或 HTTP server，仍可独立离线运行。
 
 ## 10. 开发里程碑
 

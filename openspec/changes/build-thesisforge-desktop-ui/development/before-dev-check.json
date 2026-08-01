@@ -24,6 +24,6 @@
     "status": "locked",
     "reference": "openspec/changes/build-thesisforge-desktop-ui/scope.json"
   },
-  "architecture_decision": "PySide6 remains an optional adapter under src/thesis_forge/ui; core CLI and application services remain importable and executable without PySide6, network, database, account, AI, or telemetry dependencies.",
+  "architecture_decision": "One React + TypeScript + Vite frontend supports Web, macOS, and Windows; Tauri 2 packages desktop targets, Web uses a versioned HTTP adapter, desktop uses a managed Python sidecar, and the core CLI remains executable without Node.js, Rust, Tauri, HTTP, database, account, AI, or telemetry dependencies.",
   "blockers": []
 }

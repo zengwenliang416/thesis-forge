@@ -3,6 +3,8 @@
   "change_id": "build-thesisforge-desktop-ui",
   "stage": "development",
   "allowed_roots": [
+    "frontend",
+    "src-tauri",
     "src",
     "tests",
     "docs",
@@ -11,6 +13,8 @@
     "openspec/changes/build-thesisforge-desktop-ui/tasks.md",
     "openspec/changes/build-thesisforge-desktop-ui/scope.json",
     "pyproject.toml",
+    "package.json",
+    "pnpm-lock.yaml",
     "README.md"
   ],
   "denied_roots": [
@@ -25,7 +29,10 @@
   "requires_review_on": [
     "pyproject.toml",
     "src/thesis_forge/application",
+    "src/thesis_forge/adapters",
     "src/thesis_forge/ui",
+    "frontend",
+    "src-tauri",
     "src/thesis_forge/renderers/docx",
     "tests/test_prototype_acceptance.py"
   ],

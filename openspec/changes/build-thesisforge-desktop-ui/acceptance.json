@@ -4,7 +4,7 @@
   "assertions": [
     {
       "id": "A1",
-      "statement": "The optional thesisforge-ui entrypoint opens the local light-theme zh-CN workbench without network access.",
+      "statement": "The Web build and macOS/Windows Tauri packages open the same light-theme zh-CN workbench.",
       "verify_via": "e2e",
       "status": "failing",
       "evidence_ref": null
@@ -46,14 +46,14 @@
     },
     {
       "id": "A7",
-      "statement": "UI modules call application services without duplicating compiler behavior or leaking PySide6 into core modules.",
+      "statement": "React components call typed transport adapters without duplicating compiler behavior or leaking React, Tauri, or HTTP framework dependencies into core modules.",
       "verify_via": "static",
       "status": "failing",
       "evidence_ref": null
     },
     {
       "id": "A8",
-      "statement": "Core CLI and package imports remain usable when PySide6 is not installed.",
+      "statement": "Core CLI and package imports remain usable without Node.js, Rust, Tauri, or an HTTP server.",
       "verify_via": "e2e",
       "status": "failing",
       "evidence_ref": null
@@ -74,14 +74,14 @@
     },
     {
       "id": "A11",
-      "statement": "Keyboard, focus, labels, contrast, and resize behavior satisfy the approved desktop workbench contract.",
+      "statement": "Keyboard, focus, labels, contrast, responsive layout, and resize behavior satisfy the approved workbench contract in browser, macOS, and Windows runtimes.",
       "verify_via": "sensory",
       "status": "failing",
       "evidence_ref": null
     },
     {
       "id": "A12",
-      "statement": "All UI workflows remain local and deterministic with sockets blocked and no credentials.",
+      "statement": "Desktop workflows remain local and deterministic with external sockets blocked and no credentials; Web workflows use only the configured ThesisForge HTTP adapter.",
       "verify_via": "facticity",
       "status": "failing",
       "evidence_ref": null

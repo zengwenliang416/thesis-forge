@@ -13,53 +13,74 @@ an active change or mutating archive evidence.
 - **WHEN** zero or multiple archive directories match the approved V1 core change
 - **THEN** the test fails with an explicit archive-evidence discovery error
 
-### Requirement: Provide an optional local desktop entrypoint
-The package SHALL expose `thesisforge-ui` through the optional `ui` dependency
-extra and MUST keep all core CLI imports and commands usable when PySide6 is not
-installed.
+### Requirement: Provide one cross-platform frontend
+The project SHALL provide one React + TypeScript + Vite frontend that runs in a
+Web browser and inside Tauri 2 packages for macOS and Windows. It MUST keep all
+core CLI imports and commands usable without Node.js, Rust, Tauri, or an HTTP
+server.
 
-#### Scenario: Launch with UI dependencies
-- **WHEN** the user installs the `ui` extra and runs `thesisforge-ui`
-- **THEN** a local light-theme Simplified Chinese workbench opens without network or credentials
+#### Scenario: Launch each supported runtime
+- **WHEN** the user opens the Web build or launches the macOS or Windows package
+- **THEN** the same light-theme Simplified Chinese workbench and shared feature set open
 
-#### Scenario: Use core without UI dependencies
-- **WHEN** PySide6 is absent and the user imports ThesisForge or runs a core CLI command
+#### Scenario: Use core without frontend toolchains
+- **WHEN** Node.js, Rust, Tauri, and the HTTP adapter are absent and the user imports ThesisForge or runs a core CLI command
 - **THEN** the import or command succeeds without importing the UI runtime
 
-### Requirement: Manage one explicit local source lifecycle
-The workbench MUST open one local Markdown source, show its saved content, track
-dirty edits, perform no autosave, and write source changes only after explicit
-Save or Save As.
+### Requirement: Use typed runtime transports
+The frontend MUST depend on one versioned `WorkbenchTransport` contract. Web
+MUST use a thin HTTP adapter and Tauri MUST use a command/sidecar adapter. Both
+Python adapters MUST call existing application services and MUST NOT implement
+parsing, validation, numbering, compilation, rendering, or finalization.
+
+#### Scenario: Run through Web
+- **WHEN** the browser requests inspect, validate, or build
+- **THEN** the HTTP adapter validates a versioned DTO, calls the matching application service, and returns a serialized result
+
+#### Scenario: Run through Tauri
+- **WHEN** the desktop frontend requests inspect, validate, or build
+- **THEN** a Tauri command forwards a versioned request to the managed Python sidecar and returns the same serialized contract
+
+#### Scenario: Reject implementation leakage
+- **WHEN** a transport response is inspected
+- **THEN** it contains no pathlib, Python exception, python-docx, lxml, or renderer-private object
+
+### Requirement: Manage one explicit source lifecycle
+The workbench MUST open one Markdown workspace, show its saved content, track
+dirty edits, perform no autosave, and persist source changes only after an
+explicit Save, Save As, workspace save, or download action supported by the
+current runtime.
 
 #### Scenario: Open a source
-- **WHEN** the user selects a readable Markdown file
-- **THEN** the workbench loads the saved text and derives outline, preview, and diagnostics from that source path
+- **WHEN** the user selects a readable desktop file or browser workspace input
+- **THEN** the workbench loads one versioned snapshot and derives outline, preview, and diagnostics from it
 
 #### Scenario: Edit without saving
 - **WHEN** the user changes editor text
 - **THEN** the workspace becomes dirty and Validate and Build remain disabled until save succeeds
 
 #### Scenario: Atomic save fails
-- **WHEN** Save or Save As cannot atomically replace the requested file
-- **THEN** the prior source remains intact, dirty state remains visible, and the workbench exposes a recovery action
+- **WHEN** a desktop atomic save or Web workspace/download action fails
+- **THEN** the prior source or browser snapshot remains intact, dirty state remains visible, and the workbench exposes a recovery action
 
 ### Requirement: Reuse deterministic application services
-The UI MUST call the existing inspect, validation, and build application
-services and MUST NOT duplicate Markdown parsing, validation rules, numbering,
-bibliography, compilation, rendering, or package finalization.
+Every runtime adapter MUST call the existing inspect, validation, and build
+application services and MUST NOT duplicate Markdown parsing, validation rules,
+numbering, bibliography, compilation, rendering, or package finalization.
 
 #### Scenario: Refresh a saved workspace
 - **WHEN** a saved source or selected template changes
-- **THEN** the controller calls application services and maps their typed results into UI view models
+- **THEN** the transport calls application services and maps serialized results into frontend view models
 
 #### Scenario: Fatal validation
 - **WHEN** validation returns one or more error-severity issues
 - **THEN** compile and render are not called and Build remains unavailable
 
 ### Requirement: Present academic workbench information
-The UI SHALL implement the approved academic three-pane workbench with product
-bar, outline, Markdown editor, paper-style structural preview, diagnostics,
-template selection, build action, progress, and output feedback.
+The shared React frontend SHALL implement the approved academic three-pane
+workbench with product bar, outline, Markdown editor, paper-style structural
+preview, diagnostics, template selection, build action, progress, and output
+feedback.
 
 #### Scenario: Populated workspace
 - **WHEN** a valid saved source and template are loaded
@@ -80,7 +101,7 @@ DOCX or OOXML implementation objects.
 
 #### Scenario: Generate preview
 - **WHEN** inspection and validation complete for a saved source
-- **THEN** the preview mapper produces a structural paper view without importing python-docx or lxml
+- **THEN** the frontend preview mapper produces a structural paper view without receiving python-docx, lxml, or raw OOXML
 
 ### Requirement: Build asynchronously and preserve valid output
 The workbench SHALL show ordered build stages, support cooperative cancellation,
@@ -100,15 +121,20 @@ failure.
 - **WHEN** an older operation completes after a newer workspace operation starts
 - **THEN** the older result does not replace current diagnostics, preview, progress, or output state
 
-### Requirement: Remain accessible, offline, and local-only
-All desktop flows MUST work without sockets, credentials, database, telemetry,
-AI, dark mode, or runtime locale switching, and the workbench MUST support
-keyboard navigation, visible focus, programmatic labels, sufficient contrast,
-and practical minimum-window resizing.
+### Requirement: Remain accessible and preserve local-first desktop operation
+All macOS and Windows flows MUST work with external sockets blocked and without
+credentials, database, telemetry, AI, dark mode, or runtime locale switching.
+Web flows MUST use only the configured ThesisForge HTTP endpoint. Every runtime
+MUST support keyboard navigation, visible focus, programmatic labels, sufficient
+contrast, responsive layout, and practical minimum-window resizing.
 
 #### Scenario: Run with network blocked
-- **WHEN** sockets are blocked during open, save, validate, preview, and build
-- **THEN** all local desktop flows retain their specified behavior
+- **WHEN** external sockets are blocked during desktop open, save, validate, preview, and build
+- **THEN** macOS and Windows flows retain their specified behavior through the bundled local sidecar
+
+#### Scenario: Use configured Web transport
+- **WHEN** the workbench runs in a browser
+- **THEN** it communicates only with the configured versioned ThesisForge HTTP endpoint and exposes browser capability limits honestly
 
 #### Scenario: Keyboard-only operation
 - **WHEN** the user operates file, template, diagnostics, panel, save, and build actions without a pointer

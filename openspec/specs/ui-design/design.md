@@ -1,7 +1,7 @@
 ---
 version: 0.1
-name: ThesisForge Desktop UI Foundation
-description: Desktop UI foundation used by the V1 HTML review prototype; production desktop UI remains deferred.
+name: ThesisForge Cross-Platform UI Foundation
+description: Shared UI foundation for the Web, macOS, and Windows workbench.
 colors:
   primary: "#171717"
   secondary: "#4d4d4d"
@@ -86,14 +86,16 @@ components:
     height: 40px
 ---
 
-# ThesisForge Desktop UI Foundation
+# ThesisForge Cross-Platform UI Foundation
 
 ## Overview
 
 ThesisForge V1 prioritizes the deterministic offline compiler and CLI. The
-`build-thesisforge-v1-core` change includes a review-only HTML prototype of the future
-desktop workbench, while production PySide6 UI remains deferred. The prototype must
-make the product structure reviewable without becoming a compiler dependency.
+`build-thesisforge-v1-core` change includes a review-only HTML prototype of the
+future workbench. Production uses one React + TypeScript + Vite frontend for Web,
+macOS, and Windows, with Tauri 2 wrapping the desktop variants. The prototype
+must make the product structure reviewable without becoming a compiler
+dependency.
 
 ## Colors
 
@@ -135,9 +137,9 @@ states.
 
 ## Voice & Content
 
-Future UI copy uses concise Simplified Chinese. Domain error codes remain stable and
-language-neutral; the UI adapter maps them to Chinese labels, validation messages,
-empty states, progress text, and recovery actions.
+UI copy uses concise Simplified Chinese. Domain error codes remain stable and
+language-neutral; shared frontend presentation maps them to Chinese labels,
+validation messages, empty states, progress text, and recovery actions.
 
 ## Theme & Internationalization
 
@@ -146,7 +148,10 @@ empty states, progress text, and recovery actions.
 - Internationalization: `disabled` for V1.
 - Supported locales: `zh-CN`.
 - Default locale: `zh-CN`.
-- Prototype rule: the V1 core change must provide desktop and mobile HTML review coverage in the light theme and `zh-CN`; theme and locale switchers are intentionally omitted.
+- Prototype rule: the V1 core change must provide desktop and mobile HTML review
+  coverage in the light theme and `zh-CN`; production verification must cover
+  browser, macOS, and Windows runtimes. Theme and locale switchers are
+  intentionally omitted.
 
 ## Do's and Don'ts
 

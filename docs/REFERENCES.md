@@ -81,7 +81,7 @@ git clone https://github.com/citation-style-language/styles.git references/exter
 
 不要默认把整个 styles 仓库打进最终安装包；实际发行时只纳入许可和产品策略允许的样式文件。
 
-## E. Desktop UI 参考
+## E. 历史 UI 视觉参考
 
 ### 9. zhiyiYo/PyQt-Fluent-Widgets
 
@@ -89,7 +89,9 @@ git clone https://github.com/citation-style-language/styles.git references/exter
 git clone https://github.com/zhiyiYo/PyQt-Fluent-Widgets.git references/external/PyQt-Fluent-Widgets
 ```
 
-仅作为桌面 UI / Fluent 交互参考。ThesisForge 推荐 PySide6；是否直接依赖第三方 UI 包需单独做许可证与发行评估。
+仅作为早期 Fluent 交互和视觉研究材料，不是产品技术栈，也不进入运行时依赖。
+ThesisForge 产品前端使用 React + TypeScript + Vite，并由 Tauri 2 提供 macOS /
+Windows 桌面包装。若未来吸收该仓库的具体设计或实现，仍需单独做许可证与发行评估。
 
 ---
 

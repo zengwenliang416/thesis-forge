@@ -3,6 +3,7 @@ from __future__ import annotations
 import ast
 import subprocess
 import sys
+import tomllib
 from pathlib import Path
 
 import thesis_forge.bibliography.bibtex as bibliography_bibtex_module
@@ -102,6 +103,25 @@ def test_headless_ui_controller_and_models_avoid_qt_docx_and_xml_imports():
             )
         }
         assert forbidden == set()
+
+
+def test_python_package_does_not_declare_qt_product_dependencies():
+    project_root = Path(__file__).resolve().parents[1]
+    pyproject = tomllib.loads((project_root / "pyproject.toml").read_text(encoding="utf-8"))
+    project = pyproject["project"]
+    dependency_groups = [project.get("dependencies", [])]
+    dependency_groups.extend(project.get("optional-dependencies", {}).values())
+
+    normalized_dependencies = {
+        dependency.split(";", 1)[0].strip().lower()
+        for group in dependency_groups
+        for dependency in group
+    }
+
+    assert not any(
+        dependency.startswith(("pyside", "pyqt"))
+        for dependency in normalized_dependencies
+    )
 
 
 def test_importing_headless_ui_does_not_load_application_or_rendering_stack():

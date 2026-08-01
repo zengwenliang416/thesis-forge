@@ -19,7 +19,6 @@ dependencies = [
 
 [project.optional-dependencies]
 bibliography = ["citeproc-py>=0.8,<1"]
-ui = ["PySide6>=6.7,<7"]
 dev = [
   "build>=1.2,<2",
   "hatchling>=1.25,<2",

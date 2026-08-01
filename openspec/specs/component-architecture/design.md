@@ -2,19 +2,22 @@
 
 ## Overview
 
-ThesisForge 的“组件”首先是 Python 模块、domain types、services 与 renderer helpers，而不是
-页面组件。V1 核心要求高内聚、低耦合，并以纯领域模型和 `RenderPlan` 隔离 Markdown、学校模板
-与 OOXML。未来 PySide6 UI 必须作为 adapter 复用核心服务。
+ThesisForge 同时包含 Python domain/application/rendering components 和共享
+React frontend components。核心以纯领域模型和 `RenderPlan` 隔离 Markdown、学校模板
+与 OOXML；Web/Tauri adapters 必须复用核心服务。
 
 ## Component Taxonomy
 
-- Page/screen components: V1 核心无；未来 Outline、Editor、Preview、Diagnostics、Template Selector、Build。
-- Layout components: V1 核心无；未来桌面 shell 和 resizable panel layout。
+- Page/screen components: React Workbench、Outline、Editor、Preview、
+  Diagnostics、Template Selector、Build。
+- Layout components: shared application shell、resizable panel layout、
+  responsive mobile views。
 - Domain components: `ThesisDocument`、Block/Inline types、`ValidationIssue`。
 - Form components: V1 核心无；未来 template/build options forms。
 - Data display components: CLI inspect output、diagnostics table；未来 outline/diagnostics/preview views。
 - Feedback components: CLI exit code 与 Rich diagnostics；未来 progress、toast、error panel。
-- Headless hooks: Python application services 或未来 UI controller，不在页面内复制 parser/build state。
+- Headless hooks: TypeScript workspace store、transport hooks、Python application
+  services；不在页面内复制 parser/build state。
 - Domain utilities/services: Parser、Validator rules、Template loader、Compiler、numbering/bookmark resolver、Bibliography、DOCX field/OMML helpers。
 
 ## Cohesion Rules
@@ -33,12 +36,16 @@ ThesisForge 的“组件”首先是 Python 模块、domain types、services 与
 - Validator 可依赖 Domain 和只读 contract，不得依赖 CLI/Rich 或 DOCX internals。
 - Compiler 可依赖 Domain、Template、Bibliography interface 和 RenderPlan。
 - DOCX Renderer 可依赖 RenderPlan、python-docx、lxml，不得依赖 Parser。
-- CLI/UI/AI 仅向内调用 application contracts；Core 不反向 import adapters。
+- CLI/Web/Tauri/AI 仅向内调用 application contracts；Core 不反向 import adapters。
+- React components only depend on frontend state, shared DTOs, and
+  `WorkbenchTransport`; they do not call HTTP/Tauri/Python directly.
 - Shared modules must not import feature-specific UI or command modules.
 
 ## Shared Component Extraction Rules
 
 - 同一 validation rule 或 formatting conversion 出现第二次时提取为共享 utility/rule。
+- Web/Tauri 出现第二份相同 DTO、diagnostic mapping、preview mapping、operation
+  token 或 capability logic 时提取为 shared frontend module。
 - 同一 OOXML field/bookmark creation logic 被两种 node 使用时提取 helper。
 - 编号、bookmark naming、unit parsing、font application 和 XML namespace 操作必须有单一实现。
 - Parser container handling 保持按语义类型可扩展，避免在 CLI/Renderer 复制 syntax logic。
@@ -55,9 +62,9 @@ ThesisForge 的“组件”首先是 Python 模块、domain types、services 与
 ## State Ownership Rules
 
 - Local state: 单次 parser/compiler/renderer invocation 的临时状态。
-- Shared UI state: V1 无；未来由 application controller 持有，不进入 Core Domain。
-- Server/cache state: 无。
-- Form state: V1 无；未来由 UI adapter 持有。
+- Shared UI state: TypeScript workspace store 持有，不进入 Core Domain。
+- Server/cache state: adapter 仅允许 request/operation scope，无 domain persistence。
+- Form state: React feature/form component 持有或提升到 workspace store。
 - URL state: 无。
 - Derived state: ID index、chapter counters、resolved numbers、bookmark map、citation order、RenderPlan。
 - Persistent state: 用户本地 source/template/bibliography/assets 与显式 output。
@@ -66,13 +73,17 @@ ThesisForge 的“组件”首先是 Python 模块、domain types、services 与
 
 - Preferred composition patterns: pure function pipeline、small services、typed dataclasses/Pydantic models、dependency injection for template/bibliography/render backends。
 - Forbidden composition patterns: parser-to-docx direct call、global mutable counters、renderer hard-coded school profiles、AI callback inside core build。
-- Approved provider/context boundaries: CLI 或未来 UI 构造 local build context，并显式传入 template/bibliography resolver。
-- Approved headless hook patterns: future UI controller 可订阅 progress events，但不可拥有另一套 compiler。
+- Approved provider/context boundaries: CLI 或 transport adapter 构造 build
+  context，并显式传入 template/bibliography resolver。
+- Approved headless hook patterns: frontend store 可订阅 progress events，但不可
+  拥有另一套 compiler。
 
 ## File & Naming Conventions
 
-- Component file naming: Python `snake_case.py`；一个主要 capability 一个模块，复杂 DOCX 能力位于 `renderers/docx/` 子模块。
-- Hook naming: Python application hooks 使用 `on_<event>` 或明确 protocol；未来 UI hooks/controllers 遵循其框架约定。
+- Component file naming: Python `snake_case.py`；React components 使用
+  `PascalCase.tsx`，hooks 使用 `use*.ts`，transport/DTO 使用明确 capability 名。
+- Hook naming: Python application hooks 使用 `on_<event>` 或明确 protocol；
+  React hooks 遵循 `use*`，不得隐藏 transport side effects。
 - Test naming: `tests/test_<capability>.py`；OOXML tests 命名中包含 field/bookmark/omml/section 等被验证结构。
 - Story/prototype naming: UI 阶段使用与稳定 flow/feature ID 对应的名称。
 - Barrel/export rules: `__init__.py` 只导出稳定 public APIs，不导出 XML/private helpers。
@@ -80,9 +91,10 @@ ThesisForge 的“组件”首先是 Python 模块、domain types、services 与
 ## Testing Expectations
 
 - Shared component tests: 每个 domain/service/helper 的行为测试，当前 tests 目录作为基础。
-- Hook tests: future progress/cancellation hooks 验证顺序、取消和 cleanup。
+- Hook tests: progress/cancellation hooks 验证顺序、取消、stale result 和 cleanup。
 - Integration tests: Markdown -> ThesisDocument -> Validation -> RenderPlan -> DOCX。
-- Accessibility checks: 仅在 UI 阶段启用，键盘、焦点、对比度与 screen-reader labels 必测。
+- Accessibility checks: browser、macOS 和 Windows 的键盘、焦点、对比度与
+  screen-reader labels 必测。
 - Visual/prototype review: 仅在 UI milestone；核心 DOCX 采用 OOXML structure tests 加 Word/WPS/LibreOffice 人工检查。
 - Parser coverage: Front Matter、Heading、Figure、Table、Equation、Citation、CrossReference、Algorithm、Listing。
 - Validator coverage: duplicate ID、missing reference/image/citation、heading jump、template/metadata rules。
@@ -102,7 +114,9 @@ ThesisForge 的“组件”首先是 Python 模块、domain types、services 与
 - Do keep Core Domain free of Word implementation details.
 - Do centralize numbering, bookmarks, units, fonts, citations, and OOXML field helpers.
 - Do reuse the same application services from CLI and future UI.
+- Do reuse one React component tree and one DTO contract across Web and Tauri.
 - Do add focused tests when a semantic object or OOXML capability is introduced.
 - Don't duplicate parser, validator, compiler, or render logic in adapters.
 - Don't expose raw `docx`/`lxml` objects through domain public APIs.
+- Don't expose Python objects or native-path assumptions through frontend DTOs.
 - Don't create UI components before the V1 compiler core and end-to-end build are working.

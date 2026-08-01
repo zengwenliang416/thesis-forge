@@ -1,81 +1,111 @@
 ## Context
 
 The deterministic compiler, application services, package validation, and
-atomic DOCX replacement are complete. The existing UI package is empty, PySide6
-is already an optional dependency, and the approved HTML prototype defines the
-academic three-pane information architecture and required states.
+atomic DOCX replacement are complete. The approved HTML prototype defines the
+academic three-pane information architecture and required states, but the
+production frontend has not yet been implemented.
 
-The UI must remain optional and offline. It cannot introduce a second parser,
-validator, compiler, or renderer. The first baseline defect is independent of
-Qt: prototype acceptance tests refer to the archived change by its former active
-path and currently fail.
+The product must share one dedicated frontend across Web, macOS, and Windows.
+The UI cannot introduce a second parser, validator, compiler, or renderer. The
+first baseline defect is frontend-independent: prototype acceptance tests refer
+to the archived change by its former active path and currently fail.
 
 ## Goals / Non-Goals
 
 **Goals:**
 
 - Restore an archive-safe green baseline.
-- Provide a responsive local PySide6 workbench for one Markdown source.
-- Reuse application services through a testable controller and typed view
-  models.
+- Provide one responsive React + TypeScript + Vite workbench for Web, macOS,
+  and Windows.
+- Package macOS and Windows with Tauri 2 while preserving one frontend codebase.
+- Reuse Python application services through versioned transport DTOs and thin,
+  testable Web/Tauri adapters.
 - Support explicit atomic source saving, template selection, diagnostics,
   renderer-neutral preview, progress, cancellation, and safe DOCX output.
-- Keep the core package and CLI usable without PySide6.
-- Make controller and most view behavior testable headlessly.
+- Keep the core package and CLI usable without Node.js, Rust, Tauri, or an HTTP
+  server.
+- Make frontend state, transport, and components testable without launching a
+  native desktop shell.
 
 **Non-Goals:**
 
 - Multi-document projects, autosave, recent-file persistence, cloud sync,
-  accounts, database, HTTP API, AI, marketplace, dark mode, or runtime i18n.
+  accounts, database, AI, marketplace, dark mode, or runtime i18n.
+- Public multi-tenant hosting, authentication, billing, and collaboration.
 - Exact Word pagination or a DOCX/OOXML preview engine.
 - Replacing the existing application/domain/compiler/renderer pipeline.
 
 ## Decisions
 
-### 1. Keep PySide6 behind an optional adapter boundary
+### 1. Use one React frontend and Tauri 2 desktop wrappers
 
-`src/thesis_forge/ui/` owns every PySide6 import. A small `thesisforge-ui`
-entrypoint imports the Qt application lazily and reports a clear installation
-message when the `ui` extra is absent. Core and CLI imports remain unchanged.
+`frontend/` owns the React + TypeScript + Vite application. `src-tauri/` owns
+the macOS and Windows shell, native dialogs, package metadata, and sidecar
+lifecycle. The browser build and both desktop packages consume the same React
+components, routes, state machine, design tokens, and transport interface.
 
-Alternative considered: make PySide6 a required dependency. Rejected because it
-would enlarge and platform-bind the offline CLI installation.
+Alternative considered: PySide6. Rejected because it creates a separate desktop
+UI, does not provide the Web product, and duplicates a frontend implementation.
 
-### 2. Use a controller plus immutable view models
+### 2. Put a typed transport boundary between frontend and Python
 
-`WorkspaceController` owns source/template/output paths, saved text, dirty
-state, current operation token, diagnostics, preview data, progress, and
-user-visible state. Widgets emit intent and render immutable view models.
+The frontend depends on a `WorkbenchTransport` TypeScript interface and
+versioned JSON DTOs. `WebWorkbenchTransport` calls a thin Python HTTP adapter.
+`TauriWorkbenchTransport` calls Tauri commands; the Rust shell manages a Python
+sidecar and forwards versioned requests and streamed progress events.
 
-The controller depends on injected application service callables and filesystem
-adapters, allowing headless unit tests without a visible Qt session.
+Both Python adapters call `inspect_service`, `validation_service`, and
+`build_service`. They serialize results and errors but do not parse Markdown,
+validate, compile, number, or render documents themselves.
 
-Alternative considered: let each widget call services directly. Rejected
-because it duplicates state transitions and couples presentation to domain
-execution.
+Alternative considered: let React components call ad hoc endpoints or Tauri
+commands. Rejected because runtime differences would leak into components and
+create divergent Web/desktop behavior.
 
-### 3. Preserve path-based services with an explicit save gate
+### 3. Use frontend-owned workspace state with DTO parity tests
+
+TypeScript workspace state owns source/template/output handles, saved text,
+dirty state, current operation token, diagnostics, preview data, progress, and
+user-visible state. React components emit intent and render immutable selectors
+or view models.
+
+The existing pure-Python `WorkspaceController` remains a tested reference for
+the state semantics already delivered in Slice 002. The browser bundle never
+imports it. Before the frontend claims parity, contract tests must run the same
+state-transition fixtures against Python reference behavior and TypeScript
+state behavior.
+
+Alternative considered: make Python own browser presentation state. Rejected
+because it would require chatty transport calls and couple product interaction
+to a local Python object graph.
+
+### 4. Preserve path-based services with an explicit save gate
 
 The editor loads a saved file and may become dirty, but there is no autosave.
 Validate and Build are disabled while dirty. Save and Save As use an atomic text
 writer; only after replacement succeeds does the controller refresh the saved
 snapshot and call inspection/validation.
 
+Desktop uses native dialogs and local paths through Tauri. Web uses explicit
+browser file/workspace handles, uploads, and downloads. The Web UI must not
+pretend it can access arbitrary native paths.
+
 Alternative considered: validate/build an unsaved temporary Markdown snapshot.
 Rejected for this milestone because relative images, BibTeX, and template
 resolution are anchored to the real source path and a synthetic path could
 change behavior.
 
-### 4. Run long operations through a replaceable task runner
+### 5. Keep runtime adapters replaceable
 
-The Qt adapter uses `QThreadPool`/`QRunnable` (or an equivalent isolated Qt
-worker) for inspect, validate, and build. Every operation receives a generation
-token. Results and callbacks from an older token are ignored.
+The Web adapter uses cancellable HTTP requests and an event stream for build
+progress. The Tauri adapter uses asynchronous commands and sidecar progress
+events. Every operation receives a generation token. Results and callbacks from
+an older token are ignored.
 
-Controller tests use a synchronous fake runner. Widgets never own threads or
-call application services directly.
+Frontend tests use a deterministic fake transport. Components never own process
+lifecycle, open raw sockets, or call Python application services directly.
 
-### 5. Add cooperative build cancellation at application stage boundaries
+### 6. Add cooperative build cancellation at application stage boundaries
 
 `build_service` gains an optional cancellation predicate with a default that
 preserves the current API behavior. It checks before each expensive stage and
@@ -83,13 +113,14 @@ again before final atomic replacement. Cancellation raises a typed application
 stage error and leaves the previous output unchanged.
 
 This cannot interrupt a third-party renderer in the middle of one call, but it
-prevents a canceled result from being finalized. UI stale-result tokens provide
-an additional presentation guard.
+prevents a canceled result from being finalized. Transport cancellation and
+frontend stale-result tokens provide additional guards.
 
-Alternative considered: terminate worker threads. Rejected because forced Qt or
-Python thread termination can corrupt process state and temporary files.
+Alternative considered: terminate the Python sidecar or HTTP worker. Rejected
+because forced process termination can corrupt temporary work and unrelated
+requests.
 
-### 6. Build preview from renderer-neutral instructions
+### 7. Build preview from renderer-neutral instructions
 
 A preview mapper converts `ThesisDocument` and typed `RenderPlan` instructions
 into `PreviewViewModel` sections, text runs, diagnostics markers, and page-like
@@ -99,21 +130,25 @@ Alternative considered: render DOCX and convert it to images after every edit.
 Rejected because it is slow, requires an external Office renderer, and makes
 preview availability depend on tools outside the core package.
 
-### 7. Treat the archived HTML prototype as immutable review evidence
+### 8. Treat the archived HTML prototype as immutable review evidence
 
 Prototype acceptance tests locate exactly one archived directory ending in
 `-build-thesisforge-v1-core` and validate its committed harness/artifact/evidence.
 They do not recreate an active change or mutate archive contents.
 
-Production PySide6 tests become the ongoing behavior gate; the archived HTML
-tests remain evidence that implementation stays aligned with the approved
-variant.
+Production browser and Tauri tests become the ongoing behavior gate; the
+archived HTML tests remain evidence that implementation stays aligned with the
+approved variant.
 
 ## Risks / Trade-offs
 
-- [Qt event-loop tests can be platform-sensitive] -> keep controller/view-model
-  coverage headless, isolate a small widget integration suite, and set the
-  offscreen platform in CI.
+- [Three runtimes can drift] -> share React code and DTO fixtures, keep only
+  transport adapters runtime-specific, and run parity tests in Web and Tauri.
+- [Bundling Python with Tauri increases release complexity] -> keep sidecar
+  packaging isolated, pin the protocol version, and verify macOS and Windows
+  artifacts independently.
+- [The Web runtime cannot use arbitrary native paths] -> expose explicit
+  upload/workspace/download semantics and capability-aware UI copy.
 - [Cancellation is cooperative] -> check at every application boundary and
   before final replacement; document that an in-flight renderer may finish its
   temporary file before cancellation is observed.
@@ -121,22 +156,25 @@ variant.
   reason and Save action instead of silently building stale content.
 - [Renderer-neutral preview differs from Word pagination] -> label it as a
   structural preview and retain DOCX/Office verification for final output.
-- [PySide6 package size is large] -> keep it in the optional `ui` extra and
-  exclude it from core distribution verification.
+- [HTTP exposure expands the attack surface] -> keep the adapter thin, validate
+  request sizes and workspace boundaries, avoid raw filesystem paths in hosted
+  mode, and keep public multi-tenant hosting out of scope.
 
 ## Migration Plan
 
 1. Repair archive-safe prototype test discovery and restore the baseline.
-2. Add headless controller/view-model contracts and tests.
-3. Add optional entrypoint and workbench shell.
-4. Add source lifecycle and atomic save.
-5. Add template, diagnostics, outline, and preview mapping.
-6. Add background build, cancellation, progress, and output feedback.
-7. Run full package, offline, Qt offscreen, accessibility, and sensory
-   verification.
+2. Retain the headless Python state reference and define serialized transport
+   DTOs plus parity fixtures.
+3. Add the React + TypeScript + Vite workspace and shared workbench shell.
+4. Add the Web HTTP adapter and Tauri 2 sidecar/command adapter.
+5. Add source lifecycle and platform-capability-aware save behavior.
+6. Add template, diagnostics, outline, and preview mapping.
+7. Add background build, cancellation, progress, and output feedback.
+8. Run browser, macOS, Windows, Python package, offline desktop,
+   accessibility, and sensory verification.
 
-Rollback is commit-based. The optional UI entrypoint can be removed without
-changing core CLI behavior or user documents.
+Rollback is commit-based. Frontend, HTTP, and Tauri adapters can be removed
+without changing core CLI behavior or user documents.
 
 ## Open Questions
 

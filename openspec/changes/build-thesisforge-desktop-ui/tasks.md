@@ -11,7 +11,7 @@
 - [x] 1.5 Run `tests/test_prototype_acceptance.py` and the closest archive/OpenSpec checks.
 - [x] 1.6 Record red-green evidence, spec review, quality review, and extraction decision for slice 001.
 
-## 2. Headless Workspace State And Controller
+## 2. Framework-Neutral Workspace State Reference
 
 用户结果：用户看到的空白、加载、已打开、脏编辑、错误、禁用和权限状态由一个可测试控制器一致管理。
 
@@ -25,27 +25,29 @@
 
 ## 3. Explicit Source Open And Atomic Save
 
-用户结果：用户可以打开本地 Markdown、编辑并显式保存；未保存内容不会被误用于验证或构建，失败保存不会损坏原文件。
+用户结果：用户可以在 Web、macOS、Windows 打开 Markdown 工作区、编辑并显式保存；未保存内容不会被误用于验证或构建，失败保存不会损坏已有内容。
 
-- [ ] 3.1 Implement source open with readable-path checks and saved snapshot creation.
+- [ ] 3.1 Implement source open with desktop readable-path checks, Web workspace/upload handling, and saved snapshot creation.
 - [ ] 3.2 Implement dirty tracking without autosave and disable Validate/Build while dirty.
-- [ ] 3.3 Implement atomic Save and Save As with prior-file preservation on failure.
+- [ ] 3.3 Implement desktop atomic Save/Save As and explicit Web workspace-save/download semantics with prior-content preservation on failure.
 - [ ] 3.4 Refresh inspection and validation only after a successful save.
-- [ ] 3.5 Add tests for missing files, encoding errors, read-only paths, replace failure, Save As, and unchanged saves.
+- [ ] 3.5 Add tests for missing files, encoding errors, read-only paths, browser capability limits, replace failure, Save As/download, and unchanged saves.
 - [ ] 3.6 Add tests proving inspect, validate, and build never mutate source files.
 - [ ] 3.7 Record red-green evidence, spec review, quality review, and extraction decision for slice 003.
 
-## 4. Optional PySide6 Entrypoint And Workbench Shell
+## 4. Shared React Workbench And Runtime Transports
 
-用户结果：安装 UI extra 后可启动本地学术论文工作台；未安装 PySide6 时核心 CLI 仍正常可用。
+用户结果：同一套学术论文工作台可在 Web 直接运行，并通过 Tauri 2 在 macOS、Windows 安装运行；核心 CLI 不依赖前端工具链。
 
-- [ ] 4.1 Add a lazy `thesisforge-ui` entrypoint with a clear missing-extra error.
-- [ ] 4.2 Implement the light-theme `WorkbenchWindow`, product bar, resizable panel layout, and minimum-window behavior.
-- [ ] 4.3 Add outline, editor, preview, diagnostics, template, build, progress, and output widget shells.
-- [ ] 4.4 Bind widget intent and rendering to controller/view-model contracts without direct service calls.
-- [ ] 4.5 Add offscreen Qt tests for launch, labels, panel presence, keyboard focus order, shortcuts, and resize behavior.
-- [ ] 4.6 Add import-boundary tests proving core package and CLI work when PySide6 imports are blocked.
+- [ ] 4.1 Create the React + TypeScript + Vite frontend workspace with deterministic build, lint, typecheck, and test commands.
+- [ ] 4.2 Implement the light-theme workbench shell, product bar, responsive resizable panel layout, and minimum-window behavior.
+- [ ] 4.3 Add outline, editor, preview, diagnostics, template, build, progress, and output React component shells.
+- [ ] 4.4 Bind component intent and rendering to TypeScript workspace state and `WorkbenchTransport` without direct HTTP, Tauri, or Python calls.
+- [ ] 4.5 Add Vitest/Testing Library and Playwright tests for launch, labels, panel presence, keyboard focus order, shortcuts, responsive layout, and resize behavior.
+- [ ] 4.6 Add import-boundary tests proving the Python core and CLI work without Node.js, Rust, Tauri, or an HTTP server.
 - [ ] 4.7 Record red-green evidence, spec review, quality review, and extraction decision for slice 004.
+- [ ] 4.8 Implement the versioned Web HTTP adapter and contract tests against existing Python application services.
+- [ ] 4.9 Implement the Tauri 2 macOS/Windows shell, command bridge, managed Python sidecar protocol, and transport parity tests.
 
 ## 5. Template Selection And Structured Diagnostics
 
@@ -71,28 +73,28 @@
 - [ ] 6.6 Add static tests forbidding python-docx/lxml imports from UI preview modules.
 - [ ] 6.7 Record red-green evidence, spec review, quality review, and extraction decision for slice 006.
 
-## 7. Safe Background Build, Progress, And Cancellation
+## 7. Safe Cross-Runtime Build, Progress, And Cancellation
 
 用户结果：构建期间界面保持响应，阶段可见，可安全取消；任何失败或过期结果都不会覆盖已有有效 DOCX。
 
 - [ ] 7.1 Add a backward-compatible application cancellation predicate checked at stage boundaries and before final replacement.
-- [ ] 7.2 Implement the Qt task runner and synchronous fake runner behind one controller contract.
+- [ ] 7.2 Implement cancellable Web HTTP/event-stream and Tauri command/sidecar runners behind one frontend transport contract.
 - [ ] 7.3 Display ordered parse, validate, compile, render, and finalize progress.
 - [ ] 7.4 Implement cooperative cancellation, repeated-click suppression, stale completion suppression, and retry.
 - [ ] 7.5 Display successful output path and actionable validation, permission, render, finalize, and cancellation failures.
 - [ ] 7.6 Add tests for every cancellation boundary, callback failure, renderer failure, replace failure, stale result, and prior-output preservation.
-- [ ] 7.7 Add offscreen E2E tests for successful build, cancel, retry, and recovery.
+- [ ] 7.7 Add browser and Tauri E2E tests for successful build, cancel, retry, stale completion, and recovery.
 - [ ] 7.8 Record red-green evidence, spec review, quality review, and extraction decision for slice 007.
 
-## 8. Complete Desktop Acceptance And Distribution Handoff
+## 8. Complete Web, macOS, And Windows Acceptance
 
-用户结果：用户可在离线桌面环境完成打开、编辑、保存、校验、预览和构建，维护者可重复安装、测试和发布本地 UI extra。
+用户结果：用户可在 Web、macOS、Windows 完成打开、编辑、保存、校验、预览和构建；桌面端可离线运行，维护者可重复构建和发布三端产物。
 
-- [ ] 8.1 Run the complete example through the real desktop adapter with sockets blocked.
+- [ ] 8.1 Run the complete example through the browser adapter and both Tauri desktop targets; block external sockets for desktop verification.
 - [ ] 8.2 Verify populated, loading, empty, error, disabled, permission, dirty, canceled, and success states.
 - [ ] 8.3 Verify keyboard-only operation, labels, focus visibility, contrast, resizing, and reduced-motion behavior.
-- [ ] 8.4 Verify core wheel installation without PySide6 and UI-extra installation with PySide6.
-- [ ] 8.5 Update README and maintenance documentation for UI installation, launch, limitations, troubleshooting, and local-only distribution.
-- [ ] 8.6 Run full pytest, Ruff, package/distribution checks, strict OpenSpec validation, CodeGraph claims, and Git whitespace checks.
-- [ ] 8.7 Complete six-domain verification evidence and user-aligned desktop test cases.
+- [ ] 8.4 Verify independent Python wheel installation, Web production build, macOS package, and Windows package without cross-toolchain leakage.
+- [ ] 8.5 Update README and maintenance documentation for Web, macOS, and Windows installation, launch, capability differences, limitations, troubleshooting, and distribution.
+- [ ] 8.6 Run full pytest, Ruff, frontend lint/typecheck/unit/E2E, Tauri checks, package/distribution checks, strict OpenSpec validation, CodeGraph claims, and Git whitespace checks.
+- [ ] 8.7 Complete six-domain verification evidence and user-aligned Web/macOS/Windows test cases.
 - [ ] 8.8 Record final development handoff, residual risks, and operations readiness inputs.

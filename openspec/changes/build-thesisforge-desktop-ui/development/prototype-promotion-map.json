@@ -8,8 +8,9 @@
     "Populated, dirty, loading, empty, error, disabled, permission, canceled and success state semantics"
   ],
   "must_reimplement": [
-    "All production PySide6 widgets and layout behavior",
-    "Workspace state, service orchestration, task execution and generation-token handling",
+    "All production React components and responsive layout behavior",
+    "TypeScript workspace state, transport orchestration, task execution and generation-token handling",
+    "Web HTTP and Tauri command/sidecar adapters",
     "Atomic source writes, template resolution, validation, preview mapping, progress, cancellation and output side effects"
   ],
   "blocked_direct_copies": [

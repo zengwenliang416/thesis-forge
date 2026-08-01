@@ -2,11 +2,12 @@
 
 ## Approved Outcome
 
-Deliver an optional local PySide6 workbench that opens one Markdown thesis,
-supports explicit atomic saving, reuses the existing inspect/validate/build
-application services, presents renderer-neutral structure and preview data, and
-builds DOCX without network access. The deterministic compiler and CLI remain
-fully usable without the `ui` extra.
+Deliver one React + TypeScript + Vite workbench across Web, macOS, and Windows.
+The Tauri 2 desktop packages support offline local operation through a managed
+Python sidecar; Web uses a versioned HTTP adapter. Every runtime reuses the
+existing inspect/validate/build application services, presents
+renderer-neutral data, and keeps the deterministic compiler and CLI usable
+without frontend toolchains.
 
 ## Requirements Reference
 
@@ -30,34 +31,41 @@ fully usable without the `ui` extra.
 ## Handoff Reference
 
 The approved `academic-three-pane` HTML artifact is immutable review evidence.
-Production Qt code may reuse approved labels, state names, information
-architecture, and flow semantics, but must reimplement widgets, state, service
-calls, file access, validation, and side effects. The archived V1 prototype
-remains immutable evidence used only by its contract tests.
+Production React code may reuse approved labels, state names, information
+architecture, and flow semantics, but must reimplement components, state,
+transport calls, file access, validation, and side effects. The archived V1
+prototype remains immutable evidence used only by its contract tests.
 
 ## Implementation Basis
 
-- `src/thesis_forge/ui/` owns all PySide6 imports and exposes a lazy
-  `thesisforge-ui` entrypoint.
-- `WorkspaceController` and immutable view models remain headless and depend on
-  injected application services, filesystem operations, and task runners.
+- `frontend/` owns React components, TypeScript workspace state, DTOs, and the
+  `WorkbenchTransport` contract.
+- `src-tauri/` owns macOS/Windows shell behavior, native dialogs, and Python
+  sidecar lifecycle.
+- Thin Python HTTP and sidecar adapters call `thesis_forge.application`.
+- The existing `WorkspaceController` and immutable view models remain a
+  headless Python reference for delivered state semantics, not a browser
+  dependency.
 - Dirty editor content cannot be validated or built until Save or Save As
   atomically replaces the selected source.
-- Widgets emit user intent and render typed view models; they do not call
-  Parser, Compiler, Renderer, python-docx, or lxml directly.
+- React components emit user intent and render typed view models; they do not
+  call HTTP, Tauri, Parser, Compiler, Renderer, python-docx, or lxml directly.
 - Preview mapping consumes `ThesisDocument` and typed `RenderPlan`
   instructions without reading generated DOCX or claiming exact pagination.
-- Background work uses generation tokens and cooperative cancellation; stale or
-  canceled results cannot replace a previously valid output.
-- All flows remain local, single-document, fixed `zh-CN`, light-only, and free
-  of accounts, databases, network services, AI, telemetry, and cloud sync.
+- Background work uses generation tokens and cooperative cancellation across
+  HTTP and Tauri transports; stale or canceled results cannot replace a
+  previously valid output.
+- Desktop flows remain local and offline. All runtimes remain single-document,
+  fixed `zh-CN`, light-only, and free of accounts, databases, AI, telemetry,
+  and cloud sync.
 
 ## Component Architecture Constraint
 
 Application services remain the sole inspect, validation, compilation, and
-render orchestration. UI widgets consume typed presentation models only.
-Diagnostics localization, atomic source writing, operation-token handling, and
-preview mapping are extracted before a second caller would duplicate them.
+render orchestration. React components consume typed presentation models only.
+Diagnostics localization, transport DTOs, capability detection, atomic source
+writing, operation-token handling, and preview mapping are extracted before a
+second runtime would duplicate them.
 
 ## Delivery Strategy
 

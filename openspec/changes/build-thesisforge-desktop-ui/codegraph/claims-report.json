@@ -1,6 +1,6 @@
 {
   "schema": "specnav.codegraph.claims_report.v1",
-  "generated_at": "2026-08-01T02:02:02.895Z",
+  "generated_at": "2026-08-01T02:53:36.551Z",
   "active_change": "build-thesisforge-desktop-ui",
   "claims_file": "openspec/changes/build-thesisforge-desktop-ui/codegraph/claims-map.json",
   "evidence_index": "openspec/changes/build-thesisforge-desktop-ui/codegraph/evidence-index.json",

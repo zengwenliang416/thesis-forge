@@ -7,11 +7,11 @@
     },
     {
       "area": "headless state",
-      "limit": "controller and immutable view models contain no PySide6, python-docx or lxml imports"
+      "limit": "Python state reference and transport DTOs contain no React, Tauri, HTTP framework, python-docx or lxml imports"
     },
     {
-      "area": "widget cohesion",
-      "limit": "each panel renders one user-facing responsibility and delegates orchestration to WorkspaceController"
+      "area": "component cohesion",
+      "limit": "each React panel renders one user-facing responsibility and delegates orchestration to shared workspace state"
     },
     {
       "area": "application reuse",
@@ -30,8 +30,8 @@
       "limit": "preview consumes typed domain/render-plan data and never opens DOCX or raw OOXML"
     },
     {
-      "area": "optional dependency",
-      "limit": "all PySide6 imports remain under src/thesis_forge/ui or the lazy UI entrypoint"
+      "area": "runtime boundaries",
+      "limit": "React stays under frontend, Tauri stays under src-tauri, and HTTP or sidecar frameworks stay inside Python adapters"
     }
   ]
 }

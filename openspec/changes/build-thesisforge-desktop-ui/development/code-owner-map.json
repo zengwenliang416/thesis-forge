@@ -3,6 +3,18 @@
   "owners": [
     {
       "path": "src/thesis_forge/ui",
+      "owner": "thesisforge-workspace-reference"
+    },
+    {
+      "path": "src/thesis_forge/adapters",
+      "owner": "thesisforge-transport"
+    },
+    {
+      "path": "frontend",
+      "owner": "thesisforge-frontend"
+    },
+    {
+      "path": "src-tauri",
       "owner": "thesisforge-desktop"
     },
     {

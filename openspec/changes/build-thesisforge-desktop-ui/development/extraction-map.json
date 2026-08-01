@@ -2,12 +2,14 @@
   "schema_version": 1,
   "component_rules": [
     "Keep archived prototype discovery in one deterministic test helper; do not duplicate archive globbing across tests.",
-    "Extract WorkspaceController and immutable view models before Qt widgets gain service or filesystem logic.",
+    "Keep WorkspaceController and immutable Python view models as a backend state reference; do not import them into the browser bundle.",
+    "Extract versioned DTO fixtures before Web and Tauri transports implement the same contract.",
     "Extract operation-token and stale-result handling before more than one asynchronous action uses it.",
-    "Extract atomic source saving into an application/filesystem utility rather than editor widget code.",
+    "Extract atomic source saving into an application/filesystem utility rather than React editor code.",
     "Extract diagnostics zh-CN presentation mapping when a second UI surface needs the same stable issue mapping.",
     "Extract renderer-neutral preview mapping when outline and paper preview share semantic ordering or labels.",
     "Reuse inspect_service, validation_service, build_service and template resolver instead of copying domain behavior into UI.",
-    "Keep all PySide6 imports inside the optional UI adapter and lazy entrypoint."
+    "Keep React components independent of HTTP, Tauri, Python, DOCX and OOXML implementation details.",
+    "Keep HTTP framework and sidecar protocol code inside transport adapters."
   ]
 }

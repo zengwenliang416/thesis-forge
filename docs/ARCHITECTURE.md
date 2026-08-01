@@ -101,9 +101,13 @@ V1 使用受 golden tests 约束的本地 GB/T 7714-2025 子集，不依赖网�
 
 ## 9. UI
 
-UI 不属于 Core。推荐后置 PySide6：Outline / Editor / Preview / Diagnostics / Template Selector / Export。
+UI 不属于 Core。产品前端使用 React + TypeScript + Vite，同一构建支持 Web，并由
+Tauri 2 包装为 macOS / Windows 应用。前端只依赖版本化 `WorkbenchTransport` 与
+JSON DTO：Web 使用 HTTP adapter，桌面使用 Tauri command bridge 和托管 Python
+sidecar，二者最终调用相同的 application services。
 
-核心编译器必须可以纯 CLI 使用。
+Parser、Validator、Compiler、编号和 DOCX Renderer 不得在前端复制。核心编译器必须
+可以在没有 Node.js、Rust、Tauri 和 HTTP server 时纯 CLI 使用。
 
 ## 10. 安全构建与发行
 

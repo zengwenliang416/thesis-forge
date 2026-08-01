@@ -11,8 +11,10 @@
 - lxml：focused OOXML 与 package 结构处理。
 - Typer / Rich：CLI 参数和终端输出。
 
-`citeproc-py`、PySide6 均为可选依赖，不是离线核心命令的运行前提。公开发布前仍需
-完成依赖许可证清单、项目许可证选择和分发策略审查。
+`citeproc-py` 是可选依赖，不是离线核心命令的运行前提。React、TypeScript、Vite
+和 Tauri 2 属于后续跨平台工作台的独立前端与桌面发行工具链，不进入 Python 核心
+运行时依赖。公开发布前仍需完成 Python、npm、Cargo 及 sidecar 分发依赖的许可证
+清单、项目许可证选择和分发策略审查。
 
 后续如引入或改写第三方实现，按以下格式登记：
 

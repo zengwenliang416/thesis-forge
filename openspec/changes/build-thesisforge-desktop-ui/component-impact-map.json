@@ -1,7 +1,8 @@
 {
   "new_components": [
-    "DesktopApplication",
-    "WorkbenchWindow",
+    "ReactApplication",
+    "TauriDesktopApplication",
+    "WorkbenchShell",
     "ProductBar",
     "OutlinePanel",
     "MarkdownEditor",
@@ -11,7 +12,13 @@
     "BuildProgress",
     "WorkspaceController",
     "WorkspaceViewModel",
-    "PreviewViewModel"
+    "PreviewViewModel",
+    "WorkbenchTransport",
+    "WebWorkbenchTransport",
+    "TauriWorkbenchTransport",
+    "TransportDTOv1",
+    "PythonHttpAdapter",
+    "PythonSidecarAdapter"
   ],
   "reused_components": [
     "ThesisDocument",
@@ -38,7 +45,8 @@
     "validator -> ui",
     "compiler -> ui",
     "renderer -> ui",
-    "application -> PySide6",
+    "application -> React or Tauri",
+    "core/compiler/renderer -> HTTP framework",
     "ui widgets -> python-docx or lxml",
     "ui widgets -> parser/compiler/renderer private modules"
   ],
@@ -69,9 +77,12 @@
     "stale-result suppression",
     "diagnostics presentation mapping",
     "preview view-model mapping",
-    "headless widget keyboard and focus behavior",
+    "React component keyboard and focus behavior",
     "archive-safe prototype contract discovery",
-    "optional dependency import boundary"
+    "frontend transport parity",
+    "Web HTTP contract",
+    "Tauri sidecar contract",
+    "core/frontend toolchain import boundary"
   ],
   "unresolved_gaps": []
 }

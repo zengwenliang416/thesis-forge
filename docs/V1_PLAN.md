@@ -70,9 +70,12 @@ thesisforge build thesis.md \
 
 验收样例至少包含 cover、摘要、TOC、三级标题、图、三线表、公式、交叉引用、引用、参考文献、致谢、附录。
 
-## M9 — Desktop UI
+## M9 — Cross-platform Workbench
 
-推荐 PySide6：Outline / Editor / Preview / Diagnostics / Template selector / Build。
+使用 React + TypeScript + Vite 实现共用的 Outline / Editor / Preview /
+Diagnostics / Template selector / Build 工作台。Web 通过版本化 HTTP adapter
+访问 Python application services；macOS 和 Windows 使用 Tauri 2、command
+bridge 与托管 Python sidecar 访问相同 services。
 
 ## M10 — AI Plugin
 

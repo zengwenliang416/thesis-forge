@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "change_id": "build-thesisforge-desktop-ui",
-  "digest": "062d49b8bf65d530b4bcbae328a6f3a494576bd82cd61ebf39ded0232ce34d52",
+  "digest": "d0fc577e9054e7b55126b16382c5d9d983c67b7137f70a594257bd1819001582",
   "assertion_count": 12,
-  "frozen_at": "2026-07-31T14:51:44.035Z"
+  "frozen_at": "2026-08-01T02:38:00.000Z"
 }
