@@ -1,6 +1,6 @@
 {
   "schema": "specnav.codegraph.evidence_query_plan.v1",
-  "generated_at": "2026-07-31T14:58:49.871Z",
+  "generated_at": "2026-08-01T02:01:11.361Z",
   "active_change": "build-thesisforge-desktop-ui",
   "queries": [
     {
@@ -17,6 +17,21 @@
         "tests or verification commands"
       ],
       "command": "node \"$SPECNAV_CODEGRAPH_ROOT/scripts/codegraph-context.js\" --stage development --claim development:task-001-archive-safe-prototype-baseline --query \"<query>\" --write --json"
+    },
+    {
+      "id": "development:task-002-headless-workspace-state-controller:evidence",
+      "claim_id": "development:task-002-headless-workspace-state-controller",
+      "stage": "development",
+      "task_id": "002-headless-workspace-state-controller",
+      "status": "planned",
+      "query": "Find the files, symbols, components, routes, services, data flow, and tests that implement \"Provide a pure-Python `WorkspaceController` that accepts saved source snapshots,\" in change \"build-thesisforge-desktop-ui\". Return concrete file paths, symbols, relationships, and any missing implementation evidence.",
+      "expected_evidence": [
+        "file paths",
+        "symbols",
+        "call relationships",
+        "tests or verification commands"
+      ],
+      "command": "node \"$SPECNAV_CODEGRAPH_ROOT/scripts/codegraph-context.js\" --stage development --claim development:task-002-headless-workspace-state-controller --query \"<query>\" --write --json"
     }
   ]
 }

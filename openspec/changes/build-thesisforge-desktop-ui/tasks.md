@@ -15,13 +15,13 @@
 
 用户结果：用户看到的空白、加载、已打开、脏编辑、错误、禁用和权限状态由一个可测试控制器一致管理。
 
-- [ ] 2.1 Define immutable workspace, diagnostics, progress, output, and operation-token view models.
-- [ ] 2.2 Implement `WorkspaceController` with injected inspect, validate, build, filesystem, and task-runner dependencies.
-- [ ] 2.3 Implement empty, loading, populated, dirty, error, disabled, permission, and canceled state transitions.
-- [ ] 2.4 Suppress callbacks and results whose generation token is no longer current.
-- [ ] 2.5 Add headless unit tests for every state transition, repeated action, stale result, and recovery path.
-- [ ] 2.6 Add architecture tests proving controller/view models do not import PySide6, python-docx, or lxml.
-- [ ] 2.7 Record red-green evidence, spec review, quality review, and extraction decision for slice 002.
+- [x] 2.1 Define immutable workspace, diagnostics, progress, output, and operation-token view models.
+- [x] 2.2 Implement `WorkspaceController` with injected inspect, validate, build, filesystem, and task-runner dependencies.
+- [x] 2.3 Implement empty, loading, populated, dirty, error, disabled, permission, and canceled state transitions.
+- [x] 2.4 Suppress callbacks and results whose generation token is no longer current.
+- [x] 2.5 Add headless unit tests for every state transition, repeated action, stale result, and recovery path.
+- [x] 2.6 Add architecture tests proving controller/view models do not import PySide6, python-docx, or lxml.
+- [x] 2.7 Record red-green evidence, spec review, quality review, and extraction decision for slice 002.
 
 ## 3. Explicit Source Open And Atomic Save
 

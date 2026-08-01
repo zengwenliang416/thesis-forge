@@ -1,6 +1,6 @@
 {
   "schema": "specnav.codegraph.claims.v1",
-  "generated_at": "2026-07-31T14:58:49.870Z",
+  "generated_at": "2026-08-01T02:01:11.360Z",
   "active_change": "build-thesisforge-desktop-ui",
   "claims": [
     {
@@ -27,6 +27,38 @@
       ],
       "query_ids": [
         "development:task-001-archive-safe-prototype-baseline:evidence"
+      ]
+    },
+    {
+      "id": "development:task-002-headless-workspace-state-controller",
+      "kind": "development-task",
+      "stage": "development",
+      "task_id": "002-headless-workspace-state-controller",
+      "text": "Provide a pure-Python `WorkspaceController` that accepts saved source snapshots,",
+      "required": true,
+      "source": "specnav-codegraph-plan",
+      "source_paths": [
+        "openspec/changes/build-thesisforge-desktop-ui/development/tasks/002-headless-workspace-state-controller/brief.md",
+        "openspec/changes/build-thesisforge-desktop-ui/development/tasks/002-headless-workspace-state-controller/context.json"
+      ],
+      "expected_evidence": [
+        "Observed strict-TDD RED for missing controller/view-model APIs",
+        "Headless tests covering immutable models and every required workspace state",
+        "Tests covering dirty/repeated-action guards, stale progress/success/failure suppression, newer-generation wins, and recovery",
+        "Architecture tests proving controller/view-model modules have no PySide6, python-docx, or lxml imports",
+        "Focused and full pytest, Ruff, pip check, strict OpenSpec, SpecNav entry, CodeGraph, and whitespace evidence",
+        "Task report, independent spec review, and independent quality review"
+      ],
+      "allowed_files": [
+        "src/thesis_forge/ui/__init__.py",
+        "src/thesis_forge/ui/models.py",
+        "src/thesis_forge/ui/tasks.py",
+        "src/thesis_forge/ui/controller.py",
+        "tests/test_ui_controller.py",
+        "tests/test_architecture.py"
+      ],
+      "query_ids": [
+        "development:task-002-headless-workspace-state-controller:evidence"
       ]
     }
   ]

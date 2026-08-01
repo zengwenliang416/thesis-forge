@@ -1,6 +1,6 @@
 {
   "schema": "specnav.codegraph.evidence_index.v1",
-  "generated_at": "2026-07-31T15:21:05.941Z",
+  "generated_at": "2026-08-01T02:01:26.806Z",
   "active_change": "build-thesisforge-desktop-ui",
   "source_raw": "openspec/changes/build-thesisforge-desktop-ui/codegraph/evidence.jsonl",
   "by_claim": {
@@ -28,11 +28,33 @@
       ],
       "symbols": [],
       "blockers": []
+    },
+    "development:task-002-headless-workspace-state-controller": {
+      "status": "matched",
+      "evidence_ids": [
+        "ev-ms9pjuaq",
+        "ev-ms9pk9id",
+        "ev-ms9q6jv6"
+      ],
+      "files": [
+        "tests/test_ui_controller.py",
+        "src/thesis_forge/ui/models.py",
+        "thesis.md",
+        "ui/models.py",
+        "ui/tasks.py",
+        "ui/__init__.py",
+        "tests/test_architecture.py",
+        "src/thesis_forge/ui/controller.py",
+        "src/thesis_forge/ui/tasks.py",
+        "src/thesis_forge/application/services.py"
+      ],
+      "symbols": [],
+      "blockers": []
     }
   },
   "by_stage": {
     "development": {
-      "verified": 2,
+      "verified": 5,
       "partial": 0,
       "missing": 0,
       "stale": 0,
@@ -41,5 +63,5 @@
   },
   "blockers": [],
   "raw_exists": true,
-  "record_count": 2
+  "record_count": 5
 }

@@ -1,0 +1,62 @@
+{
+  "task_id": "002-headless-workspace-state-controller",
+  "goal": "A pure-Python controller consistently owns all required workspace states, application-service orchestration, action guards, and stale-result suppression before Qt widgets are introduced.",
+  "must_read": [
+    "openspec/changes/build-thesisforge-desktop-ui/development/tasks/002-headless-workspace-state-controller/brief.md",
+    "AGENTS.md",
+    "openspec/changes/build-thesisforge-desktop-ui/requirements.md",
+    "openspec/changes/build-thesisforge-desktop-ui/acceptance.md",
+    "openspec/changes/build-thesisforge-desktop-ui/acceptance.json",
+    "openspec/changes/build-thesisforge-desktop-ui/spec-map.json",
+    "openspec/changes/build-thesisforge-desktop-ui/component-impact-map.json",
+    "openspec/changes/build-thesisforge-desktop-ui/prototype/handoff.md",
+    "openspec/changes/build-thesisforge-desktop-ui/prototype/decision.json",
+    "openspec/changes/build-thesisforge-desktop-ui/prototype/artifact/index.html",
+    "openspec/specs/ui-design/design.md",
+    "openspec/specs/system-architecture/design.md",
+    "openspec/specs/frontend-backend-data-flow/design.md",
+    "openspec/specs/component-architecture/design.md",
+    "src/thesis_forge/application/contracts.py",
+    "src/thesis_forge/application/services.py",
+    "src/thesis_forge/application/__init__.py",
+    "src/thesis_forge/ui/__init__.py",
+    "tests/test_application_services.py",
+    "tests/test_architecture.py"
+  ],
+  "allowed_files": [
+    "src/thesis_forge/ui/__init__.py",
+    "src/thesis_forge/ui/models.py",
+    "src/thesis_forge/ui/tasks.py",
+    "src/thesis_forge/ui/controller.py",
+    "tests/test_ui_controller.py",
+    "tests/test_architecture.py"
+  ],
+  "test_paths": [
+    "tests/test_ui_controller.py",
+    "tests/test_architecture.py"
+  ],
+  "non_goals": [
+    "Do not import PySide6 or create Qt widgets, windows, runners, dialogs, or entrypoints.",
+    "Do not implement source file reads, writes, Save, Save As, atomic source replacement, or permission probes.",
+    "Do not add build_service cancellation predicates or claim UI token invalidation interrupts renderer execution.",
+    "Do not implement diagnostics localization, template UI, outline, or preview mapping.",
+    "Do not change parser, validator, compiler, renderer, or application service behavior."
+  ],
+  "expected_evidence": [
+    "Observed strict-TDD RED for missing controller/view-model APIs",
+    "Headless tests covering immutable models and every required workspace state",
+    "Tests covering dirty/repeated-action guards, stale progress/success/failure suppression, newer-generation wins, and recovery",
+    "Architecture tests proving controller/view-model modules have no PySide6, python-docx, or lxml imports",
+    "Focused and full pytest, Ruff, pip check, strict OpenSpec, SpecNav entry, CodeGraph, and whitespace evidence",
+    "Task report, independent spec review, and independent quality review"
+  ],
+  "unsafe_assumptions": [
+    "Task runner callbacks arrive in order or synchronously.",
+    "Dirty editor text is equivalent to a saved source snapshot.",
+    "Controller cancellation interrupts application work rather than only invalidating callbacks.",
+    "Permission failures can be presented as generic errors.",
+    "A stale build result may update the current output path.",
+    "A filesystem seam must perform source I/O before Slice 003."
+  ],
+  "stop_condition": "Stop if implementation would edit outside the six allowed source/test files, duplicate application pipeline logic, perform source I/O, change application cancellation behavior, or import Qt/DOCX/XML implementation modules."
+}

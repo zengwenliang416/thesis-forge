@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import ast
+import subprocess
+import sys
 from pathlib import Path
 
 import thesis_forge.bibliography.bibtex as bibliography_bibtex_module
@@ -13,6 +15,9 @@ import thesis_forge.core.model as model_module
 import thesis_forge.core.parser as parser_module
 import thesis_forge.core.render_plan as render_plan_module
 import thesis_forge.renderers.docx.renderer as docx_renderer_module
+import thesis_forge.ui.controller as ui_controller_module
+import thesis_forge.ui.models as ui_models_module
+import thesis_forge.ui.tasks as ui_tasks_module
 
 FORBIDDEN_IMPORT_PREFIXES = (
     "docx",
@@ -81,3 +86,49 @@ def test_cli_delegates_core_flows_to_application_services():
         "thesis_forge.core.validator",
         "thesis_forge.renderers.docx",
     } & imports
+
+
+def test_headless_ui_controller_and_models_avoid_qt_docx_and_xml_imports():
+    forbidden_prefixes = ("PySide6", "docx", "lxml")
+
+    for module in (ui_controller_module, ui_models_module, ui_tasks_module):
+        imports = _import_names(Path(module.__file__))
+        forbidden = {
+            name
+            for name in imports
+            if any(
+                name == prefix or name.startswith(f"{prefix}.")
+                for prefix in forbidden_prefixes
+            )
+        }
+        assert forbidden == set()
+
+
+def test_importing_headless_ui_does_not_load_application_or_rendering_stack():
+    script = """
+import json
+import sys
+
+import thesis_forge.ui
+
+forbidden = {
+    "docx",
+    "lxml",
+    "thesis_forge.application.services",
+    "thesis_forge.core.compiler",
+    "thesis_forge.core.parser",
+    "thesis_forge.renderers.docx",
+}
+loaded = sorted(name for name in forbidden if name in sys.modules)
+print(json.dumps(loaded))
+raise SystemExit(bool(loaded))
+"""
+
+    result = subprocess.run(
+        [sys.executable, "-c", script],
+        check=False,
+        capture_output=True,
+        text=True,
+    )
+
+    assert result.returncode == 0, result.stdout or result.stderr
