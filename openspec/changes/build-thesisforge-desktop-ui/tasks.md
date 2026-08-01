@@ -53,13 +53,13 @@
 
 用户结果：用户可以选择学校模板、理解所有结构化问题，并从诊断定位到对应 Markdown 行。
 
-- [ ] 5.1 Implement template selection through the existing resolver and validation service.
-- [ ] 5.2 Map `ValidationIssue` severity, code, message, line, and target into stable `zh-CN` presentation models.
-- [ ] 5.3 Implement diagnostics filtering, summary counts, activation, and editor-line focus.
-- [ ] 5.4 Disable Build on fatal diagnostics while preserving warning-only builds.
-- [ ] 5.5 Add tests for valid, missing, malformed, and incompatible templates.
-- [ ] 5.6 Add tests for diagnostic ordering, localization fallback, no-line issues, activation, and fatal/warning guards.
-- [ ] 5.7 Record red-green evidence, spec review, quality review, and extraction decision for slice 005.
+- [x] 5.1 Implement template selection through the existing resolver and validation service.
+- [x] 5.2 Map `ValidationIssue` severity, code, message, line, and target into stable `zh-CN` presentation models.
+- [x] 5.3 Implement diagnostics filtering, summary counts, activation, and editor-line focus.
+- [x] 5.4 Disable Build on fatal diagnostics while preserving warning-only builds.
+- [x] 5.5 Add tests for valid, missing, malformed, and incompatible templates.
+- [x] 5.6 Add tests for diagnostic ordering, localization fallback, no-line issues, activation, and fatal/warning guards.
+- [x] 5.7 Record red-green evidence, spec review, quality review, and extraction decision for slice 005.
 
 ## 6. Outline And Renderer-Neutral Paper Preview
 

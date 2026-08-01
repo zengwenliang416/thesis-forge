@@ -1,6 +1,6 @@
 {
   "schema": "specnav.codegraph.evidence_index.v1",
-  "generated_at": "2026-08-01T05:00:06.820Z",
+  "generated_at": "2026-08-01T06:00:12.864Z",
   "active_change": "build-thesisforge-desktop-ui",
   "source_raw": "openspec/changes/build-thesisforge-desktop-ui/codegraph/evidence.jsonl",
   "by_claim": {
@@ -91,11 +91,29 @@
       ],
       "symbols": [],
       "blockers": []
+    },
+    "development:task-005-template-selection-structured-diagnostics": {
+      "status": "matched",
+      "evidence_ids": [
+        "ev-ms9xt4u5",
+        "ev-ms9yplx7"
+      ],
+      "files": [
+        "tests/test_adapters.py",
+        "tests/test_ui_controller.py",
+        "frontend/src/state/diagnostics.ts",
+        "thesis.md",
+        "frontend/src/components/WorkbenchApp.tsx",
+        "src/thesis_forge/templates/resolver.py",
+        "src/thesis_forge/adapters/runtime.py"
+      ],
+      "symbols": [],
+      "blockers": []
     }
   },
   "by_stage": {
     "development": {
-      "verified": 8,
+      "verified": 10,
       "partial": 0,
       "missing": 0,
       "stale": 0,
@@ -104,5 +122,5 @@
   },
   "blockers": [],
   "raw_exists": true,
-  "record_count": 8
+  "record_count": 10
 }

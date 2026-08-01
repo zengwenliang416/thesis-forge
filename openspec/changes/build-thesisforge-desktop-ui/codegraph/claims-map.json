@@ -1,6 +1,6 @@
 {
   "schema": "specnav.codegraph.claims.v1",
-  "generated_at": "2026-08-01T04:59:36.963Z",
+  "generated_at": "2026-08-01T05:18:38.322Z",
   "active_change": "build-thesisforge-desktop-ui",
   "claims": [
     {
@@ -132,6 +132,46 @@
       ],
       "query_ids": [
         "development:task-004-optional-pyside6-workbench-shell:evidence"
+      ]
+    },
+    {
+      "id": "development:task-005-template-selection-structured-diagnostics",
+      "kind": "development-task",
+      "stage": "development",
+      "task_id": "005-template-selection-structured-diagnostics",
+      "text": "Connect the existing template resolver and validation service to the shared",
+      "required": true,
+      "source": "specnav-codegraph-plan",
+      "source_paths": [
+        "openspec/changes/build-thesisforge-desktop-ui/development/tasks/005-template-selection-structured-diagnostics/brief.md",
+        "openspec/changes/build-thesisforge-desktop-ui/development/tasks/005-template-selection-structured-diagnostics/context.json"
+      ],
+      "expected_evidence": [
+        "Strict TDD RED and GREEN for Python/TypeScript zh-CN diagnostic mapping parity and unknown-code fallback",
+        "Reducer and selector tests for template state, deterministic ordering, filtering, counts, active issue, fatal guard, and warning-only build",
+        "Component tests for template-triggered revalidation, diagnostic rows, keyboard/pointer activation, editor line focus, and no-line issues",
+        "Transport and adapter tests proving stable templateId resolution, templatePath compatibility, selector-conflict rejection, and complete diagnostic DTO validation",
+        "Real validation-service tests for valid, missing, malformed, and incompatible templates",
+        "Frontend unit/typecheck/lint/build/E2E and focused/full Python regression evidence",
+        "Ruff, pip check, strict OpenSpec, SpecNav entry, CodeGraph, JSON, and whitespace evidence",
+        "Task report, dedicated spec review, and dedicated quality review"
+      ],
+      "allowed_files": [
+        "frontend/**",
+        "src/thesis_forge/adapters/**",
+        "src/thesis_forge/presentation/**",
+        "src/thesis_forge/ui/**",
+        "src/thesis_forge/cli.py",
+        "tests/fixtures/diagnostics-zh-cn-v1.json",
+        "tests/test_adapters.py",
+        "tests/test_cli.py",
+        "tests/test_frontend_contract.py",
+        "tests/test_ui_controller.py",
+        "tests/test_ui_models.py",
+        "tests/test_architecture.py"
+      ],
+      "query_ids": [
+        "development:task-005-template-selection-structured-diagnostics:evidence"
       ]
     }
   ]

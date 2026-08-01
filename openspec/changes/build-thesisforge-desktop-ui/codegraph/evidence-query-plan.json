@@ -1,6 +1,6 @@
 {
   "schema": "specnav.codegraph.evidence_query_plan.v1",
-  "generated_at": "2026-08-01T04:59:36.965Z",
+  "generated_at": "2026-08-01T05:18:38.323Z",
   "active_change": "build-thesisforge-desktop-ui",
   "queries": [
     {
@@ -62,6 +62,21 @@
         "tests or verification commands"
       ],
       "command": "node \"$SPECNAV_CODEGRAPH_ROOT/scripts/codegraph-context.js\" --stage development --claim development:task-004-optional-pyside6-workbench-shell --query \"<query>\" --write --json"
+    },
+    {
+      "id": "development:task-005-template-selection-structured-diagnostics:evidence",
+      "claim_id": "development:task-005-template-selection-structured-diagnostics",
+      "stage": "development",
+      "task_id": "005-template-selection-structured-diagnostics",
+      "status": "planned",
+      "query": "Find the files, symbols, components, routes, services, data flow, and tests that implement \"Connect the existing template resolver and validation service to the shared\" in change \"build-thesisforge-desktop-ui\". Return concrete file paths, symbols, relationships, and any missing implementation evidence.",
+      "expected_evidence": [
+        "file paths",
+        "symbols",
+        "call relationships",
+        "tests or verification commands"
+      ],
+      "command": "node \"$SPECNAV_CODEGRAPH_ROOT/scripts/codegraph-context.js\" --stage development --claim development:task-005-template-selection-structured-diagnostics --query \"<query>\" --write --json"
     }
   ]
 }

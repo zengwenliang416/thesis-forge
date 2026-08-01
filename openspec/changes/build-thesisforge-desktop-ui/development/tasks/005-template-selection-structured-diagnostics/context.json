@@ -1,0 +1,83 @@
+{
+  "task_id": "005-template-selection-structured-diagnostics",
+  "goal": "Users can select a school template, understand and filter stable zh-CN structured diagnostics, activate source-linked issues, and build only when no error-severity diagnostic remains.",
+  "must_read": [
+    "openspec/changes/build-thesisforge-desktop-ui/development/tasks/005-template-selection-structured-diagnostics/brief.md",
+    "AGENTS.md",
+    "openspec/changes/build-thesisforge-desktop-ui/requirements.md",
+    "openspec/changes/build-thesisforge-desktop-ui/acceptance.md",
+    "openspec/changes/build-thesisforge-desktop-ui/acceptance.json",
+    "openspec/changes/build-thesisforge-desktop-ui/design.md",
+    "openspec/changes/build-thesisforge-desktop-ui/component-impact-map.json",
+    "openspec/changes/build-thesisforge-desktop-ui/spec-map.json",
+    "openspec/changes/build-thesisforge-desktop-ui/scope.json",
+    "openspec/changes/build-thesisforge-desktop-ui/specs/desktop-workbench/spec.md",
+    "openspec/changes/build-thesisforge-desktop-ui/prototype/artifact/index.html",
+    "openspec/changes/build-thesisforge-desktop-ui/prototype/handoff.md",
+    "openspec/changes/build-thesisforge-desktop-ui/prototype/decision.json",
+    "openspec/specs/ui-design/design.md",
+    "openspec/specs/system-architecture/design.md",
+    "openspec/specs/frontend-backend-data-flow/design.md",
+    "openspec/specs/component-architecture/design.md",
+    "src/thesis_forge/templates/resolver.py",
+    "src/thesis_forge/core/validator.py",
+    "src/thesis_forge/application/services.py",
+    "src/thesis_forge/adapters/runtime.py",
+    "src/thesis_forge/ui/models.py",
+    "src/thesis_forge/cli.py",
+    "frontend/src/state/workspace.ts",
+    "frontend/src/transport/dto.ts",
+    "frontend/src/components/WorkbenchApp.tsx",
+    "frontend/src/components/StatusStrip.tsx",
+    "frontend/src/components/WorkbenchPanels.tsx"
+  ],
+  "allowed_files": [
+    "frontend/**",
+    "src/thesis_forge/adapters/**",
+    "src/thesis_forge/presentation/**",
+    "src/thesis_forge/ui/**",
+    "src/thesis_forge/cli.py",
+    "tests/fixtures/diagnostics-zh-cn-v1.json",
+    "tests/test_adapters.py",
+    "tests/test_cli.py",
+    "tests/test_frontend_contract.py",
+    "tests/test_ui_controller.py",
+    "tests/test_ui_models.py",
+    "tests/test_architecture.py"
+  ],
+  "test_paths": [
+    "frontend/src/**/*.test.ts",
+    "frontend/src/**/*.test.tsx",
+    "frontend/e2e/**",
+    "tests/test_adapters.py",
+    "tests/test_cli.py",
+    "tests/test_frontend_contract.py",
+    "tests/test_ui_controller.py",
+    "tests/test_ui_models.py",
+    "tests/test_architecture.py"
+  ],
+  "non_goals": [
+    "Do not change template schema, resolver precedence, validator rules, compiler, renderer, numbering, bibliography, or DOCX behavior.",
+    "Do not implement arbitrary browser-native template paths, final packaged template discovery, outline/preview mapping, streamed progress, cancellation, or release acceptance.",
+    "Do not introduce direct React-to-HTTP/Tauri/Python calls, autosave, database, accounts, AI, telemetry, dark mode, or runtime locale switching."
+  ],
+  "expected_evidence": [
+    "Strict TDD RED and GREEN for Python/TypeScript zh-CN diagnostic mapping parity and unknown-code fallback",
+    "Reducer and selector tests for template state, deterministic ordering, filtering, counts, active issue, fatal guard, and warning-only build",
+    "Component tests for template-triggered revalidation, diagnostic rows, keyboard/pointer activation, editor line focus, and no-line issues",
+    "Transport and adapter tests proving stable templateId resolution, templatePath compatibility, selector-conflict rejection, and complete diagnostic DTO validation",
+    "Real validation-service tests for valid, missing, malformed, and incompatible templates",
+    "Frontend unit/typecheck/lint/build/E2E and focused/full Python regression evidence",
+    "Ruff, pip check, strict OpenSpec, SpecNav entry, CodeGraph, JSON, and whitespace evidence",
+    "Task report, dedicated spec review, and dedicated quality review"
+  ],
+  "unsafe_assumptions": [
+    "Template selector presence proves resolver integration.",
+    "Every diagnostic has a line or a known localization code.",
+    "Warnings should block build.",
+    "Frontend filtering may discard diagnostics or mutate Markdown.",
+    "A shallow successful transport response proves diagnostic DTO validity.",
+    "The frontend fatal guard can replace the application build validation gate."
+  ],
+  "stop_condition": "Stop if implementation needs resolver/template-schema semantics changes, edits outside allowed files, direct frontend runtime or compiler coupling, arbitrary Web filesystem disclosure, dropped diagnostic fields, duplicated localization/filter/navigation logic, or any weakening of application-layer fatal validation."
+}
