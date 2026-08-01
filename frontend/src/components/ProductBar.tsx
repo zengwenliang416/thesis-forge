@@ -1,4 +1,4 @@
-import { FileText, FolderOpen, Hammer, Save, Search } from "lucide-react";
+import { FileText, FolderOpen, Hammer, Save, Search, X } from "lucide-react";
 import type { RefObject } from "react";
 import type {
   WorkspaceActions,
@@ -14,6 +14,7 @@ interface ProductBarProps {
   onSave(): void;
   onValidate(): void;
   onBuild(): void;
+  onCancel(): void;
 }
 
 export function ProductBar({
@@ -25,6 +26,7 @@ export function ProductBar({
   onSave,
   onValidate,
   onBuild,
+  onCancel,
 }: ProductBarProps) {
   return (
     <header className="product-bar">
@@ -89,6 +91,17 @@ export function ProductBar({
           <Search aria-hidden="true" />
           验证
         </button>
+        {state.operation?.kind === "build" && actions.canCancel ? (
+          <button
+            type="button"
+            className="button secondary"
+            aria-label="取消构建"
+            onClick={onCancel}
+          >
+            <X aria-hidden="true" />
+            取消构建
+          </button>
+        ) : null}
         <button
           type="button"
           className="button primary"

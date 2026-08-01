@@ -323,7 +323,14 @@ def test_build_progress_and_output_are_published_in_application_stage_order(
 ):
     calls: list[tuple[Path, Path, Path | None]] = []
 
-    def build(source, output, *, template_path=None, on_progress=None):
+    def build(
+        source,
+        output,
+        *,
+        template_path=None,
+        on_progress=None,
+        **_kwargs,
+    ):
         calls.append(
             (
                 Path(source),
@@ -498,6 +505,31 @@ def test_cancel_invalidates_late_success_error_and_progress_callbacks(tmp_path: 
 
     assert controller.recover() is True
     assert controller.state.status is ui.WorkspaceStatus.POPULATED
+
+
+def test_build_passes_cooperative_cancellation_predicate_to_application_service(
+    tmp_path: Path,
+):
+    predicates: list[Callable[[], bool]] = []
+
+    def build(_source, output, *, should_cancel=None, **_kwargs):
+        assert should_cancel is not None
+        predicates.append(should_cancel)
+        if should_cancel():
+            raise RuntimeError("canceled")
+        return BuildResult(output_path=Path(output), issues=())
+
+    controller, runner, _source = _loaded_controller(tmp_path, build=build)
+    controller.build(tmp_path / "thesis.docx")
+
+    assert predicates == []
+    assert controller.cancel_current() is True
+    runner.complete()
+
+    assert len(predicates) == 1
+    assert predicates[0]() is True
+    assert controller.state.status is ui.WorkspaceStatus.CANCELED
+    assert controller.state.output is None
 
 
 def test_newer_snapshot_generation_wins_over_stale_success_and_error(tmp_path: Path):

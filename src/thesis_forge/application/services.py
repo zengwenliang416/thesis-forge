@@ -31,6 +31,7 @@ Validator = Callable[[ThesisDocument, ValidationContext], list[ValidationIssue]]
 Compiler = Callable[..., RenderPlan]
 PackageValidator = Callable[[str | Path], None]
 ProgressCallback = Callable[[BuildStage], None]
+CancellationPredicate = Callable[[], bool]
 
 
 class DocumentRenderer(Protocol):
@@ -71,6 +72,16 @@ def _notify(
         callback(stage)
     except Exception as error:
         raise ApplicationStageError(stage, error) from error
+
+
+def _check_canceled(
+    should_cancel: CancellationPredicate | None,
+    stage: BuildStage,
+) -> None:
+    if should_cancel is not None and should_cancel():
+        from .contracts import BuildCanceledError
+
+        raise BuildCanceledError(stage)
 
 
 def inspect_service(
@@ -161,14 +172,17 @@ def build_service(
     *,
     template_path: str | Path | None = None,
     on_progress: ProgressCallback | None = None,
+    should_cancel: CancellationPredicate | None = None,
     dependencies: ApplicationDependencies | None = None,
 ) -> BuildResult:
     active = _dependencies(dependencies)
     output_path = Path(output)
 
+    _check_canceled(should_cancel, BuildStage.PARSE)
     _notify(on_progress, BuildStage.PARSE)
     inspection = inspect_service(source, dependencies=active)
 
+    _check_canceled(should_cancel, BuildStage.VALIDATE)
     _notify(on_progress, BuildStage.VALIDATE)
     validation = _validate_inspection(inspection, template_path, active)
 
@@ -180,6 +194,7 @@ def build_service(
             ValueError("模板未成功解析"),
         )
 
+    _check_canceled(should_cancel, BuildStage.COMPILE)
     _notify(on_progress, BuildStage.COMPILE)
     try:
         plan = active.compiler(
@@ -191,19 +206,24 @@ def build_service(
     except Exception as error:
         raise ApplicationStageError(BuildStage.COMPILE, error) from error
 
+    _check_canceled(should_cancel, BuildStage.RENDER)
     _notify(on_progress, BuildStage.RENDER)
     try:
         with temporary_output_path(output_path) as temporary_path:
             active.renderer.render(plan, temporary_path)
 
+            _check_canceled(should_cancel, BuildStage.FINALIZE)
             _notify(on_progress, BuildStage.FINALIZE)
             try:
                 active.package_validator(temporary_path)
+                _check_canceled(should_cancel, BuildStage.FINALIZE)
                 replace_output(
                     temporary_path,
                     output_path,
                     replace_file=active.replace_file,
                 )
+            except ApplicationStageError:
+                raise
             except Exception as error:
                 raise ApplicationStageError(BuildStage.FINALIZE, error) from error
     except ApplicationStageError:

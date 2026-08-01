@@ -1,14 +1,18 @@
 from __future__ import annotations
 
-from collections.abc import Callable
+from collections.abc import Callable, Iterator
 from dataclasses import asdict
 from pathlib import Path
+from queue import Queue
+from threading import Thread
 from typing import Protocol
 from uuid import uuid4
 
 from thesis_forge.application import (
     ApplicationStageError,
+    BuildCanceledError,
     BuildResult,
+    BuildValidationError,
     InspectionResult,
     PreviewResult,
     ValidationResult,
@@ -28,6 +32,8 @@ InspectService = Callable[..., InspectionResult]
 ValidationService = Callable[..., ValidationResult]
 BuildService = Callable[..., BuildResult]
 PreviewService = Callable[..., PreviewResult]
+BuildEventSink = Callable[[dict], None]
+CancellationPredicate = Callable[[], bool]
 
 
 class RuntimePaths(Protocol):
@@ -236,6 +242,122 @@ class WorkbenchCommandDispatcher:
                 message=str(error),
             )
 
+    def stream_build(
+        self,
+        request: dict,
+        emit: BuildEventSink,
+        *,
+        should_cancel: CancellationPredicate | None = None,
+    ) -> None:
+        request_id = request.get("requestId")
+        if not isinstance(request_id, str) or not request_id:
+            request_id = "invalid-request"
+
+        def progress(stage) -> None:
+            emit(
+                {
+                    "protocol": PROTOCOL_VERSION,
+                    "requestId": request_id,
+                    "type": "progress",
+                    "stage": stage.value,
+                }
+            )
+
+        try:
+            if request.get("protocol") != PROTOCOL_VERSION:
+                raise ValueError("unsupported protocol")
+            if request.get("operation") != "build":
+                raise ValueError("build stream requires a build operation")
+            payload = request.get("payload")
+            if not isinstance(payload, dict):
+                raise TypeError("payload must be an object")
+            result = self._build_result(
+                payload,
+                on_progress=progress,
+                should_cancel=should_cancel or (lambda: False),
+            )
+            emit(
+                {
+                    "protocol": PROTOCOL_VERSION,
+                    "requestId": request_id,
+                    "type": "success",
+                    "result": result,
+                }
+            )
+        except BuildCanceledError as error:
+            self._emit_build_error(
+                emit,
+                request_id,
+                kind="canceled",
+                message=str(error),
+                stage=error.stage.value,
+            )
+        except BuildValidationError as error:
+            self._emit_build_error(
+                emit,
+                request_id,
+                kind="validation",
+                message=str(error),
+                stage=error.stage.value,
+            )
+        except PermissionError as error:
+            self._emit_build_error(
+                emit,
+                request_id,
+                kind="permission",
+                message=str(error),
+            )
+        except ApplicationStageError as error:
+            kind = (
+                "finalize"
+                if error.stage.value == "finalize"
+                else "validation"
+                if error.stage.value in {"parse", "validate"}
+                else "render"
+            )
+            self._emit_build_error(
+                emit,
+                request_id,
+                kind=kind,
+                message=str(error),
+                stage=error.stage.value,
+            )
+        except (KeyError, TypeError, ValueError) as error:
+            self._emit_build_error(
+                emit,
+                request_id,
+                kind="transport",
+                message=str(error),
+            )
+        except Exception as error:  # noqa: BLE001 - transport terminal boundary
+            self._emit_build_error(
+                emit,
+                request_id,
+                kind="transport",
+                message=str(error),
+            )
+
+    @staticmethod
+    def _emit_build_error(
+        emit: BuildEventSink,
+        request_id: str,
+        *,
+        kind: str,
+        message: str,
+        stage: str | None = None,
+    ) -> None:
+        error = {"kind": kind, "message": message}
+        if stage is not None:
+            error["stage"] = stage
+        emit(
+            {
+                "protocol": PROTOCOL_VERSION,
+                "requestId": request_id,
+                "type": "error",
+                "error": error,
+            }
+        )
+
     def _source(self, payload: dict) -> tuple[dict, Path]:
         source = payload.get("source")
         if not isinstance(source, dict):
@@ -315,18 +437,26 @@ class WorkbenchCommandDispatcher:
             "source": self._runtime.present_source(source, source_path),
         }
 
-    def _build_result(self, payload: dict) -> dict:
+    def _build_result(
+        self,
+        payload: dict,
+        *,
+        on_progress: Callable | None = None,
+        should_cancel: CancellationPredicate | None = None,
+    ) -> dict:
         source, source_path = self._source(payload)
         output = payload.get("output")
         if not isinstance(output, dict):
             raise TypeError("output must be an object")
         output_path = self._runtime.output_path(output)
         stages: list[str] = []
+        progress = on_progress or (lambda stage: stages.append(stage.value))
         result = self._build(
             source_path,
             output_path,
             template_path=self._template_path(payload, source_path),
-            on_progress=lambda stage: stages.append(stage.value),
+            on_progress=progress,
+            should_cancel=should_cancel,
         )
         return {
             "source": self._runtime.present_source(source, source_path),
@@ -334,3 +464,32 @@ class WorkbenchCommandDispatcher:
             "diagnostics": [asdict(issue) for issue in result.issues],
             "progress": stages,
         }
+
+
+def iter_build_events(
+    dispatcher: WorkbenchCommandDispatcher,
+    request: dict,
+    *,
+    should_cancel: CancellationPredicate | None = None,
+    on_finished: Callable[[], None] | None = None,
+) -> Iterator[dict]:
+    queue: Queue[dict | None] = Queue()
+
+    def run() -> None:
+        try:
+            dispatcher.stream_build(
+                request,
+                queue.put,
+                should_cancel=should_cancel,
+            )
+        finally:
+            if on_finished is not None:
+                on_finished()
+            queue.put(None)
+
+    Thread(target=run, name="thesisforge-build-stream", daemon=True).start()
+    while True:
+        event = queue.get()
+        if event is None:
+            return
+        yield event

@@ -6,6 +6,7 @@ from pathlib import Path
 
 import pytest
 
+from thesis_forge import application
 from thesis_forge.adapters import (
     PROTOCOL_VERSION,
     DesktopRuntime,
@@ -14,7 +15,7 @@ from thesis_forge.adapters import (
     WorkbenchHttpApp,
     dispatch_json_line,
 )
-from thesis_forge.application import InspectionResult, ValidationResult
+from thesis_forge.application import BuildStage, InspectionResult, ValidationResult
 from thesis_forge.core.model import Heading, ThesisDocument, ValidationIssue
 from thesis_forge.core.validator import ValidationContext
 
@@ -511,6 +512,98 @@ def test_web_workspace_save_and_build_share_one_opaque_workspace(tmp_path: Path)
     }
     assert build_calls == [
         (source_path, runtime.root / source["workspaceId"] / "thesis.docx")
+    ]
+
+
+def test_build_event_stream_emits_ordered_progress_and_one_success(tmp_path: Path):
+    dispatcher, source, _calls = _dispatcher(tmp_path)
+    output = tmp_path / "thesis.docx"
+
+    def build(_source, output_path, *, on_progress=None, should_cancel=None, **_kwargs):
+        assert should_cancel is not None
+        for stage in BuildStage:
+            assert should_cancel() is False
+            on_progress(stage)
+        Path(output_path).write_bytes(b"docx")
+        return type("Result", (), {"output_path": Path(output_path), "issues": ()})()
+
+    dispatcher = WorkbenchCommandDispatcher(
+        runtime=DesktopRuntime(),
+        build=build,
+    )
+    request = _request("build", source)
+    request["payload"]["output"] = {
+        "kind": "desktop",
+        "path": str(output),
+        "fileName": output.name,
+    }
+    events: list[dict] = []
+
+    dispatcher.stream_build(request, events.append)
+
+    assert [event["type"] for event in events] == [
+        "progress",
+        "progress",
+        "progress",
+        "progress",
+        "progress",
+        "success",
+    ]
+    assert [event["stage"] for event in events[:-1]] == [
+        "parse",
+        "validate",
+        "compile",
+        "render",
+        "finalize",
+    ]
+    assert events[-1]["result"]["output"] == {
+        "kind": "desktop",
+        "name": "thesis.docx",
+    }
+    assert all(event["requestId"] == "build-1" for event in events)
+    json.dumps(events)
+
+
+def test_build_event_stream_emits_one_typed_cancellation_error(tmp_path: Path):
+    dispatcher, source, _calls = _dispatcher(tmp_path)
+    output = tmp_path / "thesis.docx"
+
+    def build(_source, _output, *, on_progress=None, should_cancel=None, **_kwargs):
+        on_progress(BuildStage.PARSE)
+        assert should_cancel()
+        raise application.BuildCanceledError(BuildStage.VALIDATE)
+
+    dispatcher = WorkbenchCommandDispatcher(
+        runtime=DesktopRuntime(),
+        build=build,
+    )
+    request = _request("build", source)
+    request["payload"]["output"] = {
+        "kind": "desktop",
+        "path": str(output),
+        "fileName": output.name,
+    }
+    events: list[dict] = []
+
+    dispatcher.stream_build(request, events.append, should_cancel=lambda: True)
+
+    assert events == [
+        {
+            "protocol": PROTOCOL_VERSION,
+            "requestId": "build-1",
+            "type": "progress",
+            "stage": "parse",
+        },
+        {
+            "protocol": PROTOCOL_VERSION,
+            "requestId": "build-1",
+            "type": "error",
+            "error": {
+                "kind": "canceled",
+                "message": "构建已取消",
+                "stage": "validate",
+            },
+        },
     ]
 
 

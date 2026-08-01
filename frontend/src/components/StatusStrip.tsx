@@ -59,16 +59,36 @@ export function StatusStrip({
 }
 
 export function BuildProgress({ state }: { state: WorkspaceState }) {
+  const stages = [
+    ["parse", "解析"],
+    ["validate", "验证"],
+    ["compile", "编译"],
+    ["render", "渲染"],
+    ["finalize", "完成"],
+  ] as const;
+  const completed = new Set(state.buildProgress);
+  const complete =
+    state.output !== null &&
+    state.operation === null &&
+    state.buildErrorKind === null;
   return (
     <div
       className="build-progress-shell"
       role="status"
       aria-label="构建进度"
     >
-      <span>{state.operation?.kind === "build" ? "构建中" : "等待构建"}</span>
+      <span>
+        {state.operation?.kind === "build"
+          ? "构建中"
+          : complete
+            ? "构建完成"
+            : "等待构建"}
+      </span>
       <div aria-hidden="true">
-        {["解析", "验证", "编译", "渲染", "完成"].map((stage) => (
-          <i key={stage} title={stage} />
+        {stages.map(([stage, label]) => (
+          <i key={stage} title={label} data-complete={completed.has(stage)}>
+            <span className="visually-hidden">{label}</span>
+          </i>
         ))}
       </div>
     </div>

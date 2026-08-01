@@ -66,3 +66,8 @@ class BuildValidationError(ApplicationStageError):
             BuildStage.VALIDATE,
             ValueError(f"存在 {error_count} 个验证错误"),
         )
+
+
+class BuildCanceledError(ApplicationStageError):
+    def __init__(self, stage: BuildStage):
+        super().__init__(stage, RuntimeError("构建已取消"))

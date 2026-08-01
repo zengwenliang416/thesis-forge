@@ -261,13 +261,14 @@ svg {
 }
 
 .build-progress-shell i {
+  display: block;
   width: 14px;
   height: 3px;
   border-radius: 999px;
   background: var(--line);
 }
 
-[data-state="loading"] .build-progress-shell i:first-child {
+.build-progress-shell i[data-complete="true"] {
   background: var(--accent);
 }
 

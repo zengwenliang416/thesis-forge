@@ -253,6 +253,76 @@ def test_build_service_reports_progress_and_atomically_replaces_target(tmp_path:
     validate_docx_package(output)
 
 
+@pytest.mark.parametrize(
+    ("cancel_on_check", "expected_stage"),
+    [
+        (1, BuildStage.PARSE),
+        (2, BuildStage.VALIDATE),
+        (3, BuildStage.COMPILE),
+        (4, BuildStage.RENDER),
+        (5, BuildStage.FINALIZE),
+        (6, BuildStage.FINALIZE),
+    ],
+)
+def test_build_cancellation_at_every_boundary_preserves_previous_output(
+    tmp_path: Path,
+    cancel_on_check: int,
+    expected_stage: BuildStage,
+):
+    output = tmp_path / "thesis.docx"
+    output.write_bytes(b"previous-valid-output")
+    checks = 0
+    replacements: list[tuple[Path, Path]] = []
+
+    class MinimalRenderer:
+        def render(self, _plan, path):
+            _write_minimal_package(Path(path))
+            return Path(path)
+
+    def should_cancel() -> bool:
+        nonlocal checks
+        checks += 1
+        return checks == cancel_on_check
+
+    def replace_file(source: Path, target: Path) -> None:
+        replacements.append((source, target))
+        source.replace(target)
+
+    with pytest.raises(application.BuildCanceledError) as captured:
+        build_service(
+            EXAMPLE_SOURCE,
+            output,
+            should_cancel=should_cancel,
+            dependencies=ApplicationDependencies(
+                renderer=MinimalRenderer(),
+                replace_file=replace_file,
+            ),
+        )
+
+    assert captured.value.stage is expected_stage
+    assert output.read_bytes() == b"previous-valid-output"
+    assert _temporary_outputs(output) == []
+    if cancel_on_check == 6:
+        assert replacements == []
+
+
+def test_progress_callback_failure_preserves_previous_output(tmp_path: Path):
+    output = tmp_path / "thesis.docx"
+    output.write_bytes(b"previous-valid-output")
+
+    def failing_callback(stage: BuildStage) -> None:
+        if stage is BuildStage.RENDER:
+            raise RuntimeError("progress consumer failed")
+
+    with pytest.raises(ApplicationStageError) as captured:
+        build_service(EXAMPLE_SOURCE, output, on_progress=failing_callback)
+
+    assert captured.value.stage is BuildStage.RENDER
+    assert str(captured.value) == "progress consumer failed"
+    assert output.read_bytes() == b"previous-valid-output"
+    assert _temporary_outputs(output) == []
+
+
 def test_fatal_validation_stops_before_compile_render_or_output(tmp_path: Path):
     source = tmp_path / "invalid.md"
     source.write_text("# 绪论 {#bad}\n", encoding="utf-8")

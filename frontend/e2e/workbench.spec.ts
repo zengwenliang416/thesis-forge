@@ -115,6 +115,39 @@ test("opens, edits, explicitly saves, refreshes, and builds through HTTP", async
       }),
     });
   });
+  await page.route("**/api/v1/build-stream", async (route) => {
+    const request = route.request().postDataJSON() as Record<string, unknown>;
+    operations.push(request);
+    const requestId = String(request.requestId);
+    const events = [
+      ...["parse", "validate", "compile", "render", "finalize"].map(
+        (stage) => ({
+          protocol: "thesisforge.workbench.v1",
+          requestId,
+          type: "progress",
+          stage,
+        }),
+      ),
+      {
+        protocol: "thesisforge.workbench.v1",
+        requestId,
+        type: "success",
+        result: {
+          output: {
+            kind: "web-download",
+            name: "thesis.docx",
+            downloadId: workspaceId,
+          },
+          diagnostics: [],
+        },
+      },
+    ];
+    await route.fulfill({
+      status: 200,
+      contentType: "application/x-ndjson",
+      body: `${events.map((event) => JSON.stringify(event)).join("\n")}\n`,
+    });
+  });
   await page.goto("/");
 
   await page.locator('input[type="file"]').setInputFiles({
@@ -167,6 +200,104 @@ test("opens, edits, explicitly saves, refreshes, and builds through HTTP", async
       },
     },
   });
+  await expect(page.getByText("构建完成")).toBeVisible();
+  await expect(page.getByText("thesis.docx")).toBeVisible();
+});
+
+test("cancels an active Web build and retries without losing prior output", async ({
+  page,
+}, testInfo) => {
+  test.skip(testInfo.project.name !== "desktop-chromium");
+  const pending: { release: (() => void) | null } = { release: null };
+  let buildCount = 0;
+  let cancelCount = 0;
+  await page.route("**/api/v1/build-cancel", async (route) => {
+    cancelCount += 1;
+    await route.fulfill({
+      status: 202,
+      contentType: "application/json",
+      body: JSON.stringify({ ok: true }),
+    });
+  });
+  await page.route("**/api/v1/build-stream", async (route) => {
+    buildCount += 1;
+    const request = route.request().postDataJSON() as { requestId: string };
+    if (buildCount === 1) {
+      await new Promise<void>((resolve) => {
+        pending.release = resolve;
+      });
+      try {
+        await route.fulfill({
+          status: 200,
+          contentType: "application/x-ndjson",
+          body: "",
+        });
+      } catch {
+        // The browser aborted the first request as part of cooperative cancel.
+      }
+      return;
+    }
+    await route.fulfill({
+      status: 200,
+      contentType: "application/x-ndjson",
+      body: `${JSON.stringify({
+        protocol: "thesisforge.workbench.v1",
+        requestId: request.requestId,
+        type: "success",
+        result: {
+          output: { kind: "web-download", name: "retry.docx", downloadId: workspaceId },
+          diagnostics: [],
+        },
+      })}\n`,
+    });
+  });
+  await page.route("**/api/v1/dispatch", async (route) => {
+    const request = route.request().postDataJSON() as Record<string, unknown>;
+    await route.fulfill({
+      status: 200,
+      contentType: "application/json",
+      body: JSON.stringify({
+        protocol: "thesisforge.workbench.v1",
+        requestId: request.requestId,
+        ok: true,
+        result: previewResult,
+      }),
+    });
+  });
+  await page.route("**/api/v1/workspaces", async (route) => {
+    await route.fulfill({
+      status: 201,
+      contentType: "application/json",
+      body: JSON.stringify({
+        protocol: "thesisforge.workbench.v1",
+        ok: true,
+        source: {
+          kind: "web-workspace",
+          workspaceId,
+          fileName: "thesis.md",
+        },
+        text: "# 绪论\n",
+      }),
+    });
+  });
+  await page.goto("/");
+  await page.locator('input[type="file"]').setInputFiles({
+    name: "thesis.md",
+    mimeType: "text/markdown",
+    buffer: Buffer.from("# 绪论\n"),
+  });
+
+  await page.getByRole("button", { name: "构建 DOCX" }).click();
+  await expect(page.getByRole("button", { name: "取消构建" })).toBeVisible();
+  await page.getByRole("button", { name: "取消构建" }).click();
+  await expect(page.getByText("操作已取消")).toBeVisible();
+  await expect(page.getByRole("button", { name: "构建 DOCX" })).toBeEnabled();
+  pending.release?.();
+  await expect.poll(() => cancelCount).toBe(1);
+
+  await page.getByRole("button", { name: "构建 DOCX" }).click();
+  await expect(page.getByText("retry.docx")).toBeVisible();
+  await expect(page.getByText("构建完成")).toBeVisible();
 });
 
 test("selects a template and blocks build on an activated fatal diagnostic", async ({

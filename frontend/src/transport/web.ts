@@ -1,4 +1,5 @@
 import { assertCommandResponse, type CommandEnvelope } from "./dto";
+import { assertBuildEvent, type BuildEvent } from "./buildEvents";
 import type {
   OpenSourceInput,
   OpenedSource,
@@ -76,5 +77,60 @@ export class WebWorkbenchTransport implements WorkbenchTransport {
       throw new Error(`HTTP ${response.status}`);
     }
     return commandResponse;
+  }
+
+  async runBuild(
+    request: CommandEnvelope,
+    onEvent: (event: BuildEvent) => void,
+    signal: AbortSignal,
+  ): Promise<void> {
+    const cancel = () => {
+      void this.#fetch(`${this.#baseUrl}/api/v1/build-cancel`, {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ requestId: request.requestId }),
+      });
+    };
+    signal.addEventListener("abort", cancel, { once: true });
+    try {
+      const response = await this.#fetch(
+        `${this.#baseUrl}/api/v1/build-stream`,
+        {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify(request),
+          signal,
+        },
+      );
+      if (!response.ok || !response.body) {
+        throw new Error(`HTTP ${response.status}`);
+      }
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder();
+      let buffer = "";
+      while (true) {
+        const { done, value } = await reader.read();
+        buffer += decoder.decode(value, { stream: !done });
+        const lines = buffer.split("\n");
+        buffer = lines.pop() ?? "";
+        for (const line of lines) {
+          if (line.trim()) {
+            onEvent(
+              assertBuildEvent(JSON.parse(line) as unknown, request.requestId),
+            );
+          }
+        }
+        if (done) {
+          break;
+        }
+      }
+      if (buffer.trim()) {
+        onEvent(
+          assertBuildEvent(JSON.parse(buffer) as unknown, request.requestId),
+        );
+      }
+    } finally {
+      signal.removeEventListener("abort", cancel);
+    }
   }
 }

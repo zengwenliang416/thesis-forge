@@ -46,6 +46,7 @@ interface WorkbenchShellProps {
   onSave(): void;
   onValidate(): void;
   onBuild(): void;
+  onCancel(): void;
   onRecover(): void;
   onTemplateSelected(templateId: string | null): void;
   onDiagnosticFilterChanged(filter: DiagnosticFilter): void;
@@ -74,6 +75,7 @@ export function WorkbenchShell({
   onSave,
   onValidate,
   onBuild,
+  onCancel,
   onRecover,
   onTemplateSelected,
   onDiagnosticFilterChanged,
@@ -105,6 +107,7 @@ export function WorkbenchShell({
         onSave={onSave}
         onValidate={onValidate}
         onBuild={onBuild}
+        onCancel={onCancel}
       />
       <StatusStrip
         state={state}
@@ -163,7 +166,11 @@ export function WorkbenchShell({
           />
         </section>
       </main>
-      <OutputFeedback runtime={runtime} capabilities={capabilities} />
+      <OutputFeedback
+        runtime={runtime}
+        capabilities={capabilities}
+        state={state}
+      />
     </div>
   );
 }

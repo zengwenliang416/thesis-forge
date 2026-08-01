@@ -1,4 +1,9 @@
 import type { OperationKind, SourceKind, SourceRef } from "../transport/dto";
+import type {
+  BuildErrorKind,
+  BuildOutput,
+  BuildStage,
+} from "../transport/buildEvents";
 import {
   hasFatalDiagnostics,
   type DiagnosticFilter,
@@ -47,6 +52,9 @@ export interface WorkspaceState {
   outline: OutlineItem[];
   preview: PreviewDocument;
   activeSelectionId: string | null;
+  buildProgress: BuildStage[];
+  buildErrorKind: BuildErrorKind | null;
+  output: BuildOutput | null;
   mobilePanel: "outline" | "editor" | "preview" | "diagnostics";
   outlineWidth: number;
   previewWidth: number;
@@ -99,6 +107,22 @@ export type WorkspaceEvent =
       permission?: boolean;
     }
   | { type: "operationCanceled"; operation: OperationToken }
+  | {
+      type: "buildProgressed";
+      operation: OperationToken;
+      stage: BuildStage;
+    }
+  | {
+      type: "buildSucceeded";
+      operation: OperationToken;
+      output: BuildOutput;
+    }
+  | {
+      type: "buildFailed";
+      operation: OperationToken;
+      kind: BuildErrorKind;
+      message: string;
+    }
   | { type: "recovered" }
   | {
       type: "mobilePanelSelected";
@@ -126,6 +150,9 @@ export function createInitialWorkspaceState(): WorkspaceState {
     outline: [],
     preview: EMPTY_PREVIEW,
     activeSelectionId: null,
+    buildProgress: [],
+    buildErrorKind: null,
+    output: null,
     mobilePanel: "editor",
     outlineWidth: 260,
     previewWidth: 430,
@@ -161,6 +188,9 @@ export function reduceWorkspaceState(
         outline: [],
         preview: EMPTY_PREVIEW,
         activeSelectionId: null,
+        buildProgress: [],
+        buildErrorKind: null,
+        output: null,
       };
     case "textEdited": {
       const dirty = event.text !== state.savedText;
@@ -220,6 +250,56 @@ export function reduceWorkspaceState(
         status: "loading",
         operation: event.operation,
         errorMessage: null,
+        buildProgress:
+          event.operation.kind === "build" ? [] : state.buildProgress,
+        buildErrorKind:
+          event.operation.kind === "build" ? null : state.buildErrorKind,
+      };
+    case "buildProgressed": {
+      if (!isCurrent(state, event.operation)) {
+        return state;
+      }
+      const order: BuildStage[] = [
+        "parse",
+        "validate",
+        "compile",
+        "render",
+        "finalize",
+      ];
+      const current = state.buildProgress.at(-1);
+      if (
+        current !== undefined &&
+        order.indexOf(event.stage) <= order.indexOf(current)
+      ) {
+        return state;
+      }
+      return {
+        ...state,
+        buildProgress: [...state.buildProgress, event.stage],
+      };
+    }
+    case "buildSucceeded":
+      if (!isCurrent(state, event.operation)) {
+        return state;
+      }
+      return {
+        ...state,
+        status: state.dirty ? "dirty" : state.source ? "populated" : "empty",
+        operation: null,
+        errorMessage: null,
+        buildErrorKind: null,
+        output: event.output,
+      };
+    case "buildFailed":
+      if (!isCurrent(state, event.operation)) {
+        return state;
+      }
+      return {
+        ...state,
+        status: event.kind === "permission" ? "permission" : "error",
+        operation: null,
+        errorMessage: event.message,
+        buildErrorKind: event.kind,
       };
     case "saveSucceeded":
       if (!isCurrent(state, event.operation)) {
@@ -232,6 +312,7 @@ export function reduceWorkspaceState(
         dirty: false,
         operation: null,
         errorMessage: null,
+        buildErrorKind: null,
       };
     case "operationSucceeded":
       if (!isCurrent(state, event.operation)) {
@@ -326,11 +407,22 @@ export function selectWorkspaceActions(state: WorkspaceState): WorkspaceActions 
       canBuild: !hasFatalDiagnostics(state.diagnostics),
     };
   }
-  if (
-    state.status === "error" ||
-    state.status === "permission" ||
-    state.status === "canceled"
-  ) {
+  if (state.status === "error" || state.status === "canceled") {
+    return {
+      ...NONE,
+      canOpen: true,
+      canEdit: state.source !== null,
+      canSave: state.dirty && (state.source?.writable ?? false),
+      canSaveAs: state.source?.kind === "desktop",
+      canDownload: state.source?.kind === "web-upload",
+      canBuild:
+        state.source !== null &&
+        !state.dirty &&
+        !hasFatalDiagnostics(state.diagnostics) &&
+        (state.status === "canceled" || state.buildErrorKind !== null),
+    };
+  }
+  if (state.status === "permission") {
     return {
       ...NONE,
       canOpen: true,

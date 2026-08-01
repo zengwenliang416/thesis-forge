@@ -4,6 +4,7 @@ import type {
   RuntimeKind,
   SourceRef,
 } from "./dto";
+import type { BuildEvent } from "./buildEvents";
 
 export interface RuntimeCapabilities {
   nativePaths: boolean;
@@ -27,4 +28,9 @@ export interface WorkbenchTransport {
   readonly capabilities: RuntimeCapabilities;
   openSource(input?: OpenSourceInput): Promise<OpenedSource | null>;
   dispatch(request: CommandEnvelope, signal?: AbortSignal): Promise<CommandResponse>;
+  runBuild?(
+    request: CommandEnvelope,
+    onEvent: (event: BuildEvent) => void,
+    signal: AbortSignal,
+  ): Promise<void>;
 }

@@ -350,6 +350,7 @@ class WorkspaceController:
                 output,
                 template_path=template,
                 on_progress=lambda stage: self._report_progress(token, stage),
+                should_cancel=lambda: not self._is_current(token),
             ),
             on_success=lambda result: self._complete_build(token, result),
             on_error=lambda error: self._fail_operation(token, error),

@@ -2,9 +2,12 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import sys
+from collections.abc import Callable
+from pathlib import Path
 
-from .runtime import DesktopRuntime, WorkbenchCommandDispatcher
+from .runtime import DesktopRuntime, WorkbenchCommandDispatcher, iter_build_events
 
 
 def dispatch_json_line(
@@ -26,11 +29,56 @@ def dispatch_json_line(
     return json.dumps(response, ensure_ascii=False)
 
 
+def stream_json_lines(
+    dispatcher: WorkbenchCommandDispatcher,
+    line: str,
+    *,
+    should_cancel: Callable[[], bool] | None = None,
+):
+    try:
+        request = json.loads(line)
+        if not isinstance(request, dict):
+            raise TypeError("request must be an object")
+        for event in iter_build_events(
+            dispatcher,
+            request,
+            should_cancel=should_cancel,
+        ):
+            yield json.dumps(event, ensure_ascii=False)
+    except (TypeError, ValueError, json.JSONDecodeError) as error:
+        yield json.dumps(
+            {
+                "protocol": "thesisforge.workbench.v1",
+                "requestId": "invalid-request",
+                "type": "error",
+                "error": {"kind": "transport", "message": str(error)},
+            },
+            ensure_ascii=False,
+        )
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--once", action="store_true")
+    parser.add_argument("--stream", action="store_true")
     args = parser.parse_args(argv)
     dispatcher = WorkbenchCommandDispatcher(runtime=DesktopRuntime())
+    if args.stream:
+        cancel_file = os.environ.get("THESISFORGE_CANCEL_FILE")
+        should_cancel = (
+            (lambda: Path(cancel_file).exists())
+            if cancel_file is not None
+            else None
+        )
+        line = sys.stdin.readline()
+        if line:
+            for event in stream_json_lines(
+                dispatcher,
+                line,
+                should_cancel=should_cancel,
+            ):
+                print(event, flush=True)
+        return 0
     if args.once:
         line = sys.stdin.readline()
         if line:

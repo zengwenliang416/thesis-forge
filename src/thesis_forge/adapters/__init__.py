@@ -1,7 +1,7 @@
 from .dto import PROTOCOL_VERSION
 from .http import WorkbenchHttpApp
 from .runtime import DesktopRuntime, WebWorkspaceRuntime, WorkbenchCommandDispatcher
-from .sidecar import dispatch_json_line
+from .sidecar import dispatch_json_line, stream_json_lines
 
 __all__ = [
     "PROTOCOL_VERSION",
@@ -10,4 +10,5 @@ __all__ = [
     "WorkbenchCommandDispatcher",
     "WorkbenchHttpApp",
     "dispatch_json_line",
+    "stream_json_lines",
 ]

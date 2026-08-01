@@ -16,6 +16,7 @@ import {
 import { lineSelectionRange } from "../state/editorNavigation";
 import type { ContentSelection } from "../state/preview";
 import type { WorkbenchTransport } from "../transport/WorkbenchTransport";
+import type { BuildEvent } from "../transport/buildEvents";
 import {
   PROTOCOL_VERSION,
   readSerializedPreviewResult,
@@ -61,6 +62,7 @@ export function WorkbenchApp({
       ? `存在 ${fatalDiagnosticCount} 个错误诊断，构建已禁用。`
       : defaultStatusDetail;
   const generationRef = useRef(0);
+  const buildAbortRef = useRef<AbortController | null>(null);
 
   const nextOperation = (kind: OperationKind) => {
     generationRef.current += 1;
@@ -180,6 +182,61 @@ export function WorkbenchApp({
     });
     dispatch({ type: "operationStarted", operation });
     try {
+      if (kind === "build" && transport.runBuild) {
+        const controller = new AbortController();
+        buildAbortRef.current = controller;
+        let terminal = false;
+        await transport.runBuild(
+          request,
+          (event: BuildEvent) => {
+            if (event.type === "progress") {
+              dispatch({
+                type: "buildProgressed",
+                operation,
+                stage: event.stage,
+              });
+              return;
+            }
+            terminal = true;
+            if (event.type === "success") {
+              dispatch({
+                type: "diagnosticsLoaded",
+                operation,
+                diagnostics: presentDiagnostics(event.result.diagnostics),
+              });
+              dispatch({
+                type: "buildSucceeded",
+                operation,
+                output: event.result.output,
+              });
+              return;
+            }
+            if (event.error.kind === "canceled") {
+              dispatch({ type: "operationCanceled", operation });
+              return;
+            }
+            dispatch({
+              type: "buildFailed",
+              operation,
+              kind: event.error.kind,
+              message: event.error.message,
+            });
+          },
+          controller.signal,
+        );
+        if (!terminal && !controller.signal.aborted) {
+          dispatch({
+            type: "buildFailed",
+            operation,
+            kind: "transport",
+            message: "构建事件流未返回终态",
+          });
+        }
+        if (buildAbortRef.current === controller) {
+          buildAbortRef.current = null;
+        }
+        return;
+      }
       const response = await transport.dispatch(request);
       if (response.ok) {
         if (kind === "validate") {
@@ -213,6 +270,15 @@ export function WorkbenchApp({
     } catch (error) {
       failOperation(operation, error);
     }
+  };
+
+  const cancelBuild = () => {
+    if (state.operation?.kind !== "build") {
+      return;
+    }
+    const operation = state.operation;
+    buildAbortRef.current?.abort();
+    dispatch({ type: "operationCanceled", operation });
   };
 
   const saveSource = async () => {
@@ -421,6 +487,7 @@ export function WorkbenchApp({
       onSave={() => void saveSource()}
       onValidate={() => void runOperation("validate")}
       onBuild={() => void runOperation("build")}
+      onCancel={cancelBuild}
       onRecover={recoverWorkspace}
       onTemplateSelected={selectTemplate}
       onDiagnosticFilterChanged={(filter) =>

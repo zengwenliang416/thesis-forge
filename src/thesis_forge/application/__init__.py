@@ -1,5 +1,6 @@
 from .contracts import (
     ApplicationStageError,
+    BuildCanceledError,
     BuildResult,
     BuildStage,
     BuildValidationError,
@@ -18,6 +19,7 @@ from .services import (
 __all__ = [
     "ApplicationDependencies",
     "ApplicationStageError",
+    "BuildCanceledError",
     "BuildResult",
     "BuildStage",
     "BuildValidationError",
