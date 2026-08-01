@@ -1,0 +1,72 @@
+{
+  "task_id": "004-optional-pyside6-workbench-shell",
+  "goal": "Users can run one shared React workbench in Web, macOS, and Windows runtimes through versioned transports while the deterministic Python CLI remains independent.",
+  "must_read": [
+    "openspec/changes/build-thesisforge-desktop-ui/development/tasks/004-optional-pyside6-workbench-shell/brief.md",
+    "AGENTS.md",
+    "openspec/changes/build-thesisforge-desktop-ui/requirements.md",
+    "openspec/changes/build-thesisforge-desktop-ui/acceptance.md",
+    "openspec/changes/build-thesisforge-desktop-ui/acceptance.json",
+    "openspec/changes/build-thesisforge-desktop-ui/design.md",
+    "openspec/changes/build-thesisforge-desktop-ui/component-impact-map.json",
+    "openspec/changes/build-thesisforge-desktop-ui/spec-map.json",
+    "openspec/changes/build-thesisforge-desktop-ui/scope.json",
+    "openspec/changes/build-thesisforge-desktop-ui/prototype/artifact/index.html",
+    "openspec/changes/build-thesisforge-desktop-ui/prototype/handoff.md",
+    "openspec/changes/build-thesisforge-desktop-ui/prototype/decision.json",
+    "openspec/specs/ui-design/design.md",
+    "openspec/specs/system-architecture/design.md",
+    "openspec/specs/frontend-backend-data-flow/design.md",
+    "openspec/specs/component-architecture/design.md",
+    "src/thesis_forge/application/contracts.py",
+    "src/thesis_forge/application/services.py",
+    "src/thesis_forge/ui/controller.py",
+    "src/thesis_forge/ui/models.py"
+  ],
+  "allowed_files": [
+    "package.json",
+    "pnpm-lock.yaml",
+    "frontend/**",
+    "src-tauri/**",
+    "src/thesis_forge/adapters/**",
+    "src/thesis_forge/ui/**",
+    "tests/test_adapters.py",
+    "tests/test_architecture.py",
+    "tests/test_frontend_contract.py",
+    "tests/fixtures/workspace-state-v1.json",
+    "README.md"
+  ],
+  "test_paths": [
+    "frontend/src/**/*.test.ts",
+    "frontend/src/**/*.test.tsx",
+    "frontend/e2e/**",
+    "src-tauri/src/**",
+    "tests/test_adapters.py",
+    "tests/test_frontend_contract.py",
+    "tests/test_architecture.py"
+  ],
+  "non_goals": [
+    "Do not introduce PySide6, PyQt, Electron, or a second desktop component tree.",
+    "Do not change parser, validator, compiler, renderer, template, bibliography, or DOCX semantics.",
+    "Do not implement final cancellation, streamed progress, diagnostics localization, preview mapping, template behavior, release signing, or installer acceptance assigned to later slices.",
+    "Do not introduce autosave, database, accounts, AI, telemetry, dark mode, or public multi-tenant hosting."
+  ],
+  "expected_evidence": [
+    "Strict TDD RED for missing frontend workspace, workspace state, transports, Python adapters, Tauri bridge, and CLI isolation contract",
+    "Shared Python and TypeScript workspace-state parity fixtures",
+    "Vitest and Testing Library coverage for shell, labels, keyboard focus, shortcuts, states, capabilities, responsive panels, and resize behavior",
+    "Playwright browser launch and responsive behavior evidence",
+    "Python HTTP and sidecar contract tests proving delegation to existing application services and JSON-safe DTOs",
+    "Cargo test/check for the Tauri command bridge and sidecar envelope",
+    "Frontend build, lint, typecheck, full Python tests, Ruff, pip check, strict OpenSpec, SpecNav entry, CodeGraph, JSON, and whitespace evidence",
+    "Task report, dedicated spec review, and dedicated quality review"
+  ],
+  "unsafe_assumptions": [
+    "Browser and desktop source capabilities can share raw native path DTOs.",
+    "React components may call HTTP or Tauri directly.",
+    "A generated Tauri config proves sidecar protocol behavior.",
+    "Frontend build success proves keyboard, responsive, or parity behavior.",
+    "The Python CLI remains independent without an explicit import and distribution test."
+  ],
+  "stop_condition": "Stop if implementation needs edits outside the allowed files, duplicates compiler behavior, exposes browser-native paths, couples shared React code to HTTP/Tauri/Python, introduces a Qt product dependency, or requires signing credentials or release-only host changes."
+}

@@ -1,6 +1,6 @@
 {
   "schema": "specnav.codegraph.claims.v1",
-  "generated_at": "2026-08-01T03:57:15.676Z",
+  "generated_at": "2026-08-01T04:59:36.963Z",
   "active_change": "build-thesisforge-desktop-ui",
   "claims": [
     {
@@ -93,6 +93,45 @@
       ],
       "query_ids": [
         "development:task-003-explicit-source-open-atomic-save:evidence"
+      ]
+    },
+    {
+      "id": "development:task-004-optional-pyside6-workbench-shell",
+      "kind": "development-task",
+      "stage": "development",
+      "task_id": "004-optional-pyside6-workbench-shell",
+      "text": "Create the shared React workbench shell and its TypeScript workspace state,",
+      "required": true,
+      "source": "specnav-codegraph-plan",
+      "source_paths": [
+        "openspec/changes/build-thesisforge-desktop-ui/development/tasks/004-optional-pyside6-workbench-shell/brief.md",
+        "openspec/changes/build-thesisforge-desktop-ui/development/tasks/004-optional-pyside6-workbench-shell/context.json"
+      ],
+      "expected_evidence": [
+        "Strict TDD RED for missing frontend workspace, workspace state, transports, Python adapters, Tauri bridge, and CLI isolation contract",
+        "Shared Python and TypeScript workspace-state parity fixtures",
+        "Vitest and Testing Library coverage for shell, labels, keyboard focus, shortcuts, states, capabilities, responsive panels, and resize behavior",
+        "Playwright browser launch and responsive behavior evidence",
+        "Python HTTP and sidecar contract tests proving delegation to existing application services and JSON-safe DTOs",
+        "Cargo test/check for the Tauri command bridge and sidecar envelope",
+        "Frontend build, lint, typecheck, full Python tests, Ruff, pip check, strict OpenSpec, SpecNav entry, CodeGraph, JSON, and whitespace evidence",
+        "Task report, dedicated spec review, and dedicated quality review"
+      ],
+      "allowed_files": [
+        "package.json",
+        "pnpm-lock.yaml",
+        "frontend/**",
+        "src-tauri/**",
+        "src/thesis_forge/adapters/**",
+        "src/thesis_forge/ui/**",
+        "tests/test_adapters.py",
+        "tests/test_architecture.py",
+        "tests/test_frontend_contract.py",
+        "tests/fixtures/workspace-state-v1.json",
+        "README.md"
+      ],
+      "query_ids": [
+        "development:task-004-optional-pyside6-workbench-shell:evidence"
       ]
     }
   ]

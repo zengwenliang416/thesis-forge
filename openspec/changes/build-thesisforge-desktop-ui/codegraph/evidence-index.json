@@ -1,6 +1,6 @@
 {
   "schema": "specnav.codegraph.evidence_index.v1",
-  "generated_at": "2026-08-01T03:57:30.391Z",
+  "generated_at": "2026-08-01T05:00:06.820Z",
   "active_change": "build-thesisforge-desktop-ui",
   "source_raw": "openspec/changes/build-thesisforge-desktop-ui/codegraph/evidence.jsonl",
   "by_claim": {
@@ -76,11 +76,26 @@
       ],
       "symbols": [],
       "blockers": []
+    },
+    "development:task-004-optional-pyside6-workbench-shell": {
+      "status": "matched",
+      "evidence_ids": [
+        "ev-ms9wkbhd"
+      ],
+      "files": [
+        "frontend/src/components/WorkbenchApp.tsx",
+        "src/thesis_forge/application/services.py",
+        "frontend/src/transport/web.ts",
+        "frontend/src/components/WorkbenchShell.tsx",
+        "frontend/src/transport/WorkbenchTransport.ts"
+      ],
+      "symbols": [],
+      "blockers": []
     }
   },
   "by_stage": {
     "development": {
-      "verified": 7,
+      "verified": 8,
       "partial": 0,
       "missing": 0,
       "stale": 0,
@@ -89,5 +104,5 @@
   },
   "blockers": [],
   "raw_exists": true,
-  "record_count": 7
+  "record_count": 8
 }

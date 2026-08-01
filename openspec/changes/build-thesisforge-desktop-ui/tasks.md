@@ -39,15 +39,15 @@
 
 用户结果：同一套学术论文工作台可在 Web 直接运行，并通过 Tauri 2 在 macOS、Windows 安装运行；核心 CLI 不依赖前端工具链。
 
-- [ ] 4.1 Create the React + TypeScript + Vite frontend workspace with deterministic build, lint, typecheck, and test commands.
-- [ ] 4.2 Implement the light-theme workbench shell, product bar, responsive resizable panel layout, and minimum-window behavior.
-- [ ] 4.3 Add outline, editor, preview, diagnostics, template, build, progress, and output React component shells.
-- [ ] 4.4 Bind component intent and rendering to TypeScript workspace state and `WorkbenchTransport` without direct HTTP, Tauri, or Python calls.
-- [ ] 4.5 Add Vitest/Testing Library and Playwright tests for launch, labels, panel presence, keyboard focus order, shortcuts, responsive layout, and resize behavior.
-- [ ] 4.6 Add import-boundary tests proving the Python core and CLI work without Node.js, Rust, Tauri, or an HTTP server.
-- [ ] 4.7 Record red-green evidence, spec review, quality review, and extraction decision for slice 004.
-- [ ] 4.8 Implement the versioned Web HTTP adapter and contract tests against existing Python application services.
-- [ ] 4.9 Implement the Tauri 2 macOS/Windows shell, command bridge, managed Python sidecar protocol, and transport parity tests.
+- [x] 4.1 Create the React + TypeScript + Vite frontend workspace with deterministic build, lint, typecheck, and test commands.
+- [x] 4.2 Implement the light-theme workbench shell, product bar, responsive resizable panel layout, and minimum-window behavior.
+- [x] 4.3 Add outline, editor, preview, diagnostics, template, build, progress, and output React component shells.
+- [x] 4.4 Bind component intent and rendering to TypeScript workspace state and `WorkbenchTransport` without direct HTTP, Tauri, or Python calls.
+- [x] 4.5 Add Vitest/Testing Library and Playwright tests for launch, labels, panel presence, keyboard focus order, shortcuts, responsive layout, and resize behavior.
+- [x] 4.6 Add import-boundary tests proving the Python core and CLI work without Node.js, Rust, Tauri, or an HTTP server.
+- [x] 4.7 Record red-green evidence, spec review, quality review, and extraction decision for slice 004.
+- [x] 4.8 Implement the versioned Web HTTP adapter and contract tests against existing Python application services.
+- [x] 4.9 Implement the Tauri 2 macOS/Windows shell, command bridge, managed Python sidecar protocol, and transport parity tests.
 
 ## 5. Template Selection And Structured Diagnostics
 
