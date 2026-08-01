@@ -5,6 +5,7 @@ from enum import StrEnum
 from pathlib import Path
 
 from thesis_forge.core.model import ThesisDocument, ValidationIssue
+from thesis_forge.core.render_plan import RenderPlan
 from thesis_forge.core.validator import ValidationContext
 
 
@@ -36,6 +37,18 @@ class ValidationResult:
 class BuildResult:
     output_path: Path
     issues: tuple[ValidationIssue, ...]
+
+
+@dataclass(frozen=True, slots=True)
+class PreviewResult:
+    document: ThesisDocument
+    context: ValidationContext
+    issues: tuple[ValidationIssue, ...]
+    plan: RenderPlan | None
+
+    @property
+    def errors(self) -> tuple[ValidationIssue, ...]:
+        return tuple(issue for issue in self.issues if issue.severity == "error")
 
 
 class ApplicationStageError(RuntimeError):

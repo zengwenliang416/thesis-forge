@@ -4,12 +4,14 @@ from .contracts import (
     BuildStage,
     BuildValidationError,
     InspectionResult,
+    PreviewResult,
     ValidationResult,
 )
 from .services import (
     ApplicationDependencies,
     build_service,
     inspect_service,
+    preview_service,
     validation_service,
 )
 
@@ -20,8 +22,10 @@ __all__ = [
     "BuildStage",
     "BuildValidationError",
     "InspectionResult",
+    "PreviewResult",
     "ValidationResult",
     "build_service",
     "inspect_service",
+    "preview_service",
     "validation_service",
 ]

@@ -1,6 +1,19 @@
 import { expect, test } from "@playwright/test";
+import { readFileSync } from "node:fs";
 
 const workspaceId = "a".repeat(32);
+const previewFixture = JSON.parse(
+  readFileSync(
+    new URL("../../tests/fixtures/preview-workbench-v1.json", import.meta.url),
+    "utf8",
+  ),
+) as Record<string, unknown> & {
+  preview: Record<string, unknown>;
+};
+const previewResult = {
+  ...previewFixture,
+  diagnostics: [],
+};
 
 test("launches the shared workbench with keyboard-visible controls", async (
   { page },
@@ -90,7 +103,7 @@ test("opens, edits, explicitly saves, refreshes, and builds through HTTP", async
   await page.route("**/api/v1/dispatch", async (route) => {
     const request = route.request().postDataJSON() as Record<string, unknown>;
     operations.push(request);
-    const result = request.operation === "validate" ? { diagnostics: [] } : {};
+    const result = request.operation === "preview" ? previewResult : {};
     await route.fulfill({
       status: 200,
       contentType: "application/json",
@@ -111,22 +124,29 @@ test("opens, edits, explicitly saves, refreshes, and builds through HTTP", async
   });
   const editor = page.getByRole("textbox", { name: "Markdown 文稿内容" });
   await expect(editor).toHaveValue("# 绪论\n");
+  const outline = page.getByRole("complementary", { name: "论文大纲" });
+  const outlineHeading = outline.getByRole("button", {
+    name: /绪论.*第 8 行/,
+  });
+  await expect(outlineHeading).toBeVisible();
+  await expect(page.getByText("系统架构")).toBeVisible();
+  await expect(page.getByText("结构预览不代表 Word 最终分页。")).toBeVisible();
+  await outlineHeading.click();
+  await expect(outlineHeading).toHaveAttribute("aria-pressed", "true");
   await editor.fill("# 绪论\n\n正文。\n");
   await expect(page.getByRole("button", { name: "构建 DOCX" })).toBeDisabled();
   await page.getByRole("button", { name: "保存文稿" }).click();
   await expect(page.getByText("文稿、模板与预览已同步")).toBeVisible();
   await page.getByRole("button", { name: "构建 DOCX" }).click();
 
-  await expect.poll(() => operations.length).toBe(6);
+  await expect.poll(() => operations.length).toBe(4);
   expect(operations.map((request) => request.operation)).toEqual([
-    "inspect",
-    "validate",
+    "preview",
     "save",
-    "inspect",
-    "validate",
+    "preview",
     "build",
   ]);
-  expect(operations[2]).toMatchObject({
+  expect(operations[1]).toMatchObject({
     operation: "save",
     payload: {
       source: {
@@ -137,7 +157,7 @@ test("opens, edits, explicitly saves, refreshes, and builds through HTTP", async
       text: "# 绪论\n\n正文。\n",
     },
   });
-  expect(operations[5]).toMatchObject({
+  expect(operations[3]).toMatchObject({
     operation: "build",
     payload: {
       output: {
@@ -177,7 +197,7 @@ test("selects a template and blocks build on an activated fatal diagnostic", asy
       (request.payload as { templateId?: string | null }).templateId ??
       null;
     const diagnostics =
-      request.operation === "validate" && selectedTemplate
+      request.operation === "preview" && selectedTemplate
         ? [
             {
               severity: "error",
@@ -196,7 +216,22 @@ test("selects a template and blocks build on an activated fatal diagnostic", asy
         protocol: "thesisforge.workbench.v1",
         requestId: request.requestId,
         ok: true,
-        result: request.operation === "validate" ? { diagnostics } : {},
+        result:
+          request.operation === "preview"
+            ? {
+                ...previewFixture,
+                diagnostics,
+                preview:
+                  diagnostics.length > 0
+                    ? {
+                        status: "blocked",
+                        message: "存在 1 个错误诊断，无法生成结构预览。",
+                        disclaimer: "结构预览不代表 Word 最终分页。",
+                        blocks: [],
+                      }
+                    : previewFixture.preview,
+              }
+            : {},
       }),
     });
   });
@@ -222,7 +257,7 @@ test("selects a template and blocks build on an activated fatal diagnostic", asy
   ).toBeFocused();
 
   expect(operations.at(-1)).toMatchObject({
-    operation: "validate",
+    operation: "preview",
     payload: {
       templateId: "example-university-2026",
     },

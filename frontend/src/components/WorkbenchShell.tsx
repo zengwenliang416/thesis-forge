@@ -21,9 +21,9 @@ import { StatusStrip } from "./StatusStrip";
 import {
   DiagnosticsPanel,
   MarkdownEditor,
-  OutlinePanel,
-  PaperPreview,
 } from "./WorkbenchPanels";
+import { OutlinePanel, PaperPreview } from "./PreviewPanels";
+import type { ContentSelection } from "../state/preview";
 
 const panels = [
   { id: "outline", label: "大纲" },
@@ -50,6 +50,7 @@ interface WorkbenchShellProps {
   onTemplateSelected(templateId: string | null): void;
   onDiagnosticFilterChanged(filter: DiagnosticFilter): void;
   onDiagnosticActivated(diagnostic: DiagnosticPresentation): void;
+  onContentActivated(selection: ContentSelection): void;
   onEdit(text: string): void;
   onMobilePanelSelected(panel: WorkspaceState["mobilePanel"]): void;
   onPanelsResized(outlineWidth: number, previewWidth: number): void;
@@ -77,6 +78,7 @@ export function WorkbenchShell({
   onTemplateSelected,
   onDiagnosticFilterChanged,
   onDiagnosticActivated,
+  onContentActivated,
   onEdit,
   onMobilePanelSelected,
   onPanelsResized,
@@ -126,7 +128,7 @@ export function WorkbenchShell({
         ))}
       </nav>
       <main className="workbench">
-        <OutlinePanel state={state} />
+        <OutlinePanel state={state} onActivated={onContentActivated} />
         <PanelResizer
           side="outline"
           state={state}
@@ -153,7 +155,7 @@ export function WorkbenchShell({
             state.mobilePanel === "diagnostics"
           }
         >
-          <PaperPreview state={state} />
+          <PaperPreview state={state} onActivated={onContentActivated} />
           <DiagnosticsPanel
             state={state}
             onFilterChanged={onDiagnosticFilterChanged}

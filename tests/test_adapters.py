@@ -176,6 +176,69 @@ def test_dispatcher_serializes_inspection_and_validation_without_python_objects(
     json.dumps(validation)
 
 
+def test_dispatcher_serializes_renderer_neutral_preview_from_application_service(
+    tmp_path: Path,
+):
+    source = tmp_path / "thesis.md"
+    source.write_text(
+        """---
+thesis:
+  title: "结构预览"
+author:
+  name: "测试作者"
+---
+
+# 绪论 {#chap:intro}
+""",
+        encoding="utf-8",
+    )
+    request = _request("preview", source)
+    request["payload"]["templateId"] = "bachelor-base"
+
+    response = WorkbenchCommandDispatcher(runtime=DesktopRuntime()).dispatch(request)
+    encoded = json.dumps(response, ensure_ascii=False)
+
+    assert response["ok"] is True
+    assert response["result"]["outline"][0] == {
+        "selectionId": "chap:intro",
+        "semanticId": "chap:intro",
+        "level": 1,
+        "text": "绪论",
+        "line": 8,
+        "markers": [],
+    }
+    assert response["result"]["preview"]["status"] == "ready"
+    assert response["result"]["preview"]["blocks"]
+    assert response["result"]["preview"]["disclaimer"] == (
+        "结构预览不代表 Word 最终分页。"
+    )
+    assert response["result"]["diagnostics"] == []
+    assert str(tmp_path) not in encoded
+    assert "asset_path" not in encoded
+
+
+@pytest.mark.parametrize("operation", ["validate", "preview"])
+def test_dispatcher_rejects_conflicting_template_selectors_for_analysis(
+    tmp_path: Path,
+    operation: str,
+):
+    source = tmp_path / "thesis.md"
+    template = tmp_path / "school.yaml"
+    _write_source(source)
+    _write_template(template, include_level2=True)
+    request = _request(operation, source)
+    request["payload"]["templateId"] = "bachelor-base"
+    request["payload"]["templatePath"] = str(template)
+
+    response = WorkbenchCommandDispatcher(runtime=DesktopRuntime()).dispatch(request)
+
+    assert response["ok"] is False
+    assert response["error"] == {
+        "kind": "request",
+        "message": "templateId and templatePath cannot be used together",
+    }
+
+
 def test_dispatcher_validates_with_a_selected_template_path(tmp_path: Path):
     source = tmp_path / "thesis.md"
     template = tmp_path / "school.yaml"

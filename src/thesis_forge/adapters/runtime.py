@@ -10,12 +10,15 @@ from thesis_forge.application import (
     ApplicationStageError,
     BuildResult,
     InspectionResult,
+    PreviewResult,
     ValidationResult,
     build_service,
     inspect_service,
+    preview_service,
     validation_service,
 )
 from thesis_forge.core.model import Heading
+from thesis_forge.presentation.preview import map_preview_result
 from thesis_forge.templates import default_template_search_roots, resolve_template
 from thesis_forge.ui.filesystem import LocalWorkspaceFileSystem
 
@@ -24,6 +27,7 @@ from .dto import PROTOCOL_VERSION, error_response, success_response
 InspectService = Callable[..., InspectionResult]
 ValidationService = Callable[..., ValidationResult]
 BuildService = Callable[..., BuildResult]
+PreviewService = Callable[..., PreviewResult]
 
 
 class RuntimePaths(Protocol):
@@ -147,11 +151,13 @@ class WorkbenchCommandDispatcher:
         runtime: RuntimePaths,
         inspect: InspectService = inspect_service,
         validate: ValidationService = validation_service,
+        preview: PreviewService = preview_service,
         build: BuildService = build_service,
     ) -> None:
         self._runtime = runtime
         self._inspect = inspect
         self._validate = validate
+        self._preview = preview
         self._build = build
 
     def dispatch(self, request: dict) -> dict:
@@ -183,6 +189,11 @@ class WorkbenchCommandDispatcher:
                 return success_response(
                     request_id,
                     self._validation_result(payload),
+                )
+            if operation == "preview":
+                return success_response(
+                    request_id,
+                    self._preview_result(payload),
                 )
             if operation == "build":
                 return success_response(
@@ -278,6 +289,18 @@ class WorkbenchCommandDispatcher:
         return {
             "source": self._runtime.present_source(source, source_path),
             "diagnostics": [asdict(issue) for issue in result.issues],
+        }
+
+    def _preview_result(self, payload: dict) -> dict:
+        source, source_path = self._source(payload)
+        result = self._preview(
+            source_path,
+            template_path=self._template_path(payload, source_path),
+        )
+        return {
+            "source": self._runtime.present_source(source, source_path),
+            "diagnostics": [asdict(issue) for issue in result.issues],
+            **map_preview_result(result),
         }
 
     def _save_result(self, payload: dict) -> dict:

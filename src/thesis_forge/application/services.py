@@ -20,6 +20,7 @@ from .contracts import (
     BuildStage,
     BuildValidationError,
     InspectionResult,
+    PreviewResult,
     ValidationResult,
 )
 from .output import ReplaceFile, replace_output, temporary_output_path
@@ -115,6 +116,43 @@ def validation_service(
     active = _dependencies(dependencies)
     inspection = inspect_service(source, dependencies=active)
     return _validate_inspection(inspection, template_path, active)
+
+
+def preview_service(
+    source: str | Path,
+    *,
+    template_path: str | Path | None = None,
+    dependencies: ApplicationDependencies | None = None,
+) -> PreviewResult:
+    active = _dependencies(dependencies)
+    inspection = inspect_service(source, dependencies=active)
+    validation = _validate_inspection(inspection, template_path, active)
+    if validation.errors or validation.context.template is None:
+        return PreviewResult(
+            document=validation.document,
+            context=validation.context,
+            issues=validation.issues,
+            plan=None,
+        )
+
+    try:
+        plan = active.compiler(
+            validation.document,
+            template=validation.context.template,
+            template_path=validation.context.template_path,
+            bibliography_database=validation.context.bibliography_database,
+        )
+    except ApplicationStageError:
+        raise
+    except Exception as error:
+        raise ApplicationStageError(BuildStage.COMPILE, error) from error
+
+    return PreviewResult(
+        document=validation.document,
+        context=validation.context,
+        issues=validation.issues,
+        plan=plan,
+    )
 
 
 def build_service(

@@ -8,6 +8,7 @@ from zipfile import ZIP_DEFLATED, ZIP_STORED, ZipFile
 import pytest
 from lxml import etree
 
+from thesis_forge import application
 from thesis_forge.application import (
     ApplicationDependencies,
     ApplicationStageError,
@@ -144,6 +145,93 @@ author:
     assert validation.errors == ()
     assert validation.context.template is not None
     assert set(tmp_path.iterdir()) == before
+
+
+def test_preview_service_compiles_without_renderer_or_output(tmp_path: Path):
+    assert hasattr(application, "preview_service")
+    source = tmp_path / "thesis.md"
+    source.write_text(
+        """---
+thesis:
+  title: "结构预览"
+author:
+  name: "测试作者"
+---
+
+# 绪论 {#chap:intro}
+""",
+        encoding="utf-8",
+    )
+    calls: list[str] = []
+
+    class UnexpectedRenderer:
+        def render(self, _plan, _path):
+            calls.append("render")
+            raise AssertionError("preview must not render")
+
+    before = set(tmp_path.iterdir())
+    result = application.preview_service(
+        source,
+        template_path=PROJECT_ROOT / "templates" / "base" / "bachelor.yaml",
+        dependencies=ApplicationDependencies(renderer=UnexpectedRenderer()),
+    )
+
+    assert result.document.source_path == source.resolve()
+    assert result.context.template is not None
+    assert result.errors == ()
+    assert result.plan is not None
+    assert calls == []
+    assert set(tmp_path.iterdir()) == before
+
+
+def test_preview_service_stops_before_compile_on_fatal_validation(tmp_path: Path):
+    assert hasattr(application, "preview_service")
+    source = tmp_path / "invalid.md"
+    source.write_text("# 绪论 {#bad}\n", encoding="utf-8")
+    calls: list[str] = []
+
+    def unexpected_compiler(*_args, **_kwargs):
+        calls.append("compile")
+        raise AssertionError("compiler must not run")
+
+    result = application.preview_service(
+        source,
+        dependencies=ApplicationDependencies(compiler=unexpected_compiler),
+    )
+
+    assert result.errors
+    assert result.plan is None
+    assert calls == []
+
+
+def test_preview_service_normalizes_compile_failure(tmp_path: Path):
+    assert hasattr(application, "preview_service")
+    source = tmp_path / "thesis.md"
+    source.write_text(
+        """---
+thesis:
+  title: "结构预览"
+author:
+  name: "测试作者"
+---
+
+# 绪论 {#chap:intro}
+""",
+        encoding="utf-8",
+    )
+
+    def failing_compiler(*_args, **_kwargs):
+        raise RuntimeError("preview compile exploded")
+
+    with pytest.raises(ApplicationStageError) as captured:
+        application.preview_service(
+            source,
+            template_path=PROJECT_ROOT / "templates" / "base" / "bachelor.yaml",
+            dependencies=ApplicationDependencies(compiler=failing_compiler),
+        )
+
+    assert captured.value.stage is BuildStage.COMPILE
+    assert str(captured.value) == "preview compile exploded"
 
 
 def test_build_service_reports_progress_and_atomically_replaces_target(tmp_path: Path):

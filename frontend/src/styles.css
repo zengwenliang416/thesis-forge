@@ -359,7 +359,9 @@ svg {
   border-right: 1px solid var(--line);
 }
 
-.outline-empty {
+.outline-content {
+  min-height: 0;
+  overflow: auto;
   padding: 16px 14px;
   color: var(--muted);
 }
@@ -374,11 +376,72 @@ svg {
   font-weight: 650;
 }
 
-.outline-empty p,
+.outline-message,
 .diagnostics-empty p {
   margin: 12px 0 0;
   font-size: 11px;
   line-height: 1.7;
+}
+
+.outline-tree {
+  display: grid;
+  gap: 4px;
+  margin-top: 12px;
+}
+
+.outline-item {
+  position: relative;
+  width: 100%;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 7px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  padding: 7px 7px 7px calc(8px + (var(--outline-level) - 1) * 13px);
+  background: transparent;
+  color: var(--ink);
+  text-align: left;
+}
+
+.outline-item:hover,
+.outline-item[aria-pressed="true"] {
+  border-color: #bfd2e2;
+  background: #edf4fa;
+}
+
+.outline-item span:first-child {
+  overflow: hidden;
+  font-size: 11px;
+  font-weight: 650;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.outline-item code {
+  color: var(--muted);
+  font-size: 8px;
+}
+
+.preview-markers {
+  display: inline-flex;
+  gap: 3px;
+}
+
+.preview-marker {
+  width: 7px;
+  height: 7px;
+  display: inline-block;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+.preview-marker[data-severity="warning"] {
+  background: var(--warning);
+}
+
+.preview-marker[data-severity="error"] {
+  background: var(--danger);
 }
 
 .panel-footer {
@@ -493,6 +556,208 @@ svg {
   box-shadow: var(--shadow);
   color: #242424;
   font-family: "Songti SC", "STSong", SimSun, serif;
+}
+
+.preview-document {
+  display: grid;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.preview-block {
+  position: relative;
+  border: 1px solid transparent;
+  border-radius: 3px;
+  padding: 7px 8px;
+  outline: 0;
+}
+
+.preview-block:hover,
+.preview-block:focus-visible,
+.preview-block[aria-pressed="true"] {
+  border-color: #b7cddd;
+  background: #f1f6f9;
+}
+
+.preview-block > .preview-markers {
+  position: absolute;
+  top: 7px;
+  right: 7px;
+}
+
+.preview-block h3 {
+  margin: 0;
+  font-family: "Songti SC", "STSong", SimSun, serif;
+}
+
+.preview-block h3[data-level="1"] {
+  font-size: 18px;
+  text-align: center;
+}
+
+.preview-block h3[data-level="2"] {
+  font-size: 15px;
+}
+
+.preview-block h3[data-level="3"] {
+  font-size: 13px;
+}
+
+.preview-block p,
+.preview-block li,
+.preview-block td,
+.preview-block th {
+  font-size: 11px;
+  line-height: 1.8;
+}
+
+.preview-block p {
+  margin: 0;
+}
+
+.preview-block ol,
+.preview-block ul {
+  margin: 0;
+  padding-left: 22px;
+}
+
+.preview-reference,
+.preview-citation {
+  color: var(--accent-strong);
+  font-weight: 650;
+}
+
+.preview-cover {
+  display: grid;
+  gap: 8px;
+  padding: 20px 8px;
+  text-align: center;
+}
+
+.preview-cover p {
+  display: grid;
+  gap: 2px;
+}
+
+.preview-cover span {
+  color: #777;
+  font-size: 9px;
+}
+
+.preview-section-break {
+  border-top: 1px dashed #aaa;
+  color: #777;
+  padding-top: 5px;
+  font-size: 9px;
+  text-align: right;
+}
+
+.preview-toc {
+  border: 1px solid #ccc;
+  padding: 12px;
+  font-weight: 700;
+  text-align: center;
+}
+
+.preview-block figure {
+  margin: 0;
+}
+
+.preview-figure-placeholder {
+  min-height: 90px;
+  display: grid;
+  place-items: center;
+  border: 1px dashed #a9a9a3;
+  background:
+    linear-gradient(135deg, transparent 48%, #d7d7d2 49% 51%, transparent 52%),
+    #f0f0ec;
+  color: #666;
+  font-size: 10px;
+}
+
+.preview-block figcaption {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 4px 7px;
+  margin-top: 7px;
+  font-size: 10px;
+}
+
+.preview-block figcaption code {
+  width: 100%;
+  color: #777;
+  font-size: 8px;
+  text-align: center;
+}
+
+.preview-block table {
+  width: 100%;
+  margin-top: 8px;
+  border-collapse: collapse;
+}
+
+.preview-block td,
+.preview-block th {
+  border-top: 1px solid #999;
+  border-bottom: 1px solid #999;
+  padding: 4px;
+}
+
+.preview-equation {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 8px;
+  min-height: 58px;
+  text-align: center;
+}
+
+.preview-block pre {
+  overflow: auto;
+  margin: 7px 0 0;
+  border-left: 3px solid #bbc3ca;
+  padding: 8px;
+  background: #f1f2f1;
+  font: 9px/1.6 "SFMono-Regular", Menlo, monospace;
+  white-space: pre-wrap;
+}
+
+.preview-footnote {
+  border-top: 1px solid #bbb;
+  padding-top: 6px;
+}
+
+.preview-bibliography {
+  display: grid;
+  gap: 5px;
+}
+
+.preview-unsupported {
+  display: grid;
+  gap: 4px;
+  border: 1px dashed var(--warning);
+  padding: 10px;
+  background: #fff8e9;
+  color: #704c14;
+  font-size: 10px;
+}
+
+.preview-message {
+  padding: 54px 0 28px;
+  text-align: center;
+}
+
+.preview-message h1 {
+  margin: 0 0 14px;
+}
+
+.preview-message p {
+  text-align: center;
+}
+
+.preview-message-blocked {
+  color: var(--danger);
 }
 
 .paper-running-head {

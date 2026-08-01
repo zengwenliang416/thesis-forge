@@ -1,0 +1,131 @@
+{
+  "schemaVersion": 1,
+  "outline": [
+    {
+      "selectionId": "chap:intro",
+      "semanticId": "chap:intro",
+      "level": 1,
+      "text": "绪论",
+      "line": 8,
+      "markers": [
+        {
+          "severity": "warning",
+          "code": "heading-level-jump"
+        }
+      ]
+    }
+  ],
+  "preview": {
+    "status": "ready",
+    "message": null,
+    "disclaimer": "结构预览不代表 Word 最终分页。",
+    "blocks": [
+      {
+        "selectionId": "chap:intro",
+        "semanticId": "chap:intro",
+        "kind": "heading",
+        "line": 8,
+        "state": "ready",
+        "markers": [
+          {
+            "severity": "warning",
+            "code": "heading-level-jump"
+          }
+        ],
+        "content": {
+          "type": "text",
+          "text": "绪论",
+          "level": 1,
+          "runs": [
+            {
+              "type": "text",
+              "text": "绪论"
+            }
+          ]
+        }
+      },
+      {
+        "selectionId": "paragraph:line:10",
+        "semanticId": null,
+        "kind": "paragraph",
+        "line": 10,
+        "state": "ready",
+        "markers": [],
+        "content": {
+          "type": "text",
+          "text": "系统结构见图 1-1，相关工作见[1]。脚注1",
+          "level": null,
+          "runs": [
+            {
+              "type": "text",
+              "text": "系统结构见"
+            },
+            {
+              "type": "reference",
+              "targetId": "fig:arch",
+              "text": "图 1-1"
+            },
+            {
+              "type": "text",
+              "text": "，相关工作见"
+            },
+            {
+              "type": "citation",
+              "keys": [
+                "ref-1"
+              ],
+              "ordinals": [
+                1
+              ],
+              "locator": null,
+              "text": "[1]"
+            },
+            {
+              "type": "text",
+              "text": "。"
+            },
+            {
+              "type": "footnote-reference",
+              "label": "note",
+              "footnoteId": 1,
+              "text": "脚注1"
+            }
+          ]
+        }
+      },
+      {
+        "selectionId": "fig:arch",
+        "semanticId": "fig:arch",
+        "kind": "figure",
+        "line": 12,
+        "state": "ready",
+        "markers": [
+          {
+            "severity": "info",
+            "code": "figure-note"
+          }
+        ],
+        "content": {
+          "type": "figure",
+          "src": "./images/arch.png",
+          "caption": "系统架构",
+          "label": "图 1-1",
+          "width": "80%",
+          "available": true
+        }
+      },
+      {
+        "selectionId": "unsupported:plan:3",
+        "semanticId": null,
+        "kind": "unsupported",
+        "line": null,
+        "state": "unsupported",
+        "markers": [],
+        "content": {
+          "type": "unsupported",
+          "originalKind": "custom-widget"
+        }
+      }
+    ]
+  }
+}

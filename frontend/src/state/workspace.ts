@@ -4,6 +4,11 @@ import {
   type DiagnosticFilter,
   type DiagnosticPresentation,
 } from "./diagnostics";
+import {
+  EMPTY_PREVIEW,
+  type OutlineItem,
+  type PreviewDocument,
+} from "./preview";
 
 export type WorkspaceStatus =
   | "empty"
@@ -39,6 +44,9 @@ export interface WorkspaceState {
   diagnostics: DiagnosticPresentation[];
   diagnosticFilter: DiagnosticFilter;
   activeDiagnosticId: string | null;
+  outline: OutlineItem[];
+  preview: PreviewDocument;
+  activeSelectionId: string | null;
   mobilePanel: "outline" | "editor" | "preview" | "diagnostics";
   outlineWidth: number;
   previewWidth: number;
@@ -64,10 +72,21 @@ export type WorkspaceEvent =
       operation: OperationToken;
       diagnostics: DiagnosticPresentation[];
     }
+  | {
+      type: "presentationLoaded";
+      operation: OperationToken;
+      outline: OutlineItem[];
+      preview: PreviewDocument;
+    }
   | { type: "diagnosticFilterChanged"; filter: DiagnosticFilter }
   | {
       type: "diagnosticActivated";
       diagnosticId: string;
+      line: number | null;
+    }
+  | {
+      type: "contentActivated";
+      selectionId: string;
       line: number | null;
     }
   | { type: "operationStarted"; operation: OperationToken }
@@ -104,6 +123,9 @@ export function createInitialWorkspaceState(): WorkspaceState {
     diagnostics: [],
     diagnosticFilter: "all",
     activeDiagnosticId: null,
+    outline: [],
+    preview: EMPTY_PREVIEW,
+    activeSelectionId: null,
     mobilePanel: "editor",
     outlineWidth: 260,
     previewWidth: 430,
@@ -136,6 +158,9 @@ export function reduceWorkspaceState(
         diagnostics: [],
         diagnosticFilter: "all",
         activeDiagnosticId: null,
+        outline: [],
+        preview: EMPTY_PREVIEW,
+        activeSelectionId: null,
       };
     case "textEdited": {
       const dirty = event.text !== state.savedText;
@@ -165,12 +190,28 @@ export function reduceWorkspaceState(
         diagnostics: event.diagnostics,
         activeDiagnosticId: null,
       };
+    case "presentationLoaded":
+      if (!isCurrent(state, event.operation)) {
+        return state;
+      }
+      return {
+        ...state,
+        outline: event.outline,
+        preview: event.preview,
+        activeSelectionId: null,
+      };
     case "diagnosticFilterChanged":
       return { ...state, diagnosticFilter: event.filter };
     case "diagnosticActivated":
       return {
         ...state,
         activeDiagnosticId: event.diagnosticId,
+        mobilePanel: event.line === null ? state.mobilePanel : "editor",
+      };
+    case "contentActivated":
+      return {
+        ...state,
+        activeSelectionId: event.selectionId,
         mobilePanel: event.line === null ? state.mobilePanel : "editor",
       };
     case "operationStarted":

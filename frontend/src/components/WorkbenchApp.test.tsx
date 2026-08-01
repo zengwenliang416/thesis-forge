@@ -4,6 +4,12 @@ import { WorkbenchApp } from "./WorkbenchApp";
 import { createInitialWorkspaceState } from "../state/workspace";
 import type { WorkbenchTransport } from "../transport/WorkbenchTransport";
 import { PROTOCOL_VERSION } from "../transport/dto";
+import previewFixture from "../../../tests/fixtures/preview-workbench-v1.json";
+
+const previewResult = {
+  ...previewFixture,
+  diagnostics: [],
+};
 
 const transport: WorkbenchTransport = {
   runtime: "web",
@@ -178,15 +184,9 @@ describe("WorkbenchApp", () => {
       })
       .mockResolvedValueOnce({
         protocol: PROTOCOL_VERSION,
-        requestId: "inspect-2",
+        requestId: "preview-2",
         ok: true,
-        result: { outline: [] },
-      })
-      .mockResolvedValueOnce({
-        protocol: PROTOCOL_VERSION,
-        requestId: "validate-2",
-        ok: true,
-        result: { diagnostics: [] },
+        result: previewResult,
       });
     const desktopTransport: WorkbenchTransport = {
       runtime: "tauri",
@@ -240,11 +240,7 @@ describe("WorkbenchApp", () => {
     );
     expect(dispatchCommand).toHaveBeenNthCalledWith(
       2,
-      expect.objectContaining({ operation: "inspect" }),
-    );
-    expect(dispatchCommand).toHaveBeenNthCalledWith(
-      3,
-      expect.objectContaining({ operation: "validate" }),
+      expect.objectContaining({ operation: "preview" }),
     );
     expect(screen.getByText("文稿、模板与预览已同步")).toBeVisible();
     expect(screen.getByRole("button", { name: "构建 DOCX" })).toBeEnabled();
@@ -443,21 +439,15 @@ describe("WorkbenchApp", () => {
       })
       .mockResolvedValueOnce({
         protocol: PROTOCOL_VERSION,
-        requestId: "inspect-2",
+        requestId: "preview-2",
         ok: false,
         error: { kind: "transport", message: "inspection unavailable" },
       })
       .mockResolvedValueOnce({
         protocol: PROTOCOL_VERSION,
-        requestId: "inspect-3",
+        requestId: "preview-3",
         ok: true,
-        result: {},
-      })
-      .mockResolvedValueOnce({
-        protocol: PROTOCOL_VERSION,
-        requestId: "validate-3",
-        ok: true,
-        result: { diagnostics: [] },
+        result: previewResult,
       });
     const desktopTransport: WorkbenchTransport = {
       runtime: "tauri",
@@ -502,11 +492,7 @@ describe("WorkbenchApp", () => {
 
     expect(dispatchCommand).toHaveBeenNthCalledWith(
       3,
-      expect.objectContaining({ operation: "inspect" }),
-    );
-    expect(dispatchCommand).toHaveBeenNthCalledWith(
-      4,
-      expect.objectContaining({ operation: "validate" }),
+      expect.objectContaining({ operation: "preview" }),
     );
     expect(screen.getByRole("button", { name: "构建 DOCX" })).toBeEnabled();
   });
@@ -515,9 +501,9 @@ describe("WorkbenchApp", () => {
     const user = userEvent.setup();
     const dispatchCommand = vi.fn().mockResolvedValue({
       protocol: PROTOCOL_VERSION,
-      requestId: "validate-1",
+      requestId: "preview-1",
       ok: true,
-      result: { diagnostics: [] },
+      result: previewResult,
     });
     const desktopTransport: WorkbenchTransport = {
       runtime: "tauri",
@@ -560,7 +546,7 @@ describe("WorkbenchApp", () => {
 
     expect(dispatchCommand).toHaveBeenCalledWith(
       expect.objectContaining({
-        operation: "validate",
+        operation: "preview",
         payload: {
           source: initialState.source.reference,
           templateId: "example-university-2026",
@@ -736,15 +722,9 @@ describe("WorkbenchApp", () => {
       .fn()
       .mockResolvedValueOnce({
         protocol: PROTOCOL_VERSION,
-        requestId: "inspect-1",
+        requestId: "preview-1",
         ok: true,
-        result: { outline: [] },
-      })
-      .mockResolvedValueOnce({
-        protocol: PROTOCOL_VERSION,
-        requestId: "validate-1",
-        ok: true,
-        result: { diagnostics: [] },
+        result: previewResult,
       });
     const desktopTransport: WorkbenchTransport = {
       runtime: "tauri",
@@ -791,9 +771,9 @@ describe("WorkbenchApp", () => {
     await user.click(screen.getByRole("button", { name: "打开 Markdown 文稿" }));
 
     expect(dispatchCommand).toHaveBeenNthCalledWith(
-      2,
+      1,
       expect.objectContaining({
-        operation: "validate",
+        operation: "preview",
         payload: {
           source: {
             kind: "desktop",

@@ -14,10 +14,13 @@ import {
   presentDiagnostics,
 } from "../state/diagnostics";
 import { lineSelectionRange } from "../state/editorNavigation";
+import type { ContentSelection } from "../state/preview";
 import type { WorkbenchTransport } from "../transport/WorkbenchTransport";
 import {
   PROTOCOL_VERSION,
+  readSerializedPreviewResult,
   readSerializedDiagnostics,
+  type CommandOperation,
   type CommandEnvelope,
   type OperationKind,
 } from "../transport/dto";
@@ -68,7 +71,7 @@ export function WorkbenchApp({
   };
 
   const requestFor = (
-    operation: OperationKind,
+    operation: CommandOperation,
     generation: number,
     payload: CommandEnvelope["payload"],
   ): CommandEnvelope => ({
@@ -113,27 +116,33 @@ export function WorkbenchApp({
     const operation = nextOperation("refresh");
     dispatch({ type: "operationStarted", operation });
     try {
-      for (const kind of ["inspect", "validate"] as const) {
-        const response = await transport.dispatch(
-          requestFor(kind, operation.generation, {
-            source,
-            ...(kind === "validate" ? { templateId } : {}),
-          }),
-        );
-        if (!response.ok) {
-          failOperation(operation, response.error);
-          return;
-        }
-        if (kind === "validate") {
-          dispatch({
-            type: "diagnosticsLoaded",
-            operation,
-            diagnostics: presentDiagnostics(
-              readSerializedDiagnostics(response.result, true),
-            ),
-          });
-        }
+      const response = await transport.dispatch(
+        requestFor("preview", operation.generation, {
+          source,
+          templateId,
+        }),
+      );
+      if (!response.ok) {
+        failOperation(operation, response.error);
+        return;
       }
+      const presentation = readSerializedPreviewResult(response.result, true);
+      if (!presentation) {
+        throw new Error("无效的 ThesisForge transport 响应");
+      }
+      dispatch({
+        type: "diagnosticsLoaded",
+        operation,
+        diagnostics: presentDiagnostics(
+          readSerializedDiagnostics(response.result, true),
+        ),
+      });
+      dispatch({
+        type: "presentationLoaded",
+        operation,
+        outline: presentation.outline,
+        preview: presentation.preview,
+      });
       dispatch({ type: "operationSucceeded", operation });
     } catch (error) {
       failOperation(operation, error);
@@ -163,7 +172,8 @@ export function WorkbenchApp({
               fileName: source.fileName.replace(/\.md$/i, ".docx"),
             }
           : undefined;
-    const request = requestFor(kind, operation.generation, {
+    const command: CommandOperation = kind === "validate" ? "preview" : kind;
+    const request = requestFor(command, operation.generation, {
       source,
       templateId,
       ...(output ? { output } : {}),
@@ -173,12 +183,22 @@ export function WorkbenchApp({
       const response = await transport.dispatch(request);
       if (response.ok) {
         if (kind === "validate") {
+          const presentation = readSerializedPreviewResult(response.result, true);
+          if (!presentation) {
+            throw new Error("无效的 ThesisForge transport 响应");
+          }
           dispatch({
             type: "diagnosticsLoaded",
             operation,
             diagnostics: presentDiagnostics(
               readSerializedDiagnostics(response.result, true),
             ),
+          });
+          dispatch({
+            type: "presentationLoaded",
+            operation,
+            outline: presentation.outline,
+            preview: presentation.preview,
           });
         }
         dispatch({ type: "operationSucceeded", operation });
@@ -338,12 +358,27 @@ export function WorkbenchApp({
     if (diagnostic.line === null) {
       return;
     }
-    const range = lineSelectionRange(state.editorText, diagnostic.line);
+    focusEditorLine(diagnostic.line);
+  };
+
+  const focusEditorLine = (line: number) => {
+    const range = lineSelectionRange(state.editorText, line);
     if (!range) {
       return;
     }
     editorRef.current?.focus();
     editorRef.current?.setSelectionRange(range.start, range.end);
+  };
+
+  const activateContent = (selection: ContentSelection) => {
+    dispatch({
+      type: "contentActivated",
+      selectionId: selection.selectionId,
+      line: selection.line,
+    });
+    if (selection.line !== null) {
+      focusEditorLine(selection.line);
+    }
   };
 
   const resizeFromPointer = (
@@ -392,6 +427,7 @@ export function WorkbenchApp({
         dispatch({ type: "diagnosticFilterChanged", filter })
       }
       onDiagnosticActivated={activateDiagnostic}
+      onContentActivated={activateContent}
       onEdit={(text) => dispatch({ type: "textEdited", text })}
       onMobilePanelSelected={(panel) =>
         dispatch({ type: "mobilePanelSelected", panel })

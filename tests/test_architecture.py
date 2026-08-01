@@ -15,6 +15,7 @@ import thesis_forge.core.math as math_module
 import thesis_forge.core.model as model_module
 import thesis_forge.core.parser as parser_module
 import thesis_forge.core.render_plan as render_plan_module
+import thesis_forge.presentation as presentation_module
 import thesis_forge.renderers.docx.renderer as docx_renderer_module
 import thesis_forge.ui.controller as ui_controller_module
 import thesis_forge.ui.filesystem as ui_filesystem_module
@@ -158,3 +159,36 @@ raise SystemExit(bool(loaded))
     )
 
     assert result.returncode == 0, result.stdout or result.stderr
+
+
+def test_preview_presentation_and_frontend_modules_do_not_import_renderers():
+    preview_module = Path(presentation_module.__file__).parent / "preview.py"
+    assert preview_module.is_file()
+    python_imports = _import_names(preview_module)
+    assert not {
+        "docx",
+        "lxml",
+        "thesis_forge.renderers",
+        "thesis_forge.renderers.docx",
+    } & python_imports
+
+    project_root = Path(__file__).resolve().parents[1]
+    frontend_paths = [
+        project_root / "frontend" / "src" / "state" / "preview.ts",
+        project_root / "frontend" / "src" / "components" / "PreviewPanels.tsx",
+    ]
+    forbidden = (
+        "docx",
+        "lxml",
+        "thesis_forge.renderers",
+        "thesis_forge.core.compiler",
+        "thesis_forge.core.parser",
+        "thesis_forge.core.validator",
+        "@tauri-apps",
+        "../transport/web",
+        "../transport/tauri",
+    )
+    for path in frontend_paths:
+        assert path.is_file()
+        content = path.read_text(encoding="utf-8").lower()
+        assert not any(value in content for value in forbidden)
