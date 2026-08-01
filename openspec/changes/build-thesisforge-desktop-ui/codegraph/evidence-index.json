@@ -1,6 +1,6 @@
 {
   "schema": "specnav.codegraph.evidence_index.v1",
-  "generated_at": "2026-08-01T02:01:26.806Z",
+  "generated_at": "2026-08-01T03:57:30.391Z",
   "active_change": "build-thesisforge-desktop-ui",
   "source_raw": "openspec/changes/build-thesisforge-desktop-ui/codegraph/evidence.jsonl",
   "by_claim": {
@@ -50,11 +50,37 @@
       ],
       "symbols": [],
       "blockers": []
+    },
+    "development:task-003-explicit-source-open-atomic-save": {
+      "status": "matched",
+      "evidence_ids": [
+        "ev-ms9u6nr6",
+        "ev-ms9ubt02"
+      ],
+      "files": [
+        "src/thesis_forge/ui/filesystem.py",
+        "src/thesis_forge/ui/controller.py",
+        "models.py",
+        "tasks.py",
+        "tests/test_ui_filesystem.py",
+        "tests/test_ui_controller.py",
+        "tests/test_architecture.py",
+        "src/thesis_forge/ui/models.py",
+        "next.md",
+        "thesis.md",
+        "other.md",
+        "web.md",
+        "snapshot.md",
+        "copy.md",
+        "failed.md"
+      ],
+      "symbols": [],
+      "blockers": []
     }
   },
   "by_stage": {
     "development": {
-      "verified": 5,
+      "verified": 7,
       "partial": 0,
       "missing": 0,
       "stale": 0,
@@ -63,5 +89,5 @@
   },
   "blockers": [],
   "raw_exists": true,
-  "record_count": 5
+  "record_count": 7
 }

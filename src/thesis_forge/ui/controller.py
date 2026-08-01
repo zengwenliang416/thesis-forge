@@ -1,21 +1,29 @@
 from __future__ import annotations
 
 from collections.abc import Callable
-from dataclasses import replace
+from dataclasses import dataclass, replace
 from pathlib import Path
 from typing import TYPE_CHECKING
 
+from .filesystem import LocalWorkspaceFileSystem
 from .models import (
     DiagnosticViewModel,
     OperationKind,
     OperationToken,
     OutputViewModel,
     ProgressViewModel,
+    WebSourceHandle,
     WorkspaceActions,
+    WorkspaceSourceKind,
     WorkspaceStatus,
     WorkspaceViewModel,
 )
-from .tasks import SynchronousTaskRunner, TaskRunner, WorkspaceFileSystem
+from .tasks import (
+    SynchronousTaskRunner,
+    TaskRunner,
+    WebWorkspacePersistence,
+    WorkspaceFileSystem,
+)
 
 if TYPE_CHECKING:
     from thesis_forge.application.contracts import (
@@ -28,6 +36,24 @@ InspectService = Callable[..., "InspectionResult"]
 ValidationService = Callable[..., "ValidationResult"]
 BuildService = Callable[..., "BuildResult"]
 StateListener = Callable[[WorkspaceViewModel], None]
+PersistenceOperation = Callable[[], Path]
+
+
+@dataclass(frozen=True, slots=True)
+class _WorkspaceAnalysis:
+    inspection: InspectionResult
+    validation: ValidationResult
+
+
+@dataclass(frozen=True, slots=True)
+class _OpenedWorkspace:
+    source_path: Path
+    source_kind: WorkspaceSourceKind
+    source_name: str
+    web_source: WebSourceHandle | None
+    template_path: Path | None
+    saved_text: str
+    analysis: _WorkspaceAnalysis
 
 
 def _default_inspect(*args, **kwargs):
@@ -56,17 +82,24 @@ class WorkspaceController:
         validate: ValidationService = _default_validate,
         build: BuildService = _default_build,
         filesystem: WorkspaceFileSystem | None = None,
+        web_persistence: WebWorkspacePersistence | None = None,
         task_runner: TaskRunner | None = None,
     ) -> None:
         self._inspect = inspect
         self._validate = validate
         self._build = build
-        self.filesystem = filesystem
+        self.filesystem = (
+            filesystem
+            if filesystem is not None
+            else LocalWorkspaceFileSystem()
+        )
+        self.web_persistence = web_persistence
         self._task_runner = task_runner or SynchronousTaskRunner()
         self._state = WorkspaceViewModel()
         self._listeners: list[StateListener] = []
         self._generation = 0
         self._inspection: InspectionResult | None = None
+        self._refresh_validation = False
 
     @property
     def state(self) -> WorkspaceViewModel:
@@ -82,6 +115,59 @@ class WorkspaceController:
 
         return unsubscribe
 
+    def open_source(
+        self,
+        source_path: str | Path,
+        *,
+        template_path: str | Path | None = None,
+    ) -> OperationToken | None:
+        if not self._state.actions.can_open:
+            return None
+
+        source = Path(source_path)
+        template = Path(template_path) if template_path is not None else None
+        token = self._begin_operation(OperationKind.OPEN)
+        self._task_runner.submit(
+            lambda: self._open_desktop_workspace(source, template),
+            on_success=lambda result: self._complete_open(token, result),
+            on_error=lambda error: self._fail_operation(token, error),
+        )
+        return token
+
+    def open_web_snapshot(
+        self,
+        service_path: str | Path,
+        saved_text: str,
+        handle: WebSourceHandle,
+        *,
+        template_path: str | Path | None = None,
+    ) -> OperationToken | None:
+        if not self._state.actions.can_open:
+            return None
+
+        source = Path(service_path)
+        template = Path(template_path) if template_path is not None else None
+        source_kind = (
+            WorkspaceSourceKind.WEB_WORKSPACE
+            if handle.workspace_id is not None
+            else WorkspaceSourceKind.WEB_UPLOAD
+        )
+        token = self._begin_operation(OperationKind.OPEN)
+        self._task_runner.submit(
+            lambda: _OpenedWorkspace(
+                source_path=source,
+                source_kind=source_kind,
+                source_name=handle.file_name,
+                web_source=handle,
+                template_path=template,
+                saved_text=saved_text,
+                analysis=self._analyze_workspace(source, template),
+            ),
+            on_success=lambda result: self._complete_open(token, result),
+            on_error=lambda error: self._fail_operation(token, error),
+        )
+        return token
+
     def load_snapshot(
         self,
         source_path: str | Path,
@@ -89,16 +175,20 @@ class WorkspaceController:
         *,
         template_path: str | Path | None = None,
     ) -> OperationToken | None:
-        if self._state.status is WorkspaceStatus.DISABLED:
+        if not self._state.actions.can_open:
             return None
 
         source = Path(source_path)
         template = Path(template_path) if template_path is not None else None
         token = self._next_token(OperationKind.INSPECT)
         self._inspection = None
+        self._refresh_validation = False
         self._update_state(
             status=WorkspaceStatus.LOADING,
             source_path=source,
+            source_kind=WorkspaceSourceKind.DESKTOP,
+            source_name=source.name,
+            web_source=None,
             template_path=template,
             saved_text=saved_text,
             editor_text=saved_text,
@@ -116,6 +206,84 @@ class WorkspaceController:
             on_error=lambda error: self._fail_operation(token, error),
         )
         return token
+
+    def save(self) -> OperationToken | None:
+        if not self._state.actions.can_save:
+            return None
+
+        source = self._require_source()
+        text = self._state.editor_text
+        if self._state.source_kind is WorkspaceSourceKind.DESKTOP:
+
+            def persist() -> Path:
+                self.filesystem.write_text_atomic(source, text)
+                return source
+
+        else:
+            handle = self._state.web_source
+            persistence = self.web_persistence
+            if (
+                handle is None
+                or persistence is None
+                or not handle.writable
+                or handle.workspace_id is None
+            ):
+                return None
+
+            def persist() -> Path:
+                return Path(persistence.save_workspace(handle, source, text))
+
+        return self._start_persistence(
+            OperationKind.SAVE,
+            persist,
+            text=text,
+            source_kind=self._state.source_kind,
+            source_name=self._state.source_name or source.name,
+            web_source=self._state.web_source,
+        )
+
+    def save_as(self, target_path: str | Path) -> OperationToken | None:
+        if not self._state.actions.can_save_as:
+            return None
+
+        target = Path(target_path)
+        text = self._state.editor_text
+
+        def persist() -> Path:
+            self.filesystem.write_text_atomic(target, text)
+            return target
+
+        return self._start_persistence(
+            OperationKind.SAVE,
+            persist,
+            text=text,
+            source_kind=WorkspaceSourceKind.DESKTOP,
+            source_name=target.name,
+            web_source=None,
+        )
+
+    def download_source(self) -> OperationToken | None:
+        if not self._state.actions.can_download:
+            return None
+
+        source = self._require_source()
+        handle = self._state.web_source
+        persistence = self.web_persistence
+        if handle is None or persistence is None:
+            return None
+        text = self._state.editor_text
+
+        def persist() -> Path:
+            return Path(persistence.download(handle, source, text))
+
+        return self._start_persistence(
+            OperationKind.DOWNLOAD,
+            persist,
+            text=text,
+            source_kind=self._state.source_kind,
+            source_name=handle.file_name,
+            web_source=handle,
+        )
 
     def edit_text(self, text: str) -> bool:
         if not self._state.actions.can_edit:
@@ -140,7 +308,7 @@ class WorkspaceController:
         return True
 
     def discard_edits(self) -> bool:
-        if not self._state.actions.can_save:
+        if self._state.status is not WorkspaceStatus.DIRTY:
             return False
 
         self._update_state(
@@ -189,7 +357,10 @@ class WorkspaceController:
         return token
 
     def cancel_current(self) -> bool:
-        if self._state.active_operation is None:
+        if (
+            self._state.active_operation is None
+            or not self._state.actions.can_cancel
+        ):
             return False
         self._update_state(
             status=WorkspaceStatus.CANCELED,
@@ -200,6 +371,8 @@ class WorkspaceController:
         return True
 
     def disable(self, reason: str) -> None:
+        if self._persistence_in_progress():
+            return
         self._update_state(
             status=WorkspaceStatus.DISABLED,
             progress=None,
@@ -217,6 +390,9 @@ class WorkspaceController:
         }:
             return False
         if self._inspection is None and self._state.source_path is not None:
+            if self._refresh_validation:
+                self._start_refresh()
+                return True
             token = self._next_token(OperationKind.INSPECT)
             source = self._state.source_path
             self._update_state(
@@ -242,9 +418,148 @@ class WorkspaceController:
         return True
 
     def reset(self) -> None:
+        if self._persistence_in_progress():
+            return
         self._inspection = None
+        self._refresh_validation = False
         self._state = WorkspaceViewModel()
         self._publish()
+
+    def _open_desktop_workspace(
+        self,
+        source: Path,
+        template: Path | None,
+    ) -> _OpenedWorkspace:
+        saved_text = self.filesystem.read_text(source)
+        return _OpenedWorkspace(
+            source_path=source,
+            source_kind=WorkspaceSourceKind.DESKTOP,
+            source_name=source.name,
+            web_source=None,
+            template_path=template,
+            saved_text=saved_text,
+            analysis=self._analyze_workspace(source, template),
+        )
+
+    def _analyze_workspace(
+        self,
+        source: Path,
+        template: Path | None,
+    ) -> _WorkspaceAnalysis:
+        return _WorkspaceAnalysis(
+            inspection=self._inspect(source),
+            validation=self._validate(
+                source,
+                template_path=template,
+            ),
+        )
+
+    def _complete_open(
+        self,
+        token: OperationToken,
+        result: _OpenedWorkspace,
+    ) -> None:
+        if not self._is_current(token):
+            return
+        self._inspection = result.analysis.inspection
+        self._refresh_validation = True
+        self._update_state(
+            status=WorkspaceStatus.POPULATED,
+            source_path=result.source_path,
+            source_kind=result.source_kind,
+            source_name=result.source_name,
+            web_source=result.web_source,
+            template_path=result.template_path,
+            saved_text=result.saved_text,
+            editor_text=result.saved_text,
+            dirty=False,
+            diagnostics=self._diagnostics(result.analysis.validation.issues),
+            progress=None,
+            output=None,
+            error_message=None,
+            disabled_reason=None,
+            active_operation=None,
+        )
+
+    def _start_persistence(
+        self,
+        kind: OperationKind,
+        operation: PersistenceOperation,
+        *,
+        text: str,
+        source_kind: WorkspaceSourceKind | None,
+        source_name: str,
+        web_source: WebSourceHandle | None,
+    ) -> OperationToken:
+        token = self._begin_operation(kind)
+        self._task_runner.submit(
+            operation,
+            on_success=lambda source: self._complete_persistence(
+                token,
+                Path(source),
+                text=text,
+                source_kind=source_kind,
+                source_name=source_name,
+                web_source=web_source,
+            ),
+            on_error=lambda error: self._fail_operation(token, error),
+        )
+        return token
+
+    def _complete_persistence(
+        self,
+        token: OperationToken,
+        source: Path,
+        *,
+        text: str,
+        source_kind: WorkspaceSourceKind | None,
+        source_name: str,
+        web_source: WebSourceHandle | None,
+    ) -> None:
+        if not self._is_current(token):
+            return
+        self._inspection = None
+        self._refresh_validation = True
+        self._update_state(
+            source_path=source,
+            source_kind=source_kind,
+            source_name=source_name,
+            web_source=web_source,
+            saved_text=text,
+            editor_text=text,
+            dirty=False,
+            progress=None,
+            error_message=None,
+            active_operation=None,
+        )
+        self._start_refresh()
+
+    def _start_refresh(self) -> OperationToken:
+        source = self._require_source()
+        template = self._state.template_path
+        token = self._begin_operation(OperationKind.REFRESH)
+        self._task_runner.submit(
+            lambda: self._analyze_workspace(source, template),
+            on_success=lambda result: self._complete_refresh(token, result),
+            on_error=lambda error: self._fail_operation(token, error),
+        )
+        return token
+
+    def _complete_refresh(
+        self,
+        token: OperationToken,
+        result: _WorkspaceAnalysis,
+    ) -> None:
+        if not self._is_current(token):
+            return
+        self._inspection = result.inspection
+        self._update_state(
+            status=self._resting_status(),
+            diagnostics=self._diagnostics(result.validation.issues),
+            progress=None,
+            error_message=None,
+            active_operation=None,
+        )
 
     def _next_token(self, kind: OperationKind) -> OperationToken:
         self._generation += 1
@@ -340,6 +655,13 @@ class WorkspaceController:
     def _is_current(self, token: OperationToken) -> bool:
         return self._state.active_operation == token
 
+    def _persistence_in_progress(self) -> bool:
+        return (
+            self._state.active_operation is not None
+            and self._state.active_operation.kind
+            in {OperationKind.SAVE, OperationKind.DOWNLOAD}
+        )
+
     def _resting_status(self) -> WorkspaceStatus:
         if self._state.source_path is None:
             return WorkspaceStatus.EMPTY
@@ -385,21 +707,66 @@ class WorkspaceController:
         if state.status is WorkspaceStatus.DISABLED:
             return WorkspaceActions(can_open=False, can_recover=True)
         if state.status is WorkspaceStatus.LOADING:
+            operation = (
+                state.active_operation.kind
+                if state.active_operation is not None
+                else None
+            )
+            persistence_active = operation in {
+                OperationKind.SAVE,
+                OperationKind.DOWNLOAD,
+                OperationKind.REFRESH,
+            }
             return WorkspaceActions(
-                can_open=True,
-                can_edit=self._inspection is not None,
-                can_cancel=True,
+                can_open=not persistence_active,
+                can_edit=(
+                    self._inspection is not None
+                    and operation in {
+                        OperationKind.INSPECT,
+                        OperationKind.VALIDATE,
+                        OperationKind.BUILD,
+                    }
+                ),
+                can_cancel=operation not in {
+                    OperationKind.SAVE,
+                    OperationKind.DOWNLOAD,
+                    OperationKind.REFRESH,
+                },
             )
         if state.status is WorkspaceStatus.DIRTY:
+            if state.source_kind is WorkspaceSourceKind.DESKTOP:
+                return WorkspaceActions(
+                    can_open=True,
+                    can_edit=True,
+                    can_save=True,
+                    can_save_as=True,
+                )
+            web_available = (
+                state.web_source is not None
+                and self.web_persistence is not None
+            )
             return WorkspaceActions(
                 can_open=True,
                 can_edit=True,
-                can_save=True,
+                can_save=(
+                    web_available
+                    and state.web_source is not None
+                    and state.web_source.workspace_id is not None
+                    and state.web_source.writable
+                ),
+                can_download=web_available,
             )
         if state.status is WorkspaceStatus.POPULATED:
+            desktop = state.source_kind is WorkspaceSourceKind.DESKTOP
+            web_available = (
+                state.web_source is not None
+                and self.web_persistence is not None
+            )
             return WorkspaceActions(
                 can_open=True,
                 can_edit=True,
+                can_save_as=desktop,
+                can_download=web_available,
                 can_validate=True,
                 can_build=True,
             )

@@ -21,8 +21,18 @@ class WorkspaceStatus(StrEnum):
     CANCELED = "canceled"
 
 
+class WorkspaceSourceKind(StrEnum):
+    DESKTOP = "desktop"
+    WEB_WORKSPACE = "web-workspace"
+    WEB_UPLOAD = "web-upload"
+
+
 class OperationKind(StrEnum):
+    OPEN = "open"
     INSPECT = "inspect"
+    REFRESH = "refresh"
+    SAVE = "save"
+    DOWNLOAD = "download"
     VALIDATE = "validate"
     BUILD = "build"
 
@@ -31,6 +41,25 @@ class OperationKind(StrEnum):
 class OperationToken:
     kind: OperationKind
     generation: int
+
+
+@dataclass(frozen=True, slots=True)
+class WebSourceHandle:
+    file_name: str
+    workspace_id: str | None = None
+    writable: bool = False
+
+    def __post_init__(self) -> None:
+        if (
+            not self.file_name
+            or Path(self.file_name).name != self.file_name
+            or "\\" in self.file_name
+        ):
+            raise ValueError("web source file_name must be a plain file name")
+        if self.workspace_id is not None and not self.workspace_id.strip():
+            raise ValueError("web workspace_id must not be blank")
+        if self.writable and self.workspace_id is None:
+            raise ValueError("writable web source requires a workspace_id")
 
 
 @dataclass(frozen=True, slots=True)
@@ -71,6 +100,8 @@ class WorkspaceActions:
     can_open: bool = True
     can_edit: bool = False
     can_save: bool = False
+    can_save_as: bool = False
+    can_download: bool = False
     can_validate: bool = False
     can_build: bool = False
     can_cancel: bool = False
@@ -81,6 +112,9 @@ class WorkspaceActions:
 class WorkspaceViewModel:
     status: WorkspaceStatus = WorkspaceStatus.EMPTY
     source_path: Path | None = None
+    source_kind: WorkspaceSourceKind | None = None
+    source_name: str | None = None
+    web_source: WebSourceHandle | None = None
     template_path: Path | None = None
     saved_text: str = ""
     editor_text: str = ""

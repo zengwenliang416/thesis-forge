@@ -1,6 +1,6 @@
 {
   "schema": "specnav.codegraph.claims.v1",
-  "generated_at": "2026-08-01T02:52:18.616Z",
+  "generated_at": "2026-08-01T03:57:15.676Z",
   "active_change": "build-thesisforge-desktop-ui",
   "claims": [
     {
@@ -59,6 +59,40 @@
       ],
       "query_ids": [
         "development:task-002-headless-workspace-state-controller:evidence"
+      ]
+    },
+    {
+      "id": "development:task-003-explicit-source-open-atomic-save",
+      "kind": "development-task",
+      "stage": "development",
+      "task_id": "003-explicit-source-open-atomic-save",
+      "text": "Extend the pure-Python workspace reference with explicit desktop open,",
+      "required": true,
+      "source": "specnav-codegraph-plan",
+      "source_paths": [
+        "openspec/changes/build-thesisforge-desktop-ui/development/tasks/003-explicit-source-open-atomic-save/brief.md",
+        "openspec/changes/build-thesisforge-desktop-ui/development/tasks/003-explicit-source-open-atomic-save/context.json"
+      ],
+      "expected_evidence": [
+        "Observed strict-TDD RED for missing source lifecycle APIs and atomic filesystem adapter",
+        "Atomic writer tests covering replacement, cleanup, UTF-8, Save As, and preservation on injected failure",
+        "Controller tests covering desktop open/save, Web workspace/download capabilities, dirty guards, recovery, and post-save refresh ordering",
+        "Tests proving inspect, validate, and build receive persisted paths and never mutate source files",
+        "Focused and full pytest, Ruff, pip check, strict OpenSpec, SpecNav entry, CodeGraph, JSON, and whitespace evidence",
+        "Task report, dedicated spec review, and dedicated quality review"
+      ],
+      "allowed_files": [
+        "src/thesis_forge/ui/__init__.py",
+        "src/thesis_forge/ui/models.py",
+        "src/thesis_forge/ui/tasks.py",
+        "src/thesis_forge/ui/filesystem.py",
+        "src/thesis_forge/ui/controller.py",
+        "tests/test_ui_controller.py",
+        "tests/test_ui_filesystem.py",
+        "tests/test_architecture.py"
+      ],
+      "query_ids": [
+        "development:task-003-explicit-source-open-atomic-save:evidence"
       ]
     }
   ]

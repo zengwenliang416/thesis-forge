@@ -27,13 +27,13 @@
 
 用户结果：用户可以在 Web、macOS、Windows 打开 Markdown 工作区、编辑并显式保存；未保存内容不会被误用于验证或构建，失败保存不会损坏已有内容。
 
-- [ ] 3.1 Implement source open with desktop readable-path checks, Web workspace/upload handling, and saved snapshot creation.
-- [ ] 3.2 Implement dirty tracking without autosave and disable Validate/Build while dirty.
-- [ ] 3.3 Implement desktop atomic Save/Save As and explicit Web workspace-save/download semantics with prior-content preservation on failure.
-- [ ] 3.4 Refresh inspection and validation only after a successful save.
-- [ ] 3.5 Add tests for missing files, encoding errors, read-only paths, browser capability limits, replace failure, Save As/download, and unchanged saves.
-- [ ] 3.6 Add tests proving inspect, validate, and build never mutate source files.
-- [ ] 3.7 Record red-green evidence, spec review, quality review, and extraction decision for slice 003.
+- [x] 3.1 Implement source open with desktop readable-path checks, Web workspace/upload handling, and saved snapshot creation.
+- [x] 3.2 Implement dirty tracking without autosave and disable Validate/Build while dirty.
+- [x] 3.3 Implement desktop atomic Save/Save As and explicit Web workspace-save/download semantics with prior-content preservation on failure.
+- [x] 3.4 Refresh inspection and validation only after a successful save.
+- [x] 3.5 Add tests for missing files, encoding errors, read-only paths, browser capability limits, replace failure, Save As/download, and unchanged saves.
+- [x] 3.6 Add tests proving inspect, validate, and build never mutate source files.
+- [x] 3.7 Record red-green evidence, spec review, quality review, and extraction decision for slice 003.
 
 ## 4. Shared React Workbench And Runtime Transports
 

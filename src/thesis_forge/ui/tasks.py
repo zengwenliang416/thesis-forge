@@ -4,6 +4,8 @@ from collections.abc import Callable
 from pathlib import Path
 from typing import Protocol, TypeVar
 
+from .models import WebSourceHandle
+
 ResultT = TypeVar("ResultT")
 
 
@@ -37,3 +39,19 @@ class WorkspaceFileSystem(Protocol):
     def read_text(self, path: Path) -> str: ...
 
     def write_text_atomic(self, path: Path, text: str) -> None: ...
+
+
+class WebWorkspacePersistence(Protocol):
+    def save_workspace(
+        self,
+        handle: WebSourceHandle,
+        source_path: Path,
+        text: str,
+    ) -> Path: ...
+
+    def download(
+        self,
+        handle: WebSourceHandle,
+        source_path: Path,
+        text: str,
+    ) -> Path: ...

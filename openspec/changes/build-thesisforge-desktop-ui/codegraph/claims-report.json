@@ -1,13 +1,14 @@
 {
   "schema": "specnav.codegraph.claims_report.v1",
-  "generated_at": "2026-08-01T02:53:36.551Z",
+  "generated_at": "2026-08-01T04:03:54.184Z",
   "active_change": "build-thesisforge-desktop-ui",
   "claims_file": "openspec/changes/build-thesisforge-desktop-ui/codegraph/claims-map.json",
   "evidence_index": "openspec/changes/build-thesisforge-desktop-ui/codegraph/evidence-index.json",
-  "claims_count": 2,
+  "claims_count": 3,
   "verified_claims": [
     "development:task-001-archive-safe-prototype-baseline",
-    "development:task-002-headless-workspace-state-controller"
+    "development:task-002-headless-workspace-state-controller",
+    "development:task-003-explicit-source-open-atomic-save"
   ],
   "unverified_claims": [],
   "blockers": [],

@@ -17,6 +17,7 @@ import thesis_forge.core.parser as parser_module
 import thesis_forge.core.render_plan as render_plan_module
 import thesis_forge.renderers.docx.renderer as docx_renderer_module
 import thesis_forge.ui.controller as ui_controller_module
+import thesis_forge.ui.filesystem as ui_filesystem_module
 import thesis_forge.ui.models as ui_models_module
 import thesis_forge.ui.tasks as ui_tasks_module
 
@@ -92,7 +93,12 @@ def test_cli_delegates_core_flows_to_application_services():
 def test_headless_ui_controller_and_models_avoid_qt_docx_and_xml_imports():
     forbidden_prefixes = ("PySide6", "docx", "lxml")
 
-    for module in (ui_controller_module, ui_models_module, ui_tasks_module):
+    for module in (
+        ui_controller_module,
+        ui_filesystem_module,
+        ui_models_module,
+        ui_tasks_module,
+    ):
         imports = _import_names(Path(module.__file__))
         forbidden = {
             name

@@ -1,6 +1,6 @@
 {
   "schema": "specnav.codegraph.guard_report.v1",
-  "generated_at": "2026-08-01T02:53:36.551Z",
+  "generated_at": "2026-08-01T04:03:54.184Z",
   "active_change": "build-thesisforge-desktop-ui",
   "stage": "development",
   "ok": true,
@@ -34,10 +34,10 @@
       "initialized": true,
       "projectPath": "/Volumes/zwl/open_sources/thesis-forge",
       "indexPath": "/Volumes/zwl/open_sources/thesis-forge/.codegraph",
-      "lastIndexed": "2026-08-01T02:53:20.135Z",
-      "fileCount": 75,
-      "nodeCount": 1127,
-      "edgeCount": 3200,
+      "lastIndexed": "2026-08-01T03:57:05.136Z",
+      "fileCount": 77,
+      "nodeCount": 1202,
+      "edgeCount": 3475,
       "pendingChanges": {
         "added": 0,
         "modified": 0,
@@ -61,7 +61,7 @@
   },
   "evidence_index": {
     "schema": "specnav.codegraph.evidence_index.v1",
-    "generated_at": "2026-08-01T02:01:26.806Z",
+    "generated_at": "2026-08-01T03:57:30.391Z",
     "active_change": "build-thesisforge-desktop-ui",
     "source_raw": "openspec/changes/build-thesisforge-desktop-ui/codegraph/evidence.jsonl",
     "by_claim": {
@@ -111,11 +111,37 @@
         ],
         "symbols": [],
         "blockers": []
+      },
+      "development:task-003-explicit-source-open-atomic-save": {
+        "status": "matched",
+        "evidence_ids": [
+          "ev-ms9u6nr6",
+          "ev-ms9ubt02"
+        ],
+        "files": [
+          "src/thesis_forge/ui/filesystem.py",
+          "src/thesis_forge/ui/controller.py",
+          "models.py",
+          "tasks.py",
+          "tests/test_ui_filesystem.py",
+          "tests/test_ui_controller.py",
+          "tests/test_architecture.py",
+          "src/thesis_forge/ui/models.py",
+          "next.md",
+          "thesis.md",
+          "other.md",
+          "web.md",
+          "snapshot.md",
+          "copy.md",
+          "failed.md"
+        ],
+        "symbols": [],
+        "blockers": []
       }
     },
     "by_stage": {
       "development": {
-        "verified": 5,
+        "verified": 7,
         "partial": 0,
         "missing": 0,
         "stale": 0,
@@ -124,18 +150,19 @@
     },
     "blockers": [],
     "raw_exists": true,
-    "record_count": 5
+    "record_count": 7
   },
   "claims_report": {
     "schema": "specnav.codegraph.claims_report.v1",
-    "generated_at": "2026-08-01T02:53:36.551Z",
+    "generated_at": "2026-08-01T04:03:54.184Z",
     "active_change": "build-thesisforge-desktop-ui",
     "claims_file": "openspec/changes/build-thesisforge-desktop-ui/codegraph/claims-map.json",
     "evidence_index": "openspec/changes/build-thesisforge-desktop-ui/codegraph/evidence-index.json",
-    "claims_count": 2,
+    "claims_count": 3,
     "verified_claims": [
       "development:task-001-archive-safe-prototype-baseline",
-      "development:task-002-headless-workspace-state-controller"
+      "development:task-002-headless-workspace-state-controller",
+      "development:task-003-explicit-source-open-atomic-save"
     ],
     "unverified_claims": [],
     "blockers": [],

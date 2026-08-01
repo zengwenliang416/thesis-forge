@@ -1,0 +1,65 @@
+{
+  "task_id": "003-explicit-source-open-atomic-save",
+  "goal": "Users explicitly open and persist one Markdown workspace through honest desktop or Web capabilities while unsaved text remains excluded from validation and build.",
+  "must_read": [
+    "openspec/changes/build-thesisforge-desktop-ui/development/tasks/003-explicit-source-open-atomic-save/brief.md",
+    "AGENTS.md",
+    "openspec/changes/build-thesisforge-desktop-ui/requirements.md",
+    "openspec/changes/build-thesisforge-desktop-ui/acceptance.md",
+    "openspec/changes/build-thesisforge-desktop-ui/acceptance.json",
+    "openspec/changes/build-thesisforge-desktop-ui/spec-map.json",
+    "openspec/changes/build-thesisforge-desktop-ui/component-impact-map.json",
+    "openspec/changes/build-thesisforge-desktop-ui/prototype/handoff.md",
+    "openspec/changes/build-thesisforge-desktop-ui/prototype/decision.json",
+    "openspec/changes/build-thesisforge-desktop-ui/prototype/artifact/index.html",
+    "openspec/specs/ui-design/design.md",
+    "openspec/specs/system-architecture/design.md",
+    "openspec/specs/frontend-backend-data-flow/design.md",
+    "openspec/specs/component-architecture/design.md",
+    "src/thesis_forge/ui/__init__.py",
+    "src/thesis_forge/ui/models.py",
+    "src/thesis_forge/ui/tasks.py",
+    "src/thesis_forge/ui/controller.py",
+    "tests/test_ui_controller.py",
+    "tests/test_architecture.py"
+  ],
+  "allowed_files": [
+    "src/thesis_forge/ui/__init__.py",
+    "src/thesis_forge/ui/models.py",
+    "src/thesis_forge/ui/tasks.py",
+    "src/thesis_forge/ui/filesystem.py",
+    "src/thesis_forge/ui/controller.py",
+    "tests/test_ui_controller.py",
+    "tests/test_ui_filesystem.py",
+    "tests/test_architecture.py"
+  ],
+  "test_paths": [
+    "tests/test_ui_filesystem.py",
+    "tests/test_ui_controller.py",
+    "tests/test_architecture.py"
+  ],
+  "non_goals": [
+    "Do not create React, TypeScript, Vite, HTTP, Tauri, native-dialog, or sidecar implementation.",
+    "Do not implement browser-native filesystem APIs or expose arbitrary browser paths.",
+    "Do not add autosave, recent files, multi-document state, file watching, or conflict resolution.",
+    "Do not implement template UI, diagnostics localization, outline, preview, or build cancellation.",
+    "Do not change parser, validator, compiler, renderer, application services, or DOCX behavior."
+  ],
+  "expected_evidence": [
+    "Observed strict-TDD RED for missing source lifecycle APIs and atomic filesystem adapter",
+    "Atomic writer tests covering replacement, cleanup, UTF-8, Save As, and preservation on injected failure",
+    "Controller tests covering desktop open/save, Web workspace/download capabilities, dirty guards, recovery, and post-save refresh ordering",
+    "Tests proving inspect, validate, and build receive persisted paths and never mutate source files",
+    "Focused and full pytest, Ruff, pip check, strict OpenSpec, SpecNav entry, CodeGraph, JSON, and whitespace evidence",
+    "Task report, dedicated spec review, and dedicated quality review"
+  ],
+  "unsafe_assumptions": [
+    "A browser can access arbitrary native paths.",
+    "Writable Web workspaces and upload/download-only sources expose identical actions.",
+    "A save may update the saved snapshot before persistence succeeds.",
+    "A post-save refresh failure means the atomic write did not happen.",
+    "Editing or cancellation may safely race an in-flight source persistence operation.",
+    "Portable permission behavior can be tested only with chmod rather than injected failures."
+  ],
+  "stop_condition": "Stop if implementation requires edits outside the eight allowed source/test files, duplicates compiler behavior, exposes browser-native paths, weakens atomic replacement, or cannot separate persistence success from refresh failure."
+}

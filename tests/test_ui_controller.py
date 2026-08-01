@@ -52,6 +52,62 @@ class _UnusedFileSystem:
         raise AssertionError(f"Slice 002 must not write {path}: {text}")
 
 
+class _MemoryFileSystem:
+    def __init__(self, files: dict[Path, str] | None = None) -> None:
+        self.files = dict(files or {})
+        self.reads: list[Path] = []
+        self.writes: list[tuple[Path, str]] = []
+        self.read_error: Exception | None = None
+        self.write_error: Exception | None = None
+
+    def read_text(self, path: Path) -> str:
+        source = Path(path)
+        self.reads.append(source)
+        if self.read_error is not None:
+            raise self.read_error
+        if source not in self.files:
+            raise FileNotFoundError(source)
+        return self.files[source]
+
+    def write_text_atomic(self, path: Path, text: str) -> None:
+        target = Path(path)
+        self.writes.append((target, text))
+        if self.write_error is not None:
+            raise self.write_error
+        self.files[target] = text
+
+
+class _WebPersistence:
+    def __init__(self) -> None:
+        self.workspace_saves: list[tuple[ui.WebSourceHandle, Path, str]] = []
+        self.downloads: list[tuple[ui.WebSourceHandle, Path, str]] = []
+        self.error: Exception | None = None
+
+    def save_workspace(
+        self,
+        handle: ui.WebSourceHandle,
+        source_path: Path,
+        text: str,
+    ) -> Path:
+        self.workspace_saves.append((handle, Path(source_path), text))
+        if self.error is not None:
+            raise self.error
+        Path(source_path).write_text(text, encoding="utf-8")
+        return Path(source_path)
+
+    def download(
+        self,
+        handle: ui.WebSourceHandle,
+        source_path: Path,
+        text: str,
+    ) -> Path:
+        self.downloads.append((handle, Path(source_path), text))
+        if self.error is not None:
+            raise self.error
+        Path(source_path).write_text(text, encoding="utf-8")
+        return Path(source_path)
+
+
 def _inspection(path: Path) -> InspectionResult:
     return InspectionResult(document=ThesisDocument(source_path=path))
 
@@ -131,6 +187,22 @@ def test_workspace_models_are_immutable_and_normalize_diagnostic_details():
         state.status = ui.WorkspaceStatus.ERROR
     with pytest.raises(FrozenInstanceError):
         diagnostic.message = "mutated"
+
+
+@pytest.mark.parametrize(
+    "handle",
+    [
+        lambda: ui.WebSourceHandle(file_name=""),
+        lambda: ui.WebSourceHandle(file_name="../thesis.md"),
+        lambda: ui.WebSourceHandle(file_name="folder/thesis.md"),
+        lambda: ui.WebSourceHandle(file_name=r"folder\thesis.md"),
+        lambda: ui.WebSourceHandle(file_name="thesis.md", workspace_id=" "),
+        lambda: ui.WebSourceHandle(file_name="thesis.md", writable=True),
+    ],
+)
+def test_web_source_handle_rejects_paths_and_inconsistent_capabilities(handle):
+    with pytest.raises(ValueError):
+        handle()
 
 
 def test_initial_workspace_is_empty_with_only_open_available():
@@ -567,3 +639,366 @@ def test_synchronous_task_runner_reports_success_and_failure():
     assert results == [42]
     assert len(errors) == 1
     assert isinstance(errors[0], ValueError)
+
+
+def test_open_source_reads_once_then_inspects_and_validates_saved_snapshot(
+    tmp_path: Path,
+):
+    source = tmp_path / "thesis.md"
+    filesystem = _MemoryFileSystem({source: "# Saved\n"})
+    runner = _DeferredTaskRunner()
+    calls: list[tuple[str, Path]] = []
+
+    def inspect(path):
+        calls.append(("inspect", Path(path)))
+        return _inspection(Path(path))
+
+    def validate(path, **_kwargs):
+        calls.append(("validate", Path(path)))
+        return _validation(Path(path))
+
+    controller = ui.WorkspaceController(
+        inspect=inspect,
+        validate=validate,
+        filesystem=filesystem,
+        task_runner=runner,
+    )
+
+    token = controller.open_source(source)
+
+    assert token == ui.OperationToken(ui.OperationKind.OPEN, 1)
+    assert controller.state.status is ui.WorkspaceStatus.LOADING
+    runner.complete()
+
+    assert filesystem.reads == [source]
+    assert calls == [("inspect", source), ("validate", source)]
+    assert controller.state.status is ui.WorkspaceStatus.POPULATED
+    assert controller.state.source_kind is ui.WorkspaceSourceKind.DESKTOP
+    assert controller.state.source_name == "thesis.md"
+    assert controller.state.saved_text == "# Saved\n"
+    assert controller.state.editor_text == "# Saved\n"
+    assert controller.state.actions.can_save_as is True
+
+
+@pytest.mark.parametrize(
+    ("error", "status"),
+    [
+        (FileNotFoundError("missing"), ui.WorkspaceStatus.ERROR),
+        (UnicodeDecodeError("utf-8", b"\xff", 0, 1, "invalid"), ui.WorkspaceStatus.ERROR),
+        (PermissionError("denied"), ui.WorkspaceStatus.PERMISSION),
+    ],
+)
+def test_failed_open_preserves_previous_workspace(
+    tmp_path: Path,
+    error: Exception,
+    status: ui.WorkspaceStatus,
+):
+    controller, runner, previous = _loaded_controller(tmp_path)
+    filesystem = _MemoryFileSystem()
+    filesystem.read_error = error
+    controller.filesystem = filesystem
+
+    controller.open_source(tmp_path / "next.md")
+    runner.complete()
+
+    assert controller.state.status is status
+    assert controller.state.source_path == previous
+    assert controller.state.saved_text == "# Saved\n"
+    assert controller.state.editor_text == "# Saved\n"
+    assert controller.recover() is True
+    assert controller.state.status is ui.WorkspaceStatus.POPULATED
+
+
+def test_desktop_save_updates_snapshot_before_post_save_refresh(tmp_path: Path):
+    source = tmp_path / "thesis.md"
+    filesystem = _MemoryFileSystem({source: "# Saved\n"})
+    runner = _DeferredTaskRunner()
+    calls: list[tuple[str, Path]] = []
+
+    def inspect(path):
+        calls.append(("inspect", Path(path)))
+        return _inspection(Path(path))
+
+    def validate(path, **_kwargs):
+        calls.append(("validate", Path(path)))
+        return _validation(Path(path))
+
+    controller = ui.WorkspaceController(
+        inspect=inspect,
+        validate=validate,
+        filesystem=filesystem,
+        task_runner=runner,
+    )
+    controller.open_source(source)
+    runner.complete()
+    calls.clear()
+    controller.edit_text("# Changed\n")
+
+    token = controller.save()
+
+    assert token == ui.OperationToken(ui.OperationKind.SAVE, 2)
+    assert controller.state.actions.can_edit is False
+    assert controller.cancel_current() is False
+    runner.complete()
+
+    assert filesystem.files[source] == "# Changed\n"
+    assert controller.state.saved_text == "# Changed\n"
+    assert controller.state.editor_text == "# Changed\n"
+    assert controller.state.dirty is False
+    assert controller.state.status is ui.WorkspaceStatus.LOADING
+    assert calls == []
+
+    runner.complete()
+    assert calls == [("inspect", source), ("validate", source)]
+    assert controller.state.status is ui.WorkspaceStatus.POPULATED
+
+
+def test_failed_desktop_save_preserves_prior_snapshot_and_dirty_editor(
+    tmp_path: Path,
+):
+    source = tmp_path / "thesis.md"
+    filesystem = _MemoryFileSystem({source: "# Previous\n"})
+    runner = _DeferredTaskRunner()
+    controller = ui.WorkspaceController(
+        inspect=lambda path: _inspection(Path(path)),
+        validate=lambda path, **_kwargs: _validation(Path(path)),
+        filesystem=filesystem,
+        task_runner=runner,
+    )
+    controller.open_source(source)
+    runner.complete()
+    controller.edit_text("# Unsaved\n")
+    filesystem.write_error = PermissionError("replace denied")
+
+    controller.save()
+    runner.complete()
+
+    assert filesystem.files[source] == "# Previous\n"
+    assert controller.state.status is ui.WorkspaceStatus.PERMISSION
+    assert controller.state.saved_text == "# Previous\n"
+    assert controller.state.editor_text == "# Unsaved\n"
+    assert controller.state.dirty is True
+    assert controller.recover() is True
+    assert controller.state.status is ui.WorkspaceStatus.DIRTY
+    assert controller.state.actions.can_save is True
+
+
+def test_post_save_refresh_failure_keeps_successful_persisted_snapshot(
+    tmp_path: Path,
+):
+    source = tmp_path / "thesis.md"
+    filesystem = _MemoryFileSystem({source: "# Saved\n"})
+    runner = _DeferredTaskRunner()
+    controller = ui.WorkspaceController(
+        inspect=lambda path: _inspection(Path(path)),
+        validate=lambda path, **_kwargs: _validation(Path(path)),
+        filesystem=filesystem,
+        task_runner=runner,
+    )
+    controller.open_source(source)
+    runner.complete()
+    controller.edit_text("# Persisted\n")
+
+    controller.save()
+    runner.complete()
+    runner.fail(RuntimeError("refresh failed"))
+
+    assert filesystem.files[source] == "# Persisted\n"
+    assert controller.state.status is ui.WorkspaceStatus.ERROR
+    assert controller.state.saved_text == "# Persisted\n"
+    assert controller.state.editor_text == "# Persisted\n"
+    assert controller.state.dirty is False
+    assert controller.recover() is True
+    runner.complete()
+    assert controller.state.status is ui.WorkspaceStatus.POPULATED
+
+
+def test_inflight_persistence_cannot_be_invalidated_by_direct_workspace_actions(
+    tmp_path: Path,
+):
+    source = tmp_path / "thesis.md"
+    filesystem = _MemoryFileSystem({source: "# Saved\n"})
+    runner = _DeferredTaskRunner()
+    controller = ui.WorkspaceController(
+        inspect=lambda path: _inspection(Path(path)),
+        validate=lambda path, **_kwargs: _validation(Path(path)),
+        filesystem=filesystem,
+        task_runner=runner,
+    )
+    controller.open_source(source)
+    runner.complete()
+    controller.edit_text("# Changed\n")
+    save_token = controller.save()
+
+    assert controller.open_source(tmp_path / "other.md") is None
+    assert (
+        controller.open_web_snapshot(
+            tmp_path / "web.md",
+            "# Web\n",
+            ui.WebSourceHandle(file_name="web.md"),
+        )
+        is None
+    )
+    assert controller.load_snapshot(tmp_path / "snapshot.md", "# Snapshot\n") is None
+    controller.disable("disabled during save")
+    controller.reset()
+
+    assert controller.state.active_operation == save_token
+    assert controller.state.status is ui.WorkspaceStatus.LOADING
+    assert controller.state.source_path == source
+
+    runner.complete()
+    runner.complete()
+    assert controller.state.status is ui.WorkspaceStatus.POPULATED
+    assert controller.state.saved_text == "# Changed\n"
+
+
+def test_save_as_changes_path_only_after_atomic_write_succeeds(tmp_path: Path):
+    source = tmp_path / "thesis.md"
+    target = tmp_path / "copy.md"
+    filesystem = _MemoryFileSystem({source: "# Saved\n"})
+    runner = _DeferredTaskRunner()
+    controller = ui.WorkspaceController(
+        inspect=lambda path: _inspection(Path(path)),
+        validate=lambda path, **_kwargs: _validation(Path(path)),
+        filesystem=filesystem,
+        task_runner=runner,
+    )
+    controller.open_source(source)
+    runner.complete()
+    controller.edit_text("# Copy\n")
+
+    controller.save_as(target)
+    assert controller.state.source_path == source
+    runner.complete()
+
+    assert filesystem.files[target] == "# Copy\n"
+    assert controller.state.source_path == target
+    assert controller.state.source_name == "copy.md"
+    runner.complete()
+    assert controller.state.status is ui.WorkspaceStatus.POPULATED
+
+    controller.save_as(tmp_path / "failed.md")
+    filesystem.write_error = PermissionError("save as denied")
+    runner.complete()
+    assert controller.state.source_path == target
+    assert controller.state.saved_text == "# Copy\n"
+
+
+def test_unchanged_desktop_source_skips_save_but_allows_save_as(tmp_path: Path):
+    source = tmp_path / "thesis.md"
+    filesystem = _MemoryFileSystem({source: "# Saved\n"})
+    runner = _DeferredTaskRunner()
+    controller = ui.WorkspaceController(
+        inspect=lambda path: _inspection(Path(path)),
+        validate=lambda path, **_kwargs: _validation(Path(path)),
+        filesystem=filesystem,
+        task_runner=runner,
+    )
+    controller.open_source(source)
+    runner.complete()
+
+    assert controller.save() is None
+    assert controller.save_as(tmp_path / "copy.md") is not None
+
+
+def test_web_workspace_and_upload_expose_honest_persistence_capabilities(
+    tmp_path: Path,
+):
+    service_path = tmp_path / "web.md"
+    service_path.write_text("# Saved\n", encoding="utf-8")
+    runner = _DeferredTaskRunner()
+    persistence = _WebPersistence()
+    controller = ui.WorkspaceController(
+        inspect=lambda path: _inspection(Path(path)),
+        validate=lambda path, **_kwargs: _validation(Path(path)),
+        web_persistence=persistence,
+        task_runner=runner,
+    )
+    writable = ui.WebSourceHandle(
+        file_name="web.md",
+        workspace_id="workspace-1",
+        writable=True,
+    )
+
+    controller.open_web_snapshot(service_path, "# Saved\n", writable)
+    runner.complete()
+    controller.edit_text("# Workspace\n")
+
+    assert controller.state.source_kind is ui.WorkspaceSourceKind.WEB_WORKSPACE
+    assert controller.state.actions.can_save is True
+    assert controller.state.actions.can_save_as is False
+    assert controller.state.actions.can_download is True
+    controller.save()
+    runner.complete()
+    runner.complete()
+    assert persistence.workspace_saves == [
+        (writable, service_path, "# Workspace\n")
+    ]
+
+    upload = ui.WebSourceHandle(file_name="upload.md")
+    controller.open_web_snapshot(service_path, "# Workspace\n", upload)
+    runner.complete()
+    controller.edit_text("# Download\n")
+
+    assert controller.state.source_kind is ui.WorkspaceSourceKind.WEB_UPLOAD
+    assert controller.state.actions.can_save is False
+    assert controller.state.actions.can_download is True
+    assert controller.save() is None
+    controller.download_source()
+    runner.complete()
+    runner.complete()
+    assert persistence.downloads == [(upload, service_path, "# Download\n")]
+
+
+def test_web_persistence_failure_preserves_prior_snapshot(tmp_path: Path):
+    service_path = tmp_path / "web.md"
+    service_path.write_text("# Saved\n", encoding="utf-8")
+    runner = _DeferredTaskRunner()
+    persistence = _WebPersistence()
+    controller = ui.WorkspaceController(
+        inspect=lambda path: _inspection(Path(path)),
+        validate=lambda path, **_kwargs: _validation(Path(path)),
+        web_persistence=persistence,
+        task_runner=runner,
+    )
+    handle = ui.WebSourceHandle(
+        file_name="web.md",
+        workspace_id="workspace-1",
+        writable=True,
+    )
+    controller.open_web_snapshot(service_path, "# Saved\n", handle)
+    runner.complete()
+    controller.edit_text("# Unsaved\n")
+    persistence.error = RuntimeError("workspace save failed")
+
+    controller.save()
+    runner.complete()
+
+    assert controller.state.status is ui.WorkspaceStatus.ERROR
+    assert controller.state.saved_text == "# Saved\n"
+    assert controller.state.editor_text == "# Unsaved\n"
+    assert controller.state.dirty is True
+
+
+def test_validate_and_build_do_not_mutate_persisted_source(tmp_path: Path):
+    source = tmp_path / "thesis.md"
+    source.write_text("# Saved\n", encoding="utf-8")
+    runner = _DeferredTaskRunner()
+    controller = ui.WorkspaceController(
+        inspect=lambda path: _inspection(Path(path)),
+        validate=lambda path, **_kwargs: _validation(Path(path)),
+        build=lambda _source, output, **_kwargs: BuildResult(Path(output), ()),
+        task_runner=runner,
+    )
+    controller.open_source(source)
+    runner.complete()
+    before = source.read_bytes()
+
+    controller.validate()
+    runner.complete()
+    assert source.read_bytes() == before
+
+    controller.build(tmp_path / "thesis.docx")
+    runner.complete()
+    assert source.read_bytes() == before

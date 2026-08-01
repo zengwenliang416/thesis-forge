@@ -1,6 +1,6 @@
 {
   "schema": "specnav.codegraph.evidence_query_plan.v1",
-  "generated_at": "2026-08-01T02:52:18.616Z",
+  "generated_at": "2026-08-01T03:57:15.677Z",
   "active_change": "build-thesisforge-desktop-ui",
   "queries": [
     {
@@ -32,6 +32,21 @@
         "tests or verification commands"
       ],
       "command": "node \"$SPECNAV_CODEGRAPH_ROOT/scripts/codegraph-context.js\" --stage development --claim development:task-002-headless-workspace-state-controller --query \"<query>\" --write --json"
+    },
+    {
+      "id": "development:task-003-explicit-source-open-atomic-save:evidence",
+      "claim_id": "development:task-003-explicit-source-open-atomic-save",
+      "stage": "development",
+      "task_id": "003-explicit-source-open-atomic-save",
+      "status": "planned",
+      "query": "Find the files, symbols, components, routes, services, data flow, and tests that implement \"Extend the pure-Python workspace reference with explicit desktop open,\" in change \"build-thesisforge-desktop-ui\". Return concrete file paths, symbols, relationships, and any missing implementation evidence.",
+      "expected_evidence": [
+        "file paths",
+        "symbols",
+        "call relationships",
+        "tests or verification commands"
+      ],
+      "command": "node \"$SPECNAV_CODEGRAPH_ROOT/scripts/codegraph-context.js\" --stage development --claim development:task-003-explicit-source-open-atomic-save --query \"<query>\" --write --json"
     }
   ]
 }
