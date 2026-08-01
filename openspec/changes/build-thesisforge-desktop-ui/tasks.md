@@ -65,13 +65,13 @@
 
 用户结果：用户在编辑前即可查看论文结构和接近纸张阅读顺序的预览，同时明确预览不冒充 Word 最终分页。
 
-- [ ] 6.1 Map headings and stable semantic IDs into an outline view model.
-- [ ] 6.2 Map typed document/render-plan instructions into page-like preview sections without DOCX objects.
-- [ ] 6.3 Synchronize outline selection, preview selection, and editor source locations.
-- [ ] 6.4 Render figures, tables, equations, references, bibliography, sections, and unsupported nodes with explicit preview states.
-- [ ] 6.5 Add unit/golden tests for preview ordering, numbering labels, diagnostics markers, and unsupported content.
-- [ ] 6.6 Add static tests forbidding python-docx/lxml imports from UI preview modules.
-- [ ] 6.7 Record red-green evidence, spec review, quality review, and extraction decision for slice 006.
+- [x] 6.1 Map headings and stable semantic IDs into an outline view model.
+- [x] 6.2 Map typed document/render-plan instructions into page-like preview sections without DOCX objects.
+- [x] 6.3 Synchronize outline selection, preview selection, and editor source locations.
+- [x] 6.4 Render figures, tables, equations, references, bibliography, sections, and unsupported nodes with explicit preview states.
+- [x] 6.5 Add unit/golden tests for preview ordering, numbering labels, diagnostics markers, and unsupported content.
+- [x] 6.6 Add static tests forbidding python-docx/lxml imports from UI preview modules.
+- [x] 6.7 Record red-green evidence, spec review, quality review, and extraction decision for slice 006.
 
 ## 7. Safe Cross-Runtime Build, Progress, And Cancellation
 

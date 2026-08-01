@@ -1,6 +1,6 @@
 {
   "schema": "specnav.codegraph.claims.v1",
-  "generated_at": "2026-08-01T05:18:38.322Z",
+  "generated_at": "2026-08-01T06:22:59.450Z",
   "active_change": "build-thesisforge-desktop-ui",
   "claims": [
     {
@@ -172,6 +172,48 @@
       ],
       "query_ids": [
         "development:task-005-template-selection-structured-diagnostics:evidence"
+      ]
+    },
+    {
+      "id": "development:task-006-outline-renderer-neutral-preview",
+      "kind": "development-task",
+      "stage": "development",
+      "task_id": "006-outline-renderer-neutral-preview",
+      "text": "Add a renderer-neutral application preview service that reuses parse,",
+      "required": true,
+      "source": "specnav-codegraph-plan",
+      "source_paths": [
+        "openspec/changes/build-thesisforge-desktop-ui/development/tasks/006-outline-renderer-neutral-preview/brief.md",
+        "openspec/changes/build-thesisforge-desktop-ui/development/tasks/006-outline-renderer-neutral-preview/context.json"
+      ],
+      "expected_evidence": [
+        "Strict RED and GREEN proving preview_service reuses parse/validate/compile, skips compile on fatal validation, and never calls renderer or writes output",
+        "Golden mapper coverage for outline IDs/lines, compiler order, numbering labels, inline references/citations/footnotes, cover, TOC, sections, lists, figures, tables, equations, listings, algorithms, bibliography, and unsupported RenderNode fallback",
+        "Adapter and TypeScript DTO tests proving preview responses are JSON-safe, versioned, complete, and reject malformed nested values",
+        "Reducer tests for preview loading, validation-blocked state, template refresh, stale suppression, and shared selection",
+        "React tests for outline/preview rendering, keyboard and pointer activation, editor line focus, diagnostics markers, empty/blocked/unsupported states, and persistent pagination disclaimer",
+        "Static tests forbidding docx, lxml, renderers, compiler, parser, validator, HTTP, Tauri, and filesystem imports from frontend preview modules",
+        "Frontend unit/typecheck/lint/build/E2E and focused/full Python regression evidence",
+        "Ruff, pip check, Cargo fmt/test/check, strict OpenSpec, SpecNav entry, CodeGraph, JSON, and whitespace evidence",
+        "Task report, dedicated spec review, and dedicated quality review"
+      ],
+      "allowed_files": [
+        "frontend/src/components/**",
+        "frontend/src/state/**",
+        "frontend/src/transport/**",
+        "frontend/src/styles.css",
+        "frontend/e2e/**",
+        "src/thesis_forge/application/**",
+        "src/thesis_forge/adapters/**",
+        "src/thesis_forge/presentation/**",
+        "tests/fixtures/preview-workbench-v1.json",
+        "tests/test_application_services.py",
+        "tests/test_adapters.py",
+        "tests/test_frontend_contract.py",
+        "tests/test_architecture.py"
+      ],
+      "query_ids": [
+        "development:task-006-outline-renderer-neutral-preview:evidence"
       ]
     }
   ]

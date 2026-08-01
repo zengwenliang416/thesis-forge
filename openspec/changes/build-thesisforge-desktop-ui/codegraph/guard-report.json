@@ -1,6 +1,6 @@
 {
   "schema": "specnav.codegraph.guard_report.v1",
-  "generated_at": "2026-08-01T06:08:48.395Z",
+  "generated_at": "2026-08-01T07:04:37.663Z",
   "active_change": "build-thesisforge-desktop-ui",
   "stage": "development",
   "ok": true,
@@ -34,10 +34,10 @@
       "initialized": true,
       "projectPath": "/Volumes/zwl/open_sources/thesis-forge",
       "indexPath": "/Volumes/zwl/open_sources/thesis-forge/.codegraph",
-      "lastIndexed": "2026-08-01T05:59:10.933Z",
-      "fileCount": 117,
-      "nodeCount": 1557,
-      "edgeCount": 4379,
+      "lastIndexed": "2026-08-01T06:50:10.694Z",
+      "fileCount": 126,
+      "nodeCount": 1692,
+      "edgeCount": 4917,
       "pendingChanges": {
         "added": 0,
         "modified": 0,
@@ -61,7 +61,7 @@
   },
   "evidence_index": {
     "schema": "specnav.codegraph.evidence_index.v1",
-    "generated_at": "2026-08-01T06:00:12.864Z",
+    "generated_at": "2026-08-01T06:50:49.891Z",
     "active_change": "build-thesisforge-desktop-ui",
     "source_raw": "openspec/changes/build-thesisforge-desktop-ui/codegraph/evidence.jsonl",
     "by_claim": {
@@ -170,11 +170,40 @@
         ],
         "symbols": [],
         "blockers": []
+      },
+      "development:task-006-outline-renderer-neutral-preview": {
+        "status": "matched",
+        "evidence_ids": [
+          "ev-msa0ibb8",
+          "ev-msa0ipb3"
+        ],
+        "files": [
+          "frontend/src/transport/dto.ts",
+          "src/thesis_forge/ui/controller.py",
+          "src/thesis_forge/renderers/docx/renderer.py",
+          "frontend/src/state/workspace.ts",
+          "src/thesis_forge/adapters/runtime.py",
+          "src/thesis_forge/presentation/preview.py",
+          "frontend/src/components/WorkbenchApp.tsx",
+          "src/thesis_forge/application/services.py",
+          "application/contracts.py",
+          "adapters/runtime.py",
+          "presentation/preview.py",
+          "PreviewPanels.tsx",
+          "previewDto.test.ts",
+          "workspace-preview.test.ts",
+          "PreviewPanels.test.tsx",
+          "WorkbenchPreviewFlow.test.tsx",
+          "workbench.spec.ts",
+          "frontend/src/components/PreviewPanels.tsx"
+        ],
+        "symbols": [],
+        "blockers": []
       }
     },
     "by_stage": {
       "development": {
-        "verified": 10,
+        "verified": 12,
         "partial": 0,
         "missing": 0,
         "stale": 0,
@@ -183,21 +212,22 @@
     },
     "blockers": [],
     "raw_exists": true,
-    "record_count": 10
+    "record_count": 12
   },
   "claims_report": {
     "schema": "specnav.codegraph.claims_report.v1",
-    "generated_at": "2026-08-01T06:08:48.394Z",
+    "generated_at": "2026-08-01T07:04:37.663Z",
     "active_change": "build-thesisforge-desktop-ui",
     "claims_file": "openspec/changes/build-thesisforge-desktop-ui/codegraph/claims-map.json",
     "evidence_index": "openspec/changes/build-thesisforge-desktop-ui/codegraph/evidence-index.json",
-    "claims_count": 5,
+    "claims_count": 6,
     "verified_claims": [
       "development:task-001-archive-safe-prototype-baseline",
       "development:task-002-headless-workspace-state-controller",
       "development:task-003-explicit-source-open-atomic-save",
       "development:task-004-optional-pyside6-workbench-shell",
-      "development:task-005-template-selection-structured-diagnostics"
+      "development:task-005-template-selection-structured-diagnostics",
+      "development:task-006-outline-renderer-neutral-preview"
     ],
     "unverified_claims": [],
     "blockers": [],

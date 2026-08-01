@@ -1,6 +1,6 @@
 {
   "schema": "specnav.codegraph.evidence_query_plan.v1",
-  "generated_at": "2026-08-01T05:18:38.323Z",
+  "generated_at": "2026-08-01T06:22:59.451Z",
   "active_change": "build-thesisforge-desktop-ui",
   "queries": [
     {
@@ -77,6 +77,21 @@
         "tests or verification commands"
       ],
       "command": "node \"$SPECNAV_CODEGRAPH_ROOT/scripts/codegraph-context.js\" --stage development --claim development:task-005-template-selection-structured-diagnostics --query \"<query>\" --write --json"
+    },
+    {
+      "id": "development:task-006-outline-renderer-neutral-preview:evidence",
+      "claim_id": "development:task-006-outline-renderer-neutral-preview",
+      "stage": "development",
+      "task_id": "006-outline-renderer-neutral-preview",
+      "status": "planned",
+      "query": "Find the files, symbols, components, routes, services, data flow, and tests that implement \"Add a renderer-neutral application preview service that reuses parse,\" in change \"build-thesisforge-desktop-ui\". Return concrete file paths, symbols, relationships, and any missing implementation evidence.",
+      "expected_evidence": [
+        "file paths",
+        "symbols",
+        "call relationships",
+        "tests or verification commands"
+      ],
+      "command": "node \"$SPECNAV_CODEGRAPH_ROOT/scripts/codegraph-context.js\" --stage development --claim development:task-006-outline-renderer-neutral-preview --query \"<query>\" --write --json"
     }
   ]
 }
