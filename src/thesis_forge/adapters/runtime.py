@@ -16,6 +16,7 @@ from thesis_forge.application import (
     validation_service,
 )
 from thesis_forge.core.model import Heading
+from thesis_forge.templates import default_template_search_roots, resolve_template
 from thesis_forge.ui.filesystem import LocalWorkspaceFileSystem
 
 from .dto import PROTOCOL_VERSION, error_response, success_response
@@ -230,6 +231,24 @@ class WorkbenchCommandDispatcher:
             raise TypeError("source must be an object")
         return source, self._runtime.source_path(source)
 
+    @staticmethod
+    def _template_path(payload: dict, source_path: Path) -> str | Path | None:
+        template_id = payload.get("templateId")
+        template_path = payload.get("templatePath")
+        if template_id is not None and template_path is not None:
+            raise ValueError("templateId and templatePath cannot be used together")
+        if template_id is not None:
+            if not isinstance(template_id, str) or not template_id:
+                raise TypeError("templateId must be a non-empty string or null")
+            return resolve_template(
+                explicit_path=None,
+                template_id=template_id,
+                search_roots=default_template_search_roots(source_path),
+            ).path
+        if template_path is not None and not isinstance(template_path, str):
+            raise TypeError("templatePath must be a string or null")
+        return template_path
+
     def _inspect_result(self, payload: dict) -> dict:
         source, source_path = self._source(payload)
         result = self._inspect(source_path)
@@ -254,7 +273,7 @@ class WorkbenchCommandDispatcher:
         source, source_path = self._source(payload)
         result = self._validate(
             source_path,
-            template_path=payload.get("templatePath"),
+            template_path=self._template_path(payload, source_path),
         )
         return {
             "source": self._runtime.present_source(source, source_path),
@@ -283,7 +302,7 @@ class WorkbenchCommandDispatcher:
         result = self._build(
             source_path,
             output_path,
-            template_path=payload.get("templatePath"),
+            template_path=self._template_path(payload, source_path),
             on_progress=lambda stage: stages.append(stage.value),
         )
         return {

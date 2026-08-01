@@ -10,6 +10,12 @@ import type {
   WorkspaceActions,
   WorkspaceState,
 } from "../state/workspace";
+import {
+  diagnosticSummary,
+  selectVisibleDiagnostics,
+  type DiagnosticFilter,
+  type DiagnosticPresentation,
+} from "../state/diagnostics";
 import type { RuntimeKind } from "../transport/dto";
 
 export function OutlinePanel({ state }: { state: WorkspaceState }) {
@@ -112,7 +118,27 @@ export function PaperPreview({ state }: { state: WorkspaceState }) {
   );
 }
 
-export function DiagnosticsPanel({ state }: { state: WorkspaceState }) {
+const filterLabels: Array<[DiagnosticFilter, string]> = [
+  ["all", "全部"],
+  ["error", "错误"],
+  ["warning", "警告"],
+  ["info", "提示"],
+];
+
+export function DiagnosticsPanel({
+  state,
+  onFilterChanged,
+  onActivated,
+}: {
+  state: WorkspaceState;
+  onFilterChanged(filter: DiagnosticFilter): void;
+  onActivated(diagnostic: DiagnosticPresentation): void;
+}) {
+  const summary = diagnosticSummary(state.diagnostics);
+  const visible = selectVisibleDiagnostics(
+    state.diagnostics,
+    state.diagnosticFilter,
+  );
   return (
     <section
       className="panel diagnostics-panel"
@@ -125,12 +151,63 @@ export function DiagnosticsPanel({ state }: { state: WorkspaceState }) {
         kicker="VALIDATION"
         title="诊断结果"
       />
-      <div className="diagnostics-empty">
-        <span className="diagnostic-count">0</span>
-        <div>
-          <strong>尚无诊断</strong>
-          <p>保存文稿后运行验证，问题会显示 code、行号和 target。</p>
+      <div className="diagnostics-content">
+        <div className="diagnostic-filters" aria-label="诊断筛选">
+          {filterLabels.map(([filter, label]) => (
+            <button
+              key={filter}
+              type="button"
+              aria-pressed={state.diagnosticFilter === filter}
+              disabled={!state.source}
+              onClick={() => onFilterChanged(filter)}
+            >
+              {label} {summary[filter]}
+            </button>
+          ))}
         </div>
+        {state.diagnostics.length === 0 ? (
+          <div className="diagnostics-empty">
+            <span className="diagnostic-count">0</span>
+            <div>
+              <strong>尚无诊断</strong>
+              <p>保存文稿后运行验证，问题会显示 code、行号和 target。</p>
+            </div>
+          </div>
+        ) : (
+          <div className="diagnostic-list">
+            {visible.map((diagnostic) => (
+              <button
+                key={diagnostic.id}
+                type="button"
+                className="diagnostic-row"
+                data-severity={diagnostic.severity}
+                aria-pressed={state.activeDiagnosticId === diagnostic.id}
+                aria-label={`${
+                  diagnostic.line === null
+                    ? "无行号"
+                    : `第 ${diagnostic.line} 行`
+                } ${diagnostic.code} ${diagnostic.message}`}
+                onClick={() => onActivated(diagnostic)}
+              >
+                <span className="diagnostic-severity">
+                  {diagnostic.severity === "error"
+                    ? "错误"
+                    : diagnostic.severity === "warning"
+                      ? "警告"
+                      : "提示"}
+                </span>
+                <strong>{diagnostic.message}</strong>
+                <code>{diagnostic.code}</code>
+                <span>
+                  {diagnostic.line === null
+                    ? "无行号"
+                    : `第 ${diagnostic.line} 行`}
+                  {diagnostic.target ? ` · ${diagnostic.target}` : ""}
+                </span>
+              </button>
+            ))}
+          </div>
+        )}
       </div>
     </section>
   );

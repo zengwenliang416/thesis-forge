@@ -46,6 +46,7 @@ export interface CommandEnvelope {
       workspaceId?: string;
       fileName?: string;
     };
+    templateId?: string | null;
     templatePath?: string | null;
     text?: string;
   };
@@ -80,6 +81,60 @@ export interface CommandFailure {
 
 export type CommandResponse = CommandSuccess | CommandFailure;
 
+function isDetails(value: unknown): value is Record<string, string | number> {
+  return (
+    typeof value === "object" &&
+    value !== null &&
+    !Array.isArray(value) &&
+    Object.values(value).every(
+      (item) => typeof item === "string" || typeof item === "number",
+    )
+  );
+}
+
+function isSerializedDiagnostic(value: unknown): value is SerializedDiagnostic {
+  return (
+    typeof value === "object" &&
+    value !== null &&
+    !Array.isArray(value) &&
+    "severity" in value &&
+    ["info", "warning", "error"].includes(String(value.severity)) &&
+    "code" in value &&
+    typeof value.code === "string" &&
+    value.code.length > 0 &&
+    "message" in value &&
+    typeof value.message === "string" &&
+    "line" in value &&
+    (value.line === null ||
+      (typeof value.line === "number" &&
+        Number.isInteger(value.line) &&
+        value.line >= 1)) &&
+    "target" in value &&
+    (value.target === null || typeof value.target === "string") &&
+    "details" in value &&
+    isDetails(value.details)
+  );
+}
+
+export function readSerializedDiagnostics(
+  result: Record<string, unknown>,
+  required = false,
+): SerializedDiagnostic[] {
+  if (!("diagnostics" in result)) {
+    if (required) {
+      throw new Error("无效的 ThesisForge transport 响应");
+    }
+    return [];
+  }
+  if (
+    !Array.isArray(result.diagnostics) ||
+    !result.diagnostics.every(isSerializedDiagnostic)
+  ) {
+    throw new Error("无效的 ThesisForge transport 响应");
+  }
+  return result.diagnostics;
+}
+
 export function assertCommandResponse(value: unknown): CommandResponse {
   if (
     typeof value !== "object" ||
@@ -103,6 +158,7 @@ export function assertCommandResponse(value: unknown): CommandResponse {
     ) {
       throw new Error("无效的 ThesisForge transport 响应");
     }
+    readSerializedDiagnostics(value.result as Record<string, unknown>);
   } else if (
     !("error" in value) ||
     typeof value.error !== "object" ||

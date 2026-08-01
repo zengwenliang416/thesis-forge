@@ -1,4 +1,9 @@
 import type { OperationKind, SourceKind, SourceRef } from "../transport/dto";
+import {
+  hasFatalDiagnostics,
+  type DiagnosticFilter,
+  type DiagnosticPresentation,
+} from "./diagnostics";
 
 export type WorkspaceStatus =
   | "empty"
@@ -30,6 +35,10 @@ export interface WorkspaceState {
   dirty: boolean;
   operation: OperationToken | null;
   errorMessage: string | null;
+  templateId: string | null;
+  diagnostics: DiagnosticPresentation[];
+  diagnosticFilter: DiagnosticFilter;
+  activeDiagnosticId: string | null;
   mobilePanel: "outline" | "editor" | "preview" | "diagnostics";
   outlineWidth: number;
   previewWidth: number;
@@ -49,6 +58,18 @@ export interface WorkspaceActions {
 export type WorkspaceEvent =
   | { type: "sourceOpened"; source: WorkspaceSource; text: string }
   | { type: "textEdited"; text: string }
+  | { type: "templateSelected"; templateId: string | null }
+  | {
+      type: "diagnosticsLoaded";
+      operation: OperationToken;
+      diagnostics: DiagnosticPresentation[];
+    }
+  | { type: "diagnosticFilterChanged"; filter: DiagnosticFilter }
+  | {
+      type: "diagnosticActivated";
+      diagnosticId: string;
+      line: number | null;
+    }
   | { type: "operationStarted"; operation: OperationToken }
   | { type: "saveSucceeded"; operation: OperationToken }
   | { type: "operationSucceeded"; operation: OperationToken }
@@ -79,6 +100,10 @@ export function createInitialWorkspaceState(): WorkspaceState {
     dirty: false,
     operation: null,
     errorMessage: null,
+    templateId: null,
+    diagnostics: [],
+    diagnosticFilter: "all",
+    activeDiagnosticId: null,
     mobilePanel: "editor",
     outlineWidth: 260,
     previewWidth: 430,
@@ -107,6 +132,10 @@ export function reduceWorkspaceState(
         dirty: false,
         operation: null,
         errorMessage: null,
+        templateId: null,
+        diagnostics: [],
+        diagnosticFilter: "all",
+        activeDiagnosticId: null,
       };
     case "textEdited": {
       const dirty = event.text !== state.savedText;
@@ -119,6 +148,31 @@ export function reduceWorkspaceState(
         errorMessage: null,
       };
     }
+    case "templateSelected":
+      return {
+        ...state,
+        templateId: event.templateId,
+        diagnostics: [],
+        diagnosticFilter: "all",
+        activeDiagnosticId: null,
+      };
+    case "diagnosticsLoaded":
+      if (!isCurrent(state, event.operation)) {
+        return state;
+      }
+      return {
+        ...state,
+        diagnostics: event.diagnostics,
+        activeDiagnosticId: null,
+      };
+    case "diagnosticFilterChanged":
+      return { ...state, diagnosticFilter: event.filter };
+    case "diagnosticActivated":
+      return {
+        ...state,
+        activeDiagnosticId: event.diagnosticId,
+        mobilePanel: event.line === null ? state.mobilePanel : "editor",
+      };
     case "operationStarted":
       return {
         ...state,
@@ -228,7 +282,7 @@ export function selectWorkspaceActions(state: WorkspaceState): WorkspaceActions 
       canSaveAs: state.source?.kind === "desktop",
       canDownload: state.source?.kind.startsWith("web-") ?? false,
       canValidate: true,
-      canBuild: true,
+      canBuild: !hasFatalDiagnostics(state.diagnostics),
     };
   }
   if (

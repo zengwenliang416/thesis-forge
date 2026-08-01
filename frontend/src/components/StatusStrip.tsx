@@ -7,6 +7,7 @@ interface StatusStripProps {
   title: string;
   detail: string;
   onRecover(): void;
+  onTemplateSelected(templateId: string | null): void;
 }
 
 export function StatusStrip({
@@ -15,6 +16,7 @@ export function StatusStrip({
   title,
   detail,
   onRecover,
+  onTemplateSelected,
 }: StatusStripProps) {
   const recoverable = ["error", "permission", "canceled", "disabled"].includes(
     state.status,
@@ -38,7 +40,16 @@ export function StatusStrip({
           </button>
         ) : null}
         <BuildProgress state={state} />
-        <TemplateSelector disabled={!state.source} />
+        <TemplateSelector
+          value={state.templateId}
+          disabled={
+            !state.source ||
+            !state.source.reference ||
+            state.dirty ||
+            state.status === "loading"
+          }
+          onSelected={onTemplateSelected}
+        />
         <div className="runtime-chip">
           {runtime === "tauri" ? "本地桌面" : "Web 工作区"}
         </div>
@@ -64,12 +75,29 @@ export function BuildProgress({ state }: { state: WorkspaceState }) {
   );
 }
 
-export function TemplateSelector({ disabled }: { disabled: boolean }) {
+export function TemplateSelector({
+  value,
+  disabled,
+  onSelected,
+}: {
+  value: string | null;
+  disabled: boolean;
+  onSelected(templateId: string | null): void;
+}) {
   return (
     <label className="template-control">
       <span>学校模板</span>
-      <select aria-label="学校模板" disabled={disabled}>
-        <option>基础本科论文模板</option>
+      <select
+        aria-label="学校模板"
+        value={value ?? ""}
+        disabled={disabled}
+        onChange={(event) => onSelected(event.currentTarget.value || null)}
+      >
+        <option value="">使用文稿声明模板</option>
+        <option value="bachelor-base">基础本科论文模板</option>
+        <option value="example-university-2026">
+          示例大学 2026 模板
+        </option>
       </select>
     </label>
   );

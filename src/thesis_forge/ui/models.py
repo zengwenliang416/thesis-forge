@@ -5,6 +5,8 @@ from enum import StrEnum
 from pathlib import Path
 from typing import TYPE_CHECKING
 
+from thesis_forge.presentation import localized_issue_message
+
 if TYPE_CHECKING:
     from thesis_forge.application.contracts import BuildStage
     from thesis_forge.core.model import ValidationIssue
@@ -76,7 +78,7 @@ class DiagnosticViewModel:
         return cls(
             severity=issue.severity,
             code=issue.code,
-            message=issue.message,
+            message=localized_issue_message(issue),
             line=issue.line,
             target=issue.target,
             details=tuple(sorted(issue.details.items())),

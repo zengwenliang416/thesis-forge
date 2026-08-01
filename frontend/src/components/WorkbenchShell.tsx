@@ -8,6 +8,10 @@ import type {
   WorkspaceState,
 } from "../state/workspace";
 import type {
+  DiagnosticFilter,
+  DiagnosticPresentation,
+} from "../state/diagnostics";
+import type {
   RuntimeCapabilities,
 } from "../transport/WorkbenchTransport";
 import type { RuntimeKind } from "../transport/dto";
@@ -43,6 +47,9 @@ interface WorkbenchShellProps {
   onValidate(): void;
   onBuild(): void;
   onRecover(): void;
+  onTemplateSelected(templateId: string | null): void;
+  onDiagnosticFilterChanged(filter: DiagnosticFilter): void;
+  onDiagnosticActivated(diagnostic: DiagnosticPresentation): void;
   onEdit(text: string): void;
   onMobilePanelSelected(panel: WorkspaceState["mobilePanel"]): void;
   onPanelsResized(outlineWidth: number, previewWidth: number): void;
@@ -67,6 +74,9 @@ export function WorkbenchShell({
   onValidate,
   onBuild,
   onRecover,
+  onTemplateSelected,
+  onDiagnosticFilterChanged,
+  onDiagnosticActivated,
   onEdit,
   onMobilePanelSelected,
   onPanelsResized,
@@ -100,6 +110,7 @@ export function WorkbenchShell({
         title={statusTitle}
         detail={statusDetail}
         onRecover={onRecover}
+        onTemplateSelected={onTemplateSelected}
       />
       <nav className="mobile-tabs" role="tablist" aria-label="工作台面板">
         {panels.map((panel) => (
@@ -143,7 +154,11 @@ export function WorkbenchShell({
           }
         >
           <PaperPreview state={state} />
-          <DiagnosticsPanel state={state} />
+          <DiagnosticsPanel
+            state={state}
+            onFilterChanged={onDiagnosticFilterChanged}
+            onActivated={onDiagnosticActivated}
+          />
         </section>
       </main>
       <OutputFeedback runtime={runtime} capabilities={capabilities} />

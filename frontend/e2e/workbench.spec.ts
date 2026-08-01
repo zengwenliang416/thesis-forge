@@ -90,6 +90,7 @@ test("opens, edits, explicitly saves, refreshes, and builds through HTTP", async
   await page.route("**/api/v1/dispatch", async (route) => {
     const request = route.request().postDataJSON() as Record<string, unknown>;
     operations.push(request);
+    const result = request.operation === "validate" ? { diagnostics: [] } : {};
     await route.fulfill({
       status: 200,
       contentType: "application/json",
@@ -97,7 +98,7 @@ test("opens, edits, explicitly saves, refreshes, and builds through HTTP", async
         protocol: "thesisforge.workbench.v1",
         requestId: request.requestId,
         ok: true,
-        result: {},
+        result,
       }),
     });
   });
@@ -144,6 +145,86 @@ test("opens, edits, explicitly saves, refreshes, and builds through HTTP", async
         workspaceId,
         fileName: "thesis.docx",
       },
+    },
+  });
+});
+
+test("selects a template and blocks build on an activated fatal diagnostic", async ({
+  page,
+}, testInfo) => {
+  test.skip(testInfo.project.name !== "desktop-chromium");
+  const operations: Array<Record<string, unknown>> = [];
+  await page.route("**/api/v1/workspaces", async (route) => {
+    await route.fulfill({
+      status: 201,
+      contentType: "application/json",
+      body: JSON.stringify({
+        protocol: "thesisforge.workbench.v1",
+        ok: true,
+        source: {
+          kind: "web-workspace",
+          workspaceId,
+          fileName: "thesis.md",
+        },
+        text: "# 绪论\n",
+      }),
+    });
+  });
+  await page.route("**/api/v1/dispatch", async (route) => {
+    const request = route.request().postDataJSON() as Record<string, unknown>;
+    operations.push(request);
+    const selectedTemplate =
+      (request.payload as { templateId?: string | null }).templateId ??
+      null;
+    const diagnostics =
+      request.operation === "validate" && selectedTemplate
+        ? [
+            {
+              severity: "error",
+              code: "missing-template-style",
+              message: "Template does not define a required semantic style",
+              line: 1,
+              target: "heading.level1",
+              details: {},
+            },
+          ]
+        : [];
+    await route.fulfill({
+      status: 200,
+      contentType: "application/json",
+      body: JSON.stringify({
+        protocol: "thesisforge.workbench.v1",
+        requestId: request.requestId,
+        ok: true,
+        result: request.operation === "validate" ? { diagnostics } : {},
+      }),
+    });
+  });
+  await page.goto("/");
+
+  await page.locator('input[type="file"]').setInputFiles({
+    name: "thesis.md",
+    mimeType: "text/markdown",
+    buffer: Buffer.from("# 绪论\n"),
+  });
+  await page
+    .getByLabel("学校模板")
+    .selectOption("example-university-2026");
+
+  await expect(page.getByText("模板未定义所需样式：heading.level1")).toBeVisible();
+  await expect(page.getByRole("button", { name: "构建 DOCX" })).toBeDisabled();
+  await expect(page.getByText("存在 1 个错误诊断，构建已禁用。")).toBeVisible();
+  const diagnostic = page.getByRole("button", { name: /第 1 行/ });
+  await diagnostic.focus();
+  await page.keyboard.press("Enter");
+  await expect(
+    page.getByRole("textbox", { name: "Markdown 文稿内容" }),
+  ).toBeFocused();
+
+  expect(operations.at(-1)).toMatchObject({
+    operation: "validate",
+    payload: {
+      templateId: "example-university-2026",
     },
   });
 });

@@ -1,0 +1,122 @@
+{
+  "schemaVersion": 1,
+  "cases": [
+    {
+      "input": {
+        "severity": "error",
+        "code": "required-metadata",
+        "message": "Required metadata is missing",
+        "line": null,
+        "target": "author.name",
+        "details": {
+          "path": "author.name"
+        }
+      },
+      "expectedMessage": "缺少必填元数据：author.name"
+    },
+    {
+      "input": {
+        "severity": "warning",
+        "code": "heading-level-jump",
+        "message": "Heading level jumps",
+        "line": 8,
+        "target": "H1->H3",
+        "details": {
+          "previous_level": 1,
+          "current_level": 3
+        }
+      },
+      "expectedMessage": "标题层级从 H1 跳到 H3"
+    },
+    {
+      "input": {
+        "severity": "error",
+        "code": "invalid-template",
+        "message": "Template selection or validation failed",
+        "line": null,
+        "target": "page.margin.top",
+        "details": {
+          "path": "school.yaml",
+          "field": "page.margin.top",
+          "problem": "Input should be a valid length"
+        }
+      },
+      "expectedMessage": "模板无效：school.yaml：page.margin.top：Input should be a valid length"
+    },
+    {
+      "input": {
+        "severity": "error",
+        "code": "missing-template-style",
+        "message": "Template does not define a required semantic style",
+        "line": 12,
+        "target": "heading.level2",
+        "details": {}
+      },
+      "expectedMessage": "模板未定义所需样式：heading.level2"
+    },
+    {
+      "input": {
+        "severity": "error",
+        "code": "missing-template",
+        "message": "Template selection or validation failed",
+        "line": null,
+        "target": "school-2026",
+        "details": {
+          "selector": "school-2026"
+        }
+      },
+      "expectedMessage": "找不到模板：school-2026"
+    },
+    {
+      "input": {
+        "severity": "error",
+        "code": "ambiguous-template",
+        "message": "Template selection or validation failed",
+        "line": null,
+        "target": "school-2026",
+        "details": {
+          "template_id": "school-2026",
+          "paths": "a.yaml, b.yaml"
+        }
+      },
+      "expectedMessage": "模板 ID 不唯一：school-2026：a.yaml, b.yaml"
+    },
+    {
+      "input": {
+        "severity": "error",
+        "code": "invalid-bibliography",
+        "message": "Configured bibliography data is invalid",
+        "line": 6,
+        "target": "references.bib",
+        "details": {
+          "problem": "unexpected end of file"
+        }
+      },
+      "expectedMessage": "参考文献数据无效：references.bib：unexpected end of file"
+    },
+    {
+      "input": {
+        "severity": "error",
+        "code": "resource-path-escape",
+        "message": "Local resource path escapes the configured resource root",
+        "line": 9,
+        "target": "../outside.png",
+        "details": {
+          "resource_type": "image"
+        }
+      },
+      "expectedMessage": "图片路径越出论文资源目录：../outside.png"
+    },
+    {
+      "input": {
+        "severity": "info",
+        "code": "future-diagnostic",
+        "message": "Keep the original message",
+        "line": null,
+        "target": null,
+        "details": {}
+      },
+      "expectedMessage": "Keep the original message"
+    }
+  ]
+}

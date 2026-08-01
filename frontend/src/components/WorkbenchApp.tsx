@@ -9,9 +9,15 @@ import {
   selectWorkspaceActions,
   type WorkspaceState,
 } from "../state/workspace";
+import {
+  diagnosticSummary,
+  presentDiagnostics,
+} from "../state/diagnostics";
+import { lineSelectionRange } from "../state/editorNavigation";
 import type { WorkbenchTransport } from "../transport/WorkbenchTransport";
 import {
   PROTOCOL_VERSION,
+  readSerializedDiagnostics,
   type CommandEnvelope,
   type OperationKind,
 } from "../transport/dto";
@@ -41,7 +47,16 @@ export function WorkbenchApp({
   const editorRef = useRef<HTMLTextAreaElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const actions = selectWorkspaceActions(state);
-  const [statusTitle, statusDetail] = statusCopy[state.status];
+  const [defaultStatusTitle, defaultStatusDetail] = statusCopy[state.status];
+  const fatalDiagnosticCount = diagnosticSummary(state.diagnostics).error;
+  const statusTitle =
+    state.status === "populated" && fatalDiagnosticCount > 0
+      ? "构建已禁用"
+      : defaultStatusTitle;
+  const statusDetail =
+    state.status === "populated" && fatalDiagnosticCount > 0
+      ? `存在 ${fatalDiagnosticCount} 个错误诊断，构建已禁用。`
+      : defaultStatusDetail;
   const generationRef = useRef(0);
 
   const nextOperation = (kind: OperationKind) => {
@@ -90,6 +105,7 @@ export function WorkbenchApp({
 
   const refreshSource = async (
     source: NonNullable<WorkspaceState["source"]>["reference"],
+    templateId = state.templateId,
   ) => {
     if (!source) {
       return;
@@ -99,11 +115,23 @@ export function WorkbenchApp({
     try {
       for (const kind of ["inspect", "validate"] as const) {
         const response = await transport.dispatch(
-          requestFor(kind, operation.generation, { source }),
+          requestFor(kind, operation.generation, {
+            source,
+            ...(kind === "validate" ? { templateId } : {}),
+          }),
         );
         if (!response.ok) {
           failOperation(operation, response.error);
           return;
+        }
+        if (kind === "validate") {
+          dispatch({
+            type: "diagnosticsLoaded",
+            operation,
+            diagnostics: presentDiagnostics(
+              readSerializedDiagnostics(response.result, true),
+            ),
+          });
         }
       }
       dispatch({ type: "operationSucceeded", operation });
@@ -112,7 +140,10 @@ export function WorkbenchApp({
     }
   };
 
-  const runOperation = async (kind: "validate" | "build") => {
+  const runOperation = async (
+    kind: "validate" | "build",
+    templateId = state.templateId,
+  ) => {
     const source = state.source?.reference;
     if (!source) {
       return;
@@ -133,13 +164,23 @@ export function WorkbenchApp({
             }
           : undefined;
     const request = requestFor(kind, operation.generation, {
-        source,
-        ...(output ? { output } : {}),
+      source,
+      templateId,
+      ...(output ? { output } : {}),
     });
     dispatch({ type: "operationStarted", operation });
     try {
       const response = await transport.dispatch(request);
       if (response.ok) {
+        if (kind === "validate") {
+          dispatch({
+            type: "diagnosticsLoaded",
+            operation,
+            diagnostics: presentDiagnostics(
+              readSerializedDiagnostics(response.result, true),
+            ),
+          });
+        }
         dispatch({ type: "operationSucceeded", operation });
       } else {
         dispatch({
@@ -231,7 +272,7 @@ export function WorkbenchApp({
       },
       text: opened.text,
     });
-    await refreshSource(opened.source);
+    await refreshSource(opened.source, null);
   };
 
   const openFile = async (file: File) => {
@@ -277,6 +318,34 @@ export function WorkbenchApp({
     dispatch({ type: "recovered" });
   };
 
+  const selectTemplate = (templateId: string | null) => {
+    const source = state.source?.reference;
+    if (!source || state.dirty) {
+      return;
+    }
+    dispatch({ type: "templateSelected", templateId });
+    void runOperation("validate", templateId);
+  };
+
+  const activateDiagnostic = (
+    diagnostic: WorkspaceState["diagnostics"][number],
+  ) => {
+    dispatch({
+      type: "diagnosticActivated",
+      diagnosticId: diagnostic.id,
+      line: diagnostic.line,
+    });
+    if (diagnostic.line === null) {
+      return;
+    }
+    const range = lineSelectionRange(state.editorText, diagnostic.line);
+    if (!range) {
+      return;
+    }
+    editorRef.current?.focus();
+    editorRef.current?.setSelectionRange(range.start, range.end);
+  };
+
   const resizeFromPointer = (
     side: "outline" | "preview",
     event: ReactPointerEvent<HTMLDivElement>,
@@ -318,6 +387,11 @@ export function WorkbenchApp({
       onValidate={() => void runOperation("validate")}
       onBuild={() => void runOperation("build")}
       onRecover={recoverWorkspace}
+      onTemplateSelected={selectTemplate}
+      onDiagnosticFilterChanged={(filter) =>
+        dispatch({ type: "diagnosticFilterChanged", filter })
+      }
+      onDiagnosticActivated={activateDiagnostic}
       onEdit={(text) => dispatch({ type: "textEdited", text })}
       onMobilePanelSelected={(panel) =>
         dispatch({ type: "mobilePanelSelected", panel })

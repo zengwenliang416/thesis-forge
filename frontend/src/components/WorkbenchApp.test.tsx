@@ -143,6 +143,7 @@ describe("WorkbenchApp", () => {
       },
       savedText: "# 绪论\n",
       editorText: "# 绪论\n",
+      templateId: "bachelor-base",
     };
 
     render(
@@ -159,6 +160,7 @@ describe("WorkbenchApp", () => {
         operation: "build",
         payload: expect.objectContaining({
           source: initialState.source.reference,
+          templateId: "bachelor-base",
         }),
       }),
     );
@@ -455,7 +457,7 @@ describe("WorkbenchApp", () => {
         protocol: PROTOCOL_VERSION,
         requestId: "validate-3",
         ok: true,
-        result: {},
+        result: { diagnostics: [] },
       });
     const desktopTransport: WorkbenchTransport = {
       runtime: "tauri",
@@ -507,5 +509,301 @@ describe("WorkbenchApp", () => {
       expect.objectContaining({ operation: "validate" }),
     );
     expect(screen.getByRole("button", { name: "构建 DOCX" })).toBeEnabled();
+  });
+
+  it("revalidates the saved source with the selected school template", async () => {
+    const user = userEvent.setup();
+    const dispatchCommand = vi.fn().mockResolvedValue({
+      protocol: PROTOCOL_VERSION,
+      requestId: "validate-1",
+      ok: true,
+      result: { diagnostics: [] },
+    });
+    const desktopTransport: WorkbenchTransport = {
+      runtime: "tauri",
+      capabilities: {
+        nativePaths: true,
+        saveWorkspace: false,
+        saveAs: true,
+        download: false,
+      },
+      openSource: async () => null,
+      dispatch: dispatchCommand,
+    };
+    const initialState = {
+      ...createInitialWorkspaceState(),
+      status: "populated" as const,
+      source: {
+        kind: "desktop" as const,
+        name: "thesis.md",
+        writable: true,
+        reference: {
+          kind: "desktop" as const,
+          path: "/Users/test/thesis.md",
+          fileName: "thesis.md",
+        },
+      },
+      savedText: "# 绪论\n",
+      editorText: "# 绪论\n",
+    };
+
+    render(
+      <WorkbenchApp
+        transport={desktopTransport}
+        initialState={initialState}
+      />,
+    );
+    await user.selectOptions(
+      screen.getByLabelText("学校模板"),
+      "example-university-2026",
+    );
+
+    expect(dispatchCommand).toHaveBeenCalledWith(
+      expect.objectContaining({
+        operation: "validate",
+        payload: {
+          source: initialState.source.reference,
+          templateId: "example-university-2026",
+        },
+      }),
+    );
+  });
+
+  it("filters diagnostics and activates a source-linked editor line", async () => {
+    const user = userEvent.setup();
+    const initialState = {
+      ...createInitialWorkspaceState(),
+      status: "populated" as const,
+      source: {
+        kind: "desktop" as const,
+        name: "thesis.md",
+        writable: true,
+        reference: {
+          kind: "desktop" as const,
+          path: "/Users/test/thesis.md",
+          fileName: "thesis.md",
+        },
+      },
+      savedText: "# 第一行\n第二行\n第三行\n",
+      editorText: "# 第一行\n第二行\n第三行\n",
+      diagnostics: [
+        {
+          id: "missing-reference:2:fig:missing:0",
+          severity: "error" as const,
+          code: "missing-reference",
+          message: "引用目标不存在：fig:missing",
+          line: 2,
+          target: "fig:missing",
+          details: {},
+        },
+        {
+          id: "heading-level-jump:3:H1->H3:1",
+          severity: "warning" as const,
+          code: "heading-level-jump",
+          message: "标题层级从 H1 跳到 H3",
+          line: 3,
+          target: "H1->H3",
+          details: {},
+        },
+      ],
+      diagnosticFilter: "all" as const,
+      activeDiagnosticId: null,
+    };
+
+    render(<WorkbenchApp transport={transport} initialState={initialState} />);
+
+    expect(screen.getByRole("button", { name: "全部 2" })).toBeVisible();
+    expect(screen.getByRole("button", { name: "错误 1" })).toBeVisible();
+    expect(screen.getByRole("button", { name: "警告 1" })).toBeVisible();
+    expect(screen.getByRole("button", { name: "构建 DOCX" })).toBeDisabled();
+    expect(screen.getByText("存在 1 个错误诊断，构建已禁用。")).toBeVisible();
+
+    await user.click(screen.getByRole("button", { name: "警告 1" }));
+    expect(screen.queryByText("引用目标不存在：fig:missing")).not.toBeInTheDocument();
+    expect(screen.getByText("标题层级从 H1 跳到 H3")).toBeVisible();
+
+    const diagnostic = screen.getByRole("button", { name: /第 3 行/ });
+    diagnostic.focus();
+    await user.keyboard("{Enter}");
+    const editor = screen.getByRole("textbox", {
+      name: "Markdown 文稿内容",
+    }) as HTMLTextAreaElement;
+    expect(editor).toHaveFocus();
+    expect(editor.selectionStart).toBe(10);
+    expect(editor.selectionEnd).toBe(13);
+  });
+
+  it("activates a source-linked diagnostic with a pointer click", async () => {
+    const user = userEvent.setup();
+    const initialState = {
+      ...createInitialWorkspaceState(),
+      status: "populated" as const,
+      source: {
+        kind: "desktop" as const,
+        name: "thesis.md",
+        writable: true,
+        reference: {
+          kind: "desktop" as const,
+          path: "/Users/test/thesis.md",
+          fileName: "thesis.md",
+        },
+      },
+      savedText: "# 第一行\n第二行\n第三行\n",
+      editorText: "# 第一行\n第二行\n第三行\n",
+      diagnostics: [
+        {
+          id: "heading-level-jump:3:H1->H3:0",
+          severity: "warning" as const,
+          code: "heading-level-jump",
+          message: "标题层级从 H1 跳到 H3",
+          line: 3,
+          target: "H1->H3",
+          details: {},
+        },
+      ],
+    };
+
+    render(<WorkbenchApp transport={transport} initialState={initialState} />);
+    await user.click(screen.getByRole("button", { name: /第 3 行/ }));
+
+    const editor = screen.getByRole("textbox", {
+      name: "Markdown 文稿内容",
+    }) as HTMLTextAreaElement;
+    expect(editor).toHaveFocus();
+    expect(editor.selectionStart).toBe(10);
+    expect(editor.selectionEnd).toBe(13);
+  });
+
+  it("renders disabled diagnostic filters until a source is open", () => {
+    render(
+      <WorkbenchApp
+        transport={transport}
+        initialState={createInitialWorkspaceState()}
+      />,
+    );
+
+    for (const name of ["全部 0", "错误 0", "警告 0", "提示 0"]) {
+      expect(screen.getByRole("button", { name })).toBeDisabled();
+    }
+  });
+
+  it("activates a no-line diagnostic without moving editor focus", async () => {
+    const user = userEvent.setup();
+    const initialState = {
+      ...createInitialWorkspaceState(),
+      status: "populated" as const,
+      source: {
+        kind: "desktop" as const,
+        name: "thesis.md",
+        writable: true,
+        reference: {
+          kind: "desktop" as const,
+          path: "/Users/test/thesis.md",
+          fileName: "thesis.md",
+        },
+      },
+      savedText: "# 绪论\n",
+      editorText: "# 绪论\n",
+      diagnostics: [
+        {
+          id: "missing-template:0:template:0",
+          severity: "error" as const,
+          code: "missing-template",
+          message: "找不到模板：template",
+          line: null,
+          target: "template",
+          details: {},
+        },
+      ],
+      diagnosticFilter: "all" as const,
+      activeDiagnosticId: null,
+    };
+
+    render(<WorkbenchApp transport={transport} initialState={initialState} />);
+    const diagnostic = screen.getByRole("button", { name: /无行号/ });
+    diagnostic.focus();
+    await user.keyboard("{Enter}");
+
+    expect(diagnostic).toHaveAttribute("aria-pressed", "true");
+    expect(
+      screen.getByRole("textbox", { name: "Markdown 文稿内容" }),
+    ).not.toHaveFocus();
+  });
+
+  it("does not carry an old explicit template into a newly opened source", async () => {
+    const user = userEvent.setup();
+    const dispatchCommand = vi
+      .fn()
+      .mockResolvedValueOnce({
+        protocol: PROTOCOL_VERSION,
+        requestId: "inspect-1",
+        ok: true,
+        result: { outline: [] },
+      })
+      .mockResolvedValueOnce({
+        protocol: PROTOCOL_VERSION,
+        requestId: "validate-1",
+        ok: true,
+        result: { diagnostics: [] },
+      });
+    const desktopTransport: WorkbenchTransport = {
+      runtime: "tauri",
+      capabilities: {
+        nativePaths: true,
+        saveWorkspace: false,
+        saveAs: true,
+        download: false,
+      },
+      openSource: async () => ({
+        source: {
+          kind: "desktop",
+          path: "/Users/test/new.md",
+          fileName: "new.md",
+        },
+        text: "# 新文稿\n",
+      }),
+      dispatch: dispatchCommand,
+    };
+    const initialState = {
+      ...createInitialWorkspaceState(),
+      status: "populated" as const,
+      source: {
+        kind: "desktop" as const,
+        name: "old.md",
+        writable: true,
+        reference: {
+          kind: "desktop" as const,
+          path: "/Users/test/old.md",
+          fileName: "old.md",
+        },
+      },
+      savedText: "# 旧文稿\n",
+      editorText: "# 旧文稿\n",
+      templateId: "bachelor-base",
+    };
+
+    render(
+      <WorkbenchApp
+        transport={desktopTransport}
+        initialState={initialState}
+      />,
+    );
+    await user.click(screen.getByRole("button", { name: "打开 Markdown 文稿" }));
+
+    expect(dispatchCommand).toHaveBeenNthCalledWith(
+      2,
+      expect.objectContaining({
+        operation: "validate",
+        payload: {
+          source: {
+            kind: "desktop",
+            path: "/Users/test/new.md",
+            fileName: "new.md",
+          },
+          templateId: null,
+        },
+      }),
+    );
+    expect(screen.getByLabelText("学校模板")).toHaveValue("");
   });
 });

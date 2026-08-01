@@ -1,6 +1,7 @@
 import {
   assertCommandResponse,
   PROTOCOL_VERSION,
+  readSerializedDiagnostics,
   type CommandEnvelope,
   type CommandResponse,
 } from "./dto";
@@ -142,5 +143,31 @@ describe("runtime transports", () => {
         ok: false,
       }),
     ).toThrow("无效的 ThesisForge transport 响应");
+  });
+
+  it("rejects malformed serialized diagnostics", () => {
+    expect(() =>
+      assertCommandResponse({
+        protocol: PROTOCOL_VERSION,
+        requestId: "validate-1",
+        ok: true,
+        result: {
+          diagnostics: [
+            {
+              severity: "fatal",
+              code: "missing-template",
+              message: "missing",
+            },
+          ],
+        },
+      }),
+    ).toThrow("无效的 ThesisForge transport 响应");
+  });
+
+  it("requires diagnostics for validation result consumers", () => {
+    expect(() => readSerializedDiagnostics({}, true)).toThrow(
+      "无效的 ThesisForge transport 响应",
+    );
+    expect(readSerializedDiagnostics({ diagnostics: [] }, true)).toEqual([]);
   });
 });

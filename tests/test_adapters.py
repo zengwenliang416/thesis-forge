@@ -79,6 +79,62 @@ def _request(operation: str, source: Path) -> dict:
     }
 
 
+def _write_source(path: Path) -> None:
+    path.write_text(
+        """---
+thesis:
+  title: Template diagnostics
+author:
+  name: ThesisForge
+---
+
+# 绪论
+
+## 背景
+""",
+        encoding="utf-8",
+    )
+
+
+def _write_template(path: Path, *, include_level2: bool) -> None:
+    level2 = (
+        """
+  level2:
+    size: 14pt
+"""
+        if include_level2
+        else ""
+    )
+    path.write_text(
+        f"""id: test-template
+name: Test Template
+year: 2026
+page:
+  size: A4
+  orientation: portrait
+  margin:
+    top: 25mm
+    bottom: 25mm
+    left: 30mm
+    right: 25mm
+body:
+  font:
+    east_asia: 宋体
+    latin: Times New Roman
+  size: 12pt
+  alignment: justify
+  first_line_indent: 2em
+  line_spacing:
+    type: fixed
+    value: 20pt
+heading:
+  level1:
+    size: 16pt
+{level2}""",
+        encoding="utf-8",
+    )
+
+
 def test_dispatcher_serializes_inspection_and_validation_without_python_objects(
     tmp_path: Path,
 ):
@@ -118,6 +174,101 @@ def test_dispatcher_serializes_inspection_and_validation_without_python_objects(
     ]
     json.dumps(inspection)
     json.dumps(validation)
+
+
+def test_dispatcher_validates_with_a_selected_template_path(tmp_path: Path):
+    source = tmp_path / "thesis.md"
+    template = tmp_path / "school.yaml"
+    _write_source(source)
+    _write_template(template, include_level2=True)
+    request = _request("validate", source)
+    request["payload"]["templatePath"] = str(template)
+
+    response = WorkbenchCommandDispatcher(runtime=DesktopRuntime()).dispatch(request)
+
+    assert response["ok"] is True
+    template_codes = {
+        diagnostic["code"]
+        for diagnostic in response["result"]["diagnostics"]
+        if "template" in diagnostic["code"]
+    }
+    assert template_codes == set()
+
+
+def test_dispatcher_resolves_a_stable_template_id_without_using_process_cwd(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+):
+    source = tmp_path / "thesis.md"
+    _write_source(source)
+    monkeypatch.chdir(tmp_path)
+    request = _request("validate", source)
+    request["payload"]["templateId"] = "bachelor-base"
+
+    response = WorkbenchCommandDispatcher(runtime=DesktopRuntime()).dispatch(request)
+
+    assert response["ok"] is True
+    assert all(
+        diagnostic["code"]
+        not in {"missing-template", "ambiguous-template", "invalid-template"}
+        for diagnostic in response["result"]["diagnostics"]
+    )
+
+
+def test_dispatcher_rejects_conflicting_template_selectors(tmp_path: Path):
+    source = tmp_path / "thesis.md"
+    template = tmp_path / "school.yaml"
+    _write_source(source)
+    _write_template(template, include_level2=True)
+    request = _request("validate", source)
+    request["payload"]["templateId"] = "bachelor-base"
+    request["payload"]["templatePath"] = str(template)
+
+    response = WorkbenchCommandDispatcher(runtime=DesktopRuntime()).dispatch(request)
+
+    assert response["ok"] is False
+    assert response["error"] == {
+        "kind": "request",
+        "message": "templateId and templatePath cannot be used together",
+    }
+
+
+@pytest.mark.parametrize(
+    ("template_kind", "expected_code"),
+    [
+        ("missing", "missing-template"),
+        ("malformed", "invalid-template"),
+        ("incompatible", "missing-template-style"),
+    ],
+)
+def test_dispatcher_surfaces_structured_selected_template_failures(
+    tmp_path: Path,
+    template_kind: str,
+    expected_code: str,
+):
+    source = tmp_path / "thesis.md"
+    template = tmp_path / "school.yaml"
+    _write_source(source)
+    if template_kind == "malformed":
+        template.write_text("id: broken\npage: [\n", encoding="utf-8")
+    elif template_kind == "incompatible":
+        _write_template(template, include_level2=False)
+
+    request = _request("validate", source)
+    request["payload"]["templatePath"] = str(template)
+    response = WorkbenchCommandDispatcher(runtime=DesktopRuntime()).dispatch(request)
+
+    assert response["ok"] is True
+    diagnostic = next(
+        item
+        for item in response["result"]["diagnostics"]
+        if item["code"] == expected_code
+    )
+    assert diagnostic["severity"] == "error"
+    assert diagnostic["target"]
+    assert isinstance(diagnostic["details"], dict)
+    if template_kind != "incompatible":
+        assert diagnostic["details"]
 
 
 def test_http_and_sidecar_use_the_same_versioned_command_contract(tmp_path: Path):

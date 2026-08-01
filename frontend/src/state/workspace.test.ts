@@ -74,4 +74,122 @@ describe("workspace state parity", () => {
       canBuild: false,
     });
   });
+
+  it("stores template and diagnostics while blocking only fatal builds", () => {
+    let state: WorkspaceState = {
+      ...createInitialWorkspaceState(),
+      status: "populated" as const,
+      source: {
+        kind: "desktop" as const,
+        name: "thesis.md",
+        writable: true,
+      },
+    };
+
+    state = reduceWorkspaceState(
+      state,
+      {
+        type: "templateSelected",
+        templateId: "bachelor-base",
+      } as unknown as WorkspaceEvent,
+    );
+    state = reduceWorkspaceState(
+      state,
+      {
+        type: "operationStarted",
+        operation: { kind: "validate", generation: 1 },
+      },
+    );
+    state = reduceWorkspaceState(
+      state,
+      {
+        type: "diagnosticsLoaded",
+        operation: { kind: "validate", generation: 1 },
+        diagnostics: [
+          {
+            id: "missing-template:0:template:0",
+            severity: "error",
+            code: "missing-template",
+            message: "找不到模板：template",
+            line: null,
+            target: "template",
+            details: {},
+          },
+        ],
+      },
+    );
+    state = reduceWorkspaceState(
+      state,
+      {
+        type: "operationSucceeded",
+        operation: { kind: "validate", generation: 1 },
+      },
+    );
+
+    expect(state.templateId).toBe("bachelor-base");
+    expect(state.diagnostics).toHaveLength(1);
+    expect(selectWorkspaceActions(state).canBuild).toBe(false);
+
+    state = reduceWorkspaceState(
+      state,
+      {
+        type: "operationStarted",
+        operation: { kind: "validate", generation: 2 },
+      },
+    );
+    state = reduceWorkspaceState(
+      state,
+      {
+        type: "diagnosticsLoaded",
+        operation: { kind: "validate", generation: 2 },
+        diagnostics: [
+          {
+            id: "heading-level-jump:8:H1->H3:0",
+            severity: "warning",
+            code: "heading-level-jump",
+            message: "标题层级从 H1 跳到 H3",
+            line: 8,
+            target: "H1->H3",
+            details: {},
+          },
+        ],
+      },
+    );
+    state = reduceWorkspaceState(
+      state,
+      {
+        type: "operationSucceeded",
+        operation: { kind: "validate", generation: 2 },
+      },
+    );
+
+    expect(selectWorkspaceActions(state).canBuild).toBe(true);
+  });
+
+  it("ignores diagnostics from an older validation generation", () => {
+    let state: WorkspaceState = {
+      ...createInitialWorkspaceState(),
+      status: "loading" as const,
+      operation: { kind: "validate" as const, generation: 2 },
+    };
+
+    state = reduceWorkspaceState(state, {
+      type: "diagnosticsLoaded",
+      operation: { kind: "validate", generation: 1 },
+      diagnostics: [
+        {
+          id: "stale",
+          severity: "error",
+          code: "missing-template",
+          message: "stale",
+          line: null,
+          target: "template",
+          details: {},
+        },
+      ],
+    });
+
+    expect(state.diagnostics).toEqual([]);
+    expect(state.operation).toEqual({ kind: "validate", generation: 2 });
+  });
 });
