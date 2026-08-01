@@ -1,0 +1,121 @@
+{
+  "protocol": "thesisforge.workbench.v1",
+  "cases": [
+    {
+      "name": "desktop-source-lifecycle",
+      "steps": [
+        {
+          "event": {
+            "type": "sourceOpened",
+            "source": {
+              "kind": "desktop",
+              "name": "thesis.md",
+              "writable": true
+            },
+            "text": "# Saved\n"
+          },
+          "expected": {
+            "status": "populated",
+            "sourceKind": "desktop",
+            "sourceName": "thesis.md",
+            "savedText": "# Saved\n",
+            "editorText": "# Saved\n",
+            "dirty": false,
+            "operation": null,
+            "actions": {
+              "canOpen": true,
+              "canEdit": true,
+              "canSave": false,
+              "canSaveAs": true,
+              "canDownload": false,
+              "canValidate": true,
+              "canBuild": true,
+              "canCancel": false
+            }
+          }
+        },
+        {
+          "event": {
+            "type": "textEdited",
+            "text": "# Changed\n"
+          },
+          "expected": {
+            "status": "dirty",
+            "sourceKind": "desktop",
+            "sourceName": "thesis.md",
+            "savedText": "# Saved\n",
+            "editorText": "# Changed\n",
+            "dirty": true,
+            "operation": null,
+            "actions": {
+              "canOpen": true,
+              "canEdit": true,
+              "canSave": true,
+              "canSaveAs": true,
+              "canDownload": false,
+              "canValidate": false,
+              "canBuild": false,
+              "canCancel": false
+            }
+          }
+        },
+        {
+          "event": {
+            "type": "operationStarted",
+            "operation": {
+              "kind": "save",
+              "generation": 1
+            }
+          },
+          "expected": {
+            "status": "loading",
+            "sourceKind": "desktop",
+            "sourceName": "thesis.md",
+            "savedText": "# Saved\n",
+            "editorText": "# Changed\n",
+            "dirty": true,
+            "operation": "save",
+            "actions": {
+              "canOpen": false,
+              "canEdit": false,
+              "canSave": false,
+              "canSaveAs": false,
+              "canDownload": false,
+              "canValidate": false,
+              "canBuild": false,
+              "canCancel": false
+            }
+          }
+        },
+        {
+          "event": {
+            "type": "saveSucceeded",
+            "operation": {
+              "kind": "save",
+              "generation": 1
+            }
+          },
+          "expected": {
+            "status": "populated",
+            "sourceKind": "desktop",
+            "sourceName": "thesis.md",
+            "savedText": "# Changed\n",
+            "editorText": "# Changed\n",
+            "dirty": false,
+            "operation": null,
+            "actions": {
+              "canOpen": true,
+              "canEdit": true,
+              "canSave": false,
+              "canSaveAs": true,
+              "canDownload": false,
+              "canValidate": true,
+              "canBuild": true,
+              "canCancel": false
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
