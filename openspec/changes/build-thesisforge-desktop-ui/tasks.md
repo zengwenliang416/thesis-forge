@@ -77,14 +77,14 @@
 
 用户结果：构建期间界面保持响应，阶段可见，可安全取消；任何失败或过期结果都不会覆盖已有有效 DOCX。
 
-- [ ] 7.1 Add a backward-compatible application cancellation predicate checked at stage boundaries and before final replacement.
-- [ ] 7.2 Implement cancellable Web HTTP/event-stream and Tauri command/sidecar runners behind one frontend transport contract.
-- [ ] 7.3 Display ordered parse, validate, compile, render, and finalize progress.
-- [ ] 7.4 Implement cooperative cancellation, repeated-click suppression, stale completion suppression, and retry.
-- [ ] 7.5 Display successful output path and actionable validation, permission, render, finalize, and cancellation failures.
-- [ ] 7.6 Add tests for every cancellation boundary, callback failure, renderer failure, replace failure, stale result, and prior-output preservation.
-- [ ] 7.7 Add browser and Tauri E2E tests for successful build, cancel, retry, stale completion, and recovery.
-- [ ] 7.8 Record red-green evidence, spec review, quality review, and extraction decision for slice 007.
+- [x] 7.1 Add a backward-compatible application cancellation predicate checked at stage boundaries and before final replacement.
+- [x] 7.2 Implement cancellable Web HTTP/event-stream and Tauri command/sidecar runners behind one frontend transport contract.
+- [x] 7.3 Display ordered parse, validate, compile, render, and finalize progress.
+- [x] 7.4 Implement cooperative cancellation, repeated-click suppression, stale completion suppression, and retry.
+- [x] 7.5 Display successful output path and actionable validation, permission, render, finalize, and cancellation failures.
+- [x] 7.6 Add tests for every cancellation boundary, callback failure, renderer failure, replace failure, stale result, and prior-output preservation.
+- [x] 7.7 Add browser and Tauri E2E tests for successful build, cancel, retry, stale completion, and recovery.
+- [x] 7.8 Record red-green evidence, spec review, quality review, and extraction decision for slice 007.
 
 ## 8. Complete Web, macOS, And Windows Acceptance
 

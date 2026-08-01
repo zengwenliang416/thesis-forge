@@ -1,6 +1,6 @@
 {
   "schema": "specnav.codegraph.evidence_index.v1",
-  "generated_at": "2026-08-01T06:50:49.891Z",
+  "generated_at": "2026-08-01T07:35:10.408Z",
   "active_change": "build-thesisforge-desktop-ui",
   "source_raw": "openspec/changes/build-thesisforge-desktop-ui/codegraph/evidence.jsonl",
   "by_claim": {
@@ -138,11 +138,29 @@
       ],
       "symbols": [],
       "blockers": []
+    },
+    "development:task-007-safe-background-build-cancellation": {
+      "status": "matched",
+      "evidence_ids": [
+        "ev-msa2361n",
+        "ev-msa23q6c"
+      ],
+      "files": [
+        "tests/test_ui_controller.py",
+        "frontend/src/transport/buildEvents.ts",
+        "frontend/src/components/OutputFeedback.tsx",
+        "frontend/src/transport/tauri.ts",
+        "frontend/src/transport/web.ts",
+        "src/thesis_forge/application/services.py",
+        "src/thesis_forge/adapters/runtime.py"
+      ],
+      "symbols": [],
+      "blockers": []
     }
   },
   "by_stage": {
     "development": {
-      "verified": 12,
+      "verified": 14,
       "partial": 0,
       "missing": 0,
       "stale": 0,
@@ -151,5 +169,5 @@
   },
   "blockers": [],
   "raw_exists": true,
-  "record_count": 12
+  "record_count": 14
 }

@@ -1,6 +1,6 @@
 {
   "schema": "specnav.codegraph.claims.v1",
-  "generated_at": "2026-08-01T06:22:59.450Z",
+  "generated_at": "2026-08-01T07:07:09.504Z",
   "active_change": "build-thesisforge-desktop-ui",
   "claims": [
     {
@@ -207,6 +207,7 @@
         "src/thesis_forge/adapters/**",
         "src/thesis_forge/presentation/**",
         "tests/fixtures/preview-workbench-v1.json",
+        "tests/test_preview_presentation.py",
         "tests/test_application_services.py",
         "tests/test_adapters.py",
         "tests/test_frontend_contract.py",
@@ -214,6 +215,31 @@
       ],
       "query_ids": [
         "development:task-006-outline-renderer-neutral-preview:evidence"
+      ]
+    },
+    {
+      "id": "development:task-007-safe-background-build-cancellation",
+      "kind": "development-task",
+      "stage": "development",
+      "task_id": "007-safe-background-build-cancellation",
+      "text": "Implement one user-visible flow from UI entry through state, API/data boundary,",
+      "required": true,
+      "source": "specnav-codegraph-plan",
+      "source_paths": [
+        "openspec/changes/build-thesisforge-desktop-ui/development/tasks/007-safe-background-build-cancellation/brief.md",
+        "openspec/changes/build-thesisforge-desktop-ui/development/tasks/007-safe-background-build-cancellation/context.json"
+      ],
+      "expected_evidence": [
+        "Focused tests or command output",
+        "Task report",
+        "Spec review",
+        "Quality review"
+      ],
+      "allowed_files": [
+        "src"
+      ],
+      "query_ids": [
+        "development:task-007-safe-background-build-cancellation:evidence"
       ]
     }
   ]
