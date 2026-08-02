@@ -18,5 +18,9 @@
     "jsx": "react-jsx",
     "types": ["vitest/globals", "@testing-library/jest-dom", "node"]
   },
-  "include": ["src", "e2e"]
+  "include": ["src", "e2e"],
+  "exclude": [
+    "e2e/tauri-windows.acceptance.ts",
+    "e2e/tauri-windows.wdio.conf.ts"
+  ]
 }

@@ -48,6 +48,9 @@ jobs:
         run: pnpm --dir frontend install --frozen-lockfile
       - name: Install Tauri CLI
         run: cargo install tauri-cli --version "^2.9" --locked
+      - name: Install Tauri WebDriver
+        if: runner.os == 'Windows'
+        run: cargo install tauri-driver --version "^2.0" --locked
       - name: Build isolated Web distribution
         run: pnpm --dir frontend exec tsc -b && pnpm --dir frontend exec vite build --outDir ../dist/web --emptyOutDir
       - name: Build and verify isolated Python distribution
@@ -63,6 +66,67 @@ jobs:
         run: dot_clean -m src-tauri/target/${{ matrix.target }}/release/bundle
       - name: Verify native desktop distribution
         run: python scripts/verify_desktop_distribution.py --target-triple ${{ matrix.target }} --platform ${{ matrix.platform }} --web-dist dist/web --bundle-root src-tauri/target/${{ matrix.target }}/release/bundle
+      - name: Install Windows MSI and prepare native acceptance
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+          $bundleRoot = "src-tauri/target/${{ matrix.target }}/release/bundle"
+          $msi = Get-ChildItem $bundleRoot -Filter *.msi -Recurse | Select-Object -First 1
+          if (-not $msi) {
+            throw "Windows MSI artifact is missing"
+          }
+          $installLog = Join-Path $env:RUNNER_TEMP "thesisforge-windows-install.log"
+          $arguments = "/i `"$($msi.FullName)`" /qn /norestart /l*v `"$installLog`""
+          $installer = Start-Process msiexec.exe -ArgumentList $arguments -Wait -PassThru
+          if ($installer.ExitCode -notin 0, 3010) {
+            throw "MSI installation failed with exit code $($installer.ExitCode)"
+          }
+
+          $roots = @(
+            (Join-Path $env:LOCALAPPDATA "Programs"),
+            $env:ProgramFiles,
+            ${env:ProgramFiles(x86)}
+          ) | Where-Object { $_ -and (Test-Path $_) }
+          $app = Get-ChildItem $roots -Filter *.exe -Recurse -ErrorAction SilentlyContinue |
+            Where-Object {
+              $_.Name -in @("ThesisForge.exe", "thesisforge-desktop.exe") -and
+              $_.FullName -notlike "*\target\*"
+            } |
+            Select-Object -First 1
+          if (-not $app) {
+            throw "Installed ThesisForge executable was not found"
+          }
+
+          $workspace = Join-Path $env:RUNNER_TEMP "thesisforge-windows-native"
+          $evidence = Join-Path $env:RUNNER_TEMP "windows-native-evidence"
+          New-Item -ItemType Directory -Force -Path $workspace, $evidence | Out-Null
+          Copy-Item "examples/bachelor-thesis/*" $workspace -Recurse -Force
+          "THESISFORGE_WINDOWS_APP=$($app.FullName)" |
+            Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+          "THESISFORGE_WINDOWS_SOURCE=$(Join-Path $workspace 'thesis.md')" |
+            Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+          "THESISFORGE_WINDOWS_EVIDENCE=$evidence" |
+            Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+      - name: Run installed Windows native acceptance
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          Get-ChildItem Env: |
+            Where-Object {
+              $_.Name -match "(_API_KEY|_TOKEN)$" -or
+              $_.Name -in @("HTTP_PROXY", "HTTPS_PROXY", "ALL_PROXY", "NO_PROXY")
+            } |
+            Remove-Item
+          $env:THESISFORGE_BLOCK_NETWORK = "1"
+          pnpm --dir frontend e2e:tauri:windows
+      - uses: actions/upload-artifact@v4
+        if: runner.os == 'Windows' && always()
+        with:
+          name: windows-native-evidence
+          path: |
+            ${{ runner.temp }}/windows-native-evidence/windows-native-acceptance.*
+            ${{ runner.temp }}/thesisforge-windows-install.log
       - uses: actions/upload-artifact@v4
         with:
           name: thesisforge-web-${{ matrix.target }}

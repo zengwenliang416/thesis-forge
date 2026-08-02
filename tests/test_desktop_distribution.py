@@ -15,6 +15,10 @@ VERIFY_DESKTOP = ROOT / "scripts" / "verify_desktop_distribution.py"
 RELEASE_CONFIG = ROOT / "src-tauri" / "tauri.release.conf.json"
 WORKFLOW = ROOT / ".github" / "workflows" / "distribution.yml"
 REAL_HTTP_CONFIG = ROOT / "frontend" / "e2e" / "real-http.playwright.config.ts"
+WINDOWS_TAURI_CONFIG = ROOT / "frontend" / "e2e" / "tauri-windows.wdio.conf.ts"
+WINDOWS_TAURI_ACCEPTANCE = (
+    ROOT / "frontend" / "e2e" / "tauri-windows.acceptance.ts"
+)
 
 
 def _load_module(path: Path, name: str):
@@ -165,6 +169,37 @@ def test_distribution_workflow_builds_native_macos_and_windows_artifacts() -> No
     assert "dot_clean -m" in commands
     assert "dist/web" in commands
     assert "dist/python" in commands
+
+
+def test_windows_workflow_installs_and_drives_the_native_tauri_package() -> None:
+    workflow_text = WORKFLOW.read_text(encoding="utf-8")
+
+    assert "cargo install tauri-driver" in workflow_text
+    assert "msiexec.exe" in workflow_text
+    assert "THESISFORGE_WINDOWS_APP" in workflow_text
+    assert "THESISFORGE_BLOCK_NETWORK" in workflow_text
+    assert "e2e:tauri:windows" in workflow_text
+    assert "windows-native-acceptance" in workflow_text
+    assert "windows-native-evidence" in workflow_text
+
+
+def test_windows_tauri_acceptance_uses_external_webdriver_and_real_commands() -> None:
+    config = WINDOWS_TAURI_CONFIG.read_text(encoding="utf-8")
+    acceptance = WINDOWS_TAURI_ACCEPTANCE.read_text(encoding="utf-8")
+
+    assert 'driverProvider: "external"' in config
+    assert "THESISFORGE_WINDOWS_APP" in config
+    assert "tauri-windows.acceptance.ts" in config
+    assert "__TAURI_INTERNALS__" in acceptance
+    assert 'command === "pick_source"' in acceptance
+    assert "打开 Markdown 文稿" in acceptance
+    assert "保存文稿" in acceptance
+    assert "构建 DOCX" in acceptance
+    assert "Markdown 文稿内容" in acceptance
+    assert "构建完成" in acceptance
+    assert "saveScreenshot" in acceptance
+    assert "prefers-reduced-motion" in acceptance
+    assert "THESISFORGE_WINDOWS_EVIDENCE" in acceptance
 
 
 def test_real_http_acceptance_selects_a_native_python_interpreter() -> None:
