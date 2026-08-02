@@ -285,6 +285,62 @@ def test_windows_workflow_installs_and_drives_the_native_tauri_package() -> None
     assert "${{ runner.temp }}/thesisforge-windows-install.log" in evidence_upload["with"]["path"]
 
 
+def test_distribution_workflow_retains_built_artifacts_after_acceptance_failure() -> None:
+    workflow = yaml.safe_load(WORKFLOW.read_text(encoding="utf-8"))
+    steps = workflow["jobs"]["desktop"]["steps"]
+    expected_artifacts = {
+        "thesisforge-web-${{ matrix.target }}",
+        "thesisforge-python-${{ matrix.target }}",
+        "thesisforge-sidecar-${{ matrix.target }}",
+        "thesisforge-desktop-${{ matrix.target }}",
+    }
+    uploads = {
+        step["with"]["name"]: step
+        for step in steps
+        if step.get("uses") == "actions/upload-artifact@v4"
+        and step.get("with", {}).get("name") in expected_artifacts
+    }
+
+    assert set(uploads) == expected_artifacts
+    for upload in uploads.values():
+        assert upload["if"] == "always()"
+        assert upload["with"]["if-no-files-found"] == "warn"
+
+
+def test_distribution_workflow_pins_and_caches_the_tauri_cli() -> None:
+    workflow = yaml.safe_load(WORKFLOW.read_text(encoding="utf-8"))
+    desktop = workflow["jobs"]["desktop"]
+    steps = desktop["steps"]
+
+    assert desktop["env"]["TAURI_CLI_VERSION"] == "2.11.4"
+    restore = next(
+        step
+        for step in steps
+        if step.get("uses") == "actions/cache/restore@v4"
+    )
+    install = next(
+        step for step in steps if step.get("name") == "Install Tauri CLI"
+    )
+    save = next(
+        step
+        for step in steps
+        if step.get("uses") == "actions/cache/save@v4"
+    )
+    verify = next(
+        step for step in steps if step.get("name") == "Verify Tauri CLI"
+    )
+
+    assert restore["id"] == "tauri-cli-cache"
+    assert "~/.cargo/bin/cargo-tauri" in restore["with"]["path"]
+    assert "~/.cargo/bin/cargo-tauri.exe" in restore["with"]["path"]
+    assert "${{ env.TAURI_CLI_VERSION }}" in restore["with"]["key"]
+    assert install["if"] == "steps.tauri-cli-cache.outputs.cache-hit != 'true'"
+    assert '--version "${{ env.TAURI_CLI_VERSION }}"' in install["run"]
+    assert save["if"] == "steps.tauri-cli-cache.outputs.cache-hit != 'true'"
+    assert save["with"] == restore["with"]
+    assert verify["run"] == "cargo tauri --version"
+
+
 def test_windows_tauri_acceptance_uses_webview2_cdp_and_real_commands() -> None:
     acceptance = WINDOWS_TAURI_ACCEPTANCE.read_text(encoding="utf-8")
 

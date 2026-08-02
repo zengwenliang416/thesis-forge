@@ -177,6 +177,76 @@ Date: 2026-08-02
 - This run did not execute checkout, tests, packaging, installation, or native
   acceptance, so it is an external GitHub billing gate rather than evidence
   for or against commit `3144dba`.
-- Tasks `8.1`, `8.4`, and `8.7` and assertions `A1`, `A11`, and `A12` remain
-  incomplete until billing is restored and a rerun produces a passing installed
-  workflow, DOCX, screenshot, sensory record, and Windows native evidence JSON.
+- This run remains useful failure provenance, but it is not a completion gate.
+  The user explicitly selected local native development and testing as the
+  acceptance authority instead of GitHub Actions.
+
+## Local Native Acceptance Pass
+
+- Authority date: `2026-08-02`.
+- Native host: Windows 11 Pro ARM64 in Parallels VM `报销必备 (1)`.
+- Product under test:
+  `C:\Program Files\ThesisForge\thesisforge-desktop.exe`, installed from the
+  generated ARM64 MSI.
+- The VM network adapter `net0` was disconnected. The application also ran with
+  `THESISFORGE_BLOCK_NETWORK=1`, proxy/API-key/token variables removed, and only
+  loopback WebView2 CDP enabled on `127.0.0.1:9222`.
+- Task Scheduler launched the acceptance under the logged-in
+  `PB82\wenliang_zeng` interactive token with Node `v22.18.0`; the captured root
+  application PID was `1632`, and its WebView2 child used the same user profile.
+- The installed Tauri application exposed `__TAURI_INTERNALS__`, runtime
+  `tauri`, the `本地桌面` label, and the shared light-theme `zh-CN` workbench.
+- Playwright opened the copied complete example, focused the editor through
+  `Ctrl+K`, appended `<!-- windows native acceptance -->`, observed the dirty
+  state, saved the source, validated it, built DOCX, and observed
+  `构建完成`.
+- The final workbench state was `populated`, the viewport was `1156x900`, the
+  reduced-motion rule was present, and the screenshot shows the outline,
+  Markdown editor, structure preview, template selector, runtime label, and
+  completed build state.
+- Generated DOCX:
+  `development/tasks/008-cross-platform-distribution-acceptance/evidence/windows-native-thesis.docx`,
+  `187088` bytes, SHA-256
+  `765158a6952de5f400a9c99bc685442db613844286f7187940479d462c32e10b`.
+- Direct package inspection confirmed TOC, SEQ, REF, PAGE fields, paired
+  bookmarks, drawing/media, table, OMML, footnotes, headers, footers, and three
+  sections.
+
+## Native Installer And Distribution Evidence
+
+- MSI:
+  `22564864` bytes, SHA-256
+  `f775a887682ee7a9ee1a0d2312c799e307e20e4bf9bde2ca9b82655def420276`.
+- NSIS:
+  `21263132` bytes, SHA-256
+  `9692f39d61bf990b6c6da2d8f5ce224d2ed92b91c84280deedc474380a9cf60c`.
+- MSI summary template: `Arm64;0`; installed app and sidecar both report PE
+  machine `0xAA64`.
+- Installed app:
+  `9486848` bytes, SHA-256
+  `a906edb5d55e8ef4efa2432f1716382a101b77497cb136edbffbb1668b37412f`.
+- Installed sidecar:
+  `19236629` bytes, SHA-256
+  `6b60553f925706edc9dab8b2ee326dc8a9f6c9425f13d0064384e16ac32136a0`.
+- MSI registration records ThesisForge `0.1.0` under
+  `C:\Program Files\ThesisForge`; the earlier NSIS install records the same
+  version under the current user's local application directory.
+- The disconnected Windows verifier returned `ok: true` for the ARM64 sidecar,
+  Web production build, MSI, NSIS, and managed sidecar. It reran
+  inspect/preview/validate, cancellation, ordered five-stage build, valid DOCX,
+  reopen, credential removal, and outbound socket blocking.
+
+## Evidence Files
+
+- `windows-native-acceptance.json`
+- `windows-native-task-result.json`
+- `windows-native-manifest.json`
+- `windows-native-acceptance.png`
+- `windows-native-thesis.docx`
+- `windows-processes-before-stop.json`
+- `windows-cdp-endpoint.json`
+- `windows-distribution-verifier-result.json`
+- `windows-distribution-verifier.log`
+
+The Windows guest local clock displayed the future date `2026-08-03`; host date
+authority and every recorded UTC timestamp remain on `2026-08-02`.

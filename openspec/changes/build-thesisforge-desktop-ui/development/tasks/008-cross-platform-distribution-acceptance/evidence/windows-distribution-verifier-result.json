@@ -1,0 +1,12 @@
+{
+  "ok": true,
+  "exitCode": 0,
+  "targetTriple": "aarch64-pc-windows-msvc",
+  "platform": "windows",
+  "webDist": "C:\\Mac\\Home\\Downloads\\thesisforge-windows-acceptance\\frontend\\dist",
+  "bundleRoot": "C:\\thesisforge-cargo-target\\aarch64-pc-windows-msvc\\release\\bundle",
+  "externalSocketsBlocked": true,
+  "credentialsRemoved": true,
+  "startedAt": "2026-08-02T17:33:47.7938738Z",
+  "completedAt": "2026-08-02T17:33:59.8574062Z"
+}

@@ -2,7 +2,7 @@
 
 ## Status
 
-DONE_WITH_CONCERNS
+DONE
 
 ## Files Changed
 
@@ -39,6 +39,13 @@ DONE_WITH_CONCERNS
   system file picker behind a test seam, executes real save/validate/build
   commands against the packaged sidecar, blocks sidecar sockets, strips
   credentials, and uploads screenshot plus JSON evidence.
+- Built ARM64 MSI and NSIS artifacts on a native Windows 11 ARM VM, installed
+  both package formats, and verified the installed main executable and managed
+  sidecar are PE `0xAA64`.
+- Ran the MSI-installed Tauri application through the complete example with the
+  VM adapter disconnected, application sockets blocked, and credentials/proxy
+  variables removed. The real WebView2 workbench saved, validated, built, and
+  produced the retained screenshot, process capture, JSON evidence, and DOCX.
 - Added dedicated browser state/accessibility acceptance and a real Python HTTP
   adapter Playwright run with no route mocks.
 - Documented runtime capabilities, installation, offline behavior, packaging,
@@ -62,7 +69,7 @@ DONE_WITH_CONCERNS
 - Installed-Windows acceptance RED returned two focused failures for the
   missing native WebDriver workflow and WDIO task files. The static contract,
   isolated WDIO typecheck, frozen lock install, and existing frontend
-  regression are now green; native execution remains pending.
+  regression are green.
 - Real HTTP RED failed because the test server did not exist. The first real
   integration run then surfaced genuine validator errors in an incomplete
   fixture. A minimal valid thesis fixture closed the real workflow with
@@ -70,25 +77,49 @@ DONE_WITH_CONCERNS
 - Standard `pnpm frontend:e2e` now runs both the deterministic browser
   state/mock matrix and the separate real Python WSGI adapter project.
 
+## Windows Native Gate
+
+- Native Windows 11 ARM64 MSI and NSIS artifacts were generated and retained by
+  hash; the MSI installed to `C:\Program Files\ThesisForge`.
+- The installed app and managed sidecar are ARM64 PE files and byte-identical to
+  their verified build inputs.
+- With Parallels `net0` disconnected, the installed app completed open, edit,
+  explicit save, validate, and five-stage DOCX build in the logged-in user
+  desktop session.
+- The Windows distribution verifier independently returned `ok: true` for Web,
+  sidecar, cancellation, build, reopen, MSI, NSIS, and managed sidecar.
+- Detailed evidence is retained in
+  `evidence/windows-native-acceptance.md`,
+  `evidence/windows-native-manifest.json`,
+  `evidence/windows-native-acceptance.json`,
+  `evidence/windows-native-acceptance.png`, and
+  `evidence/windows-native-thesis.docx`.
+
 ## Verification Commands
 
+- Final `make verify` on August 2, 2026 -> exited `0`.
 - `pnpm frontend:test` -> `53 passed`.
 - `pnpm frontend:typecheck`, `pnpm frontend:lint`, and
   `pnpm frontend:build` -> passed.
-- `pnpm frontend:e2e` -> `14 passed`, `16` intentional skips, plus real HTTP
-  `1 passed`.
-- Focused Python distribution/architecture set -> `26 passed`.
-- `.venv/bin/python -m pytest -q` -> `244 passed`.
+- `pnpm frontend:e2e` -> `15 passed`, `18` intentional matrix skips, plus real
+  HTTP `1 passed`.
+- `.venv/bin/python -m pytest` -> `256 passed`.
 - `.venv/bin/ruff check .` -> all checks passed.
 - `.venv/bin/python -m pip check` -> no broken requirements.
 - Python wheel/sdist build and isolated verifier -> passed.
 - Native frozen sidecar build and offline verifier -> passed.
 - `cargo fmt`, `cargo test`, and `cargo check` -> passed; Rust protocol suite
-  returned `6 passed`.
+  returned `11 passed`.
 - `cargo tauri build --config src-tauri/tauri.release.conf.json --bundles
   app,dmg` -> rebuilt `.app` and `.dmg`.
 - macOS distribution verifier -> passed for Web, sidecar, `.app`, managed
   sidecar, and `.dmg`.
+- Windows ARM64 sidecar verifier -> passed offline for inspect, preview,
+  validate, cancel, ordered build, DOCX validation, reopen, MSI, NSIS, and
+  managed sidecar.
+- MSI-installed Windows native acceptance -> passed through real WebView2 CDP
+  with source persistence, validation, build, sensory capture, and retained
+  DOCX.
 - Strict OpenSpec validation -> one change passed.
 - SpecNav development entry -> `ok:true`.
 - CodeGraph sync/status -> index up to date.
@@ -96,13 +127,16 @@ DONE_WITH_CONCERNS
 
 ## Concerns
 
-- Windows `.msi` / NSIS build, installed workflow, keyboard/sensory review, and
-  blocked-socket execution require a successful native Windows runner.
-- Local macOS evidence and static workflow tests do not satisfy that external
-  gate. Acceptance assertions `A1`, `A11`, and `A12` therefore remain failing.
 - Production signing, Apple notarization, Microsoft Authenticode signing,
   public publication, and license selection remain intentionally outside this
   task.
+- Windows evidence is ARM64-specific; x86_64 Windows remains a compatibility
+  target for the native workflow rather than an independently executed local
+  package in this change.
+- GitHub Actions billing remains unavailable, so remote matrix reproducibility
+  was not used as a completion gate. Local native macOS and Windows execution
+  plus full repository verification are the release authority for this
+  local-only closure.
 
 ## Scope Deviations
 
@@ -112,17 +146,14 @@ DONE_WITH_CONCERNS
 
 ## Follow-up Needed
 
-- Push the reviewed branch and run `.github/workflows/distribution.yml` on the
-  native Windows matrix, including the installed-app WDIO step.
-- Retain the Windows verifier JSON, installer artifact checksums, and a
-  user-aligned Windows interaction/sensory record.
-- Only then mark tasks `8.1`, `8.4`, and `8.7` complete and move `A1`, `A11`,
-  and `A12` to passing before the six-domain verification contract.
+- Complete local-only operations readiness and archive gates using the green
+  six-domain receipt.
+- Treat a future GitHub matrix rerun as supplementary reproducibility evidence,
+  not as a blocker for the already completed local native acceptance.
 
 ## Adjudication
 
-Local implementation, Web acceptance, Python distribution, frozen sidecar, and
-macOS native acceptance are complete and evidence-backed. The controller accepts
-the Slice 008 implementation as `DONE_WITH_CONCERNS` but does not hand the
-change to final verification because the three Windows-dependent acceptance
-assertions remain open.
+Web, Python, macOS, and Windows distribution and native workflow acceptance are
+complete and evidence-backed. Assertions `A1` through `A12` are passing, the
+12 user-aligned cases are mapped across all six domains, and Slice 008 is ready
+for local-only operations closure.

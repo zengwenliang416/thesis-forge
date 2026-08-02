@@ -2,19 +2,14 @@
 
 ## Verdict
 
-blocked
+approved
 
 ## Missing Requirements
 
-- Task `8.1` is incomplete because the complete example has not run through a
-  packaged Windows Tauri target on a native Windows runner.
-- Task `8.4` is incomplete because no native Windows `.msi` / NSIS artifact and
-  verifier output exists.
-- Task `8.7` is incomplete because six-domain verification cannot close while
-  Windows runtime and sensory evidence are absent.
-- Acceptance assertions `A1`, `A11`, and `A12` remain failing for the same
-  reason. Browser, Python, sidecar, and macOS evidence cannot substitute for
-  Windows execution.
+- None for Slice 008 implementation and native acceptance.
+- Task `8.7` is complete: 12 A1-A12 user cases, six green domain reports,
+  runtime/browser evidence, traceability, behavior eval, and receipt are
+  retained under `verify/`.
 
 ## Extra Behavior
 
@@ -24,29 +19,26 @@ blocked
 
 ## Misunderstood Requirements
 
-- None after review fixes. The task report explicitly distinguishes static
-  Windows workflow coverage from executed Windows acceptance.
+- None after review fixes. The task report distinguishes failed remote workflow
+  history from the successful native Windows VM evidence.
 - `make verify` is now documented as the source/Web/sidecar gate, not a native
   installer gate.
 
 ## Cannot Verify From Diff
 
-- A Windows runner must prove target-native PyInstaller output, Tauri MSI/NSIS
-  creation, managed sidecar placement, offline protocol behavior, installer
-  launch, keyboard/focus behavior, and runtime output.
 - Production Apple notarization, Microsoft signing, publication, and license
   selection remain out of scope and were not attempted.
+- x86_64 Windows was not independently executed; ARM64 Windows is the native
+  installed acceptance target for this local-only closure.
 
 ## Acceptance Assertions Verified
 
-- `A2`, `A3`, `A4`, `A5`, `A6`, `A7`, `A8`, `A9`, and `A10`.
-- `A1`, `A11`, and `A12` were reviewed but are intentionally not marked
-  verified because their Windows clauses lack native evidence.
+- `A1` through `A12`.
+- `A1`, `A11`, and `A12` are supported by the MSI-installed Windows Arm64
+  workbench, screenshot, process capture, manifest, disconnected verifier, and
+  retained DOCX.
 
 ## Required Fixes
 
-- Run `.github/workflows/distribution.yml` on `windows-2025`.
-- Retain the Windows verifier JSON, MSI/NSIS checksums, job reference, and
-  user-aligned native interaction/sensory evidence.
-- Update tasks `8.1`, `8.4`, and `8.7`, then move `A1`, `A11`, and `A12` to
-  passing and repeat this review.
+- None for Slice 008.
+- Continue to local-only operations readiness and archive closure.

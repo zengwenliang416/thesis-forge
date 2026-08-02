@@ -1,0 +1,28 @@
+{
+  "ok": true,
+  "appBinaryPath": "C:\\Program Files\\ThesisForge\\thesisforge-desktop.exe",
+  "sourcePath": "C:\\Users\\wenliang_zeng\\thesisforge-native-workspace\\thesis.md",
+  "outputPath": "C:\\Users\\wenliang_zeng\\thesisforge-native-workspace\\thesis.docx",
+  "outputBytes": 187088,
+  "automation": "playwright-cdp",
+  "cdpEndpoint": "http://127.0.0.1:9222",
+  "tauriInternals": true,
+  "externalSocketsBlocked": true,
+  "interaction": {
+    "save": "button",
+    "validate": "button"
+  },
+  "sensory": {
+    "title": "ThesisForge - 学术论文编译工作台",
+    "runtime": "tauri",
+    "state": "populated",
+    "activeLabel": null,
+    "reducedMotionRule": true,
+    "viewport": {
+      "width": 1156,
+      "height": 900
+    }
+  },
+  "screenshotPath": "C:\\Users\\wenliang_zeng\\thesisforge-native-evidence\\windows-native-acceptance.png",
+  "completedAt": "2026-08-02T17:27:12.837Z"
+}
