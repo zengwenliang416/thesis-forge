@@ -217,6 +217,10 @@ def test_distribution_workflow_builds_native_macos_and_windows_artifacts() -> No
     assert "-vv" in dmg_step["run"]
     assert "for attempt in 1 2 3" in dmg_step["run"]
     assert 'rm -rf "$dmg_bundle_dir"' in dmg_step["run"]
+    assert 'app_bundle_dir="src-tauri/target/${{ matrix.target }}/release/bundle/macos/ThesisForge.app"' in dmg_step["run"]
+    assert 'app_backup_dir="${RUNNER_TEMP}/ThesisForge.app"' in dmg_step["run"]
+    assert 'ditto "$app_bundle_dir" "$app_backup_dir"' in dmg_step["run"]
+    assert 'ditto "$app_backup_dir" "$app_bundle_dir"' in dmg_step["run"]
 
 
 def test_windows_workflow_installs_and_drives_the_native_tauri_package() -> None:

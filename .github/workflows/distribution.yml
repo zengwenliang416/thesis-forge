@@ -72,6 +72,14 @@ jobs:
         run: |
           set -euo pipefail
           dmg_bundle_dir="src-tauri/target/${{ matrix.target }}/release/bundle/dmg"
+          app_bundle_dir="src-tauri/target/${{ matrix.target }}/release/bundle/macos/ThesisForge.app"
+          app_backup_dir="${RUNNER_TEMP}/ThesisForge.app"
+          if [[ ! -d "$app_bundle_dir" ]]; then
+            echo "::error::macOS app bundle is missing before DMG construction"
+            exit 1
+          fi
+          rm -rf "$app_backup_dir"
+          ditto "$app_bundle_dir" "$app_backup_dir"
           for attempt in 1 2 3; do
             rm -rf "$dmg_bundle_dir"
             if cargo tauri build \
@@ -80,6 +88,8 @@ jobs:
               --bundles dmg \
               --ci \
               -vv; then
+              rm -rf "$app_bundle_dir"
+              ditto "$app_backup_dir" "$app_bundle_dir"
               exit 0
             fi
             echo "::warning::macOS DMG build attempt ${attempt} failed"
