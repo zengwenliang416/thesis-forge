@@ -20,6 +20,7 @@ WINDOWS_TAURI_CONFIG = ROOT / "frontend" / "e2e" / "tauri-windows.wdio.conf.ts"
 WINDOWS_TAURI_ACCEPTANCE = (
     ROOT / "frontend" / "e2e" / "tauri-windows.acceptance.ts"
 )
+FRONTEND_PACKAGE = ROOT / "frontend" / "package.json"
 WINDOWS_ICON = ROOT / "src-tauri" / "icons" / "icon.ico"
 
 
@@ -262,6 +263,26 @@ def test_windows_tauri_acceptance_uses_external_webdriver_and_real_commands() ->
     assert "saveScreenshot" in acceptance
     assert "prefers-reduced-motion" in acceptance
     assert "THESISFORGE_WINDOWS_EVIDENCE" in acceptance
+
+
+def test_windows_tauri_acceptance_pins_one_compatible_wdio_release_line() -> None:
+    package = json.loads(FRONTEND_PACKAGE.read_text(encoding="utf-8"))
+    dev_dependencies = package["devDependencies"]
+    wdio_packages = (
+        "@wdio/cli",
+        "@wdio/globals",
+        "@wdio/local-runner",
+        "@wdio/mocha-framework",
+        "@wdio/spec-reporter",
+        "@wdio/types",
+        "webdriverio",
+    )
+
+    assert {dev_dependencies[name] for name in wdio_packages} == {"9.27.1"}
+    assert dev_dependencies["@wdio/tauri-service"] == "1.2.0"
+    assert package["pnpm"]["overrides"] == {
+        "@wdio/tauri-service>@wdio/native-utils": "2.5.0",
+    }
 
 
 def test_real_http_acceptance_selects_a_native_python_interpreter() -> None:
