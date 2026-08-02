@@ -1,0 +1,42 @@
+{
+  "schema": "specnav.ops.releaseChecklist.v1",
+  "change": "build-thesisforge-desktop-ui",
+  "release_target": "local-only",
+  "checks": [
+    {
+      "name": "verification green",
+      "status": "pass",
+      "evidence": "verify/aggregate-report.json: six domains green; verify/receipt.json: A1-A12 covered with confidence B"
+    },
+    {
+      "name": "release docs prepared",
+      "status": "pass",
+      "evidence": "operations/changelog.md, operations/release-notes.md, operations/release-plan.md, and README/docs maintenance guidance"
+    },
+    {
+      "name": "complete local test gate",
+      "status": "pass",
+      "evidence": "make verify exited 0 with 256 Python, 53 Vitest, 15 Playwright matrix plus 1 real HTTP, and 11 Rust protocol tests"
+    },
+    {
+      "name": "macOS native package accepted",
+      "status": "pass",
+      "evidence": "packaged ThesisForge.app opened, edited, saved, validated, and built DOCX through the frozen managed sidecar"
+    },
+    {
+      "name": "Windows native package accepted",
+      "status": "pass",
+      "evidence": "Windows 11 ARM64 generated MSI/NSIS, installed MSI, completed disconnected WebView2 workflow, and passed the distribution verifier"
+    },
+    {
+      "name": "tasks complete",
+      "status": "pass",
+      "evidence": "tasks.md contains 59 completed checkbox tasks and no incomplete task"
+    },
+    {
+      "name": "public release prohibited",
+      "status": "pass",
+      "evidence": "operations/signoff.yaml and release-plan.md restrict closure to local-only until license, signing, and owner approval are resolved"
+    }
+  ]
+}

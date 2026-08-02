@@ -1,0 +1,47 @@
+{
+  "schema": "specnav.ops.updateSpec.v1",
+  "change": "build-thesisforge-desktop-ui",
+  "status": "written_back",
+  "learning_items": [
+    "The selected production UI stack is React, TypeScript, Vite, and Tauri 2 for shared Web, macOS, and Windows behavior; PySide6 is not the product frontend.",
+    "Remote CI billing failure is external provenance, not product execution evidence; successful local native acceptance may close the product gate when the user explicitly selects local authority.",
+    "Desktop acceptance must verify target-native sidecar and installer architecture, installed-app interaction, credential stripping, and outbound socket blocking.",
+    "Responsive-hidden controls still require keyboard-accessible user paths and stable DOM selectors in native WebView acceptance.",
+    "The renderer-neutral preview must remain explicit that it is not exact Word pagination."
+  ],
+  "writeback_evidence": [
+    "README.md",
+    "docs/ARCHITECTURE.md",
+    "docs/MAINTENANCE.md",
+    "docs/V1_PLAN.md",
+    "requirements.md",
+    "acceptance.md",
+    "development/tasks/008-cross-platform-distribution-acceptance/report.md",
+    "frontend/e2e/acceptance.spec.ts",
+    "frontend/e2e/tauri-windows.acceptance.ts",
+    "tests/test_desktop_distribution.py",
+    "operations/release-plan.md",
+    "operations/release-notes.md"
+  ],
+  "unresolved_items": [],
+  "promoted_checks": [
+    {
+      "id": "native-target-sidecar-architecture",
+      "statement": "Desktop release verification must reject a managed sidecar or installer whose executable architecture does not match the declared native target.",
+      "verify_via": "static",
+      "candidate_artifact": "tests/test_desktop_distribution.py",
+      "generalized": true,
+      "status": "candidate",
+      "evidence_ref": "development/tasks/008-cross-platform-distribution-acceptance/evidence/windows-native-manifest.json"
+    },
+    {
+      "id": "responsive-hidden-control-keyboard-path",
+      "statement": "When responsive CSS hides a secondary action, acceptance must prove that the documented keyboard path still performs the same user operation.",
+      "verify_via": "fixture",
+      "candidate_artifact": "frontend/e2e/acceptance.spec.ts",
+      "generalized": true,
+      "status": "candidate",
+      "evidence_ref": "development/tasks/008-cross-platform-distribution-acceptance/evidence/windows-native-acceptance.md"
+    }
+  ]
+}

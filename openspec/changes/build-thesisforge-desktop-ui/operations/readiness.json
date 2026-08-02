@@ -1,0 +1,39 @@
+{
+  "schema": "specnav.ops.readiness.v1",
+  "change": "build-thesisforge-desktop-ui",
+  "release_target": "local-only",
+  "ready": true,
+  "verification": {
+    "aggregate_verdict": "green",
+    "receipt_confidence": "B",
+    "uncovered_scope": [],
+    "residual_risk": [
+      "Installers are unsigned and not notarized; public release also requires project license and ownership review.",
+      "Windows native visual execution is ARM64-specific; x86_64 remains configuration and static coverage.",
+      "The real HTTP browser suite has one complete happy path while deterministic tests cover the broader failure matrix.",
+      "GitHub Actions billing is unavailable but is not part of local product behavior."
+    ],
+    "risk_acceptance": "Accepted by the project owner only for local repository closure, local build, local installation, and local native acceptance."
+  },
+  "git": {
+    "branch": "main",
+    "dirty": true,
+    "untracked_reviewed": true,
+    "worktree_mode": "primary repository worktree; not SpecNav-owned and not eligible for cleanup"
+  },
+  "docs": {
+    "user_facing": true,
+    "changelog": true,
+    "release_notes": true,
+    "readme_updated": true
+  },
+  "ops": {
+    "migrations": "not_required",
+    "package_validation": "pass",
+    "local_installation": "pass",
+    "external_release": "prohibited_without_license_signing_and_owner_approval",
+    "rollback": "return to the preceding local Git commit and rebuild local Web, sidecar, and desktop artifacts",
+    "monitoring": "not_required_for_local-only_release",
+    "postmortem_required": false
+  }
+}

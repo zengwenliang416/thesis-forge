@@ -1,0 +1,19 @@
+schema: specnav.ops.signoff.v1
+change: build-thesisforge-desktop-ui
+decision: accepted
+accepted_scope: local-only
+accepted_by: project-owner
+recorded_at: "2026-08-02"
+statement: >-
+  The project owner selected complete local development and testing as the
+  acceptance authority instead of GitHub pipeline availability. The remaining
+  verification risks are accepted only for local repository closure, local Web
+  serving, local package building, local installation, and native acceptance.
+  This signoff does not authorize public publication, deployment, redistribution,
+  signing claims, or notarization claims.
+residual_risks:
+  - Installers are unsigned and the macOS application is not notarized.
+  - Public release requires project license, third-party ownership review, and explicit owner approval.
+  - Windows native sensory execution is ARM64-specific.
+  - The real HTTP browser suite has one complete happy path.
+  - GitHub Actions billing is unavailable.
