@@ -10,6 +10,13 @@ from pathlib import Path
 from .runtime import DesktopRuntime, WorkbenchCommandDispatcher, iter_build_events
 
 
+def _configure_standard_streams() -> None:
+    for stream in (sys.stdin, sys.stdout, sys.stderr):
+        reconfigure = getattr(stream, "reconfigure", None)
+        if callable(reconfigure):
+            reconfigure(encoding="utf-8", errors="strict")
+
+
 def dispatch_json_line(
     dispatcher: WorkbenchCommandDispatcher,
     line: str,
@@ -58,6 +65,7 @@ def stream_json_lines(
 
 
 def main(argv: list[str] | None = None) -> int:
+    _configure_standard_streams()
     parser = argparse.ArgumentParser()
     parser.add_argument("--once", action="store_true")
     parser.add_argument("--stream", action="store_true")

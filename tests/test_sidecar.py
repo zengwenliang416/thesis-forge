@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import sys
 from pathlib import Path
 
 from thesis_forge.adapters import (
@@ -9,7 +10,36 @@ from thesis_forge.adapters import (
     WorkbenchCommandDispatcher,
     stream_json_lines,
 )
+from thesis_forge.adapters.sidecar import _configure_standard_streams
 from thesis_forge.application import BuildResult, BuildStage
+
+
+def test_sidecar_forces_utf8_standard_streams(monkeypatch):
+    class ReconfigurableStream:
+        def __init__(self):
+            self.encoding = "cp1252"
+            self.errors = "replace"
+
+        def reconfigure(self, *, encoding, errors):
+            self.encoding = encoding
+            self.errors = errors
+
+        def write(self, value):
+            return len(value.encode(self.encoding, errors=self.errors))
+
+    streams = [ReconfigurableStream() for _ in range(3)]
+    monkeypatch.setattr(sys, "stdin", streams[0])
+    monkeypatch.setattr(sys, "stdout", streams[1])
+    monkeypatch.setattr(sys, "stderr", streams[2])
+
+    _configure_standard_streams()
+
+    assert [(stream.encoding, stream.errors) for stream in streams] == [
+        ("utf-8", "strict"),
+        ("utf-8", "strict"),
+        ("utf-8", "strict"),
+    ]
+    assert streams[1].write("绪论") == len("绪论".encode())
 
 
 def test_sidecar_build_stream_uses_the_shared_event_contract(tmp_path: Path):
