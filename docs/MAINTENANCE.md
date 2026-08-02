@@ -1,13 +1,16 @@
 # ThesisForge Maintenance Guide
 
-This guide defines the reproducible local verification and distribution path for
-the ThesisForge V1 core. Product commands remain offline after dependencies are
-installed.
+This guide defines the reproducible verification and distribution path for the
+ThesisForge Python package, Web workbench, and Tauri desktop packages. Product
+commands and packaged desktop workflows remain offline after build dependencies
+are installed.
 
 ## Supported Environment
 
 - Python 3.11 or newer.
 - A local virtual environment.
+- Node.js and pnpm 10.34.5 for frontend builds.
+- Rust and Tauri CLI 2 for native desktop builds.
 - OpenSpec CLI for lifecycle validation.
 - LibreOffice is optional for manual Office compatibility review.
 
@@ -20,11 +23,13 @@ make install
 ```
 
 The project does not require AI credentials for `inspect`, `validate`, `build`,
-tests, linting, distribution verification or OpenSpec validation.
+tests, linting, distribution verification or OpenSpec validation. Packaged
+desktop applications must not require separately installed Python, Node.js,
+Rust, an HTTP service, an account, telemetry, or external sockets.
 
 ## Daily Checks
 
-Run the complete maintainer gate:
+Run the complete source, Web, and sidecar maintainer gate:
 
 ```bash
 make verify
@@ -36,11 +41,26 @@ This executes:
 .venv/bin/python -m pytest
 .venv/bin/python -m ruff check .
 .venv/bin/python -m pip check
-.venv/bin/python -m build --no-isolation --outdir dist
-.venv/bin/python scripts/verify_distribution.py --dist-dir dist
-OPENSPEC_TELEMETRY=0 openspec validate build-thesisforge-v1-core --strict --no-interactive
+.venv/bin/python -m build --no-isolation --outdir dist/python
+.venv/bin/python scripts/verify_distribution.py --dist-dir dist/python
+pnpm frontend:test
+pnpm frontend:typecheck
+pnpm frontend:lint
+pnpm frontend:build
+pnpm frontend:e2e
+cargo fmt --manifest-path src-tauri/Cargo.toml -- --check
+cargo test --manifest-path src-tauri/Cargo.toml
+cargo check --manifest-path src-tauri/Cargo.toml
+.venv/bin/python scripts/build_sidecar.py
+.venv/bin/python scripts/verify_desktop_distribution.py --sidecar-only
+OPENSPEC_TELEMETRY=0 openspec validate build-thesisforge-desktop-ui --strict --no-interactive
 git diff --check
 ```
+
+This command does not build or verify native `.app`, `.dmg`, `.msi`, or NSIS
+installer artifacts. Run the platform-native commands under **Native Packages**
+in addition to `make verify` before treating a desktop distribution as
+accepted.
 
 `verify_distribution.py` inspects wheel and sdist contents, rejects AppleDouble
 files, checks the console entry point and bundled templates, installs the wheel
@@ -73,8 +93,8 @@ only after all stages succeed.
 `make package` creates:
 
 ```text
-dist/thesis_forge-<version>-py3-none-any.whl
-dist/thesis_forge-<version>.tar.gz
+dist/python/thesis_forge-<version>-py3-none-any.whl
+dist/python/thesis_forge-<version>.tar.gz
 ```
 
 The wheel bundles the base and example-university templates under
@@ -84,6 +104,135 @@ tests, specifications and maintenance scripts.
 These artifacts are locally installable verification distributions. The
 repository has not selected a project license, so do not publish them to a
 public package index until ownership and license review are complete.
+
+## Web Distribution
+
+Build the static frontend independently:
+
+```bash
+make package-web
+```
+
+The result is `dist/web/`. It contains only static Vite assets and does not
+embed Python or a compiler service. At runtime the Web product must use the
+configured versioned ThesisForge HTTP adapter. Browser source persistence uses
+workspace-save or download semantics and must not claim native filesystem
+paths.
+
+## Desktop Sidecar
+
+Build and verify the frozen sidecar for the current native Rust target:
+
+```bash
+make verify-desktop-dist
+```
+
+The builder:
+
+- rejects a target triple different from the native host;
+- packages `thesis_forge.adapters.sidecar` with required templates and
+  python-docx data;
+- writes `src-tauri/binaries/thesisforge-sidecar-<target>`;
+- keeps PyInstaller in development dependencies only.
+
+The verifier removes API-key/token and proxy variables, sets
+`THESISFORGE_BLOCK_NETWORK=1`, copies the complete example outside the checkout,
+and proves inspect, validate, preview, cancellation, ordered build, valid DOCX
+output, and reopen behavior. Cancellation must preserve the prior output.
+
+`THESISFORGE_SIDECAR_EXECUTABLE` and `THESISFORGE_PYTHON` are explicit
+development/test overrides. A release build without those overrides resolves
+the Tauri-managed `thesisforge-sidecar` bundled beside the application.
+
+## Native Packages
+
+macOS packages must be built on macOS:
+
+```bash
+.venv/bin/python scripts/build_sidecar.py \
+  --target-triple aarch64-apple-darwin
+cargo tauri build \
+  --config src-tauri/tauri.release.conf.json \
+  --target aarch64-apple-darwin \
+  --bundles app,dmg
+dot_clean -m src-tauri/target/aarch64-apple-darwin/release/bundle
+.venv/bin/python scripts/verify_desktop_distribution.py \
+  --target-triple aarch64-apple-darwin \
+  --platform macos \
+  --web-dist dist/web \
+  --bundle-root src-tauri/target/aarch64-apple-darwin/release/bundle
+```
+
+When `--target` is omitted, Tauri writes to
+`src-tauri/target/release/bundle/`; pass that directory to the verifier instead.
+Run `dot_clean -m` before checksums and upload because external macOS volumes
+may create `._*` AppleDouble files.
+
+Windows packages must be built and verified on a Windows runner:
+
+```powershell
+python scripts/build_sidecar.py --target-triple x86_64-pc-windows-msvc
+cargo tauri build `
+  --config src-tauri/tauri.release.conf.json `
+  --target x86_64-pc-windows-msvc `
+  --bundles msi,nsis
+python scripts/verify_desktop_distribution.py `
+  --target-triple x86_64-pc-windows-msvc `
+  --platform windows `
+  --web-dist dist/web `
+  --bundle-root src-tauri/target/x86_64-pc-windows-msvc/release/bundle
+```
+
+The repository workflow `.github/workflows/distribution.yml` runs native macOS
+and Windows matrix jobs and uploads Web, Python, sidecar, and desktop artifacts
+separately. A workflow definition is not Windows execution evidence; only a
+successful Windows job may establish `.msi` / NSIS acceptance.
+
+## Installation And Launch
+
+For local macOS acceptance, open the DMG and copy `ThesisForge.app` to
+`Applications`, or launch the generated `.app` directly. For Windows, install
+the generated MSI or NSIS executable from the native Windows job.
+
+The workbench uses native file dialogs and accepts `.md` and `.markdown`.
+Desktop source writes occur only after explicit Save / `Cmd/Ctrl+S`. Build /
+`Cmd/Ctrl+B` writes `thesis.docx` next to the source unless the transport
+provides another output path. Web builds require the configured HTTP service
+and return browser-appropriate output identity/download behavior.
+
+## Signing, Checksums, And Publication
+
+Current local and CI test artifacts are unsigned development distributions.
+Production release requires all of the following external gates:
+
+- select a project license and complete third-party ownership review;
+- sign macOS bundles with Apple Developer ID and notarize/staple them;
+- sign Windows installers with an approved Authenticode certificate;
+- generate SHA-256 checksums only after signing, notarization, and AppleDouble
+  cleanup;
+- verify checksums after artifact download on each native platform;
+- retain the successful native CI run and distribution verifier JSON as release
+  evidence.
+
+Do not bypass operating-system security warnings or publish unsigned artifacts
+as production releases.
+
+## Troubleshooting
+
+- `failed to resolve packaged ThesisForge sidecar`: rebuild the native sidecar,
+  then rebuild the Tauri bundle with the release config.
+- Markdown is visible but cannot be opened: use `.md` or `.markdown`; other
+  extensions are rejected at the Rust boundary.
+- A source cannot be saved: verify filesystem permissions. The editor remains
+  dirty and the prior file must remain unchanged.
+- Build cancellation or failure: retry from the workbench; the previous valid
+  DOCX must remain intact.
+- `Bundle contains AppleDouble files`: run `dot_clean -m` on the bundle root,
+  then rerun the verifier and checksums.
+- Web actions cannot reach the compiler: configure and start the ThesisForge
+  HTTP adapter; static Vite files alone are not a compiler service.
+- Windows artifacts are missing locally on macOS: use the native Windows CI
+  matrix job. Do not relabel or copy the macOS sidecar.
 
 ## Change Checklist
 
@@ -97,5 +246,6 @@ public package index until ownership and license review are complete.
   `docs/THIRD_PARTY_NOTES.md` before merge.
 - Core commands must continue to pass with network blocked and AI credentials
   absent.
-- Release candidates require the complete `make verify` gate and review of the
-  active SpecNav task reports, ledgers, drift checks and handoff contract.
+- Release candidates require `make verify`, the applicable native package build
+  and verifier, and review of the active SpecNav task reports, ledgers, drift
+  checks and handoff contract.

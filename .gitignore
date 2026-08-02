@@ -14,5 +14,6 @@ build/
 *.docx
 *.pdf
 references/external/
+src-tauri/binaries/
 .env
 *.local.yaml

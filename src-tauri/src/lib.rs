@@ -6,10 +6,22 @@ use std::path::{Path, PathBuf};
 use std::process::{Command, Stdio};
 use std::sync::atomic::{AtomicU64, Ordering};
 use std::sync::{Arc, Mutex};
-use tauri::State;
 use tauri::ipc::Channel;
+use tauri::{AppHandle, State};
+use tauri_plugin_shell::{
+    ShellExt,
+    process::{CommandEvent, TerminatedPayload},
+};
 
 pub const PROTOCOL_VERSION: &str = "thesisforge.workbench.v1";
+
+fn is_markdown_source(path: &Path) -> bool {
+    path.extension()
+        .and_then(|extension| extension.to_str())
+        .is_some_and(|extension| {
+            extension.eq_ignore_ascii_case("md") || extension.eq_ignore_ascii_case("markdown")
+        })
+}
 
 pub fn validate_request(request: &Value) -> Result<(), String> {
     let protocol = request
@@ -32,6 +44,9 @@ pub fn validate_request(request: &Value) -> Result<(), String> {
 }
 
 pub fn open_source_path(path: &Path) -> Result<Value, String> {
+    if !is_markdown_source(path) {
+        return Err("source must be a Markdown file (.md or .markdown)".to_string());
+    }
     let text = std::fs::read_to_string(path)
         .map_err(|error| format!("failed to read Markdown source: {error}"))?;
     let file_name = path
@@ -70,6 +85,12 @@ fn sidecar_command(stream: bool) -> (String, Vec<String>) {
     )
 }
 
+fn use_development_sidecar() -> bool {
+    cfg!(debug_assertions)
+        || env::var_os("THESISFORGE_SIDECAR_EXECUTABLE").is_some()
+        || env::var_os("THESISFORGE_PYTHON").is_some()
+}
+
 pub fn dispatch_to_sidecar(request: &Value) -> Result<Value, String> {
     validate_request(request)?;
     let (program, args) = sidecar_command(false);
@@ -98,6 +119,56 @@ pub fn dispatch_to_sidecar(request: &Value) -> Result<Value, String> {
     }
     serde_json::from_slice(&output.stdout)
         .map_err(|error| format!("failed to decode sidecar response: {error}"))
+}
+
+async fn dispatch_to_managed_sidecar(app: &AppHandle, request: &Value) -> Result<Value, String> {
+    validate_request(request)?;
+    let encoded = serde_json::to_vec(request)
+        .map_err(|error| format!("failed to encode sidecar request: {error}"))?;
+    let command = app
+        .shell()
+        .sidecar("thesisforge-sidecar")
+        .map_err(|error| format!("failed to resolve packaged ThesisForge sidecar: {error}"))?
+        .arg("--once");
+    let (mut events, mut child) = command
+        .spawn()
+        .map_err(|error| format!("failed to start packaged ThesisForge sidecar: {error}"))?;
+    child
+        .write(&[encoded, b"\n".to_vec()].concat())
+        .map_err(|error| format!("failed to write packaged sidecar request: {error}"))?;
+
+    let mut stdout = Vec::new();
+    let mut stderr = Vec::new();
+    let mut terminated = None;
+    while let Some(event) = events.recv().await {
+        match event {
+            CommandEvent::Stdout(line) => stdout.extend(line),
+            CommandEvent::Stderr(line) => stderr.extend(line),
+            CommandEvent::Error(error) => {
+                return Err(format!("packaged ThesisForge sidecar failed: {error}"));
+            }
+            CommandEvent::Terminated(payload) => terminated = Some(payload),
+            _ => {}
+        }
+    }
+    ensure_successful_termination(terminated, &stderr)?;
+    serde_json::from_slice(&stdout)
+        .map_err(|error| format!("failed to decode packaged sidecar response: {error}"))
+}
+
+fn ensure_successful_termination(
+    terminated: Option<TerminatedPayload>,
+    stderr: &[u8],
+) -> Result<(), String> {
+    if terminated.as_ref().and_then(|payload| payload.code) == Some(0) {
+        return Ok(());
+    }
+    let detail = String::from_utf8_lossy(stderr).trim().to_string();
+    Err(if detail.is_empty() {
+        "packaged ThesisForge sidecar terminated without success".to_string()
+    } else {
+        detail
+    })
 }
 
 #[derive(Clone, Default)]
@@ -170,15 +241,66 @@ fn stream_sidecar_events(
     Ok(())
 }
 
+async fn stream_managed_sidecar_events(
+    app: &AppHandle,
+    request: &Value,
+    cancel_path: &Path,
+    on_event: &Channel<Value>,
+) -> Result<(), String> {
+    validate_request(request)?;
+    if request.get("operation").and_then(Value::as_str) != Some("build") {
+        return Err("build stream requires a build operation".to_string());
+    }
+    let encoded = serde_json::to_vec(request)
+        .map_err(|error| format!("failed to encode sidecar request: {error}"))?;
+    let command = app
+        .shell()
+        .sidecar("thesisforge-sidecar")
+        .map_err(|error| format!("failed to resolve packaged ThesisForge sidecar: {error}"))?
+        .arg("--stream")
+        .env("THESISFORGE_CANCEL_FILE", cancel_path);
+    let (mut events, mut child) = command
+        .spawn()
+        .map_err(|error| format!("failed to start packaged ThesisForge sidecar: {error}"))?;
+    child
+        .write(&[encoded, b"\n".to_vec()].concat())
+        .map_err(|error| format!("failed to write packaged sidecar request: {error}"))?;
+
+    let mut stderr = Vec::new();
+    let mut terminated = None;
+    while let Some(event) = events.recv().await {
+        match event {
+            CommandEvent::Stdout(line) => {
+                let event: Value = serde_json::from_slice(&line)
+                    .map_err(|error| format!("failed to decode packaged sidecar event: {error}"))?;
+                on_event.send(event).map_err(|error| {
+                    format!("failed to forward packaged sidecar event: {error}")
+                })?;
+            }
+            CommandEvent::Stderr(line) => stderr.extend(line),
+            CommandEvent::Error(error) => {
+                return Err(format!("packaged ThesisForge sidecar failed: {error}"));
+            }
+            CommandEvent::Terminated(payload) => terminated = Some(payload),
+            _ => {}
+        }
+    }
+    ensure_successful_termination(terminated, &stderr)
+}
+
 #[tauri::command]
-async fn dispatch_workbench(request: Value) -> Result<Value, String> {
-    tauri::async_runtime::spawn_blocking(move || dispatch_to_sidecar(&request))
-        .await
-        .map_err(|error| format!("sidecar task failed: {error}"))?
+async fn dispatch_workbench(app: AppHandle, request: Value) -> Result<Value, String> {
+    if use_development_sidecar() {
+        return tauri::async_runtime::spawn_blocking(move || dispatch_to_sidecar(&request))
+            .await
+            .map_err(|error| format!("sidecar task failed: {error}"))?;
+    }
+    dispatch_to_managed_sidecar(&app, &request).await
 }
 
 #[tauri::command]
 async fn run_build(
+    app: AppHandle,
     request: Value,
     on_event: Channel<Value>,
     state: State<'_, BuildCancellationState>,
@@ -196,16 +318,21 @@ async fn run_build(
         .map_err(|_| "build cancellation state is unavailable".to_string())?
         .insert(request_id.clone(), cancel_path.clone());
     let active = state.inner().clone();
-    let result = tauri::async_runtime::spawn_blocking(move || {
-        let result = stream_sidecar_events(&request, &cancel_path, &on_event);
-        let _ = std::fs::remove_file(&cancel_path);
-        if let Ok(mut paths) = active.paths.lock() {
-            paths.remove(&request_id);
-        }
-        result
-    })
-    .await
-    .map_err(|error| format!("sidecar build task failed: {error}"))?;
+    let result = if use_development_sidecar() {
+        let request = request.clone();
+        let cancel_path = cancel_path.clone();
+        tauri::async_runtime::spawn_blocking(move || {
+            stream_sidecar_events(&request, &cancel_path, &on_event)
+        })
+        .await
+        .map_err(|error| format!("sidecar build task failed: {error}"))?
+    } else {
+        stream_managed_sidecar_events(&app, &request, &cancel_path, &on_event).await
+    };
+    let _ = std::fs::remove_file(&cancel_path);
+    if let Ok(mut paths) = active.paths.lock() {
+        paths.remove(&request_id);
+    }
     result
 }
 
@@ -231,7 +358,7 @@ async fn cancel_build(
 #[tauri::command]
 async fn pick_source() -> Result<Option<Value>, String> {
     let handle = rfd::AsyncFileDialog::new()
-        .add_filter("Markdown", &["md"])
+        .set_title("选择 Markdown 文稿（.md 或 .markdown）")
         .pick_file()
         .await;
     handle.map(|file| open_source_path(file.path())).transpose()
@@ -240,6 +367,7 @@ async fn pick_source() -> Result<Option<Value>, String> {
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
+        .plugin(tauri_plugin_shell::init())
         .manage(BuildCancellationState::default())
         .invoke_handler(tauri::generate_handler![
             dispatch_workbench,

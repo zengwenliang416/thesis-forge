@@ -42,6 +42,29 @@ fn reads_a_native_markdown_source_into_the_shared_source_dto() {
 }
 
 #[test]
+fn accepts_the_long_markdown_extension() {
+    let directory = tempfile::tempdir().unwrap();
+    let source = directory.path().join("thesis.markdown");
+    std::fs::write(&source, "# 绪论\n").unwrap();
+
+    let opened = open_source_path(&source).unwrap();
+
+    assert_eq!(opened["source"]["fileName"], "thesis.markdown");
+}
+
+#[test]
+fn rejects_non_markdown_sources_at_the_native_boundary() {
+    let directory = tempfile::tempdir().unwrap();
+    let source = directory.path().join("thesis.txt");
+    std::fs::write(&source, "# 绪论\n").unwrap();
+
+    assert_eq!(
+        open_source_path(&source).unwrap_err(),
+        "source must be a Markdown file (.md or .markdown)"
+    );
+}
+
+#[test]
 fn rejects_a_request_without_an_object_payload() {
     let request = json!({
         "protocol": PROTOCOL_VERSION,

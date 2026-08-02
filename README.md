@@ -242,14 +242,16 @@ M10 AI 扩展
 
 ## 11. 测试、打包与维护
 
-完整维护门禁：
+日常源码、Web 与 sidecar 维护门禁：
 
 ```bash
 make verify
 ```
 
 该命令执行完整 pytest、Ruff、依赖一致性、wheel/sdist 构建、隔离 wheel
-安装与离线 CLI 回归、严格 OpenSpec 校验和 Git whitespace 检查。
+安装与离线 CLI 回归、前端与 sidecar 验证、严格 OpenSpec 校验和 Git
+whitespace 检查。它不构建或替代 macOS `.app/.dmg` 与 Windows `.msi/.exe`
+原生安装包门禁；原生打包和 verifier 命令见下文。
 
 只构建并验证安装包：
 
@@ -260,6 +262,53 @@ make verify-dist
 wheel 内置基础模板和示例学校模板。安装验证会从仓库外运行完整示例，确保不依赖
 checkout 中的 `src/`、`templates/` 或父开发环境 `site-packages`。详细维护流程见
 `docs/MAINTENANCE.md`。
+
+### Web 与桌面分发
+
+三个产品入口共用同一套 React + TypeScript + Vite 工作台，但运行能力不同：
+
+- Web：`dist/web/` 是静态资源，必须显式配置并连接 ThesisForge HTTP 服务。
+  浏览器没有本地路径权限，使用 workspace 上传、显式保存和下载语义。
+- macOS：Tauri `.app` / `.dmg` 内置目标平台的冻结 Python sidecar，正常运行不
+  需要另外安装 Python、Node.js、Rust、API Key、账号或网络服务。
+- Windows：Tauri `.msi` / NSIS `.exe` 使用同一前端和协议，并内置 Windows
+  原生 sidecar；必须由 Windows runner 原生构建和验收，不能重命名 macOS 产物。
+
+构建独立 Web 与当前平台 sidecar：
+
+```bash
+make package-web
+make verify-desktop-dist
+```
+
+macOS 原生打包：
+
+```bash
+cargo tauri build \
+  --config src-tauri/tauri.release.conf.json \
+  --bundles app,dmg
+dot_clean -m src-tauri/target/release/bundle
+.venv/bin/python scripts/verify_desktop_distribution.py \
+  --platform macos \
+  --bundle-root src-tauri/target/release/bundle
+```
+
+产物位于：
+
+```text
+dist/web/
+dist/python/
+src-tauri/binaries/
+src-tauri/target/<target>/release/bundle/
+```
+
+桌面工作台支持 `Cmd/Ctrl+K` 聚焦编辑器、`Cmd/Ctrl+S` 显式保存、
+`Cmd/Ctrl+B` 构建 DOCX。打开源文件仅接受 `.md` 或 `.markdown`；构建结果默认
+写入源文件同目录的 `thesis.docx`，并保留临时包校验与原子替换行为。
+
+当前本地产物未做 Apple Developer ID / Microsoft Authenticode 生产签名，也未做
+Apple notarization。它们用于本地验收和 CI 产物验证，不应直接作为公开发行包。
+签名、公证、Windows runner 和校验和流程见 `docs/MAINTENANCE.md`。
 
 ## 12. 许可证
 

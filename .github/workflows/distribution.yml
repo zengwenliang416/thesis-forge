@@ -1,0 +1,81 @@
+name: Distribution
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - ".github/workflows/distribution.yml"
+      - "frontend/**"
+      - "scripts/build_sidecar.py"
+      - "scripts/verify_desktop_distribution.py"
+      - "src/**"
+      - "src-tauri/**"
+      - "templates/**"
+      - "tests/test_desktop_distribution.py"
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  desktop:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: macos-14
+            target: aarch64-apple-darwin
+            platform: macos
+            bundles: app,dmg
+          - os: windows-2025
+            target: x86_64-pc-windows-msvc
+            platform: windows
+            bundles: msi,nsis
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: pnpm/action-setup@v4
+        with:
+          version: "10.34.5"
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.target }}
+      - name: Install Python build dependencies
+        run: python -m pip install -e ".[dev]"
+      - name: Install frontend dependencies
+        run: pnpm --dir frontend install --frozen-lockfile
+      - name: Install Tauri CLI
+        run: cargo install tauri-cli --version "^2.9" --locked
+      - name: Build isolated Web distribution
+        run: pnpm --dir frontend exec tsc -b && pnpm --dir frontend exec vite build --outDir ../dist/web --emptyOutDir
+      - name: Build and verify isolated Python distribution
+        run: python -m build --no-isolation --outdir dist/python && python scripts/verify_distribution.py --dist-dir dist/python
+      - name: Build target-native frozen sidecar
+        run: python scripts/build_sidecar.py --target-triple ${{ matrix.target }}
+      - name: Verify frozen sidecar offline
+        run: python scripts/verify_desktop_distribution.py --target-triple ${{ matrix.target }} --sidecar-only
+      - name: Build native Tauri bundles
+        run: cargo tauri build --config src-tauri/tauri.release.conf.json --target ${{ matrix.target }} --bundles ${{ matrix.bundles }}
+      - name: Remove macOS metadata sidecars
+        if: runner.os == 'macOS'
+        run: dot_clean -m src-tauri/target/${{ matrix.target }}/release/bundle
+      - name: Verify native desktop distribution
+        run: python scripts/verify_desktop_distribution.py --target-triple ${{ matrix.target }} --platform ${{ matrix.platform }} --web-dist dist/web --bundle-root src-tauri/target/${{ matrix.target }}/release/bundle
+      - uses: actions/upload-artifact@v4
+        with:
+          name: thesisforge-web-${{ matrix.target }}
+          path: dist/web
+      - uses: actions/upload-artifact@v4
+        with:
+          name: thesisforge-python-${{ matrix.target }}
+          path: dist/python
+      - uses: actions/upload-artifact@v4
+        with:
+          name: thesisforge-sidecar-${{ matrix.target }}
+          path: src-tauri/binaries
+      - uses: actions/upload-artifact@v4
+        with:
+          name: thesisforge-desktop-${{ matrix.target }}
+          path: src-tauri/target/${{ matrix.target }}/release/bundle
