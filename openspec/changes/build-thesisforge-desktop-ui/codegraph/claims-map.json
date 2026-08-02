@@ -1,6 +1,6 @@
 {
   "schema": "specnav.codegraph.claims.v1",
-  "generated_at": "2026-08-01T07:59:35.809Z",
+  "generated_at": "2026-08-02T17:45:36.480Z",
   "active_change": "build-thesisforge-desktop-ui",
   "claims": [
     {
@@ -314,6 +314,319 @@
       ],
       "query_ids": [
         "development:task-008-cross-platform-distribution-acceptance:evidence"
+      ]
+    },
+    {
+      "id": "verification:task-001-archive-safe-prototype-baseline",
+      "kind": "verification-task-traceability",
+      "stage": "verification",
+      "task_id": "001-archive-safe-prototype-baseline",
+      "text": "Resolve the unique archived `build-thesisforge-v1-core` directory, run its",
+      "required": true,
+      "source": "specnav-codegraph-plan",
+      "source_paths": [
+        "openspec/changes/build-thesisforge-desktop-ui/development/tasks/001-archive-safe-prototype-baseline/brief.md",
+        "openspec/changes/build-thesisforge-desktop-ui/development/tasks/001-archive-safe-prototype-baseline/context.json"
+      ],
+      "expected_evidence": [
+        "Observed red baseline from the former active prototype path",
+        "Focused zero-match, ambiguous-match, active-exclusion, missing-evidence and immutability tests",
+        "Existing harness, artifact and browser-evidence tests passing from the archive",
+        "Closest distribution and strict OpenSpec checks",
+        "Task report, spec review and quality review"
+      ],
+      "allowed_files": [
+        "tests/test_prototype_acceptance.py"
+      ],
+      "query_ids": [
+        "verification:task-001-archive-safe-prototype-baseline:evidence"
+      ]
+    },
+    {
+      "id": "verification:task-002-headless-workspace-state-controller",
+      "kind": "verification-task-traceability",
+      "stage": "verification",
+      "task_id": "002-headless-workspace-state-controller",
+      "text": "Provide a pure-Python `WorkspaceController` that accepts saved source snapshots,",
+      "required": true,
+      "source": "specnav-codegraph-plan",
+      "source_paths": [
+        "openspec/changes/build-thesisforge-desktop-ui/development/tasks/002-headless-workspace-state-controller/brief.md",
+        "openspec/changes/build-thesisforge-desktop-ui/development/tasks/002-headless-workspace-state-controller/context.json"
+      ],
+      "expected_evidence": [
+        "Observed strict-TDD RED for missing controller/view-model APIs",
+        "Headless tests covering immutable models and every required workspace state",
+        "Tests covering dirty/repeated-action guards, stale progress/success/failure suppression, newer-generation wins, and recovery",
+        "Architecture tests proving controller/view-model modules have no PySide6, python-docx, or lxml imports",
+        "Focused and full pytest, Ruff, pip check, strict OpenSpec, SpecNav entry, CodeGraph, and whitespace evidence",
+        "Task report, independent spec review, and independent quality review"
+      ],
+      "allowed_files": [
+        "src/thesis_forge/ui/__init__.py",
+        "src/thesis_forge/ui/models.py",
+        "src/thesis_forge/ui/tasks.py",
+        "src/thesis_forge/ui/controller.py",
+        "tests/test_ui_controller.py",
+        "tests/test_architecture.py"
+      ],
+      "query_ids": [
+        "verification:task-002-headless-workspace-state-controller:evidence"
+      ]
+    },
+    {
+      "id": "verification:task-003-explicit-source-open-atomic-save",
+      "kind": "verification-task-traceability",
+      "stage": "verification",
+      "task_id": "003-explicit-source-open-atomic-save",
+      "text": "Extend the pure-Python workspace reference with explicit desktop open,",
+      "required": true,
+      "source": "specnav-codegraph-plan",
+      "source_paths": [
+        "openspec/changes/build-thesisforge-desktop-ui/development/tasks/003-explicit-source-open-atomic-save/brief.md",
+        "openspec/changes/build-thesisforge-desktop-ui/development/tasks/003-explicit-source-open-atomic-save/context.json"
+      ],
+      "expected_evidence": [
+        "Observed strict-TDD RED for missing source lifecycle APIs and atomic filesystem adapter",
+        "Atomic writer tests covering replacement, cleanup, UTF-8, Save As, and preservation on injected failure",
+        "Controller tests covering desktop open/save, Web workspace/download capabilities, dirty guards, recovery, and post-save refresh ordering",
+        "Tests proving inspect, validate, and build receive persisted paths and never mutate source files",
+        "Focused and full pytest, Ruff, pip check, strict OpenSpec, SpecNav entry, CodeGraph, JSON, and whitespace evidence",
+        "Task report, dedicated spec review, and dedicated quality review"
+      ],
+      "allowed_files": [
+        "src/thesis_forge/ui/__init__.py",
+        "src/thesis_forge/ui/models.py",
+        "src/thesis_forge/ui/tasks.py",
+        "src/thesis_forge/ui/filesystem.py",
+        "src/thesis_forge/ui/controller.py",
+        "tests/test_ui_controller.py",
+        "tests/test_ui_filesystem.py",
+        "tests/test_architecture.py"
+      ],
+      "query_ids": [
+        "verification:task-003-explicit-source-open-atomic-save:evidence"
+      ]
+    },
+    {
+      "id": "verification:task-004-optional-pyside6-workbench-shell",
+      "kind": "verification-task-traceability",
+      "stage": "verification",
+      "task_id": "004-optional-pyside6-workbench-shell",
+      "text": "Create the shared React workbench shell and its TypeScript workspace state,",
+      "required": true,
+      "source": "specnav-codegraph-plan",
+      "source_paths": [
+        "openspec/changes/build-thesisforge-desktop-ui/development/tasks/004-optional-pyside6-workbench-shell/brief.md",
+        "openspec/changes/build-thesisforge-desktop-ui/development/tasks/004-optional-pyside6-workbench-shell/context.json"
+      ],
+      "expected_evidence": [
+        "Strict TDD RED for missing frontend workspace, workspace state, transports, Python adapters, Tauri bridge, and CLI isolation contract",
+        "Shared Python and TypeScript workspace-state parity fixtures",
+        "Vitest and Testing Library coverage for shell, labels, keyboard focus, shortcuts, states, capabilities, responsive panels, and resize behavior",
+        "Playwright browser launch and responsive behavior evidence",
+        "Python HTTP and sidecar contract tests proving delegation to existing application services and JSON-safe DTOs",
+        "Cargo test/check for the Tauri command bridge and sidecar envelope",
+        "Frontend build, lint, typecheck, full Python tests, Ruff, pip check, strict OpenSpec, SpecNav entry, CodeGraph, JSON, and whitespace evidence",
+        "Task report, dedicated spec review, and dedicated quality review"
+      ],
+      "allowed_files": [
+        "package.json",
+        "pnpm-lock.yaml",
+        "frontend/**",
+        "src-tauri/**",
+        "src/thesis_forge/adapters/**",
+        "src/thesis_forge/ui/**",
+        "tests/test_adapters.py",
+        "tests/test_architecture.py",
+        "tests/test_frontend_contract.py",
+        "tests/fixtures/workspace-state-v1.json",
+        "README.md"
+      ],
+      "query_ids": [
+        "verification:task-004-optional-pyside6-workbench-shell:evidence"
+      ]
+    },
+    {
+      "id": "verification:task-005-template-selection-structured-diagnostics",
+      "kind": "verification-task-traceability",
+      "stage": "verification",
+      "task_id": "005-template-selection-structured-diagnostics",
+      "text": "Connect the existing template resolver and validation service to the shared",
+      "required": true,
+      "source": "specnav-codegraph-plan",
+      "source_paths": [
+        "openspec/changes/build-thesisforge-desktop-ui/development/tasks/005-template-selection-structured-diagnostics/brief.md",
+        "openspec/changes/build-thesisforge-desktop-ui/development/tasks/005-template-selection-structured-diagnostics/context.json"
+      ],
+      "expected_evidence": [
+        "Strict TDD RED and GREEN for Python/TypeScript zh-CN diagnostic mapping parity and unknown-code fallback",
+        "Reducer and selector tests for template state, deterministic ordering, filtering, counts, active issue, fatal guard, and warning-only build",
+        "Component tests for template-triggered revalidation, diagnostic rows, keyboard/pointer activation, editor line focus, and no-line issues",
+        "Transport and adapter tests proving stable templateId resolution, templatePath compatibility, selector-conflict rejection, and complete diagnostic DTO validation",
+        "Real validation-service tests for valid, missing, malformed, and incompatible templates",
+        "Frontend unit/typecheck/lint/build/E2E and focused/full Python regression evidence",
+        "Ruff, pip check, strict OpenSpec, SpecNav entry, CodeGraph, JSON, and whitespace evidence",
+        "Task report, dedicated spec review, and dedicated quality review"
+      ],
+      "allowed_files": [
+        "frontend/**",
+        "src/thesis_forge/adapters/**",
+        "src/thesis_forge/presentation/**",
+        "src/thesis_forge/ui/**",
+        "src/thesis_forge/cli.py",
+        "tests/fixtures/diagnostics-zh-cn-v1.json",
+        "tests/test_adapters.py",
+        "tests/test_cli.py",
+        "tests/test_frontend_contract.py",
+        "tests/test_ui_controller.py",
+        "tests/test_ui_models.py",
+        "tests/test_architecture.py"
+      ],
+      "query_ids": [
+        "verification:task-005-template-selection-structured-diagnostics:evidence"
+      ]
+    },
+    {
+      "id": "verification:task-006-outline-renderer-neutral-preview",
+      "kind": "verification-task-traceability",
+      "stage": "verification",
+      "task_id": "006-outline-renderer-neutral-preview",
+      "text": "Add a renderer-neutral application preview service that reuses parse,",
+      "required": true,
+      "source": "specnav-codegraph-plan",
+      "source_paths": [
+        "openspec/changes/build-thesisforge-desktop-ui/development/tasks/006-outline-renderer-neutral-preview/brief.md",
+        "openspec/changes/build-thesisforge-desktop-ui/development/tasks/006-outline-renderer-neutral-preview/context.json"
+      ],
+      "expected_evidence": [
+        "Strict RED and GREEN proving preview_service reuses parse/validate/compile, skips compile on fatal validation, and never calls renderer or writes output",
+        "Golden mapper coverage for outline IDs/lines, compiler order, numbering labels, inline references/citations/footnotes, cover, TOC, sections, lists, figures, tables, equations, listings, algorithms, bibliography, and unsupported RenderNode fallback",
+        "Adapter and TypeScript DTO tests proving preview responses are JSON-safe, versioned, complete, and reject malformed nested values",
+        "Reducer tests for preview loading, validation-blocked state, template refresh, stale suppression, and shared selection",
+        "React tests for outline/preview rendering, keyboard and pointer activation, editor line focus, diagnostics markers, empty/blocked/unsupported states, and persistent pagination disclaimer",
+        "Static tests forbidding docx, lxml, renderers, compiler, parser, validator, HTTP, Tauri, and filesystem imports from frontend preview modules",
+        "Frontend unit/typecheck/lint/build/E2E and focused/full Python regression evidence",
+        "Ruff, pip check, Cargo fmt/test/check, strict OpenSpec, SpecNav entry, CodeGraph, JSON, and whitespace evidence",
+        "Task report, dedicated spec review, and dedicated quality review"
+      ],
+      "allowed_files": [
+        "frontend/src/components/**",
+        "frontend/src/state/**",
+        "frontend/src/transport/**",
+        "frontend/src/styles.css",
+        "frontend/e2e/**",
+        "src/thesis_forge/application/**",
+        "src/thesis_forge/adapters/**",
+        "src/thesis_forge/presentation/**",
+        "tests/fixtures/preview-workbench-v1.json",
+        "tests/test_preview_presentation.py",
+        "tests/test_application_services.py",
+        "tests/test_adapters.py",
+        "tests/test_frontend_contract.py",
+        "tests/test_architecture.py"
+      ],
+      "query_ids": [
+        "verification:task-006-outline-renderer-neutral-preview:evidence"
+      ]
+    },
+    {
+      "id": "verification:task-007-safe-background-build-cancellation",
+      "kind": "verification-task-traceability",
+      "stage": "verification",
+      "task_id": "007-safe-background-build-cancellation",
+      "text": "Add cooperative cancellation to the existing deterministic build application",
+      "required": true,
+      "source": "specnav-codegraph-plan",
+      "source_paths": [
+        "openspec/changes/build-thesisforge-desktop-ui/development/tasks/007-safe-background-build-cancellation/brief.md",
+        "openspec/changes/build-thesisforge-desktop-ui/development/tasks/007-safe-background-build-cancellation/context.json"
+      ],
+      "expected_evidence": [
+        "Strict RED and GREEN for cancellation before parse, validate, compile, render, finalize, package validation, and final atomic replacement",
+        "Application tests proving callback, renderer, package validation, replacement, and cancellation failures preserve prior output and clean temporary files",
+        "Adapter tests proving ordered JSON-safe progress and exactly one terminal success or typed error event",
+        "Web stream tests proving incremental progress, AbortSignal propagation, disconnect cancellation, and no stale terminal application",
+        "Tauri/Rust tests proving asynchronous sidecar event forwarding, request identity, cancellation signaling, and protocol parity",
+        "Reducer tests for ordered progress, repeated-click suppression, cancellation, retry, output preservation, and stale progress/success/error/output suppression",
+        "React tests for progress, cancel/retry controls, actionable error copy, final output feedback, and retained prior output",
+        "Browser and Tauri E2E coverage for successful build, cancel, retry, stale completion, and recovery",
+        "Frontend unit/typecheck/lint/build/E2E and focused/full Python regression evidence",
+        "Ruff, pip check, Cargo fmt/test/check, strict OpenSpec, SpecNav entry, CodeGraph, JSON, and whitespace evidence",
+        "Task report, dedicated spec review, and dedicated quality review"
+      ],
+      "allowed_files": [
+        "frontend/src/components/**",
+        "frontend/src/state/**",
+        "frontend/src/transport/**",
+        "frontend/src/styles.css",
+        "frontend/e2e/**",
+        "src/thesis_forge/application/contracts.py",
+        "src/thesis_forge/application/services.py",
+        "src/thesis_forge/adapters/**",
+        "src/thesis_forge/ui/controller.py",
+        "src-tauri/src/**",
+        "src-tauri/tests/**",
+        "tests/test_application_services.py",
+        "tests/test_adapters.py",
+        "tests/test_http_adapter.py",
+        "tests/test_sidecar.py",
+        "tests/test_ui_controller.py",
+        "tests/test_frontend_contract.py",
+        "tests/test_architecture.py"
+      ],
+      "query_ids": [
+        "verification:task-007-safe-background-build-cancellation:evidence"
+      ]
+    },
+    {
+      "id": "verification:task-008-cross-platform-distribution-acceptance",
+      "kind": "verification-task-traceability",
+      "stage": "verification",
+      "task_id": "008-cross-platform-distribution-acceptance",
+      "text": "Turn the already working shared React workbench and Python application services",
+      "required": true,
+      "source": "specnav-codegraph-plan",
+      "source_paths": [
+        "openspec/changes/build-thesisforge-desktop-ui/development/tasks/008-cross-platform-distribution-acceptance/brief.md",
+        "openspec/changes/build-thesisforge-desktop-ui/development/tasks/008-cross-platform-distribution-acceptance/context.json"
+      ],
+      "expected_evidence": [
+        "Strict RED and GREEN for release configuration, target-specific sidecar naming, platform mismatch rejection, artifact isolation, and native bundle discovery",
+        "Frozen sidecar inspect, validate, preview, build, cancellation, and reopen smoke evidence with sockets blocked and credentials removed",
+        "Valid DOCX package and preserved prior-output checks from the frozen sidecar",
+        "Browser acceptance for populated, loading, empty, error, disabled, permission, dirty, canceled, and success states",
+        "Keyboard-only, labels, focus visibility, contrast, responsive resize, and reduced-motion checks",
+        "Independent Python wheel/sdist, Web production, macOS app/dmg, and Windows msi/nsis build evidence",
+        "Workflow/static tests proving macOS and Windows use native runners and do not relabel sidecars",
+        "Full frontend, Python, Ruff, pip, Cargo, distribution, strict OpenSpec, SpecNav, CodeGraph, JSON, and whitespace gates",
+        "README and maintenance instructions with capability differences, limitations, troubleshooting, signing/notarization gates, checksums, and artifact provenance",
+        "Six-domain verification inputs plus task report, spec review, and quality review"
+      ],
+      "allowed_files": [
+        ".github/workflows/**",
+        ".gitignore",
+        "Makefile",
+        "README.md",
+        "docs/MAINTENANCE.md",
+        "frontend/e2e/**",
+        "frontend/src/**",
+        "package.json",
+        "pyproject.toml",
+        "scripts/build_sidecar.py",
+        "scripts/verify_desktop_distribution.py",
+        "src-tauri/Cargo.lock",
+        "src-tauri/Cargo.toml",
+        "src-tauri/src/**",
+        "src-tauri/tests/**",
+        "src-tauri/tauri.conf.json",
+        "src-tauri/tauri.release.conf.json",
+        "tests/test_desktop_distribution.py",
+        "tests/test_frontend_contract.py",
+        "tests/test_architecture.py"
+      ],
+      "query_ids": [
+        "verification:task-008-cross-platform-distribution-acceptance:evidence"
       ]
     }
   ]

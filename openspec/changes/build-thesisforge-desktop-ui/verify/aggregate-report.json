@@ -1,0 +1,979 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-08-02T18:10:14.713Z",
+  "change_id": "build-thesisforge-desktop-ui",
+  "active_change": "build-thesisforge-desktop-ui",
+  "verdict": "green",
+  "domains": {
+    "facticity": "green",
+    "static": "green",
+    "unit": "green",
+    "redteam": "green",
+    "e2e": "green",
+    "sensory": "green"
+  },
+  "blocking_findings": [],
+  "residual_risk": [],
+  "evidence_receipt": "verify/receipt.json",
+  "behavior_eval_report": "verify/behavior-evals/report.json",
+  "html_report": "verify/aggregate-report.html",
+  "review_style": "claude-warm-editorial",
+  "stale": false,
+  "blockers": [],
+  "warnings": [
+    "development:codegraph:claim-unverified:verification:task-001-archive-safe-prototype-baseline",
+    "development:codegraph:claim-unverified:verification:task-002-headless-workspace-state-controller",
+    "development:codegraph:claim-unverified:verification:task-003-explicit-source-open-atomic-save",
+    "development:codegraph:claim-unverified:verification:task-004-optional-pyside6-workbench-shell",
+    "development:codegraph:claim-unverified:verification:task-005-template-selection-structured-diagnostics",
+    "development:codegraph:claim-unverified:verification:task-006-outline-renderer-neutral-preview",
+    "development:codegraph:claim-unverified:verification:task-007-safe-background-build-cancellation",
+    "development:codegraph:claim-unverified:verification:task-008-cross-platform-distribution-acceptance",
+    "codegraph:claim-unverified:verification:task-001-archive-safe-prototype-baseline",
+    "codegraph:claim-unverified:verification:task-002-headless-workspace-state-controller",
+    "codegraph:claim-unverified:verification:task-003-explicit-source-open-atomic-save",
+    "codegraph:claim-unverified:verification:task-004-optional-pyside6-workbench-shell",
+    "codegraph:claim-unverified:verification:task-005-template-selection-structured-diagnostics",
+    "codegraph:claim-unverified:verification:task-006-outline-renderer-neutral-preview",
+    "codegraph:claim-unverified:verification:task-007-safe-background-build-cancellation",
+    "codegraph:claim-unverified:verification:task-008-cross-platform-distribution-acceptance"
+  ],
+  "codegraph": {
+    "ok": true,
+    "status": {
+      "schema": "specnav.codegraph.status.v1",
+      "ok": true,
+      "generated_at": "2026-08-02T18:10:14.710Z",
+      "project_root": "/Volumes/zwl/open_sources/thesis-forge",
+      "active_change": "build-thesisforge-desktop-ui",
+      "policy": {
+        "enabled": true,
+        "profile": "active_dev",
+        "mode": "advisory",
+        "stage": "verification",
+        "required_for_stage": false,
+        "disabled_reason": null
+      },
+      "execution_surface": "cli",
+      "decision": {
+        "stage": "verification",
+        "result": "pass",
+        "reason": "CodeGraph policy satisfied for verification."
+      },
+      "cli": {
+        "available": true,
+        "version": "1.3.1",
+        "path": "/Users/wenliang_zeng/.local/bin/codegraph",
+        "unsupported": false,
+        "error": null
+      },
+      "mcp": {
+        "configured": true,
+        "visible_in_current_session": false,
+        "restart_required": true,
+        "config_files": [
+          "/Users/wenliang_zeng/.claude.json",
+          "/Users/wenliang_zeng/.codex/config.toml"
+        ]
+      },
+      "index": {
+        "initialized": true,
+        "projectPath": "/Volumes/zwl/open_sources/thesis-forge",
+        "indexPath": "/Volumes/zwl/open_sources/thesis-forge/.codegraph",
+        "lastIndexed": "2026-08-02T15:37:40.895Z",
+        "fileCount": 142,
+        "nodeCount": 2000,
+        "edgeCount": 5672,
+        "pendingChanges": {
+          "added": 0,
+          "modified": 0,
+          "removed": 0
+        },
+        "reindexRecommended": false,
+        "worktreeMismatch": null
+      },
+      "blockers": [],
+      "warnings": [],
+      "raw_codegraph_status": {
+        "initialized": true,
+        "version": "1.3.1",
+        "projectPath": "/Volumes/zwl/open_sources/thesis-forge",
+        "indexPath": "/Volumes/zwl/open_sources/thesis-forge/.codegraph",
+        "lastIndexed": "2026-08-02T15:37:40.895Z",
+        "fileCount": 142,
+        "nodeCount": 2000,
+        "edgeCount": 5672,
+        "dbSizeBytes": 4775936,
+        "backend": "node-sqlite",
+        "journalMode": "wal",
+        "nodesByKind": {
+          "class": 174,
+          "constant": 50,
+          "file": 135,
+          "function": 588,
+          "import": 638,
+          "interface": 35,
+          "method": 218,
+          "property": 6,
+          "struct": 1,
+          "type_alias": 18,
+          "variable": 137
+        },
+        "languages": [
+          "javascript",
+          "python",
+          "rust",
+          "tsx",
+          "typescript",
+          "yaml"
+        ],
+        "pendingChanges": {
+          "added": 0,
+          "modified": 0,
+          "removed": 0
+        },
+        "worktreeMismatch": null,
+        "index": {
+          "builtWithVersion": "1.3.1",
+          "builtWithExtractionVersion": 24,
+          "currentExtractionVersion": 24,
+          "reindexRecommended": false,
+          "state": "complete",
+          "pendingRefs": 0
+        }
+      }
+    },
+    "evidence_index": {
+      "schema": "specnav.codegraph.evidence_index.v1",
+      "generated_at": "2026-08-02T04:02:08.156Z",
+      "active_change": "build-thesisforge-desktop-ui",
+      "source_raw": "openspec/changes/build-thesisforge-desktop-ui/codegraph/evidence.jsonl",
+      "by_claim": {
+        "development:task-001-archive-safe-prototype-baseline": {
+          "status": "matched",
+          "evidence_ids": [
+            "ev-ms92lwbo",
+            "ev-ms93b24v"
+          ],
+          "files": [
+            "tests/test_prototype_acceptance.py",
+            "marker.js",
+            "harness.js",
+            "index.html",
+            "app.js",
+            "styles.cs",
+            "browser-verification.js",
+            "desktop.go",
+            "mobile.go",
+            "tests/test_acceptance.py",
+            "tests/test_distribution.py",
+            "thesis.md",
+            "sitecustomize.py",
+            "verify_distribution.py"
+          ],
+          "symbols": [],
+          "blockers": []
+        },
+        "development:task-002-headless-workspace-state-controller": {
+          "status": "matched",
+          "evidence_ids": [
+            "ev-ms9pjuaq",
+            "ev-ms9pk9id",
+            "ev-ms9q6jv6"
+          ],
+          "files": [
+            "tests/test_ui_controller.py",
+            "src/thesis_forge/ui/models.py",
+            "thesis.md",
+            "ui/models.py",
+            "ui/tasks.py",
+            "ui/__init__.py",
+            "tests/test_architecture.py",
+            "src/thesis_forge/ui/controller.py",
+            "src/thesis_forge/ui/tasks.py",
+            "src/thesis_forge/application/services.py"
+          ],
+          "symbols": [],
+          "blockers": []
+        },
+        "development:task-003-explicit-source-open-atomic-save": {
+          "status": "matched",
+          "evidence_ids": [
+            "ev-ms9u6nr6",
+            "ev-ms9ubt02"
+          ],
+          "files": [
+            "src/thesis_forge/ui/filesystem.py",
+            "src/thesis_forge/ui/controller.py",
+            "models.py",
+            "tasks.py",
+            "tests/test_ui_filesystem.py",
+            "tests/test_ui_controller.py",
+            "tests/test_architecture.py",
+            "src/thesis_forge/ui/models.py",
+            "next.md",
+            "thesis.md",
+            "other.md",
+            "web.md",
+            "snapshot.md",
+            "copy.md",
+            "failed.md"
+          ],
+          "symbols": [],
+          "blockers": []
+        },
+        "development:task-004-optional-pyside6-workbench-shell": {
+          "status": "matched",
+          "evidence_ids": [
+            "ev-ms9wkbhd"
+          ],
+          "files": [
+            "frontend/src/components/WorkbenchApp.tsx",
+            "src/thesis_forge/application/services.py",
+            "frontend/src/transport/web.ts",
+            "frontend/src/components/WorkbenchShell.tsx",
+            "frontend/src/transport/WorkbenchTransport.ts"
+          ],
+          "symbols": [],
+          "blockers": []
+        },
+        "development:task-005-template-selection-structured-diagnostics": {
+          "status": "matched",
+          "evidence_ids": [
+            "ev-ms9xt4u5",
+            "ev-ms9yplx7"
+          ],
+          "files": [
+            "tests/test_adapters.py",
+            "tests/test_ui_controller.py",
+            "frontend/src/state/diagnostics.ts",
+            "thesis.md",
+            "frontend/src/components/WorkbenchApp.tsx",
+            "src/thesis_forge/templates/resolver.py",
+            "src/thesis_forge/adapters/runtime.py"
+          ],
+          "symbols": [],
+          "blockers": []
+        },
+        "development:task-006-outline-renderer-neutral-preview": {
+          "status": "matched",
+          "evidence_ids": [
+            "ev-msa0ibb8",
+            "ev-msa0ipb3"
+          ],
+          "files": [
+            "frontend/src/transport/dto.ts",
+            "src/thesis_forge/ui/controller.py",
+            "src/thesis_forge/renderers/docx/renderer.py",
+            "frontend/src/state/workspace.ts",
+            "src/thesis_forge/adapters/runtime.py",
+            "src/thesis_forge/presentation/preview.py",
+            "frontend/src/components/WorkbenchApp.tsx",
+            "src/thesis_forge/application/services.py",
+            "application/contracts.py",
+            "adapters/runtime.py",
+            "presentation/preview.py",
+            "PreviewPanels.tsx",
+            "previewDto.test.ts",
+            "workspace-preview.test.ts",
+            "PreviewPanels.test.tsx",
+            "WorkbenchPreviewFlow.test.tsx",
+            "workbench.spec.ts",
+            "frontend/src/components/PreviewPanels.tsx"
+          ],
+          "symbols": [],
+          "blockers": []
+        },
+        "development:task-007-safe-background-build-cancellation": {
+          "status": "matched",
+          "evidence_ids": [
+            "ev-msa2361n",
+            "ev-msa23q6c"
+          ],
+          "files": [
+            "tests/test_ui_controller.py",
+            "frontend/src/transport/buildEvents.ts",
+            "frontend/src/components/OutputFeedback.tsx",
+            "frontend/src/transport/tauri.ts",
+            "frontend/src/transport/web.ts",
+            "src/thesis_forge/application/services.py",
+            "src/thesis_forge/adapters/runtime.py"
+          ],
+          "symbols": [],
+          "blockers": []
+        },
+        "development:task-008-cross-platform-distribution-acceptance": {
+          "status": "matched",
+          "evidence_ids": [
+            "ev-msb8e4av",
+            "ev-msb8f2ti",
+            "ev-msb9xlzr"
+          ],
+          "files": [
+            "src/thesis_forge/core/math.py",
+            "tests/test_adapters.py",
+            "tests/test_ui_controller.py",
+            "school.yaml",
+            "thesis.md",
+            "scripts/build_sidecar.py",
+            "scripts/verify_desktop_distribution.py",
+            "src-tauri/src/lib.rs",
+            "tests/test_desktop_distribution.py",
+            "tests/test_http_adapter.py",
+            "frontend/e2e/real_http_server.py",
+            "first.yaml",
+            "second.md",
+            "second.yaml",
+            "build_sidecar.py",
+            "verify_desktop_distribution.py",
+            "tauri.release.conf.js",
+            "distribution.yml",
+            "real-http.playwright.config.ts",
+            "tauri.conf.js",
+            "builder.py",
+            "/tmp/entry.py",
+            "templates/base/bachelor.yaml",
+            "templates/schools/example-university/2026.yaml",
+            "pyproject.toml",
+            "Cargo.toml",
+            "lib.rs",
+            "index.html"
+          ],
+          "symbols": [],
+          "blockers": []
+        }
+      },
+      "by_stage": {
+        "development": {
+          "verified": 17,
+          "partial": 0,
+          "missing": 0,
+          "stale": 0,
+          "blocking": 0
+        }
+      },
+      "blockers": [],
+      "raw_exists": true,
+      "record_count": 17
+    },
+    "claims_report": {
+      "schema": "specnav.codegraph.claims_report.v1",
+      "generated_at": "2026-08-02T18:10:14.711Z",
+      "active_change": "build-thesisforge-desktop-ui",
+      "claims_file": "openspec/changes/build-thesisforge-desktop-ui/codegraph/claims-map.json",
+      "evidence_index": "openspec/changes/build-thesisforge-desktop-ui/codegraph/evidence-index.json",
+      "claims_count": 16,
+      "verified_claims": [
+        "development:task-001-archive-safe-prototype-baseline",
+        "development:task-002-headless-workspace-state-controller",
+        "development:task-003-explicit-source-open-atomic-save",
+        "development:task-004-optional-pyside6-workbench-shell",
+        "development:task-005-template-selection-structured-diagnostics",
+        "development:task-006-outline-renderer-neutral-preview",
+        "development:task-007-safe-background-build-cancellation",
+        "development:task-008-cross-platform-distribution-acceptance"
+      ],
+      "unverified_claims": [
+        "verification:task-001-archive-safe-prototype-baseline",
+        "verification:task-002-headless-workspace-state-controller",
+        "verification:task-003-explicit-source-open-atomic-save",
+        "verification:task-004-optional-pyside6-workbench-shell",
+        "verification:task-005-template-selection-structured-diagnostics",
+        "verification:task-006-outline-renderer-neutral-preview",
+        "verification:task-007-safe-background-build-cancellation",
+        "verification:task-008-cross-platform-distribution-acceptance"
+      ],
+      "blockers": [],
+      "warnings": [
+        "codegraph:claim-unverified:verification:task-001-archive-safe-prototype-baseline",
+        "codegraph:claim-unverified:verification:task-002-headless-workspace-state-controller",
+        "codegraph:claim-unverified:verification:task-003-explicit-source-open-atomic-save",
+        "codegraph:claim-unverified:verification:task-004-optional-pyside6-workbench-shell",
+        "codegraph:claim-unverified:verification:task-005-template-selection-structured-diagnostics",
+        "codegraph:claim-unverified:verification:task-006-outline-renderer-neutral-preview",
+        "codegraph:claim-unverified:verification:task-007-safe-background-build-cancellation",
+        "codegraph:claim-unverified:verification:task-008-cross-platform-distribution-acceptance"
+      ]
+    },
+    "drift": {
+      "schema": "specnav.codegraph.drift.v1",
+      "active_change": "build-thesisforge-desktop-ui",
+      "drift": [],
+      "blockers": []
+    },
+    "decision": {
+      "schema": "specnav.codegraph.decision.v1",
+      "stage": "verification",
+      "profile": "active_dev",
+      "effective_mode": "advisory",
+      "required_for_stage": false,
+      "execution_surface": "cli",
+      "result": "pass",
+      "blockers": [],
+      "warnings": [],
+      "explanation": "CodeGraph policy satisfied for verification."
+    },
+    "guard_report": {
+      "schema": "specnav.codegraph.guard_report.v1",
+      "generated_at": "2026-08-02T18:10:14.711Z",
+      "active_change": "build-thesisforge-desktop-ui",
+      "stage": "verification",
+      "ok": true,
+      "status": {
+        "policy": {
+          "enabled": true,
+          "profile": "active_dev",
+          "mode": "advisory",
+          "stage": "verification",
+          "required_for_stage": false,
+          "disabled_reason": null
+        },
+        "execution_surface": "cli",
+        "cli": {
+          "available": true,
+          "version": "1.3.1",
+          "path": "/Users/wenliang_zeng/.local/bin/codegraph",
+          "unsupported": false,
+          "error": null
+        },
+        "mcp": {
+          "configured": true,
+          "visible_in_current_session": false,
+          "restart_required": true,
+          "config_files": [
+            "/Users/wenliang_zeng/.claude.json",
+            "/Users/wenliang_zeng/.codex/config.toml"
+          ]
+        },
+        "index": {
+          "initialized": true,
+          "projectPath": "/Volumes/zwl/open_sources/thesis-forge",
+          "indexPath": "/Volumes/zwl/open_sources/thesis-forge/.codegraph",
+          "lastIndexed": "2026-08-02T15:37:40.895Z",
+          "fileCount": 142,
+          "nodeCount": 2000,
+          "edgeCount": 5672,
+          "pendingChanges": {
+            "added": 0,
+            "modified": 0,
+            "removed": 0
+          },
+          "reindexRecommended": false,
+          "worktreeMismatch": null
+        }
+      },
+      "decision": {
+        "schema": "specnav.codegraph.decision.v1",
+        "stage": "verification",
+        "profile": "active_dev",
+        "effective_mode": "advisory",
+        "required_for_stage": false,
+        "execution_surface": "cli",
+        "result": "pass",
+        "blockers": [],
+        "warnings": [],
+        "explanation": "CodeGraph policy satisfied for verification."
+      },
+      "evidence_index": {
+        "schema": "specnav.codegraph.evidence_index.v1",
+        "generated_at": "2026-08-02T04:02:08.156Z",
+        "active_change": "build-thesisforge-desktop-ui",
+        "source_raw": "openspec/changes/build-thesisforge-desktop-ui/codegraph/evidence.jsonl",
+        "by_claim": {
+          "development:task-001-archive-safe-prototype-baseline": {
+            "status": "matched",
+            "evidence_ids": [
+              "ev-ms92lwbo",
+              "ev-ms93b24v"
+            ],
+            "files": [
+              "tests/test_prototype_acceptance.py",
+              "marker.js",
+              "harness.js",
+              "index.html",
+              "app.js",
+              "styles.cs",
+              "browser-verification.js",
+              "desktop.go",
+              "mobile.go",
+              "tests/test_acceptance.py",
+              "tests/test_distribution.py",
+              "thesis.md",
+              "sitecustomize.py",
+              "verify_distribution.py"
+            ],
+            "symbols": [],
+            "blockers": []
+          },
+          "development:task-002-headless-workspace-state-controller": {
+            "status": "matched",
+            "evidence_ids": [
+              "ev-ms9pjuaq",
+              "ev-ms9pk9id",
+              "ev-ms9q6jv6"
+            ],
+            "files": [
+              "tests/test_ui_controller.py",
+              "src/thesis_forge/ui/models.py",
+              "thesis.md",
+              "ui/models.py",
+              "ui/tasks.py",
+              "ui/__init__.py",
+              "tests/test_architecture.py",
+              "src/thesis_forge/ui/controller.py",
+              "src/thesis_forge/ui/tasks.py",
+              "src/thesis_forge/application/services.py"
+            ],
+            "symbols": [],
+            "blockers": []
+          },
+          "development:task-003-explicit-source-open-atomic-save": {
+            "status": "matched",
+            "evidence_ids": [
+              "ev-ms9u6nr6",
+              "ev-ms9ubt02"
+            ],
+            "files": [
+              "src/thesis_forge/ui/filesystem.py",
+              "src/thesis_forge/ui/controller.py",
+              "models.py",
+              "tasks.py",
+              "tests/test_ui_filesystem.py",
+              "tests/test_ui_controller.py",
+              "tests/test_architecture.py",
+              "src/thesis_forge/ui/models.py",
+              "next.md",
+              "thesis.md",
+              "other.md",
+              "web.md",
+              "snapshot.md",
+              "copy.md",
+              "failed.md"
+            ],
+            "symbols": [],
+            "blockers": []
+          },
+          "development:task-004-optional-pyside6-workbench-shell": {
+            "status": "matched",
+            "evidence_ids": [
+              "ev-ms9wkbhd"
+            ],
+            "files": [
+              "frontend/src/components/WorkbenchApp.tsx",
+              "src/thesis_forge/application/services.py",
+              "frontend/src/transport/web.ts",
+              "frontend/src/components/WorkbenchShell.tsx",
+              "frontend/src/transport/WorkbenchTransport.ts"
+            ],
+            "symbols": [],
+            "blockers": []
+          },
+          "development:task-005-template-selection-structured-diagnostics": {
+            "status": "matched",
+            "evidence_ids": [
+              "ev-ms9xt4u5",
+              "ev-ms9yplx7"
+            ],
+            "files": [
+              "tests/test_adapters.py",
+              "tests/test_ui_controller.py",
+              "frontend/src/state/diagnostics.ts",
+              "thesis.md",
+              "frontend/src/components/WorkbenchApp.tsx",
+              "src/thesis_forge/templates/resolver.py",
+              "src/thesis_forge/adapters/runtime.py"
+            ],
+            "symbols": [],
+            "blockers": []
+          },
+          "development:task-006-outline-renderer-neutral-preview": {
+            "status": "matched",
+            "evidence_ids": [
+              "ev-msa0ibb8",
+              "ev-msa0ipb3"
+            ],
+            "files": [
+              "frontend/src/transport/dto.ts",
+              "src/thesis_forge/ui/controller.py",
+              "src/thesis_forge/renderers/docx/renderer.py",
+              "frontend/src/state/workspace.ts",
+              "src/thesis_forge/adapters/runtime.py",
+              "src/thesis_forge/presentation/preview.py",
+              "frontend/src/components/WorkbenchApp.tsx",
+              "src/thesis_forge/application/services.py",
+              "application/contracts.py",
+              "adapters/runtime.py",
+              "presentation/preview.py",
+              "PreviewPanels.tsx",
+              "previewDto.test.ts",
+              "workspace-preview.test.ts",
+              "PreviewPanels.test.tsx",
+              "WorkbenchPreviewFlow.test.tsx",
+              "workbench.spec.ts",
+              "frontend/src/components/PreviewPanels.tsx"
+            ],
+            "symbols": [],
+            "blockers": []
+          },
+          "development:task-007-safe-background-build-cancellation": {
+            "status": "matched",
+            "evidence_ids": [
+              "ev-msa2361n",
+              "ev-msa23q6c"
+            ],
+            "files": [
+              "tests/test_ui_controller.py",
+              "frontend/src/transport/buildEvents.ts",
+              "frontend/src/components/OutputFeedback.tsx",
+              "frontend/src/transport/tauri.ts",
+              "frontend/src/transport/web.ts",
+              "src/thesis_forge/application/services.py",
+              "src/thesis_forge/adapters/runtime.py"
+            ],
+            "symbols": [],
+            "blockers": []
+          },
+          "development:task-008-cross-platform-distribution-acceptance": {
+            "status": "matched",
+            "evidence_ids": [
+              "ev-msb8e4av",
+              "ev-msb8f2ti",
+              "ev-msb9xlzr"
+            ],
+            "files": [
+              "src/thesis_forge/core/math.py",
+              "tests/test_adapters.py",
+              "tests/test_ui_controller.py",
+              "school.yaml",
+              "thesis.md",
+              "scripts/build_sidecar.py",
+              "scripts/verify_desktop_distribution.py",
+              "src-tauri/src/lib.rs",
+              "tests/test_desktop_distribution.py",
+              "tests/test_http_adapter.py",
+              "frontend/e2e/real_http_server.py",
+              "first.yaml",
+              "second.md",
+              "second.yaml",
+              "build_sidecar.py",
+              "verify_desktop_distribution.py",
+              "tauri.release.conf.js",
+              "distribution.yml",
+              "real-http.playwright.config.ts",
+              "tauri.conf.js",
+              "builder.py",
+              "/tmp/entry.py",
+              "templates/base/bachelor.yaml",
+              "templates/schools/example-university/2026.yaml",
+              "pyproject.toml",
+              "Cargo.toml",
+              "lib.rs",
+              "index.html"
+            ],
+            "symbols": [],
+            "blockers": []
+          }
+        },
+        "by_stage": {
+          "development": {
+            "verified": 17,
+            "partial": 0,
+            "missing": 0,
+            "stale": 0,
+            "blocking": 0
+          }
+        },
+        "blockers": [],
+        "raw_exists": true,
+        "record_count": 17
+      },
+      "claims_report": {
+        "schema": "specnav.codegraph.claims_report.v1",
+        "generated_at": "2026-08-02T18:10:14.711Z",
+        "active_change": "build-thesisforge-desktop-ui",
+        "claims_file": "openspec/changes/build-thesisforge-desktop-ui/codegraph/claims-map.json",
+        "evidence_index": "openspec/changes/build-thesisforge-desktop-ui/codegraph/evidence-index.json",
+        "claims_count": 16,
+        "verified_claims": [
+          "development:task-001-archive-safe-prototype-baseline",
+          "development:task-002-headless-workspace-state-controller",
+          "development:task-003-explicit-source-open-atomic-save",
+          "development:task-004-optional-pyside6-workbench-shell",
+          "development:task-005-template-selection-structured-diagnostics",
+          "development:task-006-outline-renderer-neutral-preview",
+          "development:task-007-safe-background-build-cancellation",
+          "development:task-008-cross-platform-distribution-acceptance"
+        ],
+        "unverified_claims": [
+          "verification:task-001-archive-safe-prototype-baseline",
+          "verification:task-002-headless-workspace-state-controller",
+          "verification:task-003-explicit-source-open-atomic-save",
+          "verification:task-004-optional-pyside6-workbench-shell",
+          "verification:task-005-template-selection-structured-diagnostics",
+          "verification:task-006-outline-renderer-neutral-preview",
+          "verification:task-007-safe-background-build-cancellation",
+          "verification:task-008-cross-platform-distribution-acceptance"
+        ],
+        "blockers": [],
+        "warnings": [
+          "codegraph:claim-unverified:verification:task-001-archive-safe-prototype-baseline",
+          "codegraph:claim-unverified:verification:task-002-headless-workspace-state-controller",
+          "codegraph:claim-unverified:verification:task-003-explicit-source-open-atomic-save",
+          "codegraph:claim-unverified:verification:task-004-optional-pyside6-workbench-shell",
+          "codegraph:claim-unverified:verification:task-005-template-selection-structured-diagnostics",
+          "codegraph:claim-unverified:verification:task-006-outline-renderer-neutral-preview",
+          "codegraph:claim-unverified:verification:task-007-safe-background-build-cancellation",
+          "codegraph:claim-unverified:verification:task-008-cross-platform-distribution-acceptance"
+        ]
+      },
+      "drift": {
+        "schema": "specnav.codegraph.drift.v1",
+        "active_change": "build-thesisforge-desktop-ui",
+        "drift": [],
+        "blockers": []
+      },
+      "blockers": [],
+      "warnings": [
+        "codegraph:claim-unverified:verification:task-001-archive-safe-prototype-baseline",
+        "codegraph:claim-unverified:verification:task-002-headless-workspace-state-controller",
+        "codegraph:claim-unverified:verification:task-003-explicit-source-open-atomic-save",
+        "codegraph:claim-unverified:verification:task-004-optional-pyside6-workbench-shell",
+        "codegraph:claim-unverified:verification:task-005-template-selection-structured-diagnostics",
+        "codegraph:claim-unverified:verification:task-006-outline-renderer-neutral-preview",
+        "codegraph:claim-unverified:verification:task-007-safe-background-build-cancellation",
+        "codegraph:claim-unverified:verification:task-008-cross-platform-distribution-acceptance"
+      ]
+    },
+    "artifacts": {
+      "status": "openspec/changes/build-thesisforge-desktop-ui/codegraph/status.json",
+      "decision": "openspec/changes/build-thesisforge-desktop-ui/codegraph/decision.json",
+      "guard_report": "openspec/changes/build-thesisforge-desktop-ui/codegraph/guard-report.json",
+      "evidence_raw": "openspec/changes/build-thesisforge-desktop-ui/codegraph/evidence.jsonl",
+      "evidence_index": "openspec/changes/build-thesisforge-desktop-ui/codegraph/evidence-index.json",
+      "claims_map": "openspec/changes/build-thesisforge-desktop-ui/codegraph/claims-map.json",
+      "claims_report": "openspec/changes/build-thesisforge-desktop-ui/codegraph/claims-report.json",
+      "drift_report": "openspec/changes/build-thesisforge-desktop-ui/codegraph/drift-report.json",
+      "impact_report": "openspec/changes/build-thesisforge-desktop-ui/codegraph/impact-report.json"
+    },
+    "blockers": [],
+    "warnings": [
+      "codegraph:claim-unverified:verification:task-001-archive-safe-prototype-baseline",
+      "codegraph:claim-unverified:verification:task-002-headless-workspace-state-controller",
+      "codegraph:claim-unverified:verification:task-003-explicit-source-open-atomic-save",
+      "codegraph:claim-unverified:verification:task-004-optional-pyside6-workbench-shell",
+      "codegraph:claim-unverified:verification:task-005-template-selection-structured-diagnostics",
+      "codegraph:claim-unverified:verification:task-006-outline-renderer-neutral-preview",
+      "codegraph:claim-unverified:verification:task-007-safe-background-build-cancellation",
+      "codegraph:claim-unverified:verification:task-008-cross-platform-distribution-acceptance"
+    ]
+  },
+  "lane": "standard",
+  "required_domains": [
+    "facticity",
+    "static",
+    "unit",
+    "redteam",
+    "e2e",
+    "sensory"
+  ],
+  "artifacts": [
+    {
+      "name": "acceptance.json",
+      "path": "openspec/changes/build-thesisforge-desktop-ui/verify/acceptance.json",
+      "ok": true,
+      "blockers": []
+    },
+    {
+      "name": "plan.md",
+      "path": "openspec/changes/build-thesisforge-desktop-ui/verify/plan.md",
+      "ok": true,
+      "blockers": []
+    },
+    {
+      "name": "plan.json",
+      "path": "openspec/changes/build-thesisforge-desktop-ui/verify/plan.json",
+      "ok": true,
+      "blockers": []
+    },
+    {
+      "name": "evidence-index.jsonl",
+      "path": "openspec/changes/build-thesisforge-desktop-ui/verify/evidence-index.jsonl",
+      "ok": true,
+      "blockers": []
+    },
+    {
+      "name": "traceability-matrix.json",
+      "path": "openspec/changes/build-thesisforge-desktop-ui/verify/traceability-matrix.json",
+      "ok": true,
+      "blockers": []
+    },
+    {
+      "name": "diff-traceability",
+      "path": "openspec/changes/build-thesisforge-desktop-ui/verify/diff-traceability",
+      "ok": true,
+      "blockers": []
+    },
+    {
+      "name": "user-test-cases.md",
+      "path": "openspec/changes/build-thesisforge-desktop-ui/verify/user-test-cases.md",
+      "ok": true,
+      "blockers": []
+    },
+    {
+      "name": "user-test-cases.json",
+      "path": "openspec/changes/build-thesisforge-desktop-ui/verify/user-test-cases.json",
+      "ok": true,
+      "blockers": []
+    },
+    {
+      "name": "user-test-case-signoff.json",
+      "path": "openspec/changes/build-thesisforge-desktop-ui/verify/user-test-case-signoff.json",
+      "ok": true,
+      "blockers": []
+    },
+    {
+      "name": "domain-case-matrix.json",
+      "path": "openspec/changes/build-thesisforge-desktop-ui/verify/domain-case-matrix.json",
+      "ok": true,
+      "blockers": []
+    },
+    {
+      "name": "runtime-evidence.json",
+      "path": "openspec/changes/build-thesisforge-desktop-ui/verify/runtime-evidence.json",
+      "ok": true,
+      "blockers": []
+    },
+    {
+      "name": "blocker-classification.jsonl",
+      "path": "openspec/changes/build-thesisforge-desktop-ui/verify/blocker-classification.jsonl",
+      "ok": true,
+      "blockers": []
+    },
+    {
+      "name": "receipt.md",
+      "path": "openspec/changes/build-thesisforge-desktop-ui/verify/receipt.md",
+      "ok": true,
+      "blockers": []
+    },
+    {
+      "name": "receipt.json",
+      "path": "openspec/changes/build-thesisforge-desktop-ui/verify/receipt.json",
+      "ok": true,
+      "blockers": []
+    },
+    {
+      "name": "behavior-evals/scenarios.json",
+      "path": "openspec/changes/build-thesisforge-desktop-ui/verify/behavior-evals/scenarios.json",
+      "ok": true,
+      "blockers": []
+    },
+    {
+      "name": "behavior-evals/report.json",
+      "path": "openspec/changes/build-thesisforge-desktop-ui/verify/behavior-evals/report.json",
+      "ok": true,
+      "blockers": []
+    },
+    {
+      "name": "behavior-evals/transcripts",
+      "path": "openspec/changes/build-thesisforge-desktop-ui/verify/behavior-evals/transcripts",
+      "ok": true,
+      "blockers": []
+    },
+    {
+      "name": "behavior-evals/report.md",
+      "path": "openspec/changes/build-thesisforge-desktop-ui/verify/behavior-evals/report.md",
+      "ok": true,
+      "blockers": []
+    },
+    {
+      "name": "facticity/report.md",
+      "path": "openspec/changes/build-thesisforge-desktop-ui/verify/facticity/report.md",
+      "ok": true,
+      "blockers": []
+    },
+    {
+      "name": "facticity/report.json",
+      "path": "openspec/changes/build-thesisforge-desktop-ui/verify/facticity/report.json",
+      "ok": true,
+      "blockers": []
+    },
+    {
+      "name": "static/report.md",
+      "path": "openspec/changes/build-thesisforge-desktop-ui/verify/static/report.md",
+      "ok": true,
+      "blockers": []
+    },
+    {
+      "name": "static/report.json",
+      "path": "openspec/changes/build-thesisforge-desktop-ui/verify/static/report.json",
+      "ok": true,
+      "blockers": []
+    },
+    {
+      "name": "unit/report.md",
+      "path": "openspec/changes/build-thesisforge-desktop-ui/verify/unit/report.md",
+      "ok": true,
+      "blockers": []
+    },
+    {
+      "name": "unit/report.json",
+      "path": "openspec/changes/build-thesisforge-desktop-ui/verify/unit/report.json",
+      "ok": true,
+      "blockers": []
+    },
+    {
+      "name": "redteam/report.md",
+      "path": "openspec/changes/build-thesisforge-desktop-ui/verify/redteam/report.md",
+      "ok": true,
+      "blockers": []
+    },
+    {
+      "name": "redteam/report.json",
+      "path": "openspec/changes/build-thesisforge-desktop-ui/verify/redteam/report.json",
+      "ok": true,
+      "blockers": []
+    },
+    {
+      "name": "e2e/report.md",
+      "path": "openspec/changes/build-thesisforge-desktop-ui/verify/e2e/report.md",
+      "ok": true,
+      "blockers": []
+    },
+    {
+      "name": "e2e/report.json",
+      "path": "openspec/changes/build-thesisforge-desktop-ui/verify/e2e/report.json",
+      "ok": true,
+      "blockers": []
+    },
+    {
+      "name": "sensory/report.md",
+      "path": "openspec/changes/build-thesisforge-desktop-ui/verify/sensory/report.md",
+      "ok": true,
+      "blockers": []
+    },
+    {
+      "name": "sensory/report.json",
+      "path": "openspec/changes/build-thesisforge-desktop-ui/verify/sensory/report.json",
+      "ok": true,
+      "blockers": []
+    },
+    {
+      "name": "unit/test-quality-rubric.json",
+      "path": "openspec/changes/build-thesisforge-desktop-ui/verify/unit/test-quality-rubric.json",
+      "ok": true,
+      "blockers": []
+    },
+    {
+      "name": "sensory/reviewer-independence.md",
+      "path": "openspec/changes/build-thesisforge-desktop-ui/verify/sensory/reviewer-independence.md",
+      "ok": true,
+      "blockers": []
+    },
+    {
+      "name": "root-cause-checks.jsonl",
+      "path": "openspec/changes/build-thesisforge-desktop-ui/verify/root-cause-checks.jsonl",
+      "ok": true,
+      "blockers": []
+    }
+  ]
+}

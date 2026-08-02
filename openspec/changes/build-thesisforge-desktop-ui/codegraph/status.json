@@ -1,22 +1,22 @@
 {
   "schema": "specnav.codegraph.status.v1",
   "ok": true,
-  "generated_at": "2026-08-02T04:50:39.172Z",
+  "generated_at": "2026-08-02T18:10:30.002Z",
   "project_root": "/Volumes/zwl/open_sources/thesis-forge",
   "active_change": "build-thesisforge-desktop-ui",
   "policy": {
     "enabled": true,
     "profile": "active_dev",
     "mode": "advisory",
-    "stage": "development",
+    "stage": "operations",
     "required_for_stage": false,
     "disabled_reason": null
   },
   "execution_surface": "cli",
   "decision": {
-    "stage": "development",
+    "stage": "operations",
     "result": "pass",
-    "reason": "CodeGraph policy satisfied for development."
+    "reason": "CodeGraph policy satisfied for operations."
   },
   "cli": {
     "available": true,
@@ -38,10 +38,10 @@
     "initialized": true,
     "projectPath": "/Volumes/zwl/open_sources/thesis-forge",
     "indexPath": "/Volumes/zwl/open_sources/thesis-forge/.codegraph",
-    "lastIndexed": "2026-08-02T04:46:45.755Z",
-    "fileCount": 143,
-    "nodeCount": 1953,
-    "edgeCount": 5562,
+    "lastIndexed": "2026-08-02T15:37:40.895Z",
+    "fileCount": 142,
+    "nodeCount": 2000,
+    "edgeCount": 5672,
     "pendingChanges": {
       "added": 0,
       "modified": 0,
@@ -57,25 +57,25 @@
     "version": "1.3.1",
     "projectPath": "/Volumes/zwl/open_sources/thesis-forge",
     "indexPath": "/Volumes/zwl/open_sources/thesis-forge/.codegraph",
-    "lastIndexed": "2026-08-02T04:46:45.755Z",
-    "fileCount": 143,
-    "nodeCount": 1953,
-    "edgeCount": 5562,
+    "lastIndexed": "2026-08-02T15:37:40.895Z",
+    "fileCount": 142,
+    "nodeCount": 2000,
+    "edgeCount": 5672,
     "dbSizeBytes": 4775936,
     "backend": "node-sqlite",
     "journalMode": "wal",
     "nodesByKind": {
-      "class": 173,
+      "class": 174,
       "constant": 50,
-      "file": 136,
-      "function": 555,
-      "import": 632,
+      "file": 135,
+      "function": 588,
+      "import": 638,
       "interface": 35,
-      "method": 215,
+      "method": 218,
       "property": 6,
       "struct": 1,
       "type_alias": 18,
-      "variable": 132
+      "variable": 137
     },
     "languages": [
       "javascript",

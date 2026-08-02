@@ -4,8 +4,8 @@
 
 - Slices 001 through 007 are complete and previously reviewed.
 - Slice 008 implementation is complete for Web, Python distribution, frozen
-  desktop sidecar, and native macOS `.app/.dmg`.
-- Slice 008 remains `DONE_WITH_CONCERNS`; Windows native acceptance is open.
+  desktop sidecar, native macOS `.app/.dmg`, and Windows ARM64 MSI/NSIS.
+- Slice 008 is `DONE`; native macOS and MSI-installed Windows workflows passed.
 
 ## Files Changed
 
@@ -23,9 +23,8 @@
   preview, ordered build progress, cooperative cancellation, recovery, and
   output preservation.
 - Real Python HTTP adapter workflow, frozen offline sidecar, isolated
-  wheel/sdist and Web artifacts, and native macOS packages.
-- Acceptance assertions `A2` through `A10` are passing. `A1`, `A11`, and `A12`
-  remain open because their Windows clauses are not executed.
+  wheel/sdist and Web artifacts, and native macOS/Windows packages.
+- Acceptance assertions `A1` through `A12` are passing.
 
 ## Prototype Decisions Implemented
 
@@ -69,33 +68,43 @@
 
 ## Local Validation
 
-- Python full suite: `244 passed`.
-- Frontend unit: `53 passed`; browser matrix: `14 passed`, `16` intentional
-  skips; real HTTP: `1 passed`.
-- Rust protocol: `6 passed`; Cargo fmt/check passed.
+- Python full suite: latest completed regression `256 passed`.
+- Frontend unit: `53 passed`; browser matrix: `15 passed`; real HTTP:
+  `1 passed`.
+- Rust protocol: `11 passed`; Cargo fmt/check passed.
 - Windows installed-app workflow contract: `14` focused distribution tests
   passed locally; isolated WDIO typecheck and frozen pnpm lock install passed.
 - Wheel/sdist isolated verification, frozen sidecar offline verification,
   native macOS Tauri build, macOS bundle verifier, Ruff, frontend
   lint/typecheck/build, pip check, strict OpenSpec, CodeGraph sync, and
   whitespace checks passed.
+- Windows 11 ARM64 generated MSI and NSIS artifacts, installed the MSI, verified
+  ARM64 PE app/sidecar hashes, completed the real WebView2 workflow with
+  `net0` disconnected, and reran the full Windows distribution verifier.
 
 ## Known Risks
 
-- No native Windows MSI/NSIS, installed workflow, blocked-socket run, or sensory
-  evidence exists yet.
 - Local and CI artifacts are unsigned and not notarized; public release also
   requires project license and third-party ownership review.
 - Browser mock tests cover a broader failure matrix than the single real HTTP
   happy-path run; adapter/unit tests provide the remaining backend failure
   coverage.
+- Windows native sensory/package evidence is ARM64-specific; x86_64 remains
+  covered by configuration/static tests rather than an independent local run.
+- GitHub Actions billing is unavailable. Remote CI is supplementary and not a
+  completion gate for this local-only handoff.
 
 ## Items Requiring Six-Domain Verification
 
-- Run the native Windows distribution job and capture artifact/verifier/runtime
-  evidence.
-- Close `A1`, `A11`, and `A12`.
-- Produce facticity, static, unit, redteam, E2E, and sensory verification
-  artifacts without substituting browser evidence for native package evidence.
-- Complete user test cases and operations readiness only after the Windows gate
-  is green.
+- `verify/user-test-cases.json` freezes 12 approved cases mapped one-to-one to
+  acceptance assertions `A1` through `A12`; the user selected complete local
+  development/testing as the authority instead of GitHub runner availability.
+- Facticity, static, unit, redteam, E2E, and sensory reports are green and
+  reference the retained Web, macOS, and Windows native evidence.
+- The current working tree passed `make verify`: Python `256`, Vitest `53`,
+  Playwright `15` plus real HTTP `1`, and Rust protocol `11`, together with
+  wheel/sdist, Web build, frozen sidecar, Ruff, pip, Cargo, strict OpenSpec,
+  and whitespace gates.
+- `verify/receipt.json` records confidence `B` with only signing, notarization,
+  license/publication, Windows x86_64 native execution, and remote CI billing
+  retained as non-blocking residual risks.

@@ -1,6 +1,6 @@
 {
   "schema": "specnav.codegraph.evidence_query_plan.v1",
-  "generated_at": "2026-08-01T07:59:35.810Z",
+  "generated_at": "2026-08-02T17:45:36.480Z",
   "active_change": "build-thesisforge-desktop-ui",
   "queries": [
     {
@@ -122,6 +122,126 @@
         "tests or verification commands"
       ],
       "command": "node \"$SPECNAV_CODEGRAPH_ROOT/scripts/codegraph-context.js\" --stage development --claim development:task-008-cross-platform-distribution-acceptance --query \"<query>\" --write --json"
+    },
+    {
+      "id": "verification:task-001-archive-safe-prototype-baseline:evidence",
+      "claim_id": "verification:task-001-archive-safe-prototype-baseline",
+      "stage": "verification",
+      "task_id": "001-archive-safe-prototype-baseline",
+      "status": "planned",
+      "query": "Verify the implemented files, symbols, callers, tests, and requirement/prototype traceability for \"Resolve the unique archived `build-thesisforge-v1-core` directory, run its\" in change \"build-thesisforge-desktop-ui\". Return concrete file paths, symbols, relationships, and any missing implementation evidence.",
+      "expected_evidence": [
+        "file paths",
+        "symbols",
+        "call relationships",
+        "tests or verification commands"
+      ],
+      "command": "node \"$SPECNAV_CODEGRAPH_ROOT/scripts/codegraph-context.js\" --stage verification --claim verification:task-001-archive-safe-prototype-baseline --query \"<query>\" --write --json"
+    },
+    {
+      "id": "verification:task-002-headless-workspace-state-controller:evidence",
+      "claim_id": "verification:task-002-headless-workspace-state-controller",
+      "stage": "verification",
+      "task_id": "002-headless-workspace-state-controller",
+      "status": "planned",
+      "query": "Verify the implemented files, symbols, callers, tests, and requirement/prototype traceability for \"Provide a pure-Python `WorkspaceController` that accepts saved source snapshots,\" in change \"build-thesisforge-desktop-ui\". Return concrete file paths, symbols, relationships, and any missing implementation evidence.",
+      "expected_evidence": [
+        "file paths",
+        "symbols",
+        "call relationships",
+        "tests or verification commands"
+      ],
+      "command": "node \"$SPECNAV_CODEGRAPH_ROOT/scripts/codegraph-context.js\" --stage verification --claim verification:task-002-headless-workspace-state-controller --query \"<query>\" --write --json"
+    },
+    {
+      "id": "verification:task-003-explicit-source-open-atomic-save:evidence",
+      "claim_id": "verification:task-003-explicit-source-open-atomic-save",
+      "stage": "verification",
+      "task_id": "003-explicit-source-open-atomic-save",
+      "status": "planned",
+      "query": "Verify the implemented files, symbols, callers, tests, and requirement/prototype traceability for \"Extend the pure-Python workspace reference with explicit desktop open,\" in change \"build-thesisforge-desktop-ui\". Return concrete file paths, symbols, relationships, and any missing implementation evidence.",
+      "expected_evidence": [
+        "file paths",
+        "symbols",
+        "call relationships",
+        "tests or verification commands"
+      ],
+      "command": "node \"$SPECNAV_CODEGRAPH_ROOT/scripts/codegraph-context.js\" --stage verification --claim verification:task-003-explicit-source-open-atomic-save --query \"<query>\" --write --json"
+    },
+    {
+      "id": "verification:task-004-optional-pyside6-workbench-shell:evidence",
+      "claim_id": "verification:task-004-optional-pyside6-workbench-shell",
+      "stage": "verification",
+      "task_id": "004-optional-pyside6-workbench-shell",
+      "status": "planned",
+      "query": "Verify the implemented files, symbols, callers, tests, and requirement/prototype traceability for \"Create the shared React workbench shell and its TypeScript workspace state,\" in change \"build-thesisforge-desktop-ui\". Return concrete file paths, symbols, relationships, and any missing implementation evidence.",
+      "expected_evidence": [
+        "file paths",
+        "symbols",
+        "call relationships",
+        "tests or verification commands"
+      ],
+      "command": "node \"$SPECNAV_CODEGRAPH_ROOT/scripts/codegraph-context.js\" --stage verification --claim verification:task-004-optional-pyside6-workbench-shell --query \"<query>\" --write --json"
+    },
+    {
+      "id": "verification:task-005-template-selection-structured-diagnostics:evidence",
+      "claim_id": "verification:task-005-template-selection-structured-diagnostics",
+      "stage": "verification",
+      "task_id": "005-template-selection-structured-diagnostics",
+      "status": "planned",
+      "query": "Verify the implemented files, symbols, callers, tests, and requirement/prototype traceability for \"Connect the existing template resolver and validation service to the shared\" in change \"build-thesisforge-desktop-ui\". Return concrete file paths, symbols, relationships, and any missing implementation evidence.",
+      "expected_evidence": [
+        "file paths",
+        "symbols",
+        "call relationships",
+        "tests or verification commands"
+      ],
+      "command": "node \"$SPECNAV_CODEGRAPH_ROOT/scripts/codegraph-context.js\" --stage verification --claim verification:task-005-template-selection-structured-diagnostics --query \"<query>\" --write --json"
+    },
+    {
+      "id": "verification:task-006-outline-renderer-neutral-preview:evidence",
+      "claim_id": "verification:task-006-outline-renderer-neutral-preview",
+      "stage": "verification",
+      "task_id": "006-outline-renderer-neutral-preview",
+      "status": "planned",
+      "query": "Verify the implemented files, symbols, callers, tests, and requirement/prototype traceability for \"Add a renderer-neutral application preview service that reuses parse,\" in change \"build-thesisforge-desktop-ui\". Return concrete file paths, symbols, relationships, and any missing implementation evidence.",
+      "expected_evidence": [
+        "file paths",
+        "symbols",
+        "call relationships",
+        "tests or verification commands"
+      ],
+      "command": "node \"$SPECNAV_CODEGRAPH_ROOT/scripts/codegraph-context.js\" --stage verification --claim verification:task-006-outline-renderer-neutral-preview --query \"<query>\" --write --json"
+    },
+    {
+      "id": "verification:task-007-safe-background-build-cancellation:evidence",
+      "claim_id": "verification:task-007-safe-background-build-cancellation",
+      "stage": "verification",
+      "task_id": "007-safe-background-build-cancellation",
+      "status": "planned",
+      "query": "Verify the implemented files, symbols, callers, tests, and requirement/prototype traceability for \"Add cooperative cancellation to the existing deterministic build application\" in change \"build-thesisforge-desktop-ui\". Return concrete file paths, symbols, relationships, and any missing implementation evidence.",
+      "expected_evidence": [
+        "file paths",
+        "symbols",
+        "call relationships",
+        "tests or verification commands"
+      ],
+      "command": "node \"$SPECNAV_CODEGRAPH_ROOT/scripts/codegraph-context.js\" --stage verification --claim verification:task-007-safe-background-build-cancellation --query \"<query>\" --write --json"
+    },
+    {
+      "id": "verification:task-008-cross-platform-distribution-acceptance:evidence",
+      "claim_id": "verification:task-008-cross-platform-distribution-acceptance",
+      "stage": "verification",
+      "task_id": "008-cross-platform-distribution-acceptance",
+      "status": "planned",
+      "query": "Verify the implemented files, symbols, callers, tests, and requirement/prototype traceability for \"Turn the already working shared React workbench and Python application services\" in change \"build-thesisforge-desktop-ui\". Return concrete file paths, symbols, relationships, and any missing implementation evidence.",
+      "expected_evidence": [
+        "file paths",
+        "symbols",
+        "call relationships",
+        "tests or verification commands"
+      ],
+      "command": "node \"$SPECNAV_CODEGRAPH_ROOT/scripts/codegraph-context.js\" --stage verification --claim verification:task-008-cross-platform-distribution-acceptance --query \"<query>\" --write --json"
     }
   ]
 }

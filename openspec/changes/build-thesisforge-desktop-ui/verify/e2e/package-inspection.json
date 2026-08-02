@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "status": "pass",
+  "python_distribution": {
+    "wheel_sha256": "b7ed60dfbc19afc17fe10d992d41f1136784e71868160e83d5a5f93cc6ebc176",
+    "sdist_sha256": "f7fa9b79b879a08de67aaf8fc1b53e120c2dabe2497f735802a3feb49372774b",
+    "hermetic": true,
+    "docx_bytes": 187059
+  },
+  "macos_sidecar": {
+    "target": "aarch64-apple-darwin",
+    "bytes": 21849664,
+    "sha256": "cd7378b08637be7c1ac75554ca12f3d77de5952298489537301b37b5425773f8",
+    "offline": true,
+    "docx_bytes": 187059
+  },
+  "windows": {
+    "target": "windows-arm64",
+    "msi_bytes": 22564864,
+    "msi_sha256": "f775a887682ee7a9ee1a0d2312c799e307e20e4bf9bde2ca9b82655def420276",
+    "nsis_bytes": 21263132,
+    "nsis_sha256": "9692f39d61bf990b6c6da2d8f5ce224d2ed92b91c84280deedc474380a9cf60c",
+    "docx_bytes": 187088,
+    "docx_sha256": "765158a6952de5f400a9c99bc685442db613844286f7187940479d462c32e10b",
+    "offline": true
+  }
+}

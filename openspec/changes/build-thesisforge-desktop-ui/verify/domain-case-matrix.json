@@ -1,0 +1,354 @@
+{
+  "schema_version": 1,
+  "change_id": "build-thesisforge-desktop-ui",
+  "cases": [
+    {
+      "case_id": "utc-a1-shared-cross-platform-workbench",
+      "domains": {
+        "facticity": [
+          "将 utc-a1-shared-cross-platform-workbench 的用户结果与 requirements、acceptance 和当前实现证据逐项核对。",
+          "确认“Web、macOS 与 Windows 打开同一套中文浅色工作台”没有超出已执行平台和制品边界。"
+        ],
+        "static": [
+          "检查 utc-a1-shared-cross-platform-workbench 涉及的类型、schema、依赖方向、打包配置和禁止导入。",
+          "运行 Ruff、TypeScript typecheck/lint、Cargo fmt/check、严格 OpenSpec 和 CodeGraph guard。"
+        ],
+        "unit": [
+          "运行覆盖 utc-a1-shared-cross-platform-workbench 正常路径、空状态、错误路径和边界输入的 Python/Vitest/Rust 测试。",
+          "确认断言面向公开行为而不是私有调用次数。"
+        ],
+        "redteam": [
+          "针对 utc-a1-shared-cross-platform-workbench 注入权限、脏状态、迟到结果、协议漂移、网络和打包失败。",
+          "确认失败不破坏源文件、先前 DOCX 或运行时边界。"
+        ],
+        "e2e": [
+          "在 Web 或适用的 macOS/Windows 原生运行时执行 utc-a1-shared-cross-platform-workbench 的完整用户路径。",
+          "记录命令日志、DOCX/installer 校验、截图或原生任务结果。"
+        ],
+        "sensory": [
+          "独立复核 utc-a1-shared-cross-platform-workbench 的可读性、标签、状态清晰度、键盘路径和平台一致性。",
+          "检查截图与批准 academic-three-pane 原型的信息架构是否一致。"
+        ]
+      }
+    },
+    {
+      "case_id": "utc-a2-open-saved-snapshot",
+      "domains": {
+        "facticity": [
+          "将 utc-a2-open-saved-snapshot 的用户结果与 requirements、acceptance 和当前实现证据逐项核对。",
+          "确认“打开 Markdown 后从同一保存快照填充工作台”没有超出已执行平台和制品边界。"
+        ],
+        "static": [
+          "检查 utc-a2-open-saved-snapshot 涉及的类型、schema、依赖方向、打包配置和禁止导入。",
+          "运行 Ruff、TypeScript typecheck/lint、Cargo fmt/check、严格 OpenSpec 和 CodeGraph guard。"
+        ],
+        "unit": [
+          "运行覆盖 utc-a2-open-saved-snapshot 正常路径、空状态、错误路径和边界输入的 Python/Vitest/Rust 测试。",
+          "确认断言面向公开行为而不是私有调用次数。"
+        ],
+        "redteam": [
+          "针对 utc-a2-open-saved-snapshot 注入权限、脏状态、迟到结果、协议漂移、网络和打包失败。",
+          "确认失败不破坏源文件、先前 DOCX 或运行时边界。"
+        ],
+        "e2e": [
+          "在 Web 或适用的 macOS/Windows 原生运行时执行 utc-a2-open-saved-snapshot 的完整用户路径。",
+          "记录命令日志、DOCX/installer 校验、截图或原生任务结果。"
+        ],
+        "sensory": [
+          "独立复核 utc-a2-open-saved-snapshot 的可读性、标签、状态清晰度、键盘路径和平台一致性。",
+          "检查截图与批准 academic-three-pane 原型的信息架构是否一致。"
+        ]
+      }
+    },
+    {
+      "case_id": "utc-a3-explicit-atomic-save",
+      "domains": {
+        "facticity": [
+          "将 utc-a3-explicit-atomic-save 的用户结果与 requirements、acceptance 和当前实现证据逐项核对。",
+          "确认“脏编辑必须显式保存且失败不损坏原文”没有超出已执行平台和制品边界。"
+        ],
+        "static": [
+          "检查 utc-a3-explicit-atomic-save 涉及的类型、schema、依赖方向、打包配置和禁止导入。",
+          "运行 Ruff、TypeScript typecheck/lint、Cargo fmt/check、严格 OpenSpec 和 CodeGraph guard。"
+        ],
+        "unit": [
+          "运行覆盖 utc-a3-explicit-atomic-save 正常路径、空状态、错误路径和边界输入的 Python/Vitest/Rust 测试。",
+          "确认断言面向公开行为而不是私有调用次数。"
+        ],
+        "redteam": [
+          "针对 utc-a3-explicit-atomic-save 注入权限、脏状态、迟到结果、协议漂移、网络和打包失败。",
+          "确认失败不破坏源文件、先前 DOCX 或运行时边界。"
+        ],
+        "e2e": [
+          "在 Web 或适用的 macOS/Windows 原生运行时执行 utc-a3-explicit-atomic-save 的完整用户路径。",
+          "记录命令日志、DOCX/installer 校验、截图或原生任务结果。"
+        ],
+        "sensory": [
+          "独立复核 utc-a3-explicit-atomic-save 的可读性、标签、状态清晰度、键盘路径和平台一致性。",
+          "检查截图与批准 academic-three-pane 原型的信息架构是否一致。"
+        ]
+      }
+    },
+    {
+      "case_id": "utc-a4-template-diagnostics",
+      "domains": {
+        "facticity": [
+          "将 utc-a4-template-diagnostics 的用户结果与 requirements、acceptance 和当前实现证据逐项核对。",
+          "确认“模板选择与结构化诊断复用确定性核心契约”没有超出已执行平台和制品边界。"
+        ],
+        "static": [
+          "检查 utc-a4-template-diagnostics 涉及的类型、schema、依赖方向、打包配置和禁止导入。",
+          "运行 Ruff、TypeScript typecheck/lint、Cargo fmt/check、严格 OpenSpec 和 CodeGraph guard。"
+        ],
+        "unit": [
+          "运行覆盖 utc-a4-template-diagnostics 正常路径、空状态、错误路径和边界输入的 Python/Vitest/Rust 测试。",
+          "确认断言面向公开行为而不是私有调用次数。"
+        ],
+        "redteam": [
+          "针对 utc-a4-template-diagnostics 注入权限、脏状态、迟到结果、协议漂移、网络和打包失败。",
+          "确认失败不破坏源文件、先前 DOCX 或运行时边界。"
+        ],
+        "e2e": [
+          "在 Web 或适用的 macOS/Windows 原生运行时执行 utc-a4-template-diagnostics 的完整用户路径。",
+          "记录命令日志、DOCX/installer 校验、截图或原生任务结果。"
+        ],
+        "sensory": [
+          "独立复核 utc-a4-template-diagnostics 的可读性、标签、状态清晰度、键盘路径和平台一致性。",
+          "检查截图与批准 academic-three-pane 原型的信息架构是否一致。"
+        ]
+      }
+    },
+    {
+      "case_id": "utc-a5-ordered-build-progress",
+      "domains": {
+        "facticity": [
+          "将 utc-a5-ordered-build-progress 的用户结果与 requirements、acceptance 和当前实现证据逐项核对。",
+          "确认“构建显示五阶段进度并返回最终 DOCX”没有超出已执行平台和制品边界。"
+        ],
+        "static": [
+          "检查 utc-a5-ordered-build-progress 涉及的类型、schema、依赖方向、打包配置和禁止导入。",
+          "运行 Ruff、TypeScript typecheck/lint、Cargo fmt/check、严格 OpenSpec 和 CodeGraph guard。"
+        ],
+        "unit": [
+          "运行覆盖 utc-a5-ordered-build-progress 正常路径、空状态、错误路径和边界输入的 Python/Vitest/Rust 测试。",
+          "确认断言面向公开行为而不是私有调用次数。"
+        ],
+        "redteam": [
+          "针对 utc-a5-ordered-build-progress 注入权限、脏状态、迟到结果、协议漂移、网络和打包失败。",
+          "确认失败不破坏源文件、先前 DOCX 或运行时边界。"
+        ],
+        "e2e": [
+          "在 Web 或适用的 macOS/Windows 原生运行时执行 utc-a5-ordered-build-progress 的完整用户路径。",
+          "记录命令日志、DOCX/installer 校验、截图或原生任务结果。"
+        ],
+        "sensory": [
+          "独立复核 utc-a5-ordered-build-progress 的可读性、标签、状态清晰度、键盘路径和平台一致性。",
+          "检查截图与批准 academic-three-pane 原型的信息架构是否一致。"
+        ]
+      }
+    },
+    {
+      "case_id": "utc-a6-failure-preserves-output",
+      "domains": {
+        "facticity": [
+          "将 utc-a6-failure-preserves-output 的用户结果与 requirements、acceptance 和当前实现证据逐项核对。",
+          "确认“失败、取消和过期结果保留已有有效输出”没有超出已执行平台和制品边界。"
+        ],
+        "static": [
+          "检查 utc-a6-failure-preserves-output 涉及的类型、schema、依赖方向、打包配置和禁止导入。",
+          "运行 Ruff、TypeScript typecheck/lint、Cargo fmt/check、严格 OpenSpec 和 CodeGraph guard。"
+        ],
+        "unit": [
+          "运行覆盖 utc-a6-failure-preserves-output 正常路径、空状态、错误路径和边界输入的 Python/Vitest/Rust 测试。",
+          "确认断言面向公开行为而不是私有调用次数。"
+        ],
+        "redteam": [
+          "针对 utc-a6-failure-preserves-output 注入权限、脏状态、迟到结果、协议漂移、网络和打包失败。",
+          "确认失败不破坏源文件、先前 DOCX 或运行时边界。"
+        ],
+        "e2e": [
+          "在 Web 或适用的 macOS/Windows 原生运行时执行 utc-a6-failure-preserves-output 的完整用户路径。",
+          "记录命令日志、DOCX/installer 校验、截图或原生任务结果。"
+        ],
+        "sensory": [
+          "独立复核 utc-a6-failure-preserves-output 的可读性、标签、状态清晰度、键盘路径和平台一致性。",
+          "检查截图与批准 academic-three-pane 原型的信息架构是否一致。"
+        ]
+      }
+    },
+    {
+      "case_id": "utc-a7-architecture-boundaries",
+      "domains": {
+        "facticity": [
+          "将 utc-a7-architecture-boundaries 的用户结果与 requirements、acceptance 和当前实现证据逐项核对。",
+          "确认“React、Tauri、HTTP 与确定性核心保持单向依赖”没有超出已执行平台和制品边界。"
+        ],
+        "static": [
+          "检查 utc-a7-architecture-boundaries 涉及的类型、schema、依赖方向、打包配置和禁止导入。",
+          "运行 Ruff、TypeScript typecheck/lint、Cargo fmt/check、严格 OpenSpec 和 CodeGraph guard。"
+        ],
+        "unit": [
+          "运行覆盖 utc-a7-architecture-boundaries 正常路径、空状态、错误路径和边界输入的 Python/Vitest/Rust 测试。",
+          "确认断言面向公开行为而不是私有调用次数。"
+        ],
+        "redteam": [
+          "针对 utc-a7-architecture-boundaries 注入权限、脏状态、迟到结果、协议漂移、网络和打包失败。",
+          "确认失败不破坏源文件、先前 DOCX 或运行时边界。"
+        ],
+        "e2e": [
+          "在 Web 或适用的 macOS/Windows 原生运行时执行 utc-a7-architecture-boundaries 的完整用户路径。",
+          "记录命令日志、DOCX/installer 校验、截图或原生任务结果。"
+        ],
+        "sensory": [
+          "独立复核 utc-a7-architecture-boundaries 的可读性、标签、状态清晰度、键盘路径和平台一致性。",
+          "检查截图与批准 academic-three-pane 原型的信息架构是否一致。"
+        ]
+      }
+    },
+    {
+      "case_id": "utc-a8-independent-core-distribution",
+      "domains": {
+        "facticity": [
+          "将 utc-a8-independent-core-distribution 的用户结果与 requirements、acceptance 和当前实现证据逐项核对。",
+          "确认“Python CLI、wheel 和 sdist 独立于前端桌面工具链”没有超出已执行平台和制品边界。"
+        ],
+        "static": [
+          "检查 utc-a8-independent-core-distribution 涉及的类型、schema、依赖方向、打包配置和禁止导入。",
+          "运行 Ruff、TypeScript typecheck/lint、Cargo fmt/check、严格 OpenSpec 和 CodeGraph guard。"
+        ],
+        "unit": [
+          "运行覆盖 utc-a8-independent-core-distribution 正常路径、空状态、错误路径和边界输入的 Python/Vitest/Rust 测试。",
+          "确认断言面向公开行为而不是私有调用次数。"
+        ],
+        "redteam": [
+          "针对 utc-a8-independent-core-distribution 注入权限、脏状态、迟到结果、协议漂移、网络和打包失败。",
+          "确认失败不破坏源文件、先前 DOCX 或运行时边界。"
+        ],
+        "e2e": [
+          "在 Web 或适用的 macOS/Windows 原生运行时执行 utc-a8-independent-core-distribution 的完整用户路径。",
+          "记录命令日志、DOCX/installer 校验、截图或原生任务结果。"
+        ],
+        "sensory": [
+          "独立复核 utc-a8-independent-core-distribution 的可读性、标签、状态清晰度、键盘路径和平台一致性。",
+          "检查截图与批准 academic-three-pane 原型的信息架构是否一致。"
+        ]
+      }
+    },
+    {
+      "case_id": "utc-a9-archive-safe-prototype",
+      "domains": {
+        "facticity": [
+          "将 utc-a9-archive-safe-prototype 的用户结果与 requirements、acceptance 和当前实现证据逐项核对。",
+          "确认“归档后的批准原型仍可被唯一定位和验证”没有超出已执行平台和制品边界。"
+        ],
+        "static": [
+          "检查 utc-a9-archive-safe-prototype 涉及的类型、schema、依赖方向、打包配置和禁止导入。",
+          "运行 Ruff、TypeScript typecheck/lint、Cargo fmt/check、严格 OpenSpec 和 CodeGraph guard。"
+        ],
+        "unit": [
+          "运行覆盖 utc-a9-archive-safe-prototype 正常路径、空状态、错误路径和边界输入的 Python/Vitest/Rust 测试。",
+          "确认断言面向公开行为而不是私有调用次数。"
+        ],
+        "redteam": [
+          "针对 utc-a9-archive-safe-prototype 注入权限、脏状态、迟到结果、协议漂移、网络和打包失败。",
+          "确认失败不破坏源文件、先前 DOCX 或运行时边界。"
+        ],
+        "e2e": [
+          "在 Web 或适用的 macOS/Windows 原生运行时执行 utc-a9-archive-safe-prototype 的完整用户路径。",
+          "记录命令日志、DOCX/installer 校验、截图或原生任务结果。"
+        ],
+        "sensory": [
+          "独立复核 utc-a9-archive-safe-prototype 的可读性、标签、状态清晰度、键盘路径和平台一致性。",
+          "检查截图与批准 academic-three-pane 原型的信息架构是否一致。"
+        ]
+      }
+    },
+    {
+      "case_id": "utc-a10-headless-state-coverage",
+      "domains": {
+        "facticity": [
+          "将 utc-a10-headless-state-coverage 的用户结果与 requirements、acceptance 和当前实现证据逐项核对。",
+          "确认“全部工作台状态可在无可见桌面会话下测试”没有超出已执行平台和制品边界。"
+        ],
+        "static": [
+          "检查 utc-a10-headless-state-coverage 涉及的类型、schema、依赖方向、打包配置和禁止导入。",
+          "运行 Ruff、TypeScript typecheck/lint、Cargo fmt/check、严格 OpenSpec 和 CodeGraph guard。"
+        ],
+        "unit": [
+          "运行覆盖 utc-a10-headless-state-coverage 正常路径、空状态、错误路径和边界输入的 Python/Vitest/Rust 测试。",
+          "确认断言面向公开行为而不是私有调用次数。"
+        ],
+        "redteam": [
+          "针对 utc-a10-headless-state-coverage 注入权限、脏状态、迟到结果、协议漂移、网络和打包失败。",
+          "确认失败不破坏源文件、先前 DOCX 或运行时边界。"
+        ],
+        "e2e": [
+          "在 Web 或适用的 macOS/Windows 原生运行时执行 utc-a10-headless-state-coverage 的完整用户路径。",
+          "记录命令日志、DOCX/installer 校验、截图或原生任务结果。"
+        ],
+        "sensory": [
+          "独立复核 utc-a10-headless-state-coverage 的可读性、标签、状态清晰度、键盘路径和平台一致性。",
+          "检查截图与批准 academic-three-pane 原型的信息架构是否一致。"
+        ]
+      }
+    },
+    {
+      "case_id": "utc-a11-accessible-responsive-workbench",
+      "domains": {
+        "facticity": [
+          "将 utc-a11-accessible-responsive-workbench 的用户结果与 requirements、acceptance 和当前实现证据逐项核对。",
+          "确认“键盘、焦点、标签、对比度和响应式布局满足合同”没有超出已执行平台和制品边界。"
+        ],
+        "static": [
+          "检查 utc-a11-accessible-responsive-workbench 涉及的类型、schema、依赖方向、打包配置和禁止导入。",
+          "运行 Ruff、TypeScript typecheck/lint、Cargo fmt/check、严格 OpenSpec 和 CodeGraph guard。"
+        ],
+        "unit": [
+          "运行覆盖 utc-a11-accessible-responsive-workbench 正常路径、空状态、错误路径和边界输入的 Python/Vitest/Rust 测试。",
+          "确认断言面向公开行为而不是私有调用次数。"
+        ],
+        "redteam": [
+          "针对 utc-a11-accessible-responsive-workbench 注入权限、脏状态、迟到结果、协议漂移、网络和打包失败。",
+          "确认失败不破坏源文件、先前 DOCX 或运行时边界。"
+        ],
+        "e2e": [
+          "在 Web 或适用的 macOS/Windows 原生运行时执行 utc-a11-accessible-responsive-workbench 的完整用户路径。",
+          "记录命令日志、DOCX/installer 校验、截图或原生任务结果。"
+        ],
+        "sensory": [
+          "独立复核 utc-a11-accessible-responsive-workbench 的可读性、标签、状态清晰度、键盘路径和平台一致性。",
+          "检查截图与批准 academic-three-pane 原型的信息架构是否一致。"
+        ]
+      }
+    },
+    {
+      "case_id": "utc-a12-offline-runtime-boundaries",
+      "domains": {
+        "facticity": [
+          "将 utc-a12-offline-runtime-boundaries 的用户结果与 requirements、acceptance 和当前实现证据逐项核对。",
+          "确认“桌面离线确定性运行且 Web 只使用配置的 HTTP 适配器”没有超出已执行平台和制品边界。"
+        ],
+        "static": [
+          "检查 utc-a12-offline-runtime-boundaries 涉及的类型、schema、依赖方向、打包配置和禁止导入。",
+          "运行 Ruff、TypeScript typecheck/lint、Cargo fmt/check、严格 OpenSpec 和 CodeGraph guard。"
+        ],
+        "unit": [
+          "运行覆盖 utc-a12-offline-runtime-boundaries 正常路径、空状态、错误路径和边界输入的 Python/Vitest/Rust 测试。",
+          "确认断言面向公开行为而不是私有调用次数。"
+        ],
+        "redteam": [
+          "针对 utc-a12-offline-runtime-boundaries 注入权限、脏状态、迟到结果、协议漂移、网络和打包失败。",
+          "确认失败不破坏源文件、先前 DOCX 或运行时边界。"
+        ],
+        "e2e": [
+          "在 Web 或适用的 macOS/Windows 原生运行时执行 utc-a12-offline-runtime-boundaries 的完整用户路径。",
+          "记录命令日志、DOCX/installer 校验、截图或原生任务结果。"
+        ],
+        "sensory": [
+          "独立复核 utc-a12-offline-runtime-boundaries 的可读性、标签、状态清晰度、键盘路径和平台一致性。",
+          "检查截图与批准 academic-three-pane 原型的信息架构是否一致。"
+        ]
+      }
+    }
+  ]
+}

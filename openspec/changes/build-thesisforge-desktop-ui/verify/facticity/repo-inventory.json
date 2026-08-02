@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "change_id": "build-thesisforge-desktop-ui",
+  "baseline": "f1adc43",
+  "changed_files": 221,
+  "source_surfaces": [
+    "frontend",
+    "src-tauri",
+    "src/thesis_forge/adapters",
+    "src/thesis_forge/application",
+    "src/thesis_forge/presentation",
+    "src/thesis_forge/ui",
+    "scripts",
+    "tests",
+    "docs",
+    "openspec/changes/build-thesisforge-desktop-ui"
+  ],
+  "runtime_targets": [
+    "web",
+    "macos-arm64",
+    "windows-arm64"
+  ],
+  "database_introduced": false,
+  "ai_required": false
+}

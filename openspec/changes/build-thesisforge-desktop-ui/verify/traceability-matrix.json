@@ -1,0 +1,6233 @@
+{
+  "schema_version": 1,
+  "change_id": "build-thesisforge-desktop-ui",
+  "entries": [
+    {
+      "changed_file": ".github/workflows/distribution.yml",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": ".gitignore",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "Makefile",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "README.md",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "docs/ARCHITECTURE.md",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "docs/MAINTENANCE.md",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "docs/REFERENCES.md",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "docs/THIRD_PARTY_NOTES.md",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "docs/V1_PLAN.md",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "frontend/.gitignore",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#4-shared-react-workbench-and-runtime-transports",
+        "tasks.md#5-template-selection-and-structured-diagnostics",
+        "tasks.md#6-outline-and-renderer-neutral-paper-preview",
+        "tasks.md#7-safe-cross-runtime-build-progress-and-cancellation",
+        "tasks.md#8-complete-web-macos-and-windows-acceptance"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "frontend/e2e/acceptance.spec.ts",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#4-shared-react-workbench-and-runtime-transports",
+        "tasks.md#5-template-selection-and-structured-diagnostics",
+        "tasks.md#6-outline-and-renderer-neutral-paper-preview",
+        "tasks.md#7-safe-cross-runtime-build-progress-and-cancellation",
+        "tasks.md#8-complete-web-macos-and-windows-acceptance"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "frontend/e2e/real-http.acceptance.ts",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#4-shared-react-workbench-and-runtime-transports",
+        "tasks.md#5-template-selection-and-structured-diagnostics",
+        "tasks.md#6-outline-and-renderer-neutral-paper-preview",
+        "tasks.md#7-safe-cross-runtime-build-progress-and-cancellation",
+        "tasks.md#8-complete-web-macos-and-windows-acceptance"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "frontend/e2e/real-http.playwright.config.ts",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#4-shared-react-workbench-and-runtime-transports",
+        "tasks.md#5-template-selection-and-structured-diagnostics",
+        "tasks.md#6-outline-and-renderer-neutral-paper-preview",
+        "tasks.md#7-safe-cross-runtime-build-progress-and-cancellation",
+        "tasks.md#8-complete-web-macos-and-windows-acceptance"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "frontend/e2e/real_http_server.py",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#4-shared-react-workbench-and-runtime-transports",
+        "tasks.md#5-template-selection-and-structured-diagnostics",
+        "tasks.md#6-outline-and-renderer-neutral-paper-preview",
+        "tasks.md#7-safe-cross-runtime-build-progress-and-cancellation",
+        "tasks.md#8-complete-web-macos-and-windows-acceptance"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "frontend/e2e/tauri-windows.acceptance.ts",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#4-shared-react-workbench-and-runtime-transports",
+        "tasks.md#5-template-selection-and-structured-diagnostics",
+        "tasks.md#6-outline-and-renderer-neutral-paper-preview",
+        "tasks.md#7-safe-cross-runtime-build-progress-and-cancellation",
+        "tasks.md#8-complete-web-macos-and-windows-acceptance"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "frontend/e2e/workbench.spec.ts",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#4-shared-react-workbench-and-runtime-transports",
+        "tasks.md#5-template-selection-and-structured-diagnostics",
+        "tasks.md#6-outline-and-renderer-neutral-paper-preview",
+        "tasks.md#7-safe-cross-runtime-build-progress-and-cancellation",
+        "tasks.md#8-complete-web-macos-and-windows-acceptance"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "frontend/index.html",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#4-shared-react-workbench-and-runtime-transports",
+        "tasks.md#5-template-selection-and-structured-diagnostics",
+        "tasks.md#6-outline-and-renderer-neutral-paper-preview",
+        "tasks.md#7-safe-cross-runtime-build-progress-and-cancellation",
+        "tasks.md#8-complete-web-macos-and-windows-acceptance"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "frontend/package.json",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#4-shared-react-workbench-and-runtime-transports",
+        "tasks.md#5-template-selection-and-structured-diagnostics",
+        "tasks.md#6-outline-and-renderer-neutral-paper-preview",
+        "tasks.md#7-safe-cross-runtime-build-progress-and-cancellation",
+        "tasks.md#8-complete-web-macos-and-windows-acceptance"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "frontend/playwright.config.ts",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#4-shared-react-workbench-and-runtime-transports",
+        "tasks.md#5-template-selection-and-structured-diagnostics",
+        "tasks.md#6-outline-and-renderer-neutral-paper-preview",
+        "tasks.md#7-safe-cross-runtime-build-progress-and-cancellation",
+        "tasks.md#8-complete-web-macos-and-windows-acceptance"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "frontend/pnpm-lock.yaml",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#4-shared-react-workbench-and-runtime-transports",
+        "tasks.md#5-template-selection-and-structured-diagnostics",
+        "tasks.md#6-outline-and-renderer-neutral-paper-preview",
+        "tasks.md#7-safe-cross-runtime-build-progress-and-cancellation",
+        "tasks.md#8-complete-web-macos-and-windows-acceptance"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "frontend/scripts/lint.mjs",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#4-shared-react-workbench-and-runtime-transports",
+        "tasks.md#5-template-selection-and-structured-diagnostics",
+        "tasks.md#6-outline-and-renderer-neutral-paper-preview",
+        "tasks.md#7-safe-cross-runtime-build-progress-and-cancellation",
+        "tasks.md#8-complete-web-macos-and-windows-acceptance"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "frontend/src/components/OutputFeedback.tsx",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#4-shared-react-workbench-and-runtime-transports",
+        "tasks.md#5-template-selection-and-structured-diagnostics",
+        "tasks.md#6-outline-and-renderer-neutral-paper-preview",
+        "tasks.md#7-safe-cross-runtime-build-progress-and-cancellation",
+        "tasks.md#8-complete-web-macos-and-windows-acceptance"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "frontend/src/components/PanelHeader.tsx",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#4-shared-react-workbench-and-runtime-transports",
+        "tasks.md#5-template-selection-and-structured-diagnostics",
+        "tasks.md#6-outline-and-renderer-neutral-paper-preview",
+        "tasks.md#7-safe-cross-runtime-build-progress-and-cancellation",
+        "tasks.md#8-complete-web-macos-and-windows-acceptance"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "frontend/src/components/PreviewPanels.test.tsx",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#4-shared-react-workbench-and-runtime-transports",
+        "tasks.md#5-template-selection-and-structured-diagnostics",
+        "tasks.md#6-outline-and-renderer-neutral-paper-preview",
+        "tasks.md#7-safe-cross-runtime-build-progress-and-cancellation",
+        "tasks.md#8-complete-web-macos-and-windows-acceptance"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "frontend/src/components/PreviewPanels.tsx",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#4-shared-react-workbench-and-runtime-transports",
+        "tasks.md#5-template-selection-and-structured-diagnostics",
+        "tasks.md#6-outline-and-renderer-neutral-paper-preview",
+        "tasks.md#7-safe-cross-runtime-build-progress-and-cancellation",
+        "tasks.md#8-complete-web-macos-and-windows-acceptance"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "frontend/src/components/ProductBar.tsx",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#4-shared-react-workbench-and-runtime-transports",
+        "tasks.md#5-template-selection-and-structured-diagnostics",
+        "tasks.md#6-outline-and-renderer-neutral-paper-preview",
+        "tasks.md#7-safe-cross-runtime-build-progress-and-cancellation",
+        "tasks.md#8-complete-web-macos-and-windows-acceptance"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "frontend/src/components/StatusStrip.tsx",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#4-shared-react-workbench-and-runtime-transports",
+        "tasks.md#5-template-selection-and-structured-diagnostics",
+        "tasks.md#6-outline-and-renderer-neutral-paper-preview",
+        "tasks.md#7-safe-cross-runtime-build-progress-and-cancellation",
+        "tasks.md#8-complete-web-macos-and-windows-acceptance"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "frontend/src/components/WorkbenchApp.test.tsx",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#4-shared-react-workbench-and-runtime-transports",
+        "tasks.md#5-template-selection-and-structured-diagnostics",
+        "tasks.md#6-outline-and-renderer-neutral-paper-preview",
+        "tasks.md#7-safe-cross-runtime-build-progress-and-cancellation",
+        "tasks.md#8-complete-web-macos-and-windows-acceptance"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "frontend/src/components/WorkbenchApp.tsx",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#4-shared-react-workbench-and-runtime-transports",
+        "tasks.md#5-template-selection-and-structured-diagnostics",
+        "tasks.md#6-outline-and-renderer-neutral-paper-preview",
+        "tasks.md#7-safe-cross-runtime-build-progress-and-cancellation",
+        "tasks.md#8-complete-web-macos-and-windows-acceptance"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "frontend/src/components/WorkbenchBuildFlow.test.tsx",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#4-shared-react-workbench-and-runtime-transports",
+        "tasks.md#5-template-selection-and-structured-diagnostics",
+        "tasks.md#6-outline-and-renderer-neutral-paper-preview",
+        "tasks.md#7-safe-cross-runtime-build-progress-and-cancellation",
+        "tasks.md#8-complete-web-macos-and-windows-acceptance"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "frontend/src/components/WorkbenchPanels.tsx",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#4-shared-react-workbench-and-runtime-transports",
+        "tasks.md#5-template-selection-and-structured-diagnostics",
+        "tasks.md#6-outline-and-renderer-neutral-paper-preview",
+        "tasks.md#7-safe-cross-runtime-build-progress-and-cancellation",
+        "tasks.md#8-complete-web-macos-and-windows-acceptance"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "frontend/src/components/WorkbenchPreviewFlow.test.tsx",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#4-shared-react-workbench-and-runtime-transports",
+        "tasks.md#5-template-selection-and-structured-diagnostics",
+        "tasks.md#6-outline-and-renderer-neutral-paper-preview",
+        "tasks.md#7-safe-cross-runtime-build-progress-and-cancellation",
+        "tasks.md#8-complete-web-macos-and-windows-acceptance"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "frontend/src/components/WorkbenchShell.tsx",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#4-shared-react-workbench-and-runtime-transports",
+        "tasks.md#5-template-selection-and-structured-diagnostics",
+        "tasks.md#6-outline-and-renderer-neutral-paper-preview",
+        "tasks.md#7-safe-cross-runtime-build-progress-and-cancellation",
+        "tasks.md#8-complete-web-macos-and-windows-acceptance"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "frontend/src/main.tsx",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#4-shared-react-workbench-and-runtime-transports",
+        "tasks.md#5-template-selection-and-structured-diagnostics",
+        "tasks.md#6-outline-and-renderer-neutral-paper-preview",
+        "tasks.md#7-safe-cross-runtime-build-progress-and-cancellation",
+        "tasks.md#8-complete-web-macos-and-windows-acceptance"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "frontend/src/state/diagnostics.test.ts",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#4-shared-react-workbench-and-runtime-transports",
+        "tasks.md#5-template-selection-and-structured-diagnostics",
+        "tasks.md#6-outline-and-renderer-neutral-paper-preview",
+        "tasks.md#7-safe-cross-runtime-build-progress-and-cancellation",
+        "tasks.md#8-complete-web-macos-and-windows-acceptance"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "frontend/src/state/diagnostics.ts",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#4-shared-react-workbench-and-runtime-transports",
+        "tasks.md#5-template-selection-and-structured-diagnostics",
+        "tasks.md#6-outline-and-renderer-neutral-paper-preview",
+        "tasks.md#7-safe-cross-runtime-build-progress-and-cancellation",
+        "tasks.md#8-complete-web-macos-and-windows-acceptance"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "frontend/src/state/editorNavigation.ts",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#4-shared-react-workbench-and-runtime-transports",
+        "tasks.md#5-template-selection-and-structured-diagnostics",
+        "tasks.md#6-outline-and-renderer-neutral-paper-preview",
+        "tasks.md#7-safe-cross-runtime-build-progress-and-cancellation",
+        "tasks.md#8-complete-web-macos-and-windows-acceptance"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "frontend/src/state/preview.ts",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#4-shared-react-workbench-and-runtime-transports",
+        "tasks.md#5-template-selection-and-structured-diagnostics",
+        "tasks.md#6-outline-and-renderer-neutral-paper-preview",
+        "tasks.md#7-safe-cross-runtime-build-progress-and-cancellation",
+        "tasks.md#8-complete-web-macos-and-windows-acceptance"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "frontend/src/state/workspace-build.test.ts",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#4-shared-react-workbench-and-runtime-transports",
+        "tasks.md#5-template-selection-and-structured-diagnostics",
+        "tasks.md#6-outline-and-renderer-neutral-paper-preview",
+        "tasks.md#7-safe-cross-runtime-build-progress-and-cancellation",
+        "tasks.md#8-complete-web-macos-and-windows-acceptance"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "frontend/src/state/workspace-preview.test.ts",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#4-shared-react-workbench-and-runtime-transports",
+        "tasks.md#5-template-selection-and-structured-diagnostics",
+        "tasks.md#6-outline-and-renderer-neutral-paper-preview",
+        "tasks.md#7-safe-cross-runtime-build-progress-and-cancellation",
+        "tasks.md#8-complete-web-macos-and-windows-acceptance"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "frontend/src/state/workspace.test.ts",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#4-shared-react-workbench-and-runtime-transports",
+        "tasks.md#5-template-selection-and-structured-diagnostics",
+        "tasks.md#6-outline-and-renderer-neutral-paper-preview",
+        "tasks.md#7-safe-cross-runtime-build-progress-and-cancellation",
+        "tasks.md#8-complete-web-macos-and-windows-acceptance"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "frontend/src/state/workspace.ts",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#4-shared-react-workbench-and-runtime-transports",
+        "tasks.md#5-template-selection-and-structured-diagnostics",
+        "tasks.md#6-outline-and-renderer-neutral-paper-preview",
+        "tasks.md#7-safe-cross-runtime-build-progress-and-cancellation",
+        "tasks.md#8-complete-web-macos-and-windows-acceptance"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "frontend/src/styles.css",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#4-shared-react-workbench-and-runtime-transports",
+        "tasks.md#5-template-selection-and-structured-diagnostics",
+        "tasks.md#6-outline-and-renderer-neutral-paper-preview",
+        "tasks.md#7-safe-cross-runtime-build-progress-and-cancellation",
+        "tasks.md#8-complete-web-macos-and-windows-acceptance"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "frontend/src/test/setup.ts",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#4-shared-react-workbench-and-runtime-transports",
+        "tasks.md#5-template-selection-and-structured-diagnostics",
+        "tasks.md#6-outline-and-renderer-neutral-paper-preview",
+        "tasks.md#7-safe-cross-runtime-build-progress-and-cancellation",
+        "tasks.md#8-complete-web-macos-and-windows-acceptance"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "frontend/src/transport/WorkbenchTransport.ts",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#4-shared-react-workbench-and-runtime-transports",
+        "tasks.md#5-template-selection-and-structured-diagnostics",
+        "tasks.md#6-outline-and-renderer-neutral-paper-preview",
+        "tasks.md#7-safe-cross-runtime-build-progress-and-cancellation",
+        "tasks.md#8-complete-web-macos-and-windows-acceptance"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "frontend/src/transport/buildEvents.test.ts",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#4-shared-react-workbench-and-runtime-transports",
+        "tasks.md#5-template-selection-and-structured-diagnostics",
+        "tasks.md#6-outline-and-renderer-neutral-paper-preview",
+        "tasks.md#7-safe-cross-runtime-build-progress-and-cancellation",
+        "tasks.md#8-complete-web-macos-and-windows-acceptance"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "frontend/src/transport/buildEvents.ts",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#4-shared-react-workbench-and-runtime-transports",
+        "tasks.md#5-template-selection-and-structured-diagnostics",
+        "tasks.md#6-outline-and-renderer-neutral-paper-preview",
+        "tasks.md#7-safe-cross-runtime-build-progress-and-cancellation",
+        "tasks.md#8-complete-web-macos-and-windows-acceptance"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "frontend/src/transport/dto.ts",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#4-shared-react-workbench-and-runtime-transports",
+        "tasks.md#5-template-selection-and-structured-diagnostics",
+        "tasks.md#6-outline-and-renderer-neutral-paper-preview",
+        "tasks.md#7-safe-cross-runtime-build-progress-and-cancellation",
+        "tasks.md#8-complete-web-macos-and-windows-acceptance"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "frontend/src/transport/previewDto.test.ts",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#4-shared-react-workbench-and-runtime-transports",
+        "tasks.md#5-template-selection-and-structured-diagnostics",
+        "tasks.md#6-outline-and-renderer-neutral-paper-preview",
+        "tasks.md#7-safe-cross-runtime-build-progress-and-cancellation",
+        "tasks.md#8-complete-web-macos-and-windows-acceptance"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "frontend/src/transport/runtime.ts",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#4-shared-react-workbench-and-runtime-transports",
+        "tasks.md#5-template-selection-and-structured-diagnostics",
+        "tasks.md#6-outline-and-renderer-neutral-paper-preview",
+        "tasks.md#7-safe-cross-runtime-build-progress-and-cancellation",
+        "tasks.md#8-complete-web-macos-and-windows-acceptance"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "frontend/src/transport/tauri.ts",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#4-shared-react-workbench-and-runtime-transports",
+        "tasks.md#5-template-selection-and-structured-diagnostics",
+        "tasks.md#6-outline-and-renderer-neutral-paper-preview",
+        "tasks.md#7-safe-cross-runtime-build-progress-and-cancellation",
+        "tasks.md#8-complete-web-macos-and-windows-acceptance"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "frontend/src/transport/transports-build.test.ts",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#4-shared-react-workbench-and-runtime-transports",
+        "tasks.md#5-template-selection-and-structured-diagnostics",
+        "tasks.md#6-outline-and-renderer-neutral-paper-preview",
+        "tasks.md#7-safe-cross-runtime-build-progress-and-cancellation",
+        "tasks.md#8-complete-web-macos-and-windows-acceptance"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "frontend/src/transport/transports.test.ts",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#4-shared-react-workbench-and-runtime-transports",
+        "tasks.md#5-template-selection-and-structured-diagnostics",
+        "tasks.md#6-outline-and-renderer-neutral-paper-preview",
+        "tasks.md#7-safe-cross-runtime-build-progress-and-cancellation",
+        "tasks.md#8-complete-web-macos-and-windows-acceptance"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "frontend/src/transport/web.ts",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#4-shared-react-workbench-and-runtime-transports",
+        "tasks.md#5-template-selection-and-structured-diagnostics",
+        "tasks.md#6-outline-and-renderer-neutral-paper-preview",
+        "tasks.md#7-safe-cross-runtime-build-progress-and-cancellation",
+        "tasks.md#8-complete-web-macos-and-windows-acceptance"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "frontend/src/vite-env.d.ts",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#4-shared-react-workbench-and-runtime-transports",
+        "tasks.md#5-template-selection-and-structured-diagnostics",
+        "tasks.md#6-outline-and-renderer-neutral-paper-preview",
+        "tasks.md#7-safe-cross-runtime-build-progress-and-cancellation",
+        "tasks.md#8-complete-web-macos-and-windows-acceptance"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "frontend/tsconfig.app.json",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#4-shared-react-workbench-and-runtime-transports",
+        "tasks.md#5-template-selection-and-structured-diagnostics",
+        "tasks.md#6-outline-and-renderer-neutral-paper-preview",
+        "tasks.md#7-safe-cross-runtime-build-progress-and-cancellation",
+        "tasks.md#8-complete-web-macos-and-windows-acceptance"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "frontend/tsconfig.json",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#4-shared-react-workbench-and-runtime-transports",
+        "tasks.md#5-template-selection-and-structured-diagnostics",
+        "tasks.md#6-outline-and-renderer-neutral-paper-preview",
+        "tasks.md#7-safe-cross-runtime-build-progress-and-cancellation",
+        "tasks.md#8-complete-web-macos-and-windows-acceptance"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "frontend/tsconfig.node.json",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#4-shared-react-workbench-and-runtime-transports",
+        "tasks.md#5-template-selection-and-structured-diagnostics",
+        "tasks.md#6-outline-and-renderer-neutral-paper-preview",
+        "tasks.md#7-safe-cross-runtime-build-progress-and-cancellation",
+        "tasks.md#8-complete-web-macos-and-windows-acceptance"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "frontend/vite.config.ts",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#4-shared-react-workbench-and-runtime-transports",
+        "tasks.md#5-template-selection-and-structured-diagnostics",
+        "tasks.md#6-outline-and-renderer-neutral-paper-preview",
+        "tasks.md#7-safe-cross-runtime-build-progress-and-cancellation",
+        "tasks.md#8-complete-web-macos-and-windows-acceptance"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "openspec/.specnav/change-registry.json",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "openspec/changes/build-thesisforge-desktop-ui/.openspec.yaml",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "openspec/changes/build-thesisforge-desktop-ui/README.md",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "openspec/changes/build-thesisforge-desktop-ui/acceptance.json",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "openspec/changes/build-thesisforge-desktop-ui/acceptance.md",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "openspec/changes/build-thesisforge-desktop-ui/codegraph/claims-map.json",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "openspec/changes/build-thesisforge-desktop-ui/codegraph/claims-report.json",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "openspec/changes/build-thesisforge-desktop-ui/codegraph/decision.json",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "openspec/changes/build-thesisforge-desktop-ui/codegraph/drift-report.json",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "openspec/changes/build-thesisforge-desktop-ui/codegraph/evidence-index.json",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "openspec/changes/build-thesisforge-desktop-ui/codegraph/evidence-query-plan.json",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "openspec/changes/build-thesisforge-desktop-ui/codegraph/evidence.jsonl",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "openspec/changes/build-thesisforge-desktop-ui/codegraph/guard-report.json",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "openspec/changes/build-thesisforge-desktop-ui/codegraph/status.json",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "openspec/changes/build-thesisforge-desktop-ui/component-impact-map.json",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "openspec/changes/build-thesisforge-desktop-ui/design.md",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "openspec/changes/build-thesisforge-desktop-ui/development/acceptance-freeze.json",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "openspec/changes/build-thesisforge-desktop-ui/development/basis.md",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "openspec/changes/build-thesisforge-desktop-ui/development/before-dev-check.json",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "openspec/changes/build-thesisforge-desktop-ui/development/code-owner-map.json",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "openspec/changes/build-thesisforge-desktop-ui/development/complexity-budget.json",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "openspec/changes/build-thesisforge-desktop-ui/development/drift-check.jsonl",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "openspec/changes/build-thesisforge-desktop-ui/development/extraction-map.json",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "openspec/changes/build-thesisforge-desktop-ui/development/handoff-to-verify.md",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "openspec/changes/build-thesisforge-desktop-ui/development/prototype-promotion-map.json",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "openspec/changes/build-thesisforge-desktop-ui/development/task-context.jsonl",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "openspec/changes/build-thesisforge-desktop-ui/development/task-graph.json",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "openspec/changes/build-thesisforge-desktop-ui/development/task-ledger.jsonl",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "openspec/changes/build-thesisforge-desktop-ui/development/tasks/001-archive-safe-prototype-baseline/brief.md",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#1-archive-safe-prototype-baseline",
+        "tasks.md#8-complete-web-macos-and-windows-acceptance"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "openspec/changes/build-thesisforge-desktop-ui/development/tasks/001-archive-safe-prototype-baseline/context.json",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#1-archive-safe-prototype-baseline",
+        "tasks.md#8-complete-web-macos-and-windows-acceptance"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "openspec/changes/build-thesisforge-desktop-ui/development/tasks/001-archive-safe-prototype-baseline/quality-review.md",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#1-archive-safe-prototype-baseline",
+        "tasks.md#8-complete-web-macos-and-windows-acceptance"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "openspec/changes/build-thesisforge-desktop-ui/development/tasks/001-archive-safe-prototype-baseline/report.md",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#1-archive-safe-prototype-baseline",
+        "tasks.md#8-complete-web-macos-and-windows-acceptance"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "openspec/changes/build-thesisforge-desktop-ui/development/tasks/001-archive-safe-prototype-baseline/spec-review.md",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#1-archive-safe-prototype-baseline",
+        "tasks.md#8-complete-web-macos-and-windows-acceptance"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "openspec/changes/build-thesisforge-desktop-ui/development/tasks/002-headless-workspace-state-controller/brief.md",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#1-archive-safe-prototype-baseline",
+        "tasks.md#8-complete-web-macos-and-windows-acceptance"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "openspec/changes/build-thesisforge-desktop-ui/development/tasks/002-headless-workspace-state-controller/context.json",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#1-archive-safe-prototype-baseline",
+        "tasks.md#8-complete-web-macos-and-windows-acceptance"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "openspec/changes/build-thesisforge-desktop-ui/development/tasks/002-headless-workspace-state-controller/quality-review.md",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#1-archive-safe-prototype-baseline",
+        "tasks.md#8-complete-web-macos-and-windows-acceptance"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "openspec/changes/build-thesisforge-desktop-ui/development/tasks/002-headless-workspace-state-controller/report.md",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#1-archive-safe-prototype-baseline",
+        "tasks.md#8-complete-web-macos-and-windows-acceptance"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "openspec/changes/build-thesisforge-desktop-ui/development/tasks/002-headless-workspace-state-controller/spec-review.md",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#1-archive-safe-prototype-baseline",
+        "tasks.md#8-complete-web-macos-and-windows-acceptance"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "openspec/changes/build-thesisforge-desktop-ui/development/tasks/003-explicit-source-open-atomic-save/brief.md",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#1-archive-safe-prototype-baseline",
+        "tasks.md#8-complete-web-macos-and-windows-acceptance"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "openspec/changes/build-thesisforge-desktop-ui/development/tasks/003-explicit-source-open-atomic-save/context.json",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#1-archive-safe-prototype-baseline",
+        "tasks.md#8-complete-web-macos-and-windows-acceptance"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "openspec/changes/build-thesisforge-desktop-ui/development/tasks/003-explicit-source-open-atomic-save/quality-review.md",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#1-archive-safe-prototype-baseline",
+        "tasks.md#8-complete-web-macos-and-windows-acceptance"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "openspec/changes/build-thesisforge-desktop-ui/development/tasks/003-explicit-source-open-atomic-save/report.md",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#1-archive-safe-prototype-baseline",
+        "tasks.md#8-complete-web-macos-and-windows-acceptance"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "openspec/changes/build-thesisforge-desktop-ui/development/tasks/003-explicit-source-open-atomic-save/spec-review.md",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#1-archive-safe-prototype-baseline",
+        "tasks.md#8-complete-web-macos-and-windows-acceptance"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "openspec/changes/build-thesisforge-desktop-ui/development/tasks/004-optional-pyside6-workbench-shell/brief.md",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#1-archive-safe-prototype-baseline",
+        "tasks.md#8-complete-web-macos-and-windows-acceptance"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "openspec/changes/build-thesisforge-desktop-ui/development/tasks/004-optional-pyside6-workbench-shell/context.json",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#1-archive-safe-prototype-baseline",
+        "tasks.md#8-complete-web-macos-and-windows-acceptance"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "openspec/changes/build-thesisforge-desktop-ui/development/tasks/004-optional-pyside6-workbench-shell/quality-review.md",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#1-archive-safe-prototype-baseline",
+        "tasks.md#8-complete-web-macos-and-windows-acceptance"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "openspec/changes/build-thesisforge-desktop-ui/development/tasks/004-optional-pyside6-workbench-shell/report.md",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#1-archive-safe-prototype-baseline",
+        "tasks.md#8-complete-web-macos-and-windows-acceptance"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "openspec/changes/build-thesisforge-desktop-ui/development/tasks/004-optional-pyside6-workbench-shell/spec-review.md",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#1-archive-safe-prototype-baseline",
+        "tasks.md#8-complete-web-macos-and-windows-acceptance"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "openspec/changes/build-thesisforge-desktop-ui/development/tasks/005-template-selection-structured-diagnostics/brief.md",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#1-archive-safe-prototype-baseline",
+        "tasks.md#8-complete-web-macos-and-windows-acceptance"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "openspec/changes/build-thesisforge-desktop-ui/development/tasks/005-template-selection-structured-diagnostics/context.json",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#1-archive-safe-prototype-baseline",
+        "tasks.md#8-complete-web-macos-and-windows-acceptance"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "openspec/changes/build-thesisforge-desktop-ui/development/tasks/005-template-selection-structured-diagnostics/quality-review.md",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#1-archive-safe-prototype-baseline",
+        "tasks.md#8-complete-web-macos-and-windows-acceptance"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "openspec/changes/build-thesisforge-desktop-ui/development/tasks/005-template-selection-structured-diagnostics/report.md",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#1-archive-safe-prototype-baseline",
+        "tasks.md#8-complete-web-macos-and-windows-acceptance"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "openspec/changes/build-thesisforge-desktop-ui/development/tasks/005-template-selection-structured-diagnostics/spec-review.md",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#1-archive-safe-prototype-baseline",
+        "tasks.md#8-complete-web-macos-and-windows-acceptance"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "openspec/changes/build-thesisforge-desktop-ui/development/tasks/006-outline-renderer-neutral-preview/brief.md",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#1-archive-safe-prototype-baseline",
+        "tasks.md#8-complete-web-macos-and-windows-acceptance"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "openspec/changes/build-thesisforge-desktop-ui/development/tasks/006-outline-renderer-neutral-preview/context.json",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#1-archive-safe-prototype-baseline",
+        "tasks.md#8-complete-web-macos-and-windows-acceptance"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "openspec/changes/build-thesisforge-desktop-ui/development/tasks/006-outline-renderer-neutral-preview/quality-review.md",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#1-archive-safe-prototype-baseline",
+        "tasks.md#8-complete-web-macos-and-windows-acceptance"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "openspec/changes/build-thesisforge-desktop-ui/development/tasks/006-outline-renderer-neutral-preview/report.md",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#1-archive-safe-prototype-baseline",
+        "tasks.md#8-complete-web-macos-and-windows-acceptance"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "openspec/changes/build-thesisforge-desktop-ui/development/tasks/006-outline-renderer-neutral-preview/spec-review.md",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#1-archive-safe-prototype-baseline",
+        "tasks.md#8-complete-web-macos-and-windows-acceptance"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "openspec/changes/build-thesisforge-desktop-ui/development/tasks/007-safe-background-build-cancellation/brief.md",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#1-archive-safe-prototype-baseline",
+        "tasks.md#8-complete-web-macos-and-windows-acceptance"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "openspec/changes/build-thesisforge-desktop-ui/development/tasks/007-safe-background-build-cancellation/context.json",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#1-archive-safe-prototype-baseline",
+        "tasks.md#8-complete-web-macos-and-windows-acceptance"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "openspec/changes/build-thesisforge-desktop-ui/development/tasks/007-safe-background-build-cancellation/quality-review.md",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#1-archive-safe-prototype-baseline",
+        "tasks.md#8-complete-web-macos-and-windows-acceptance"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "openspec/changes/build-thesisforge-desktop-ui/development/tasks/007-safe-background-build-cancellation/report.md",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#1-archive-safe-prototype-baseline",
+        "tasks.md#8-complete-web-macos-and-windows-acceptance"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "openspec/changes/build-thesisforge-desktop-ui/development/tasks/007-safe-background-build-cancellation/spec-review.md",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#1-archive-safe-prototype-baseline",
+        "tasks.md#8-complete-web-macos-and-windows-acceptance"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "openspec/changes/build-thesisforge-desktop-ui/development/tasks/008-cross-platform-distribution-acceptance/brief.md",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#1-archive-safe-prototype-baseline",
+        "tasks.md#8-complete-web-macos-and-windows-acceptance"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "openspec/changes/build-thesisforge-desktop-ui/development/tasks/008-cross-platform-distribution-acceptance/context.json",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#1-archive-safe-prototype-baseline",
+        "tasks.md#8-complete-web-macos-and-windows-acceptance"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "openspec/changes/build-thesisforge-desktop-ui/development/tasks/008-cross-platform-distribution-acceptance/evidence/local-distribution-verification.md",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#1-archive-safe-prototype-baseline",
+        "tasks.md#8-complete-web-macos-and-windows-acceptance"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "openspec/changes/build-thesisforge-desktop-ui/development/tasks/008-cross-platform-distribution-acceptance/evidence/macos-native-acceptance.md",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#1-archive-safe-prototype-baseline",
+        "tasks.md#8-complete-web-macos-and-windows-acceptance"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "openspec/changes/build-thesisforge-desktop-ui/development/tasks/008-cross-platform-distribution-acceptance/evidence/web-http-acceptance.md",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#1-archive-safe-prototype-baseline",
+        "tasks.md#8-complete-web-macos-and-windows-acceptance"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "openspec/changes/build-thesisforge-desktop-ui/development/tasks/008-cross-platform-distribution-acceptance/evidence/windows-cdp-endpoint.json",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#1-archive-safe-prototype-baseline",
+        "tasks.md#8-complete-web-macos-and-windows-acceptance"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "openspec/changes/build-thesisforge-desktop-ui/development/tasks/008-cross-platform-distribution-acceptance/evidence/windows-distribution-verifier-result.json",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#1-archive-safe-prototype-baseline",
+        "tasks.md#8-complete-web-macos-and-windows-acceptance"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "openspec/changes/build-thesisforge-desktop-ui/development/tasks/008-cross-platform-distribution-acceptance/evidence/windows-distribution-verifier.log",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#1-archive-safe-prototype-baseline",
+        "tasks.md#8-complete-web-macos-and-windows-acceptance"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "openspec/changes/build-thesisforge-desktop-ui/development/tasks/008-cross-platform-distribution-acceptance/evidence/windows-native-acceptance.json",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#1-archive-safe-prototype-baseline",
+        "tasks.md#8-complete-web-macos-and-windows-acceptance"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "openspec/changes/build-thesisforge-desktop-ui/development/tasks/008-cross-platform-distribution-acceptance/evidence/windows-native-acceptance.md",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#1-archive-safe-prototype-baseline",
+        "tasks.md#8-complete-web-macos-and-windows-acceptance"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "openspec/changes/build-thesisforge-desktop-ui/development/tasks/008-cross-platform-distribution-acceptance/evidence/windows-native-acceptance.png",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#1-archive-safe-prototype-baseline",
+        "tasks.md#8-complete-web-macos-and-windows-acceptance"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "openspec/changes/build-thesisforge-desktop-ui/development/tasks/008-cross-platform-distribution-acceptance/evidence/windows-native-manifest.json",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#1-archive-safe-prototype-baseline",
+        "tasks.md#8-complete-web-macos-and-windows-acceptance"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "openspec/changes/build-thesisforge-desktop-ui/development/tasks/008-cross-platform-distribution-acceptance/evidence/windows-native-task-result.json",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#1-archive-safe-prototype-baseline",
+        "tasks.md#8-complete-web-macos-and-windows-acceptance"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "openspec/changes/build-thesisforge-desktop-ui/development/tasks/008-cross-platform-distribution-acceptance/evidence/windows-native-thesis.docx",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#1-archive-safe-prototype-baseline",
+        "tasks.md#8-complete-web-macos-and-windows-acceptance"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "openspec/changes/build-thesisforge-desktop-ui/development/tasks/008-cross-platform-distribution-acceptance/evidence/windows-processes-before-stop.json",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#1-archive-safe-prototype-baseline",
+        "tasks.md#8-complete-web-macos-and-windows-acceptance"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "openspec/changes/build-thesisforge-desktop-ui/development/tasks/008-cross-platform-distribution-acceptance/quality-review.md",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#1-archive-safe-prototype-baseline",
+        "tasks.md#8-complete-web-macos-and-windows-acceptance"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "openspec/changes/build-thesisforge-desktop-ui/development/tasks/008-cross-platform-distribution-acceptance/report.md",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#1-archive-safe-prototype-baseline",
+        "tasks.md#8-complete-web-macos-and-windows-acceptance"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "openspec/changes/build-thesisforge-desktop-ui/development/tasks/008-cross-platform-distribution-acceptance/spec-review.md",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#1-archive-safe-prototype-baseline",
+        "tasks.md#8-complete-web-macos-and-windows-acceptance"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "openspec/changes/build-thesisforge-desktop-ui/development/validation-log.jsonl",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "openspec/changes/build-thesisforge-desktop-ui/proposal.md",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "openspec/changes/build-thesisforge-desktop-ui/prototype/artifact/app.js",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "openspec/changes/build-thesisforge-desktop-ui/prototype/artifact/index.html",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "openspec/changes/build-thesisforge-desktop-ui/prototype/artifact/styles.css",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "openspec/changes/build-thesisforge-desktop-ui/prototype/decision.json",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "openspec/changes/build-thesisforge-desktop-ui/prototype/evidence/browser-verification.json",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "openspec/changes/build-thesisforge-desktop-ui/prototype/evidence/desktop-populated.png",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "openspec/changes/build-thesisforge-desktop-ui/prototype/evidence/mobile-permission.png",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "openspec/changes/build-thesisforge-desktop-ui/prototype/evidence/mobile-preview.png",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "openspec/changes/build-thesisforge-desktop-ui/prototype/evidence/verify-ui.cjs",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "openspec/changes/build-thesisforge-desktop-ui/prototype/handoff.md",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "openspec/changes/build-thesisforge-desktop-ui/prototype/logic/harness.js",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "openspec/changes/build-thesisforge-desktop-ui/prototype/prototype-manifest.json",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "openspec/changes/build-thesisforge-desktop-ui/prototype/question.md",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "openspec/changes/build-thesisforge-desktop-ui/prototype/screen-map.json",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "openspec/changes/build-thesisforge-desktop-ui/prototype/verifier-report.json",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "openspec/changes/build-thesisforge-desktop-ui/prototype/visual-inventory.json",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "openspec/changes/build-thesisforge-desktop-ui/requirements.md",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "openspec/changes/build-thesisforge-desktop-ui/scope.json",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "openspec/changes/build-thesisforge-desktop-ui/spec-map.json",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "openspec/changes/build-thesisforge-desktop-ui/specs/desktop-workbench/spec.md",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "openspec/changes/build-thesisforge-desktop-ui/tasks.md",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "openspec/specs/component-architecture/design.md",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "openspec/specs/frontend-backend-data-flow/design.md",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "openspec/specs/system-architecture/design.md",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "openspec/specs/ui-design/design.md",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "package.json",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "pyproject.toml",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "scripts/build_sidecar.py",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#4-shared-react-workbench-and-runtime-transports",
+        "tasks.md#7-safe-cross-runtime-build-progress-and-cancellation",
+        "tasks.md#8-complete-web-macos-and-windows-acceptance"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "scripts/verify_desktop_distribution.py",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#4-shared-react-workbench-and-runtime-transports",
+        "tasks.md#7-safe-cross-runtime-build-progress-and-cancellation",
+        "tasks.md#8-complete-web-macos-and-windows-acceptance"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "scripts/verify_distribution.py",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#4-shared-react-workbench-and-runtime-transports",
+        "tasks.md#7-safe-cross-runtime-build-progress-and-cancellation",
+        "tasks.md#8-complete-web-macos-and-windows-acceptance"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "src-tauri/.gitignore",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#4-shared-react-workbench-and-runtime-transports",
+        "tasks.md#7-safe-cross-runtime-build-progress-and-cancellation",
+        "tasks.md#8-complete-web-macos-and-windows-acceptance"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "src-tauri/Cargo.lock",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#4-shared-react-workbench-and-runtime-transports",
+        "tasks.md#7-safe-cross-runtime-build-progress-and-cancellation",
+        "tasks.md#8-complete-web-macos-and-windows-acceptance"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "src-tauri/Cargo.toml",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#4-shared-react-workbench-and-runtime-transports",
+        "tasks.md#7-safe-cross-runtime-build-progress-and-cancellation",
+        "tasks.md#8-complete-web-macos-and-windows-acceptance"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "src-tauri/build.rs",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#4-shared-react-workbench-and-runtime-transports",
+        "tasks.md#7-safe-cross-runtime-build-progress-and-cancellation",
+        "tasks.md#8-complete-web-macos-and-windows-acceptance"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "src-tauri/icons/icon.ico",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#4-shared-react-workbench-and-runtime-transports",
+        "tasks.md#7-safe-cross-runtime-build-progress-and-cancellation",
+        "tasks.md#8-complete-web-macos-and-windows-acceptance"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "src-tauri/icons/icon.png",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#4-shared-react-workbench-and-runtime-transports",
+        "tasks.md#7-safe-cross-runtime-build-progress-and-cancellation",
+        "tasks.md#8-complete-web-macos-and-windows-acceptance"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "src-tauri/icons/icon.svg",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#4-shared-react-workbench-and-runtime-transports",
+        "tasks.md#7-safe-cross-runtime-build-progress-and-cancellation",
+        "tasks.md#8-complete-web-macos-and-windows-acceptance"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "src-tauri/src/lib.rs",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#4-shared-react-workbench-and-runtime-transports",
+        "tasks.md#7-safe-cross-runtime-build-progress-and-cancellation",
+        "tasks.md#8-complete-web-macos-and-windows-acceptance"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "src-tauri/src/main.rs",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#4-shared-react-workbench-and-runtime-transports",
+        "tasks.md#7-safe-cross-runtime-build-progress-and-cancellation",
+        "tasks.md#8-complete-web-macos-and-windows-acceptance"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "src-tauri/tauri.conf.json",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#4-shared-react-workbench-and-runtime-transports",
+        "tasks.md#7-safe-cross-runtime-build-progress-and-cancellation",
+        "tasks.md#8-complete-web-macos-and-windows-acceptance"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "src-tauri/tauri.release.conf.json",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#4-shared-react-workbench-and-runtime-transports",
+        "tasks.md#7-safe-cross-runtime-build-progress-and-cancellation",
+        "tasks.md#8-complete-web-macos-and-windows-acceptance"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "src-tauri/tests/protocol_contract.rs",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#4-shared-react-workbench-and-runtime-transports",
+        "tasks.md#7-safe-cross-runtime-build-progress-and-cancellation",
+        "tasks.md#8-complete-web-macos-and-windows-acceptance"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "src/thesis_forge/adapters/__init__.py",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#4-shared-react-workbench-and-runtime-transports",
+        "tasks.md#7-safe-cross-runtime-build-progress-and-cancellation"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "src/thesis_forge/adapters/dto.py",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#4-shared-react-workbench-and-runtime-transports",
+        "tasks.md#7-safe-cross-runtime-build-progress-and-cancellation"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "src/thesis_forge/adapters/http.py",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#4-shared-react-workbench-and-runtime-transports",
+        "tasks.md#7-safe-cross-runtime-build-progress-and-cancellation"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "src/thesis_forge/adapters/runtime.py",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#4-shared-react-workbench-and-runtime-transports",
+        "tasks.md#7-safe-cross-runtime-build-progress-and-cancellation"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "src/thesis_forge/adapters/sidecar.py",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#4-shared-react-workbench-and-runtime-transports",
+        "tasks.md#7-safe-cross-runtime-build-progress-and-cancellation"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "src/thesis_forge/application/__init__.py",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "src/thesis_forge/application/contracts.py",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "src/thesis_forge/application/services.py",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "src/thesis_forge/cli.py",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "src/thesis_forge/presentation/__init__.py",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#5-template-selection-and-structured-diagnostics",
+        "tasks.md#6-outline-and-renderer-neutral-paper-preview"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "src/thesis_forge/presentation/diagnostics.py",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#5-template-selection-and-structured-diagnostics",
+        "tasks.md#6-outline-and-renderer-neutral-paper-preview"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "src/thesis_forge/presentation/preview.py",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#5-template-selection-and-structured-diagnostics",
+        "tasks.md#6-outline-and-renderer-neutral-paper-preview"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "src/thesis_forge/templates/resolver.py",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "src/thesis_forge/ui/__init__.py",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#2-framework-neutral-workspace-state-reference",
+        "tasks.md#3-explicit-source-open-and-atomic-save"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "src/thesis_forge/ui/controller.py",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#2-framework-neutral-workspace-state-reference",
+        "tasks.md#3-explicit-source-open-and-atomic-save"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "src/thesis_forge/ui/filesystem.py",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#2-framework-neutral-workspace-state-reference",
+        "tasks.md#3-explicit-source-open-and-atomic-save"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "src/thesis_forge/ui/models.py",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#2-framework-neutral-workspace-state-reference",
+        "tasks.md#3-explicit-source-open-and-atomic-save"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "src/thesis_forge/ui/tasks.py",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#2-framework-neutral-workspace-state-reference",
+        "tasks.md#3-explicit-source-open-and-atomic-save"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "tests/fixtures/diagnostics-zh-cn-v1.json",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#1-archive-safe-prototype-baseline",
+        "tasks.md#8-complete-web-macos-and-windows-acceptance"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "tests/fixtures/preview-workbench-v1.json",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#1-archive-safe-prototype-baseline",
+        "tasks.md#8-complete-web-macos-and-windows-acceptance"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "tests/fixtures/workspace-state-v1.json",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#1-archive-safe-prototype-baseline",
+        "tasks.md#8-complete-web-macos-and-windows-acceptance"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "tests/test_adapters.py",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#1-archive-safe-prototype-baseline",
+        "tasks.md#8-complete-web-macos-and-windows-acceptance"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "tests/test_application_services.py",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#1-archive-safe-prototype-baseline",
+        "tasks.md#8-complete-web-macos-and-windows-acceptance"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "tests/test_architecture.py",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#1-archive-safe-prototype-baseline",
+        "tasks.md#8-complete-web-macos-and-windows-acceptance"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "tests/test_desktop_distribution.py",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#1-archive-safe-prototype-baseline",
+        "tasks.md#8-complete-web-macos-and-windows-acceptance"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "tests/test_distribution.py",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#1-archive-safe-prototype-baseline",
+        "tasks.md#8-complete-web-macos-and-windows-acceptance"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "tests/test_frontend_contract.py",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#1-archive-safe-prototype-baseline",
+        "tasks.md#8-complete-web-macos-and-windows-acceptance"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "tests/test_http_adapter.py",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#1-archive-safe-prototype-baseline",
+        "tasks.md#8-complete-web-macos-and-windows-acceptance"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "tests/test_preview_presentation.py",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#1-archive-safe-prototype-baseline",
+        "tasks.md#8-complete-web-macos-and-windows-acceptance"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "tests/test_prototype_acceptance.py",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#1-archive-safe-prototype-baseline",
+        "tasks.md#8-complete-web-macos-and-windows-acceptance"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "tests/test_sidecar.py",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#1-archive-safe-prototype-baseline",
+        "tasks.md#8-complete-web-macos-and-windows-acceptance"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "tests/test_template.py",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#1-archive-safe-prototype-baseline",
+        "tasks.md#8-complete-web-macos-and-windows-acceptance"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "tests/test_ui_controller.py",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#1-archive-safe-prototype-baseline",
+        "tasks.md#8-complete-web-macos-and-windows-acceptance"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "tests/test_ui_filesystem.py",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#1-archive-safe-prototype-baseline",
+        "tasks.md#8-complete-web-macos-and-windows-acceptance"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    },
+    {
+      "changed_file": "tests/test_ui_models.py",
+      "requirement_refs": [
+        "requirements.md#In Scope",
+        "acceptance.md#Verification Surfaces"
+      ],
+      "task_refs": [
+        "tasks.md#1-archive-safe-prototype-baseline",
+        "tasks.md#8-complete-web-macos-and-windows-acceptance"
+      ],
+      "prototype_refs": [
+        "prototype/handoff.md"
+      ],
+      "foundation_spec_refs": [
+        "ui-design",
+        "system-architecture",
+        "frontend-backend-data-flow",
+        "component-architecture"
+      ],
+      "verification_domains": [
+        "facticity",
+        "static",
+        "unit",
+        "redteam",
+        "e2e",
+        "sensory"
+      ]
+    }
+  ],
+  "unmapped_changes": []
+}

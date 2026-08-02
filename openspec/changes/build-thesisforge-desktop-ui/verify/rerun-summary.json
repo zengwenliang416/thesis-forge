@@ -1,0 +1,67 @@
+{
+  "schema": "thesisforge.verify.rerun.v1",
+  "verified_at": "2026-08-02",
+  "reason": "Refresh all domains required by the authoritative SpecNav rerun scope after mapped distribution workflow and test changes.",
+  "scope": {
+    "changed_files": [
+      ".github/workflows/distribution.yml",
+      "tests/test_desktop_distribution.py"
+    ],
+    "domains": [
+      "e2e",
+      "facticity",
+      "redteam",
+      "sensory",
+      "static",
+      "unit"
+    ],
+    "full_rerun": false,
+    "unmapped_changes": []
+  },
+  "command": "make verify",
+  "exit_code": 0,
+  "results": {
+    "python": {
+      "collected": 256,
+      "passed": 256
+    },
+    "ruff": "pass",
+    "pip_check": "pass",
+    "python_distribution": {
+      "wheel": "pass",
+      "sdist": "pass",
+      "isolated_install": "pass"
+    },
+    "frontend_unit": {
+      "files_passed": 12,
+      "tests_passed": 53
+    },
+    "frontend_typecheck": "pass",
+    "frontend_lint": "pass",
+    "frontend_build": "pass",
+    "playwright_matrix": {
+      "passed": 15,
+      "skipped_by_configuration": 18
+    },
+    "real_http_playwright": {
+      "passed": 1
+    },
+    "rust": {
+      "protocol_tests_passed": 11,
+      "fmt": "pass",
+      "check": "pass"
+    },
+    "macos_sidecar": {
+      "target": "aarch64-apple-darwin",
+      "bytes": 21849616,
+      "sha256": "446b321ba7b1875bac5f48f9cd526dce1aa03387b146fb3263d5192568dcd94b",
+      "offline": true,
+      "reopened": true,
+      "canceled": true,
+      "docx_bytes": 187059,
+      "docx_sha256": "7983ff93aa1a56487b2d6ccccd0b5ecb72bbce97328b57d868a36241dd7aceb9"
+    },
+    "strict_openspec": "pass",
+    "git_diff_check": "pass"
+  }
+}

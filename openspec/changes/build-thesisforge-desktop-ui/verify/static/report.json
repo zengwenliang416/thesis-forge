@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "verified_at": "2026-08-02",
+  "domain": "static",
+  "verdict": "green",
+  "required": true,
+  "evidence": [
+    "verify/rerun-summary.json",
+    "verify/static/commands.jsonl",
+    "verify/static/anchor-report.json",
+    "verify/traceability-matrix.json",
+    "codegraph/guard-report.json",
+    "tests/test_architecture.py",
+    "tests/test_frontend_contract.py"
+  ],
+  "commands": [
+    "make verify",
+    ".venv/bin/python -m ruff check .",
+    "pnpm frontend:typecheck",
+    "pnpm frontend:lint",
+    "cargo fmt/check",
+    "OPENSPEC_TELEMETRY=0 openspec validate build-thesisforge-desktop-ui --strict --no-interactive",
+    "git diff --check"
+  ],
+  "findings": [],
+  "required_fixes": [],
+  "residual_risk": [
+    "Static checks do not replace runtime interaction or rendered visual review.",
+    "The GitHub workflow file is validated structurally but remote runner billing is outside source control."
+  ],
+  "blocker_class": null
+}

@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "verified_at": "2026-08-02",
+  "domain": "unit",
+  "verdict": "green",
+  "required": true,
+  "evidence": [
+    "verify/rerun-summary.json",
+    "verify/unit/test-map.json",
+    "verify/unit/test-quality-rubric.json",
+    "verify/unit/coverage-notes.md",
+    "verify/e2e/make-verify.log",
+    "tests",
+    "frontend/src",
+    "src-tauri/tests/protocol_contract.rs"
+  ],
+  "commands": [
+    ".venv/bin/python -m pytest",
+    "pnpm frontend:test",
+    "cargo test --manifest-path src-tauri/Cargo.toml",
+    "pnpm frontend:e2e"
+  ],
+  "findings": [],
+  "required_fixes": [],
+  "residual_risk": [
+    "No line-coverage percentage is collected.",
+    "The real HTTP browser suite has one complete happy path; deterministic unit and mock-state suites cover the broader failure matrix."
+  ],
+  "blocker_class": null
+}

@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "scenarios": [
+    {
+      "id": "verify-runs-six-domains",
+      "prompt": "Complete local ThesisForge development and testing without treating GitHub billing as a product gate.",
+      "expected": [
+        "load active desktop UI change",
+        "freeze A1-A12 user test cases",
+        "execute current full local gate",
+        "retain Web, macOS, and Windows native evidence",
+        "write all six domain reports",
+        "produce a green aggregate and receipt"
+      ]
+    }
+  ]
+}

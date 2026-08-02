@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "change_id": "build-thesisforge-desktop-ui",
+  "status": "green",
+  "surfaces": [
+    {
+      "surface": "runtime",
+      "required": true,
+      "status": "pass",
+      "command": "make verify plus packaged macOS and disconnected Windows installed-app acceptance",
+      "evidence_refs": [
+        "verify/e2e/make-verify.log",
+        "development/tasks/008-cross-platform-distribution-acceptance/evidence/local-distribution-verification.md",
+        "development/tasks/008-cross-platform-distribution-acceptance/evidence/macos-native-acceptance.md",
+        "development/tasks/008-cross-platform-distribution-acceptance/evidence/windows-native-acceptance.json",
+        "development/tasks/008-cross-platform-distribution-acceptance/evidence/windows-distribution-verifier-result.json"
+      ],
+      "notes": [
+        "Current gate passed 256 Python, 53 Vitest, 15 browser matrix, 1 real HTTP, and 11 Rust protocol tests.",
+        "macOS frozen sidecar passed offline inspect/preview/validate/cancel/five-stage build/reopen.",
+        "Windows MSI-installed workflow passed with the VM network disconnected."
+      ]
+    },
+    {
+      "surface": "browser",
+      "required": true,
+      "status": "pass",
+      "command": "pnpm frontend:e2e and installed Windows WebView2 CDP acceptance",
+      "evidence_refs": [
+        "verify/e2e/make-verify.log",
+        "development/tasks/008-cross-platform-distribution-acceptance/evidence/web-http-acceptance.md",
+        "development/tasks/008-cross-platform-distribution-acceptance/evidence/windows-native-acceptance.json"
+      ],
+      "artifact_refs": [
+        "development/tasks/008-cross-platform-distribution-acceptance/evidence/windows-native-acceptance.png",
+        "prototype/evidence/desktop-populated.png",
+        "prototype/evidence/mobile-preview.png",
+        "prototype/evidence/mobile-permission.png"
+      ],
+      "notes": [
+        "Playwright executed desktop, minimum-desktop, mobile, accessibility, responsive, cancellation, and real HTTP projects.",
+        "The Windows screenshot is from the actual MSI-installed Tauri/WebView2 workbench after a successful build."
+      ]
+    }
+  ]
+}

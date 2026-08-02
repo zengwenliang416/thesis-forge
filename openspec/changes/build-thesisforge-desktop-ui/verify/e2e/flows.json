@@ -1,0 +1,64 @@
+{
+  "schema_version": 1,
+  "change_id": "build-thesisforge-desktop-ui",
+  "flows": [
+    {
+      "id": "web-real-http",
+      "cases": [
+        "utc-a1-shared-cross-platform-workbench",
+        "utc-a2-open-saved-snapshot",
+        "utc-a3-explicit-atomic-save",
+        "utc-a5-ordered-build-progress",
+        "utc-a12-offline-runtime-boundaries"
+      ],
+      "status": "pass"
+    },
+    {
+      "id": "browser-state-accessibility-matrix",
+      "cases": [
+        "utc-a4-template-diagnostics",
+        "utc-a6-failure-preserves-output",
+        "utc-a10-headless-state-coverage",
+        "utc-a11-accessible-responsive-workbench"
+      ],
+      "status": "pass"
+    },
+    {
+      "id": "macos-packaged-native",
+      "cases": [
+        "utc-a1-shared-cross-platform-workbench",
+        "utc-a5-ordered-build-progress",
+        "utc-a8-independent-core-distribution",
+        "utc-a12-offline-runtime-boundaries"
+      ],
+      "status": "pass"
+    },
+    {
+      "id": "windows-msi-installed-native",
+      "cases": [
+        "utc-a1-shared-cross-platform-workbench",
+        "utc-a2-open-saved-snapshot",
+        "utc-a3-explicit-atomic-save",
+        "utc-a5-ordered-build-progress",
+        "utc-a11-accessible-responsive-workbench",
+        "utc-a12-offline-runtime-boundaries"
+      ],
+      "status": "pass"
+    },
+    {
+      "id": "archive-safe-prototype",
+      "cases": [
+        "utc-a9-archive-safe-prototype"
+      ],
+      "status": "pass"
+    },
+    {
+      "id": "architecture-and-distribution",
+      "cases": [
+        "utc-a7-architecture-boundaries",
+        "utc-a8-independent-core-distribution"
+      ],
+      "status": "pass"
+    }
+  ]
+}

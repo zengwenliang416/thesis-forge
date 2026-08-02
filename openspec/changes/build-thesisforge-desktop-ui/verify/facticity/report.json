@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "verified_at": "2026-08-02",
+  "domain": "facticity",
+  "verdict": "green",
+  "required": true,
+  "evidence": [
+    "verify/rerun-summary.json",
+    "verify/facticity/claims.jsonl",
+    "verify/facticity/repo-inventory.json",
+    "verify/traceability-matrix.json",
+    "acceptance.json",
+    "development/handoff-to-verify.md",
+    "development/tasks/008-cross-platform-distribution-acceptance/evidence"
+  ],
+  "commands": [
+    "SpecNav rerun-scope",
+    "make verify",
+    "git diff --name-only f1adc43",
+    "direct acceptance A1-A12 evidence audit",
+    "visual inspection of windows-native-acceptance.png",
+    "inspection of current make verify log and native manifests"
+  ],
+  "findings": [],
+  "required_fixes": [],
+  "residual_risk": [
+    "Windows native sensory evidence is ARM64-specific; x86_64 remains configuration/static coverage.",
+    "The project is not signed, notarized, or licensed for public redistribution."
+  ],
+  "blocker_class": null
+}

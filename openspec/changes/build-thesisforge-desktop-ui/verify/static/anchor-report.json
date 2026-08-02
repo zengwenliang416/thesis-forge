@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "status": "pass",
+  "policy": "advisory",
+  "changed_files": 221,
+  "unmapped_files": [],
+  "evidence_refs": [
+    "verify/traceability-matrix.json",
+    "codegraph/guard-report.json"
+  ]
+}

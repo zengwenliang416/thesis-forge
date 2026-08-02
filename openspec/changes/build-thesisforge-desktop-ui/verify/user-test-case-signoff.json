@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "change_id": "build-thesisforge-desktop-ui",
+  "status": "approved",
+  "user_decision": "2026-08-02 用户要求忽略 GitHub 流水线可用性，并以整个开发测试完整、Web/macOS/Windows 本地原生证据齐全作为验收依据。",
+  "approved_case_ids": [
+    "utc-a1-shared-cross-platform-workbench",
+    "utc-a2-open-saved-snapshot",
+    "utc-a3-explicit-atomic-save",
+    "utc-a4-template-diagnostics",
+    "utc-a5-ordered-build-progress",
+    "utc-a6-failure-preserves-output",
+    "utc-a7-architecture-boundaries",
+    "utc-a8-independent-core-distribution",
+    "utc-a9-archive-safe-prototype",
+    "utc-a10-headless-state-coverage",
+    "utc-a11-accessible-responsive-workbench",
+    "utc-a12-offline-runtime-boundaries"
+  ],
+  "rejected_case_ids": [],
+  "notes": [
+    "用例集一一对应 acceptance.json 的 A1-A12。",
+    "GitHub billing failure保留为历史外部证据，不替代或阻塞本地产品验收。"
+  ]
+}

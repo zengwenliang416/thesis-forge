@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "change_id": "build-thesisforge-desktop-ui",
+  "result": "green",
+  "covered_scope": [
+    "All 12 user-approved A1-A12 cases across facticity, static, unit, redteam, E2E, and sensory.",
+    "Current Python, frontend, browser, real HTTP, Rust, distribution, strict OpenSpec, and whitespace gates.",
+    "Native packaged macOS workflow and MSI-installed disconnected Windows ARM64 workflow.",
+    "Independent Python wheel/sdist, Web production build, managed frozen sidecar, MSI, and NSIS boundaries."
+  ],
+  "uncovered_scope": [],
+  "residual_risk": [
+    "Installers are unsigned and not notarized; public release also requires a project license and ownership review.",
+    "Windows native visual execution is ARM64-specific; x86_64 remains configuration/static coverage.",
+    "The real HTTP browser suite has one full happy path while deterministic tests cover the wider failure matrix.",
+    "GitHub Actions billing remains unavailable but is not part of local product behavior."
+  ],
+  "confidence": "B"
+}

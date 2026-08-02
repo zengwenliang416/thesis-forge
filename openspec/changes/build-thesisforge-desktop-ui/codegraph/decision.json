@@ -1,6 +1,6 @@
 {
   "schema": "specnav.codegraph.decision.v1",
-  "stage": "development",
+  "stage": "operations",
   "profile": "active_dev",
   "effective_mode": "advisory",
   "required_for_stage": false,
@@ -8,5 +8,5 @@
   "result": "pass",
   "blockers": [],
   "warnings": [],
-  "explanation": "CodeGraph policy satisfied for development."
+  "explanation": "CodeGraph policy satisfied for operations."
 }

@@ -1,0 +1,7 @@
+{"command": ".venv/bin/python -m ruff check .", "status": "pass", "ok": true}
+{"command": "pnpm frontend:typecheck", "status": "pass", "ok": true}
+{"command": "pnpm frontend:lint", "status": "pass", "ok": true}
+{"command": "cargo fmt --manifest-path src-tauri/Cargo.toml -- --check", "status": "pass", "ok": true}
+{"command": "cargo check --manifest-path src-tauri/Cargo.toml", "status": "pass", "ok": true}
+{"command": "OPENSPEC_TELEMETRY=0 openspec validate build-thesisforge-desktop-ui --strict --no-interactive", "status": "pass", "ok": true}
+{"command": "git diff --check", "status": "pass", "ok": true}

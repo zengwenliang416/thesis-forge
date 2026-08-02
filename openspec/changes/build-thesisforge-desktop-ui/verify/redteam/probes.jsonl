@@ -1,0 +1,9 @@
+{"probe": "read-only-and-replace-failure", "status": "pass", "evidence": "tests/test_ui_filesystem.py"}
+{"probe": "cancel-each-build-boundary", "status": "pass", "evidence": "tests/test_application_services.py"}
+{"probe": "stale-callback-and-repeated-click", "status": "pass", "evidence": "frontend/src/state/workspace-build.test.ts"}
+{"probe": "invalid-missing-incompatible-template", "status": "pass", "evidence": "tests/test_template.py"}
+{"probe": "malformed-versioned-protocol", "status": "pass", "evidence": "tests/test_adapters.py; src-tauri/tests/protocol_contract.rs"}
+{"probe": "outbound-connect-and-connect-ex", "status": "pass", "evidence": "scripts/verify_desktop_distribution.py"}
+{"probe": "credential-stripping", "status": "pass", "evidence": "windows-distribution-verifier-result.json"}
+{"probe": "target-native-sidecar-and-installer-isolation", "status": "pass", "evidence": "tests/test_desktop_distribution.py"}
+{"probe": "corrupt-or-invalid-docx-preserves-output", "status": "pass", "evidence": "tests/test_application_services.py; tests/test_desktop_distribution.py"}

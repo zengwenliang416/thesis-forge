@@ -1,0 +1,113 @@
+{
+  "schema_version": 1,
+  "change_id": "build-thesisforge-desktop-ui",
+  "current_results": {
+    "python": {
+      "passed": 256,
+      "command": ".venv/bin/python -m pytest"
+    },
+    "vitest": {
+      "passed": 53,
+      "command": "pnpm frontend:test"
+    },
+    "playwright_matrix": {
+      "passed": 15,
+      "skipped_by_config": 18,
+      "command": "pnpm --dir frontend e2e"
+    },
+    "playwright_real_http": {
+      "passed": 1,
+      "command": "playwright real HTTP project"
+    },
+    "rust_protocol": {
+      "passed": 11,
+      "command": "cargo test --manifest-path src-tauri/Cargo.toml"
+    }
+  },
+  "case_mappings": [
+    {
+      "case_id": "utc-a1-shared-cross-platform-workbench",
+      "tests": [
+        "运行覆盖 utc-a1-shared-cross-platform-workbench 正常路径、空状态、错误路径和边界输入的 Python/Vitest/Rust 测试。",
+        "确认断言面向公开行为而不是私有调用次数。"
+      ]
+    },
+    {
+      "case_id": "utc-a2-open-saved-snapshot",
+      "tests": [
+        "运行覆盖 utc-a2-open-saved-snapshot 正常路径、空状态、错误路径和边界输入的 Python/Vitest/Rust 测试。",
+        "确认断言面向公开行为而不是私有调用次数。"
+      ]
+    },
+    {
+      "case_id": "utc-a3-explicit-atomic-save",
+      "tests": [
+        "运行覆盖 utc-a3-explicit-atomic-save 正常路径、空状态、错误路径和边界输入的 Python/Vitest/Rust 测试。",
+        "确认断言面向公开行为而不是私有调用次数。"
+      ]
+    },
+    {
+      "case_id": "utc-a4-template-diagnostics",
+      "tests": [
+        "运行覆盖 utc-a4-template-diagnostics 正常路径、空状态、错误路径和边界输入的 Python/Vitest/Rust 测试。",
+        "确认断言面向公开行为而不是私有调用次数。"
+      ]
+    },
+    {
+      "case_id": "utc-a5-ordered-build-progress",
+      "tests": [
+        "运行覆盖 utc-a5-ordered-build-progress 正常路径、空状态、错误路径和边界输入的 Python/Vitest/Rust 测试。",
+        "确认断言面向公开行为而不是私有调用次数。"
+      ]
+    },
+    {
+      "case_id": "utc-a6-failure-preserves-output",
+      "tests": [
+        "运行覆盖 utc-a6-failure-preserves-output 正常路径、空状态、错误路径和边界输入的 Python/Vitest/Rust 测试。",
+        "确认断言面向公开行为而不是私有调用次数。"
+      ]
+    },
+    {
+      "case_id": "utc-a7-architecture-boundaries",
+      "tests": [
+        "运行覆盖 utc-a7-architecture-boundaries 正常路径、空状态、错误路径和边界输入的 Python/Vitest/Rust 测试。",
+        "确认断言面向公开行为而不是私有调用次数。"
+      ]
+    },
+    {
+      "case_id": "utc-a8-independent-core-distribution",
+      "tests": [
+        "运行覆盖 utc-a8-independent-core-distribution 正常路径、空状态、错误路径和边界输入的 Python/Vitest/Rust 测试。",
+        "确认断言面向公开行为而不是私有调用次数。"
+      ]
+    },
+    {
+      "case_id": "utc-a9-archive-safe-prototype",
+      "tests": [
+        "运行覆盖 utc-a9-archive-safe-prototype 正常路径、空状态、错误路径和边界输入的 Python/Vitest/Rust 测试。",
+        "确认断言面向公开行为而不是私有调用次数。"
+      ]
+    },
+    {
+      "case_id": "utc-a10-headless-state-coverage",
+      "tests": [
+        "运行覆盖 utc-a10-headless-state-coverage 正常路径、空状态、错误路径和边界输入的 Python/Vitest/Rust 测试。",
+        "确认断言面向公开行为而不是私有调用次数。"
+      ]
+    },
+    {
+      "case_id": "utc-a11-accessible-responsive-workbench",
+      "tests": [
+        "运行覆盖 utc-a11-accessible-responsive-workbench 正常路径、空状态、错误路径和边界输入的 Python/Vitest/Rust 测试。",
+        "确认断言面向公开行为而不是私有调用次数。"
+      ]
+    },
+    {
+      "case_id": "utc-a12-offline-runtime-boundaries",
+      "tests": [
+        "运行覆盖 utc-a12-offline-runtime-boundaries 正常路径、空状态、错误路径和边界输入的 Python/Vitest/Rust 测试。",
+        "确认断言面向公开行为而不是私有调用次数。"
+      ]
+    }
+  ]
+}

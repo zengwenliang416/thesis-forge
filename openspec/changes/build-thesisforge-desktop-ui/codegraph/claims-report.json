@@ -1,10 +1,10 @@
 {
   "schema": "specnav.codegraph.claims_report.v1",
-  "generated_at": "2026-08-02T04:50:39.174Z",
+  "generated_at": "2026-08-02T18:10:30.002Z",
   "active_change": "build-thesisforge-desktop-ui",
   "claims_file": "openspec/changes/build-thesisforge-desktop-ui/codegraph/claims-map.json",
   "evidence_index": "openspec/changes/build-thesisforge-desktop-ui/codegraph/evidence-index.json",
-  "claims_count": 8,
+  "claims_count": 16,
   "verified_claims": [
     "development:task-001-archive-safe-prototype-baseline",
     "development:task-002-headless-workspace-state-controller",
@@ -15,7 +15,25 @@
     "development:task-007-safe-background-build-cancellation",
     "development:task-008-cross-platform-distribution-acceptance"
   ],
-  "unverified_claims": [],
+  "unverified_claims": [
+    "verification:task-001-archive-safe-prototype-baseline",
+    "verification:task-002-headless-workspace-state-controller",
+    "verification:task-003-explicit-source-open-atomic-save",
+    "verification:task-004-optional-pyside6-workbench-shell",
+    "verification:task-005-template-selection-structured-diagnostics",
+    "verification:task-006-outline-renderer-neutral-preview",
+    "verification:task-007-safe-background-build-cancellation",
+    "verification:task-008-cross-platform-distribution-acceptance"
+  ],
   "blockers": [],
-  "warnings": []
+  "warnings": [
+    "codegraph:claim-unverified:verification:task-001-archive-safe-prototype-baseline",
+    "codegraph:claim-unverified:verification:task-002-headless-workspace-state-controller",
+    "codegraph:claim-unverified:verification:task-003-explicit-source-open-atomic-save",
+    "codegraph:claim-unverified:verification:task-004-optional-pyside6-workbench-shell",
+    "codegraph:claim-unverified:verification:task-005-template-selection-structured-diagnostics",
+    "codegraph:claim-unverified:verification:task-006-outline-renderer-neutral-preview",
+    "codegraph:claim-unverified:verification:task-007-safe-background-build-cancellation",
+    "codegraph:claim-unverified:verification:task-008-cross-platform-distribution-acceptance"
+  ]
 }

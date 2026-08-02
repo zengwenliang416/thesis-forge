@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "verified_at": "2026-08-02",
+  "domain": "e2e",
+  "verdict": "green",
+  "required": true,
+  "evidence": [
+    "verify/rerun-summary.json",
+    "verify/e2e/flows.json",
+    "verify/e2e/run-log.jsonl",
+    "verify/e2e/package-inspection.json",
+    "verify/e2e/make-verify.log",
+    "verify/runtime-evidence.json",
+    "development/tasks/008-cross-platform-distribution-acceptance/evidence/web-http-acceptance.md",
+    "development/tasks/008-cross-platform-distribution-acceptance/evidence/macos-native-acceptance.md",
+    "development/tasks/008-cross-platform-distribution-acceptance/evidence/windows-native-acceptance.json"
+  ],
+  "commands": [
+    "make verify",
+    "real Python HTTP Playwright acceptance",
+    "packaged macOS native workflow",
+    "MSI-installed disconnected Windows WebView2 workflow",
+    "Python and desktop distribution verifiers"
+  ],
+  "findings": [],
+  "required_fixes": [],
+  "residual_risk": [
+    "Windows native execution is ARM64-specific; x86_64 is statically configured but not independently run locally.",
+    "Production Web hosting/authentication is out of scope; the verified HTTP host is an explicit local adapter."
+  ],
+  "blocker_class": null
+}

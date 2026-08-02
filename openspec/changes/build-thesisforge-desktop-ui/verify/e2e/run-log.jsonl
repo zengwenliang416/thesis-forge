@@ -1,0 +1,4 @@
+{"surface": "full-local-gate", "status": "pass", "command": "make verify", "evidence": "verify/e2e/make-verify.log"}
+{"surface": "web", "status": "pass", "command": "Playwright real HTTP project", "evidence": "development/tasks/008-cross-platform-distribution-acceptance/evidence/web-http-acceptance.md"}
+{"surface": "macos", "status": "pass", "command": "packaged .app native open/edit/save/validate/build", "evidence": "development/tasks/008-cross-platform-distribution-acceptance/evidence/macos-native-acceptance.md"}
+{"surface": "windows", "status": "pass", "command": "MSI-installed WebView2 open/edit/save/validate/build with net0 disconnected", "evidence": "development/tasks/008-cross-platform-distribution-acceptance/evidence/windows-native-acceptance.json"}

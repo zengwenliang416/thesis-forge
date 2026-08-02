@@ -1,0 +1,3 @@
+{"status": "accepted", "finding": "The renderer-neutral preview correctly states that it is not exact Word pagination."}
+{"status": "accepted", "finding": "The compact Windows toolbar preserves save through Ctrl+S when the visible button is hidden by responsive rules."}
+{"status": "accepted-risk", "finding": "Full WCAG and x86_64 Windows visual certification are outside this local V1 scope."}

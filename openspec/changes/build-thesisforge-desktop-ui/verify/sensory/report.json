@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "verified_at": "2026-08-02",
+  "domain": "sensory",
+  "verdict": "green",
+  "required": true,
+  "evidence": [
+    "verify/rerun-summary.json",
+    "verify/sensory/reviewer-independence.md",
+    "verify/sensory/review.md",
+    "verify/sensory/findings.jsonl",
+    "development/tasks/008-cross-platform-distribution-acceptance/evidence/windows-native-acceptance.png",
+    "prototype/evidence/desktop-populated.png",
+    "prototype/evidence/mobile-preview.png",
+    "prototype/evidence/mobile-permission.png",
+    "verify/e2e/make-verify.log"
+  ],
+  "commands": [
+    "visual inspection of the original Windows installed-app screenshot",
+    "review of macOS packaged native acceptance transcript",
+    "current Playwright accessibility, responsive, keyboard, and reduced-motion matrix",
+    "comparison with the approved academic-three-pane prototype"
+  ],
+  "findings": [
+    "No clipping, overlapping primary controls, error residue, or stale dirty state was visible in the installed Windows success screenshot.",
+    "Keyboard save remains available when responsive CSS hides the secondary toolbar action."
+  ],
+  "required_fixes": [],
+  "residual_risk": [
+    "This is not a full WCAG audit or screen-reader certification.",
+    "Windows visual evidence is ARM64-only, and installers are unsigned."
+  ],
+  "blocker_class": null
+}

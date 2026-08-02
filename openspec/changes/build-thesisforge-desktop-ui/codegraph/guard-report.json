@@ -1,15 +1,15 @@
 {
   "schema": "specnav.codegraph.guard_report.v1",
-  "generated_at": "2026-08-02T04:50:39.174Z",
+  "generated_at": "2026-08-02T18:10:30.002Z",
   "active_change": "build-thesisforge-desktop-ui",
-  "stage": "development",
+  "stage": "operations",
   "ok": true,
   "status": {
     "policy": {
       "enabled": true,
       "profile": "active_dev",
       "mode": "advisory",
-      "stage": "development",
+      "stage": "operations",
       "required_for_stage": false,
       "disabled_reason": null
     },
@@ -34,10 +34,10 @@
       "initialized": true,
       "projectPath": "/Volumes/zwl/open_sources/thesis-forge",
       "indexPath": "/Volumes/zwl/open_sources/thesis-forge/.codegraph",
-      "lastIndexed": "2026-08-02T04:46:45.755Z",
-      "fileCount": 143,
-      "nodeCount": 1953,
-      "edgeCount": 5562,
+      "lastIndexed": "2026-08-02T15:37:40.895Z",
+      "fileCount": 142,
+      "nodeCount": 2000,
+      "edgeCount": 5672,
       "pendingChanges": {
         "added": 0,
         "modified": 0,
@@ -49,7 +49,7 @@
   },
   "decision": {
     "schema": "specnav.codegraph.decision.v1",
-    "stage": "development",
+    "stage": "operations",
     "profile": "active_dev",
     "effective_mode": "advisory",
     "required_for_stage": false,
@@ -57,7 +57,7 @@
     "result": "pass",
     "blockers": [],
     "warnings": [],
-    "explanation": "CodeGraph policy satisfied for development."
+    "explanation": "CodeGraph policy satisfied for operations."
   },
   "evidence_index": {
     "schema": "specnav.codegraph.evidence_index.v1",
@@ -274,11 +274,11 @@
   },
   "claims_report": {
     "schema": "specnav.codegraph.claims_report.v1",
-    "generated_at": "2026-08-02T04:50:39.174Z",
+    "generated_at": "2026-08-02T18:10:30.002Z",
     "active_change": "build-thesisforge-desktop-ui",
     "claims_file": "openspec/changes/build-thesisforge-desktop-ui/codegraph/claims-map.json",
     "evidence_index": "openspec/changes/build-thesisforge-desktop-ui/codegraph/evidence-index.json",
-    "claims_count": 8,
+    "claims_count": 16,
     "verified_claims": [
       "development:task-001-archive-safe-prototype-baseline",
       "development:task-002-headless-workspace-state-controller",
@@ -289,9 +289,27 @@
       "development:task-007-safe-background-build-cancellation",
       "development:task-008-cross-platform-distribution-acceptance"
     ],
-    "unverified_claims": [],
+    "unverified_claims": [
+      "verification:task-001-archive-safe-prototype-baseline",
+      "verification:task-002-headless-workspace-state-controller",
+      "verification:task-003-explicit-source-open-atomic-save",
+      "verification:task-004-optional-pyside6-workbench-shell",
+      "verification:task-005-template-selection-structured-diagnostics",
+      "verification:task-006-outline-renderer-neutral-preview",
+      "verification:task-007-safe-background-build-cancellation",
+      "verification:task-008-cross-platform-distribution-acceptance"
+    ],
     "blockers": [],
-    "warnings": []
+    "warnings": [
+      "codegraph:claim-unverified:verification:task-001-archive-safe-prototype-baseline",
+      "codegraph:claim-unverified:verification:task-002-headless-workspace-state-controller",
+      "codegraph:claim-unverified:verification:task-003-explicit-source-open-atomic-save",
+      "codegraph:claim-unverified:verification:task-004-optional-pyside6-workbench-shell",
+      "codegraph:claim-unverified:verification:task-005-template-selection-structured-diagnostics",
+      "codegraph:claim-unverified:verification:task-006-outline-renderer-neutral-preview",
+      "codegraph:claim-unverified:verification:task-007-safe-background-build-cancellation",
+      "codegraph:claim-unverified:verification:task-008-cross-platform-distribution-acceptance"
+    ]
   },
   "drift": {
     "schema": "specnav.codegraph.drift.v1",
@@ -300,5 +318,14 @@
     "blockers": []
   },
   "blockers": [],
-  "warnings": []
+  "warnings": [
+    "codegraph:claim-unverified:verification:task-001-archive-safe-prototype-baseline",
+    "codegraph:claim-unverified:verification:task-002-headless-workspace-state-controller",
+    "codegraph:claim-unverified:verification:task-003-explicit-source-open-atomic-save",
+    "codegraph:claim-unverified:verification:task-004-optional-pyside6-workbench-shell",
+    "codegraph:claim-unverified:verification:task-005-template-selection-structured-diagnostics",
+    "codegraph:claim-unverified:verification:task-006-outline-renderer-neutral-preview",
+    "codegraph:claim-unverified:verification:task-007-safe-background-build-cancellation",
+    "codegraph:claim-unverified:verification:task-008-cross-platform-distribution-acceptance"
+  ]
 }
