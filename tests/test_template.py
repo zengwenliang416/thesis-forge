@@ -5,6 +5,7 @@ import pytest
 from thesis_forge.templates import (
     TemplateLoadError,
     TemplateNotFoundError,
+    default_template_search_roots,
     load_template,
     resolve_template,
 )
@@ -260,6 +261,26 @@ heading:
             template_id="missing",
             search_roots=(root,),
         )
+
+
+def test_empty_ancestor_templates_directory_does_not_hide_packaged_templates(
+    tmp_path: Path,
+):
+    source = tmp_path / "user" / "project" / "thesis.md"
+    source.parent.mkdir(parents=True)
+    source.write_text("# Thesis\n", encoding="utf-8")
+    unrelated_templates = tmp_path / "user" / "templates"
+    unrelated_templates.mkdir()
+    (unrelated_templates / "desktop.ini").write_text("", encoding="utf-8")
+
+    resolved = resolve_template(
+        explicit_path=None,
+        template_id="example-university-2026",
+        search_roots=default_template_search_roots(source),
+    )
+
+    assert resolved.template.id == "example-university-2026"
+    assert unrelated_templates not in resolved.path.parents
 
 
 def test_resolve_template_id_surfaces_malformed_matching_yaml(tmp_path: Path):

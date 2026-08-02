@@ -42,7 +42,7 @@ def default_template_search_roots(source_path: Path | None = None) -> tuple[Path
         source = Path(source_path).expanduser().resolve()
         for ancestor in (source.parent, *source.parents):
             template_dir = ancestor / "templates"
-            if template_dir.is_dir():
+            if template_dir.is_dir() and _candidate_paths((template_dir,)):
                 return (template_dir,)
 
     package_templates = Path(str(resources.files("thesis_forge").joinpath("template_data")))
