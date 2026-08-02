@@ -32,6 +32,7 @@ export const config = {
       },
     },
   ],
+  outputDir: path.resolve("logs/wdio"),
   logLevel: "info",
   waitforTimeout: 20_000,
   connectionRetryTimeout: 120_000,

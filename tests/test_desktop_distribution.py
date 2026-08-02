@@ -235,6 +235,8 @@ def test_distribution_workflow_builds_native_macos_and_windows_artifacts() -> No
 
 
 def test_windows_workflow_installs_and_drives_the_native_tauri_package() -> None:
+    workflow = yaml.safe_load(WORKFLOW.read_text(encoding="utf-8"))
+    steps = workflow["jobs"]["desktop"]["steps"]
     workflow_text = WORKFLOW.read_text(encoding="utf-8")
 
     assert "cargo install tauri-driver" in workflow_text
@@ -242,8 +244,51 @@ def test_windows_workflow_installs_and_drives_the_native_tauri_package() -> None
     assert "THESISFORGE_WINDOWS_APP" in workflow_text
     assert "THESISFORGE_BLOCK_NETWORK" in workflow_text
     assert "e2e:tauri:windows" in workflow_text
-    assert "windows-native-acceptance" in workflow_text
     assert "windows-native-evidence" in workflow_text
+
+    probe_step = next(
+        step
+        for step in steps
+        if step.get("name") == "Probe installed Windows application"
+    )
+    assert probe_step["if"] == "runner.os == 'Windows'"
+    assert "Start-Process" in probe_step["run"]
+    assert "THESISFORGE_WINDOWS_APP" in probe_step["run"]
+    assert "Get-CimInstance Win32_Process" in probe_step["run"]
+    assert "windows-app-probe.json" in probe_step["run"]
+    assert "taskkill.exe" in probe_step["run"]
+
+    diagnostics_step = next(
+        step
+        for step in steps
+        if step.get("name") == "Collect Windows native acceptance diagnostics"
+    )
+    assert diagnostics_step["if"] == "runner.os == 'Windows' && always()"
+    assert "frontend/logs" in diagnostics_step["run"]
+    assert "Get-CimInstance Win32_Process" in diagnostics_step["run"]
+    assert "Get-WinEvent" in diagnostics_step["run"]
+    assert "DevToolsActivePort" in diagnostics_step["run"]
+    assert "windows-processes.json" in diagnostics_step["run"]
+    assert "windows-application-events.json" in diagnostics_step["run"]
+
+    acceptance_step = next(
+        step
+        for step in steps
+        if step.get("name") == "Run installed Windows native acceptance"
+    )
+    assert "Tee-Object" in acceptance_step["run"]
+    assert "wdio-console.log" in acceptance_step["run"]
+    assert "$LASTEXITCODE" in acceptance_step["run"]
+
+    evidence_upload = next(
+        step
+        for step in steps
+        if step.get("uses") == "actions/upload-artifact@v4"
+        and step.get("with", {}).get("name") == "windows-native-evidence"
+    )
+    assert evidence_upload["if"] == "runner.os == 'Windows' && always()"
+    assert "${{ runner.temp }}/windows-native-evidence" in evidence_upload["with"]["path"]
+    assert "${{ runner.temp }}/thesisforge-windows-install.log" in evidence_upload["with"]["path"]
 
 
 def test_windows_tauri_acceptance_uses_external_webdriver_and_real_commands() -> None:
@@ -253,6 +298,7 @@ def test_windows_tauri_acceptance_uses_external_webdriver_and_real_commands() ->
     assert 'driverProvider: "external"' in config
     assert "THESISFORGE_WINDOWS_APP" in config
     assert "tauri-windows.acceptance.ts" in config
+    assert 'outputDir: path.resolve("logs/wdio")' in config
     assert "__TAURI_INTERNALS__" in acceptance
     assert 'command === "pick_source"' in acceptance
     assert "打开 Markdown 文稿" in acceptance
