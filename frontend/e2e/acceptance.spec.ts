@@ -130,20 +130,25 @@ test("saves with Ctrl+S when the minimum desktop toolbar hides secondary actions
     });
   });
   await page.goto("/");
+  const sourceText = "# 绪论\n";
   await page.locator('input[type="file"]').setInputFiles({
     name: "thesis.md",
     mimeType: "text/markdown",
-    buffer: Buffer.from("# 绪论\n"),
+    buffer: Buffer.from(sourceText),
   });
 
   const editor = page.getByRole("textbox", { name: "Markdown 文稿内容" });
-  await editor.fill("# 绪论\n\n最小桌面宽度保存回归。\n");
+  await page.keyboard.press("Control+k");
+  await expect(editor).toBeFocused();
+  const editedText = `${await editor.inputValue()}\n最小桌面宽度保存回归。\n`;
+  await editor.fill(editedText);
+  await expect(editor).toHaveValue(editedText);
   await expect(page.getByText("文稿有未保存修改")).toBeVisible();
   await expect(page.getByRole("button", { name: "保存文稿" })).toBeHidden();
 
   await page.keyboard.press("Control+s");
 
-  await expect.poll(() => savedText).toBe("# 绪论\n\n最小桌面宽度保存回归。\n");
+  await expect.poll(() => savedText).toBe(editedText);
   await expect(page.getByText("文稿、模板与预览已同步")).toBeVisible();
 });
 

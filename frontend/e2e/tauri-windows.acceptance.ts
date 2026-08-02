@@ -309,9 +309,19 @@ async function main(): Promise<void> {
       await editor.evaluate((element) => element === document.activeElement),
       true,
     );
-    await editor.press("Control+End");
-    await editor.press("Enter");
-    await editor.type(marker);
+    const editedSource = `${await editor.inputValue()}\n${marker}\n`;
+    // WebView2 CDP can acknowledge key events without inserting their text.
+    // Playwright fill still drives the controlled textarea through an input event.
+    await editor.fill(editedSource);
+    await page.waitForFunction(
+      (expectedMarker) =>
+        (
+          document.querySelector(
+            '[aria-label="Markdown 文稿内容"]',
+          ) as HTMLTextAreaElement | null
+        )?.value.includes(expectedMarker) === true,
+      marker,
+    );
     await page.waitForFunction(
       () => document.querySelector(".app-shell")?.getAttribute("data-state") === "dirty",
     );
