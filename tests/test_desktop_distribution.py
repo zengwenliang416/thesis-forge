@@ -41,6 +41,10 @@ def test_release_config_bundles_one_managed_sidecar() -> None:
     assert "beforeBuildCommand" not in config.get("build", {})
     assert base_config["build"]["beforeDevCommand"] == "pnpm --dir frontend dev"
     assert base_config["build"]["beforeBuildCommand"] == "pnpm --dir frontend build"
+    assert base_config["bundle"]["icon"] == [
+        "icons/icon.png",
+        "icons/icon.ico",
+    ]
 
 
 def test_windows_resource_icon_is_packaged() -> None:
