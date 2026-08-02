@@ -20,6 +20,7 @@ WINDOWS_TAURI_CONFIG = ROOT / "frontend" / "e2e" / "tauri-windows.wdio.conf.ts"
 WINDOWS_TAURI_ACCEPTANCE = (
     ROOT / "frontend" / "e2e" / "tauri-windows.acceptance.ts"
 )
+WINDOWS_ICON = ROOT / "src-tauri" / "icons" / "icon.ico"
 
 
 def _load_module(path: Path, name: str):
@@ -40,6 +41,11 @@ def test_release_config_bundles_one_managed_sidecar() -> None:
     assert "beforeBuildCommand" not in config.get("build", {})
     assert base_config["build"]["beforeDevCommand"] == "pnpm --dir frontend dev"
     assert base_config["build"]["beforeBuildCommand"] == "pnpm --dir frontend build"
+
+
+def test_windows_resource_icon_is_packaged() -> None:
+    assert WINDOWS_ICON.is_file()
+    assert WINDOWS_ICON.read_bytes()[:4] == b"\x00\x00\x01\x00"
 
 
 def test_sidecar_builder_uses_native_target_specific_names() -> None:
