@@ -1,6 +1,6 @@
 {
   "schema": "specnav.codegraph.evidence_query_plan.v1",
-  "generated_at": "2026-08-01T07:07:09.504Z",
+  "generated_at": "2026-08-01T07:59:35.810Z",
   "active_change": "build-thesisforge-desktop-ui",
   "queries": [
     {
@@ -99,7 +99,7 @@
       "stage": "development",
       "task_id": "007-safe-background-build-cancellation",
       "status": "planned",
-      "query": "Find the files, symbols, components, routes, services, data flow, and tests that implement \"Implement one user-visible flow from UI entry through state, API/data boundary,\" in change \"build-thesisforge-desktop-ui\". Return concrete file paths, symbols, relationships, and any missing implementation evidence.",
+      "query": "Find the files, symbols, components, routes, services, data flow, and tests that implement \"Add cooperative cancellation to the existing deterministic build application\" in change \"build-thesisforge-desktop-ui\". Return concrete file paths, symbols, relationships, and any missing implementation evidence.",
       "expected_evidence": [
         "file paths",
         "symbols",
@@ -107,6 +107,21 @@
         "tests or verification commands"
       ],
       "command": "node \"$SPECNAV_CODEGRAPH_ROOT/scripts/codegraph-context.js\" --stage development --claim development:task-007-safe-background-build-cancellation --query \"<query>\" --write --json"
+    },
+    {
+      "id": "development:task-008-cross-platform-distribution-acceptance:evidence",
+      "claim_id": "development:task-008-cross-platform-distribution-acceptance",
+      "stage": "development",
+      "task_id": "008-cross-platform-distribution-acceptance",
+      "status": "planned",
+      "query": "Find the files, symbols, components, routes, services, data flow, and tests that implement \"Turn the already working shared React workbench and Python application services\" in change \"build-thesisforge-desktop-ui\". Return concrete file paths, symbols, relationships, and any missing implementation evidence.",
+      "expected_evidence": [
+        "file paths",
+        "symbols",
+        "call relationships",
+        "tests or verification commands"
+      ],
+      "command": "node \"$SPECNAV_CODEGRAPH_ROOT/scripts/codegraph-context.js\" --stage development --claim development:task-008-cross-platform-distribution-acceptance --query \"<query>\" --write --json"
     }
   ]
 }

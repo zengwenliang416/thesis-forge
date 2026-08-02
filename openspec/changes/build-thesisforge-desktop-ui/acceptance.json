@@ -7,84 +7,84 @@
       "statement": "The Web build and macOS/Windows Tauri packages open the same light-theme zh-CN workbench.",
       "verify_via": "e2e",
       "status": "failing",
-      "evidence_ref": null
+      "evidence_ref": "development/tasks/008-cross-platform-distribution-acceptance/report.md#windows-native-gate"
     },
     {
       "id": "A2",
       "statement": "Opening a source populates outline, editor, preview, and diagnostics from one saved source snapshot.",
       "verify_via": "e2e",
-      "status": "failing",
-      "evidence_ref": null
+      "status": "passing",
+      "evidence_ref": "development/tasks/008-cross-platform-distribution-acceptance/evidence/web-http-acceptance.md"
     },
     {
       "id": "A3",
       "statement": "Dirty editor state disables validation and build until an explicit atomic save succeeds.",
       "verify_via": "unit",
-      "status": "failing",
-      "evidence_ref": null
+      "status": "passing",
+      "evidence_ref": "development/tasks/003-explicit-source-open-atomic-save/report.md; development/tasks/008-cross-platform-distribution-acceptance/evidence/web-http-acceptance.md"
     },
     {
       "id": "A4",
       "statement": "Template selection and diagnostics use existing template and validation contracts.",
       "verify_via": "unit",
-      "status": "failing",
-      "evidence_ref": null
+      "status": "passing",
+      "evidence_ref": "development/tasks/005-template-selection-structured-diagnostics/report.md"
     },
     {
       "id": "A5",
       "statement": "Build progress is ordered and successful completion reports the final DOCX path.",
       "verify_via": "e2e",
-      "status": "failing",
-      "evidence_ref": null
+      "status": "passing",
+      "evidence_ref": "development/tasks/007-safe-background-build-cancellation/report.md; development/tasks/008-cross-platform-distribution-acceptance/evidence/local-distribution-verification.md"
     },
     {
       "id": "A6",
       "statement": "Validation, permission, cancellation, render, and finalize failures preserve prior valid files and expose recovery.",
       "verify_via": "redteam",
-      "status": "failing",
-      "evidence_ref": null
+      "status": "passing",
+      "evidence_ref": "development/tasks/007-safe-background-build-cancellation/report.md; development/tasks/008-cross-platform-distribution-acceptance/evidence/local-distribution-verification.md"
     },
     {
       "id": "A7",
       "statement": "React components call typed transport adapters without duplicating compiler behavior or leaking React, Tauri, or HTTP framework dependencies into core modules.",
       "verify_via": "static",
-      "status": "failing",
-      "evidence_ref": null
+      "status": "passing",
+      "evidence_ref": "development/tasks/004-optional-pyside6-workbench-shell/report.md"
     },
     {
       "id": "A8",
       "statement": "Core CLI and package imports remain usable without Node.js, Rust, Tauri, or an HTTP server.",
       "verify_via": "e2e",
-      "status": "failing",
-      "evidence_ref": null
+      "status": "passing",
+      "evidence_ref": "development/tasks/008-cross-platform-distribution-acceptance/evidence/local-distribution-verification.md"
     },
     {
       "id": "A9",
       "statement": "Archived prototype contract tests locate stable archived evidence after the source change is archived.",
       "verify_via": "unit",
-      "status": "failing",
-      "evidence_ref": null
+      "status": "passing",
+      "evidence_ref": "development/tasks/001-archive-safe-prototype-baseline/report.md"
     },
     {
       "id": "A10",
       "statement": "Controller and view-model tests run headlessly and cover all required workbench states.",
       "verify_via": "unit",
-      "status": "failing",
-      "evidence_ref": null
+      "status": "passing",
+      "evidence_ref": "development/tasks/002-headless-workspace-state-controller/report.md; development/tasks/008-cross-platform-distribution-acceptance/evidence/web-http-acceptance.md"
     },
     {
       "id": "A11",
       "statement": "Keyboard, focus, labels, contrast, responsive layout, and resize behavior satisfy the approved workbench contract in browser, macOS, and Windows runtimes.",
       "verify_via": "sensory",
       "status": "failing",
-      "evidence_ref": null
+      "evidence_ref": "development/tasks/008-cross-platform-distribution-acceptance/report.md#windows-native-gate"
     },
     {
       "id": "A12",
       "statement": "Desktop workflows remain local and deterministic with external sockets blocked and no credentials; Web workflows use only the configured ThesisForge HTTP adapter.",
       "verify_via": "facticity",
       "status": "failing",
-      "evidence_ref": null
+      "evidence_ref": "development/tasks/008-cross-platform-distribution-acceptance/report.md#windows-native-gate"
     }
   ]
 }

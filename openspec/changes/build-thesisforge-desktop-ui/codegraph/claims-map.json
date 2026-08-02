@@ -1,6 +1,6 @@
 {
   "schema": "specnav.codegraph.claims.v1",
-  "generated_at": "2026-08-01T07:07:09.504Z",
+  "generated_at": "2026-08-01T07:59:35.809Z",
   "active_change": "build-thesisforge-desktop-ui",
   "claims": [
     {
@@ -222,7 +222,7 @@
       "kind": "development-task",
       "stage": "development",
       "task_id": "007-safe-background-build-cancellation",
-      "text": "Implement one user-visible flow from UI entry through state, API/data boundary,",
+      "text": "Add cooperative cancellation to the existing deterministic build application",
       "required": true,
       "source": "specnav-codegraph-plan",
       "source_paths": [
@@ -230,16 +230,90 @@
         "openspec/changes/build-thesisforge-desktop-ui/development/tasks/007-safe-background-build-cancellation/context.json"
       ],
       "expected_evidence": [
-        "Focused tests or command output",
-        "Task report",
-        "Spec review",
-        "Quality review"
+        "Strict RED and GREEN for cancellation before parse, validate, compile, render, finalize, package validation, and final atomic replacement",
+        "Application tests proving callback, renderer, package validation, replacement, and cancellation failures preserve prior output and clean temporary files",
+        "Adapter tests proving ordered JSON-safe progress and exactly one terminal success or typed error event",
+        "Web stream tests proving incremental progress, AbortSignal propagation, disconnect cancellation, and no stale terminal application",
+        "Tauri/Rust tests proving asynchronous sidecar event forwarding, request identity, cancellation signaling, and protocol parity",
+        "Reducer tests for ordered progress, repeated-click suppression, cancellation, retry, output preservation, and stale progress/success/error/output suppression",
+        "React tests for progress, cancel/retry controls, actionable error copy, final output feedback, and retained prior output",
+        "Browser and Tauri E2E coverage for successful build, cancel, retry, stale completion, and recovery",
+        "Frontend unit/typecheck/lint/build/E2E and focused/full Python regression evidence",
+        "Ruff, pip check, Cargo fmt/test/check, strict OpenSpec, SpecNav entry, CodeGraph, JSON, and whitespace evidence",
+        "Task report, dedicated spec review, and dedicated quality review"
       ],
       "allowed_files": [
-        "src"
+        "frontend/src/components/**",
+        "frontend/src/state/**",
+        "frontend/src/transport/**",
+        "frontend/src/styles.css",
+        "frontend/e2e/**",
+        "src/thesis_forge/application/contracts.py",
+        "src/thesis_forge/application/services.py",
+        "src/thesis_forge/adapters/**",
+        "src/thesis_forge/ui/controller.py",
+        "src-tauri/src/**",
+        "src-tauri/tests/**",
+        "tests/test_application_services.py",
+        "tests/test_adapters.py",
+        "tests/test_http_adapter.py",
+        "tests/test_sidecar.py",
+        "tests/test_ui_controller.py",
+        "tests/test_frontend_contract.py",
+        "tests/test_architecture.py"
       ],
       "query_ids": [
         "development:task-007-safe-background-build-cancellation:evidence"
+      ]
+    },
+    {
+      "id": "development:task-008-cross-platform-distribution-acceptance",
+      "kind": "development-task",
+      "stage": "development",
+      "task_id": "008-cross-platform-distribution-acceptance",
+      "text": "Turn the already working shared React workbench and Python application services",
+      "required": true,
+      "source": "specnav-codegraph-plan",
+      "source_paths": [
+        "openspec/changes/build-thesisforge-desktop-ui/development/tasks/008-cross-platform-distribution-acceptance/brief.md",
+        "openspec/changes/build-thesisforge-desktop-ui/development/tasks/008-cross-platform-distribution-acceptance/context.json"
+      ],
+      "expected_evidence": [
+        "Strict RED and GREEN for release configuration, target-specific sidecar naming, platform mismatch rejection, artifact isolation, and native bundle discovery",
+        "Frozen sidecar inspect, validate, preview, build, cancellation, and reopen smoke evidence with sockets blocked and credentials removed",
+        "Valid DOCX package and preserved prior-output checks from the frozen sidecar",
+        "Browser acceptance for populated, loading, empty, error, disabled, permission, dirty, canceled, and success states",
+        "Keyboard-only, labels, focus visibility, contrast, responsive resize, and reduced-motion checks",
+        "Independent Python wheel/sdist, Web production, macOS app/dmg, and Windows msi/nsis build evidence",
+        "Workflow/static tests proving macOS and Windows use native runners and do not relabel sidecars",
+        "Full frontend, Python, Ruff, pip, Cargo, distribution, strict OpenSpec, SpecNav, CodeGraph, JSON, and whitespace gates",
+        "README and maintenance instructions with capability differences, limitations, troubleshooting, signing/notarization gates, checksums, and artifact provenance",
+        "Six-domain verification inputs plus task report, spec review, and quality review"
+      ],
+      "allowed_files": [
+        ".github/workflows/**",
+        ".gitignore",
+        "Makefile",
+        "README.md",
+        "docs/MAINTENANCE.md",
+        "frontend/e2e/**",
+        "frontend/src/**",
+        "package.json",
+        "pyproject.toml",
+        "scripts/build_sidecar.py",
+        "scripts/verify_desktop_distribution.py",
+        "src-tauri/Cargo.lock",
+        "src-tauri/Cargo.toml",
+        "src-tauri/src/**",
+        "src-tauri/tests/**",
+        "src-tauri/tauri.conf.json",
+        "src-tauri/tauri.release.conf.json",
+        "tests/test_desktop_distribution.py",
+        "tests/test_frontend_contract.py",
+        "tests/test_architecture.py"
+      ],
+      "query_ids": [
+        "development:task-008-cross-platform-distribution-acceptance:evidence"
       ]
     }
   ]

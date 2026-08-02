@@ -3,6 +3,7 @@
   "change_id": "build-thesisforge-desktop-ui",
   "stage": "development",
   "allowed_roots": [
+    ".github",
     "frontend",
     "src-tauri",
     "src",

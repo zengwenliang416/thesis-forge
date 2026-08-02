@@ -55,7 +55,8 @@ approved
 
 ## Required Fixes
 
-- None for Slice 007.
+- Slice 007 has no remaining quality fixes after the request-owned cancellation
+  cleanup and focused regression coverage were approved.
 
 ## Review Provenance
 

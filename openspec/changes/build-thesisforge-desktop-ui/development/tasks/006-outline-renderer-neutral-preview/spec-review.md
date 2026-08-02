@@ -2,7 +2,7 @@
 
 ## Verdict
 
-approved after closure fix
+approved
 
 ## Missing Requirements
 

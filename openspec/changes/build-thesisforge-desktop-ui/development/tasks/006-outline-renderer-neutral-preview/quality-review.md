@@ -67,7 +67,9 @@ approved
 
 ## Required Fixes
 
-- None.
+- Slice 006 has no remaining quality fixes after renderer-neutral projection,
+  stale suppression, synchronized selection, compatibility handling, and
+  focused regressions were independently approved.
 
 ## Residual Risk
 

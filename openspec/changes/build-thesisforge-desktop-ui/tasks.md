@@ -91,10 +91,10 @@
 用户结果：用户可在 Web、macOS、Windows 完成打开、编辑、保存、校验、预览和构建；桌面端可离线运行，维护者可重复构建和发布三端产物。
 
 - [ ] 8.1 Run the complete example through the browser adapter and both Tauri desktop targets; block external sockets for desktop verification.
-- [ ] 8.2 Verify populated, loading, empty, error, disabled, permission, dirty, canceled, and success states.
-- [ ] 8.3 Verify keyboard-only operation, labels, focus visibility, contrast, resizing, and reduced-motion behavior.
+- [x] 8.2 Verify populated, loading, empty, error, disabled, permission, dirty, canceled, and success states.
+- [x] 8.3 Verify keyboard-only operation, labels, focus visibility, contrast, resizing, and reduced-motion behavior.
 - [ ] 8.4 Verify independent Python wheel installation, Web production build, macOS package, and Windows package without cross-toolchain leakage.
-- [ ] 8.5 Update README and maintenance documentation for Web, macOS, and Windows installation, launch, capability differences, limitations, troubleshooting, and distribution.
-- [ ] 8.6 Run full pytest, Ruff, frontend lint/typecheck/unit/E2E, Tauri checks, package/distribution checks, strict OpenSpec validation, CodeGraph claims, and Git whitespace checks.
+- [x] 8.5 Update README and maintenance documentation for Web, macOS, and Windows installation, launch, capability differences, limitations, troubleshooting, and distribution.
+- [x] 8.6 Run full pytest, Ruff, frontend lint/typecheck/unit/E2E, Tauri checks, package/distribution checks, strict OpenSpec validation, CodeGraph claims, and Git whitespace checks.
 - [ ] 8.7 Complete six-domain verification evidence and user-aligned Web/macOS/Windows test cases.
-- [ ] 8.8 Record final development handoff, residual risks, and operations readiness inputs.
+- [x] 8.8 Record final development handoff, residual risks, and operations readiness inputs.

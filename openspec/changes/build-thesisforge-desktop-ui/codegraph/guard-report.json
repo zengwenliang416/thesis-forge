@@ -1,6 +1,6 @@
 {
   "schema": "specnav.codegraph.guard_report.v1",
-  "generated_at": "2026-08-01T07:52:03.826Z",
+  "generated_at": "2026-08-02T04:17:28.934Z",
   "active_change": "build-thesisforge-desktop-ui",
   "stage": "development",
   "ok": true,
@@ -34,10 +34,10 @@
       "initialized": true,
       "projectPath": "/Volumes/zwl/open_sources/thesis-forge",
       "indexPath": "/Volumes/zwl/open_sources/thesis-forge/.codegraph",
-      "lastIndexed": "2026-08-01T07:51:36.517Z",
-      "fileCount": 133,
-      "nodeCount": 1804,
-      "edgeCount": 5283,
+      "lastIndexed": "2026-08-02T04:01:43.416Z",
+      "fileCount": 141,
+      "nodeCount": 1935,
+      "edgeCount": 5539,
       "pendingChanges": {
         "added": 0,
         "modified": 0,
@@ -61,7 +61,7 @@
   },
   "evidence_index": {
     "schema": "specnav.codegraph.evidence_index.v1",
-    "generated_at": "2026-08-01T07:35:10.408Z",
+    "generated_at": "2026-08-02T04:02:08.156Z",
     "active_change": "build-thesisforge-desktop-ui",
     "source_raw": "openspec/changes/build-thesisforge-desktop-ui/codegraph/evidence.jsonl",
     "by_claim": {
@@ -217,11 +217,51 @@
         ],
         "symbols": [],
         "blockers": []
+      },
+      "development:task-008-cross-platform-distribution-acceptance": {
+        "status": "matched",
+        "evidence_ids": [
+          "ev-msb8e4av",
+          "ev-msb8f2ti",
+          "ev-msb9xlzr"
+        ],
+        "files": [
+          "src/thesis_forge/core/math.py",
+          "tests/test_adapters.py",
+          "tests/test_ui_controller.py",
+          "school.yaml",
+          "thesis.md",
+          "scripts/build_sidecar.py",
+          "scripts/verify_desktop_distribution.py",
+          "src-tauri/src/lib.rs",
+          "tests/test_desktop_distribution.py",
+          "tests/test_http_adapter.py",
+          "frontend/e2e/real_http_server.py",
+          "first.yaml",
+          "second.md",
+          "second.yaml",
+          "build_sidecar.py",
+          "verify_desktop_distribution.py",
+          "tauri.release.conf.js",
+          "distribution.yml",
+          "real-http.playwright.config.ts",
+          "tauri.conf.js",
+          "builder.py",
+          "/tmp/entry.py",
+          "templates/base/bachelor.yaml",
+          "templates/schools/example-university/2026.yaml",
+          "pyproject.toml",
+          "Cargo.toml",
+          "lib.rs",
+          "index.html"
+        ],
+        "symbols": [],
+        "blockers": []
       }
     },
     "by_stage": {
       "development": {
-        "verified": 14,
+        "verified": 17,
         "partial": 0,
         "missing": 0,
         "stale": 0,
@@ -230,15 +270,15 @@
     },
     "blockers": [],
     "raw_exists": true,
-    "record_count": 14
+    "record_count": 17
   },
   "claims_report": {
     "schema": "specnav.codegraph.claims_report.v1",
-    "generated_at": "2026-08-01T07:52:03.826Z",
+    "generated_at": "2026-08-02T04:17:28.934Z",
     "active_change": "build-thesisforge-desktop-ui",
     "claims_file": "openspec/changes/build-thesisforge-desktop-ui/codegraph/claims-map.json",
     "evidence_index": "openspec/changes/build-thesisforge-desktop-ui/codegraph/evidence-index.json",
-    "claims_count": 7,
+    "claims_count": 8,
     "verified_claims": [
       "development:task-001-archive-safe-prototype-baseline",
       "development:task-002-headless-workspace-state-controller",
@@ -246,7 +286,8 @@
       "development:task-004-optional-pyside6-workbench-shell",
       "development:task-005-template-selection-structured-diagnostics",
       "development:task-006-outline-renderer-neutral-preview",
-      "development:task-007-safe-background-build-cancellation"
+      "development:task-007-safe-background-build-cancellation",
+      "development:task-008-cross-platform-distribution-acceptance"
     ],
     "unverified_claims": [],
     "blockers": [],

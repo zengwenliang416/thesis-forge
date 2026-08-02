@@ -34,7 +34,8 @@ approved
 
 ## Required Fixes
 
-- None.
+- Slice 007 has no remaining implementation fixes after the HTTP disconnect
+  cancellation cleanup race was corrected and revalidated.
 
 ## Review Provenance
 

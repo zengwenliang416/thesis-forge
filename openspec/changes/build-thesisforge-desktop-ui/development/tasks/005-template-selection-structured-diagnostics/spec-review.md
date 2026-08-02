@@ -39,7 +39,9 @@ approved
 
 ## Required Fixes
 
-- None.
+- Slice 005 has no remaining specification fixes after stable template IDs,
+  visible fatal-build guards, disabled empty-state filters, and keyboard plus
+  pointer activation were revalidated.
 
 ## Independent Validation
 
