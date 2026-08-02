@@ -326,7 +326,7 @@ async function main(): Promise<void> {
       () => document.querySelector(".app-shell")?.getAttribute("data-state") === "dirty",
     );
 
-    const save = page.getByRole("button", { name: "保存文稿" });
+    const save = page.locator('[aria-label="保存文稿"]');
     assert.equal(await save.count(), 1);
     const saveVisible = await save.isVisible();
     if (saveVisible) {
@@ -342,7 +342,7 @@ async function main(): Promise<void> {
         "populated",
     );
 
-    const validate = page.getByRole("button", { name: "验证论文" });
+    const validate = page.locator('[aria-label="验证论文"]');
     assert.equal(await validate.count(), 1);
     const validateVisible = await validate.isVisible();
     if (validateVisible) {

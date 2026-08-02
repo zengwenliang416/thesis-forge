@@ -144,7 +144,10 @@ test("saves with Ctrl+S when the minimum desktop toolbar hides secondary actions
   await editor.fill(editedText);
   await expect(editor).toHaveValue(editedText);
   await expect(page.getByText("文稿有未保存修改")).toBeVisible();
-  await expect(page.getByRole("button", { name: "保存文稿" })).toBeHidden();
+  const save = page.locator('[aria-label="保存文稿"]');
+  await expect(save).toHaveCount(1);
+  await expect(save).toBeHidden();
+  await expect(save).toBeEnabled();
 
   await page.keyboard.press("Control+s");
 
