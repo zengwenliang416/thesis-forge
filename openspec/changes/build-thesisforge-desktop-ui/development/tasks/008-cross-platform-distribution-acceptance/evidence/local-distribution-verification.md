@@ -69,8 +69,8 @@ Host: `aarch64-apple-darwin`
 
 - Frontend unit: `53 passed`.
 - Browser E2E: `14 passed`, `16` intentional skips, plus real HTTP `1 passed`.
-- Python focused distribution set: `24 passed`.
-- Python full suite: `242 passed`.
+- Python focused distribution set: `26 passed`.
+- Python full suite: `244 passed`.
 - Rust protocol tests: `6 passed`.
 - Ruff, frontend lint, frontend typecheck, Cargo fmt/check, pip check, strict
   OpenSpec validation, CodeGraph sync/status, and `git diff --check` passed.

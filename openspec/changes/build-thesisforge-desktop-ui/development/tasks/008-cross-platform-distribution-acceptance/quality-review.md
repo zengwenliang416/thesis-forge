@@ -30,9 +30,9 @@ approved
 
 - Focused distribution tests cover release config, native target names,
   cross-host rejection, package data, Windows release-sidecar discovery,
-  workflow matrices, managed-sidecar use, output isolation, secret/path
-  leakage, AppleDouble pollution, and cross-platform real HTTP interpreter
-  selection.
+  workflow matrices, installed MSI discovery, external Tauri WebDriver
+  configuration, managed-sidecar use, output isolation, secret/path leakage,
+  AppleDouble pollution, and cross-platform real HTTP interpreter selection.
 - Browser tests cover required states, keyboard/focus, contrast, resize,
   reduced motion, success, cancel, retry, and fatal diagnostics.
 - The separate real HTTP project proves open, save, preview/validate, build,
@@ -40,7 +40,11 @@ approved
 - The frozen sidecar verifier executes inspect, validate, preview, cancel,
   ordered build, prior-output preservation, DOCX package validation, and reopen
   with credentials removed and outbound connect/connect_ex blocked.
-- Full local regression returned Python `242`, frontend unit `53`, browser
+- The Windows WDIO test limits its seam to `pick_source`; save, validate,
+  build, packaged-sidecar execution, source persistence, DOCX validation,
+  keyboard focus, reduced-motion CSS, screenshot, and JSON evidence remain
+  real installed-app operations.
+- Full local regression returned Python `244`, frontend unit `53`, browser
   matrix `14`, real HTTP `1`, and Rust protocol `6` passing tests.
 
 ## Error Handling

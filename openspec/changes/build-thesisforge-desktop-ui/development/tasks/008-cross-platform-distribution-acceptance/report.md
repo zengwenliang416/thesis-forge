@@ -34,6 +34,11 @@ DONE_WITH_CONCERNS
 - Added native macOS and Windows CI matrix definitions with separate Web,
   Python, sidecar, and desktop uploads. No cross-OS sidecar relabeling is
   allowed.
+- Added a Windows-only installed-app gate that installs the native MSI, drives
+  the installed Tauri WebView through external `tauri-driver`, keeps only the
+  system file picker behind a test seam, executes real save/validate/build
+  commands against the packaged sidecar, blocks sidecar sockets, strips
+  credentials, and uploads screenshot plus JSON evidence.
 - Added dedicated browser state/accessibility acceptance and a real Python HTTP
   adapter Playwright run with no route mocks.
 - Documented runtime capabilities, installation, offline behavior, packaging,
@@ -54,6 +59,10 @@ DONE_WITH_CONCERNS
 - Quality-review RED added regressions for a Windows-capable real HTTP test
   interpreter and `socket.connect_ex` blocking; both failed before the fixes
   and returned `12 passed` after implementation.
+- Installed-Windows acceptance RED returned two focused failures for the
+  missing native WebDriver workflow and WDIO task files. The static contract,
+  isolated WDIO typecheck, frozen lock install, and existing frontend
+  regression are now green; native execution remains pending.
 - Real HTTP RED failed because the test server did not exist. The first real
   integration run then surfaced genuine validator errors in an incomplete
   fixture. A minimal valid thesis fixture closed the real workflow with
@@ -68,8 +77,8 @@ DONE_WITH_CONCERNS
   `pnpm frontend:build` -> passed.
 - `pnpm frontend:e2e` -> `14 passed`, `16` intentional skips, plus real HTTP
   `1 passed`.
-- Focused Python distribution/architecture set -> `24 passed`.
-- `.venv/bin/python -m pytest -q` -> `242 passed`.
+- Focused Python distribution/architecture set -> `26 passed`.
+- `.venv/bin/python -m pytest -q` -> `244 passed`.
 - `.venv/bin/ruff check .` -> all checks passed.
 - `.venv/bin/python -m pip check` -> no broken requirements.
 - Python wheel/sdist build and isolated verifier -> passed.
@@ -104,7 +113,7 @@ DONE_WITH_CONCERNS
 ## Follow-up Needed
 
 - Push the reviewed branch and run `.github/workflows/distribution.yml` on the
-  native Windows matrix.
+  native Windows matrix, including the installed-app WDIO step.
 - Retain the Windows verifier JSON, installer artifact checksums, and a
   user-aligned Windows interaction/sensory record.
 - Only then mark tasks `8.1`, `8.4`, and `8.7` complete and move `A1`, `A11`,

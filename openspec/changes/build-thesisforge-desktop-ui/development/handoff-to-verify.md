@@ -69,10 +69,12 @@
 
 ## Local Validation
 
-- Python full suite: `242 passed`.
+- Python full suite: `244 passed`.
 - Frontend unit: `53 passed`; browser matrix: `14 passed`, `16` intentional
   skips; real HTTP: `1 passed`.
 - Rust protocol: `6 passed`; Cargo fmt/check passed.
+- Windows installed-app workflow contract: `14` focused distribution tests
+  passed locally; isolated WDIO typecheck and frozen pnpm lock install passed.
 - Wheel/sdist isolated verification, frozen sidecar offline verification,
   native macOS Tauri build, macOS bundle verifier, Ruff, frontend
   lint/typecheck/build, pip check, strict OpenSpec, CodeGraph sync, and
