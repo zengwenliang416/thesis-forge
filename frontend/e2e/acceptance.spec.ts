@@ -88,6 +88,65 @@ test("verifies empty, disabled, keyboard-focus, contrast, resize, and reduced mo
   ).toBe(true);
 });
 
+test("saves with Ctrl+S when the minimum desktop toolbar hides secondary actions", async ({
+  page,
+}, testInfo) => {
+  test.skip(testInfo.project.name !== "minimum-desktop-chromium");
+  let savedText: string | undefined;
+  await page.route("**/api/v1/workspaces", async (route) => {
+    await route.fulfill({
+      status: 201,
+      contentType: "application/json",
+      body: JSON.stringify({
+        protocol: "thesisforge.workbench.v1",
+        ok: true,
+        source: {
+          kind: "web-workspace",
+          workspaceId,
+          fileName: "thesis.md",
+        },
+        text: "# 绪论\n",
+      }),
+    });
+  });
+  await page.route("**/api/v1/dispatch", async (route) => {
+    const request = route.request().postDataJSON() as {
+      requestId: string;
+      operation: string;
+      payload: { text?: string };
+    };
+    if (request.operation === "save") {
+      savedText = request.payload.text;
+    }
+    await route.fulfill({
+      status: 200,
+      contentType: "application/json",
+      body: JSON.stringify({
+        protocol: "thesisforge.workbench.v1",
+        requestId: request.requestId,
+        ok: true,
+        result: request.operation === "preview" ? acceptedPreview : {},
+      }),
+    });
+  });
+  await page.goto("/");
+  await page.locator('input[type="file"]').setInputFiles({
+    name: "thesis.md",
+    mimeType: "text/markdown",
+    buffer: Buffer.from("# 绪论\n"),
+  });
+
+  const editor = page.getByRole("textbox", { name: "Markdown 文稿内容" });
+  await editor.fill("# 绪论\n\n最小桌面宽度保存回归。\n");
+  await expect(page.getByText("文稿有未保存修改")).toBeVisible();
+  await expect(page.getByRole("button", { name: "保存文稿" })).toBeHidden();
+
+  await page.keyboard.press("Control+s");
+
+  await expect.poll(() => savedText).toBe("# 绪论\n\n最小桌面宽度保存回归。\n");
+  await expect(page.getByText("文稿、模板与预览已同步")).toBeVisible();
+});
+
 test("verifies loading and permission recovery without losing the opened source", async ({
   page,
 }, testInfo) => {

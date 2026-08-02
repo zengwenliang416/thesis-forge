@@ -299,10 +299,15 @@ def test_windows_tauri_acceptance_uses_webview2_cdp_and_real_commands() -> None:
     assert 'internals.invoke = ' not in acceptance
     assert "打开 Markdown 文稿" in acceptance
     assert "保存文稿" in acceptance
+    assert "await save.isVisible()" in acceptance
+    assert 'page.keyboard.press("Control+s")' in acceptance
     assert "构建 DOCX" in acceptance
     assert "Markdown 文稿内容" in acceptance
     assert "构建完成" in acceptance
     assert "page.screenshot" in acceptance
+    assert "windows-native-failure.png" in acceptance
+    assert "windows-native-failure.html" in acceptance
+    assert "windows-native-failure.json" in acceptance
     assert "prefers-reduced-motion" in acceptance
     assert "THESISFORGE_WINDOWS_EVIDENCE" in acceptance
 

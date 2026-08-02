@@ -161,6 +161,98 @@ function captureWindowsProcesses(child: ChildProcess): Record<string, unknown> {
   };
 }
 
+async function captureFailureEvidence(
+  page: Page | undefined,
+  error: unknown,
+): Promise<void> {
+  const failurePath = path.join(
+    evidenceDirectory,
+    "windows-native-failure.json",
+  );
+  const failure: Record<string, unknown> = {
+    capturedAt: new Date().toISOString(),
+    error: error instanceof Error ? error.stack ?? error.message : String(error),
+  };
+
+  if (!page || page.isClosed()) {
+    failure.pageAvailable = false;
+    await writeFile(failurePath, JSON.stringify(failure, null, 2), "utf8");
+    return;
+  }
+
+  try {
+    failure.pageAvailable = true;
+    failure.page = await page.evaluate(() => {
+      const save = document.querySelector(
+        '[aria-label="保存文稿"]',
+      ) as HTMLButtonElement | null;
+      const validate = document.querySelector(
+        '[aria-label="验证论文"]',
+      ) as HTMLButtonElement | null;
+      const editor = document.querySelector(
+        '[aria-label="Markdown 文稿内容"]',
+      ) as HTMLTextAreaElement | null;
+      const shell = document.querySelector(".app-shell");
+      return {
+        title: document.title,
+        url: window.location.href,
+        viewport: {
+          width: window.innerWidth,
+          height: window.innerHeight,
+          devicePixelRatio: window.devicePixelRatio,
+        },
+        shell: {
+          runtime: shell?.getAttribute("data-runtime"),
+          state: shell?.getAttribute("data-state"),
+        },
+        save: save
+          ? {
+              present: true,
+              visible: getComputedStyle(save).display !== "none",
+              disabled: save.disabled,
+            }
+          : { present: false },
+        validate: validate
+          ? {
+              present: true,
+              visible: getComputedStyle(validate).display !== "none",
+              disabled: validate.disabled,
+            }
+          : { present: false },
+        editor: editor
+          ? {
+              present: true,
+              length: editor.value.length,
+              hasAcceptanceMarker: editor.value.includes(
+                "<!-- windows native acceptance -->",
+              ),
+            }
+          : { present: false },
+        activeElement: {
+          tagName: document.activeElement?.tagName,
+          ariaLabel: document.activeElement?.getAttribute("aria-label"),
+        },
+      };
+    });
+    await writeFile(
+      path.join(evidenceDirectory, "windows-native-failure.html"),
+      await page.content(),
+      "utf8",
+    );
+    await page.screenshot({
+      path: path.join(evidenceDirectory, "windows-native-failure.png"),
+      fullPage: true,
+    });
+  } catch (captureError) {
+    failure.captureError =
+      captureError instanceof Error
+        ? captureError.stack ?? captureError.message
+        : String(captureError);
+  }
+
+  await writeFile(failurePath, JSON.stringify(failure, null, 2), "utf8");
+}
+
 async function main(): Promise<void> {
   await mkdir(evidenceDirectory, { recursive: true });
   const app = spawn(appBinaryPath, [], {
@@ -176,6 +268,7 @@ async function main(): Promise<void> {
   app.stdin?.end();
   const processOutput = captureProcessOutput(app);
   let browser: Browser | undefined;
+  let page: Page | undefined;
 
   try {
     const endpoint = await waitForCdp(app);
@@ -185,7 +278,7 @@ async function main(): Promise<void> {
       "utf8",
     );
     browser = await chromium.connectOverCDP(cdpEndpoint);
-    const page = await waitForWorkbenchPage(browser);
+    page = await waitForWorkbenchPage(browser);
     const tauriInternals = await page.evaluate(() => {
       const candidate = window as unknown as {
         __TAURI_INTERNALS__?: unknown;
@@ -219,19 +312,39 @@ async function main(): Promise<void> {
     await editor.press("Control+End");
     await editor.press("Enter");
     await editor.type(marker);
+    await page.waitForFunction(
+      () => document.querySelector(".app-shell")?.getAttribute("data-state") === "dirty",
+    );
 
     const save = page.getByRole("button", { name: "保存文稿" });
-    await save.waitFor({ state: "visible" });
-    assert.equal(await save.isEnabled(), true);
-    await save.click();
+    assert.equal(await save.count(), 1);
+    const saveVisible = await save.isVisible();
+    if (saveVisible) {
+      assert.equal(await save.isEnabled(), true);
+      await save.click();
+    } else {
+      await page.keyboard.press("Control+s");
+    }
     await waitForSavedSource();
+    await page.waitForFunction(
+      () =>
+        document.querySelector(".app-shell")?.getAttribute("data-state") ===
+        "populated",
+    );
 
     const validate = page.getByRole("button", { name: "验证论文" });
-    assert.equal(await validate.isEnabled(), true);
-    await validate.click();
-    await page.waitForFunction(
-      () => document.querySelector(".app-shell")?.getAttribute("data-state") === "populated",
-    );
+    assert.equal(await validate.count(), 1);
+    const validateVisible = await validate.isVisible();
+    if (validateVisible) {
+      assert.equal(await validate.isEnabled(), true);
+      await validate.click();
+      await page.waitForTimeout(50);
+      await page.waitForFunction(
+        () =>
+          document.querySelector(".app-shell")?.getAttribute("data-state") ===
+          "populated",
+      );
+    }
 
     const build = page.getByRole("button", { name: "构建 DOCX" });
     assert.equal(await build.isEnabled(), true);
@@ -292,6 +405,10 @@ async function main(): Promise<void> {
           cdpEndpoint,
           tauriInternals,
           externalSocketsBlocked: true,
+          interaction: {
+            save: saveVisible ? "button" : "keyboard-shortcut",
+            validate: validateVisible ? "button" : "save-refresh",
+          },
           sensory,
           screenshotPath,
           completedAt: new Date().toISOString(),
@@ -301,6 +418,9 @@ async function main(): Promise<void> {
       ),
       "utf8",
     );
+  } catch (error) {
+    await captureFailureEvidence(page, error);
+    throw error;
   } finally {
     await writeFile(
       path.join(evidenceDirectory, "windows-app-output.json"),
