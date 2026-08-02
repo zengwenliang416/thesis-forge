@@ -5,6 +5,7 @@ import json
 import os
 import tomllib
 from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
 import yaml
@@ -123,6 +124,43 @@ def test_desktop_verifier_rejects_cross_host_targets_and_sidecar_pollution(
         verifier.validate_sidecar_artifact(sidecar)
 
 
+def test_desktop_verifier_forces_utf8_for_frozen_sidecar(
+    monkeypatch,
+) -> None:
+    verifier = _load_module(VERIFY_DESKTOP, "verify_desktop_distribution_environment")
+    monkeypatch.setenv("PYTHONIOENCODING", "cp1252")
+    monkeypatch.setenv("PYTHONUTF8", "0")
+
+    environment = verifier._offline_environment()
+
+    assert environment["PYTHONIOENCODING"] == "utf-8"
+    assert environment["PYTHONUTF8"] == "1"
+
+
+def test_desktop_verifier_decodes_sidecar_output_as_utf8(
+    monkeypatch,
+    tmp_path: Path,
+) -> None:
+    verifier = _load_module(VERIFY_DESKTOP, "verify_desktop_distribution_subprocess")
+    observed: dict[str, object] = {}
+
+    def fake_run(command, **kwargs):
+        observed.update(kwargs)
+        return SimpleNamespace(returncode=0, stdout='{"ok": true}\n', stderr="")
+
+    monkeypatch.setattr(verifier.subprocess, "run", fake_run)
+
+    verifier._run_sidecar(
+        tmp_path / "thesisforge-sidecar.exe",
+        {"operation": "inspect"},
+        stream=False,
+        cwd=tmp_path,
+        environment={},
+    )
+
+    assert observed["encoding"] == "utf-8"
+
+
 def test_windows_bundle_verifier_finds_the_managed_sidecar_in_release_directory(
     tmp_path: Path,
 ) -> None:
@@ -155,7 +193,7 @@ def test_distribution_workflow_builds_native_macos_and_windows_artifacts() -> No
         )
         for item in matrix
     } == {
-        ("macos-14", "aarch64-apple-darwin", "app,dmg"),
+        ("macos-14", "aarch64-apple-darwin", "app"),
         ("windows-2025", "x86_64-pc-windows-msvc", "msi,nsis"),
     }
     commands = "\n".join(
@@ -169,6 +207,16 @@ def test_distribution_workflow_builds_native_macos_and_windows_artifacts() -> No
     assert "dot_clean -m" in commands
     assert "dist/web" in commands
     assert "dist/python" in commands
+    dmg_step = next(
+        step
+        for step in desktop["steps"]
+        if step.get("name") == "Build macOS DMG with diagnostics"
+    )
+    assert "--bundles dmg" in dmg_step["run"]
+    assert "--ci" in dmg_step["run"]
+    assert "-vv" in dmg_step["run"]
+    assert "for attempt in 1 2 3" in dmg_step["run"]
+    assert 'rm -rf "$dmg_bundle_dir"' in dmg_step["run"]
 
 
 def test_windows_workflow_installs_and_drives_the_native_tauri_package() -> None:

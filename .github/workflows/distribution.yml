@@ -7,11 +7,13 @@ on:
       - ".github/workflows/distribution.yml"
       - "frontend/**"
       - "scripts/build_sidecar.py"
+      - "scripts/verify_distribution.py"
       - "scripts/verify_desktop_distribution.py"
       - "src/**"
       - "src-tauri/**"
       - "templates/**"
       - "tests/test_desktop_distribution.py"
+      - "tests/test_distribution.py"
   push:
     tags:
       - "v*"
@@ -25,12 +27,15 @@ jobs:
           - os: macos-14
             target: aarch64-apple-darwin
             platform: macos
-            bundles: app,dmg
+            bundles: app
           - os: windows-2025
             target: x86_64-pc-windows-msvc
             platform: windows
             bundles: msi,nsis
     runs-on: ${{ matrix.os }}
+    env:
+      PYTHONIOENCODING: utf-8
+      PYTHONUTF8: "1"
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -60,7 +65,28 @@ jobs:
       - name: Verify frozen sidecar offline
         run: python scripts/verify_desktop_distribution.py --target-triple ${{ matrix.target }} --sidecar-only
       - name: Build native Tauri bundles
-        run: cargo tauri build --config src-tauri/tauri.release.conf.json --target ${{ matrix.target }} --bundles ${{ matrix.bundles }}
+        run: cargo tauri build --config src-tauri/tauri.release.conf.json --target ${{ matrix.target }} --bundles ${{ matrix.bundles }} --ci -vv
+      - name: Build macOS DMG with diagnostics
+        if: runner.os == 'macOS'
+        shell: bash
+        run: |
+          set -euo pipefail
+          dmg_bundle_dir="src-tauri/target/${{ matrix.target }}/release/bundle/dmg"
+          for attempt in 1 2 3; do
+            rm -rf "$dmg_bundle_dir"
+            if cargo tauri build \
+              --config src-tauri/tauri.release.conf.json \
+              --target ${{ matrix.target }} \
+              --bundles dmg \
+              --ci \
+              -vv; then
+              exit 0
+            fi
+            echo "::warning::macOS DMG build attempt ${attempt} failed"
+            hdiutil info || true
+            sleep "$((attempt * 5))"
+          done
+          exit 1
       - name: Remove macOS metadata sidecars
         if: runner.os == 'macOS'
         run: dot_clean -m src-tauri/target/${{ matrix.target }}/release/bundle

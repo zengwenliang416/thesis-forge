@@ -88,6 +88,8 @@ def _offline_environment() -> dict[str, str]:
         }:
             environment.pop(key, None)
     environment.pop("PYTHONPATH", None)
+    environment["PYTHONIOENCODING"] = "utf-8"
+    environment["PYTHONUTF8"] = "1"
     environment["THESISFORGE_BLOCK_NETWORK"] = "1"
     return environment
 
@@ -134,6 +136,7 @@ def _run_sidecar(
         env=environment,
         input=f"{json.dumps(request, ensure_ascii=False)}\n",
         text=True,
+        encoding="utf-8",
         capture_output=True,
         check=False,
     )

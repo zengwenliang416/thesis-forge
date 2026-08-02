@@ -128,6 +128,7 @@ def _run(
         cwd=cwd,
         env=env,
         text=True,
+        encoding="utf-8",
         capture_output=True,
         check=False,
     )
@@ -135,6 +136,22 @@ def _run(
         detail = "\n".join(part for part in (result.stdout, result.stderr) if part)
         raise RuntimeError(f"Command failed ({result.returncode}): {' '.join(command)}\n{detail}")
     return result
+
+
+def _verification_environment() -> dict[str, str]:
+    environment = os.environ.copy()
+    for key in tuple(environment):
+        upper = key.upper()
+        if (
+            upper.endswith("_API_KEY")
+            or upper in {"HTTP_PROXY", "HTTPS_PROXY", "ALL_PROXY", "NO_PROXY"}
+        ):
+            environment.pop(key, None)
+    environment["PIP_DISABLE_PIP_VERSION_CHECK"] = "1"
+    environment["PYTHONIOENCODING"] = "utf-8"
+    environment["PYTHONUTF8"] = "1"
+    environment.pop("PYTHONPATH", None)
+    return environment
 
 
 def _normalize_distribution_name(name: str) -> str:
@@ -233,16 +250,7 @@ def _verify_installed_wheel(wheel: Path) -> dict[str, object]:
         cli = scripts_dir / f"thesisforge{suffix}"
         dependencies = _copy_runtime_dependencies(installed_site)
 
-        base_env = os.environ.copy()
-        for key in tuple(base_env):
-            upper = key.upper()
-            if (
-                upper.endswith("_API_KEY")
-                or upper in {"HTTP_PROXY", "HTTPS_PROXY", "ALL_PROXY", "NO_PROXY"}
-            ):
-                base_env.pop(key, None)
-        base_env["PIP_DISABLE_PIP_VERSION_CHECK"] = "1"
-        base_env.pop("PYTHONPATH", None)
+        base_env = _verification_environment()
 
         _run(
             [
