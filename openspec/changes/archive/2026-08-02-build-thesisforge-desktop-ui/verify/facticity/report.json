@@ -23,6 +23,14 @@
   ],
   "findings": [],
   "required_fixes": [],
+  "pre_archive_refresh": {
+    "verified_at": "2026-08-02",
+    "commits": [
+      "5dc5488",
+      "875f5eb",
+      "0ac0a0a"
+    ]
+  },
   "residual_risk": [
     "Windows native sensory evidence is ARM64-specific; x86_64 remains configuration/static coverage.",
     "The project is not signed, notarized, or licensed for public redistribution."

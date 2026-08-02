@@ -22,6 +22,14 @@
   ],
   "findings": [],
   "required_fixes": [],
+  "pre_archive_refresh": {
+    "verified_at": "2026-08-02",
+    "commits": [
+      "5dc5488",
+      "875f5eb",
+      "0ac0a0a"
+    ]
+  },
   "residual_risk": [
     "No line-coverage percentage is collected.",
     "The real HTTP browser suite has one complete happy path; deterministic unit and mock-state suites cover the broader failure matrix."

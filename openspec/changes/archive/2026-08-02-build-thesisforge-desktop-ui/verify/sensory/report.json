@@ -26,6 +26,14 @@
     "Keyboard save remains available when responsive CSS hides the secondary toolbar action."
   ],
   "required_fixes": [],
+  "pre_archive_refresh": {
+    "verified_at": "2026-08-02",
+    "commits": [
+      "5dc5488",
+      "875f5eb",
+      "0ac0a0a"
+    ]
+  },
   "residual_risk": [
     "This is not a full WCAG audit or screen-reader certification.",
     "Windows visual evidence is ARM64-only, and installers are unsigned."

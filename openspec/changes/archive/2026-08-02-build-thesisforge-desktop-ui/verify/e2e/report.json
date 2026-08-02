@@ -24,6 +24,14 @@
   ],
   "findings": [],
   "required_fixes": [],
+  "pre_archive_refresh": {
+    "verified_at": "2026-08-02",
+    "commits": [
+      "5dc5488",
+      "875f5eb",
+      "0ac0a0a"
+    ]
+  },
   "residual_risk": [
     "Windows native execution is ARM64-specific; x86_64 is statically configured but not independently run locally.",
     "Production Web hosting/authentication is out of scope; the verified HTTP host is an explicit local adapter."

@@ -24,6 +24,14 @@
   ],
   "findings": [],
   "required_fixes": [],
+  "pre_archive_refresh": {
+    "verified_at": "2026-08-02",
+    "commits": [
+      "5dc5488",
+      "875f5eb",
+      "0ac0a0a"
+    ]
+  },
   "residual_risk": [
     "Static checks do not replace runtime interaction or rendered visual review.",
     "The GitHub workflow file is validated structurally but remote runner billing is outside source control."

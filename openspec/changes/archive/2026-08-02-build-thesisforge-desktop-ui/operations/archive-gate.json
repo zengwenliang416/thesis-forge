@@ -1,34 +1,12 @@
 {
-  "schema_version": 1,
-  "generated_at": "2026-08-02T18:10:14.713Z",
-  "change_id": "build-thesisforge-desktop-ui",
+  "schema": "specnav.ops.archiveGate.v1",
+  "generated_at": "2026-08-02T18:15:56.032Z",
   "active_change": "build-thesisforge-desktop-ui",
+  "release_target": "local-only",
+  "lane": "standard",
   "verdict": "green",
-  "domains": {
-    "facticity": "green",
-    "static": "green",
-    "unit": "green",
-    "redteam": "green",
-    "e2e": "green",
-    "sensory": "green"
-  },
-  "blocking_findings": [],
-  "residual_risk": [],
-  "evidence_receipt": "verify/receipt.json",
-  "behavior_eval_report": "verify/behavior-evals/report.json",
-  "html_report": "verify/aggregate-report.html",
-  "review_style": "claude-warm-editorial",
-  "stale": false,
   "blockers": [],
   "warnings": [
-    "development:codegraph:claim-unverified:verification:task-001-archive-safe-prototype-baseline",
-    "development:codegraph:claim-unverified:verification:task-002-headless-workspace-state-controller",
-    "development:codegraph:claim-unverified:verification:task-003-explicit-source-open-atomic-save",
-    "development:codegraph:claim-unverified:verification:task-004-optional-pyside6-workbench-shell",
-    "development:codegraph:claim-unverified:verification:task-005-template-selection-structured-diagnostics",
-    "development:codegraph:claim-unverified:verification:task-006-outline-renderer-neutral-preview",
-    "development:codegraph:claim-unverified:verification:task-007-safe-background-build-cancellation",
-    "development:codegraph:claim-unverified:verification:task-008-cross-platform-distribution-acceptance",
     "codegraph:claim-unverified:verification:task-001-archive-safe-prototype-baseline",
     "codegraph:claim-unverified:verification:task-002-headless-workspace-state-controller",
     "codegraph:claim-unverified:verification:task-003-explicit-source-open-atomic-save",
@@ -43,22 +21,22 @@
     "status": {
       "schema": "specnav.codegraph.status.v1",
       "ok": true,
-      "generated_at": "2026-08-02T18:10:14.710Z",
+      "generated_at": "2026-08-02T18:15:56.029Z",
       "project_root": "/Volumes/zwl/open_sources/thesis-forge",
       "active_change": "build-thesisforge-desktop-ui",
       "policy": {
         "enabled": true,
         "profile": "active_dev",
         "mode": "advisory",
-        "stage": "verification",
+        "stage": "operations",
         "required_for_stage": false,
         "disabled_reason": null
       },
       "execution_surface": "cli",
       "decision": {
-        "stage": "verification",
+        "stage": "operations",
         "result": "pass",
-        "reason": "CodeGraph policy satisfied for verification."
+        "reason": "CodeGraph policy satisfied for operations."
       },
       "cli": {
         "available": true,
@@ -358,7 +336,7 @@
     },
     "claims_report": {
       "schema": "specnav.codegraph.claims_report.v1",
-      "generated_at": "2026-08-02T18:10:14.711Z",
+      "generated_at": "2026-08-02T18:15:56.030Z",
       "active_change": "build-thesisforge-desktop-ui",
       "claims_file": "openspec/changes/build-thesisforge-desktop-ui/codegraph/claims-map.json",
       "evidence_index": "openspec/changes/build-thesisforge-desktop-ui/codegraph/evidence-index.json",
@@ -403,7 +381,7 @@
     },
     "decision": {
       "schema": "specnav.codegraph.decision.v1",
-      "stage": "verification",
+      "stage": "operations",
       "profile": "active_dev",
       "effective_mode": "advisory",
       "required_for_stage": false,
@@ -411,20 +389,20 @@
       "result": "pass",
       "blockers": [],
       "warnings": [],
-      "explanation": "CodeGraph policy satisfied for verification."
+      "explanation": "CodeGraph policy satisfied for operations."
     },
     "guard_report": {
       "schema": "specnav.codegraph.guard_report.v1",
-      "generated_at": "2026-08-02T18:10:14.711Z",
+      "generated_at": "2026-08-02T18:15:56.030Z",
       "active_change": "build-thesisforge-desktop-ui",
-      "stage": "verification",
+      "stage": "operations",
       "ok": true,
       "status": {
         "policy": {
           "enabled": true,
           "profile": "active_dev",
           "mode": "advisory",
-          "stage": "verification",
+          "stage": "operations",
           "required_for_stage": false,
           "disabled_reason": null
         },
@@ -464,7 +442,7 @@
       },
       "decision": {
         "schema": "specnav.codegraph.decision.v1",
-        "stage": "verification",
+        "stage": "operations",
         "profile": "active_dev",
         "effective_mode": "advisory",
         "required_for_stage": false,
@@ -472,7 +450,7 @@
         "result": "pass",
         "blockers": [],
         "warnings": [],
-        "explanation": "CodeGraph policy satisfied for verification."
+        "explanation": "CodeGraph policy satisfied for operations."
       },
       "evidence_index": {
         "schema": "specnav.codegraph.evidence_index.v1",
@@ -689,7 +667,7 @@
       },
       "claims_report": {
         "schema": "specnav.codegraph.claims_report.v1",
-        "generated_at": "2026-08-02T18:10:14.711Z",
+        "generated_at": "2026-08-02T18:15:56.030Z",
         "active_change": "build-thesisforge-desktop-ui",
         "claims_file": "openspec/changes/build-thesisforge-desktop-ui/codegraph/claims-map.json",
         "evidence_index": "openspec/changes/build-thesisforge-desktop-ui/codegraph/evidence-index.json",
@@ -767,213 +745,5 @@
       "codegraph:claim-unverified:verification:task-008-cross-platform-distribution-acceptance"
     ]
   },
-  "lane": "standard",
-  "required_domains": [
-    "facticity",
-    "static",
-    "unit",
-    "redteam",
-    "e2e",
-    "sensory"
-  ],
-  "artifacts": [
-    {
-      "name": "acceptance.json",
-      "path": "openspec/changes/build-thesisforge-desktop-ui/verify/acceptance.json",
-      "ok": true,
-      "blockers": []
-    },
-    {
-      "name": "plan.md",
-      "path": "openspec/changes/build-thesisforge-desktop-ui/verify/plan.md",
-      "ok": true,
-      "blockers": []
-    },
-    {
-      "name": "plan.json",
-      "path": "openspec/changes/build-thesisforge-desktop-ui/verify/plan.json",
-      "ok": true,
-      "blockers": []
-    },
-    {
-      "name": "evidence-index.jsonl",
-      "path": "openspec/changes/build-thesisforge-desktop-ui/verify/evidence-index.jsonl",
-      "ok": true,
-      "blockers": []
-    },
-    {
-      "name": "traceability-matrix.json",
-      "path": "openspec/changes/build-thesisforge-desktop-ui/verify/traceability-matrix.json",
-      "ok": true,
-      "blockers": []
-    },
-    {
-      "name": "diff-traceability",
-      "path": "openspec/changes/build-thesisforge-desktop-ui/verify/diff-traceability",
-      "ok": true,
-      "blockers": []
-    },
-    {
-      "name": "user-test-cases.md",
-      "path": "openspec/changes/build-thesisforge-desktop-ui/verify/user-test-cases.md",
-      "ok": true,
-      "blockers": []
-    },
-    {
-      "name": "user-test-cases.json",
-      "path": "openspec/changes/build-thesisforge-desktop-ui/verify/user-test-cases.json",
-      "ok": true,
-      "blockers": []
-    },
-    {
-      "name": "user-test-case-signoff.json",
-      "path": "openspec/changes/build-thesisforge-desktop-ui/verify/user-test-case-signoff.json",
-      "ok": true,
-      "blockers": []
-    },
-    {
-      "name": "domain-case-matrix.json",
-      "path": "openspec/changes/build-thesisforge-desktop-ui/verify/domain-case-matrix.json",
-      "ok": true,
-      "blockers": []
-    },
-    {
-      "name": "runtime-evidence.json",
-      "path": "openspec/changes/build-thesisforge-desktop-ui/verify/runtime-evidence.json",
-      "ok": true,
-      "blockers": []
-    },
-    {
-      "name": "blocker-classification.jsonl",
-      "path": "openspec/changes/build-thesisforge-desktop-ui/verify/blocker-classification.jsonl",
-      "ok": true,
-      "blockers": []
-    },
-    {
-      "name": "receipt.md",
-      "path": "openspec/changes/build-thesisforge-desktop-ui/verify/receipt.md",
-      "ok": true,
-      "blockers": []
-    },
-    {
-      "name": "receipt.json",
-      "path": "openspec/changes/build-thesisforge-desktop-ui/verify/receipt.json",
-      "ok": true,
-      "blockers": []
-    },
-    {
-      "name": "behavior-evals/scenarios.json",
-      "path": "openspec/changes/build-thesisforge-desktop-ui/verify/behavior-evals/scenarios.json",
-      "ok": true,
-      "blockers": []
-    },
-    {
-      "name": "behavior-evals/report.json",
-      "path": "openspec/changes/build-thesisforge-desktop-ui/verify/behavior-evals/report.json",
-      "ok": true,
-      "blockers": []
-    },
-    {
-      "name": "behavior-evals/transcripts",
-      "path": "openspec/changes/build-thesisforge-desktop-ui/verify/behavior-evals/transcripts",
-      "ok": true,
-      "blockers": []
-    },
-    {
-      "name": "behavior-evals/report.md",
-      "path": "openspec/changes/build-thesisforge-desktop-ui/verify/behavior-evals/report.md",
-      "ok": true,
-      "blockers": []
-    },
-    {
-      "name": "facticity/report.md",
-      "path": "openspec/changes/build-thesisforge-desktop-ui/verify/facticity/report.md",
-      "ok": true,
-      "blockers": []
-    },
-    {
-      "name": "facticity/report.json",
-      "path": "openspec/changes/build-thesisforge-desktop-ui/verify/facticity/report.json",
-      "ok": true,
-      "blockers": []
-    },
-    {
-      "name": "static/report.md",
-      "path": "openspec/changes/build-thesisforge-desktop-ui/verify/static/report.md",
-      "ok": true,
-      "blockers": []
-    },
-    {
-      "name": "static/report.json",
-      "path": "openspec/changes/build-thesisforge-desktop-ui/verify/static/report.json",
-      "ok": true,
-      "blockers": []
-    },
-    {
-      "name": "unit/report.md",
-      "path": "openspec/changes/build-thesisforge-desktop-ui/verify/unit/report.md",
-      "ok": true,
-      "blockers": []
-    },
-    {
-      "name": "unit/report.json",
-      "path": "openspec/changes/build-thesisforge-desktop-ui/verify/unit/report.json",
-      "ok": true,
-      "blockers": []
-    },
-    {
-      "name": "redteam/report.md",
-      "path": "openspec/changes/build-thesisforge-desktop-ui/verify/redteam/report.md",
-      "ok": true,
-      "blockers": []
-    },
-    {
-      "name": "redteam/report.json",
-      "path": "openspec/changes/build-thesisforge-desktop-ui/verify/redteam/report.json",
-      "ok": true,
-      "blockers": []
-    },
-    {
-      "name": "e2e/report.md",
-      "path": "openspec/changes/build-thesisforge-desktop-ui/verify/e2e/report.md",
-      "ok": true,
-      "blockers": []
-    },
-    {
-      "name": "e2e/report.json",
-      "path": "openspec/changes/build-thesisforge-desktop-ui/verify/e2e/report.json",
-      "ok": true,
-      "blockers": []
-    },
-    {
-      "name": "sensory/report.md",
-      "path": "openspec/changes/build-thesisforge-desktop-ui/verify/sensory/report.md",
-      "ok": true,
-      "blockers": []
-    },
-    {
-      "name": "sensory/report.json",
-      "path": "openspec/changes/build-thesisforge-desktop-ui/verify/sensory/report.json",
-      "ok": true,
-      "blockers": []
-    },
-    {
-      "name": "unit/test-quality-rubric.json",
-      "path": "openspec/changes/build-thesisforge-desktop-ui/verify/unit/test-quality-rubric.json",
-      "ok": true,
-      "blockers": []
-    },
-    {
-      "name": "sensory/reviewer-independence.md",
-      "path": "openspec/changes/build-thesisforge-desktop-ui/verify/sensory/reviewer-independence.md",
-      "ok": true,
-      "blockers": []
-    },
-    {
-      "name": "root-cause-checks.jsonl",
-      "path": "openspec/changes/build-thesisforge-desktop-ui/verify/root-cause-checks.jsonl",
-      "ok": true,
-      "blockers": []
-    }
-  ]
+  "operations_ready": true
 }

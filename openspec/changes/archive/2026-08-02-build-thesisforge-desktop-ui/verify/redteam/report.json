@@ -21,6 +21,14 @@
   ],
   "findings": [],
   "required_fixes": [],
+  "pre_archive_refresh": {
+    "verified_at": "2026-08-02",
+    "commits": [
+      "5dc5488",
+      "875f5eb",
+      "0ac0a0a"
+    ]
+  },
   "residual_risk": [
     "Targeted adversarial tests are not continuous coverage-guided fuzzing.",
     "The local-first application has no authentication, tenant, cloud database, or payment surface to penetration-test."
