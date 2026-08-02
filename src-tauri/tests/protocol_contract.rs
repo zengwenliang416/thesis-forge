@@ -1,6 +1,7 @@
 use serde_json::json;
 use thesisforge_desktop::{
-    PROTOCOL_VERSION, open_source_path, validate_request, windows_acceptance_browser_args,
+    PROTOCOL_VERSION, acceptance_source_override, open_source_path, validate_request,
+    windows_acceptance_browser_args,
 };
 
 #[test]
@@ -64,6 +65,26 @@ fn rejects_non_markdown_sources_at_the_native_boundary() {
         open_source_path(&source).unwrap_err(),
         "source must be a Markdown file (.md or .markdown)"
     );
+}
+
+#[test]
+fn opens_the_explicit_native_acceptance_source_without_a_system_picker() {
+    let directory = tempfile::tempdir().unwrap();
+    let source = directory.path().join("thesis.md");
+    std::fs::write(&source, "---\nthesis:\n  title: test\n---\n").unwrap();
+
+    let opened = acceptance_source_override(Some(source.as_os_str()))
+        .unwrap()
+        .expect("acceptance source");
+
+    assert_eq!(opened["source"]["kind"], "desktop");
+    assert_eq!(opened["source"]["fileName"], "thesis.md");
+    assert!(opened["text"].as_str().unwrap().contains("thesis:"));
+}
+
+#[test]
+fn keeps_the_native_acceptance_source_seam_disabled_by_default() {
+    assert_eq!(acceptance_source_override(None).unwrap(), None);
 }
 
 #[test]

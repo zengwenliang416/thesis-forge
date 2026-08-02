@@ -1,6 +1,7 @@
 use serde_json::Value;
 use std::collections::HashMap;
 use std::env;
+use std::ffi::OsStr;
 use std::io::{BufRead, BufReader, Read, Write};
 use std::path::{Path, PathBuf};
 use std::process::{Command, Stdio};
@@ -15,6 +16,7 @@ use tauri_plugin_shell::{
 
 pub const PROTOCOL_VERSION: &str = "thesisforge.workbench.v1";
 const WINDOWS_ACCEPTANCE_CDP_PORT_ENV: &str = "THESISFORGE_WINDOWS_CDP_PORT";
+const WINDOWS_ACCEPTANCE_SOURCE_ENV: &str = "THESISFORGE_WINDOWS_ACCEPTANCE_SOURCE";
 
 pub fn windows_acceptance_browser_args(raw_port: Option<&str>) -> Result<Option<String>, String> {
     let Some(raw_port) = raw_port.map(str::trim).filter(|value| !value.is_empty()) else {
@@ -81,6 +83,13 @@ pub fn open_source_path(path: &Path) -> Result<Value, String> {
         },
         "text": text
     }))
+}
+
+pub fn acceptance_source_override(raw_path: Option<&OsStr>) -> Result<Option<Value>, String> {
+    let Some(raw_path) = raw_path.filter(|value| !value.is_empty()) else {
+        return Ok(None);
+    };
+    open_source_path(Path::new(raw_path)).map(Some)
 }
 
 fn sidecar_command(stream: bool) -> (String, Vec<String>) {
@@ -377,6 +386,11 @@ async fn cancel_build(
 
 #[tauri::command]
 async fn pick_source() -> Result<Option<Value>, String> {
+    if let Some(opened) =
+        acceptance_source_override(env::var_os(WINDOWS_ACCEPTANCE_SOURCE_ENV).as_deref())?
+    {
+        return Ok(Some(opened));
+    }
     let handle = rfd::AsyncFileDialog::new()
         .set_title("选择 Markdown 文稿（.md 或 .markdown）")
         .pick_file()

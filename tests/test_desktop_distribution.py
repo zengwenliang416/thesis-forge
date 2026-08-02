@@ -290,12 +290,13 @@ def test_windows_tauri_acceptance_uses_webview2_cdp_and_real_commands() -> None:
 
     assert "WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS" not in acceptance
     assert "THESISFORGE_WINDOWS_CDP_PORT" in acceptance
+    assert "THESISFORGE_WINDOWS_ACCEPTANCE_SOURCE" in acceptance
     assert "chromium.connectOverCDP" in acceptance
     assert "http://127.0.0.1:" in acceptance
     assert "spawn(appBinaryPath" in acceptance
     assert "taskkill.exe" in acceptance
     assert "__TAURI_INTERNALS__" in acceptance
-    assert 'command === "pick_source"' in acceptance
+    assert 'internals.invoke = ' not in acceptance
     assert "打开 Markdown 文稿" in acceptance
     assert "保存文稿" in acceptance
     assert "构建 DOCX" in acceptance

@@ -163,12 +163,12 @@ function captureWindowsProcesses(child: ChildProcess): Record<string, unknown> {
 
 async function main(): Promise<void> {
   await mkdir(evidenceDirectory, { recursive: true });
-  const sourceText = await readFile(sourcePath, "utf8");
   const app = spawn(appBinaryPath, [], {
     env: {
       ...process.env,
       THESISFORGE_BLOCK_NETWORK: "1",
       THESISFORGE_WINDOWS_CDP_PORT: String(cdpPort),
+      THESISFORGE_WINDOWS_ACCEPTANCE_SOURCE: sourcePath,
     },
     stdio: ["pipe", "pipe", "pipe"],
     windowsHide: false,
@@ -193,44 +193,6 @@ async function main(): Promise<void> {
       return typeof candidate.__TAURI_INTERNALS__ === "object";
     });
     assert.equal(tauriInternals, true);
-
-    await page.evaluate<
-      void,
-      { path: string; fileName: string; text: string }
-    >(
-      (fixture: { path: string; fileName: string; text: string }) => {
-        const internals = (
-          window as unknown as {
-            __TAURI_INTERNALS__: {
-              invoke(
-                command: string,
-                args?: Record<string, unknown>,
-                options?: Record<string, unknown>,
-              ): Promise<unknown>;
-            };
-          }
-        ).__TAURI_INTERNALS__;
-        const originalInvoke = internals.invoke.bind(internals);
-        internals.invoke = (command, args, options) => {
-          if (command === "pick_source") {
-            return Promise.resolve({
-              source: {
-                kind: "desktop",
-                path: fixture.path,
-                fileName: fixture.fileName,
-              },
-              text: fixture.text,
-            });
-          }
-          return originalInvoke(command, args, options);
-        };
-      },
-      {
-        path: sourcePath,
-        fileName: path.basename(sourcePath),
-        text: sourceText,
-      },
-    );
 
     const shell = page.locator(".app-shell");
     await shell.waitFor({ state: "visible" });
