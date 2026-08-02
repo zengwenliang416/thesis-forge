@@ -21,6 +21,7 @@ WINDOWS_TAURI_ACCEPTANCE = (
 )
 FRONTEND_PACKAGE = ROOT / "frontend" / "package.json"
 WINDOWS_ICON = ROOT / "src-tauri" / "icons" / "icon.ico"
+TAURI_LIB = ROOT / "src-tauri" / "src" / "lib.rs"
 
 
 def _load_module(path: Path, name: str):
@@ -287,7 +288,7 @@ def test_windows_workflow_installs_and_drives_the_native_tauri_package() -> None
 def test_windows_tauri_acceptance_uses_webview2_cdp_and_real_commands() -> None:
     acceptance = WINDOWS_TAURI_ACCEPTANCE.read_text(encoding="utf-8")
 
-    assert "WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS" in acceptance
+    assert "WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS" not in acceptance
     assert "THESISFORGE_WINDOWS_CDP_PORT" in acceptance
     assert "chromium.connectOverCDP" in acceptance
     assert "http://127.0.0.1:" in acceptance
@@ -303,6 +304,28 @@ def test_windows_tauri_acceptance_uses_webview2_cdp_and_real_commands() -> None:
     assert "page.screenshot" in acceptance
     assert "prefers-reduced-motion" in acceptance
     assert "THESISFORGE_WINDOWS_EVIDENCE" in acceptance
+
+
+def test_tauri_window_owner_enables_cdp_only_for_native_acceptance() -> None:
+    config = json.loads(
+        (ROOT / "src-tauri" / "tauri.conf.json").read_text(encoding="utf-8")
+    )
+    tauri_lib = TAURI_LIB.read_text(encoding="utf-8")
+
+    assert config["app"]["windows"][0]["create"] is False
+    assert "WebviewWindowBuilder::from_config" in tauri_lib
+    assert "windows_acceptance_browser_args" in tauri_lib
+    assert ".additional_browser_args(&browser_args)" in tauri_lib
+    assert "THESISFORGE_WINDOWS_CDP_PORT" in tauri_lib
+
+
+def test_windows_tauri_acceptance_captures_processes_before_termination() -> None:
+    acceptance = WINDOWS_TAURI_ACCEPTANCE.read_text(encoding="utf-8")
+
+    snapshot = 'path.join(evidenceDirectory, "windows-processes-before-stop.json")'
+    assert snapshot in acceptance
+    assert "Get-CimInstance Win32_Process" in acceptance
+    assert acceptance.index(snapshot) < acceptance.index("stopInstalledApp(app)")
 
 
 def test_windows_tauri_acceptance_uses_existing_playwright_toolchain() -> None:

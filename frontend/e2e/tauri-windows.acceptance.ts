@@ -116,23 +116,59 @@ function stopInstalledApp(child: ChildProcess): void {
   });
 }
 
+function captureWindowsProcesses(child: ChildProcess): Record<string, unknown> {
+  const rootPid = child.pid ?? -1;
+  const command = [
+    `$rootPid = ${rootPid}`,
+    "$processes = @(Get-CimInstance Win32_Process | " +
+      "Where-Object { " +
+      "$_.ProcessId -eq $rootPid -or " +
+      "$_.ParentProcessId -eq $rootPid -or " +
+      "$_.Name -match 'thesisforge|msedgewebview2' " +
+      "} | Select-Object Name, ProcessId, ParentProcessId, ExecutablePath, " +
+      "CommandLine, CreationDate)",
+    "$processes | ConvertTo-Json -Depth 4 -Compress",
+  ].join("; ");
+  const result = spawnSync(
+    "powershell.exe",
+    ["-NoProfile", "-NonInteractive", "-Command", command],
+    {
+      encoding: "utf8",
+      windowsHide: true,
+    },
+  );
+  let processes: unknown[] = [];
+  let parseError: string | undefined;
+  const rawOutput = result.stdout?.trim();
+  if (rawOutput) {
+    try {
+      const parsed = JSON.parse(rawOutput) as unknown;
+      processes = Array.isArray(parsed) ? parsed : [parsed];
+    } catch (error) {
+      parseError = error instanceof Error ? error.message : String(error);
+    }
+  }
+  return {
+    capturedAt: new Date().toISOString(),
+    rootPid,
+    childExitCode: child.exitCode,
+    powershellStatus: result.status,
+    powershellError: result.error?.message,
+    stderr: result.stderr?.trim(),
+    parseError,
+    rawOutput: parseError ? rawOutput : undefined,
+    processes,
+  };
+}
+
 async function main(): Promise<void> {
   await mkdir(evidenceDirectory, { recursive: true });
   const sourceText = await readFile(sourcePath, "utf8");
-  const existingWebViewArgs =
-    process.env.WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS?.trim();
-  const webViewArgs = [
-    existingWebViewArgs,
-    `--remote-debugging-port=${cdpPort}`,
-    "--remote-allow-origins=*",
-  ]
-    .filter(Boolean)
-    .join(" ");
   const app = spawn(appBinaryPath, [], {
     env: {
       ...process.env,
       THESISFORGE_BLOCK_NETWORK: "1",
-      WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS: webViewArgs,
+      THESISFORGE_WINDOWS_CDP_PORT: String(cdpPort),
     },
     stdio: ["pipe", "pipe", "pipe"],
     windowsHide: false,
@@ -307,6 +343,11 @@ async function main(): Promise<void> {
     await writeFile(
       path.join(evidenceDirectory, "windows-app-output.json"),
       JSON.stringify(processOutput, null, 2),
+      "utf8",
+    );
+    await writeFile(
+      path.join(evidenceDirectory, "windows-processes-before-stop.json"),
+      JSON.stringify(captureWindowsProcesses(app), null, 2),
       "utf8",
     );
     await browser?.close().catch(() => undefined);

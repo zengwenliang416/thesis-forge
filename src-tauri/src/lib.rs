@@ -14,6 +14,26 @@ use tauri_plugin_shell::{
 };
 
 pub const PROTOCOL_VERSION: &str = "thesisforge.workbench.v1";
+const WINDOWS_ACCEPTANCE_CDP_PORT_ENV: &str = "THESISFORGE_WINDOWS_CDP_PORT";
+
+pub fn windows_acceptance_browser_args(raw_port: Option<&str>) -> Result<Option<String>, String> {
+    let Some(raw_port) = raw_port.map(str::trim).filter(|value| !value.is_empty()) else {
+        return Ok(None);
+    };
+    let port = raw_port
+        .parse::<u16>()
+        .ok()
+        .filter(|port| *port >= 1024)
+        .ok_or_else(|| {
+            format!("{WINDOWS_ACCEPTANCE_CDP_PORT_ENV} must be an integer from 1024 to 65535")
+        })?;
+    Ok(Some(format!(
+        "--disable-features=msWebOOUI,msPdfOOUI,msSmartScreenProtection \
+         --remote-debugging-address=127.0.0.1 \
+         --remote-debugging-port={port} \
+         --remote-allow-origins=*"
+    )))
+}
 
 fn is_markdown_source(path: &Path) -> bool {
     path.extension()
@@ -369,6 +389,30 @@ pub fn run() {
     tauri::Builder::default()
         .plugin(tauri_plugin_shell::init())
         .manage(BuildCancellationState::default())
+        .setup(|app| {
+            let window_config = app
+                .config()
+                .app
+                .windows
+                .first()
+                .ok_or_else(|| std::io::Error::other("main window config is missing"))?;
+            let window_builder =
+                tauri::WebviewWindowBuilder::from_config(app.handle(), window_config)?;
+            #[cfg(target_os = "windows")]
+            let window_builder = {
+                let browser_args = windows_acceptance_browser_args(
+                    env::var(WINDOWS_ACCEPTANCE_CDP_PORT_ENV).ok().as_deref(),
+                )
+                .map_err(std::io::Error::other)?;
+                if let Some(browser_args) = browser_args {
+                    window_builder.additional_browser_args(&browser_args)
+                } else {
+                    window_builder
+                }
+            };
+            window_builder.build()?;
+            Ok(())
+        })
         .invoke_handler(tauri::generate_handler![
             dispatch_workbench,
             run_build,

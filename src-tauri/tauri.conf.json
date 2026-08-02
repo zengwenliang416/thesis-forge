@@ -12,6 +12,7 @@
   "app": {
     "windows": [
       {
+        "create": false,
         "title": "ThesisForge - 学术论文编译工作台",
         "width": 1440,
         "height": 900,

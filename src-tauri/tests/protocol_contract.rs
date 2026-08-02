@@ -1,5 +1,7 @@
 use serde_json::json;
-use thesisforge_desktop::{PROTOCOL_VERSION, open_source_path, validate_request};
+use thesisforge_desktop::{
+    PROTOCOL_VERSION, open_source_path, validate_request, windows_acceptance_browser_args,
+};
 
 #[test]
 fn accepts_the_shared_versioned_request_envelope() {
@@ -75,5 +77,35 @@ fn rejects_a_request_without_an_object_payload() {
     assert_eq!(
         validate_request(&request).unwrap_err(),
         "payload is required"
+    );
+}
+
+#[test]
+fn keeps_webview_remote_debugging_disabled_without_the_acceptance_port() {
+    assert_eq!(windows_acceptance_browser_args(None).unwrap(), None);
+    assert_eq!(windows_acceptance_browser_args(Some("   ")).unwrap(), None);
+}
+
+#[test]
+fn builds_loopback_only_webview2_arguments_for_native_acceptance() {
+    let arguments = windows_acceptance_browser_args(Some("9222"))
+        .unwrap()
+        .expect("acceptance arguments");
+
+    assert!(arguments.contains("--remote-debugging-address=127.0.0.1"));
+    assert!(arguments.contains("--remote-debugging-port=9222"));
+    assert!(arguments.contains("--remote-allow-origins=*"));
+    assert!(arguments.contains("--disable-features=msWebOOUI,msPdfOOUI,msSmartScreenProtection"));
+}
+
+#[test]
+fn rejects_unsafe_native_acceptance_cdp_ports() {
+    assert_eq!(
+        windows_acceptance_browser_args(Some("not-a-port")).unwrap_err(),
+        "THESISFORGE_WINDOWS_CDP_PORT must be an integer from 1024 to 65535"
+    );
+    assert_eq!(
+        windows_acceptance_browser_args(Some("80")).unwrap_err(),
+        "THESISFORGE_WINDOWS_CDP_PORT must be an integer from 1024 to 65535"
     );
 }
