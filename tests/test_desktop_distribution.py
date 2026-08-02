@@ -16,7 +16,6 @@ VERIFY_DESKTOP = ROOT / "scripts" / "verify_desktop_distribution.py"
 RELEASE_CONFIG = ROOT / "src-tauri" / "tauri.release.conf.json"
 WORKFLOW = ROOT / ".github" / "workflows" / "distribution.yml"
 REAL_HTTP_CONFIG = ROOT / "frontend" / "e2e" / "real-http.playwright.config.ts"
-WINDOWS_TAURI_CONFIG = ROOT / "frontend" / "e2e" / "tauri-windows.wdio.conf.ts"
 WINDOWS_TAURI_ACCEPTANCE = (
     ROOT / "frontend" / "e2e" / "tauri-windows.acceptance.ts"
 )
@@ -239,24 +238,18 @@ def test_windows_workflow_installs_and_drives_the_native_tauri_package() -> None
     steps = workflow["jobs"]["desktop"]["steps"]
     workflow_text = WORKFLOW.read_text(encoding="utf-8")
 
-    assert "cargo install tauri-driver" in workflow_text
+    assert "cargo install tauri-driver" not in workflow_text
     assert "msiexec.exe" in workflow_text
     assert "THESISFORGE_WINDOWS_APP" in workflow_text
     assert "THESISFORGE_BLOCK_NETWORK" in workflow_text
+    assert "THESISFORGE_WINDOWS_CDP_PORT" in workflow_text
     assert "e2e:tauri:windows" in workflow_text
     assert "windows-native-evidence" in workflow_text
 
-    probe_step = next(
-        step
+    assert not any(
+        step.get("name") == "Probe installed Windows application"
         for step in steps
-        if step.get("name") == "Probe installed Windows application"
     )
-    assert probe_step["if"] == "runner.os == 'Windows'"
-    assert "Start-Process" in probe_step["run"]
-    assert "THESISFORGE_WINDOWS_APP" in probe_step["run"]
-    assert "Get-CimInstance Win32_Process" in probe_step["run"]
-    assert "windows-app-probe.json" in probe_step["run"]
-    assert "taskkill.exe" in probe_step["run"]
 
     diagnostics_step = next(
         step
@@ -264,10 +257,10 @@ def test_windows_workflow_installs_and_drives_the_native_tauri_package() -> None
         if step.get("name") == "Collect Windows native acceptance diagnostics"
     )
     assert diagnostics_step["if"] == "runner.os == 'Windows' && always()"
-    assert "frontend/logs" in diagnostics_step["run"]
     assert "Get-CimInstance Win32_Process" in diagnostics_step["run"]
     assert "Get-WinEvent" in diagnostics_step["run"]
-    assert "DevToolsActivePort" in diagnostics_step["run"]
+    assert "/json/version" in diagnostics_step["run"]
+    assert "windows-cdp-endpoint.json" in diagnostics_step["run"]
     assert "windows-processes.json" in diagnostics_step["run"]
     assert "windows-application-events.json" in diagnostics_step["run"]
 
@@ -277,7 +270,7 @@ def test_windows_workflow_installs_and_drives_the_native_tauri_package() -> None
         if step.get("name") == "Run installed Windows native acceptance"
     )
     assert "Tee-Object" in acceptance_step["run"]
-    assert "wdio-console.log" in acceptance_step["run"]
+    assert "playwright-cdp.log" in acceptance_step["run"]
     assert "$LASTEXITCODE" in acceptance_step["run"]
 
     evidence_upload = next(
@@ -291,14 +284,15 @@ def test_windows_workflow_installs_and_drives_the_native_tauri_package() -> None
     assert "${{ runner.temp }}/thesisforge-windows-install.log" in evidence_upload["with"]["path"]
 
 
-def test_windows_tauri_acceptance_uses_external_webdriver_and_real_commands() -> None:
-    config = WINDOWS_TAURI_CONFIG.read_text(encoding="utf-8")
+def test_windows_tauri_acceptance_uses_webview2_cdp_and_real_commands() -> None:
     acceptance = WINDOWS_TAURI_ACCEPTANCE.read_text(encoding="utf-8")
 
-    assert 'driverProvider: "external"' in config
-    assert "THESISFORGE_WINDOWS_APP" in config
-    assert "tauri-windows.acceptance.ts" in config
-    assert 'outputDir: path.resolve("logs/wdio")' in config
+    assert "WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS" in acceptance
+    assert "THESISFORGE_WINDOWS_CDP_PORT" in acceptance
+    assert "chromium.connectOverCDP" in acceptance
+    assert "http://127.0.0.1:" in acceptance
+    assert "spawn(appBinaryPath" in acceptance
+    assert "taskkill.exe" in acceptance
     assert "__TAURI_INTERNALS__" in acceptance
     assert 'command === "pick_source"' in acceptance
     assert "打开 Markdown 文稿" in acceptance
@@ -306,29 +300,22 @@ def test_windows_tauri_acceptance_uses_external_webdriver_and_real_commands() ->
     assert "构建 DOCX" in acceptance
     assert "Markdown 文稿内容" in acceptance
     assert "构建完成" in acceptance
-    assert "saveScreenshot" in acceptance
+    assert "page.screenshot" in acceptance
     assert "prefers-reduced-motion" in acceptance
     assert "THESISFORGE_WINDOWS_EVIDENCE" in acceptance
 
 
-def test_windows_tauri_acceptance_pins_one_compatible_wdio_release_line() -> None:
+def test_windows_tauri_acceptance_uses_existing_playwright_toolchain() -> None:
     package = json.loads(FRONTEND_PACKAGE.read_text(encoding="utf-8"))
     dev_dependencies = package["devDependencies"]
-    wdio_packages = (
-        "@wdio/cli",
-        "@wdio/globals",
-        "@wdio/local-runner",
-        "@wdio/mocha-framework",
-        "@wdio/spec-reporter",
-        "@wdio/types",
-        "webdriverio",
+    assert package["scripts"]["e2e:tauri:windows"] == (
+        "tsx e2e/tauri-windows.acceptance.ts"
     )
-
-    assert {dev_dependencies[name] for name in wdio_packages} == {"9.27.1"}
-    assert dev_dependencies["@wdio/tauri-service"] == "1.2.0"
-    assert package["pnpm"]["overrides"] == {
-        "@wdio/tauri-service>@wdio/native-utils": "2.5.0",
-    }
+    assert dev_dependencies["@playwright/test"] == "1.62.1"
+    assert dev_dependencies["tsx"] == "4.23.1"
+    assert all("wdio" not in name for name in dev_dependencies)
+    assert "webdriverio" not in dev_dependencies
+    assert "pnpm" not in package
 
 
 def test_real_http_acceptance_selects_a_native_python_interpreter() -> None:

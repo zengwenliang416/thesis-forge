@@ -1,31 +1,167 @@
 import assert from "node:assert/strict";
+import { spawn, spawnSync, type ChildProcess } from "node:child_process";
 import { mkdir, readFile, stat, writeFile } from "node:fs/promises";
 import path from "node:path";
-import { $, browser } from "@wdio/globals";
+import { chromium, type Browser, type Page } from "@playwright/test";
 
-const sourcePath = process.env.THESISFORGE_WINDOWS_SOURCE;
-const evidenceDirectory = process.env.THESISFORGE_WINDOWS_EVIDENCE;
-const appBinaryPath = process.env.THESISFORGE_WINDOWS_APP;
+function requireEnvironment(name: string): string {
+  const value = process.env[name];
+  if (!value) {
+    throw new Error(`${name} is required`);
+  }
+  return value;
+}
 
-if (!sourcePath || !evidenceDirectory || !appBinaryPath) {
-  throw new Error(
-    "THESISFORGE_WINDOWS_SOURCE, THESISFORGE_WINDOWS_EVIDENCE, and " +
-      "THESISFORGE_WINDOWS_APP are required",
-  );
+const sourcePath = requireEnvironment("THESISFORGE_WINDOWS_SOURCE");
+const evidenceDirectory = requireEnvironment("THESISFORGE_WINDOWS_EVIDENCE");
+const appBinaryPath = requireEnvironment("THESISFORGE_WINDOWS_APP");
+const cdpPort = Number(process.env.THESISFORGE_WINDOWS_CDP_PORT ?? "9222");
+
+if (!Number.isInteger(cdpPort) || cdpPort < 1024 || cdpPort > 65_535) {
+  throw new Error(`Invalid THESISFORGE_WINDOWS_CDP_PORT: ${cdpPort}`);
 }
 
 const outputPath = sourcePath.replace(/\.md$/i, ".docx");
 const marker = "<!-- windows native acceptance -->";
+const cdpEndpoint = `http://127.0.0.1:${cdpPort}`;
 
-describe("installed Windows Tauri acceptance", () => {
-  it("opens, saves, validates, builds, and records sensory evidence", async () => {
-    const sourceText = await readFile(sourcePath, "utf8");
-    await mkdir(evidenceDirectory, { recursive: true });
+function captureProcessOutput(
+  child: ChildProcess,
+): { stdout: string[]; stderr: string[] } {
+  const output = { stdout: [] as string[], stderr: [] as string[] };
+  assert(child.stdout);
+  assert(child.stderr);
+  child.stdout.setEncoding("utf8");
+  child.stderr.setEncoding("utf8");
+  child.stdout.on("data", (chunk: string) => {
+    output.stdout.push(chunk);
+    process.stdout.write(chunk);
+  });
+  child.stderr.on("data", (chunk: string) => {
+    output.stderr.push(chunk);
+    process.stderr.write(chunk);
+  });
+  return output;
+}
 
-    const webdriverActive = await browser.execute(() => navigator.webdriver);
-    assert.equal(webdriverActive, true);
+async function waitForCdp(
+  child: ChildProcess,
+): Promise<Record<string, unknown>> {
+  const deadline = Date.now() + 60_000;
+  let lastError = "endpoint not requested";
 
-    await browser.execute(
+  while (Date.now() < deadline) {
+    if (child.exitCode !== null) {
+      throw new Error(
+        `Installed ThesisForge exited before CDP was ready: ${child.exitCode}`,
+      );
+    }
+    try {
+      const response = await fetch(`${cdpEndpoint}/json/version`, {
+        signal: AbortSignal.timeout(2_000),
+      });
+      if (response.ok) {
+        const endpoint = (await response.json()) as Record<string, unknown>;
+        if (typeof endpoint.webSocketDebuggerUrl === "string") {
+          return endpoint;
+        }
+        lastError = "CDP response did not include webSocketDebuggerUrl";
+      } else {
+        lastError = `CDP returned HTTP ${response.status}`;
+      }
+    } catch (error) {
+      lastError = error instanceof Error ? error.message : String(error);
+    }
+    await new Promise((resolve) => setTimeout(resolve, 500));
+  }
+  throw new Error(`Installed ThesisForge CDP endpoint was not ready: ${lastError}`);
+}
+
+async function waitForWorkbenchPage(browser: Browser): Promise<Page> {
+  const deadline = Date.now() + 30_000;
+
+  while (Date.now() < deadline) {
+    for (const context of browser.contexts()) {
+      for (const page of context.pages()) {
+        if (page.isClosed()) {
+          continue;
+        }
+        if ((await page.locator(".app-shell").count()) > 0) {
+          return page;
+        }
+      }
+    }
+    await new Promise((resolve) => setTimeout(resolve, 250));
+  }
+  throw new Error("Connected WebView2 target did not render the ThesisForge workbench");
+}
+
+async function waitForSavedSource(): Promise<void> {
+  const deadline = Date.now() + 20_000;
+  while (Date.now() < deadline) {
+    if ((await readFile(sourcePath, "utf8")).includes(marker)) {
+      return;
+    }
+    await new Promise((resolve) => setTimeout(resolve, 250));
+  }
+  throw new Error("Installed app did not persist the edited source");
+}
+
+function stopInstalledApp(child: ChildProcess): void {
+  if (child.pid === undefined || child.exitCode !== null) {
+    return;
+  }
+  spawnSync("taskkill.exe", ["/PID", String(child.pid), "/T", "/F"], {
+    stdio: "ignore",
+  });
+}
+
+async function main(): Promise<void> {
+  await mkdir(evidenceDirectory, { recursive: true });
+  const sourceText = await readFile(sourcePath, "utf8");
+  const existingWebViewArgs =
+    process.env.WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS?.trim();
+  const webViewArgs = [
+    existingWebViewArgs,
+    `--remote-debugging-port=${cdpPort}`,
+    "--remote-allow-origins=*",
+  ]
+    .filter(Boolean)
+    .join(" ");
+  const app = spawn(appBinaryPath, [], {
+    env: {
+      ...process.env,
+      THESISFORGE_BLOCK_NETWORK: "1",
+      WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS: webViewArgs,
+    },
+    stdio: ["pipe", "pipe", "pipe"],
+    windowsHide: false,
+  });
+  app.stdin?.end();
+  const processOutput = captureProcessOutput(app);
+  let browser: Browser | undefined;
+
+  try {
+    const endpoint = await waitForCdp(app);
+    await writeFile(
+      path.join(evidenceDirectory, "windows-cdp-endpoint.json"),
+      JSON.stringify(endpoint, null, 2),
+      "utf8",
+    );
+    browser = await chromium.connectOverCDP(cdpEndpoint);
+    const page = await waitForWorkbenchPage(browser);
+    const tauriInternals = await page.evaluate(() => {
+      const candidate = window as unknown as {
+        __TAURI_INTERNALS__?: unknown;
+      };
+      return typeof candidate.__TAURI_INTERNALS__ === "object";
+    });
+    assert.equal(tauriInternals, true);
+
+    await page.evaluate<
+      void,
+      { path: string; fileName: string; text: string }
+    >(
       (fixture: { path: string; fileName: string; text: string }) => {
         const internals = (
           window as unknown as {
@@ -60,59 +196,59 @@ describe("installed Windows Tauri acceptance", () => {
       },
     );
 
-    const shell = await $(".app-shell");
-    await shell.waitForDisplayed();
+    const shell = page.locator(".app-shell");
+    await shell.waitFor({ state: "visible" });
     assert.equal(await shell.getAttribute("data-runtime"), "tauri");
-    assert.match(await shell.getText(), /本地桌面/);
+    assert.match(await shell.innerText(), /本地桌面/);
 
-    const open = await $('aria/打开 Markdown 文稿');
-    await open.click();
-
-    const editor = await $('aria/Markdown 文稿内容');
-    await browser.waitUntil(
-      async () => (await editor.getValue()).includes("thesis:"),
-      { timeoutMsg: "installed app did not populate the complete example" },
+    await page.getByRole("button", { name: "打开 Markdown 文稿" }).click();
+    const editor = page.getByLabel("Markdown 文稿内容");
+    await editor.waitFor({ state: "visible" });
+    await page.waitForFunction(
+      () =>
+        (
+          document.querySelector(
+            '[aria-label="Markdown 文稿内容"]',
+          ) as HTMLTextAreaElement | null
+        )?.value.includes("thesis:") === true,
     );
 
-    await browser.keys(["Control", "k"]);
-    assert.equal(await editor.isFocused(), true);
-    await browser.keys(["Control", "End"]);
-    await editor.addValue(`\n${marker}\n`);
+    await page.keyboard.press("Control+k");
+    assert.equal(
+      await editor.evaluate((element) => element === document.activeElement),
+      true,
+    );
+    await editor.press("Control+End");
+    await editor.press("Enter");
+    await editor.type(marker);
 
-    const save = await $('aria/保存文稿');
-    await save.waitForEnabled();
+    const save = page.getByRole("button", { name: "保存文稿" });
+    await save.waitFor({ state: "visible" });
+    assert.equal(await save.isEnabled(), true);
     await save.click();
-    await browser.waitUntil(
-      async () => (await readFile(sourcePath, "utf8")).includes(marker),
-      { timeoutMsg: "installed app did not persist the edited source" },
-    );
+    await waitForSavedSource();
 
-    const validate = await $('aria/验证论文');
-    await validate.waitForEnabled();
+    const validate = page.getByRole("button", { name: "验证论文" });
+    assert.equal(await validate.isEnabled(), true);
     await validate.click();
-    await browser.waitUntil(
-      async () => (await shell.getAttribute("data-state")) === "populated",
-      { timeoutMsg: "installed app did not complete native validation" },
+    await page.waitForFunction(
+      () => document.querySelector(".app-shell")?.getAttribute("data-state") === "populated",
     );
 
-    const build = await $('aria/构建 DOCX');
-    await build.waitForEnabled();
+    const build = page.getByRole("button", { name: "构建 DOCX" });
+    assert.equal(await build.isEnabled(), true);
     await build.click();
-    const progress = await $('aria/构建进度');
-    await browser.waitUntil(
-      async () => (await progress.getText()).includes("构建完成"),
-      {
-        timeout: 90_000,
-        timeoutMsg: "installed app did not complete the packaged sidecar build",
-      },
-    );
-    assert.match(await $('aria/输出结果').getText(), /thesis\.docx/);
+    const progress = page.getByLabel("构建进度");
+    await progress.getByText("构建完成", { exact: false }).waitFor({
+      timeout: 90_000,
+    });
+    assert.match(await page.getByLabel("输出结果").innerText(), /thesis\.docx/);
 
     const output = await readFile(outputPath);
     assert.equal(output.subarray(0, 2).toString("ascii"), "PK");
     assert.ok((await stat(outputPath)).size > 1_000);
 
-    const sensory = await browser.execute(() => {
+    const sensory = await page.evaluate(() => {
       const reducedMotionRule = Array.from(document.styleSheets).some(
         (sheet) => {
           try {
@@ -144,7 +280,7 @@ describe("installed Windows Tauri acceptance", () => {
       evidenceDirectory,
       "windows-native-acceptance.png",
     );
-    await browser.saveScreenshot(screenshotPath);
+    await page.screenshot({ path: screenshotPath });
     await writeFile(
       path.join(evidenceDirectory, "windows-native-acceptance.json"),
       JSON.stringify(
@@ -154,7 +290,10 @@ describe("installed Windows Tauri acceptance", () => {
           sourcePath,
           outputPath,
           outputBytes: (await stat(outputPath)).size,
-          webdriverActive,
+          automation: "playwright-cdp",
+          cdpEndpoint,
+          tauriInternals,
+          externalSocketsBlocked: true,
           sensory,
           screenshotPath,
           completedAt: new Date().toISOString(),
@@ -164,5 +303,15 @@ describe("installed Windows Tauri acceptance", () => {
       ),
       "utf8",
     );
-  });
-});
+  } finally {
+    await writeFile(
+      path.join(evidenceDirectory, "windows-app-output.json"),
+      JSON.stringify(processOutput, null, 2),
+      "utf8",
+    );
+    await browser?.close().catch(() => undefined);
+    stopInstalledApp(app);
+  }
+}
+
+await main();
