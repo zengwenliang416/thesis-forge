@@ -4,7 +4,6 @@ import ast
 import json
 from pathlib import Path
 
-
 ROOT = Path(__file__).resolve().parents[5]
 PROTOTYPE = ROOT / "openspec/changes/template-driven-thesis-formatting-p0/prototype"
 
