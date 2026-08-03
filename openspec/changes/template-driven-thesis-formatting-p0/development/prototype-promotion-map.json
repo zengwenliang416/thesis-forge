@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "promotion_policy": "reimplement_under_development_gate",
+  "allowed_to_copy": [
+    "Closed ParagraphRole value set from the approved component contract",
+    "Documented dependency direction and compatibility rules",
+    "Approved test and risk inventory"
+  ],
+  "must_reimplement": [
+    "Pydantic template models and compatibility normalization",
+    "Compiler semantic context and role resolution",
+    "DOCX paragraph, TOC and header/footer translation",
+    "Production tests, school template and documentation"
+  ],
+  "blocked_direct_copies": [
+    "Prototype verification script as production architecture enforcement",
+    "Review-only component map prose as executable behavior",
+    "Any raw Word or OOXML object in Parser, Domain, Template Model or RenderPlan"
+  ]
+}

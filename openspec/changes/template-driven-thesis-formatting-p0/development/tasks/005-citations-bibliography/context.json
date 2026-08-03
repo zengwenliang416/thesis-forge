@@ -1,0 +1,50 @@
+{
+  "task_id": "005-citations-bibliography",
+  "goal": "Add template-driven citation and bibliography presentation without changing citation data or text formatting.",
+  "must_read": [
+    "openspec/changes/template-driven-thesis-formatting-p0/development/tasks/005-citations-bibliography/brief.md",
+    "openspec/changes/template-driven-thesis-formatting-p0/requirements.md",
+    "openspec/changes/template-driven-thesis-formatting-p0/acceptance.md",
+    "openspec/changes/template-driven-thesis-formatting-p0/acceptance.json",
+    "openspec/changes/template-driven-thesis-formatting-p0/spec-map.json",
+    "openspec/changes/template-driven-thesis-formatting-p0/component-impact-map.json",
+    "openspec/changes/template-driven-thesis-formatting-p0/prototype/handoff.md",
+    "openspec/changes/template-driven-thesis-formatting-p0/prototype/decision.json",
+    "openspec/changes/template-driven-thesis-formatting-p0/prototype/component/component-map.md",
+    "openspec/specs/ui-design/design.md",
+    "openspec/specs/system-architecture/design.md",
+    "openspec/specs/frontend-backend-data-flow/design.md",
+    "openspec/specs/component-architecture/design.md"
+  ],
+  "allowed_files": [
+    "src/thesis_forge/templates/model.py",
+    "src/thesis_forge/core/render_plan.py",
+    "src/thesis_forge/renderers/docx/inlines.py",
+    "src/thesis_forge/renderers/docx/renderer.py",
+    "src/thesis_forge/renderers/docx/styles.py",
+    "tests/test_bibliography.py",
+    "tests/test_compiler.py",
+    "tests/test_docx_renderer.py",
+    "openspec/changes/template-driven-thesis-formatting-p0/development/tasks/005-citations-bibliography/**"
+  ],
+  "test_paths": [
+    "tests/test_bibliography.py",
+    "tests/test_compiler.py",
+    "tests/test_docx_renderer.py"
+  ],
+  "non_goals": [
+    "Do not change bibliography record schema.",
+    "Do not replace GBT 7714 formatting.",
+    "Do not add network or CSL dependencies."
+  ],
+  "expected_evidence": [
+    "Existing bibliography golden tests",
+    "Citation superscript XML assertions",
+    "Bibliography hanging-indent XML assertions",
+    "Task report and independent reviews"
+  ],
+  "unsafe_assumptions": [
+    "Citation presentation can safely alter formatter output."
+  ],
+  "stop_condition": "Stop if Word presentation leaks into bibliography data/text formatting or citation order changes."
+}

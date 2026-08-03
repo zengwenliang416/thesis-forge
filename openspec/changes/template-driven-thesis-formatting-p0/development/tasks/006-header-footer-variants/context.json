@@ -1,0 +1,48 @@
+{
+  "task_id": "006-header-footer-variants",
+  "goal": "Render template-driven page geometry and first/default/even header/footer variants with real Word relationships and fields.",
+  "must_read": [
+    "openspec/changes/template-driven-thesis-formatting-p0/development/tasks/006-header-footer-variants/brief.md",
+    "openspec/changes/template-driven-thesis-formatting-p0/requirements.md",
+    "openspec/changes/template-driven-thesis-formatting-p0/acceptance.md",
+    "openspec/changes/template-driven-thesis-formatting-p0/acceptance.json",
+    "openspec/changes/template-driven-thesis-formatting-p0/spec-map.json",
+    "openspec/changes/template-driven-thesis-formatting-p0/component-impact-map.json",
+    "openspec/changes/template-driven-thesis-formatting-p0/prototype/handoff.md",
+    "openspec/changes/template-driven-thesis-formatting-p0/prototype/decision.json",
+    "openspec/changes/template-driven-thesis-formatting-p0/prototype/component/component-map.md",
+    "openspec/specs/ui-design/design.md",
+    "openspec/specs/system-architecture/design.md",
+    "openspec/specs/frontend-backend-data-flow/design.md",
+    "openspec/specs/component-architecture/design.md"
+  ],
+  "allowed_files": [
+    "src/thesis_forge/templates/model.py",
+    "src/thesis_forge/renderers/docx/document.py",
+    "src/thesis_forge/renderers/docx/sections.py",
+    "src/thesis_forge/renderers/docx/styles.py",
+    "src/thesis_forge/renderers/docx/fields.py",
+    "tests/test_template.py",
+    "tests/test_docx_renderer.py",
+    "openspec/changes/template-driven-thesis-formatting-p0/development/tasks/006-header-footer-variants/**"
+  ],
+  "test_paths": [
+    "tests/test_template.py",
+    "tests/test_docx_renderer.py"
+  ],
+  "non_goals": [
+    "Do not componentize cover pages.",
+    "Do not promise pixel-identical pagination.",
+    "Do not change application output semantics."
+  ],
+  "expected_evidence": [
+    "Legacy normalization tests",
+    "Section and relationship XML assertions",
+    "Header/footer border and field assertions",
+    "Stale inheritance regression tests"
+  ],
+  "unsafe_assumptions": [
+    "python-docx automatically unlinks and clears every first/default/even variant."
+  ],
+  "stop_condition": "Stop if explicit variants cannot be represented without raw Word objects entering Template Model."
+}

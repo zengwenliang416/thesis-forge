@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "component_rules": [
+    "Extract shared paragraph properties into ParagraphStyleSpec instead of duplicating body, heading, TOC, bibliography and header/footer models.",
+    "Extract repeated DOCX font, alignment, indentation, spacing and pagination conversion into one paragraph-style translator.",
+    "Keep semantic heading and keyword recognition in one compiler-owned document context state machine.",
+    "Keep TOC tabs, paragraph borders, document grid and header/footer relationships in focused DOCX helpers.",
+    "Reuse bibliography data and text formatters without importing DOCX presentation behavior."
+  ]
+}

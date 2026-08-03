@@ -1,0 +1,46 @@
+{
+  "task_id": "001-paragraph-policy",
+  "goal": "Implement the complete renderer-neutral paragraph policy and preserve legacy template compatibility.",
+  "must_read": [
+    "openspec/changes/template-driven-thesis-formatting-p0/development/tasks/001-paragraph-policy/brief.md",
+    "openspec/changes/template-driven-thesis-formatting-p0/requirements.md",
+    "openspec/changes/template-driven-thesis-formatting-p0/acceptance.md",
+    "openspec/changes/template-driven-thesis-formatting-p0/acceptance.json",
+    "openspec/changes/template-driven-thesis-formatting-p0/spec-map.json",
+    "openspec/changes/template-driven-thesis-formatting-p0/component-impact-map.json",
+    "openspec/changes/template-driven-thesis-formatting-p0/prototype/handoff.md",
+    "openspec/changes/template-driven-thesis-formatting-p0/prototype/decision.json",
+    "openspec/changes/template-driven-thesis-formatting-p0/prototype/component/component-map.md",
+    "openspec/specs/ui-design/design.md",
+    "openspec/specs/system-architecture/design.md",
+    "openspec/specs/frontend-backend-data-flow/design.md",
+    "openspec/specs/component-architecture/design.md"
+  ],
+  "allowed_files": [
+    "src/thesis_forge/templates/model.py",
+    "src/thesis_forge/templates/resolver.py",
+    "tests/test_template.py",
+    "tests/test_architecture.py",
+    "templates/base/**",
+    "openspec/changes/template-driven-thesis-formatting-p0/development/tasks/001-paragraph-policy/**"
+  ],
+  "test_paths": [
+    "tests/test_template.py",
+    "tests/test_architecture.py"
+  ],
+  "non_goals": [
+    "Do not implement DOCX translation.",
+    "Do not add school-specific values.",
+    "Do not change Markdown syntax."
+  ],
+  "expected_evidence": [
+    "Legacy and new template model tests",
+    "Field-specific validation assertions",
+    "Architecture import assertions",
+    "Task report and independent reviews"
+  ],
+  "unsafe_assumptions": [
+    "Pydantic inheritance and validators preserve compatibility without explicit fixtures."
+  ],
+  "stop_condition": "Stop if a model needs raw Word details or legacy defaults cannot be derived from committed behavior."
+}

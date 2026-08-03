@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "owners": [
+    {
+      "path": "src/thesis_forge/templates",
+      "owner": "template-policy"
+    },
+    {
+      "path": "src/thesis_forge/core/compiler.py",
+      "owner": "semantic-compilation"
+    },
+    {
+      "path": "src/thesis_forge/core/render_plan.py",
+      "owner": "renderer-neutral-contracts"
+    },
+    {
+      "path": "src/thesis_forge/renderers/docx",
+      "owner": "docx-translation"
+    },
+    {
+      "path": "src/thesis_forge/bibliography",
+      "owner": "citation-data-and-text"
+    },
+    {
+      "path": "tests",
+      "owner": "verification"
+    },
+    {
+      "path": "templates",
+      "owner": "school-template-policy"
+    },
+    {
+      "path": "openspec/changes/template-driven-thesis-formatting-p0",
+      "owner": "specnav-evidence"
+    }
+  ]
+}

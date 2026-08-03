@@ -1,0 +1,259 @@
+{
+  "schema": "specnav.codegraph.claims.v1",
+  "generated_at": "2026-08-03T03:32:07.143Z",
+  "active_change": "template-driven-thesis-formatting-p0",
+  "claims": [
+    {
+      "id": "development:task-001-paragraph-policy",
+      "kind": "development-task",
+      "stage": "development",
+      "task_id": "001-paragraph-policy",
+      "text": "Complete tasks 1.1-1.7 and prove A1, A2, A7 and A8 at the template-model",
+      "required": true,
+      "source": "specnav-codegraph-plan",
+      "source_paths": [
+        "openspec/changes/template-driven-thesis-formatting-p0/development/tasks/001-paragraph-policy/brief.md",
+        "openspec/changes/template-driven-thesis-formatting-p0/development/tasks/001-paragraph-policy/context.json"
+      ],
+      "expected_evidence": [
+        "Legacy and new template model tests",
+        "Field-specific validation assertions",
+        "Architecture import assertions",
+        "Task report and independent reviews"
+      ],
+      "allowed_files": [
+        "src/thesis_forge/templates/model.py",
+        "src/thesis_forge/templates/resolver.py",
+        "tests/test_template.py",
+        "tests/test_architecture.py",
+        "templates/base/**",
+        "openspec/changes/template-driven-thesis-formatting-p0/development/tasks/001-paragraph-policy/**"
+      ],
+      "query_ids": [
+        "development:task-001-paragraph-policy:evidence"
+      ]
+    },
+    {
+      "id": "development:task-002-docx-paragraph-translation",
+      "kind": "development-task",
+      "stage": "development",
+      "task_id": "002-docx-paragraph-translation",
+      "text": "Complete tasks 2.1-2.7 and prove A1/A2 without changing semantic content.",
+      "required": true,
+      "source": "specnav-codegraph-plan",
+      "source_paths": [
+        "openspec/changes/template-driven-thesis-formatting-p0/development/tasks/002-docx-paragraph-translation/brief.md",
+        "openspec/changes/template-driven-thesis-formatting-p0/development/tasks/002-docx-paragraph-translation/context.json"
+      ],
+      "expected_evidence": [
+        "Focused style translator unit tests",
+        "Direct styles.xml assertions",
+        "Legacy body and heading regression evidence",
+        "Task report and independent reviews"
+      ],
+      "allowed_files": [
+        "src/thesis_forge/renderers/docx/styles.py",
+        "src/thesis_forge/renderers/docx/fonts.py",
+        "src/thesis_forge/renderers/docx/units.py",
+        "src/thesis_forge/renderers/docx/document.py",
+        "tests/test_docx_renderer.py",
+        "tests/test_template.py",
+        "openspec/changes/template-driven-thesis-formatting-p0/development/tasks/002-docx-paragraph-translation/**"
+      ],
+      "query_ids": [
+        "development:task-002-docx-paragraph-translation:evidence"
+      ]
+    },
+    {
+      "id": "development:task-003-semantic-roles",
+      "kind": "development-task",
+      "stage": "development",
+      "task_id": "003-semantic-roles",
+      "text": "Complete tasks 3.1-3.7 and prove A3, A7 and A8 from Markdown input through",
+      "required": true,
+      "source": "specnav-codegraph-plan",
+      "source_paths": [
+        "openspec/changes/template-driven-thesis-formatting-p0/development/tasks/003-semantic-roles/brief.md",
+        "openspec/changes/template-driven-thesis-formatting-p0/development/tasks/003-semantic-roles/context.json"
+      ],
+      "expected_evidence": [
+        "Semantic state transition tests",
+        "Keyword false-positive tests",
+        "Renderer-neutral architecture tests",
+        "Semantic style OOXML assertions"
+      ],
+      "allowed_files": [
+        "src/thesis_forge/core/compiler.py",
+        "src/thesis_forge/core/render_plan.py",
+        "src/thesis_forge/renderers/docx/renderer.py",
+        "src/thesis_forge/renderers/docx/styles.py",
+        "tests/test_compiler.py",
+        "tests/test_render_plan.py",
+        "tests/test_docx_renderer.py",
+        "tests/test_architecture.py",
+        "openspec/changes/template-driven-thesis-formatting-p0/development/tasks/003-semantic-roles/**"
+      ],
+      "query_ids": [
+        "development:task-003-semantic-roles:evidence"
+      ]
+    },
+    {
+      "id": "development:task-004-toc-styles",
+      "kind": "development-task",
+      "stage": "development",
+      "task_id": "004-toc-styles",
+      "text": "Complete tasks 4.1-4.6 and prove A4 through focused styles.xml and document.xml",
+      "required": true,
+      "source": "specnav-codegraph-plan",
+      "source_paths": [
+        "openspec/changes/template-driven-thesis-formatting-p0/development/tasks/004-toc-styles/brief.md",
+        "openspec/changes/template-driven-thesis-formatting-p0/development/tasks/004-toc-styles/context.json"
+      ],
+      "expected_evidence": [
+        "TOC policy validation tests",
+        "styles.xml tab and leader assertions",
+        "document.xml complex-field assertions",
+        "Task report and independent reviews"
+      ],
+      "allowed_files": [
+        "src/thesis_forge/templates/model.py",
+        "src/thesis_forge/renderers/docx/styles.py",
+        "src/thesis_forge/renderers/docx/renderer.py",
+        "src/thesis_forge/renderers/docx/fields.py",
+        "tests/test_template.py",
+        "tests/test_docx_renderer.py",
+        "openspec/changes/template-driven-thesis-formatting-p0/development/tasks/004-toc-styles/**"
+      ],
+      "query_ids": [
+        "development:task-004-toc-styles:evidence"
+      ]
+    },
+    {
+      "id": "development:task-005-citations-bibliography",
+      "kind": "development-task",
+      "stage": "development",
+      "task_id": "005-citations-bibliography",
+      "text": "Complete tasks 5.1-5.6 and prove A5 from compiled citation runs through",
+      "required": true,
+      "source": "specnav-codegraph-plan",
+      "source_paths": [
+        "openspec/changes/template-driven-thesis-formatting-p0/development/tasks/005-citations-bibliography/brief.md",
+        "openspec/changes/template-driven-thesis-formatting-p0/development/tasks/005-citations-bibliography/context.json"
+      ],
+      "expected_evidence": [
+        "Existing bibliography golden tests",
+        "Citation superscript XML assertions",
+        "Bibliography hanging-indent XML assertions",
+        "Task report and independent reviews"
+      ],
+      "allowed_files": [
+        "src/thesis_forge/templates/model.py",
+        "src/thesis_forge/core/render_plan.py",
+        "src/thesis_forge/renderers/docx/inlines.py",
+        "src/thesis_forge/renderers/docx/renderer.py",
+        "src/thesis_forge/renderers/docx/styles.py",
+        "tests/test_bibliography.py",
+        "tests/test_compiler.py",
+        "tests/test_docx_renderer.py",
+        "openspec/changes/template-driven-thesis-formatting-p0/development/tasks/005-citations-bibliography/**"
+      ],
+      "query_ids": [
+        "development:task-005-citations-bibliography:evidence"
+      ]
+    },
+    {
+      "id": "development:task-006-header-footer-variants",
+      "kind": "development-task",
+      "stage": "development",
+      "task_id": "006-header-footer-variants",
+      "text": "Complete tasks 6.1-6.9 and prove A6 with direct settings, section, relationship,",
+      "required": true,
+      "source": "specnav-codegraph-plan",
+      "source_paths": [
+        "openspec/changes/template-driven-thesis-formatting-p0/development/tasks/006-header-footer-variants/brief.md",
+        "openspec/changes/template-driven-thesis-formatting-p0/development/tasks/006-header-footer-variants/context.json"
+      ],
+      "expected_evidence": [
+        "Legacy normalization tests",
+        "Section and relationship XML assertions",
+        "Header/footer border and field assertions",
+        "Stale inheritance regression tests"
+      ],
+      "allowed_files": [
+        "src/thesis_forge/templates/model.py",
+        "src/thesis_forge/renderers/docx/document.py",
+        "src/thesis_forge/renderers/docx/sections.py",
+        "src/thesis_forge/renderers/docx/styles.py",
+        "src/thesis_forge/renderers/docx/fields.py",
+        "tests/test_template.py",
+        "tests/test_docx_renderer.py",
+        "openspec/changes/template-driven-thesis-formatting-p0/development/tasks/006-header-footer-variants/**"
+      ],
+      "query_ids": [
+        "development:task-006-header-footer-variants:evidence"
+      ]
+    },
+    {
+      "id": "development:task-007-school-template-e2e",
+      "kind": "development-task",
+      "stage": "development",
+      "task_id": "007-school-template-e2e",
+      "text": "Complete tasks 7.1-7.7 and prove A2-A9 through documentation, a school template,",
+      "required": true,
+      "source": "specnav-codegraph-plan",
+      "source_paths": [
+        "openspec/changes/template-driven-thesis-formatting-p0/development/tasks/007-school-template-e2e/brief.md",
+        "openspec/changes/template-driven-thesis-formatting-p0/development/tasks/007-school-template-e2e/context.json"
+      ],
+      "expected_evidence": [
+        "Documented template schema",
+        "HUT YAML and complete example",
+        "Offline CLI E2E output",
+        "Direct package XML assertions",
+        "Repeated-build determinism evidence"
+      ],
+      "allowed_files": [
+        "docs/TEMPLATE_SPEC.md",
+        "templates/**",
+        "examples/**",
+        "tests/test_acceptance.py",
+        "tests/test_cli.py",
+        "tests/test_application_services.py",
+        "tests/test_docx_renderer.py",
+        "openspec/changes/template-driven-thesis-formatting-p0/development/tasks/007-school-template-e2e/**",
+        "openspec/changes/template-driven-thesis-formatting-p0/verification/**"
+      ],
+      "query_ids": [
+        "development:task-007-school-template-e2e:evidence"
+      ]
+    },
+    {
+      "id": "development:task-008-regression-office-handoff",
+      "kind": "development-task",
+      "stage": "development",
+      "task_id": "008-regression-office-handoff",
+      "text": "Complete tasks 8.1-8.7, close every acceptance assertion with direct evidence",
+      "required": true,
+      "source": "specnav-codegraph-plan",
+      "source_paths": [
+        "openspec/changes/template-driven-thesis-formatting-p0/development/tasks/008-regression-office-handoff/brief.md",
+        "openspec/changes/template-driven-thesis-formatting-p0/development/tasks/008-regression-office-handoff/context.json"
+      ],
+      "expected_evidence": [
+        "Focused and full system-executed validation logs",
+        "CodeGraph claims and impact evidence",
+        "Word or WPS sensory review artifacts",
+        "A1-A10 evidence references",
+        "Passing development handoff contract"
+      ],
+      "allowed_files": [
+        "tests/**",
+        "docs/**",
+        "openspec/changes/template-driven-thesis-formatting-p0/**"
+      ],
+      "query_ids": [
+        "development:task-008-regression-office-handoff:evidence"
+      ]
+    }
+  ]
+}

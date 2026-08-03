@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "budgets": [
+    {
+      "area": "template policy",
+      "limit": "one closed ParagraphStyleSpec reused by body, heading, semantic, TOC, bibliography and header/footer policies"
+    },
+    {
+      "area": "coupling",
+      "limit": "Parser, Domain, Template Model and RenderPlan import no docx, lxml or renderer modules"
+    },
+    {
+      "area": "OOXML",
+      "limit": "low-level XML writes remain in focused DOCX helpers and receive direct XML tests"
+    },
+    {
+      "area": "compatibility",
+      "limit": "all existing templates load without source migration and preserve prior default semantics"
+    },
+    {
+      "area": "scope",
+      "limit": "no frontend, database, network, AI, legacy .doc import or out-of-P0 layout expansion"
+    }
+  ]
+}

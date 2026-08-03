@@ -1,0 +1,47 @@
+{
+  "task_id": "002-docx-paragraph-translation",
+  "goal": "Apply body and heading paragraph policy through one shared DOCX translator.",
+  "must_read": [
+    "openspec/changes/template-driven-thesis-formatting-p0/development/tasks/002-docx-paragraph-translation/brief.md",
+    "openspec/changes/template-driven-thesis-formatting-p0/requirements.md",
+    "openspec/changes/template-driven-thesis-formatting-p0/acceptance.md",
+    "openspec/changes/template-driven-thesis-formatting-p0/acceptance.json",
+    "openspec/changes/template-driven-thesis-formatting-p0/spec-map.json",
+    "openspec/changes/template-driven-thesis-formatting-p0/component-impact-map.json",
+    "openspec/changes/template-driven-thesis-formatting-p0/prototype/handoff.md",
+    "openspec/changes/template-driven-thesis-formatting-p0/prototype/decision.json",
+    "openspec/changes/template-driven-thesis-formatting-p0/prototype/component/component-map.md",
+    "openspec/specs/ui-design/design.md",
+    "openspec/specs/system-architecture/design.md",
+    "openspec/specs/frontend-backend-data-flow/design.md",
+    "openspec/specs/component-architecture/design.md"
+  ],
+  "allowed_files": [
+    "src/thesis_forge/renderers/docx/styles.py",
+    "src/thesis_forge/renderers/docx/fonts.py",
+    "src/thesis_forge/renderers/docx/units.py",
+    "src/thesis_forge/renderers/docx/document.py",
+    "tests/test_docx_renderer.py",
+    "tests/test_template.py",
+    "openspec/changes/template-driven-thesis-formatting-p0/development/tasks/002-docx-paragraph-translation/**"
+  ],
+  "test_paths": [
+    "tests/test_docx_renderer.py",
+    "tests/test_template.py"
+  ],
+  "non_goals": [
+    "Do not resolve semantic roles.",
+    "Do not implement TOC or section variants.",
+    "Do not hard-code school policy."
+  ],
+  "expected_evidence": [
+    "Focused style translator unit tests",
+    "Direct styles.xml assertions",
+    "Legacy body and heading regression evidence",
+    "Task report and independent reviews"
+  ],
+  "unsafe_assumptions": [
+    "python-docx exposes every required property without focused OOXML helpers."
+  ],
+  "stop_condition": "Stop if the translator requires renderer details outside the DOCX layer or changes legacy output without evidence."
+}

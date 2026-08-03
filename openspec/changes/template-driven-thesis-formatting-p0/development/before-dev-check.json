@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "active_change": "template-driven-thesis-formatting-p0",
+  "status": "ready",
+  "ok": true,
+  "checked_at": "2026-08-03T03:27:00Z",
+  "requirements_contract": "ok",
+  "prototype_contract": "ok",
+  "prototype_decision": "approved",
+  "approved_variant": "policy-role-docx-seam-v1",
+  "tasks_baseline_commit": "dda08b4",
+  "scope_lock": "openspec/changes/template-driven-thesis-formatting-p0/scope.json",
+  "blockers": []
+}

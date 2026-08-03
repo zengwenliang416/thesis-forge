@@ -1,0 +1,47 @@
+{
+  "task_id": "004-toc-styles",
+  "goal": "Configure real TOC 1-3 Word styles and preserve the updateable TOC field.",
+  "must_read": [
+    "openspec/changes/template-driven-thesis-formatting-p0/development/tasks/004-toc-styles/brief.md",
+    "openspec/changes/template-driven-thesis-formatting-p0/requirements.md",
+    "openspec/changes/template-driven-thesis-formatting-p0/acceptance.md",
+    "openspec/changes/template-driven-thesis-formatting-p0/acceptance.json",
+    "openspec/changes/template-driven-thesis-formatting-p0/spec-map.json",
+    "openspec/changes/template-driven-thesis-formatting-p0/component-impact-map.json",
+    "openspec/changes/template-driven-thesis-formatting-p0/prototype/handoff.md",
+    "openspec/changes/template-driven-thesis-formatting-p0/prototype/decision.json",
+    "openspec/changes/template-driven-thesis-formatting-p0/prototype/component/component-map.md",
+    "openspec/specs/ui-design/design.md",
+    "openspec/specs/system-architecture/design.md",
+    "openspec/specs/frontend-backend-data-flow/design.md",
+    "openspec/specs/component-architecture/design.md"
+  ],
+  "allowed_files": [
+    "src/thesis_forge/templates/model.py",
+    "src/thesis_forge/renderers/docx/styles.py",
+    "src/thesis_forge/renderers/docx/renderer.py",
+    "src/thesis_forge/renderers/docx/fields.py",
+    "tests/test_template.py",
+    "tests/test_docx_renderer.py",
+    "openspec/changes/template-driven-thesis-formatting-p0/development/tasks/004-toc-styles/**"
+  ],
+  "test_paths": [
+    "tests/test_template.py",
+    "tests/test_docx_renderer.py"
+  ],
+  "non_goals": [
+    "Do not emit static TOC entries.",
+    "Do not implement figure or table indexes.",
+    "Do not depend on localized UI style names."
+  ],
+  "expected_evidence": [
+    "TOC policy validation tests",
+    "styles.xml tab and leader assertions",
+    "document.xml complex-field assertions",
+    "Task report and independent reviews"
+  ],
+  "unsafe_assumptions": [
+    "Word, WPS and LibreOffice expose identical localized TOC style names."
+  ],
+  "stop_condition": "Stop if real TOC fields or stable package style IDs cannot be preserved."
+}

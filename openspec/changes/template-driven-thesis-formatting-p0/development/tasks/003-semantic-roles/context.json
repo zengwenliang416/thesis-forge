@@ -1,0 +1,51 @@
+{
+  "task_id": "003-semantic-roles",
+  "goal": "Resolve abstract, keyword and special-section roles before DOCX rendering.",
+  "must_read": [
+    "openspec/changes/template-driven-thesis-formatting-p0/development/tasks/003-semantic-roles/brief.md",
+    "openspec/changes/template-driven-thesis-formatting-p0/requirements.md",
+    "openspec/changes/template-driven-thesis-formatting-p0/acceptance.md",
+    "openspec/changes/template-driven-thesis-formatting-p0/acceptance.json",
+    "openspec/changes/template-driven-thesis-formatting-p0/spec-map.json",
+    "openspec/changes/template-driven-thesis-formatting-p0/component-impact-map.json",
+    "openspec/changes/template-driven-thesis-formatting-p0/prototype/handoff.md",
+    "openspec/changes/template-driven-thesis-formatting-p0/prototype/decision.json",
+    "openspec/changes/template-driven-thesis-formatting-p0/prototype/component/component-map.md",
+    "openspec/specs/ui-design/design.md",
+    "openspec/specs/system-architecture/design.md",
+    "openspec/specs/frontend-backend-data-flow/design.md",
+    "openspec/specs/component-architecture/design.md"
+  ],
+  "allowed_files": [
+    "src/thesis_forge/core/compiler.py",
+    "src/thesis_forge/core/render_plan.py",
+    "src/thesis_forge/renderers/docx/renderer.py",
+    "src/thesis_forge/renderers/docx/styles.py",
+    "tests/test_compiler.py",
+    "tests/test_render_plan.py",
+    "tests/test_docx_renderer.py",
+    "tests/test_architecture.py",
+    "openspec/changes/template-driven-thesis-formatting-p0/development/tasks/003-semantic-roles/**"
+  ],
+  "test_paths": [
+    "tests/test_compiler.py",
+    "tests/test_render_plan.py",
+    "tests/test_docx_renderer.py",
+    "tests/test_architecture.py"
+  ],
+  "non_goals": [
+    "Do not add Markdown syntax.",
+    "Do not place Word style IDs in RenderPlan.",
+    "Do not hard-code school formatting."
+  ],
+  "expected_evidence": [
+    "Semantic state transition tests",
+    "Keyword false-positive tests",
+    "Renderer-neutral architecture tests",
+    "Semantic style OOXML assertions"
+  ],
+  "unsafe_assumptions": [
+    "A heading title alone is stable enough when the approved contract requires stable IDs."
+  ],
+  "stop_condition": "Stop if semantic source IDs are ambiguous or a role requires parser or Word coupling."
+}

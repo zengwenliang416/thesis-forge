@@ -1,0 +1,52 @@
+{
+  "task_id": "007-school-template-e2e",
+  "goal": "Deliver and verify a complete HUT P0 school template and thesis build.",
+  "must_read": [
+    "openspec/changes/template-driven-thesis-formatting-p0/development/tasks/007-school-template-e2e/brief.md",
+    "openspec/changes/template-driven-thesis-formatting-p0/requirements.md",
+    "openspec/changes/template-driven-thesis-formatting-p0/acceptance.md",
+    "openspec/changes/template-driven-thesis-formatting-p0/acceptance.json",
+    "openspec/changes/template-driven-thesis-formatting-p0/spec-map.json",
+    "openspec/changes/template-driven-thesis-formatting-p0/component-impact-map.json",
+    "openspec/changes/template-driven-thesis-formatting-p0/prototype/handoff.md",
+    "openspec/changes/template-driven-thesis-formatting-p0/prototype/decision.json",
+    "openspec/changes/template-driven-thesis-formatting-p0/prototype/component/component-map.md",
+    "openspec/specs/ui-design/design.md",
+    "openspec/specs/system-architecture/design.md",
+    "openspec/specs/frontend-backend-data-flow/design.md",
+    "openspec/specs/component-architecture/design.md"
+  ],
+  "allowed_files": [
+    "docs/TEMPLATE_SPEC.md",
+    "templates/**",
+    "examples/**",
+    "tests/test_acceptance.py",
+    "tests/test_cli.py",
+    "tests/test_application_services.py",
+    "tests/test_docx_renderer.py",
+    "openspec/changes/template-driven-thesis-formatting-p0/development/tasks/007-school-template-e2e/**",
+    "openspec/changes/template-driven-thesis-formatting-p0/verification/**"
+  ],
+  "test_paths": [
+    "tests/test_acceptance.py",
+    "tests/test_cli.py",
+    "tests/test_application_services.py",
+    "tests/test_docx_renderer.py"
+  ],
+  "non_goals": [
+    "Do not import the legacy .doc source.",
+    "Do not add frontend editing.",
+    "Do not implement P1/P2 layout gaps."
+  ],
+  "expected_evidence": [
+    "Documented template schema",
+    "HUT YAML and complete example",
+    "Offline CLI E2E output",
+    "Direct package XML assertions",
+    "Repeated-build determinism evidence"
+  ],
+  "unsafe_assumptions": [
+    "A successful package validator proves usable Word or WPS layout."
+  ],
+  "stop_condition": "Stop if any school policy cannot be expressed through the approved template model."
+}

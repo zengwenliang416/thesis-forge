@@ -1,0 +1,44 @@
+{
+  "task_id": "008-regression-office-handoff",
+  "goal": "Close A1-A10 with complete automated, CodeGraph and Word/WPS evidence and pass development handoff.",
+  "must_read": [
+    "openspec/changes/template-driven-thesis-formatting-p0/development/tasks/008-regression-office-handoff/brief.md",
+    "openspec/changes/template-driven-thesis-formatting-p0/requirements.md",
+    "openspec/changes/template-driven-thesis-formatting-p0/acceptance.md",
+    "openspec/changes/template-driven-thesis-formatting-p0/acceptance.json",
+    "openspec/changes/template-driven-thesis-formatting-p0/spec-map.json",
+    "openspec/changes/template-driven-thesis-formatting-p0/component-impact-map.json",
+    "openspec/changes/template-driven-thesis-formatting-p0/prototype/handoff.md",
+    "openspec/changes/template-driven-thesis-formatting-p0/prototype/decision.json",
+    "openspec/changes/template-driven-thesis-formatting-p0/prototype/component/component-map.md",
+    "openspec/specs/ui-design/design.md",
+    "openspec/specs/system-architecture/design.md",
+    "openspec/specs/frontend-backend-data-flow/design.md",
+    "openspec/specs/component-architecture/design.md"
+  ],
+  "allowed_files": [
+    "tests/**",
+    "docs/**",
+    "openspec/changes/template-driven-thesis-formatting-p0/**"
+  ],
+  "test_paths": [
+    "tests/**"
+  ],
+  "non_goals": [
+    "Do not add production features after verification begins.",
+    "Do not repair GitHub CI.",
+    "Do not release or deploy."
+  ],
+  "expected_evidence": [
+    "Focused and full system-executed validation logs",
+    "CodeGraph claims and impact evidence",
+    "Word or WPS sensory review artifacts",
+    "A1-A10 evidence references",
+    "Passing development handoff contract"
+  ],
+  "unsafe_assumptions": [
+    "Passing package checks or LibreOffice conversion proves Word/WPS layout.",
+    "A green CI badge is required when local complete validation is authoritative."
+  ],
+  "stop_condition": "Stop if any baseline task or acceptance assertion lacks direct evidence."
+}
