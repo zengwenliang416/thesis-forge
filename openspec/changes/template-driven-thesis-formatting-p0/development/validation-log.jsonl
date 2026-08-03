@@ -1,1 +1,12 @@
-{"task_id":"001-paragraph-policy","status":"blocked","command":"<decision-required>","reason":"Replace scaffold with actual validation before handoff."}
+{"task_id":"001-paragraph-policy","status":"passed","command":".venv/bin/python -m pytest tests/test_template.py tests/test_architecture.py -q","result":"25 passed in 0.67s","attestation":"system-executed","checked_at":"2026-08-03T03:36:00Z"}
+{"task_id":"001-paragraph-policy","status":"passed","command":".venv/bin/python -m pytest -q","result":"264 passed in 14.53s","attestation":"system-executed","checked_at":"2026-08-03T03:36:00Z"}
+{"task_id":"001-paragraph-policy","status":"passed","command":".venv/bin/ruff check .","result":"All checks passed","attestation":"system-executed","checked_at":"2026-08-03T03:36:00Z"}
+{"task_id":"001-paragraph-policy","status":"passed","command":"git diff --check","result":"no output","attestation":"system-executed","checked_at":"2026-08-03T03:36:00Z"}
+{"task_id":"001-paragraph-policy","status":"passed","command":".venv/bin/python -m pytest tests/test_template.py tests/test_architecture.py -q","result":"48 passed in 0.79s","attestation":"system-executed","checked_at":"2026-08-03T03:59:10Z"}
+{"task_id":"001-paragraph-policy","status":"passed","command":".venv/bin/python -m pytest -q","result":"287 passed in 14.16s","attestation":"system-executed","checked_at":"2026-08-03T03:59:10Z"}
+{"task_id":"001-paragraph-policy","status":"passed","command":".venv/bin/ruff check .","result":"All checks passed","attestation":"system-executed","checked_at":"2026-08-03T03:59:10Z"}
+{"task_id":"001-paragraph-policy","status":"passed","command":"git diff --check","result":"no output","attestation":"system-executed","checked_at":"2026-08-03T03:59:10Z"}
+{"task_id":"001-paragraph-policy","status":"passed","command":".venv/bin/python -m pytest tests/test_template.py tests/test_architecture.py -q","result":"49 passed in 0.68s","attestation":"system-executed","checked_at":"2026-08-03T04:04:53Z"}
+{"task_id":"001-paragraph-policy","status":"passed","command":".venv/bin/python -m pytest -q","result":"288 passed in 13.74s","attestation":"system-executed","checked_at":"2026-08-03T04:04:53Z"}
+{"task_id":"001-paragraph-policy","status":"passed","command":".venv/bin/ruff check .","result":"All checks passed","attestation":"system-executed","checked_at":"2026-08-03T04:04:53Z"}
+{"task_id":"001-paragraph-policy","status":"passed","command":"git diff --check","result":"no output","attestation":"system-executed","checked_at":"2026-08-03T04:04:53Z"}

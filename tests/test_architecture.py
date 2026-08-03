@@ -17,6 +17,7 @@ import thesis_forge.core.parser as parser_module
 import thesis_forge.core.render_plan as render_plan_module
 import thesis_forge.presentation as presentation_module
 import thesis_forge.renderers.docx.renderer as docx_renderer_module
+import thesis_forge.templates.model as template_model_module
 import thesis_forge.ui.controller as ui_controller_module
 import thesis_forge.ui.filesystem as ui_filesystem_module
 import thesis_forge.ui.models as ui_models_module
@@ -61,6 +62,17 @@ def test_render_plan_is_renderer_neutral_and_docx_renderer_does_not_import_parse
 
     renderer_imports = _import_names(Path(docx_renderer_module.__file__))
     assert "thesis_forge.core.parser" not in renderer_imports
+
+
+def test_template_model_is_renderer_neutral():
+    imports = _import_names(Path(template_model_module.__file__))
+    forbidden = {
+        name
+        for name in imports
+        if name in {"docx", "lxml"}
+        or name.startswith(("docx.", "lxml.", "thesis_forge.renderers."))
+    }
+    assert forbidden == set()
 
 
 def test_bibliography_subsystem_does_not_import_docx_xml_or_renderer_layers():

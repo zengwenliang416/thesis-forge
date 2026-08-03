@@ -1,1 +1,1 @@
-{"task_id":"001-paragraph-policy","blocking":true,"reason":"Replace scaffold with actual drift check before handoff."}
+{"task_id":"001-paragraph-policy","blocking":false,"checked_at":"2026-08-03T03:36:00Z","baseline_commit":"dda08b4","reason":"Tasks 1.1-1.7 are preserved; implementation remains inside approved template-policy scope and defers renderer behavior to tasks 002-006."}

@@ -1,1 +1,4 @@
-{"task_id":"001-paragraph-policy","status":"planned","source":"vertical-slice-scaffold"}
+{"task_id":"001-paragraph-policy","status":"implemented","source":"controller","completed_at":"2026-08-03T04:04:53Z","evidence":["49 focused tests passed","288 full tests passed","ruff passed","git diff --check passed","codegraph:ev-mscoceb1"],"review_status":"pending"}
+{"task_id":"001-paragraph-policy","status":"spec_review_passed","source":"independent-review","completed_at":"2026-08-03T04:08:40Z","evidence":"development/tasks/001-paragraph-policy/spec-review.md"}
+{"task_id":"001-paragraph-policy","status":"quality_review_passed","source":"independent-review","completed_at":"2026-08-03T04:08:40Z","evidence":"development/tasks/001-paragraph-policy/quality-review.md"}
+{"task_id":"001-paragraph-policy","status":"complete","source":"specnav-controller","completed_at":"2026-08-03T04:08:40Z","evidence":"Tasks 1.1-1.7 complete; both independent reviews approved; 49 focused and 288 full tests passed; Ruff and git diff checks passed."}

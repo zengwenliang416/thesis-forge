@@ -30,6 +30,7 @@ boundary before any DOCX rendering behavior changes.
 ## Files Allowed
 
 - `src/thesis_forge/templates/model.py`
+- `src/thesis_forge/templates/__init__.py`
 - `src/thesis_forge/templates/resolver.py`
 - `tests/test_template.py`
 - `tests/test_architecture.py`

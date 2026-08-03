@@ -1,13 +1,14 @@
 {
   "schema": "specnav.codegraph.claims_report.v1",
-  "generated_at": "2026-08-03T03:32:25.262Z",
+  "generated_at": "2026-08-03T04:10:28.988Z",
   "active_change": "template-driven-thesis-formatting-p0",
   "claims_file": "openspec/changes/template-driven-thesis-formatting-p0/codegraph/claims-map.json",
   "evidence_index": "openspec/changes/template-driven-thesis-formatting-p0/codegraph/evidence-index.json",
   "claims_count": 8,
-  "verified_claims": [],
+  "verified_claims": [
+    "development:task-001-paragraph-policy"
+  ],
   "unverified_claims": [
-    "development:task-001-paragraph-policy",
     "development:task-002-docx-paragraph-translation",
     "development:task-003-semantic-roles",
     "development:task-004-toc-styles",
@@ -18,7 +19,6 @@
   ],
   "blockers": [],
   "warnings": [
-    "codegraph:claim-unverified:development:task-001-paragraph-policy",
     "codegraph:claim-unverified:development:task-002-docx-paragraph-translation",
     "codegraph:claim-unverified:development:task-003-semantic-roles",
     "codegraph:claim-unverified:development:task-004-toc-styles",
