@@ -151,6 +151,13 @@ class BodySpec(ParagraphStyleSpec):
     first_line_indent: LengthSpec
     line_spacing: LineSpacingSpec
 
+    @field_validator("size")
+    @classmethod
+    def validate_absolute_body_size(cls, value: LengthSpec) -> LengthSpec:
+        if value.unit == "em":
+            raise ValueError("body.size 必须使用绝对单位，不能使用 em")
+        return value
+
 
 class HeadingLevelSpec(ParagraphStyleSpec):
     size: LengthSpec

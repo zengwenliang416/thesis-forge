@@ -10,3 +10,11 @@
 {"task_id":"001-paragraph-policy","status":"passed","command":".venv/bin/python -m pytest -q","result":"288 passed in 13.74s","attestation":"system-executed","checked_at":"2026-08-03T04:04:53Z"}
 {"task_id":"001-paragraph-policy","status":"passed","command":".venv/bin/ruff check .","result":"All checks passed","attestation":"system-executed","checked_at":"2026-08-03T04:04:53Z"}
 {"task_id":"001-paragraph-policy","status":"passed","command":"git diff --check","result":"no output","attestation":"system-executed","checked_at":"2026-08-03T04:04:53Z"}
+{"task_id":"002-docx-paragraph-translation","status":"passed","command":".venv/bin/python -m pytest tests/test_docx_renderer.py tests/test_template.py -q","result":"75 passed in 1.04s","attestation":"system-executed","checked_at":"2026-08-03T04:23:20Z"}
+{"task_id":"002-docx-paragraph-translation","status":"passed","command":".venv/bin/python -m pytest -q","result":"305 passed in 14.08s","attestation":"system-executed","checked_at":"2026-08-03T04:23:20Z"}
+{"task_id":"002-docx-paragraph-translation","status":"passed","command":".venv/bin/ruff check .","result":"All checks passed","attestation":"system-executed","checked_at":"2026-08-03T04:23:20Z"}
+{"task_id":"002-docx-paragraph-translation","status":"passed","command":"git diff --check","result":"no output","attestation":"system-executed","checked_at":"2026-08-03T04:23:20Z"}
+{"task_id":"002-docx-paragraph-translation","status":"passed","command":".venv/bin/python -m pytest tests/test_docx_renderer.py tests/test_template.py -q","result":"78 passed in 1.19s","attestation":"system-executed","checked_at":"2026-08-03T04:36:17Z"}
+{"task_id":"002-docx-paragraph-translation","status":"passed","command":".venv/bin/python -m pytest -q","result":"308 passed in 14.03s","attestation":"system-executed","checked_at":"2026-08-03T04:36:17Z"}
+{"task_id":"002-docx-paragraph-translation","status":"passed","command":".venv/bin/ruff check .","result":"All checks passed","attestation":"system-executed","checked_at":"2026-08-03T04:36:17Z"}
+{"task_id":"002-docx-paragraph-translation","status":"passed","command":"git diff --check","result":"no output","attestation":"system-executed","checked_at":"2026-08-03T04:36:17Z"}

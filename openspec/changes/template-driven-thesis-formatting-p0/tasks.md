@@ -14,13 +14,13 @@
 
 **用户结果：** 正文与标题严格使用模板中的字体、缩进、段距、行距和分页控制，不再依赖 Word 默认值或重复实现。
 
-- [ ] 2.1 抽取共享 DOCX paragraph-style translator，统一应用字体、字号、强调、对齐、缩进、段距和行距。（A1）
-- [ ] 2.2 增加 `w:widowControl`、`w:keepNext`、`w:keepLines`、`w:pageBreakBefore`、`w:outlineLvl` 和 `w:snapToGrid` 的聚焦 OOXML helpers。（A1）
-- [ ] 2.3 使用目标样式字号解析 `em`，避免全局 12 pt 假设。（A1）
-- [ ] 2.4 将 Normal/body 和 Heading 1-3 迁移到共享 translator，并保持旧模板生成语义兼容。（A1、A2）
-- [ ] 2.5 为语义角色创建稳定内部 Word styles，但不允许模板直接提供 `w:styleId`。（A3、A7）
-- [ ] 2.6 增加 paragraph/style XML 测试，断言 `w:pStyle`、`w:spacing`、`w:ind`、分页属性、outline 和 grid 属性。（A1）
-- [ ] 2.7 增加两份不同模板生成样式不同、语义对象相同的确定性测试。（A8）
+- [x] 2.1 抽取共享 DOCX paragraph-style translator，统一应用字体、字号、强调、对齐、缩进、段距和行距。（A1）
+- [x] 2.2 增加 `w:widowControl`、`w:keepNext`、`w:keepLines`、`w:pageBreakBefore`、`w:outlineLvl` 和 `w:snapToGrid` 的聚焦 OOXML helpers。（A1）
+- [x] 2.3 使用目标样式字号解析 `em`，避免全局 12 pt 假设。（A1）
+- [x] 2.4 将 Normal/body 和 Heading 1-3 迁移到共享 translator，并保持旧模板生成语义兼容。（A1、A2）
+- [x] 2.5 为语义角色创建稳定内部 Word styles，但不允许模板直接提供 `w:styleId`。（A3、A7）
+- [x] 2.6 增加 paragraph/style XML 测试，断言 `w:pStyle`、`w:spacing`、`w:ind`、分页属性、outline 和 grid 属性。（A1）
+- [x] 2.7 增加两份不同模板生成样式不同、语义对象相同的确定性测试。（A8）
 
 ## 3. Abstract, Keywords And Semantic Roles
 

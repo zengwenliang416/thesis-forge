@@ -555,6 +555,38 @@ def test_body_and_heading_inheritance_preserves_required_fields_and_defaults():
     assert heading_schema["properties"]["page_break_before"]["default"] is False
 
 
+def test_body_font_size_rejects_em_without_absolute_base(tmp_path: Path):
+    path = tmp_path / "relative-body-size.yaml"
+    path.write_text(
+        """id: relative-body-size
+name: Relative Body Size
+year: 2026
+page:
+  margin:
+    top: 25mm
+    bottom: 25mm
+    left: 30mm
+    right: 25mm
+body:
+  size: 1em
+  first_line_indent: 2em
+  line_spacing:
+    type: fixed
+    value: 20pt
+heading:
+  level1:
+    size: 1.5em
+""",
+        encoding="utf-8",
+    )
+
+    with pytest.raises(TemplateLoadError) as exc_info:
+        load_template(path)
+
+    assert exc_info.value.field_errors[0][0] == "body.size"
+    assert "绝对单位" in str(exc_info.value)
+
+
 @pytest.mark.parametrize(
     "header_yaml",
     [

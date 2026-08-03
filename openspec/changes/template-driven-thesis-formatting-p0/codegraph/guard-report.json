@@ -1,6 +1,6 @@
 {
   "schema": "specnav.codegraph.guard_report.v1",
-  "generated_at": "2026-08-03T04:10:28.988Z",
+  "generated_at": "2026-08-03T04:43:19.130Z",
   "active_change": "template-driven-thesis-formatting-p0",
   "stage": "development",
   "ok": true,
@@ -34,10 +34,10 @@
       "initialized": true,
       "projectPath": "/Volumes/zwl/open_sources/thesis-forge",
       "indexPath": "/Volumes/zwl/open_sources/thesis-forge/.codegraph",
-      "lastIndexed": "2026-08-03T04:10:16.493Z",
+      "lastIndexed": "2026-08-03T04:37:34.697Z",
       "fileCount": 145,
-      "nodeCount": 2041,
-      "edgeCount": 5809,
+      "nodeCount": 2068,
+      "edgeCount": 5930,
       "pendingChanges": {
         "added": 0,
         "modified": 0,
@@ -61,7 +61,7 @@
   },
   "evidence_index": {
     "schema": "specnav.codegraph.evidence_index.v1",
-    "generated_at": "2026-08-03T03:33:18.842Z",
+    "generated_at": "2026-08-03T04:37:51.919Z",
     "active_change": "template-driven-thesis-formatting-p0",
     "source_raw": "openspec/changes/template-driven-thesis-formatting-p0/codegraph/evidence.jsonl",
     "by_claim": {
@@ -80,11 +80,27 @@
         ],
         "symbols": [],
         "blockers": []
+      },
+      "development:task-002-docx-paragraph-translation": {
+        "status": "matched",
+        "evidence_ids": [
+          "ev-mscq4qfn",
+          "ev-mscqnesn"
+        ],
+        "files": [
+          "src/thesis_forge/renderers/docx/styles.py",
+          "src/thesis_forge/renderers/docx/fonts.py",
+          "src/thesis_forge/renderers/docx/package.py",
+          "src/thesis_forge/templates/model.py",
+          "number.rs"
+        ],
+        "symbols": [],
+        "blockers": []
       }
     },
     "by_stage": {
       "development": {
-        "verified": 1,
+        "verified": 3,
         "partial": 0,
         "missing": 0,
         "stale": 0,
@@ -93,20 +109,20 @@
     },
     "blockers": [],
     "raw_exists": true,
-    "record_count": 1
+    "record_count": 3
   },
   "claims_report": {
     "schema": "specnav.codegraph.claims_report.v1",
-    "generated_at": "2026-08-03T04:10:28.988Z",
+    "generated_at": "2026-08-03T04:43:19.130Z",
     "active_change": "template-driven-thesis-formatting-p0",
     "claims_file": "openspec/changes/template-driven-thesis-formatting-p0/codegraph/claims-map.json",
     "evidence_index": "openspec/changes/template-driven-thesis-formatting-p0/codegraph/evidence-index.json",
     "claims_count": 8,
     "verified_claims": [
-      "development:task-001-paragraph-policy"
+      "development:task-001-paragraph-policy",
+      "development:task-002-docx-paragraph-translation"
     ],
     "unverified_claims": [
-      "development:task-002-docx-paragraph-translation",
       "development:task-003-semantic-roles",
       "development:task-004-toc-styles",
       "development:task-005-citations-bibliography",
@@ -116,7 +132,6 @@
     ],
     "blockers": [],
     "warnings": [
-      "codegraph:claim-unverified:development:task-002-docx-paragraph-translation",
       "codegraph:claim-unverified:development:task-003-semantic-roles",
       "codegraph:claim-unverified:development:task-004-toc-styles",
       "codegraph:claim-unverified:development:task-005-citations-bibliography",
@@ -133,7 +148,6 @@
   },
   "blockers": [],
   "warnings": [
-    "codegraph:claim-unverified:development:task-002-docx-paragraph-translation",
     "codegraph:claim-unverified:development:task-003-semantic-roles",
     "codegraph:claim-unverified:development:task-004-toc-styles",
     "codegraph:claim-unverified:development:task-005-citations-bibliography",

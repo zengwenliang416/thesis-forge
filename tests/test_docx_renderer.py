@@ -2,6 +2,7 @@ import base64
 from pathlib import Path
 
 import pytest
+from docx import Document
 from lxml import etree
 
 import thesis_forge.renderers.docx.fields as fields_module
@@ -30,7 +31,18 @@ from thesis_forge.core.render_plan import ReferenceRun
 from thesis_forge.renderers.docx import DocxRenderer
 from thesis_forge.renderers.docx.errors import DocxRenderError
 from thesis_forge.renderers.docx.package import list_package_parts, read_package_part
-from thesis_forge.templates import FontSpec, LengthSpec, SectionsSpec, load_template
+from thesis_forge.renderers.docx.styles import (
+    apply_paragraph_style,
+    ensure_paragraph_style,
+)
+from thesis_forge.templates import (
+    FontSpec,
+    LengthSpec,
+    LineSpacingSpec,
+    ParagraphStyleSpec,
+    SectionsSpec,
+    load_template,
+)
 
 NS = {
     "a": "http://schemas.openxmlformats.org/drawingml/2006/main",
@@ -89,8 +101,348 @@ def test_docx_renderer_applies_template_page_body_and_heading_xml(tmp_path: Path
     assert heading.xpath("./w:rPr/w:rFonts/@w:eastAsia", namespaces=NS) == ["黑体"]
     assert heading.xpath("./w:rPr/w:b", namespaces=NS)
     assert heading.xpath("./w:pPr/w:jc/@w:val", namespaces=NS) == ["center"]
+    assert heading.xpath("./w:pPr/w:keepNext", namespaces=NS)
+    assert heading.xpath("./w:pPr/w:keepLines", namespaces=NS)
     assert "[TODO:" not in etree.tostring(document_xml, encoding="unicode")
     assert "word/document.xml" in list_package_parts(output)
+
+
+def test_docx_renderer_translates_complete_body_and_heading_policy_xml(
+    tmp_path: Path,
+):
+    template = load_template("templates/base/bachelor.yaml")
+    template.body.font = FontSpec(east_asia="楷体", latin="Arial")
+    template.body.size = LengthSpec.model_validate("10pt")
+    template.body.bold = True
+    template.body.italic = True
+    template.body.alignment = "right"
+    template.body.left_indent = LengthSpec.model_validate("1em")
+    template.body.right_indent = LengthSpec.model_validate("5pt")
+    template.body.first_line_indent = LengthSpec.model_validate("2em")
+    template.body.space_before = LengthSpec.model_validate("6pt")
+    template.body.space_after = LengthSpec.model_validate("8pt")
+    template.body.line_spacing = LineSpacingSpec(type="fixed", value="20pt")
+    template.body.widow_control = False
+    template.body.keep_together = True
+    template.body.keep_with_next = False
+    template.body.page_break_before = True
+    template.body.outline_level = 2
+    template.body.snap_to_grid = False
+
+    heading = template.heading.level1
+    heading.font = None
+    heading.size = LengthSpec.model_validate("20pt")
+    heading.first_line_indent = None
+    heading.hanging_indent = LengthSpec.model_validate("1.5em")
+    heading.space_before = LengthSpec.model_validate("10pt")
+    heading.space_after = LengthSpec.model_validate("4pt")
+    heading.line_spacing = LineSpacingSpec(type="multiple", value=1.5)
+    heading.widow_control = True
+    heading.keep_together = False
+    heading.keep_with_next = True
+    heading.page_break_before = False
+    heading.outline_level = 0
+    heading.snap_to_grid = True
+
+    document = ThesisDocument(
+        source_path=tmp_path / "thesis.md",
+        blocks=[
+            Heading(id="chap:intro", level=1, text="绪论"),
+            Paragraph(text="正文", inlines=[Text(value="正文")]),
+        ],
+    )
+    output = tmp_path / "complete-policy.docx"
+
+    DocxRenderer().render(compile_document(document, template=template), output)
+
+    styles_xml = _xml_part(output, "word/styles.xml")
+    normal = styles_xml.xpath(".//w:style[@w:styleId='Normal']", namespaces=NS)[0]
+    assert normal.xpath("./w:rPr/w:rFonts/@w:eastAsia", namespaces=NS) == ["楷体"]
+    assert normal.xpath("./w:rPr/w:rFonts/@w:ascii", namespaces=NS) == ["Arial"]
+    assert normal.xpath("./w:rPr/w:sz/@w:val", namespaces=NS) == ["20"]
+    assert normal.xpath("./w:rPr/w:b", namespaces=NS)
+    assert normal.xpath("./w:rPr/w:i", namespaces=NS)
+    assert normal.xpath("./w:pPr/w:jc/@w:val", namespaces=NS) == ["right"]
+    assert normal.xpath("./w:pPr/w:ind/@w:left", namespaces=NS) == ["200"]
+    assert normal.xpath("./w:pPr/w:ind/@w:right", namespaces=NS) == ["100"]
+    assert normal.xpath("./w:pPr/w:ind/@w:firstLine", namespaces=NS) == ["400"]
+    assert normal.xpath("./w:pPr/w:spacing/@w:before", namespaces=NS) == ["120"]
+    assert normal.xpath("./w:pPr/w:spacing/@w:after", namespaces=NS) == ["160"]
+    assert normal.xpath("./w:pPr/w:spacing/@w:line", namespaces=NS) == ["400"]
+    assert normal.xpath("./w:pPr/w:spacing/@w:lineRule", namespaces=NS) == ["exact"]
+    assert normal.xpath("./w:pPr/w:widowControl/@w:val", namespaces=NS) == ["0"]
+    assert normal.xpath("./w:pPr/w:keepLines", namespaces=NS)
+    assert normal.xpath("./w:pPr/w:keepNext/@w:val", namespaces=NS) == ["0"]
+    assert normal.xpath("./w:pPr/w:pageBreakBefore", namespaces=NS)
+    assert normal.xpath("./w:pPr/w:outlineLvl/@w:val", namespaces=NS) == ["2"]
+    assert normal.xpath("./w:pPr/w:snapToGrid/@w:val", namespaces=NS) == ["0"]
+
+    heading_xml = styles_xml.xpath(
+        ".//w:style[@w:styleId='Heading1']",
+        namespaces=NS,
+    )[0]
+    assert heading_xml.xpath("./w:rPr/w:rFonts/@w:eastAsia", namespaces=NS) == [
+        "楷体"
+    ]
+    assert heading_xml.xpath("./w:rPr/w:rFonts/@w:ascii", namespaces=NS) == [
+        "Arial"
+    ]
+    assert heading_xml.xpath("./w:rPr/w:sz/@w:val", namespaces=NS) == ["40"]
+    assert heading_xml.xpath("./w:pPr/w:ind/@w:hanging", namespaces=NS) == ["600"]
+    assert heading_xml.xpath("./w:pPr/w:spacing/@w:before", namespaces=NS) == ["200"]
+    assert heading_xml.xpath("./w:pPr/w:spacing/@w:after", namespaces=NS) == ["80"]
+    assert heading_xml.xpath("./w:pPr/w:spacing/@w:line", namespaces=NS) == ["360"]
+    assert heading_xml.xpath("./w:pPr/w:spacing/@w:lineRule", namespaces=NS) == [
+        "auto"
+    ]
+    assert heading_xml.xpath("./w:pPr/w:widowControl", namespaces=NS)
+    assert heading_xml.xpath("./w:pPr/w:keepLines/@w:val", namespaces=NS) == ["0"]
+    assert heading_xml.xpath("./w:pPr/w:keepNext", namespaces=NS)
+    assert heading_xml.xpath("./w:pPr/w:pageBreakBefore/@w:val", namespaces=NS) == [
+        "0"
+    ]
+    assert heading_xml.xpath("./w:pPr/w:outlineLvl/@w:val", namespaces=NS) == ["0"]
+    assert heading_xml.xpath("./w:pPr/w:snapToGrid", namespaces=NS)
+
+
+def test_paragraph_style_translator_uses_target_size_for_em_and_paragraph_runs():
+    document = Document()
+    paragraph = document.add_paragraph("正文")
+    spec = ParagraphStyleSpec(
+        font=FontSpec(east_asia="仿宋", latin="Calibri"),
+        size="15pt",
+        left_indent="2em",
+        hanging_indent="1em",
+        space_before="0.5em",
+        line_spacing={"type": "fixed", "value": "2em"},
+    )
+
+    apply_paragraph_style(paragraph, spec)
+
+    paragraph_xml = paragraph._p
+    assert paragraph_xml.xpath("./w:pPr/w:ind/@w:left") == ["600"]
+    assert paragraph_xml.xpath("./w:pPr/w:ind/@w:hanging") == ["300"]
+    assert paragraph_xml.xpath("./w:pPr/w:spacing/@w:before") == ["150"]
+    assert paragraph_xml.xpath("./w:pPr/w:spacing/@w:line") == ["600"]
+    run_xml = paragraph.runs[0]._r
+    assert run_xml.xpath("./w:rPr/w:rFonts/@w:eastAsia") == ["仿宋"]
+    assert run_xml.xpath("./w:rPr/w:rFonts/@w:ascii") == ["Calibri"]
+    assert run_xml.xpath("./w:rPr/w:sz/@w:val") == ["30"]
+
+
+def test_heading_em_size_and_indent_resolve_from_body_font_size(tmp_path: Path):
+    template = load_template("templates/base/bachelor.yaml")
+    template.body.size = LengthSpec.model_validate("10pt")
+    template.heading.level1.size = LengthSpec.model_validate("1.5em")
+    template.heading.level1.left_indent = LengthSpec.model_validate("1em")
+    document = ThesisDocument(
+        source_path=tmp_path / "thesis.md",
+        blocks=[Heading(id="chap:intro", level=1, text="绪论")],
+    )
+    output = tmp_path / "heading-em.docx"
+
+    DocxRenderer().render(compile_document(document, template=template), output)
+
+    styles_xml = _xml_part(output, "word/styles.xml")
+    heading = styles_xml.xpath(
+        ".//w:style[@w:styleId='Heading1']",
+        namespaces=NS,
+    )[0]
+    assert heading.xpath("./w:rPr/w:sz/@w:val", namespaces=NS) == ["30"]
+    assert heading.xpath("./w:pPr/w:ind/@w:left", namespaces=NS) == ["300"]
+
+
+def test_single_line_spacing_writes_quantized_word_xml(tmp_path: Path):
+    template = load_template("templates/base/bachelor.yaml")
+    template.body.line_spacing = LineSpacingSpec(type="single")
+    document = ThesisDocument(
+        source_path=tmp_path / "thesis.md",
+        blocks=[Paragraph(text="正文", inlines=[Text(value="正文")])],
+    )
+    output = tmp_path / "single-spacing.docx"
+
+    DocxRenderer().render(compile_document(document, template=template), output)
+
+    styles_xml = _xml_part(output, "word/styles.xml")
+    normal = styles_xml.xpath(".//w:style[@w:styleId='Normal']", namespaces=NS)[0]
+    assert normal.xpath("./w:pPr/w:spacing/@w:lineRule", namespaces=NS) == ["auto"]
+    assert normal.xpath("./w:pPr/w:spacing/@w:line", namespaces=NS) == ["240"]
+
+
+@pytest.mark.parametrize(
+    ("role", "style_name", "style_id"),
+    [
+        ("abstract.zh.title", "TF Abstract ZH Title", "TFAbstractZHTitle"),
+        ("abstract.zh.body", "TF Abstract ZH Body", "TFAbstractZHBody"),
+        ("keywords.zh", "TF Keywords ZH", "TFKeywordsZH"),
+        ("abstract.en.title", "TF Abstract EN Title", "TFAbstractENTitle"),
+        ("abstract.en.body", "TF Abstract EN Body", "TFAbstractENBody"),
+        ("keywords.en", "TF Keywords EN", "TFKeywordsEN"),
+        ("toc.title", "TF TOC Title", "TFTOCTitle"),
+        (
+            "bibliography.title",
+            "TF Bibliography Title",
+            "TFBibliographyTitle",
+        ),
+        (
+            "bibliography.entry",
+            "TF Bibliography Entry",
+            "TFBibliographyEntry",
+        ),
+        (
+            "special.acknowledgements",
+            "TF Acknowledgements",
+            "TFAcknowledgements",
+        ),
+        ("special.achievements", "TF Achievements", "TFAchievements"),
+    ],
+)
+def test_ensure_paragraph_style_uses_stable_internal_style_ids(
+    role: str,
+    style_name: str,
+    style_id: str,
+):
+    document = Document()
+    spec = ParagraphStyleSpec(size="12pt", alignment="justify")
+
+    first = ensure_paragraph_style(document, role, spec)
+    second = ensure_paragraph_style(document, role, spec)
+
+    assert first._element is second._element
+    assert sum(
+        style.style_id == style_id
+        for style in document.styles
+    ) == 1
+    assert first.style_id == style_id
+    assert first.name == style_name
+    assert first.base_style.style_id == "Normal"
+
+
+def test_ensure_paragraph_style_rejects_arbitrary_word_style_id():
+    with pytest.raises(ValueError, match="unsupported paragraph role"):
+        ensure_paragraph_style(
+            Document(),
+            "CustomWordStyle",
+            ParagraphStyleSpec(size="12pt"),
+        )
+
+
+def test_stable_paragraph_style_survives_package_round_trip(tmp_path: Path):
+    document = Document()
+    style = ensure_paragraph_style(
+        document,
+        "abstract.zh.body",
+        ParagraphStyleSpec(size="12pt", first_line_indent="2em"),
+    )
+    document.add_paragraph("摘要正文", style=style)
+    output = tmp_path / "stable-style.docx"
+
+    document.save(output)
+
+    styles_xml = _xml_part(output, "word/styles.xml")
+    document_xml = _xml_part(output, "word/document.xml")
+    assert styles_xml.xpath(
+        ".//w:style[@w:styleId='TFAbstractZHBody']",
+        namespaces=NS,
+    )
+    assert document_xml.xpath(
+        ".//w:p[.//w:t[text()='摘要正文']]/w:pPr/w:pStyle/@w:val",
+        namespaces=NS,
+    ) == ["TFAbstractZHBody"]
+
+    reopened = Document(output)
+    assert reopened.paragraphs[0].style.style_id == "TFAbstractZHBody"
+    assert reopened.styles["TF Abstract ZH Body"].style_id == "TFAbstractZHBody"
+
+
+def test_heading_levels_one_through_three_use_shared_translator(tmp_path: Path):
+    template = load_template("templates/base/bachelor.yaml")
+    expected_left_indents = {"Heading1": "320", "Heading2": "560", "Heading3": "720"}
+    for level in range(1, 4):
+        heading = template.heading.for_level(level)
+        assert heading is not None
+        heading.left_indent = LengthSpec.model_validate(f"{level}em")
+        heading.outline_level = level - 1
+        heading.keep_with_next = True
+        heading.snap_to_grid = False
+    document = ThesisDocument(
+        source_path=tmp_path / "thesis.md",
+        blocks=[
+            Heading(id="chap:one", level=1, text="一级标题"),
+            Heading(id="sec:two", level=2, text="二级标题"),
+            Heading(id="sec:three", level=3, text="三级标题"),
+        ],
+    )
+    output = tmp_path / "heading-levels.docx"
+
+    DocxRenderer().render(compile_document(document, template=template), output)
+
+    styles_xml = _xml_part(output, "word/styles.xml")
+    for level in range(1, 4):
+        style_id = f"Heading{level}"
+        style = styles_xml.xpath(
+            f".//w:style[@w:styleId='{style_id}']",
+            namespaces=NS,
+        )[0]
+        assert style.xpath("./w:pPr/w:ind/@w:left", namespaces=NS) == [
+            expected_left_indents[style_id]
+        ]
+        assert style.xpath("./w:pPr/w:outlineLvl/@w:val", namespaces=NS) == [
+            str(level - 1)
+        ]
+        assert style.xpath("./w:pPr/w:keepNext", namespaces=NS)
+        assert style.xpath("./w:pPr/w:snapToGrid/@w:val", namespaces=NS) == ["0"]
+
+
+def test_two_templates_change_styles_without_changing_document_semantics(
+    tmp_path: Path,
+):
+    document = ThesisDocument(
+        source_path=tmp_path / "thesis.md",
+        blocks=[
+            Heading(id="chap:intro", level=1, text="绪论"),
+            Paragraph(text="相同正文", inlines=[Text(value="相同正文")]),
+        ],
+    )
+    first_template = load_template("templates/base/bachelor.yaml")
+    second_template = load_template("templates/base/bachelor.yaml")
+    second_template.body.font = FontSpec(east_asia="楷体", latin="Arial")
+    second_template.body.size = LengthSpec.model_validate("10pt")
+    second_template.body.first_line_indent = LengthSpec.model_validate("3em")
+    first_output = tmp_path / "first.docx"
+    second_output = tmp_path / "second.docx"
+
+    DocxRenderer().render(
+        compile_document(document, template=first_template),
+        first_output,
+    )
+    DocxRenderer().render(
+        compile_document(document, template=second_template),
+        second_output,
+    )
+
+    first_document = _xml_part(first_output, "word/document.xml")
+    second_document = _xml_part(second_output, "word/document.xml")
+    assert first_document.xpath(".//w:body//w:t/text()", namespaces=NS) == (
+        second_document.xpath(".//w:body//w:t/text()", namespaces=NS)
+    )
+    first_styles = _xml_part(first_output, "word/styles.xml")
+    second_styles = _xml_part(second_output, "word/styles.xml")
+    first_normal = first_styles.xpath(
+        ".//w:style[@w:styleId='Normal']",
+        namespaces=NS,
+    )[0]
+    second_normal = second_styles.xpath(
+        ".//w:style[@w:styleId='Normal']",
+        namespaces=NS,
+    )[0]
+    assert etree.tostring(first_normal) != etree.tostring(second_normal)
+    assert second_normal.xpath("./w:rPr/w:rFonts/@w:eastAsia", namespaces=NS) == [
+        "楷体"
+    ]
+    assert second_normal.xpath("./w:pPr/w:ind/@w:firstLine", namespaces=NS) == [
+        "600"
+    ]
 
 
 def test_docx_renderer_applies_landscape_orientation(tmp_path: Path):

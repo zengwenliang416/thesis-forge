@@ -1,9 +1,21 @@
 from __future__ import annotations
 
-from docx.document import Document as DocumentObject
-from docx.enum.text import WD_ALIGN_PARAGRAPH, WD_LINE_SPACING
+from typing import TypeAlias
 
-from thesis_forge.templates.model import HeadingLevelSpec, ThesisTemplate
+from docx.document import Document as DocumentObject
+from docx.enum.style import WD_STYLE_TYPE
+from docx.enum.text import WD_ALIGN_PARAGRAPH, WD_LINE_SPACING
+from docx.oxml import OxmlElement
+from docx.oxml.ns import qn
+from docx.styles.style import ParagraphStyle
+from docx.text.paragraph import Paragraph
+
+from thesis_forge.templates.model import (
+    FontSpec,
+    LengthSpec,
+    ParagraphStyleSpec,
+    ThesisTemplate,
+)
 
 from .fonts import apply_font
 from .units import to_docx_length, to_points
@@ -15,59 +27,216 @@ ALIGNMENTS = {
     "justify": WD_ALIGN_PARAGRAPH.JUSTIFY,
 }
 
+PARAGRAPH_STYLE_NAMES = {
+    "abstract.zh.title": "TF Abstract ZH Title",
+    "abstract.zh.body": "TF Abstract ZH Body",
+    "keywords.zh": "TF Keywords ZH",
+    "abstract.en.title": "TF Abstract EN Title",
+    "abstract.en.body": "TF Abstract EN Body",
+    "keywords.en": "TF Keywords EN",
+    "toc.title": "TF TOC Title",
+    "bibliography.title": "TF Bibliography Title",
+    "bibliography.entry": "TF Bibliography Entry",
+    "special.acknowledgements": "TF Acknowledgements",
+    "special.achievements": "TF Achievements",
+}
 
-def _configure_heading(
-    document: DocumentObject,
-    template: ThesisTemplate,
-    level: int,
-    spec: HeadingLevelSpec,
+
+ParagraphTarget: TypeAlias = ParagraphStyle | Paragraph
+
+
+def _resolved_size_points(
+    size: LengthSpec | None,
+    fallback_size: LengthSpec | None,
+) -> float | None:
+    selected = size or fallback_size
+    if selected is None:
+        return None
+    if selected.unit != "em":
+        return to_points(selected)
+    if fallback_size is None or fallback_size.unit == "em":
+        raise ValueError("em font size requires a non-em fallback size")
+    return to_points(selected, em_size_pt=to_points(fallback_size))
+
+
+def _font_size_em_base_points(
+    size: LengthSpec | None,
+    fallback_size: LengthSpec | None,
+) -> float | None:
+    if size is None or size.unit != "em":
+        return None
+    if fallback_size is None or fallback_size.unit == "em":
+        raise ValueError("em font size requires a non-em fallback size")
+    return to_points(fallback_size)
+
+
+def _set_on_off_property(paragraph, tag: str, value: bool | None) -> None:
+    if value is None:
+        return
+    p_pr = paragraph._element.get_or_add_pPr()
+    element = p_pr.find(qn(tag))
+    if element is None:
+        element = OxmlElement(tag)
+        p_pr.append(element)
+    if value:
+        element.attrib.pop(qn("w:val"), None)
+    else:
+        element.set(qn("w:val"), "0")
+
+
+def _set_outline_level(paragraph, value: int | None) -> None:
+    if value is None:
+        return
+    p_pr = paragraph._element.get_or_add_pPr()
+    outline = p_pr.find(qn("w:outlineLvl"))
+    if outline is None:
+        outline = OxmlElement("w:outlineLvl")
+        p_pr.append(outline)
+    outline.set(qn("w:val"), str(value))
+
+
+def apply_paragraph_style(
+    target: ParagraphTarget,
+    spec: ParagraphStyleSpec,
+    *,
+    fallback_font: FontSpec | None = None,
+    fallback_size: LengthSpec | None = None,
 ) -> None:
-    style = document.styles[f"Heading {level}"]
-    apply_font(
-        style.font,
-        spec.font or template.body.font,
-        size=spec.size,
-        bold=spec.bold,
-        italic=spec.italic,
-    )
-    paragraph = style.paragraph_format
-    paragraph.alignment = ALIGNMENTS[spec.alignment]
-    paragraph.page_break_before = spec.page_break_before
+    font_spec = spec.font or fallback_font
+    size = spec.size or fallback_size
+    size_pt = _resolved_size_points(spec.size, fallback_size)
+    font_em_base_pt = _font_size_em_base_points(spec.size, fallback_size)
+
+    if isinstance(target, Paragraph):
+        for run in target.runs:
+            apply_font(
+                run.font,
+                font_spec,
+                size=size,
+                bold=spec.bold,
+                italic=spec.italic,
+                em_size_pt=font_em_base_pt,
+            )
+    else:
+        apply_font(
+            target.font,
+            font_spec,
+            size=size,
+            bold=spec.bold,
+            italic=spec.italic,
+            em_size_pt=font_em_base_pt,
+        )
+
+    paragraph = target.paragraph_format
+    if spec.alignment is not None:
+        paragraph.alignment = ALIGNMENTS[spec.alignment]
+    if spec.left_indent is not None:
+        paragraph.left_indent = to_docx_length(
+            spec.left_indent,
+            em_size_pt=size_pt,
+        )
+    if spec.right_indent is not None:
+        paragraph.right_indent = to_docx_length(
+            spec.right_indent,
+            em_size_pt=size_pt,
+        )
+    if spec.hanging_indent is not None and spec.hanging_indent.value > 0:
+        paragraph.first_line_indent = -to_docx_length(
+            spec.hanging_indent,
+            em_size_pt=size_pt,
+        )
+    elif spec.first_line_indent is not None:
+        paragraph.first_line_indent = to_docx_length(
+            spec.first_line_indent,
+            em_size_pt=size_pt,
+        )
+    elif spec.hanging_indent is not None:
+        paragraph.first_line_indent = to_docx_length(
+            spec.hanging_indent,
+            em_size_pt=size_pt,
+        )
     if spec.space_before is not None:
         paragraph.space_before = to_docx_length(
             spec.space_before,
-            em_size_pt=to_points(spec.size, em_size_pt=12),
+            em_size_pt=size_pt,
         )
     if spec.space_after is not None:
         paragraph.space_after = to_docx_length(
             spec.space_after,
-            em_size_pt=to_points(spec.size, em_size_pt=12),
+            em_size_pt=size_pt,
         )
+
+    spacing = spec.line_spacing
+    if spacing is not None:
+        if spacing.type == "fixed":
+            paragraph.line_spacing = to_docx_length(
+                spacing.value,
+                em_size_pt=size_pt,
+            )
+            paragraph.line_spacing_rule = WD_LINE_SPACING.EXACTLY
+        elif spacing.type == "multiple":
+            paragraph.line_spacing = float(spacing.value)
+            paragraph.line_spacing_rule = WD_LINE_SPACING.MULTIPLE
+        else:
+            paragraph.line_spacing_rule = WD_LINE_SPACING.SINGLE
+
+    if spec.widow_control is not None:
+        paragraph.widow_control = spec.widow_control
+    if spec.keep_together is not None:
+        paragraph.keep_together = spec.keep_together
+    if spec.keep_with_next is not None:
+        paragraph.keep_with_next = spec.keep_with_next
+    if spec.page_break_before is not None:
+        paragraph.page_break_before = spec.page_break_before
+    _set_outline_level(paragraph, spec.outline_level)
+    _set_on_off_property(paragraph, "w:snapToGrid", spec.snap_to_grid)
+
+
+def ensure_paragraph_style(
+    document: DocumentObject,
+    role: str,
+    spec: ParagraphStyleSpec,
+    *,
+    fallback_font: FontSpec | None = None,
+    fallback_size: LengthSpec | None = None,
+) -> ParagraphStyle:
+    try:
+        style_name = PARAGRAPH_STYLE_NAMES[role]
+    except KeyError as error:
+        raise ValueError(f"unsupported paragraph role: {role}") from error
+
+    style_id = style_name.replace(" ", "")
+    style = next(
+        (
+            candidate
+            for candidate in document.styles
+            if candidate.type == WD_STYLE_TYPE.PARAGRAPH
+            and candidate.style_id == style_id
+        ),
+        None,
+    )
+    if style is None:
+        style = document.styles.add_style(style_name, WD_STYLE_TYPE.PARAGRAPH)
+        style.base_style = document.styles["Normal"]
+    apply_paragraph_style(
+        style,
+        spec,
+        fallback_font=fallback_font,
+        fallback_size=fallback_size,
+    )
+    return style
 
 
 def configure_styles(document: DocumentObject, template: ThesisTemplate) -> None:
     normal = document.styles["Normal"]
-    body_size_pt = to_points(template.body.size, em_size_pt=12)
-    apply_font(normal.font, template.body.font, size=template.body.size)
-    paragraph = normal.paragraph_format
-    paragraph.alignment = ALIGNMENTS[template.body.alignment]
-    paragraph.first_line_indent = to_docx_length(
-        template.body.first_line_indent,
-        em_size_pt=body_size_pt,
-    )
-
-    spacing = template.body.line_spacing
-    if spacing.type == "fixed":
-        paragraph.line_spacing = to_docx_length(spacing.value, em_size_pt=body_size_pt)
-        paragraph.line_spacing_rule = WD_LINE_SPACING.EXACTLY
-    elif spacing.type == "multiple":
-        paragraph.line_spacing = float(spacing.value)
-        paragraph.line_spacing_rule = WD_LINE_SPACING.MULTIPLE
-    else:
-        paragraph.line_spacing_rule = WD_LINE_SPACING.SINGLE
+    apply_paragraph_style(normal, template.body)
 
     for level in range(1, 4):
         heading = template.heading.for_level(level)
         if heading is not None:
-            _configure_heading(document, template, level, heading)
-
+            apply_paragraph_style(
+                document.styles[f"Heading {level}"],
+                heading,
+                fallback_font=template.body.font,
+                fallback_size=template.body.size,
+            )

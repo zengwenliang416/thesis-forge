@@ -32,6 +32,7 @@ Complete tasks 2.1-2.7 and prove A1/A2 without changing semantic content.
 - `src/thesis_forge/renderers/docx/fonts.py`
 - `src/thesis_forge/renderers/docx/units.py`
 - `src/thesis_forge/renderers/docx/document.py`
+- `src/thesis_forge/templates/model.py`
 - `tests/test_docx_renderer.py`
 - `tests/test_template.py`
 - `openspec/changes/template-driven-thesis-formatting-p0/development/tasks/002-docx-paragraph-translation`
