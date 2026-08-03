@@ -1,0 +1,33 @@
+{
+  "ok": true,
+  "variant": "policy-role-docx-seam-v1",
+  "entry": "component/component-map.md",
+  "checks": {
+    "parser_is_renderer_neutral": true,
+    "domain_is_renderer_neutral": true,
+    "render_plan_is_renderer_neutral": true,
+    "template_model_is_renderer_neutral": true,
+    "compiler_uses_template_and_render_plan": true,
+    "docx_renderer_owns_word_dependencies": true,
+    "branch_is_component_seam": true,
+    "variant_is_named": true,
+    "entry_exists": true,
+    "question_has_no_placeholder": true,
+    "map_has_no_placeholder": true,
+    "map_names_common_policy": true,
+    "map_names_renderer_neutral_role": true,
+    "map_names_shared_translator": true,
+    "map_defines_compatibility": true,
+    "map_defines_forbidden_dependencies": true,
+    "map_defines_promotion_tests": true
+  },
+  "inspected_sources": [
+    "src/thesis_forge/core/parser.py",
+    "src/thesis_forge/core/model.py",
+    "src/thesis_forge/core/render_plan.py",
+    "src/thesis_forge/core/compiler.py",
+    "src/thesis_forge/templates/model.py",
+    "src/thesis_forge/renderers/docx/renderer.py"
+  ],
+  "production_files_modified": false
+}

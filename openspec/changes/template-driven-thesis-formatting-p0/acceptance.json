@@ -1,0 +1,76 @@
+{
+  "schema_version": 1,
+  "change_id": "template-driven-thesis-formatting-p0",
+  "assertions": [
+    {
+      "id": "A1",
+      "statement": "Body paragraph spacing, indentation, line spacing and pagination controls are validated from YAML and emitted in DOCX styles.",
+      "verify_via": "e2e",
+      "status": "failing",
+      "evidence_ref": null
+    },
+    {
+      "id": "A2",
+      "statement": "Existing templates remain valid and preserve prior defaults when new P0 fields are omitted.",
+      "verify_via": "unit",
+      "status": "failing",
+      "evidence_ref": null
+    },
+    {
+      "id": "A3",
+      "statement": "Chinese and English abstract and keyword paragraphs receive independent template-driven semantic styles.",
+      "verify_via": "e2e",
+      "status": "failing",
+      "evidence_ref": null
+    },
+    {
+      "id": "A4",
+      "statement": "TOC 1-3 styles contain configured indentation, spacing, page-number tab stops and leaders.",
+      "verify_via": "e2e",
+      "status": "failing",
+      "evidence_ref": null
+    },
+    {
+      "id": "A5",
+      "statement": "Inline citations support superscript mode and bibliography entries support configured hanging indentation and spacing.",
+      "verify_via": "e2e",
+      "status": "failing",
+      "evidence_ref": null
+    },
+    {
+      "id": "A6",
+      "statement": "Odd, even and first-page header/footer variants render real relationships, distances, borders and configurable page-number fields.",
+      "verify_via": "e2e",
+      "status": "failing",
+      "evidence_ref": null
+    },
+    {
+      "id": "A7",
+      "statement": "Semantic style roles are resolved before rendering and RenderPlan remains free of DOCX or OOXML implementation objects.",
+      "verify_via": "unit",
+      "status": "failing",
+      "evidence_ref": null
+    },
+    {
+      "id": "A8",
+      "statement": "School-specific values are absent from renderer constants and all core commands remain offline and deterministic.",
+      "verify_via": "static",
+      "status": "failing",
+      "evidence_ref": null
+    },
+    {
+      "id": "A9",
+      "statement": "The complete P0 example builds into a valid editable DOCX whose package passes focused OOXML assertions.",
+      "verify_via": "e2e",
+      "status": "failing",
+      "evidence_ref": null
+    },
+    {
+      "id": "A10",
+      "statement": "The P0 example is reviewed in Microsoft Word or WPS for body, abstract, TOC, bibliography, header and page-number layout.",
+      "verify_via": "sensory",
+      "status": "failing",
+      "evidence_ref": null
+    }
+  ]
+}

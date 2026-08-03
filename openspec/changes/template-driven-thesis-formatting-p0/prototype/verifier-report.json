@@ -1,0 +1,50 @@
+{
+  "schema": "specnav.prototype.verifier.v1",
+  "status": "green",
+  "checked_entry": "component/component-map.md",
+  "project_fidelity": {
+    "status": "green",
+    "inventory": "not-applicable: component-seam",
+    "shell_checked": false,
+    "generic_shell_detected": false,
+    "notes": [
+      "This change has no production UI impact; the component-seam branch verifies backend ownership and dependency direction.",
+      "The proposed seam was compared with the current Template Model, Compiler, RenderPlan, DOCX renderer and project architecture rules.",
+      "No production source file was modified by the prototype."
+    ]
+  },
+  "visual_matrix": {
+    "viewports": [],
+    "theme_modes": [
+      "not-applicable: no UI change"
+    ],
+    "locales": [
+      "zh-CN requirements and fixed documentation"
+    ],
+    "states": [
+      "legacy template compatibility",
+      "semantic role resolution",
+      "DOCX style translation",
+      "header/footer variants"
+    ]
+  },
+  "checks": [
+    "Inspected the declared component-seam entry and named variant policy-role-docx-seam-v1.",
+    "Confirmed the proposal defines one common ParagraphStyleSpec and one shared DOCX ParagraphStyleTranslator.",
+    "Confirmed Template Model owns policy, Compiler owns semantic role resolution, RenderPlan remains renderer neutral and DOCX Renderer owns Word translation.",
+    "Confirmed compatibility rules preserve existing body, heading, header/footer and page-number template forms.",
+    "Confirmed forbidden dependencies prevent Parser, Domain, RenderPlan and Template Model from importing DOCX, OOXML or renderer code.",
+    "Executed a read-only AST verification against current parser, domain, render-plan, compiler, template-model and DOCX-renderer sources.",
+    "Confirmed the prototype defines promotion tests for model compatibility, semantic roles, OOXML structures, full offline CLI build and Office sensory review.",
+    "Confirmed no production implementation, UI, database, network, AI or deployment behavior is included."
+  ],
+  "evidence": [
+    "component/component-map.md",
+    "component-tree.md",
+    "evidence/verify_component_seam.py",
+    "evidence/component-seam-verification.json",
+    "command: .venv/bin/python openspec/changes/template-driven-thesis-formatting-p0/prototype/evidence/verify_component_seam.py",
+    "result: ok=true; 17/17 dependency and contract checks passed; production_files_modified=false"
+  ],
+  "blockers": []
+}

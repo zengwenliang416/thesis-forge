@@ -1,0 +1,10 @@
+{
+  "status": "approved",
+  "prototype_code": "required_present",
+  "prototype_type": "component-seam",
+  "approved_variant": "policy-role-docx-seam-v1",
+  "promotion": "requires_development_gate",
+  "approved_by": "user",
+  "approved_at": "2026-08-03",
+  "blocked_reasons": []
+}
