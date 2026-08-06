@@ -2,28 +2,51 @@
 
 ## Verdict
 
-blocked
+approved
 
 ## Missing Requirements
 
-- Replace this scaffold with direct review.
+- None.
 
 ## Extra Behavior
 
-- None recorded.
+- `footnotes.py` was added to the allowed task boundary after a failing
+  end-to-end test exposed a second citation-run path. This closes the same
+  presentation requirement in `footnotes.xml`; it does not alter footnote
+  data, numbering or citation text.
+- CodeGraph and SpecNav metadata changes are evidence refreshes, not product
+  behavior.
 
 ## Misunderstood Requirements
 
-- None recorded.
+- None. `inline` correctly omits `w:vertAlign`; `superscript` writes the Word
+  run property without changing formatter output or `CitationRun`.
+- The two-character hanging layout is template-driven through `left_indent:
+  2em` plus `hanging_indent: 2em`, not a hard-coded school value.
 
 ## Cannot Verify From Diff
 
-- Replace this scaffold with direct review.
+- Formatter, Compiler, `CitationRun`, template model and semantic style
+  resolver were already present and unchanged in this slice. Their contracts
+  are verified by the current source and existing bibliography/compiler tests,
+  not by new production diff lines.
+- Word/WPS sensory review remains tasks 007-008.
 
 ## Acceptance Assertions Verified
 
-- Replace this scaffold with the acceptance.json assertion ids verified during review (e.g. A1, A3), or "not applicable" when the change has no acceptance.json.
+- A5.
+- Task 5.1: `CitationSpec.presentation` defaults to `inline`, including omitted
+  citation-policy fallback.
+- Task 5.2: one `citation_run_element()` serves document and footnote paths and
+  writes only `w:vertAlign w:val="superscript"`.
+- Tasks 5.3-5.4: bibliography title/entry roles retain heading/body fallback and
+  shared paragraph translation for fonts, indentation, spacing and line
+  spacing.
+- Task 5.5: formatter golden tests remain DOCX-free; Compiler tests preserve
+  grouped citations, locators, repeated citations and first-use ordering.
+- Task 5.6: saved `document.xml`, `footnotes.xml` and `styles.xml` directly
+  assert superscript, stable style IDs, fonts and `w:left`/`w:hanging`.
 
 ## Required Fixes
 
-- Replace this scaffold with direct review.
+- None.

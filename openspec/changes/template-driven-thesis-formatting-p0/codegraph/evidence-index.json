@@ -1,6 +1,6 @@
 {
   "schema": "specnav.codegraph.evidence_index.v1",
-  "generated_at": "2026-08-06T07:51:49.171Z",
+  "generated_at": "2026-08-06T09:07:13.019Z",
   "active_change": "template-driven-thesis-formatting-p0",
   "source_raw": "openspec/changes/template-driven-thesis-formatting-p0/codegraph/evidence.jsonl",
   "by_claim": {
@@ -72,11 +72,36 @@
       ],
       "symbols": [],
       "blockers": []
+    },
+    "development:task-005-citations-bibliography": {
+      "status": "matched",
+      "evidence_ids": [
+        "ev-msh9e8be",
+        "ev-msh9px8y",
+        "ev-mshalcs2"
+      ],
+      "files": [
+        "src/thesis_forge/renderers/docx/inlines.py",
+        "src/thesis_forge/core/render_plan.py",
+        "frontend/src/components/PreviewPanels.tsx",
+        "src/thesis_forge/ui/tasks.py",
+        "tests/test_acceptance.py",
+        "inlines.py",
+        "src/thesis_forge/templates/model.py",
+        "tests/test_frontend_contract.py",
+        "number.rs",
+        "tests/test_adapters.py",
+        "src/thesis_forge/renderers/docx/styles.py",
+        "src/thesis_forge/core/compiler.py",
+        "src/thesis_forge/bibliography/formatter.py"
+      ],
+      "symbols": [],
+      "blockers": []
     }
   },
   "by_stage": {
     "development": {
-      "verified": 8,
+      "verified": 11,
       "partial": 0,
       "missing": 0,
       "stale": 0,
@@ -85,5 +110,5 @@
   },
   "blockers": [],
   "raw_exists": true,
-  "record_count": 8
+  "record_count": 11
 }

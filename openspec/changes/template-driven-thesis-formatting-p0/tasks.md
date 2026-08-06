@@ -49,12 +49,12 @@
 
 **用户结果：** 模板可以选择文内引用普通或上标显示，并配置参考文献标题与条目的字体、段距和两字符悬挂缩进。
 
-- [ ] 5.1 为 `CitationSpec` 增加默认 `inline` 的 presentation mode，并保持引用数据与文本格式化合同不变。（A2、A5）
-- [ ] 5.2 在 DOCX inline run 创建阶段实现 citation superscript，不把 Word 属性放入 bibliography formatter。（A5）
-- [ ] 5.3 为参考文献标题和条目增加语义样式与确定性 fallback。（A5）
-- [ ] 5.4 使用共享 paragraph translator 渲染 bibliography entry 的悬挂缩进、段距和行距。（A5）
-- [ ] 5.5 增加 inline/superscript 引用、连续引用、locator、参考文献顺序和无 DOCX bibliography 单元测试。（A5）
-- [ ] 5.6 增加 `document.xml` / `styles.xml` 测试，断言 `w:vertAlign w:val="superscript"` 与参考文献 `w:ind` hanging 属性。（A5）
+- [x] 5.1 为 `CitationSpec` 增加默认 `inline` 的 presentation mode，并保持引用数据与文本格式化合同不变。（A2、A5）
+- [x] 5.2 在 DOCX inline run 创建阶段实现 citation superscript，不把 Word 属性放入 bibliography formatter。（A5）
+- [x] 5.3 为参考文献标题和条目增加语义样式与确定性 fallback。（A5）
+- [x] 5.4 使用共享 paragraph translator 渲染 bibliography entry 的悬挂缩进、段距和行距。（A5）
+- [x] 5.5 增加 inline/superscript 引用、连续引用、locator、参考文献顺序和无 DOCX bibliography 单元测试。（A5）
+- [x] 5.6 增加 `document.xml` / `styles.xml` 测试，断言 `w:vertAlign w:val="superscript"` 与参考文献 `w:ind` hanging 属性。（A5）
 
 ## 6. Page Geometry And Header/Footer Variants
 

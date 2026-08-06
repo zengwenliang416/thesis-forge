@@ -13,7 +13,7 @@ from thesis_forge.core.render_plan import FootnoteDefinitionInstruction, Footnot
 
 from .errors import DocxRenderError
 from .fields import reference_field_runs
-from .inlines import InlineHandlers, render_inline_runs
+from .inlines import InlineHandlers, citation_run_element, render_inline_runs
 
 
 def _text_run(text: str):
@@ -39,8 +39,14 @@ def _reserved_footnote(footnote_id: int, kind: str):
 
 
 class FootnoteManager:
-    def __init__(self, document: DocumentObject):
+    def __init__(
+        self,
+        document: DocumentObject,
+        *,
+        citation_superscript: bool = False,
+    ):
         self.document = document
+        self.citation_superscript = citation_superscript
         self.definitions: dict[int, FootnoteDefinitionInstruction] = {}
 
     def add_reference(self, paragraph: Paragraph, reference: FootnoteReferenceRun) -> None:
@@ -87,7 +93,12 @@ class FootnoteManager:
             InlineHandlers(
                 text=lambda item: paragraph.append(_text_run(item.text)),
                 reference=lambda item: paragraph.extend(reference_field_runs(item)),
-                citation=lambda item: paragraph.append(_text_run(item.text)),
+                citation=lambda item: paragraph.append(
+                    citation_run_element(
+                        item,
+                        superscript=self.citation_superscript,
+                    )
+                ),
                 footnote_reference=lambda item: self._reject_nested_reference(
                     item.label
                 ),

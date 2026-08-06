@@ -31,6 +31,7 @@ document.xml and styles.xml.
 
 - `src/thesis_forge/templates/model.py`
 - `src/thesis_forge/core/render_plan.py`
+- `src/thesis_forge/renderers/docx/footnotes.py`
 - `src/thesis_forge/renderers/docx/inlines.py`
 - `src/thesis_forge/renderers/docx/renderer.py`
 - `src/thesis_forge/renderers/docx/styles.py`

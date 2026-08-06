@@ -28,7 +28,14 @@ from thesis_forge.core.model import (
     ThesisDocument,
 )
 from thesis_forge.core.parser import parse_markdown
-from thesis_forge.core.render_plan import ReferenceRun, RenderPlan, TocInstruction
+from thesis_forge.core.render_plan import (
+    CitationRun,
+    ParagraphInstruction,
+    ReferenceRun,
+    RenderPlan,
+    TextRun,
+    TocInstruction,
+)
 from thesis_forge.renderers.docx import DocxRenderer
 from thesis_forge.renderers.docx.errors import DocxRenderError
 from thesis_forge.renderers.docx.package import list_package_parts, read_package_part
@@ -1735,6 +1742,240 @@ def test_docx_renderer_writes_resolved_body_footnote_and_bibliography_text(
     assert "脚注引用[2]" in footnote_text
     assert "[@smith2025]" not in footnote_text
     assert paragraphs[-2:] == [
+        "[1] DOE J. Structured Academic Documents[M]. Beijing: Example Press, 2024.",
+        (
+            "[2] SMITH J, WANG L. Deterministic Thesis Compilation[J]. "
+            "Journal of Document Engineering, 2025, 12(3): 101-118. "
+            "DOI:10.1000/tf.2025.001."
+        ),
+    ]
+
+
+@pytest.mark.parametrize(
+    ("presentation", "expected_superscript"),
+    [
+        (None, False),
+        ("inline", False),
+        ("superscript", True),
+    ],
+)
+def test_docx_renderer_applies_citation_presentation_only_to_citation_runs(
+    tmp_path: Path,
+    presentation: str | None,
+    expected_superscript: bool,
+):
+    template = load_template("templates/base/bachelor.yaml")
+    assert template.citation is not None
+    if presentation is None:
+        template.citation = None
+    else:
+        template.citation.presentation = presentation
+    output = tmp_path / f"citation-{presentation or 'omitted'}.docx"
+
+    DocxRenderer().render(
+        RenderPlan(
+            nodes=[
+                ParagraphInstruction(
+                    text="引用[1,2, p. 12]。",
+                    inlines=(
+                        TextRun("引用"),
+                        CitationRun(
+                            keys=("doe2024", "smith2025"),
+                            ordinals=(1, 2),
+                            locator="p. 12",
+                            raw="[@doe2024; @smith2025, p. 12]",
+                            text="[1,2, p. 12]",
+                        ),
+                        TextRun("。"),
+                    ),
+                )
+            ],
+            template=template,
+        ),
+        output,
+    )
+
+    document_xml = _xml_part(output, "word/document.xml")
+    citation_run = document_xml.xpath(
+        ".//w:r[w:t[text()='[1,2, p. 12]']]",
+        namespaces=NS,
+    )[0]
+    text_runs = document_xml.xpath(
+        ".//w:r[w:t[text()='引用' or text()='。']]",
+        namespaces=NS,
+    )
+
+    assert "".join(document_xml.xpath(".//w:body//w:t/text()", namespaces=NS)) == (
+        "引用[1,2, p. 12]。"
+    )
+    assert bool(
+        citation_run.xpath(
+            "./w:rPr/w:vertAlign[@w:val='superscript']",
+            namespaces=NS,
+        )
+    ) is expected_superscript
+    assert all(
+        not run.xpath("./w:rPr/w:vertAlign", namespaces=NS)
+        for run in text_runs
+    )
+
+
+def test_docx_renderer_applies_superscript_to_body_and_footnote_citations(
+    tmp_path: Path,
+):
+    fixture = Path(__file__).parent / "fixtures" / "bibliography" / "gbt7714-v1.bib"
+    database = LocalBibTeXLoader().load(fixture)
+    body_citation = Citation(keys=["doe2024"], raw="[@doe2024]")
+    footnote_citation = Citation(keys=["smith2025"], raw="[@smith2025]")
+    document = ThesisDocument(
+        source_path=tmp_path / "thesis.md",
+        blocks=[
+            Paragraph(
+                text="正文引用",
+                inlines=[
+                    Text(value="正文引用"),
+                    body_citation,
+                    FootnoteReference(label="note"),
+                ],
+            ),
+            FootnoteDefinition(
+                label="note",
+                text="脚注引用",
+                inlines=[Text(value="脚注引用"), footnote_citation],
+            ),
+        ],
+        citations=[body_citation, footnote_citation],
+    )
+    template = load_template("templates/base/bachelor.yaml")
+    assert template.citation is not None
+    template.citation.presentation = "superscript"
+    output = tmp_path / "citation-footnote-superscript.docx"
+
+    DocxRenderer().render(
+        compile_document(
+            document,
+            template=template,
+            bibliography_database=database,
+            citation_formatter=Gbt7714Formatter(),
+        ),
+        output,
+    )
+
+    document_xml = _xml_part(output, "word/document.xml")
+    footnotes_xml = _xml_part(output, "word/footnotes.xml")
+    assert document_xml.xpath(
+        ".//w:r[w:t[text()='[1]']]/w:rPr/w:vertAlign/@w:val",
+        namespaces=NS,
+    ) == ["superscript"]
+    assert footnotes_xml.xpath(
+        ".//w:footnote[@w:id='1']//w:r[w:t[text()='[2]']]"
+        "/w:rPr/w:vertAlign/@w:val",
+        namespaces=NS,
+    ) == ["superscript"]
+
+
+def test_docx_renderer_applies_bibliography_title_and_entry_policy_xml(
+    tmp_path: Path,
+):
+    fixture = Path(__file__).parent / "fixtures" / "bibliography" / "gbt7714-v1.bib"
+    database = LocalBibTeXLoader().load(fixture)
+    citation = Citation(
+        keys=["doe2024", "smith2025"],
+        locator="p. 12",
+        raw="[@doe2024; @smith2025, p. 12]",
+    )
+    document = ThesisDocument(
+        source_path=tmp_path / "thesis.md",
+        blocks=[
+            Paragraph(text="引用", inlines=[Text(value="引用"), citation]),
+            Heading(id="references", level=1, text="参考文献"),
+            BibliographyBlock(),
+        ],
+        citations=[citation],
+    )
+    template = load_template("templates/base/bachelor.yaml")
+    template.bibliography = BibliographySpec(
+        title=ParagraphStyleSpec(
+            font=FontSpec(east_asia="黑体", latin="Arial"),
+            size="16pt",
+            bold=True,
+            alignment="center",
+            space_before="12pt",
+            space_after="6pt",
+        ),
+        entry=ParagraphStyleSpec(
+            font=FontSpec(east_asia="宋体", latin="Times New Roman"),
+            size="10.5pt",
+            left_indent="2em",
+            hanging_indent="2em",
+            space_before="6pt",
+            space_after="0pt",
+            line_spacing={"type": "fixed", "value": "20pt"},
+        ),
+    )
+    output = tmp_path / "bibliography-policy.docx"
+
+    DocxRenderer().render(
+        compile_document(
+            document,
+            template=template,
+            bibliography_database=database,
+            citation_formatter=Gbt7714Formatter(),
+        ),
+        output,
+    )
+
+    styles_xml = _xml_part(output, "word/styles.xml")
+    document_xml = _xml_part(output, "word/document.xml")
+    title_style = styles_xml.xpath(
+        ".//w:style[@w:styleId='TFBibliographyTitle']",
+        namespaces=NS,
+    )[0]
+    entry_style = styles_xml.xpath(
+        ".//w:style[@w:styleId='TFBibliographyEntry']",
+        namespaces=NS,
+    )[0]
+
+    assert title_style.xpath("./w:basedOn/@w:val", namespaces=NS) == ["Heading1"]
+    assert title_style.xpath("./w:rPr/w:rFonts/@w:eastAsia", namespaces=NS) == [
+        "黑体"
+    ]
+    assert title_style.xpath("./w:rPr/w:rFonts/@w:ascii", namespaces=NS) == ["Arial"]
+    assert title_style.xpath("./w:rPr/w:sz/@w:val", namespaces=NS) == ["32"]
+    assert title_style.xpath("./w:rPr/w:b", namespaces=NS)
+    assert title_style.xpath("./w:pPr/w:jc/@w:val", namespaces=NS) == ["center"]
+    assert title_style.xpath("./w:pPr/w:spacing/@w:before", namespaces=NS) == ["240"]
+    assert title_style.xpath("./w:pPr/w:spacing/@w:after", namespaces=NS) == ["120"]
+    assert entry_style.xpath("./w:basedOn/@w:val", namespaces=NS) == ["Normal"]
+    assert entry_style.xpath("./w:rPr/w:rFonts/@w:eastAsia", namespaces=NS) == [
+        "宋体"
+    ]
+    assert entry_style.xpath("./w:rPr/w:rFonts/@w:ascii", namespaces=NS) == [
+        "Times New Roman"
+    ]
+    assert entry_style.xpath("./w:rPr/w:sz/@w:val", namespaces=NS) == ["21"]
+    assert entry_style.xpath("./w:pPr/w:ind/@w:left", namespaces=NS) == ["420"]
+    assert entry_style.xpath("./w:pPr/w:ind/@w:hanging", namespaces=NS) == ["420"]
+    assert entry_style.xpath("./w:pPr/w:spacing/@w:before", namespaces=NS) == ["120"]
+    assert entry_style.xpath("./w:pPr/w:spacing/@w:after", namespaces=NS) == ["0"]
+    assert entry_style.xpath("./w:pPr/w:spacing/@w:line", namespaces=NS) == ["400"]
+    assert entry_style.xpath(
+        "./w:pPr/w:spacing/@w:lineRule",
+        namespaces=NS,
+    ) == ["exact"]
+
+    assert document_xml.xpath(
+        ".//w:p[.//w:t[text()='参考文献']]/w:pPr/w:pStyle/@w:val",
+        namespaces=NS,
+    ) == ["TFBibliographyTitle"]
+    bibliography_paragraphs = document_xml.xpath(
+        ".//w:p[w:pPr/w:pStyle[@w:val='TFBibliographyEntry']]",
+        namespaces=NS,
+    )
+    assert [
+        "".join(paragraph.xpath(".//w:t/text()", namespaces=NS))
+        for paragraph in bibliography_paragraphs
+    ] == [
         "[1] DOE J. Structured Academic Documents[M]. Beijing: Example Press, 2024.",
         (
             "[2] SMITH J, WANG L. Deterministic Thesis Compilation[J]. "

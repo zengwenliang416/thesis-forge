@@ -35,7 +35,7 @@ from .errors import DocxRenderError
 from .fields import add_complex_field, add_reference_field, set_update_fields
 from .figures import render_figure
 from .footnotes import FootnoteManager
-from .inlines import InlineHandlers, render_inline_runs
+from .inlines import InlineHandlers, citation_run_element, render_inline_runs
 from .lists import apply_list_numbering, create_list_numbering
 from .sections import add_section, configure_initial_section
 from .styles import (
@@ -47,17 +47,31 @@ from .styles import (
 from .tables import render_table
 
 
+def _citation_superscript(template: ThesisTemplate | None) -> bool:
+    return (
+        template is not None
+        and template.citation is not None
+        and template.citation.presentation == "superscript"
+    )
+
+
 def _add_runs(
     paragraph,
     runs: tuple[InlineRun, ...],
     footnotes: FootnoteManager,
+    template: ThesisTemplate | None,
 ) -> None:
     render_inline_runs(
         runs,
         InlineHandlers(
             text=lambda item: paragraph.add_run(item.text),
             reference=lambda item: add_reference_field(paragraph, item),
-            citation=lambda item: paragraph.add_run(item.text),
+            citation=lambda item: paragraph._p.append(
+                citation_run_element(
+                    item,
+                    superscript=_citation_superscript(template),
+                )
+            ),
             footnote_reference=lambda item: footnotes.add_reference(paragraph, item),
         ),
         capability="paragraph",
@@ -128,12 +142,12 @@ def _render_typed(
                 heading_level=instruction.level,
             ) or style
         paragraph = document.add_paragraph(style=style)
-        _add_runs(paragraph, instruction.inlines, footnotes)
+        _add_runs(paragraph, instruction.inlines, footnotes, template)
         wrap_paragraph_in_bookmark(paragraph, instruction.bookmark)
     elif isinstance(instruction, ParagraphInstruction):
         style = _semantic_word_style(document, template, instruction.role)
         paragraph = document.add_paragraph(style=style)
-        _add_runs(paragraph, instruction.inlines, footnotes)
+        _add_runs(paragraph, instruction.inlines, footnotes, template)
     elif isinstance(instruction, ListInstruction):
         first_ordinal = next(
             (item.ordinal for item in instruction.items if item.ordinal is not None),
@@ -151,7 +165,7 @@ def _render_typed(
                 number_id=number_id,
                 level=item.level,
             )
-            _add_runs(paragraph, item.inlines, footnotes)
+            _add_runs(paragraph, item.inlines, footnotes, template)
     elif isinstance(instruction, FigureInstruction):
         render_figure(document, instruction, template)
     elif isinstance(instruction, TableInstruction):
@@ -232,7 +246,10 @@ class DocxRenderer:
             )
         except (AttributeError, KeyError, TypeError, ValueError) as error:
             raise DocxRenderError("document", str(error)) from error
-        footnotes = FootnoteManager(document)
+        footnotes = FootnoteManager(
+            document,
+            citation_superscript=_citation_superscript(plan.template),
+        )
 
         for node in plan.nodes:
             try:

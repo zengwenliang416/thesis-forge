@@ -43,3 +43,8 @@
 {"task_id":"004-toc-styles","status":"passed","command":".venv/bin/python -m pytest -q","result":"334 passed in 29.74s","attestation":"system-executed","checked_at":"2026-08-06T08:17:48Z"}
 {"task_id":"004-toc-styles","status":"passed","command":".venv/bin/ruff check .","result":"All checks passed","attestation":"system-executed","checked_at":"2026-08-06T08:17:48Z"}
 {"task_id":"004-toc-styles","status":"passed","command":"git diff --check","result":"no output","attestation":"system-executed","checked_at":"2026-08-06T08:17:48Z"}
+{"task_id":"005-citations-bibliography","status":"passed","command":".venv/bin/python -m pytest tests/test_bibliography.py tests/test_compiler.py tests/test_docx_renderer.py -k 'citation or bibliography' -q","result":"18 passed, 64 deselected in 6.23s","attestation":"system-executed","checked_at":"2026-08-06T09:07:32Z"}
+{"task_id":"005-citations-bibliography","status":"passed","command":".venv/bin/python -m pytest tests/test_bibliography.py tests/test_compiler.py tests/test_docx_renderer.py -q","result":"82 passed in 7.78s","attestation":"system-executed","checked_at":"2026-08-06T09:07:32Z"}
+{"task_id":"005-citations-bibliography","status":"passed","command":".venv/bin/python -m pytest -q","result":"339 passed in 87.79s","attestation":"system-executed","checked_at":"2026-08-06T09:07:32Z"}
+{"task_id":"005-citations-bibliography","status":"passed","command":".venv/bin/ruff check .","result":"All checks passed","attestation":"system-executed","checked_at":"2026-08-06T09:07:32Z"}
+{"task_id":"005-citations-bibliography","status":"passed","command":"git diff --check","result":"no output","attestation":"system-executed","checked_at":"2026-08-06T09:07:32Z"}
