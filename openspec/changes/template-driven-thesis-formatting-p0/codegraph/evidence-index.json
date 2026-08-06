@@ -1,6 +1,6 @@
 {
   "schema": "specnav.codegraph.evidence_index.v1",
-  "generated_at": "2026-08-06T09:57:28.807Z",
+  "generated_at": "2026-08-06T12:27:50.107Z",
   "active_change": "template-driven-thesis-formatting-p0",
   "source_raw": "openspec/changes/template-driven-thesis-formatting-p0/codegraph/evidence.jsonl",
   "by_claim": {
@@ -112,11 +112,41 @@
       ],
       "symbols": [],
       "blockers": []
+    },
+    "development:task-007-school-template-e2e": {
+      "status": "matched",
+      "evidence_ids": [
+        "ev-mshgnr85",
+        "ev-mshhrcno"
+      ],
+      "files": [
+        "tests/test_acceptance.py",
+        "thesis.md",
+        "master-2026.yaml",
+        "desktop.go",
+        "mobile.go",
+        "build_sidecar.py",
+        "verify_desktop_distribution.py",
+        "tauri.release.conf.js",
+        "distribution.yml",
+        "real-http.playwright.config.ts",
+        "tauri-windows.acceptance.ts",
+        "package.js",
+        "lib.rs",
+        "tauri.conf.js",
+        "tests/test_frontend_contract.py",
+        "tests/test_ui_controller.py",
+        "tests/test_adapters.py",
+        "workspace-state-v1.js",
+        "WorkbenchTransport.ts"
+      ],
+      "symbols": [],
+      "blockers": []
     }
   },
   "by_stage": {
     "development": {
-      "verified": 13,
+      "verified": 15,
       "partial": 0,
       "missing": 0,
       "stale": 0,
@@ -125,5 +155,5 @@
   },
   "blockers": [],
   "raw_exists": true,
-  "record_count": 13
+  "record_count": 15
 }

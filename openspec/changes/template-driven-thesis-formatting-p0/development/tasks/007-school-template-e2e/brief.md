@@ -37,6 +37,9 @@ a complete example and offline end-to-end package assertions.
 - `tests/test_cli.py`
 - `tests/test_application_services.py`
 - `tests/test_docx_renderer.py`
+- `pyproject.toml`
+- `scripts/build_sidecar.py`
+- `tests/test_desktop_distribution.py`
 - `openspec/changes/template-driven-thesis-formatting-p0/development/tasks/007-school-template-e2e`
 - `openspec/changes/template-driven-thesis-formatting-p0/verification`
 
@@ -52,6 +55,7 @@ a complete example and offline end-to-end package assertions.
 ## Components To Reuse
 
 - Existing inspect/validate/build services, package validator and atomic writer.
+- Existing wheel force-include and native sidecar package-data paths.
 
 ## Components To Extract
 
@@ -61,6 +65,8 @@ a complete example and offline end-to-end package assertions.
 
 - Read-only Markdown/YAML/BibTeX/images -> inspect/validate/build -> temporary
   DOCX -> package validation -> atomic output.
+- Repository template -> wheel/sidecar package data -> installed template
+  resolver.
 
 ## State / Error / Empty / Loading Behavior
 

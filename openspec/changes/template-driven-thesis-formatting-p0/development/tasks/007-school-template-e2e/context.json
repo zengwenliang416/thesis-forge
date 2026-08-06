@@ -24,6 +24,9 @@
     "tests/test_cli.py",
     "tests/test_application_services.py",
     "tests/test_docx_renderer.py",
+    "pyproject.toml",
+    "scripts/build_sidecar.py",
+    "tests/test_desktop_distribution.py",
     "openspec/changes/template-driven-thesis-formatting-p0/development/tasks/007-school-template-e2e/**",
     "openspec/changes/template-driven-thesis-formatting-p0/verification/**"
   ],
@@ -43,7 +46,8 @@
     "HUT YAML and complete example",
     "Offline CLI E2E output",
     "Direct package XML assertions",
-    "Repeated-build determinism evidence"
+    "Repeated-build determinism evidence",
+    "Wheel and native sidecar template packaging evidence"
   ],
   "unsafe_assumptions": [
     "A successful package validator proves usable Word or WPS layout."

@@ -74,13 +74,13 @@
 
 **用户结果：** 论文作者可以选择一份湖南工业大学 P0 模板，构建覆盖正文、摘要、目录、参考文献和奇偶页眉页脚的完整可编辑 DOCX。
 
-- [ ] 7.1 更新 `docs/TEMPLATE_SPEC.md`，完整记录所有新增字段、默认值、兼容规则、枚举、单位和示例。（A2、A8）
-- [ ] 7.2 新增湖南工业大学 P0 YAML 模板，所有学校字体、尺寸、行距、边框和页码值仅存在于模板。（A8）
-- [ ] 7.3 更新完整论文示例，覆盖稳定摘要/目录/参考文献 heading ID、中英文关键词、引文和多 section 内容。（A3、A4、A5、A6）
-- [ ] 7.4 增加 inspect/validate/build 离线端到端测试，证明输入 Markdown、YAML、BibTeX 和图片不被修改。（A8、A9）
-- [ ] 7.5 解包完整 DOCX 并断言 `styles.xml`、`document.xml`、`settings.xml`、section properties、relationships 和 header/footer parts。（A9）
-- [ ] 7.6 重复构建并比较 RenderPlan 与规范化 OOXML，证明同输入输出确定。（A8、A9）
-- [ ] 7.7 使用两份有效模板构建同一论文，证明样式不同但编号、引用、书签和语义内容等价。（A8、A9）
+- [x] 7.1 更新 `docs/TEMPLATE_SPEC.md`，完整记录所有新增字段、默认值、兼容规则、枚举、单位和示例。（A2、A8）
+- [x] 7.2 新增湖南工业大学 P0 YAML 模板，所有学校字体、尺寸、行距、边框和页码值仅存在于模板。（A8）
+- [x] 7.3 更新完整论文示例，覆盖稳定摘要/目录/参考文献 heading ID、中英文关键词、引文和多 section 内容。（A3、A4、A5、A6）
+- [x] 7.4 增加 inspect/validate/build 离线端到端测试，证明输入 Markdown、YAML、BibTeX 和图片不被修改。（A8、A9）
+- [x] 7.5 解包完整 DOCX 并断言 `styles.xml`、`document.xml`、`settings.xml`、section properties、relationships 和 header/footer parts。（A9）
+- [x] 7.6 重复构建并比较 RenderPlan 与规范化 OOXML，证明同输入输出确定。（A8、A9）
+- [x] 7.7 使用两份有效模板构建同一论文，证明样式不同但编号、引用、书签和语义内容等价。（A8、A9）
 
 ## 8. Regression, Office Review And Handoff
 

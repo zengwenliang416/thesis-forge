@@ -1,6 +1,6 @@
 {
   "schema": "specnav.codegraph.claims.v1",
-  "generated_at": "2026-08-06T08:42:20.677Z",
+  "generated_at": "2026-08-06T11:56:30.475Z",
   "active_change": "template-driven-thesis-formatting-p0",
   "claims": [
     {
@@ -214,7 +214,8 @@
         "HUT YAML and complete example",
         "Offline CLI E2E output",
         "Direct package XML assertions",
-        "Repeated-build determinism evidence"
+        "Repeated-build determinism evidence",
+        "Wheel and native sidecar template packaging evidence"
       ],
       "allowed_files": [
         "docs/TEMPLATE_SPEC.md",
@@ -224,6 +225,9 @@
         "tests/test_cli.py",
         "tests/test_application_services.py",
         "tests/test_docx_renderer.py",
+        "pyproject.toml",
+        "scripts/build_sidecar.py",
+        "tests/test_desktop_distribution.py",
         "openspec/changes/template-driven-thesis-formatting-p0/development/tasks/007-school-template-e2e/**",
         "openspec/changes/template-driven-thesis-formatting-p0/verification/**"
       ],
