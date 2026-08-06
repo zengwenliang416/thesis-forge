@@ -87,10 +87,14 @@ def test_sidecar_builder_embeds_package_data_without_wheel_runtime_leakage() -> 
     assert str(ROOT / "src") in command
     assert "--collect-data" in command
     assert "docx" in command
-    assert command.count("--add-data") == 3
+    assert command.count("--add-data") == 4
     assert any("docx/parts" in value for value in command)
     assert any("templates/base/bachelor.yaml" in value for value in command)
     assert any("templates/schools/example-university/2026.yaml" in value for value in command)
+    assert any(
+        "templates/schools/hunan-university-of-technology/master-2026.yaml" in value
+        for value in command
+    )
     assert "socket.socket.connect_ex = blocked" in builder._entrypoint_text()
 
     pyproject = tomllib.loads((ROOT / "pyproject.toml").read_text(encoding="utf-8"))
@@ -101,6 +105,20 @@ def test_sidecar_builder_embeds_package_data_without_wheel_runtime_leakage() -> 
     assert any(
         dependency.lower().startswith("pyinstaller")
         for dependency in pyproject["project"]["optional-dependencies"]["dev"]
+    )
+    force_include = pyproject["tool"]["hatch"]["build"]["targets"]["wheel"][
+        "force-include"
+    ]
+    package_sources = {
+        source.relative_to(ROOT).as_posix()
+        for source, _destination in builder.PACKAGE_DATA
+    }
+    assert package_sources == set(force_include)
+    assert force_include[
+        "templates/schools/hunan-university-of-technology/master-2026.yaml"
+    ] == (
+        "thesis_forge/template_data/schools/"
+        "hunan-university-of-technology/master-2026.yaml"
     )
 
 

@@ -1,0 +1,421 @@
+id: hut-master-2026
+name: 湖南工业大学硕士学位论文 P0 模板
+year: 2026
+
+page:
+  size: A4
+  orientation: portrait
+  margin:
+    top: 25mm
+    bottom: 25mm
+    left: 30mm
+    right: 25mm
+  header_distance: 15mm
+  footer_distance: 17.5mm
+  document_grid:
+    type: lines
+    line_pitch: 20pt
+
+body:
+  font:
+    east_asia: 宋体
+    latin: Times New Roman
+  size: 12pt
+  alignment: justify
+  first_line_indent: 2em
+  space_before: 0pt
+  space_after: 0pt
+  line_spacing:
+    type: fixed
+    value: 20pt
+  widow_control: true
+  snap_to_grid: true
+
+heading:
+  level1:
+    font:
+      east_asia: 黑体
+      latin: Times New Roman
+    size: 16pt
+    bold: true
+    alignment: center
+    space_before: 0pt
+    space_after: 12pt
+    line_spacing:
+      type: fixed
+      value: 20pt
+    keep_with_next: true
+    page_break_before: true
+    outline_level: 0
+    snap_to_grid: true
+  level2:
+    font:
+      east_asia: 黑体
+      latin: Times New Roman
+    size: 14pt
+    bold: true
+    alignment: left
+    space_before: 6pt
+    space_after: 6pt
+    line_spacing:
+      type: fixed
+      value: 20pt
+    keep_with_next: true
+    outline_level: 1
+    snap_to_grid: true
+  level3:
+    font:
+      east_asia: 黑体
+      latin: Times New Roman
+    size: 12pt
+    bold: true
+    alignment: left
+    space_before: 3pt
+    space_after: 3pt
+    line_spacing:
+      type: fixed
+      value: 20pt
+    keep_with_next: true
+    outline_level: 2
+    snap_to_grid: true
+
+semantic_styles:
+  abstract_zh:
+    title:
+      font:
+        east_asia: 黑体
+        latin: Times New Roman
+      size: 16pt
+      bold: true
+      alignment: center
+      space_before: 0pt
+      space_after: 12pt
+      line_spacing:
+        type: fixed
+        value: 20pt
+      keep_with_next: true
+      page_break_before: true
+      snap_to_grid: true
+    body:
+      font:
+        east_asia: 宋体
+        latin: Times New Roman
+      size: 12pt
+      alignment: justify
+      first_line_indent: 2em
+      space_before: 0pt
+      space_after: 0pt
+      line_spacing:
+        type: fixed
+        value: 20pt
+      widow_control: true
+      snap_to_grid: true
+    keywords:
+      font:
+        east_asia: 宋体
+        latin: Times New Roman
+      size: 12pt
+      alignment: justify
+      first_line_indent: 0pt
+      space_before: 0pt
+      space_after: 0pt
+      line_spacing:
+        type: fixed
+        value: 20pt
+      snap_to_grid: true
+  abstract_en:
+    title:
+      font:
+        east_asia: 黑体
+        latin: Times New Roman
+      size: 16pt
+      bold: true
+      alignment: center
+      space_before: 0pt
+      space_after: 12pt
+      line_spacing:
+        type: fixed
+        value: 20pt
+      keep_with_next: true
+      page_break_before: true
+      snap_to_grid: true
+    body:
+      font:
+        east_asia: 宋体
+        latin: Times New Roman
+      size: 12pt
+      alignment: justify
+      first_line_indent: 2em
+      space_before: 0pt
+      space_after: 0pt
+      line_spacing:
+        type: fixed
+        value: 20pt
+      widow_control: true
+      snap_to_grid: true
+    keywords:
+      font:
+        east_asia: 宋体
+        latin: Times New Roman
+      size: 12pt
+      alignment: justify
+      first_line_indent: 0pt
+      space_before: 0pt
+      space_after: 0pt
+      line_spacing:
+        type: fixed
+        value: 20pt
+      snap_to_grid: true
+  acknowledgements:
+    font:
+      east_asia: 黑体
+      latin: Times New Roman
+    size: 16pt
+    bold: true
+    alignment: center
+    space_before: 0pt
+    space_after: 12pt
+    line_spacing:
+      type: fixed
+      value: 20pt
+    keep_with_next: true
+    page_break_before: true
+    snap_to_grid: true
+  achievements:
+    font:
+      east_asia: 黑体
+      latin: Times New Roman
+    size: 16pt
+    bold: true
+    alignment: center
+    space_before: 0pt
+    space_after: 12pt
+    line_spacing:
+      type: fixed
+      value: 20pt
+    keep_with_next: true
+    page_break_before: true
+    snap_to_grid: true
+
+toc:
+  title:
+    font:
+      east_asia: 黑体
+      latin: Times New Roman
+    size: 16pt
+    bold: true
+    alignment: center
+    space_before: 0pt
+    space_after: 12pt
+    line_spacing:
+      type: fixed
+      value: 20pt
+    keep_with_next: true
+    snap_to_grid: true
+  level1:
+    font:
+      east_asia: 宋体
+      latin: Times New Roman
+    size: 12pt
+    left_indent: 0pt
+    first_line_indent: 0pt
+    space_before: 0pt
+    space_after: 0pt
+    line_spacing:
+      type: fixed
+      value: 20pt
+    page_number_tab: 155mm
+    leader: dots
+    snap_to_grid: true
+  level2:
+    font:
+      east_asia: 宋体
+      latin: Times New Roman
+    size: 12pt
+    left_indent: 1em
+    first_line_indent: 0pt
+    space_before: 0pt
+    space_after: 0pt
+    line_spacing:
+      type: fixed
+      value: 20pt
+    page_number_tab: 155mm
+    leader: dots
+    snap_to_grid: true
+  level3:
+    font:
+      east_asia: 宋体
+      latin: Times New Roman
+    size: 12pt
+    left_indent: 2em
+    first_line_indent: 0pt
+    space_before: 0pt
+    space_after: 0pt
+    line_spacing:
+      type: fixed
+      value: 20pt
+    page_number_tab: 155mm
+    leader: dots
+    snap_to_grid: true
+
+bibliography:
+  title:
+    font:
+      east_asia: 黑体
+      latin: Times New Roman
+    size: 16pt
+    bold: true
+    alignment: center
+    space_before: 0pt
+    space_after: 12pt
+    line_spacing:
+      type: fixed
+      value: 20pt
+    keep_with_next: true
+    page_break_before: true
+    snap_to_grid: true
+  entry:
+    font:
+      east_asia: 宋体
+      latin: Times New Roman
+    size: 10.5pt
+    alignment: justify
+    left_indent: 2em
+    hanging_indent: 2em
+    space_before: 0pt
+    space_after: 0pt
+    line_spacing:
+      type: fixed
+      value: 20pt
+    widow_control: true
+    snap_to_grid: true
+
+figure:
+  numbering:
+    mode: chapter
+    separator: "-"
+  caption:
+    position: bottom
+    prefix: 图
+    font:
+      east_asia: 宋体
+      latin: Times New Roman
+    size: 10.5pt
+    alignment: center
+  default_width: 150mm
+
+table:
+  style: three_line
+  numbering:
+    mode: chapter
+    separator: "-"
+  caption:
+    position: top
+    prefix: 表
+    font:
+      east_asia: 宋体
+      latin: Times New Roman
+    size: 10.5pt
+    alignment: center
+
+equation:
+  numbering:
+    mode: chapter
+    separator: "-"
+  alignment: center
+
+sections:
+  cover:
+    start: new_page
+    header:
+      default:
+        enabled: false
+    footer:
+      default:
+        enabled: false
+    page_number:
+      format: none
+  front_matter:
+    start: new_page
+    header:
+      default:
+        enabled: false
+    footer:
+      default:
+        enabled: true
+        page_number:
+          alignment: center
+          page_prefix: ""
+          page_suffix: ""
+          include_total: false
+    page_number:
+      format: roman-lower
+      restart: 1
+      display:
+        alignment: center
+        page_prefix: ""
+        page_suffix: ""
+        include_total: false
+  main:
+    start: odd_page
+    header:
+      default:
+        enabled: true
+        text: 湖南工业大学硕士学位论文
+        style:
+          font:
+            east_asia: 宋体
+            latin: Times New Roman
+          size: 10.5pt
+          alignment: center
+          space_before: 0pt
+          space_after: 0pt
+          line_spacing:
+            type: single
+          snap_to_grid: true
+        bottom_border:
+          style: single
+          width: 0.5pt
+          color: auto
+          space: 1pt
+      even:
+        enabled: true
+        text: HUNAN UNIVERSITY OF TECHNOLOGY
+        style:
+          font:
+            east_asia: 宋体
+            latin: Times New Roman
+          size: 10.5pt
+          alignment: center
+          space_before: 0pt
+          space_after: 0pt
+          line_spacing:
+            type: single
+          snap_to_grid: true
+        bottom_border:
+          style: single
+          width: 0.5pt
+          color: auto
+          space: 1pt
+      first:
+        enabled: false
+    footer:
+      default:
+        enabled: true
+        page_number:
+          alignment: center
+          page_prefix: ""
+          page_suffix: ""
+          include_total: false
+    page_number:
+      format: decimal
+      restart: 1
+      display:
+        alignment: center
+        page_prefix: ""
+        page_suffix: ""
+        include_total: false
+
+citation:
+  style: GB-T-7714-2025
+  presentation: superscript

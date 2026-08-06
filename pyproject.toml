@@ -38,6 +38,7 @@ exclude = ["**/._*"]
 [tool.hatch.build.targets.wheel.force-include]
 "templates/base/bachelor.yaml" = "thesis_forge/template_data/base/bachelor.yaml"
 "templates/schools/example-university/2026.yaml" = "thesis_forge/template_data/schools/example-university/2026.yaml"
+"templates/schools/hunan-university-of-technology/master-2026.yaml" = "thesis_forge/template_data/schools/hunan-university-of-technology/master-2026.yaml"
 
 [tool.hatch.build.targets.sdist]
 include = [

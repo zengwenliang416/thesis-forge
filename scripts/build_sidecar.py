@@ -24,6 +24,14 @@ PACKAGE_DATA = (
         ROOT / "templates" / "schools" / "example-university" / "2026.yaml",
         "thesis_forge/template_data/schools/example-university",
     ),
+    (
+        ROOT
+        / "templates"
+        / "schools"
+        / "hunan-university-of-technology"
+        / "master-2026.yaml",
+        "thesis_forge/template_data/schools/hunan-university-of-technology",
+    ),
 )
 
 

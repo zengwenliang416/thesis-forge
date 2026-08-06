@@ -7,21 +7,35 @@ import subprocess
 from pathlib import Path
 from zipfile import ZipFile
 
+import yaml
 from lxml import etree
 
+from thesis_forge.application import preview_service, validation_service
 from thesis_forge.renderers.docx.package import validate_docx_package
+from thesis_forge.templates import load_template
 
 ROOT = Path(__file__).resolve().parents[1]
-EXAMPLE_DIR = ROOT / "examples" / "bachelor-thesis"
+EXAMPLE_DIR = ROOT / "examples" / "complete-thesis"
 SOURCE = EXAMPLE_DIR / "thesis.md"
 BIBLIOGRAPHY = EXAMPLE_DIR / "references.bib"
 FIGURE = EXAMPLE_DIR / "images" / "acceptance-architecture.png"
+HUT_TEMPLATE = (
+    ROOT
+    / "templates"
+    / "schools"
+    / "hunan-university-of-technology"
+    / "master-2026.yaml"
+)
+EXAMPLE_TEMPLATE = (
+    ROOT / "templates" / "schools" / "example-university" / "2026.yaml"
+)
 CLI = ROOT / ".venv" / "bin" / "thesisforge"
 
 NS = {
     "w": "http://schemas.openxmlformats.org/wordprocessingml/2006/main",
     "r": "http://schemas.openxmlformats.org/officeDocument/2006/relationships",
     "m": "http://schemas.openxmlformats.org/officeDocument/2006/math",
+    "pr": "http://schemas.openxmlformats.org/package/2006/relationships",
 }
 
 
@@ -89,22 +103,107 @@ def _field_instructions(document_xml) -> tuple[str, ...]:
     )
 
 
-def _normalized_ooxml(path: Path) -> dict[str, object]:
+def _semantic_snapshot(path: Path) -> dict[str, object]:
     document_xml = _xml_part(path, "word/document.xml")
     return {
-        "fields": _field_instructions(document_xml),
+        "text": tuple(
+            document_xml.xpath(".//w:body//w:t/text()", namespaces=NS)
+        ),
+        "fields": tuple(
+            instruction
+            for instruction in _field_instructions(document_xml)
+            if instruction.startswith(("TOC ", "SEQ ", "REF "))
+        ),
         "bookmarks": tuple(
             document_xml.xpath(".//w:bookmarkStart/@w:name", namespaces=NS)
         ),
-        "section_count": len(document_xml.xpath(".//w:sectPr", namespaces=NS)),
         "drawing_count": len(document_xml.xpath(".//w:drawing", namespaces=NS)),
         "table_count": len(document_xml.xpath(".//w:tbl", namespaces=NS)),
         "math_count": len(document_xml.xpath(".//m:oMath", namespaces=NS)),
     }
 
 
+def _normalized_word_ooxml(path: Path) -> dict[str, bytes]:
+    with ZipFile(path) as package:
+        parts = {
+            name: package.read(name)
+            for name in package.namelist()
+            if name.startswith("word/")
+            and name.endswith((".xml", ".rels"))
+        }
+    return {
+        name: etree.tostring(
+            etree.fromstring(content),
+            method="c14n",
+            with_comments=False,
+        )
+        for name, content in sorted(parts.items())
+    }
+
+
+def _render_plan_snapshot(path: Path, *, template_path: Path | None = None):
+    preview = preview_service(path, template_path=template_path)
+    assert not preview.errors
+    assert preview.plan is not None
+    return {
+        "nodes": tuple(
+            (node.kind, node.payload)
+            for node in preview.plan.nodes
+        ),
+        "bookmarks": preview.plan.bookmarks,
+        "references": preview.plan.references,
+        "citation_order": preview.plan.citation_order,
+        "initial_section_role": preview.plan.initial_section_role,
+    }
+
+
+def _write_alternate_style_template(tmp_path: Path) -> Path:
+    data = yaml.safe_load(HUT_TEMPLATE.read_text(encoding="utf-8"))
+    data["id"] = "hut-master-2026-alternate-style"
+    data["name"] = "湖南工业大学硕士学位论文样式对照模板"
+    data["body"]["font"]["east_asia"] = "仿宋"
+    data["body"]["size"] = "11pt"
+    data["heading"]["level1"]["size"] = "18pt"
+    path = tmp_path / "alternate-style.yaml"
+    path.write_text(
+        yaml.safe_dump(data, allow_unicode=True, sort_keys=False),
+        encoding="utf-8",
+    )
+    return path
+
+
+def _write_minimal_source(path: Path, *, template_id: str) -> None:
+    path.write_text(
+        f"""---
+thesis:
+  title: Template validation fixture
+author:
+  name: ThesisForge
+render:
+  template_id: {template_id}
+---
+
+# 绪论 {{#chap:introduction}}
+
+正文。
+""",
+        encoding="utf-8",
+    )
+
+
+def _relationship_targets(path: Path) -> dict[str, str]:
+    relationships = _xml_part(path, "word/_rels/document.xml.rels")
+    return {
+        relationship.get("Id"): relationship.get("Target")
+        for relationship in relationships.xpath(
+            "./pr:Relationship",
+            namespaces=NS,
+        )
+    }
+
+
 def test_complete_example_inventory_and_offline_inspect_are_read_only(tmp_path: Path):
-    input_paths = (SOURCE, BIBLIOGRAPHY, FIGURE)
+    input_paths = (SOURCE, HUT_TEMPLATE, BIBLIOGRAPHY, FIGURE)
     before = {path: _digest(path) for path in input_paths}
 
     result = _run_cli(tmp_path, "inspect", str(SOURCE))
@@ -129,11 +228,13 @@ def test_complete_example_inventory_and_offline_inspect_are_read_only(tmp_path: 
         "chap:abstract-zh",
         "chap:abstract-en",
         "chap:introduction",
+        "chap:design",
         "fig:architecture",
         "tbl:capabilities",
         "eq:pipeline",
         "alg:build",
         "lst:service",
+        "chap:bibliography",
         "chap:acknowledgements",
         "chap:appendix-a",
     } <= block_ids
@@ -153,15 +254,29 @@ def test_complete_example_inventory_and_offline_inspect_are_read_only(tmp_path: 
 def test_complete_example_validates_and_builds_offline_without_mutating_inputs(
     tmp_path: Path,
 ):
-    input_paths = (SOURCE, BIBLIOGRAPHY, FIGURE)
+    input_paths = (SOURCE, HUT_TEMPLATE, BIBLIOGRAPHY, FIGURE)
     before = {path: _digest(path) for path in input_paths}
 
-    validation = _run_cli(tmp_path, "validate", str(SOURCE))
+    validation = _run_cli(
+        tmp_path,
+        "validate",
+        str(SOURCE),
+        "--template",
+        str(HUT_TEMPLATE),
+    )
     assert validation.returncode == 0, validation.stderr or validation.stdout
     assert "未发现结构性问题" in validation.stdout
 
     output = tmp_path / "acceptance.docx"
-    build = _run_cli(tmp_path, "build", str(SOURCE), "-o", str(output))
+    build = _run_cli(
+        tmp_path,
+        "build",
+        str(SOURCE),
+        "--template",
+        str(HUT_TEMPLATE),
+        "-o",
+        str(output),
+    )
     assert build.returncode == 0, build.stderr or build.stdout
     assert output.is_file()
     validate_docx_package(output)
@@ -191,13 +306,15 @@ def test_complete_example_docx_contains_required_visible_content_and_word_object
     assert any(part.startswith("word/footer") for part in parts)
 
     document_xml = _xml_part(output, "word/document.xml")
+    styles_xml = _xml_part(output, "word/styles.xml")
+    settings_xml = _xml_part(output, "word/settings.xml")
     document_text = "".join(document_xml.xpath(".//w:body//w:t/text()", namespaces=NS))
     for expected in (
-        "XX大学",
-        "基于结构化 Markdown 的本科论文编译系统设计",
-        "张三",
-        "2022000001",
-        "李老师",
+        "湖南工业大学",
+        "面向结构化学术文档的确定性论文编译系统设计",
+        "曾文亮",
+        "2024000001",
+        "指导教师",
         "摘要",
         "Abstract",
         "绪论",
@@ -230,9 +347,25 @@ def test_complete_example_docx_contains_required_visible_content_and_word_object
         namespaces=NS,
     ) == ["TFAbstractENTitle"]
     assert {
-        "XX大学",
-        "基于结构化 Markdown 的本科论文编译系统设计",
+        "湖南工业大学",
+        "面向结构化学术文档的确定性论文编译系统设计",
     }.isdisjoint(heading_texts)
+    expected_roles = {
+        "摘要": "TFAbstractZHTitle",
+        "关键词：Markdown；论文编译；OOXML；确定性构建": "TFKeywordsZH",
+        "Abstract": "TFAbstractENTitle",
+        "Keywords: Markdown; thesis compiler; OOXML; deterministic build": (
+            "TFKeywordsEN"
+        ),
+        "参考文献": "TFBibliographyTitle",
+        "致谢": "TFAcknowledgements",
+    }
+    for text, style_id in expected_roles.items():
+        assert document_xml.xpath(
+            ".//w:p[.//w:t[text()=$text]]/w:pPr/w:pStyle/@w:val",
+            namespaces=NS,
+            text=text,
+        ) == [style_id]
 
     fields = _field_instructions(document_xml)
     assert any(field.startswith("TOC ") for field in fields)
@@ -247,7 +380,7 @@ def test_complete_example_docx_contains_required_visible_content_and_word_object
         for field in _field_instructions(_xml_part(output, part))
     )
     assert "PAGE" in footer_fields
-    assert "NUMPAGES" in footer_fields
+    assert "NUMPAGES" not in footer_fields
 
     bookmark_names = set(
         document_xml.xpath(".//w:bookmarkStart/@w:name", namespaces=NS)
@@ -265,6 +398,10 @@ def test_complete_example_docx_contains_required_visible_content_and_word_object
     assert document_xml.xpath(".//w:headerReference", namespaces=NS)
     assert document_xml.xpath(".//w:footerReference", namespaces=NS)
     assert document_xml.xpath(".//w:drawing", namespaces=NS)
+    assert document_xml.xpath(
+        ".//w:r[w:rPr/w:vertAlign[@w:val='superscript']]",
+        namespaces=NS,
+    )
 
     tables = document_xml.xpath(".//w:tbl", namespaces=NS)
     assert tables
@@ -282,14 +419,264 @@ def test_complete_example_docx_contains_required_visible_content_and_word_object
     )
     assert "确定性构建" in footnote_text
 
+    normal = styles_xml.xpath(
+        "./w:style[@w:styleId='Normal']",
+        namespaces=NS,
+    )[0]
+    assert normal.xpath("./w:rPr/w:rFonts/@w:eastAsia", namespaces=NS) == ["宋体"]
+    assert normal.xpath("./w:rPr/w:rFonts/@w:ascii", namespaces=NS) == [
+        "Times New Roman"
+    ]
+    assert normal.xpath("./w:rPr/w:sz/@w:val", namespaces=NS) == ["24"]
+    assert normal.xpath("./w:pPr/w:ind/@w:firstLine", namespaces=NS) == ["480"]
+    assert normal.xpath("./w:pPr/w:spacing/@w:before", namespaces=NS) == ["0"]
+    assert normal.xpath("./w:pPr/w:spacing/@w:after", namespaces=NS) == ["0"]
+    assert normal.xpath("./w:pPr/w:spacing/@w:line", namespaces=NS) == ["400"]
+    assert normal.xpath("./w:pPr/w:spacing/@w:lineRule", namespaces=NS) == [
+        "exact"
+    ]
+    assert normal.xpath("./w:pPr/w:widowControl", namespaces=NS)
 
-def test_complete_example_repeated_builds_are_semantically_equivalent(tmp_path: Path):
+    for style_id in (
+        "TFAbstractZHTitle",
+        "TFAbstractZHBody",
+        "TFKeywordsZH",
+        "TFAbstractENTitle",
+        "TFAbstractENBody",
+        "TFKeywordsEN",
+        "TFBibliographyTitle",
+        "TFBibliographyEntry",
+        "TFAcknowledgements",
+        "TOC1",
+        "TOC2",
+        "TOC3",
+    ):
+        assert styles_xml.xpath(
+            "./w:style[@w:styleId=$style_id]",
+            namespaces=NS,
+            style_id=style_id,
+        )
+    assert styles_xml.xpath(
+        "./w:style[@w:styleId='TFBibliographyEntry']/w:pPr/w:ind/@w:left",
+        namespaces=NS,
+    ) == ["420"]
+    assert styles_xml.xpath(
+        "./w:style[@w:styleId='TFBibliographyEntry']/w:pPr/w:ind/@w:hanging",
+        namespaces=NS,
+    ) == ["420"]
+    for level in (1, 2, 3):
+        toc_style = styles_xml.xpath(
+            "./w:style[@w:styleId=$style_id]",
+            namespaces=NS,
+            style_id=f"TOC{level}",
+        )[0]
+        assert toc_style.xpath(
+            "./w:pPr/w:tabs/w:tab/@w:val",
+            namespaces=NS,
+        ) == ["right"]
+        assert toc_style.xpath(
+            "./w:pPr/w:tabs/w:tab/@w:leader",
+            namespaces=NS,
+        ) == ["dot"]
+
+    sections = document_xml.xpath(".//w:sectPr", namespaces=NS)
+    assert len(sections) >= 3
+    for section in sections:
+        assert section.xpath("./w:pgMar/@w:header", namespaces=NS) == ["850"]
+        assert section.xpath("./w:pgMar/@w:footer", namespaces=NS) == ["992"]
+        assert section.xpath("./w:docGrid/@w:type", namespaces=NS) == ["lines"]
+        assert section.xpath("./w:docGrid/@w:linePitch", namespaces=NS) == ["400"]
+    assert settings_xml.xpath("./w:evenAndOddHeaders", namespaces=NS)
+
+    main_section = sections[-1]
+    references = {
+        (
+            etree.QName(reference).localname,
+            reference.get(f"{{{NS['w']}}}type"),
+        ): reference.get(f"{{{NS['r']}}}id")
+        for reference in main_section.xpath(
+            "./w:headerReference | ./w:footerReference",
+            namespaces=NS,
+        )
+    }
+    assert set(references) == {
+        ("headerReference", "default"),
+        ("headerReference", "first"),
+        ("headerReference", "even"),
+        ("footerReference", "default"),
+        ("footerReference", "first"),
+        ("footerReference", "even"),
+    }
+    targets = _relationship_targets(output)
+    default_header = _xml_part(
+        output,
+        f"word/{targets[references[('headerReference', 'default')]]}",
+    )
+    even_header = _xml_part(
+        output,
+        f"word/{targets[references[('headerReference', 'even')]]}",
+    )
+    first_header = _xml_part(
+        output,
+        f"word/{targets[references[('headerReference', 'first')]]}",
+    )
+    assert "湖南工业大学硕士学位论文" in "".join(
+        default_header.xpath(".//w:t/text()", namespaces=NS)
+    )
+    assert "HUNAN UNIVERSITY OF TECHNOLOGY" in "".join(
+        even_header.xpath(".//w:t/text()", namespaces=NS)
+    )
+    assert default_header.xpath(
+        ".//w:pBdr/w:bottom/@w:val",
+        namespaces=NS,
+    ) == ["single"]
+    assert not first_header.xpath(".//w:t | .//w:instrText", namespaces=NS)
+
+
+def test_complete_example_repeated_builds_have_identical_plan_and_word_ooxml(
+    tmp_path: Path,
+):
     first = tmp_path / "first.docx"
     second = tmp_path / "second.docx"
 
+    assert _render_plan_snapshot(SOURCE) == _render_plan_snapshot(SOURCE)
     first_result = _run_cli(tmp_path, "build", str(SOURCE), "-o", str(first))
     second_result = _run_cli(tmp_path, "build", str(SOURCE), "-o", str(second))
 
     assert first_result.returncode == 0, first_result.stderr or first_result.stdout
     assert second_result.returncode == 0, second_result.stderr or second_result.stdout
-    assert _normalized_ooxml(first) == _normalized_ooxml(second)
+    assert _normalized_word_ooxml(first) == _normalized_word_ooxml(second)
+
+
+def test_template_failures_return_structured_validation_issues(tmp_path: Path):
+    missing_source = tmp_path / "missing.md"
+    _write_minimal_source(missing_source, template_id="missing-template-id")
+    missing = validation_service(missing_source)
+    assert {(issue.code, issue.target) for issue in missing.errors} == {
+        ("missing-template", "missing-template-id")
+    }
+
+    templates = tmp_path / "templates"
+    templates.mkdir()
+    duplicate_data = yaml.safe_load(HUT_TEMPLATE.read_text(encoding="utf-8"))
+    duplicate_data["id"] = "duplicate-template"
+    for name in ("first.yaml", "second.yaml"):
+        (templates / name).write_text(
+            yaml.safe_dump(
+                duplicate_data,
+                allow_unicode=True,
+                sort_keys=False,
+            ),
+            encoding="utf-8",
+        )
+    ambiguous_source = tmp_path / "ambiguous.md"
+    _write_minimal_source(
+        ambiguous_source,
+        template_id="duplicate-template",
+    )
+    ambiguous = validation_service(ambiguous_source)
+    assert {(issue.code, issue.target) for issue in ambiguous.errors} == {
+        ("ambiguous-template", "duplicate-template")
+    }
+
+    invalid_data = yaml.safe_load(HUT_TEMPLATE.read_text(encoding="utf-8"))
+    invalid_data["body"]["unknown_policy"] = True
+    invalid_template = tmp_path / "invalid.yaml"
+    invalid_template.write_text(
+        yaml.safe_dump(invalid_data, allow_unicode=True, sort_keys=False),
+        encoding="utf-8",
+    )
+    invalid = validation_service(
+        ambiguous_source,
+        template_path=invalid_template,
+    )
+    assert {(issue.code, issue.target) for issue in invalid.errors} == {
+        ("invalid-template", "body.unknown_policy")
+    }
+
+    missing_style = validation_service(
+        SOURCE,
+        template_path=EXAMPLE_TEMPLATE,
+    )
+    assert {(issue.code, issue.target) for issue in missing_style.errors} == {
+        ("missing-template-style", "heading.level3")
+    }
+
+
+def test_complete_example_two_templates_change_style_not_semantics(tmp_path: Path):
+    hut_output = tmp_path / "hut.docx"
+    alternate_output = tmp_path / "alternate.docx"
+    alternate_template = _write_alternate_style_template(tmp_path)
+
+    hut_plan = _render_plan_snapshot(SOURCE, template_path=HUT_TEMPLATE)
+    alternate_plan = _render_plan_snapshot(
+        SOURCE,
+        template_path=alternate_template,
+    )
+    assert hut_plan == alternate_plan
+
+    hut_result = _run_cli(
+        tmp_path,
+        "build",
+        str(SOURCE),
+        "--template",
+        str(HUT_TEMPLATE),
+        "-o",
+        str(hut_output),
+    )
+    alternate_result = _run_cli(
+        tmp_path,
+        "build",
+        str(SOURCE),
+        "--template",
+        str(alternate_template),
+        "-o",
+        str(alternate_output),
+    )
+    assert hut_result.returncode == 0, hut_result.stderr or hut_result.stdout
+    assert alternate_result.returncode == 0, (
+        alternate_result.stderr or alternate_result.stdout
+    )
+    assert _semantic_snapshot(hut_output) == _semantic_snapshot(alternate_output)
+    hut_ooxml = _normalized_word_ooxml(hut_output)
+    alternate_ooxml = _normalized_word_ooxml(alternate_output)
+    assert {
+        name: content
+        for name, content in hut_ooxml.items()
+        if name != "word/styles.xml"
+    } == {
+        name: content
+        for name, content in alternate_ooxml.items()
+        if name != "word/styles.xml"
+    }
+    assert _xml_part(hut_output, "word/styles.xml").xpath(
+        "./w:style[@w:styleId='Normal']/w:pPr/w:spacing/@w:after",
+        namespaces=NS,
+    ) == ["0"]
+    assert hut_ooxml["word/styles.xml"] != alternate_ooxml["word/styles.xml"]
+
+
+def test_hut_template_contains_school_values_without_renderer_hardcoding():
+    template = load_template(HUT_TEMPLATE)
+    assert template.id == "hut-master-2026"
+    assert str(template.page.header_distance) == "15mm"
+    assert str(template.page.footer_distance) == "17.5mm"
+    assert template.citation is not None
+    assert template.citation.presentation == "superscript"
+    assert template.sections.main is not None
+    assert template.sections.main.header.even is not None
+    assert template.sections.main.footer.default is not None
+    assert template.sections.main.footer.default.page_number is not None
+    assert template.sections.main.footer.default.page_number.include_total is False
+
+    renderer_text = "\n".join(
+        path.read_text(encoding="utf-8")
+        for path in sorted((ROOT / "src/thesis_forge/renderers/docx").rglob("*.py"))
+        if not path.name.startswith("._")
+    )
+    for school_value in (
+        "湖南工业大学",
+        "HUNAN UNIVERSITY OF TECHNOLOGY",
+        "17.5mm",
+    ):
+        assert school_value not in renderer_text
