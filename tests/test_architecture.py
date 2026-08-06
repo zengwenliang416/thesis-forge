@@ -59,9 +59,18 @@ def test_render_plan_is_renderer_neutral_and_docx_renderer_does_not_import_parse
     for module in (compiler_module, math_module, render_plan_module):
         imports = _import_names(Path(module.__file__))
         assert not {"docx", "lxml"} & imports
+        assert not any(
+            name == "thesis_forge.renderers"
+            or name.startswith("thesis_forge.renderers.")
+            for name in imports
+        )
 
     renderer_imports = _import_names(Path(docx_renderer_module.__file__))
     assert "thesis_forge.core.parser" not in renderer_imports
+
+    render_plan_source = Path(render_plan_module.__file__).read_text(encoding="utf-8")
+    assert "TFAbstract" not in render_plan_source
+    assert "w:pStyle" not in render_plan_source
 
 
 def test_template_model_is_renderer_neutral():

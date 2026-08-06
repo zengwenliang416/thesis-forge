@@ -1,4 +1,5 @@
 from decimal import Decimal
+from typing import get_args
 
 from thesis_forge.core.render_plan import (
     BibliographyEntryInstruction,
@@ -6,6 +7,8 @@ from thesis_forge.core.render_plan import (
     FigureInstruction,
     FigureWidthInstruction,
     HeadingInstruction,
+    ParagraphInstruction,
+    ParagraphRole,
     RenderNode,
     RenderPlan,
     SectionBreakInstruction,
@@ -24,6 +27,7 @@ def test_typed_instruction_preserves_generic_render_node_contract():
         text="绪论",
         inlines=(TextRun("绪论"),),
         bookmark="tf_chap_intro",
+        role="abstract.zh.title",
     )
     plan = RenderPlan(nodes=[instruction])
 
@@ -33,6 +37,7 @@ def test_typed_instruction_preserves_generic_render_node_contract():
         "level": 1,
         "text": "绪论",
         "bookmark": "tf_chap_intro",
+        "role": "abstract.zh.title",
     }
     assert instruction.to_render_node() == RenderNode(
         kind="heading",
@@ -41,8 +46,34 @@ def test_typed_instruction_preserves_generic_render_node_contract():
             "level": 1,
             "text": "绪论",
             "bookmark": "tf_chap_intro",
+            "role": "abstract.zh.title",
         },
     )
+
+
+def test_paragraph_roles_are_closed_renderer_neutral_values_with_compatible_defaults():
+    assert set(get_args(ParagraphRole)) == {
+        "body",
+        "abstract.zh.title",
+        "abstract.zh.body",
+        "keywords.zh",
+        "abstract.en.title",
+        "abstract.en.body",
+        "keywords.en",
+        "toc.title",
+        "bibliography.title",
+        "bibliography.entry",
+        "special.acknowledgements",
+        "special.achievements",
+    }
+
+    heading = HeadingInstruction(source_id=None, level=2, text="普通标题")
+    paragraph = ParagraphInstruction(text="普通正文")
+
+    assert heading.role is None
+    assert paragraph.role == "body"
+    assert heading.payload["role"] is None
+    assert paragraph.payload == {"text": "普通正文", "role": "body"}
 
 
 def test_figure_and_table_instructions_keep_renderer_neutral_compatibility_payloads():

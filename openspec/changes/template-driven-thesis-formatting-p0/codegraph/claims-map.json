@@ -1,6 +1,6 @@
 {
   "schema": "specnav.codegraph.claims.v1",
-  "generated_at": "2026-08-03T03:32:07.143Z",
+  "generated_at": "2026-08-03T06:57:54.721Z",
   "active_change": "template-driven-thesis-formatting-p0",
   "claims": [
     {
@@ -23,6 +23,7 @@
       ],
       "allowed_files": [
         "src/thesis_forge/templates/model.py",
+        "src/thesis_forge/templates/__init__.py",
         "src/thesis_forge/templates/resolver.py",
         "tests/test_template.py",
         "tests/test_architecture.py",
@@ -56,6 +57,7 @@
         "src/thesis_forge/renderers/docx/fonts.py",
         "src/thesis_forge/renderers/docx/units.py",
         "src/thesis_forge/renderers/docx/document.py",
+        "src/thesis_forge/templates/model.py",
         "tests/test_docx_renderer.py",
         "tests/test_template.py",
         "openspec/changes/template-driven-thesis-formatting-p0/development/tasks/002-docx-paragraph-translation/**"
@@ -91,6 +93,7 @@
         "tests/test_render_plan.py",
         "tests/test_docx_renderer.py",
         "tests/test_architecture.py",
+        "tests/test_acceptance.py",
         "openspec/changes/template-driven-thesis-formatting-p0/development/tasks/003-semantic-roles/**"
       ],
       "query_ids": [

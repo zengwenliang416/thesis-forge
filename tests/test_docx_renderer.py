@@ -27,6 +27,7 @@ from thesis_forge.core.model import (
     Text,
     ThesisDocument,
 )
+from thesis_forge.core.parser import parse_markdown
 from thesis_forge.core.render_plan import ReferenceRun
 from thesis_forge.renderers.docx import DocxRenderer
 from thesis_forge.renderers.docx.errors import DocxRenderError
@@ -34,13 +35,17 @@ from thesis_forge.renderers.docx.package import list_package_parts, read_package
 from thesis_forge.renderers.docx.styles import (
     apply_paragraph_style,
     ensure_paragraph_style,
+    resolve_paragraph_style,
 )
 from thesis_forge.templates import (
+    AbstractStyleSpec,
+    BibliographySpec,
     FontSpec,
     LengthSpec,
     LineSpacingSpec,
     ParagraphStyleSpec,
     SectionsSpec,
+    TocSpec,
     load_template,
 )
 
@@ -355,6 +360,225 @@ def test_stable_paragraph_style_survives_package_round_trip(tmp_path: Path):
     assert reopened.styles["TF Abstract ZH Body"].style_id == "TFAbstractZHBody"
 
 
+def test_semantic_style_resolution_uses_deterministic_heading_and_body_fallbacks():
+    template = load_template("templates/base/bachelor.yaml")
+
+    assert resolve_paragraph_style(
+        template,
+        "abstract.zh.title",
+        heading_level=1,
+    ) is template.heading.level1
+    assert resolve_paragraph_style(
+        template,
+        "abstract.zh.body",
+    ) is template.body
+    assert resolve_paragraph_style(
+        template,
+        "keywords.en",
+    ) is template.body
+    assert resolve_paragraph_style(
+        template,
+        "toc.title",
+        heading_level=1,
+    ) is template.heading.level1
+    assert resolve_paragraph_style(
+        template,
+        "bibliography.entry",
+    ) is template.body
+    assert resolve_paragraph_style(
+        template,
+        "special.acknowledgements",
+        heading_level=1,
+    ) is template.heading.level1
+
+
+def test_partial_semantic_title_inherits_heading_style_and_overrides_false(
+    tmp_path: Path,
+):
+    template = load_template("templates/base/bachelor.yaml")
+    template.heading.level1.space_before = LengthSpec.model_validate("10pt")
+    template.heading.level1.keep_with_next = True
+    template.heading.level1.page_break_before = True
+    template.semantic_styles.abstract_zh = AbstractStyleSpec(
+        title=ParagraphStyleSpec(
+            space_before="1em",
+            page_break_before=False,
+        )
+    )
+    document = ThesisDocument(
+        source_path=tmp_path / "thesis.md",
+        blocks=[Heading(id="chap:abstract-zh", level=1, text="摘要")],
+    )
+    output = tmp_path / "partial-semantic-title.docx"
+
+    DocxRenderer().render(compile_document(document, template=template), output)
+
+    styles_xml = _xml_part(output, "word/styles.xml")
+    heading = styles_xml.xpath(
+        ".//w:style[@w:styleId='Heading1']",
+        namespaces=NS,
+    )[0]
+    semantic = styles_xml.xpath(
+        ".//w:style[@w:styleId='TFAbstractZHTitle']",
+        namespaces=NS,
+    )[0]
+    assert heading.xpath("./w:rPr/w:b", namespaces=NS)
+    assert heading.xpath("./w:pPr/w:jc/@w:val", namespaces=NS) == ["center"]
+    assert heading.xpath("./w:pPr/w:spacing/@w:before", namespaces=NS) == ["200"]
+    assert heading.xpath("./w:pPr/w:keepNext", namespaces=NS)
+    assert heading.xpath("./w:pPr/w:pageBreakBefore", namespaces=NS)
+    assert semantic.xpath("./w:basedOn/@w:val", namespaces=NS) == ["Heading1"]
+    assert not semantic.xpath("./w:rPr/w:b", namespaces=NS)
+    assert not semantic.xpath("./w:rPr/w:rFonts", namespaces=NS)
+    assert not semantic.xpath("./w:rPr/w:sz", namespaces=NS)
+    assert not semantic.xpath("./w:pPr/w:jc", namespaces=NS)
+    assert semantic.xpath(
+        "./w:pPr/w:spacing/@w:before",
+        namespaces=NS,
+    ) == ["320"]
+    assert not semantic.xpath("./w:pPr/w:keepNext", namespaces=NS)
+    assert semantic.xpath(
+        "./w:pPr/w:pageBreakBefore/@w:val",
+        namespaces=NS,
+    ) == ["0"]
+
+
+def test_partial_semantic_body_uses_inherited_size_for_em_lengths(
+    tmp_path: Path,
+):
+    template = load_template("templates/base/bachelor.yaml")
+    template.semantic_styles.abstract_zh = AbstractStyleSpec(
+        body=ParagraphStyleSpec(
+            first_line_indent="2em",
+            space_after="0.5em",
+            line_spacing={"type": "fixed", "value": "1.5em"},
+        )
+    )
+    document = ThesisDocument(
+        source_path=tmp_path / "thesis.md",
+        blocks=[
+            Heading(id="chap:abstract-zh", level=1, text="摘要"),
+            Paragraph(text="摘要正文"),
+        ],
+    )
+    output = tmp_path / "partial-semantic-body.docx"
+
+    DocxRenderer().render(compile_document(document, template=template), output)
+
+    styles_xml = _xml_part(output, "word/styles.xml")
+    semantic = styles_xml.xpath(
+        ".//w:style[@w:styleId='TFAbstractZHBody']",
+        namespaces=NS,
+    )[0]
+    assert semantic.xpath("./w:basedOn/@w:val", namespaces=NS) == ["Normal"]
+    assert not semantic.xpath("./w:rPr/w:rFonts", namespaces=NS)
+    assert not semantic.xpath("./w:rPr/w:sz", namespaces=NS)
+    assert semantic.xpath("./w:pPr/w:ind/@w:firstLine", namespaces=NS) == ["480"]
+    assert semantic.xpath("./w:pPr/w:spacing/@w:after", namespaces=NS) == ["120"]
+    assert semantic.xpath("./w:pPr/w:spacing/@w:line", namespaces=NS) == ["360"]
+    assert semantic.xpath(
+        "./w:pPr/w:spacing/@w:lineRule",
+        namespaces=NS,
+    ) == ["exact"]
+
+
+def test_docx_renderer_binds_complete_abstract_fragment_to_semantic_styles(
+    tmp_path: Path,
+):
+    source = tmp_path / "semantic-fragment.md"
+    source.write_text(
+        """# 摘要 {#chap:abstract-zh}
+
+中文摘要正文。
+
+关键词：编译；模板
+
+# Abstract {#chap:abstract-en}
+
+English abstract body.
+
+Keywords: compiler; template
+
+# 目录 {#chap:toc}
+
+# 参考文献 {#references}
+
+[1] Reference entry.
+
+# 致谢 {#acknowledgements}
+
+感谢所有帮助。
+
+# 攻读学位期间的成果 {#achievements}
+""",
+        encoding="utf-8",
+    )
+    template = load_template("templates/base/bachelor.yaml")
+    template.semantic_styles.abstract_zh = AbstractStyleSpec(
+        title=ParagraphStyleSpec(size="18pt", alignment="center"),
+        body=ParagraphStyleSpec(size="12pt", first_line_indent="2em"),
+        keywords=ParagraphStyleSpec(size="11pt", first_line_indent="0em"),
+    )
+    template.semantic_styles.abstract_en = AbstractStyleSpec(
+        title=ParagraphStyleSpec(size="17pt", alignment="center"),
+        body=ParagraphStyleSpec(size="10pt", first_line_indent="1em"),
+        keywords=ParagraphStyleSpec(size="9pt", first_line_indent="0em"),
+    )
+    template.bibliography = BibliographySpec(
+        title=ParagraphStyleSpec(size="16pt", alignment="center"),
+        entry=ParagraphStyleSpec(size="10pt", hanging_indent="2em"),
+    )
+    template.semantic_styles.acknowledgements = ParagraphStyleSpec(
+        size="16pt",
+        alignment="center",
+    )
+    template.semantic_styles.achievements = ParagraphStyleSpec(
+        size="15pt",
+        alignment="center",
+    )
+    template.toc = TocSpec(title=ParagraphStyleSpec(size="16pt"))
+    output = tmp_path / "semantic-fragment.docx"
+
+    DocxRenderer().render(
+        compile_document(parse_markdown(source), template=template),
+        output,
+    )
+
+    document_xml = _xml_part(output, "word/document.xml")
+    styles_xml = _xml_part(output, "word/styles.xml")
+    expected_styles = {
+        "摘要": "TFAbstractZHTitle",
+        "中文摘要正文。": "TFAbstractZHBody",
+        "关键词：编译；模板": "TFKeywordsZH",
+        "Abstract": "TFAbstractENTitle",
+        "English abstract body.": "TFAbstractENBody",
+        "Keywords: compiler; template": "TFKeywordsEN",
+        "目录": "TFTOCTitle",
+        "参考文献": "TFBibliographyTitle",
+        "[1] Reference entry.": "TFBibliographyEntry",
+        "致谢": "TFAcknowledgements",
+        "攻读学位期间的成果": "TFAchievements",
+    }
+    for text, style_id in expected_styles.items():
+        assert document_xml.xpath(
+            f".//w:p[.//w:t[text()={text!r}]]/w:pPr/w:pStyle/@w:val",
+            namespaces=NS,
+        ) == [style_id]
+        assert styles_xml.xpath(
+            f".//w:style[@w:styleId={style_id!r}]",
+            namespaces=NS,
+        )
+
+    assert styles_xml.xpath(
+        ".//w:style[@w:styleId='TFAbstractZHBody']/w:pPr/w:ind/@w:firstLine",
+        namespaces=NS,
+    ) == ["480"]
+    assert styles_xml.xpath(
+        ".//w:style[@w:styleId='TFKeywordsEN']/w:rPr/w:sz/@w:val",
+        namespaces=NS,
+    ) == ["18"]
+
+
 def test_heading_levels_one_through_three_use_shared_translator(tmp_path: Path):
     template = load_template("templates/base/bachelor.yaml")
     expected_left_indents = {"Heading1": "320", "Heading2": "560", "Heading3": "720"}
@@ -522,7 +746,7 @@ def test_docx_renderer_writes_metadata_cover_before_front_matter(tmp_path: Path)
     assert document_xml.xpath(
         ".//w:p[.//w:t[text()='摘要']]/w:pPr/w:pStyle/@w:val",
         namespaces=NS,
-    ) == ["Heading1"]
+    ) == ["TFAbstractZHTitle"]
     assert len(document_xml.xpath(".//w:sectPr", namespaces=NS)) == 3
     assert document_xml.xpath(".//w:headerReference", namespaces=NS)
     assert document_xml.xpath(".//w:footerReference", namespaces=NS)

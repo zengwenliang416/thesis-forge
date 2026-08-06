@@ -10,6 +10,7 @@ from docx.oxml.ns import qn
 from docx.styles.style import ParagraphStyle
 from docx.text.paragraph import Paragraph
 
+from thesis_forge.core.render_plan import ParagraphRole
 from thesis_forge.templates.model import (
     FontSpec,
     LengthSpec,
@@ -41,8 +42,118 @@ PARAGRAPH_STYLE_NAMES = {
     "special.achievements": "TF Achievements",
 }
 
+HEADING_BASE_ROLES = frozenset(
+    {
+        "abstract.zh.title",
+        "abstract.en.title",
+        "toc.title",
+        "bibliography.title",
+        "special.acknowledgements",
+        "special.achievements",
+    }
+)
+
 
 ParagraphTarget: TypeAlias = ParagraphStyle | Paragraph
+
+
+def resolve_paragraph_style(
+    template: ThesisTemplate | None,
+    role: ParagraphRole,
+    *,
+    heading_level: int | None = None,
+) -> ParagraphStyleSpec | None:
+    if template is None:
+        return None
+    if role == "body":
+        return template.body
+
+    heading_fallback = (
+        template.heading.for_level(heading_level or 1) or template.heading.level1
+    )
+    semantic = template.semantic_styles
+    if role == "abstract.zh.title":
+        return (
+            semantic.abstract_zh.title
+            if semantic.abstract_zh is not None and semantic.abstract_zh.title is not None
+            else heading_fallback
+        )
+    if role == "abstract.zh.body":
+        return (
+            semantic.abstract_zh.body
+            if semantic.abstract_zh is not None and semantic.abstract_zh.body is not None
+            else template.body
+        )
+    if role == "keywords.zh":
+        return (
+            semantic.abstract_zh.keywords
+            if semantic.abstract_zh is not None
+            and semantic.abstract_zh.keywords is not None
+            else template.body
+        )
+    if role == "abstract.en.title":
+        return (
+            semantic.abstract_en.title
+            if semantic.abstract_en is not None and semantic.abstract_en.title is not None
+            else heading_fallback
+        )
+    if role == "abstract.en.body":
+        return (
+            semantic.abstract_en.body
+            if semantic.abstract_en is not None and semantic.abstract_en.body is not None
+            else template.body
+        )
+    if role == "keywords.en":
+        return (
+            semantic.abstract_en.keywords
+            if semantic.abstract_en is not None
+            and semantic.abstract_en.keywords is not None
+            else template.body
+        )
+    if role == "toc.title":
+        return (
+            template.toc.title
+            if template.toc is not None and template.toc.title is not None
+            else heading_fallback
+        )
+    if role == "bibliography.title":
+        return (
+            template.bibliography.title
+            if template.bibliography is not None
+            and template.bibliography.title is not None
+            else heading_fallback
+        )
+    if role == "bibliography.entry":
+        return (
+            template.bibliography.entry
+            if template.bibliography is not None
+            and template.bibliography.entry is not None
+            else template.body
+        )
+    if role == "special.acknowledgements":
+        return semantic.acknowledgements or heading_fallback
+    if role == "special.achievements":
+        return semantic.achievements or heading_fallback
+    raise ValueError(f"unsupported paragraph role: {role}")
+
+
+def resolve_role_em_size_points(
+    template: ThesisTemplate,
+    role: ParagraphRole,
+    *,
+    heading_level: int | None = None,
+) -> float:
+    if role in HEADING_BASE_ROLES:
+        heading = (
+            template.heading.for_level(heading_level or 1)
+            or template.heading.level1
+        )
+        resolved = _resolved_size_points(heading.size, template.body.size)
+    else:
+        resolved = _resolved_size_points(template.body.size, None)
+    if resolved is None:
+        raise ValueError(f"paragraph role has no effective font size: {role}")
+    return resolved
 
 
 def _resolved_size_points(
@@ -101,10 +212,13 @@ def apply_paragraph_style(
     *,
     fallback_font: FontSpec | None = None,
     fallback_size: LengthSpec | None = None,
+    em_size_pt: float | None = None,
 ) -> None:
     font_spec = spec.font or fallback_font
     size = spec.size or fallback_size
     size_pt = _resolved_size_points(spec.size, fallback_size)
+    if size_pt is None:
+        size_pt = em_size_pt
     font_em_base_pt = _font_size_em_base_points(spec.size, fallback_size)
 
     if isinstance(target, Paragraph):
@@ -199,6 +313,8 @@ def ensure_paragraph_style(
     *,
     fallback_font: FontSpec | None = None,
     fallback_size: LengthSpec | None = None,
+    base_style: ParagraphStyle | None = None,
+    em_size_pt: float | None = None,
 ) -> ParagraphStyle:
     try:
         style_name = PARAGRAPH_STYLE_NAMES[role]
@@ -217,12 +333,13 @@ def ensure_paragraph_style(
     )
     if style is None:
         style = document.styles.add_style(style_name, WD_STYLE_TYPE.PARAGRAPH)
-        style.base_style = document.styles["Normal"]
+    style.base_style = base_style or document.styles["Normal"]
     apply_paragraph_style(
         style,
         spec,
         fallback_font=fallback_font,
         fallback_size=fallback_size,
+        em_size_pt=em_size_pt,
     )
     return style
 

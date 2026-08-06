@@ -48,6 +48,7 @@ from .render_plan import (
     ListInstruction,
     ListItemInstruction,
     ParagraphInstruction,
+    ParagraphRole,
     ReferenceRun,
     RenderInstruction,
     RenderPlan,
@@ -67,6 +68,33 @@ FIGURE_WIDTH_RE = re.compile(
     r"^(?P<value>\d+(?:\.\d+)?)(?P<unit>%|mm|cm|pt|em)$"
 )
 TABLE_SEPARATOR_RE = re.compile(r"^:?-{3,}:?$")
+ZH_KEYWORDS_RE = re.compile(r"^\s*(?:\*\*)?关键词\s*[：:](?:\*\*)?")
+EN_KEYWORDS_RE = re.compile(
+    r"^\s*(?:\*\*)?keywords\s*:(?:\*\*)?",
+    re.IGNORECASE,
+)
+
+SEMANTIC_HEADING_ROLES: dict[str, ParagraphRole] = {
+    "chap:abstract-zh": "abstract.zh.title",
+    "chap:abstract-en": "abstract.en.title",
+    "chap:toc": "toc.title",
+    "chap:contents": "toc.title",
+    "chap:bibliography": "bibliography.title",
+    "chap:references": "bibliography.title",
+    "references": "bibliography.title",
+    "chap:acknowledgements": "special.acknowledgements",
+    "acknowledgements": "special.acknowledgements",
+    "chap:achievements": "special.achievements",
+    "achievements": "special.achievements",
+}
+
+SEMANTIC_BODY_ROLES: dict[str, ParagraphRole] = {
+    "chap:abstract-zh": "abstract.zh.body",
+    "chap:abstract-en": "abstract.en.body",
+    "chap:bibliography": "bibliography.entry",
+    "chap:references": "bibliography.entry",
+    "references": "bibliography.entry",
+}
 
 
 class CompilerError(ValueError):
@@ -524,6 +552,33 @@ class _SectionPlanner:
 
 
 @dataclass(slots=True)
+class _SemanticContext:
+    active_paragraph_role: ParagraphRole = "body"
+
+    def role_for(self, block: Heading | Paragraph) -> ParagraphRole | None:
+        if isinstance(block, Heading):
+            if block.level != 1:
+                return None
+            self.active_paragraph_role = "body"
+            if block.id is None:
+                return None
+            self.active_paragraph_role = SEMANTIC_BODY_ROLES.get(block.id, "body")
+            return SEMANTIC_HEADING_ROLES.get(block.id)
+
+        if (
+            self.active_paragraph_role == "abstract.zh.body"
+            and ZH_KEYWORDS_RE.match(block.text)
+        ):
+            return "keywords.zh"
+        if (
+            self.active_paragraph_role == "abstract.en.body"
+            and EN_KEYWORDS_RE.match(block.text)
+        ):
+            return "keywords.en"
+        return self.active_paragraph_role
+
+
+@dataclass(slots=True)
 class _CompilationContext:
     document: ThesisDocument
     template: ThesisTemplate | None
@@ -532,6 +587,7 @@ class _CompilationContext:
     footnote_ids: dict[str, int]
     bibliography_database: BibliographyDatabase | None
     citation_formatter: CitationFormatter | None
+    semantic: _SemanticContext
     bibliography_emitted: bool = False
 
     def inlines(self, values: list[Inline]) -> tuple[InlineRun, ...]:
@@ -682,11 +738,13 @@ def _compile_block(
             text=block.text,
             inlines=_fallback_text_runs(block.text, context.inlines(block.inlines)),
             bookmark=bookmark,
+            role=context.semantic.role_for(block),
         )
     if isinstance(block, Paragraph):
         return ParagraphInstruction(
             text=block.text,
             inlines=_fallback_text_runs(block.text, context.inlines(block.inlines)),
+            role=context.semantic.role_for(block) or "body",
         )
     if isinstance(block, ListBlock):
         return _compile_list(block, context)
@@ -802,6 +860,7 @@ def compile_document(
             if citation_formatter is not None
             else (Gbt7714Formatter() if bibliography_database is not None else None)
         ),
+        semantic=_SemanticContext(),
     )
     section_planner = _SectionPlanner.from_template(template)
     instructions: list[RenderInstruction] = []

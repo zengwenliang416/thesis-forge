@@ -1,6 +1,6 @@
 {
   "schema": "specnav.codegraph.evidence_index.v1",
-  "generated_at": "2026-08-03T04:37:51.919Z",
+  "generated_at": "2026-08-03T07:07:25.430Z",
   "active_change": "template-driven-thesis-formatting-p0",
   "source_raw": "openspec/changes/template-driven-thesis-formatting-p0/codegraph/evidence.jsonl",
   "by_claim": {
@@ -35,11 +35,35 @@
       ],
       "symbols": [],
       "blockers": []
+    },
+    "development:task-003-semantic-roles": {
+      "status": "matched",
+      "evidence_ids": [
+        "ev-mscv2ik1",
+        "ev-mscv2zpb",
+        "ev-mscvniyw",
+        "ev-mscvzqsv"
+      ],
+      "files": [
+        "tests/test_application_services.py",
+        "thesis.md",
+        "bachelor.yaml",
+        "invalid.md",
+        "sitecustomize.py",
+        "tests/test_compiler.py",
+        "src/thesis_forge/core/compiler.py",
+        "src/thesis_forge/renderers/docx/styles.py",
+        "src/thesis_forge/core/render_plan.py",
+        "tests/test_frontend_contract.py",
+        "src/thesis_forge/renderers/docx/units.py"
+      ],
+      "symbols": [],
+      "blockers": []
     }
   },
   "by_stage": {
     "development": {
-      "verified": 3,
+      "verified": 7,
       "partial": 0,
       "missing": 0,
       "stale": 0,
@@ -48,5 +72,5 @@
   },
   "blockers": [],
   "raw_exists": true,
-  "record_count": 3
+  "record_count": 7
 }

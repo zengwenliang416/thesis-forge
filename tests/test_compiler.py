@@ -45,6 +45,7 @@ from thesis_forge.core.render_plan import (
     SectionBreakInstruction,
     SequenceInstruction,
     TableInstruction,
+    TextRun,
     TocInstruction,
 )
 from thesis_forge.templates import LengthSpec, SectionsSpec, load_template
@@ -506,3 +507,133 @@ def test_compile_document_emits_renderer_neutral_cover_from_front_matter():
     )
     assert plan.nodes[0].payload["student_id"] == "2022000001"
     assert plan.nodes[1] == SectionBreakInstruction(role="front_matter")
+
+
+def test_compile_document_resolves_semantic_heading_and_paragraph_roles():
+    document = ThesisDocument(
+        source_path=Path("/tmp/thesis.md"),
+        blocks=[
+            Heading(id="chap:abstract-zh", level=1, text="摘要"),
+            Paragraph(text="中文摘要正文"),
+            Paragraph(text="关键词：编译；模板"),
+            Paragraph(text="本文讨论关键词：不会误判"),
+            Heading(id="chap:abstract-en", level=1, text="Abstract"),
+            Paragraph(text="English abstract body."),
+            Paragraph(text="**Keywords:** compiler; template"),
+            Heading(id="references", level=1, text="参考文献"),
+            Paragraph(text="[1] Reference entry."),
+            Heading(id="acknowledgements", level=1, text="致谢"),
+            Paragraph(text="感谢所有帮助。"),
+            Heading(id="achievements", level=1, text="攻读学位期间的成果"),
+            Paragraph(text="成果说明。"),
+            Heading(id="chap:introduction", level=1, text="摘要"),
+            Paragraph(text="关键词：普通正文"),
+        ],
+    )
+
+    plan = compile_document(
+        document,
+        template=load_template("templates/base/bachelor.yaml"),
+    )
+    semantic_nodes = [
+        node
+        for node in plan.nodes
+        if isinstance(node, (HeadingInstruction, ParagraphInstruction))
+    ]
+
+    assert [node.role for node in semantic_nodes] == [
+        "abstract.zh.title",
+        "abstract.zh.body",
+        "keywords.zh",
+        "abstract.zh.body",
+        "abstract.en.title",
+        "abstract.en.body",
+        "keywords.en",
+        "bibliography.title",
+        "bibliography.entry",
+        "special.acknowledgements",
+        "body",
+        "special.achievements",
+        "body",
+        None,
+        "body",
+    ]
+    assert semantic_nodes[2].text == "关键词：编译；模板"
+    assert semantic_nodes[6].text == "**Keywords:** compiler; template"
+    assert semantic_nodes[2].inlines == (TextRun("关键词：编译；模板"),)
+    assert semantic_nodes[6].inlines == (
+        TextRun("**Keywords:** compiler; template"),
+    )
+    assert all(isinstance(node.role, str) or node.role is None for node in semantic_nodes)
+
+
+def test_compile_document_preserves_abstract_context_across_nested_headings():
+    document = ThesisDocument(
+        source_path=Path("/tmp/thesis.md"),
+        blocks=[
+            Heading(id="chap:abstract-zh", level=1, text="摘要"),
+            Heading(id="sec:zh-method", level=2, text="方法"),
+            Paragraph(text="中文摘要的分节正文"),
+            Paragraph(text="关键词：编译；模板"),
+            Heading(id="chap:abstract-en", level=1, text="Abstract"),
+            Heading(id="sec:en-method", level=3, text="Method"),
+            Paragraph(text="English abstract subsection body."),
+            Paragraph(text="Keywords: compiler; template"),
+            Heading(id="chap:introduction", level=1, text="绪论"),
+            Paragraph(text="关键词：普通正文"),
+        ],
+    )
+
+    plan = compile_document(document)
+    semantic_nodes = [
+        node
+        for node in plan.nodes
+        if isinstance(node, (HeadingInstruction, ParagraphInstruction))
+    ]
+
+    assert [node.role for node in semantic_nodes] == [
+        "abstract.zh.title",
+        None,
+        "abstract.zh.body",
+        "keywords.zh",
+        "abstract.en.title",
+        None,
+        "abstract.en.body",
+        "keywords.en",
+        None,
+        "body",
+    ]
+
+
+@pytest.mark.parametrize(
+    ("heading_id", "paragraph_text"),
+    [
+        ("chap:abstract-zh", "正文提到关键词：但标签不在段首"),
+        ("chap:abstract-zh", "关键字：不是约定标签"),
+        ("chap:abstract-en", "This sentence mentions Keywords: later."),
+        ("chap:abstract-en", "Keyword: singular is not the label."),
+        ("chap:introduction", "关键词：普通章节不得识别"),
+        (None, "Keywords: an unmarked heading is not semantic"),
+    ],
+)
+def test_compile_document_avoids_keyword_false_positives(
+    heading_id: str | None,
+    paragraph_text: str,
+):
+    document = ThesisDocument(
+        source_path=Path("/tmp/thesis.md"),
+        blocks=[
+            Heading(id=heading_id, level=1, text="摘要"),
+            Paragraph(text=paragraph_text),
+        ],
+    )
+
+    first = compile_document(document)
+    second = compile_document(document)
+    paragraph = next(
+        node for node in first.nodes if isinstance(node, ParagraphInstruction)
+    )
+
+    assert paragraph.role in {"abstract.zh.body", "abstract.en.body", "body"}
+    assert paragraph.role not in {"keywords.zh", "keywords.en"}
+    assert first == second

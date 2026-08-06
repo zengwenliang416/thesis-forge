@@ -26,13 +26,13 @@
 
 **用户结果：** 中文摘要、英文摘要、中文关键词、英文关键词和特殊章节可以独立配置样式，而不需要修改论文 Markdown 内容。
 
-- [ ] 3.1 在 RenderPlan 中定义封闭的 renderer-neutral `ParagraphRole`，并为 heading/paragraph instruction 增加兼容默认值。（A7）
-- [ ] 3.2 在 Compiler 中实现基于稳定 heading ID 的文档上下文状态机，识别中英文摘要、目录、参考文献、致谢和成果章节。（A3、A7）
-- [ ] 3.3 仅在匹配摘要上下文且标签位于段首时识别中英文关键词，保留原 inline runs 和文本。（A3）
-- [ ] 3.4 为缺失语义样式实现确定性的 body/heading fallback，不在 Renderer 中硬编码学校值。（A3、A8）
-- [ ] 3.5 增加中英文角色切换、章节退出、关键词标签、普通正文误判和重复构建的 Compiler/RenderPlan 测试。（A3、A7）
-- [ ] 3.6 增加完整摘要片段的 OOXML 测试，断言不同角色绑定不同稳定 Word styles。（A3）
-- [ ] 3.7 扩展架构测试，证明 Parser、Domain 和 RenderPlan 仍不依赖 `docx`、`lxml` 或 renderer。（A7、A8）
+- [x] 3.1 在 RenderPlan 中定义封闭的 renderer-neutral `ParagraphRole`，并为 heading/paragraph instruction 增加兼容默认值。（A7）
+- [x] 3.2 在 Compiler 中实现基于稳定 heading ID 的文档上下文状态机，识别中英文摘要、目录、参考文献、致谢和成果章节。（A3、A7）
+- [x] 3.3 仅在匹配摘要上下文且标签位于段首时识别中英文关键词，保留原 inline runs 和文本。（A3）
+- [x] 3.4 为缺失语义样式实现确定性的 body/heading fallback，不在 Renderer 中硬编码学校值。（A3、A8）
+- [x] 3.5 增加中英文角色切换、章节退出、关键词标签、普通正文误判和重复构建的 Compiler/RenderPlan 测试。（A3、A7）
+- [x] 3.6 增加完整摘要片段的 OOXML 测试，断言不同角色绑定不同稳定 Word styles。（A3）
+- [x] 3.7 扩展架构测试，证明 Parser、Domain 和 RenderPlan 仍不依赖 `docx`、`lxml` 或 renderer。（A7、A8）
 
 ## 4. Configurable Real TOC
 

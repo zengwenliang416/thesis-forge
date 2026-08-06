@@ -18,6 +18,7 @@ from thesis_forge.core.render_plan import (
     ListingInstruction,
     ListInstruction,
     ParagraphInstruction,
+    ParagraphRole,
     RenderNode,
     RenderPlan,
     SectionBreakInstruction,
@@ -37,6 +38,12 @@ from .footnotes import FootnoteManager
 from .inlines import InlineHandlers, render_inline_runs
 from .lists import apply_list_numbering, create_list_numbering
 from .sections import add_section, configure_initial_section
+from .styles import (
+    HEADING_BASE_ROLES,
+    ensure_paragraph_style,
+    resolve_paragraph_style,
+    resolve_role_em_size_points,
+)
 from .tables import render_table
 
 
@@ -64,6 +71,44 @@ def _add_preformatted_paragraph(document: DocumentObject, text: str):
     return paragraph
 
 
+def _semantic_word_style(
+    document: DocumentObject,
+    template: ThesisTemplate | None,
+    role: ParagraphRole,
+    *,
+    heading_level: int | None = None,
+):
+    if template is None or role == "body":
+        return None
+    spec = resolve_paragraph_style(
+        template,
+        role,
+        heading_level=heading_level,
+    )
+    if spec is None:
+        return None
+    base_style = None
+    if role in HEADING_BASE_ROLES:
+        base_style = document.styles[f"Heading {min(heading_level or 1, 9)}"]
+    em_fallback_size = (
+        template.body.size
+        if spec.size is not None and spec.size.unit == "em"
+        else None
+    )
+    return ensure_paragraph_style(
+        document,
+        role,
+        spec,
+        fallback_size=em_fallback_size,
+        base_style=base_style,
+        em_size_pt=resolve_role_em_size_points(
+            template,
+            role,
+            heading_level=heading_level,
+        ),
+    )
+
+
 def _render_typed(
     document: DocumentObject,
     instruction,
@@ -74,11 +119,20 @@ def _render_typed(
     if isinstance(instruction, CoverInstruction):
         render_cover(document, instruction)
     elif isinstance(instruction, HeadingInstruction):
-        paragraph = document.add_paragraph(style=f"Heading {min(instruction.level, 9)}")
+        style = f"Heading {min(instruction.level, 9)}"
+        if instruction.role is not None:
+            style = _semantic_word_style(
+                document,
+                template,
+                instruction.role,
+                heading_level=instruction.level,
+            ) or style
+        paragraph = document.add_paragraph(style=style)
         _add_runs(paragraph, instruction.inlines, footnotes)
         wrap_paragraph_in_bookmark(paragraph, instruction.bookmark)
     elif isinstance(instruction, ParagraphInstruction):
-        paragraph = document.add_paragraph()
+        style = _semantic_word_style(document, template, instruction.role)
+        paragraph = document.add_paragraph(style=style)
         _add_runs(paragraph, instruction.inlines, footnotes)
     elif isinstance(instruction, ListInstruction):
         first_ordinal = next(
@@ -119,10 +173,17 @@ def _render_typed(
     elif isinstance(instruction, FootnoteDefinitionInstruction):
         footnotes.add_definition(instruction)
     elif isinstance(instruction, BibliographyInstruction):
+        style = _semantic_word_style(document, template, "bibliography.entry")
         for entry in instruction.entries:
-            document.add_paragraph(entry.text)
+            document.add_paragraph(entry.text, style=style)
     elif isinstance(instruction, TocInstruction):
-        paragraph = document.add_paragraph()
+        style = _semantic_word_style(
+            document,
+            template,
+            "toc.title",
+            heading_level=1,
+        )
+        paragraph = document.add_paragraph(style=style)
         add_complex_field(
             paragraph,
             f'TOC \\o "{instruction.min_level}-{instruction.max_level}" \\h \\z \\u',

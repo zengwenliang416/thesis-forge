@@ -63,6 +63,21 @@ class FootnoteReferenceRun:
 
 InlineRun: TypeAlias = TextRun | ReferenceRun | CitationRun | FootnoteReferenceRun
 
+ParagraphRole: TypeAlias = Literal[
+    "body",
+    "abstract.zh.title",
+    "abstract.zh.body",
+    "keywords.zh",
+    "abstract.en.title",
+    "abstract.en.body",
+    "keywords.en",
+    "toc.title",
+    "bibliography.title",
+    "bibliography.entry",
+    "special.acknowledgements",
+    "special.achievements",
+]
+
 
 @dataclass(frozen=True, slots=True)
 class HeadingInstruction(_Instruction):
@@ -72,6 +87,7 @@ class HeadingInstruction(_Instruction):
     text: str
     inlines: tuple[InlineRun, ...] = ()
     bookmark: str | None = None
+    role: ParagraphRole | None = None
 
     @property
     def payload(self) -> dict[str, Any]:
@@ -80,6 +96,7 @@ class HeadingInstruction(_Instruction):
             "level": self.level,
             "text": self.text,
             "bookmark": self.bookmark,
+            "role": self.role,
         }
 
 
@@ -88,10 +105,11 @@ class ParagraphInstruction(_Instruction):
     kind: ClassVar[str] = "paragraph"
     text: str
     inlines: tuple[InlineRun, ...] = ()
+    role: ParagraphRole = "body"
 
     @property
     def payload(self) -> dict[str, Any]:
-        return {"text": self.text}
+        return {"text": self.text, "role": self.role}
 
 
 @dataclass(frozen=True, slots=True)

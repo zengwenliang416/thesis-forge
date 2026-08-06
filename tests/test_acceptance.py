@@ -210,11 +210,25 @@ def test_complete_example_docx_contains_required_visible_content_and_word_object
     heading_texts = {
         "".join(paragraph.xpath(".//w:t/text()", namespaces=NS))
         for paragraph in document_xml.xpath(
-            ".//w:p[w:pPr/w:pStyle[starts-with(@w:val, 'Heading')]]",
+            (
+                ".//w:p[w:pPr/w:pStyle["
+                "starts-with(@w:val, 'Heading') "
+                "or @w:val='TFAbstractZHTitle' "
+                "or @w:val='TFAbstractENTitle'"
+                "]]"
+            ),
             namespaces=NS,
         )
     }
     assert {"摘要", "Abstract", "绪论", "系统设计"} <= heading_texts
+    assert document_xml.xpath(
+        ".//w:p[.//w:t[text()='摘要']]/w:pPr/w:pStyle/@w:val",
+        namespaces=NS,
+    ) == ["TFAbstractZHTitle"]
+    assert document_xml.xpath(
+        ".//w:p[.//w:t[text()='Abstract']]/w:pPr/w:pStyle/@w:val",
+        namespaces=NS,
+    ) == ["TFAbstractENTitle"]
     assert {
         "XX大学",
         "基于结构化 Markdown 的本科论文编译系统设计",

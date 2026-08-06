@@ -37,6 +37,7 @@ RenderPlan and semantic Word styles.
 - `tests/test_render_plan.py`
 - `tests/test_docx_renderer.py`
 - `tests/test_architecture.py`
+- `tests/test_acceptance.py`
 - `openspec/changes/template-driven-thesis-formatting-p0/development/tasks/003-semantic-roles`
 
 ## Interfaces / Seams
