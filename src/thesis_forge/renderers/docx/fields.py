@@ -93,5 +93,28 @@ def set_update_fields(document: DocumentObject) -> None:
     existing = settings.find(qn("w:updateFields"))
     if existing is None:
         existing = OxmlElement("w:updateFields")
-        settings.append(existing)
+        settings.insert_element_before(
+            existing,
+            "w:hdrShapeDefaults",
+            "w:footnotePr",
+            "w:endnotePr",
+            "w:compat",
+            "w:docVars",
+            "w:rsids",
+            "m:mathPr",
+            "w:attachedSchema",
+            "w:themeFontLang",
+            "w:clrSchemeMapping",
+            "w:doNotIncludeSubdocsInStats",
+            "w:doNotAutoCompressPictures",
+            "w:forceUpgrade",
+            "w:captions",
+            "w:readModeInkLockDown",
+            "w:smartTagType",
+            "sl:schemaLibrary",
+            "w:shapeDefaults",
+            "w:doNotEmbedSmartTags",
+            "w:decimalSymbol",
+            "w:listSeparator",
+        )
     existing.set(qn("w:val"), "true")

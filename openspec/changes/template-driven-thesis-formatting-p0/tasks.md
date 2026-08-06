@@ -60,15 +60,15 @@
 
 **用户结果：** 模板可以配置页眉页脚距离、首页/奇数页/偶数页内容、页眉底边和页码显示，且不会继承上一 section 的过期内容。
 
-- [ ] 6.1 扩展 `PageSpec`，支持 header distance、footer distance 和可选 document grid。（A6）
-- [ ] 6.2 实现 default/first/even header/footer 变体模型，支持文本、段落样式、底边和页码显示策略。（A6）
-- [ ] 6.3 将旧 header/footer 配置规范化到变体模型，并保持现有“第 X 页 / 共 Y 页”默认输出。（A2、A6）
-- [ ] 6.4 实现模板驱动 PAGE/NUMPAGES 前后缀、分隔符、总页数开关和对齐，不固定中文页码文本。（A6）
-- [ ] 6.5 统一配置初始和新增 section，显式 unlink/clear 已配置或禁用的 first/default/even 变体。（A6）
-- [ ] 6.6 当声明 even 变体时写入 `w:evenAndOddHeaders`，并正确生成 first/default/even header/footer relationships。（A6）
-- [ ] 6.7 实现 header bottom border、`w:pgMar` header/footer distance、`w:docGrid` 和 `w:pgNumType` OOXML。（A6）
-- [ ] 6.8 增加继承泄漏、禁用变体、首页差异、奇偶页、纯 PAGE、PAGE+NUMPAGES、格式/restart 和非法组合测试。（A6）
-- [ ] 6.9 增加 section/settings/header/footer XML 测试，断言关系、距离、边框、字段代码和奇偶页设置。（A6）
+- [x] 6.1 扩展 `PageSpec`，支持 header distance、footer distance 和可选 document grid。（A6）
+- [x] 6.2 实现 default/first/even header/footer 变体模型，支持文本、段落样式、底边和页码显示策略。（A6）
+- [x] 6.3 将旧 header/footer 配置规范化到变体模型，并保持现有“第 X 页 / 共 Y 页”默认输出。（A2、A6）
+- [x] 6.4 实现模板驱动 PAGE/NUMPAGES 前后缀、分隔符、总页数开关和对齐，不固定中文页码文本。（A6）
+- [x] 6.5 统一配置初始和新增 section，显式 unlink/clear 已配置或禁用的 first/default/even 变体。（A6）
+- [x] 6.6 当声明 even 变体时写入 `w:evenAndOddHeaders`，并正确生成 first/default/even header/footer relationships。（A6）
+- [x] 6.7 实现 header bottom border、`w:pgMar` header/footer distance、`w:docGrid` 和 `w:pgNumType` OOXML。（A6）
+- [x] 6.8 增加继承泄漏、禁用变体、首页差异、奇偶页、纯 PAGE、PAGE+NUMPAGES、格式/restart 和非法组合测试。（A6）
+- [x] 6.9 增加 section/settings/header/footer XML 测试，断言关系、距离、边框、字段代码和奇偶页设置。（A6）
 
 ## 7. School Template, Documentation And Complete Build
 

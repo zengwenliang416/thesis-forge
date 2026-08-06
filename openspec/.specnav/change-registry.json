@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-08-02T18:15:56.517Z",
-  "current_focus": null,
+  "generated_at": "2026-08-06T10:37:15.771Z",
+  "current_focus": "template-driven-thesis-formatting-p0",
   "changes": [
     {
       "id": "build-thesisforge-desktop-ui",
@@ -10,8 +10,8 @@
       "branch": "main",
       "created_at": null,
       "last_active_at": "2026-08-02",
-      "archived_at": "2026-08-02T18:15:56.484Z",
-      "archive_path": "openspec/changes/archive/2026-08-02-build-thesisforge-desktop-ui"
+      "archive_path": "openspec/changes/archive/2026-08-02-build-thesisforge-desktop-ui",
+      "archived_at": "2026-08-02T18:15:56.484Z"
     },
     {
       "id": "build-thesisforge-v1-core",
@@ -22,6 +22,14 @@
       "last_active_at": "2026-07-31",
       "archive_path": "openspec/changes/archive/2026-07-31-build-thesisforge-v1-core",
       "archived_at": "2026-07-31T14:32:11.156Z"
+    },
+    {
+      "id": "template-driven-thesis-formatting-p0",
+      "stage": "requirements",
+      "status": "active",
+      "branch": null,
+      "created_at": null,
+      "last_active_at": null
     }
   ]
 }

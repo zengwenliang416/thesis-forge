@@ -54,6 +54,20 @@ class LengthSpec(TemplateModel):
         return f"{number or '0'}{self.unit}"
 
 
+def _require_absolute_length(
+    value: LengthSpec | None,
+    *,
+    positive: bool = False,
+) -> LengthSpec | None:
+    if value is None:
+        return None
+    if value.unit == "em":
+        raise ValueError("物理尺寸必须使用绝对单位 mm / cm / pt")
+    if positive and value.value <= 0:
+        raise ValueError("物理尺寸必须大于 0")
+    return value
+
+
 class FontSpec(TemplateModel):
     east_asia: str = "宋体"
     latin: str = "Times New Roman"
@@ -63,6 +77,14 @@ class DocumentGridSpec(TemplateModel):
     type: Literal["default", "lines", "lines_and_chars", "snap_to_chars"] = "lines"
     line_pitch: LengthSpec | None = None
     char_space: int | None = None
+
+    @field_validator("line_pitch")
+    @classmethod
+    def validate_line_pitch(
+        cls,
+        value: LengthSpec | None,
+    ) -> LengthSpec | None:
+        return _require_absolute_length(value, positive=True)
 
     @model_validator(mode="after")
     def validate_grid(self) -> DocumentGridSpec:
@@ -77,6 +99,13 @@ class MarginSpec(TemplateModel):
     left: LengthSpec
     right: LengthSpec
 
+    @field_validator("top", "bottom", "left", "right")
+    @classmethod
+    def validate_physical_length(cls, value: LengthSpec) -> LengthSpec:
+        validated = _require_absolute_length(value)
+        assert validated is not None
+        return validated
+
 
 class PageSpec(TemplateModel):
     size: Literal["A3", "A4", "A5", "Letter", "Legal"] = "A4"
@@ -85,6 +114,14 @@ class PageSpec(TemplateModel):
     header_distance: LengthSpec | None = None
     footer_distance: LengthSpec | None = None
     document_grid: DocumentGridSpec | None = None
+
+    @field_validator("header_distance", "footer_distance")
+    @classmethod
+    def validate_header_footer_distance(
+        cls,
+        value: LengthSpec | None,
+    ) -> LengthSpec | None:
+        return _require_absolute_length(value)
 
 
 class LineSpacingSpec(TemplateModel):
@@ -269,6 +306,22 @@ class ParagraphBorderSpec(TemplateModel):
     color: str = Field(default="auto", pattern=r"^(?:auto|[0-9A-Fa-f]{6})$")
     space: LengthSpec | None = None
 
+    @field_validator("width")
+    @classmethod
+    def validate_width(
+        cls,
+        value: LengthSpec | None,
+    ) -> LengthSpec | None:
+        return _require_absolute_length(value, positive=True)
+
+    @field_validator("space")
+    @classmethod
+    def validate_space(
+        cls,
+        value: LengthSpec | None,
+    ) -> LengthSpec | None:
+        return _require_absolute_length(value)
+
 
 class PageNumberDisplaySpec(TemplateModel):
     alignment: Literal["left", "center", "right"] = "center"
@@ -321,6 +374,12 @@ class PageNumberSpec(TemplateModel):
     format: Literal["none", "decimal", "roman-lower", "roman-upper"] = "decimal"
     restart: int | None = Field(default=None, ge=1)
     display: PageNumberDisplaySpec = Field(default_factory=PageNumberDisplaySpec)
+
+    @model_validator(mode="after")
+    def validate_restart(self) -> PageNumberSpec:
+        if self.format == "none" and self.restart is not None:
+            raise ValueError("page_number.format 为 none 时不能配置 restart")
+        return self
 
 
 class SectionSpec(TemplateModel):

@@ -3,10 +3,12 @@ from pathlib import Path
 
 import pytest
 from docx import Document
+from docx.shared import Inches
 from lxml import etree
 
 import thesis_forge.renderers.docx.fields as fields_module
 import thesis_forge.renderers.docx.renderer as renderer_module
+import thesis_forge.renderers.docx.sections as sections_module
 from thesis_forge.bibliography import Gbt7714Formatter, LocalBibTeXLoader
 from thesis_forge.core.compiler import compile_document
 from thesis_forge.core.model import (
@@ -47,6 +49,7 @@ from thesis_forge.renderers.docx.styles import (
 from thesis_forge.templates import (
     AbstractStyleSpec,
     BibliographySpec,
+    DocumentGridSpec,
     FontSpec,
     LengthSpec,
     LineSpacingSpec,
@@ -1667,6 +1670,628 @@ def test_docx_renderer_prevents_disabled_section_header_footer_inheritance(
         namespaces=NS,
     )
     assert not main_footer.xpath(".//w:instrText", namespaces=NS)
+
+
+def test_docx_renderer_writes_page_geometry_and_all_header_footer_variants(
+    tmp_path: Path,
+):
+    template = load_template("templates/base/bachelor.yaml")
+    template.page.header_distance = LengthSpec.model_validate("12mm")
+    template.page.footer_distance = LengthSpec.model_validate("14mm")
+    template.page.document_grid = DocumentGridSpec.model_validate(
+        {
+            "type": "lines_and_chars",
+            "line_pitch": "18pt",
+            "char_space": 100,
+        }
+    )
+    template.sections = SectionsSpec.model_validate(
+        {
+            "main": {
+                "header": {
+                    "default": {
+                        "text": "ODD HEADER",
+                        "style": {
+                            "font": {"east_asia": "黑体", "latin": "Arial"},
+                            "size": "10pt",
+                            "alignment": "right",
+                            "space_after": "3pt",
+                            "snap_to_grid": True,
+                        },
+                        "bottom_border": {
+                            "style": "double",
+                            "width": "0.75pt",
+                            "color": "336699",
+                            "space": "1pt",
+                        },
+                    },
+                    "first": {"text": "FIRST HEADER"},
+                    "even": {"text": "EVEN HEADER"},
+                },
+                "footer": {
+                    "default": {
+                        "text": "P",
+                        "page_number": {
+                            "alignment": "right",
+                            "page_prefix": "[",
+                            "page_suffix": "]",
+                            "include_total": False,
+                        },
+                    },
+                    "first": {"enabled": False},
+                    "even": {
+                        "page_number": {
+                            "alignment": "left",
+                            "page_prefix": "p",
+                            "page_suffix": "",
+                            "include_total": True,
+                            "separator": "|",
+                            "total_prefix": "n",
+                            "total_suffix": "",
+                        }
+                    },
+                },
+                "page_number": {"format": "decimal", "restart": 3},
+            }
+        }
+    )
+    document = ThesisDocument(
+        source_path=tmp_path / "thesis.md",
+        blocks=[Heading(id="chap:intro", level=1, text="绪论")],
+    )
+    output = tmp_path / "header-footer-variants.docx"
+
+    DocxRenderer().render(compile_document(document, template=template), output)
+
+    document_xml = _xml_part(output, "word/document.xml")
+    settings_xml = _xml_part(output, "word/settings.xml")
+    relationships = _xml_part(output, "word/_rels/document.xml.rels")
+    section = document_xml.xpath(".//w:sectPr", namespaces=NS)[0]
+    margins = section.xpath("./w:pgMar", namespaces=NS)[0]
+    assert margins.get(f"{{{NS['w']}}}header") == "680"
+    assert margins.get(f"{{{NS['w']}}}footer") == "794"
+    assert section.xpath("./w:docGrid/@w:type", namespaces=NS) == [
+        "linesAndChars"
+    ]
+    assert section.xpath("./w:docGrid/@w:linePitch", namespaces=NS) == ["360"]
+    assert section.xpath("./w:docGrid/@w:charSpace", namespaces=NS) == ["100"]
+    assert section.xpath("./w:pgNumType/@w:fmt", namespaces=NS) == ["decimal"]
+    assert section.xpath("./w:pgNumType/@w:start", namespaces=NS) == ["3"]
+    assert section.xpath("./w:titlePg", namespaces=NS)
+    assert settings_xml.xpath("./w:evenAndOddHeaders", namespaces=NS)
+    section_order = [etree.QName(child).localname for child in section]
+    assert section_order.index("pgNumType") < section_order.index("cols")
+    assert section_order.index("cols") < section_order.index("docGrid")
+    settings_order = [etree.QName(child).localname for child in settings_xml]
+    assert settings_order.index("evenAndOddHeaders") < settings_order.index(
+        "updateFields"
+    )
+
+    references = {
+        (etree.QName(reference).localname, reference.get(f"{{{NS['w']}}}type")):
+        reference.get(f"{{{NS['r']}}}id")
+        for reference in section.xpath(
+            "./w:headerReference | ./w:footerReference",
+            namespaces=NS,
+        )
+    }
+    assert set(references) == {
+        ("headerReference", "default"),
+        ("headerReference", "first"),
+        ("headerReference", "even"),
+        ("footerReference", "default"),
+        ("footerReference", "first"),
+        ("footerReference", "even"),
+    }
+    targets = {
+        relationship.get("Id"): relationship.get("Target")
+        for relationship in relationships.xpath(
+            "./pr:Relationship",
+            namespaces=REL_NS,
+        )
+    }
+
+    odd_header = _xml_part(
+        output,
+        f"word/{targets[references[('headerReference', 'default')]]}",
+    )
+    assert odd_header.xpath(".//w:t/text()", namespaces=NS) == ["ODD HEADER"]
+    assert odd_header.xpath(".//w:pPr/w:jc/@w:val", namespaces=NS) == ["right"]
+    assert odd_header.xpath(".//w:pPr/w:spacing/@w:after", namespaces=NS) == [
+        "60"
+    ]
+    assert odd_header.xpath(".//w:rPr/w:rFonts/@w:eastAsia", namespaces=NS) == [
+        "黑体"
+    ]
+    assert odd_header.xpath(".//w:rPr/w:rFonts/@w:ascii", namespaces=NS) == [
+        "Arial"
+    ]
+    assert odd_header.xpath(".//w:rPr/w:sz/@w:val", namespaces=NS) == ["20"]
+    assert odd_header.xpath(".//w:pBdr/w:bottom/@w:val", namespaces=NS) == [
+        "double"
+    ]
+    assert odd_header.xpath(".//w:pBdr/w:bottom/@w:sz", namespaces=NS) == ["6"]
+    assert odd_header.xpath(".//w:pBdr/w:bottom/@w:color", namespaces=NS) == [
+        "336699"
+    ]
+    assert odd_header.xpath(".//w:pBdr/w:bottom/@w:space", namespaces=NS) == [
+        "1"
+    ]
+    paragraph_properties = odd_header.xpath(".//w:pPr", namespaces=NS)[0]
+    property_order = [
+        etree.QName(child).localname for child in paragraph_properties
+    ]
+    assert property_order.index("pBdr") < property_order.index("snapToGrid")
+    assert property_order.index("snapToGrid") < property_order.index("spacing")
+    assert property_order.index("spacing") < property_order.index("jc")
+
+    first_header = _xml_part(
+        output,
+        f"word/{targets[references[('headerReference', 'first')]]}",
+    )
+    even_header = _xml_part(
+        output,
+        f"word/{targets[references[('headerReference', 'even')]]}",
+    )
+    assert first_header.xpath(".//w:t/text()", namespaces=NS) == ["FIRST HEADER"]
+    assert even_header.xpath(".//w:t/text()", namespaces=NS) == ["EVEN HEADER"]
+
+    odd_footer = _xml_part(
+        output,
+        f"word/{targets[references[('footerReference', 'default')]]}",
+    )
+    assert odd_footer.xpath(".//w:instrText/text()", namespaces=NS) == ["PAGE"]
+    assert odd_footer.xpath(".//w:pPr/w:jc/@w:val", namespaces=NS) == ["right"]
+    assert "".join(odd_footer.xpath(".//w:t/text()", namespaces=NS)) == "P [1]"
+
+    first_footer = _xml_part(
+        output,
+        f"word/{targets[references[('footerReference', 'first')]]}",
+    )
+    assert not first_footer.xpath(".//w:t | .//w:instrText", namespaces=NS)
+
+    even_footer = _xml_part(
+        output,
+        f"word/{targets[references[('footerReference', 'even')]]}",
+    )
+    assert even_footer.xpath(".//w:instrText/text()", namespaces=NS) == [
+        "PAGE",
+        "NUMPAGES",
+    ]
+    assert even_footer.xpath(".//w:pPr/w:jc/@w:val", namespaces=NS) == ["left"]
+    assert "".join(even_footer.xpath(".//w:t/text()", namespaces=NS)) == "p1|n1"
+
+
+def test_docx_renderer_clears_disabled_variants_in_added_section(
+    tmp_path: Path,
+):
+    template = load_template("templates/base/bachelor.yaml")
+    template.page.header_distance = LengthSpec.model_validate("11mm")
+    template.page.footer_distance = LengthSpec.model_validate("13mm")
+    template.page.document_grid = DocumentGridSpec.model_validate(
+        {
+            "type": "lines",
+            "line_pitch": "20pt",
+        }
+    )
+    enabled_variants = {
+        "default": {"text": "DEFAULT"},
+        "first": {"text": "FIRST"},
+        "even": {"text": "EVEN"},
+    }
+    disabled_variants = {
+        "default": {"enabled": False, "text": "STALE DEFAULT"},
+        "first": {"enabled": False, "text": "STALE FIRST"},
+        "even": {"enabled": False, "text": "STALE EVEN"},
+    }
+    template.sections = SectionsSpec.model_validate(
+        {
+            "front_matter": {
+                "header": enabled_variants,
+                "footer": enabled_variants,
+                "page_number": {"format": "roman-lower"},
+            },
+            "main": {
+                "header": disabled_variants,
+                "footer": disabled_variants,
+                "page_number": {"format": "none"},
+            },
+        }
+    )
+    document = ThesisDocument(
+        source_path=tmp_path / "thesis.md",
+        blocks=[
+            Heading(id="chap:abstract-zh", level=1, text="摘要"),
+            Heading(id="chap:intro", level=1, text="绪论"),
+        ],
+    )
+    output = tmp_path / "cleared-variants.docx"
+
+    DocxRenderer().render(compile_document(document, template=template), output)
+
+    document_xml = _xml_part(output, "word/document.xml")
+    relationships = _xml_part(output, "word/_rels/document.xml.rels")
+    sections = document_xml.xpath(".//w:sectPr", namespaces=NS)
+    assert len(sections) == 2
+    for section in sections:
+        margins = section.xpath("./w:pgMar", namespaces=NS)[0]
+        assert margins.get(f"{{{NS['w']}}}header") == "624"
+        assert margins.get(f"{{{NS['w']}}}footer") == "737"
+        assert section.xpath("./w:docGrid/@w:type", namespaces=NS) == ["lines"]
+        assert section.xpath("./w:docGrid/@w:linePitch", namespaces=NS) == ["400"]
+
+    main = sections[1]
+    references = main.xpath(
+        "./w:headerReference | ./w:footerReference",
+        namespaces=NS,
+    )
+    assert {
+        (etree.QName(reference).localname, reference.get(f"{{{NS['w']}}}type"))
+        for reference in references
+    } == {
+        ("headerReference", "default"),
+        ("headerReference", "first"),
+        ("headerReference", "even"),
+        ("footerReference", "default"),
+        ("footerReference", "first"),
+        ("footerReference", "even"),
+    }
+    targets = {
+        relationship.get("Id"): relationship.get("Target")
+        for relationship in relationships.xpath(
+            "./pr:Relationship",
+            namespaces=REL_NS,
+        )
+    }
+    for reference in references:
+        relationship_id = reference.get(f"{{{NS['r']}}}id")
+        part = _xml_part(
+            output,
+            f"word/{targets[relationship_id]}",
+        )
+        assert not part.xpath(".//w:t | .//w:instrText", namespaces=NS)
+
+
+def test_docx_renderer_uses_current_default_when_even_variant_is_omitted(
+    tmp_path: Path,
+):
+    template = load_template("templates/base/bachelor.yaml")
+    template.sections = SectionsSpec.model_validate(
+        {
+            "front_matter": {
+                "header": {
+                    "default": {"text": "FRONT DEFAULT"},
+                    "even": {"text": "FRONT EVEN"},
+                },
+                "page_number": {"format": "roman-lower"},
+            },
+            "main": {
+                "header": {
+                    "default": {"text": "MAIN DEFAULT"},
+                },
+                "page_number": {"format": "decimal"},
+            },
+        }
+    )
+    document = ThesisDocument(
+        source_path=tmp_path / "thesis.md",
+        blocks=[
+            Heading(id="chap:abstract-zh", level=1, text="摘要"),
+            Heading(id="chap:intro", level=1, text="绪论"),
+        ],
+    )
+    output = tmp_path / "even-default-fallback.docx"
+
+    DocxRenderer().render(compile_document(document, template=template), output)
+
+    document_xml = _xml_part(output, "word/document.xml")
+    relationships = _xml_part(output, "word/_rels/document.xml.rels")
+    sections = document_xml.xpath(".//w:sectPr", namespaces=NS)
+    main_even_id = sections[1].xpath(
+        "./w:headerReference[@w:type='even']/@r:id",
+        namespaces=NS,
+    )
+    assert main_even_id
+    targets = {
+        relationship.get("Id"): relationship.get("Target")
+        for relationship in relationships.xpath(
+            "./pr:Relationship",
+            namespaces=REL_NS,
+        )
+    }
+    main_even = _xml_part(output, f"word/{targets[main_even_id[0]]}")
+    assert main_even.xpath(".//w:t/text()", namespaces=NS) == ["MAIN DEFAULT"]
+    assert not main_even.xpath(".//w:t[text()='FRONT EVEN']", namespaces=NS)
+
+
+def test_docx_renderer_uses_current_default_when_first_variant_is_omitted(
+    tmp_path: Path,
+):
+    template = load_template("templates/base/bachelor.yaml")
+    template.sections = SectionsSpec.model_validate(
+        {
+            "front_matter": {
+                "header": {
+                    "default": {"text": "FRONT HEADER"},
+                    "first": {"text": "FRONT FIRST HEADER"},
+                },
+                "footer": {
+                    "default": {"text": "FRONT FOOTER"},
+                    "first": {"text": "FRONT FIRST FOOTER"},
+                },
+                "page_number": {"format": "roman-lower"},
+            },
+            "main": {
+                "header": {
+                    "default": {"text": "MAIN HEADER"},
+                    "first": {"text": "MAIN FIRST HEADER"},
+                },
+                "footer": {
+                    "default": {"text": "MAIN FOOTER"},
+                },
+                "page_number": {"format": "decimal"},
+            },
+        }
+    )
+    document = ThesisDocument(
+        source_path=tmp_path / "thesis.md",
+        blocks=[
+            Heading(id="chap:abstract-zh", level=1, text="摘要"),
+            Heading(id="chap:intro", level=1, text="绪论"),
+        ],
+    )
+    output = tmp_path / "first-default-fallback.docx"
+
+    DocxRenderer().render(compile_document(document, template=template), output)
+
+    document_xml = _xml_part(output, "word/document.xml")
+    relationships = _xml_part(output, "word/_rels/document.xml.rels")
+    sections = document_xml.xpath(".//w:sectPr", namespaces=NS)
+    front_first_footer_id = sections[0].xpath(
+        "./w:footerReference[@w:type='first']/@r:id",
+        namespaces=NS,
+    )
+    main_default_footer_id = sections[1].xpath(
+        "./w:footerReference[@w:type='default']/@r:id",
+        namespaces=NS,
+    )
+    main_first_footer_id = sections[1].xpath(
+        "./w:footerReference[@w:type='first']/@r:id",
+        namespaces=NS,
+    )
+    assert front_first_footer_id
+    assert main_default_footer_id
+    assert main_first_footer_id
+    assert len(
+        {
+            front_first_footer_id[0],
+            main_default_footer_id[0],
+            main_first_footer_id[0],
+        }
+    ) == 3
+    targets = {
+        relationship.get("Id"): relationship.get("Target")
+        for relationship in relationships.xpath(
+            "./pr:Relationship",
+            namespaces=REL_NS,
+        )
+    }
+    assert len(
+        {
+            targets[front_first_footer_id[0]],
+            targets[main_default_footer_id[0]],
+            targets[main_first_footer_id[0]],
+        }
+    ) == 3
+    relationship_types = {
+        relationship.get("Id"): relationship.get("Type")
+        for relationship in relationships.xpath(
+            "./pr:Relationship",
+            namespaces=REL_NS,
+        )
+    }
+    assert relationship_types[main_first_footer_id[0]].endswith("/footer")
+    front_first_footer = _xml_part(
+        output,
+        f"word/{targets[front_first_footer_id[0]]}",
+    )
+    assert front_first_footer.xpath(".//w:t/text()", namespaces=NS) == [
+        "FRONT FIRST FOOTER"
+    ]
+    main_first_footer = _xml_part(
+        output,
+        f"word/{targets[main_first_footer_id[0]]}",
+    )
+    assert main_first_footer.xpath(".//w:t/text()", namespaces=NS) == [
+        "MAIN FOOTER"
+    ]
+    assert not main_first_footer.xpath(
+        ".//w:t[text()='FRONT FIRST FOOTER']",
+        namespaces=NS,
+    )
+
+
+def test_docx_renderer_materializes_initial_first_fallback_with_default_policy(
+    tmp_path: Path,
+):
+    template = load_template("templates/base/bachelor.yaml")
+    template.sections = SectionsSpec.model_validate(
+        {
+            "main": {
+                "header": {
+                    "default": {
+                        "text": "MAIN HEADER",
+                        "style": {
+                            "font": {"east_asia": "黑体", "latin": "Arial"},
+                            "size": "10pt",
+                            "space_after": "2pt",
+                        },
+                        "bottom_border": {
+                            "style": "single",
+                            "width": "0.5pt",
+                        },
+                        "page_number": {
+                            "alignment": "right",
+                            "page_prefix": "(",
+                            "page_suffix": ")",
+                            "include_total": False,
+                        },
+                    }
+                },
+                "footer": {
+                    "default": {"text": "MAIN FOOTER"},
+                    "first": {"text": "FIRST FOOTER"},
+                },
+                "page_number": {"format": "decimal"},
+            }
+        }
+    )
+    document = ThesisDocument(
+        source_path=tmp_path / "thesis.md",
+        blocks=[Heading(id="chap:intro", level=1, text="绪论")],
+    )
+    output = tmp_path / "initial-first-default-policy.docx"
+
+    DocxRenderer().render(compile_document(document, template=template), output)
+
+    reloaded = Document(output)
+    assert reloaded.sections[0].first_page_header.is_linked_to_previous is False
+
+    document_xml = _xml_part(output, "word/document.xml")
+    relationships = _xml_part(output, "word/_rels/document.xml.rels")
+    section = document_xml.xpath(".//w:sectPr", namespaces=NS)[0]
+    first_header_id = section.xpath(
+        "./w:headerReference[@w:type='first']/@r:id",
+        namespaces=NS,
+    )
+    assert first_header_id
+    targets = {
+        relationship.get("Id"): relationship.get("Target")
+        for relationship in relationships.xpath(
+            "./pr:Relationship",
+            namespaces=REL_NS,
+        )
+    }
+    first_header = _xml_part(output, f"word/{targets[first_header_id[0]]}")
+    assert first_header.xpath(".//w:instrText/text()", namespaces=NS) == ["PAGE"]
+    assert "".join(first_header.xpath(".//w:t/text()", namespaces=NS)) == (
+        "MAIN HEADER (1)"
+    )
+    assert first_header.xpath(".//w:pPr/w:jc/@w:val", namespaces=NS) == [
+        "right"
+    ]
+    assert first_header.xpath(".//w:pPr/w:spacing/@w:after", namespaces=NS) == [
+        "40"
+    ]
+    assert first_header.xpath(".//w:pBdr/w:bottom/@w:val", namespaces=NS) == [
+        "single"
+    ]
+    assert first_header.xpath(".//w:pBdr/w:bottom/@w:sz", namespaces=NS) == [
+        "4"
+    ]
+    assert set(
+        first_header.xpath(".//w:rPr/w:rFonts/@w:eastAsia", namespaces=NS)
+    ) == {"黑体"}
+    assert set(
+        first_header.xpath(".//w:rPr/w:rFonts/@w:ascii", namespaces=NS)
+    ) == {"Arial"}
+
+
+def test_docx_renderer_materializes_disabled_default_as_blank_first_fallback(
+    tmp_path: Path,
+):
+    template = load_template("templates/base/bachelor.yaml")
+    template.sections = SectionsSpec.model_validate(
+        {
+            "front_matter": {
+                "header": {
+                    "first": {"text": "FRONT FIRST HEADER"},
+                },
+                "footer": {
+                    "first": {
+                        "text": "FRONT FIRST FOOTER",
+                        "page_number": {"include_total": True},
+                    },
+                },
+                "page_number": {"format": "roman-lower"},
+            },
+            "main": {
+                "header": {
+                    "first": {"text": "MAIN FIRST HEADER"},
+                },
+                "footer": {
+                    "default": {
+                        "enabled": False,
+                        "text": "DISABLED MAIN FOOTER",
+                        "page_number": {"include_total": True},
+                    },
+                },
+                "page_number": {"format": "decimal"},
+            },
+        }
+    )
+    document = ThesisDocument(
+        source_path=tmp_path / "thesis.md",
+        blocks=[
+            Heading(id="chap:abstract-zh", level=1, text="摘要"),
+            Heading(id="chap:intro", level=1, text="绪论"),
+        ],
+    )
+    output = tmp_path / "disabled-first-default-fallback.docx"
+
+    DocxRenderer().render(compile_document(document, template=template), output)
+
+    reloaded = Document(output)
+    assert reloaded.sections[1].first_page_footer.is_linked_to_previous is False
+    assert not any(
+        paragraph.text
+        for paragraph in reloaded.sections[1].first_page_footer.paragraphs
+    )
+
+    document_xml = _xml_part(output, "word/document.xml")
+    relationships = _xml_part(output, "word/_rels/document.xml.rels")
+    main = document_xml.xpath(".//w:sectPr", namespaces=NS)[1]
+    first_footer_id = main.xpath(
+        "./w:footerReference[@w:type='first']/@r:id",
+        namespaces=NS,
+    )
+    assert first_footer_id
+    targets = {
+        relationship.get("Id"): relationship.get("Target")
+        for relationship in relationships.xpath(
+            "./pr:Relationship",
+            namespaces=REL_NS,
+        )
+    }
+    first_footer = _xml_part(output, f"word/{targets[first_footer_id[0]]}")
+    assert not first_footer.xpath(".//w:t | .//w:instrText", namespaces=NS)
+
+
+def test_clear_header_footer_part_removes_all_blocks_and_relationships(
+    tmp_path: Path,
+):
+    image = tmp_path / "header.png"
+    image.write_bytes(PNG_1X1)
+    document = Document()
+    header = document.sections[0].header
+    header.is_linked_to_previous = False
+    header.paragraphs[0].add_run("STALE TEXT")
+    header.add_table(rows=1, cols=1, width=Inches(1))
+    header.add_paragraph().add_run().add_picture(str(image), width=Inches(0.1))
+    assert header._element.xpath("./w:tbl")
+    assert any(
+        relationship.reltype.endswith("/image")
+        for relationship in header.part.rels.values()
+    )
+
+    sections_module._clear_part(header)
+
+    assert [etree.QName(child).localname for child in header._element] == ["p"]
+    assert not header._element.xpath(".//w:t | .//w:tbl | .//w:drawing")
+    assert not any(
+        relationship.reltype.endswith("/image")
+        for relationship in header.part.rels.values()
+    )
 
 
 def test_reference_field_runs_centralize_ref_instruction():

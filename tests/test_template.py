@@ -1033,3 +1033,146 @@ def test_direct_section_model_construction_enforces_page_number_conflict():
     error = exc_info.value.errors()[0]
     assert error["loc"] == ("footer", "default", "page_number")
     assert "PAGE/NUMPAGES" in error["msg"]
+
+
+def test_page_number_format_none_rejects_restart(tmp_path: Path):
+    path = tmp_path / "invalid-page-number-restart.yaml"
+    path.write_text(
+        """id: invalid-page-number-restart
+name: Invalid Page Number Restart
+year: 2026
+page:
+  margin:
+    top: 25mm
+    bottom: 25mm
+    left: 30mm
+    right: 25mm
+body:
+  size: 12pt
+  first_line_indent: 2em
+  line_spacing:
+    type: fixed
+    value: 20pt
+heading:
+  level1:
+    size: 16pt
+sections:
+  main:
+    page_number:
+      format: none
+      restart: 1
+""",
+        encoding="utf-8",
+    )
+
+    with pytest.raises(TemplateLoadError) as exc_info:
+        load_template(path)
+
+    assert exc_info.value.field_errors[0][0] == "sections.main.page_number"
+    assert "restart" in str(exc_info.value)
+
+
+@pytest.mark.parametrize(
+    ("margin_policy", "page_policy", "section_policy", "expected_path"),
+    [
+        (
+            "    top: 1em\n    bottom: 25mm\n    left: 30mm\n    right: 25mm\n",
+            "",
+            "",
+            "page.margin.top",
+        ),
+        (
+            "    top: 25mm\n    bottom: 1em\n    left: 30mm\n    right: 25mm\n",
+            "",
+            "",
+            "page.margin.bottom",
+        ),
+        (
+            "    top: 25mm\n    bottom: 25mm\n    left: 1em\n    right: 25mm\n",
+            "",
+            "",
+            "page.margin.left",
+        ),
+        (
+            "    top: 25mm\n    bottom: 25mm\n    left: 30mm\n    right: 1em\n",
+            "",
+            "",
+            "page.margin.right",
+        ),
+        (
+            "    top: 25mm\n    bottom: 25mm\n    left: 30mm\n    right: 25mm\n",
+            "  header_distance: 1em\n",
+            "",
+            "page.header_distance",
+        ),
+        (
+            "    top: 25mm\n    bottom: 25mm\n    left: 30mm\n    right: 25mm\n",
+            "  footer_distance: 1em\n",
+            "",
+            "page.footer_distance",
+        ),
+        (
+            "    top: 25mm\n    bottom: 25mm\n    left: 30mm\n    right: 25mm\n",
+            "  document_grid:\n    type: lines\n    line_pitch: 1em\n",
+            "",
+            "page.document_grid.line_pitch",
+        ),
+        (
+            "    top: 25mm\n    bottom: 25mm\n    left: 30mm\n    right: 25mm\n",
+            "",
+            """sections:
+  main:
+    header:
+      default:
+        bottom_border:
+          width: 1em
+""",
+            "sections.main.header.default.bottom_border.width",
+        ),
+        (
+            "    top: 25mm\n    bottom: 25mm\n    left: 30mm\n    right: 25mm\n",
+            "",
+            """sections:
+  main:
+    header:
+      default:
+        bottom_border:
+          space: 1em
+""",
+            "sections.main.header.default.bottom_border.space",
+        ),
+    ],
+)
+def test_physical_page_and_border_lengths_reject_em(
+    tmp_path: Path,
+    margin_policy: str,
+    page_policy: str,
+    section_policy: str,
+    expected_path: str,
+):
+    path = tmp_path / "invalid-physical-length.yaml"
+    path.write_text(
+        f"""id: invalid-physical-length
+name: Invalid Physical Length
+year: 2026
+page:
+  margin:
+{margin_policy}
+{page_policy}body:
+  size: 12pt
+  first_line_indent: 2em
+  line_spacing:
+    type: fixed
+    value: 20pt
+heading:
+  level1:
+    size: 16pt
+{section_policy}""",
+        encoding="utf-8",
+    )
+
+    with pytest.raises(TemplateLoadError) as exc_info:
+        load_template(path)
+
+    assert exc_info.value.field_errors[0][0] == expected_path
+    assert "mm / cm / pt" in str(exc_info.value)

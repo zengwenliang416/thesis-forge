@@ -205,7 +205,24 @@ def _set_on_off_property(paragraph, tag: str, value: bool | None) -> None:
     element = p_pr.find(qn(tag))
     if element is None:
         element = OxmlElement(tag)
-        p_pr.append(element)
+        p_pr.insert_element_before(
+            element,
+            "w:spacing",
+            "w:ind",
+            "w:contextualSpacing",
+            "w:mirrorIndents",
+            "w:suppressOverlap",
+            "w:jc",
+            "w:textDirection",
+            "w:textAlignment",
+            "w:textboxTightWrap",
+            "w:outlineLvl",
+            "w:divId",
+            "w:cnfStyle",
+            "w:rPr",
+            "w:sectPr",
+            "w:pPrChange",
+        )
     if value:
         element.attrib.pop(qn("w:val"), None)
     else:
