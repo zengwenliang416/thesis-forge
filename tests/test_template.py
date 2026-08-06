@@ -14,6 +14,7 @@ from thesis_forge.templates import (
     SectionSpec,
     TemplateLoadError,
     TemplateNotFoundError,
+    TocLevelSpec,
     default_template_search_roots,
     load_template,
     resolve_template,
@@ -799,6 +800,83 @@ toc:
         load_template(path)
 
     assert exc_info.value.field_errors[0][0] == "toc.level1.leader"
+
+
+def test_toc_level_defaults_keep_entries_flush_and_use_dot_leaders():
+    level = TocLevelSpec()
+
+    assert str(level.first_line_indent) == "0pt"
+    assert level.page_number_tab is None
+    assert level.leader == "dots"
+
+
+def test_invalid_toc_page_number_tab_reports_exact_path(tmp_path: Path):
+    path = tmp_path / "invalid-toc-tab.yaml"
+    path.write_text(
+        """id: invalid-toc-tab
+name: Invalid TOC Tab
+year: 2026
+page:
+  margin:
+    top: 25mm
+    bottom: 25mm
+    left: 30mm
+    right: 25mm
+body:
+  size: 12pt
+  first_line_indent: 2em
+  line_spacing:
+    type: fixed
+    value: 20pt
+heading:
+  level1:
+    size: 16pt
+toc:
+  level1:
+    page_number_tab: 0pt
+""",
+        encoding="utf-8",
+    )
+
+    with pytest.raises(TemplateLoadError) as exc_info:
+        load_template(path)
+
+    assert exc_info.value.field_errors[0][0] == "toc.level1.page_number_tab"
+    assert "大于 0" in str(exc_info.value)
+
+
+def test_toc_rejects_unsupported_fourth_level(tmp_path: Path):
+    path = tmp_path / "invalid-toc-level.yaml"
+    path.write_text(
+        """id: invalid-toc-level
+name: Invalid TOC Level
+year: 2026
+page:
+  margin:
+    top: 25mm
+    bottom: 25mm
+    left: 30mm
+    right: 25mm
+body:
+  size: 12pt
+  first_line_indent: 2em
+  line_spacing:
+    type: fixed
+    value: 20pt
+heading:
+  level1:
+    size: 16pt
+toc:
+  level4:
+    page_number_tab: 150mm
+""",
+        encoding="utf-8",
+    )
+
+    with pytest.raises(TemplateLoadError) as exc_info:
+        load_template(path)
+
+    assert exc_info.value.field_errors[0][0] == "toc.level4"
 
 
 def test_invalid_header_border_width_reports_complete_path(tmp_path: Path):

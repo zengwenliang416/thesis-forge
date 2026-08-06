@@ -190,10 +190,23 @@ class SemanticStylesSpec(TemplateModel):
 
 
 class TocLevelSpec(ParagraphStyleSpec):
+    first_line_indent: LengthSpec | None = Field(
+        default_factory=lambda: LengthSpec.model_validate("0pt")
+    )
     page_number_tab: LengthSpec | None = None
     leader: Literal["none", "dots", "dashes", "line", "heavy", "middle_dot"] = (
         "dots"
     )
+
+    @field_validator("page_number_tab")
+    @classmethod
+    def validate_page_number_tab(
+        cls,
+        value: LengthSpec | None,
+    ) -> LengthSpec | None:
+        if value is not None and value.value <= 0:
+            raise ValueError("page_number_tab 必须大于 0")
+        return value
 
 
 class TocSpec(TemplateModel):

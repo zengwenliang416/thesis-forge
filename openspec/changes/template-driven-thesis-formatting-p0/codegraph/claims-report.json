@@ -1,6 +1,6 @@
 {
   "schema": "specnav.codegraph.claims_report.v1",
-  "generated_at": "2026-08-06T07:19:58.600Z",
+  "generated_at": "2026-08-06T08:18:48.543Z",
   "active_change": "template-driven-thesis-formatting-p0",
   "claims_file": "openspec/changes/template-driven-thesis-formatting-p0/codegraph/claims-map.json",
   "evidence_index": "openspec/changes/template-driven-thesis-formatting-p0/codegraph/evidence-index.json",
@@ -8,10 +8,10 @@
   "verified_claims": [
     "development:task-001-paragraph-policy",
     "development:task-002-docx-paragraph-translation",
-    "development:task-003-semantic-roles"
+    "development:task-003-semantic-roles",
+    "development:task-004-toc-styles"
   ],
   "unverified_claims": [
-    "development:task-004-toc-styles",
     "development:task-005-citations-bibliography",
     "development:task-006-header-footer-variants",
     "development:task-007-school-template-e2e",
@@ -19,7 +19,6 @@
   ],
   "blockers": [],
   "warnings": [
-    "codegraph:claim-unverified:development:task-004-toc-styles",
     "codegraph:claim-unverified:development:task-005-citations-bibliography",
     "codegraph:claim-unverified:development:task-006-header-footer-variants",
     "codegraph:claim-unverified:development:task-007-school-template-e2e",

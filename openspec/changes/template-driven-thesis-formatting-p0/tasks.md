@@ -38,12 +38,12 @@
 
 **用户结果：** 论文保留真实可更新的 Word 目录字段，同时 TOC 1-3 的缩进、行距、页码制表位和点引导符完全由模板控制。
 
-- [ ] 4.1 定义 TOC 标题与 TOC 1-3 样式配置，包括公共段落属性、页码 tab stop 和 leader。（A4）
-- [ ] 4.2 保留真实 `TOC` complex field 和 update-on-open 行为，不生成静态目录文本。（A4）
-- [ ] 4.3 创建或更新稳定的 `TOC 1`、`TOC 2`、`TOC 3` Word styles，并复用共享 paragraph translator。（A4）
-- [ ] 4.4 使用聚焦 OOXML helper 写入右对齐制表位和 dot leader。（A4）
-- [ ] 4.5 增加缺省 fallback、1-3 层不同缩进/行距和非法 tab/leader 配置测试。（A2、A4）
-- [ ] 4.6 增加 `styles.xml` 与 `document.xml` 测试，断言真实 TOC field、稳定 styleId、`w:tabs`、位置和 leader。（A4）
+- [x] 4.1 定义 TOC 标题与 TOC 1-3 样式配置，包括公共段落属性、页码 tab stop 和 leader。（A4）
+- [x] 4.2 保留真实 `TOC` complex field 和 update-on-open 行为，不生成静态目录文本。（A4）
+- [x] 4.3 创建或更新稳定的 `TOC 1`、`TOC 2`、`TOC 3` Word styles，并复用共享 paragraph translator。（A4）
+- [x] 4.4 使用聚焦 OOXML helper 写入右对齐制表位和 dot leader。（A4）
+- [x] 4.5 增加缺省 fallback、1-3 层不同缩进/行距和非法 tab/leader 配置测试。（A2、A4）
+- [x] 4.6 增加 `styles.xml` 与 `document.xml` 测试，断言真实 TOC field、稳定 styleId、`w:tabs`、位置和 leader。（A4）
 
 ## 5. Citation And Bibliography Presentation
 

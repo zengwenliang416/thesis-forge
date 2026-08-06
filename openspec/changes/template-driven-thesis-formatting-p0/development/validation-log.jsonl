@@ -34,3 +34,12 @@
 {"task_id":"003-semantic-roles","status":"passed","command":".venv/bin/python -m pytest -q","result":"321 passed in 45.20s","attestation":"system-executed","checked_at":"2026-08-06T07:22:18Z"}
 {"task_id":"003-semantic-roles","status":"passed","command":".venv/bin/ruff check .","result":"All checks passed","attestation":"system-executed","checked_at":"2026-08-06T07:22:18Z"}
 {"task_id":"003-semantic-roles","status":"passed","command":"git diff --check","result":"no output","attestation":"system-executed","checked_at":"2026-08-06T07:22:18Z"}
+{"task_id":"004-toc-styles","status":"passed","command":".venv/bin/python -m pytest tests/test_template.py tests/test_docx_renderer.py -k 'toc or style' -q","result":"34 passed, 61 deselected in 2.99s","attestation":"system-executed","checked_at":"2026-08-06T07:52:27Z"}
+{"task_id":"004-toc-styles","status":"passed","command":".venv/bin/python -m pytest tests/test_template.py tests/test_docx_renderer.py -q","result":"95 passed in 27.41s","attestation":"system-executed","checked_at":"2026-08-06T07:52:27Z"}
+{"task_id":"004-toc-styles","status":"passed","command":".venv/bin/python -m pytest -q","result":"334 passed in 87.41s","attestation":"system-executed","checked_at":"2026-08-06T07:52:27Z"}
+{"task_id":"004-toc-styles","status":"passed","command":".venv/bin/ruff check .","result":"All checks passed","attestation":"system-executed","checked_at":"2026-08-06T07:52:27Z"}
+{"task_id":"004-toc-styles","status":"passed","command":"git diff --check","result":"no output","attestation":"system-executed","checked_at":"2026-08-06T07:52:27Z"}
+{"task_id":"004-toc-styles","status":"passed","command":".venv/bin/python -m pytest tests/test_template.py tests/test_docx_renderer.py -k 'toc or style' -q","result":"34 passed, 61 deselected in 1.66s","attestation":"system-executed","checked_at":"2026-08-06T08:17:48Z"}
+{"task_id":"004-toc-styles","status":"passed","command":".venv/bin/python -m pytest -q","result":"334 passed in 29.74s","attestation":"system-executed","checked_at":"2026-08-06T08:17:48Z"}
+{"task_id":"004-toc-styles","status":"passed","command":".venv/bin/ruff check .","result":"All checks passed","attestation":"system-executed","checked_at":"2026-08-06T08:17:48Z"}
+{"task_id":"004-toc-styles","status":"passed","command":"git diff --check","result":"no output","attestation":"system-executed","checked_at":"2026-08-06T08:17:48Z"}

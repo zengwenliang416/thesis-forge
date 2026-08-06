@@ -1,6 +1,6 @@
 {
   "schema": "specnav.codegraph.guard_report.v1",
-  "generated_at": "2026-08-06T07:19:58.600Z",
+  "generated_at": "2026-08-06T08:18:48.543Z",
   "active_change": "template-driven-thesis-formatting-p0",
   "stage": "development",
   "ok": true,
@@ -34,10 +34,10 @@
       "initialized": true,
       "projectPath": "/Volumes/zwl/open_sources/thesis-forge",
       "indexPath": "/Volumes/zwl/open_sources/thesis-forge/.codegraph",
-      "lastIndexed": "2026-08-03T07:07:19.259Z",
+      "lastIndexed": "2026-08-06T07:51:24.356Z",
       "fileCount": 145,
-      "nodeCount": 2091,
-      "edgeCount": 6079,
+      "nodeCount": 2106,
+      "edgeCount": 6157,
       "pendingChanges": {
         "added": 0,
         "modified": 0,
@@ -61,7 +61,7 @@
   },
   "evidence_index": {
     "schema": "specnav.codegraph.evidence_index.v1",
-    "generated_at": "2026-08-03T07:07:25.430Z",
+    "generated_at": "2026-08-06T07:51:49.171Z",
     "active_change": "template-driven-thesis-formatting-p0",
     "source_raw": "openspec/changes/template-driven-thesis-formatting-p0/codegraph/evidence.jsonl",
     "by_claim": {
@@ -120,11 +120,24 @@
         ],
         "symbols": [],
         "blockers": []
+      },
+      "development:task-004-toc-styles": {
+        "status": "matched",
+        "evidence_ids": [
+          "ev-msh7we5o"
+        ],
+        "files": [
+          "src/thesis_forge/renderers/docx/styles.py",
+          "src/thesis_forge/templates/model.py",
+          "src/thesis_forge/renderers/docx/fields.py"
+        ],
+        "symbols": [],
+        "blockers": []
       }
     },
     "by_stage": {
       "development": {
-        "verified": 7,
+        "verified": 8,
         "partial": 0,
         "missing": 0,
         "stale": 0,
@@ -133,11 +146,11 @@
     },
     "blockers": [],
     "raw_exists": true,
-    "record_count": 7
+    "record_count": 8
   },
   "claims_report": {
     "schema": "specnav.codegraph.claims_report.v1",
-    "generated_at": "2026-08-06T07:19:58.600Z",
+    "generated_at": "2026-08-06T08:18:48.543Z",
     "active_change": "template-driven-thesis-formatting-p0",
     "claims_file": "openspec/changes/template-driven-thesis-formatting-p0/codegraph/claims-map.json",
     "evidence_index": "openspec/changes/template-driven-thesis-formatting-p0/codegraph/evidence-index.json",
@@ -145,10 +158,10 @@
     "verified_claims": [
       "development:task-001-paragraph-policy",
       "development:task-002-docx-paragraph-translation",
-      "development:task-003-semantic-roles"
+      "development:task-003-semantic-roles",
+      "development:task-004-toc-styles"
     ],
     "unverified_claims": [
-      "development:task-004-toc-styles",
       "development:task-005-citations-bibliography",
       "development:task-006-header-footer-variants",
       "development:task-007-school-template-e2e",
@@ -156,7 +169,6 @@
     ],
     "blockers": [],
     "warnings": [
-      "codegraph:claim-unverified:development:task-004-toc-styles",
       "codegraph:claim-unverified:development:task-005-citations-bibliography",
       "codegraph:claim-unverified:development:task-006-header-footer-variants",
       "codegraph:claim-unverified:development:task-007-school-template-e2e",
@@ -171,7 +183,6 @@
   },
   "blockers": [],
   "warnings": [
-    "codegraph:claim-unverified:development:task-004-toc-styles",
     "codegraph:claim-unverified:development:task-005-citations-bibliography",
     "codegraph:claim-unverified:development:task-006-header-footer-variants",
     "codegraph:claim-unverified:development:task-007-school-template-e2e",

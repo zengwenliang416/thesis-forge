@@ -7,6 +7,7 @@ from docx.enum.style import WD_STYLE_TYPE
 from docx.enum.text import WD_ALIGN_PARAGRAPH, WD_LINE_SPACING
 from docx.oxml import OxmlElement
 from docx.oxml.ns import qn
+from docx.shared import Emu
 from docx.styles.style import ParagraphStyle
 from docx.text.paragraph import Paragraph
 
@@ -16,6 +17,7 @@ from thesis_forge.templates.model import (
     LengthSpec,
     ParagraphStyleSpec,
     ThesisTemplate,
+    TocLevelSpec,
 )
 
 from .fonts import apply_font
@@ -52,6 +54,21 @@ HEADING_BASE_ROLES = frozenset(
         "special.achievements",
     }
 )
+
+TOC_STYLE_NAMES = {
+    1: "TOC 1",
+    2: "TOC 2",
+    3: "TOC 3",
+}
+
+TOC_LEADERS = {
+    "none": "none",
+    "dots": "dot",
+    "dashes": "hyphen",
+    "line": "underscore",
+    "heavy": "heavy",
+    "middle_dot": "middleDot",
+}
 
 
 ParagraphTarget: TypeAlias = ParagraphStyle | Paragraph
@@ -344,6 +361,97 @@ def ensure_paragraph_style(
     return style
 
 
+def _set_right_tab(
+    style: ParagraphStyle,
+    *,
+    position_twips: int,
+    leader: str,
+) -> None:
+    p_pr = style._element.get_or_add_pPr()
+    tabs = p_pr.find(qn("w:tabs"))
+    if tabs is None:
+        tabs = OxmlElement("w:tabs")
+        p_pr.insert_element_before(
+            tabs,
+            "w:spacing",
+            "w:ind",
+            "w:jc",
+            "w:outlineLvl",
+            "w:rPr",
+        )
+    for tab in tuple(tabs.findall(qn("w:tab"))):
+        if tab.get(qn("w:val")) == "right":
+            tabs.remove(tab)
+
+    tab = OxmlElement("w:tab")
+    tab.set(qn("w:val"), "right")
+    tab.set(qn("w:pos"), str(position_twips))
+    tab.set(qn("w:leader"), TOC_LEADERS[leader])
+    tabs.append(tab)
+
+
+def _toc_content_width_twips(document: DocumentObject) -> int:
+    section = document.sections[0]
+    content_width = (
+        int(section.page_width)
+        - int(section.left_margin)
+        - int(section.right_margin)
+    )
+    if content_width <= 0:
+        raise ValueError("TOC page-number tab requires positive content width")
+    return Emu(content_width).twips
+
+
+def configure_toc_styles(
+    document: DocumentObject,
+    template: ThesisTemplate,
+) -> None:
+    if template.toc is None:
+        return
+
+    normal = document.styles["Normal"]
+    default_tab_position = _toc_content_width_twips(document)
+    for level, style_name in TOC_STYLE_NAMES.items():
+        spec = template.toc.for_level(level) or TocLevelSpec()
+        style_id = style_name.replace(" ", "")
+        style = next(
+            (
+                candidate
+                for candidate in document.styles
+                if candidate.type == WD_STYLE_TYPE.PARAGRAPH
+                and candidate.style_id == style_id
+            ),
+            None,
+        )
+        if style is None:
+            style = document.styles.add_style(style_name, WD_STYLE_TYPE.PARAGRAPH)
+        style.base_style = normal
+
+        em_size_pt = _resolved_size_points(spec.size, template.body.size)
+        em_fallback_size = (
+            template.body.size
+            if spec.size is not None and spec.size.unit == "em"
+            else None
+        )
+        apply_paragraph_style(
+            style,
+            spec,
+            fallback_size=em_fallback_size,
+            em_size_pt=em_size_pt,
+        )
+        position_twips = default_tab_position
+        if spec.page_number_tab is not None:
+            position_twips = to_docx_length(
+                spec.page_number_tab,
+                em_size_pt=em_size_pt,
+            ).twips
+        _set_right_tab(
+            style,
+            position_twips=position_twips,
+            leader=spec.leader,
+        )
+
+
 def configure_styles(document: DocumentObject, template: ThesisTemplate) -> None:
     normal = document.styles["Normal"]
     apply_paragraph_style(normal, template.body)
@@ -357,3 +465,4 @@ def configure_styles(document: DocumentObject, template: ThesisTemplate) -> None
                 fallback_font=template.body.font,
                 fallback_size=template.body.size,
             )
+    configure_toc_styles(document, template)

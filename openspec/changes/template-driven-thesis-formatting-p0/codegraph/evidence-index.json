@@ -1,6 +1,6 @@
 {
   "schema": "specnav.codegraph.evidence_index.v1",
-  "generated_at": "2026-08-03T07:07:25.430Z",
+  "generated_at": "2026-08-06T07:51:49.171Z",
   "active_change": "template-driven-thesis-formatting-p0",
   "source_raw": "openspec/changes/template-driven-thesis-formatting-p0/codegraph/evidence.jsonl",
   "by_claim": {
@@ -59,11 +59,24 @@
       ],
       "symbols": [],
       "blockers": []
+    },
+    "development:task-004-toc-styles": {
+      "status": "matched",
+      "evidence_ids": [
+        "ev-msh7we5o"
+      ],
+      "files": [
+        "src/thesis_forge/renderers/docx/styles.py",
+        "src/thesis_forge/templates/model.py",
+        "src/thesis_forge/renderers/docx/fields.py"
+      ],
+      "symbols": [],
+      "blockers": []
     }
   },
   "by_stage": {
     "development": {
-      "verified": 7,
+      "verified": 8,
       "partial": 0,
       "missing": 0,
       "stale": 0,
@@ -72,5 +85,5 @@
   },
   "blockers": [],
   "raw_exists": true,
-  "record_count": 7
+  "record_count": 8
 }

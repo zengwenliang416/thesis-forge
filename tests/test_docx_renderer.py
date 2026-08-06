@@ -28,7 +28,7 @@ from thesis_forge.core.model import (
     ThesisDocument,
 )
 from thesis_forge.core.parser import parse_markdown
-from thesis_forge.core.render_plan import ReferenceRun
+from thesis_forge.core.render_plan import ReferenceRun, RenderPlan, TocInstruction
 from thesis_forge.renderers.docx import DocxRenderer
 from thesis_forge.renderers.docx.errors import DocxRenderError
 from thesis_forge.renderers.docx.package import list_package_parts, read_package_part
@@ -45,6 +45,7 @@ from thesis_forge.templates import (
     LineSpacingSpec,
     ParagraphStyleSpec,
     SectionsSpec,
+    TocLevelSpec,
     TocSpec,
     load_template,
 )
@@ -390,6 +391,229 @@ def test_semantic_style_resolution_uses_deterministic_heading_and_body_fallbacks
         "special.acknowledgements",
         heading_level=1,
     ) is template.heading.level1
+
+
+def test_toc_level_styles_use_deterministic_defaults_and_real_field(tmp_path: Path):
+    template = load_template("templates/base/bachelor.yaml")
+    template.toc = TocSpec(title=ParagraphStyleSpec(size="16pt"))
+    output = tmp_path / "default-toc-styles.docx"
+
+    DocxRenderer().render(
+        RenderPlan(nodes=[TocInstruction()], template=template),
+        output,
+    )
+
+    styles_xml = _xml_part(output, "word/styles.xml")
+    document_xml = _xml_part(output, "word/document.xml")
+    settings_xml = _xml_part(output, "word/settings.xml")
+    for level in range(1, 4):
+        style = styles_xml.xpath(
+            f".//w:style[@w:styleId='TOC{level}']",
+            namespaces=NS,
+        )[0]
+        assert style.xpath("./w:name/@w:val", namespaces=NS) == [f"TOC {level}"]
+        assert style.xpath("./w:basedOn/@w:val", namespaces=NS) == ["Normal"]
+        assert style.xpath("./w:pPr/w:ind/@w:firstLine", namespaces=NS) == ["0"]
+        assert style.xpath(
+            "./w:pPr/w:tabs/w:tab/@w:val",
+            namespaces=NS,
+        ) == ["right"]
+        assert style.xpath(
+            "./w:pPr/w:tabs/w:tab/@w:pos",
+            namespaces=NS,
+        ) == ["8788"]
+        assert style.xpath(
+            "./w:pPr/w:tabs/w:tab/@w:leader",
+            namespaces=NS,
+        ) == ["dot"]
+
+    field_codes = [
+        "".join(node.itertext()).strip()
+        for node in document_xml.xpath(".//w:instrText", namespaces=NS)
+    ]
+    assert field_codes == ['TOC \\o "1-3" \\h \\z \\u']
+    assert document_xml.xpath(
+        ".//w:instrText/../..//w:fldChar/@w:fldCharType",
+        namespaces=NS,
+    ) == ["begin", "separate", "end"]
+    assert document_xml.xpath(
+        ".//w:fldChar[@w:fldCharType='begin']/@w:dirty",
+        namespaces=NS,
+    ) == ["true"]
+    assert settings_xml.xpath("./w:updateFields/@w:val", namespaces=NS) == ["true"]
+
+
+def test_toc_level_styles_translate_indentation_spacing_tabs_and_leaders(
+    tmp_path: Path,
+):
+    template = load_template("templates/base/bachelor.yaml")
+    template.body.size = LengthSpec.model_validate("10pt")
+    template.toc = TocSpec(
+        title=ParagraphStyleSpec(size="16pt"),
+        level1=TocLevelSpec(
+            size="10pt",
+            left_indent="0em",
+            line_spacing={"type": "fixed", "value": "20pt"},
+            page_number_tab="150mm",
+            leader="dots",
+        ),
+        level2=TocLevelSpec(
+            size="10pt",
+            left_indent="1em",
+            line_spacing={"type": "multiple", "value": 1.5},
+            page_number_tab="145mm",
+            leader="dashes",
+        ),
+        level3=TocLevelSpec(
+            size="10pt",
+            left_indent="2em",
+            space_after="0.5em",
+            page_number_tab="140mm",
+            leader="middle_dot",
+        ),
+    )
+    output = tmp_path / "configured-toc-styles.docx"
+
+    DocxRenderer().render(
+        RenderPlan(nodes=[TocInstruction()], template=template),
+        output,
+    )
+
+    styles_xml = _xml_part(output, "word/styles.xml")
+    level1 = styles_xml.xpath(
+        ".//w:style[@w:styleId='TOC1']",
+        namespaces=NS,
+    )[0]
+    level2 = styles_xml.xpath(
+        ".//w:style[@w:styleId='TOC2']",
+        namespaces=NS,
+    )[0]
+    level3 = styles_xml.xpath(
+        ".//w:style[@w:styleId='TOC3']",
+        namespaces=NS,
+    )[0]
+
+    assert level1.xpath("./w:pPr/w:ind/@w:left", namespaces=NS) == ["0"]
+    assert level1.xpath("./w:pPr/w:spacing/@w:line", namespaces=NS) == ["400"]
+    assert level1.xpath(
+        "./w:pPr/w:spacing/@w:lineRule",
+        namespaces=NS,
+    ) == ["exact"]
+    assert level2.xpath("./w:pPr/w:ind/@w:left", namespaces=NS) == ["200"]
+    assert level2.xpath("./w:pPr/w:spacing/@w:line", namespaces=NS) == ["360"]
+    assert level2.xpath(
+        "./w:pPr/w:spacing/@w:lineRule",
+        namespaces=NS,
+    ) == ["auto"]
+    assert level3.xpath("./w:pPr/w:ind/@w:left", namespaces=NS) == ["400"]
+    assert level3.xpath("./w:pPr/w:spacing/@w:after", namespaces=NS) == ["100"]
+
+    expected_tabs = {
+        "TOC1": ("8504", "dot"),
+        "TOC2": ("8220", "hyphen"),
+        "TOC3": ("7937", "middleDot"),
+    }
+    for style_id, (position, leader) in expected_tabs.items():
+        style = styles_xml.xpath(
+            f".//w:style[@w:styleId={style_id!r}]",
+            namespaces=NS,
+        )[0]
+        assert style.xpath(
+            "./w:pPr/w:tabs/w:tab/@w:val",
+            namespaces=NS,
+        ) == ["right"]
+        assert style.xpath(
+            "./w:pPr/w:tabs/w:tab/@w:pos",
+            namespaces=NS,
+        ) == [position]
+        assert style.xpath(
+            "./w:pPr/w:tabs/w:tab/@w:leader",
+            namespaces=NS,
+        ) == [leader]
+
+
+@pytest.mark.parametrize(
+    ("leader", "word_value"),
+    [
+        ("none", "none"),
+        ("dots", "dot"),
+        ("dashes", "hyphen"),
+        ("line", "underscore"),
+        ("heavy", "heavy"),
+        ("middle_dot", "middleDot"),
+    ],
+)
+def test_toc_leader_policy_maps_to_word_tokens(
+    tmp_path: Path,
+    leader: str,
+    word_value: str,
+):
+    template = load_template("templates/base/bachelor.yaml")
+    template.toc = TocSpec(
+        level1=TocLevelSpec(
+            page_number_tab="150mm",
+            leader=leader,
+        )
+    )
+    output = tmp_path / f"toc-leader-{leader}.docx"
+
+    DocxRenderer().render(
+        RenderPlan(nodes=[TocInstruction()], template=template),
+        output,
+    )
+
+    styles_xml = _xml_part(output, "word/styles.xml")
+    assert styles_xml.xpath(
+        ".//w:style[@w:styleId='TOC1']/w:pPr/w:tabs/w:tab/@w:leader",
+        namespaces=NS,
+    ) == [word_value]
+
+
+def test_toc_em_page_number_tab_uses_effective_level_size(tmp_path: Path):
+    template = load_template("templates/base/bachelor.yaml")
+    template.body.size = LengthSpec.model_validate("12pt")
+    template.toc = TocSpec(
+        level1=TocLevelSpec(
+            size="10pt",
+            page_number_tab="10em",
+        )
+    )
+    output = tmp_path / "toc-em-tab.docx"
+
+    DocxRenderer().render(
+        RenderPlan(nodes=[TocInstruction()], template=template),
+        output,
+    )
+
+    styles_xml = _xml_part(output, "word/styles.xml")
+    assert styles_xml.xpath(
+        ".//w:style[@w:styleId='TOC1']/w:pPr/w:tabs/w:tab/@w:pos",
+        namespaces=NS,
+    ) == ["2000"]
+
+
+def test_template_without_toc_policy_preserves_real_field_without_style_overrides(
+    tmp_path: Path,
+):
+    template = load_template("templates/base/bachelor.yaml")
+    assert template.toc is None
+    output = tmp_path / "legacy-toc-field.docx"
+
+    DocxRenderer().render(
+        RenderPlan(nodes=[TocInstruction()], template=template),
+        output,
+    )
+
+    styles_xml = _xml_part(output, "word/styles.xml")
+    document_xml = _xml_part(output, "word/document.xml")
+    assert not styles_xml.xpath(
+        ".//w:style[@w:styleId='TOC1' or @w:styleId='TOC2' or @w:styleId='TOC3']",
+        namespaces=NS,
+    )
+    assert [
+        "".join(node.itertext()).strip()
+        for node in document_xml.xpath(".//w:instrText", namespaces=NS)
+    ] == ['TOC \\o "1-3" \\h \\z \\u']
 
 
 def test_partial_semantic_title_inherits_heading_style_and_overrides_false(
