@@ -1,0 +1,46 @@
+{
+  "task_id": "002-cover-rendering",
+  "goal": "Render ordered template-driven cover paragraphs using the shared style translator.",
+  "must_read": [
+    "openspec/changes/template-driven-thesis-layout-p1/development/tasks/002-cover-rendering/brief.md",
+    "openspec/changes/template-driven-thesis-layout-p1/requirements.md",
+    "openspec/changes/template-driven-thesis-layout-p1/acceptance.md",
+    "openspec/changes/template-driven-thesis-layout-p1/spec-map.json",
+    "openspec/changes/template-driven-thesis-layout-p1/component-impact-map.json",
+    "openspec/changes/template-driven-thesis-layout-p1/prototype/handoff.md",
+    "openspec/changes/template-driven-thesis-layout-p1/prototype/decision.json",
+    "openspec/changes/template-driven-thesis-layout-p1/prototype/component/component-map.md",
+    "openspec/specs/ui-design/design.md",
+    "openspec/specs/system-architecture/design.md",
+    "openspec/specs/frontend-backend-data-flow/design.md",
+    "openspec/specs/component-architecture/design.md"
+  ],
+  "allowed_files": [
+    "src/thesis_forge/core/render_plan.py",
+    "src/thesis_forge/renderers/docx/cover.py",
+    "src/thesis_forge/renderers/docx/renderer.py",
+    "tests/test_render_plan.py",
+    "tests/test_docx_renderer.py",
+    "tests/test_architecture.py",
+    "openspec/changes/template-driven-thesis-layout-p1/development/tasks/002-cover-rendering/**"
+  ],
+  "test_paths": [
+    "tests/test_render_plan.py",
+    "tests/test_docx_renderer.py",
+    "tests/test_architecture.py"
+  ],
+  "non_goals": [
+    "Do not change Markdown parsing.",
+    "Do not add HUT-specific values.",
+    "Do not add absolute-position cover objects."
+  ],
+  "expected_evidence": [
+    "Renderer-neutral payload assertions",
+    "Cover paragraph order and text assertions",
+    "OOXML style assertions"
+  ],
+  "unsafe_assumptions": [
+    "Paragraph direct formatting automatically updates runs created before style application."
+  ],
+  "stop_condition": "Stop if CoverInstruction requires template or DOCX implementation objects."
+}

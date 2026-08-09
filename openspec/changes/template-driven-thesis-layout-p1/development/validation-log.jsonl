@@ -1,0 +1,7 @@
+{"task_id":"001-cover-policy","status":"passed","command":".venv/bin/python -m pytest tests/test_template.py tests/test_architecture.py -q","attestation":"system-executed"}
+{"task_id":"002-cover-rendering","status":"passed","command":".venv/bin/python -m pytest tests/test_render_plan.py tests/test_docx_renderer.py -q","attestation":"system-executed"}
+{"task_id":"003-hut-cover-verification","status":"passed","command":".venv/bin/python -m pytest tests/test_template.py tests/test_render_plan.py tests/test_docx_renderer.py tests/test_acceptance.py -q","result":"142 passed","attestation":"system-executed"}
+{"task_id":"003-hut-cover-verification","status":"passed","command":".venv/bin/python -m pytest -q","result":"372 passed","attestation":"system-executed"}
+{"task_id":"003-hut-cover-verification","status":"passed","command":".venv/bin/ruff check .","result":"All checks passed","attestation":"system-executed"}
+{"task_id":"003-hut-cover-verification","status":"passed","command":"OPENSPEC_TELEMETRY=0 openspec validate template-driven-thesis-layout-p1 --strict --json","result":"valid=true","attestation":"system-executed"}
+{"task_id":"003-hut-cover-verification","status":"passed","command":".venv/bin/thesisforge build examples/complete-thesis/thesis.md --template templates/schools/hunan-university-of-technology/master-2026.yaml -o /Users/wenliang_zeng/Downloads/thesisforge-hut-cover-parameterized.docx","result":"build succeeded; sha256=34cc836cee161d8a4c189d159ff4fefff9eee19c1779d22ec5c5a35787d4457b","attestation":"system-executed"}

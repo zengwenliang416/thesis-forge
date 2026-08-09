@@ -1,0 +1,9 @@
+{
+  "schema_version": 1,
+  "component_rules": [
+    "Represent cover item ordering and content selection once in CoverSpec and CoverItemSpec.",
+    "Reuse ParagraphStyleSpec for every cover item instead of copying font and spacing fields.",
+    "Reuse apply_paragraph_style for DOCX translation instead of cover-specific formatting code.",
+    "Keep cover item value resolution focused and independent of paragraph creation."
+  ]
+}

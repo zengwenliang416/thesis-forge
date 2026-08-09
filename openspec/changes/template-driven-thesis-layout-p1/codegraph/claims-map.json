@@ -1,0 +1,96 @@
+{
+  "schema": "specnav.codegraph.claims.v1",
+  "generated_at": "2026-08-09T06:14:26.004Z",
+  "active_change": "template-driven-thesis-layout-p1",
+  "claims": [
+    {
+      "id": "development:task-001-cover-policy",
+      "kind": "development-task",
+      "stage": "development",
+      "task_id": "001-cover-policy",
+      "text": "Complete tasks 1.1-1.4 at the Template Model and documentation boundary.",
+      "required": true,
+      "source": "specnav-codegraph-plan",
+      "source_paths": [
+        "openspec/changes/template-driven-thesis-layout-p1/development/tasks/001-cover-policy/brief.md",
+        "openspec/changes/template-driven-thesis-layout-p1/development/tasks/001-cover-policy/context.json"
+      ],
+      "expected_evidence": [
+        "Cover model default and validation tests",
+        "Architecture assertions",
+        "Updated template specification"
+      ],
+      "allowed_files": [
+        "src/thesis_forge/templates/model.py",
+        "src/thesis_forge/templates/__init__.py",
+        "tests/test_template.py",
+        "tests/test_architecture.py",
+        "docs/TEMPLATE_SPEC.md",
+        "openspec/changes/template-driven-thesis-layout-p1/development/tasks/001-cover-policy/**"
+      ],
+      "query_ids": [
+        "development:task-001-cover-policy:evidence"
+      ]
+    },
+    {
+      "id": "development:task-002-cover-rendering",
+      "kind": "development-task",
+      "stage": "development",
+      "task_id": "002-cover-rendering",
+      "text": "Complete tasks 2.1-2.4 and remove the fixed cover rendering path.",
+      "required": true,
+      "source": "specnav-codegraph-plan",
+      "source_paths": [
+        "openspec/changes/template-driven-thesis-layout-p1/development/tasks/002-cover-rendering/brief.md",
+        "openspec/changes/template-driven-thesis-layout-p1/development/tasks/002-cover-rendering/context.json"
+      ],
+      "expected_evidence": [
+        "Renderer-neutral payload assertions",
+        "Cover paragraph order and text assertions",
+        "OOXML style assertions"
+      ],
+      "allowed_files": [
+        "src/thesis_forge/core/render_plan.py",
+        "src/thesis_forge/renderers/docx/cover.py",
+        "src/thesis_forge/renderers/docx/renderer.py",
+        "tests/test_render_plan.py",
+        "tests/test_docx_renderer.py",
+        "tests/test_architecture.py",
+        "openspec/changes/template-driven-thesis-layout-p1/development/tasks/002-cover-rendering/**"
+      ],
+      "query_ids": [
+        "development:task-002-cover-rendering:evidence"
+      ]
+    },
+    {
+      "id": "development:task-003-hut-cover-verification",
+      "kind": "development-task",
+      "stage": "development",
+      "task_id": "003-hut-cover-verification",
+      "text": "Complete tasks 3.1-3.4 with HUT YAML, two-template and complete-build evidence.",
+      "required": true,
+      "source": "specnav-codegraph-plan",
+      "source_paths": [
+        "openspec/changes/template-driven-thesis-layout-p1/development/tasks/003-hut-cover-verification/brief.md",
+        "openspec/changes/template-driven-thesis-layout-p1/development/tasks/003-hut-cover-verification/context.json"
+      ],
+      "expected_evidence": [
+        "Explicit HUT YAML cover policy",
+        "Two-template semantic equivalence and style difference",
+        "Complete offline build and OOXML assertions"
+      ],
+      "allowed_files": [
+        "templates/schools/hunan-university-of-technology/master-2026.yaml",
+        "templates/schools/example-university/2026.yaml",
+        "tests/test_template.py",
+        "tests/test_docx_renderer.py",
+        "tests/test_acceptance.py",
+        "docs/TEMPLATE_SPEC.md",
+        "openspec/changes/template-driven-thesis-layout-p1/**"
+      ],
+      "query_ids": [
+        "development:task-003-hut-cover-verification:evidence"
+      ]
+    }
+  ]
+}

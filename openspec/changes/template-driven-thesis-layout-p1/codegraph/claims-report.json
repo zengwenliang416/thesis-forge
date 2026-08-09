@@ -1,12 +1,20 @@
 {
   "schema": "specnav.codegraph.claims_report.v1",
-  "generated_at": "2026-08-09T06:02:54.693Z",
+  "generated_at": "2026-08-09T06:17:33.316Z",
   "active_change": "template-driven-thesis-layout-p1",
   "claims_file": "openspec/changes/template-driven-thesis-layout-p1/codegraph/claims-map.json",
   "evidence_index": "openspec/changes/template-driven-thesis-layout-p1/codegraph/evidence-index.json",
-  "claims_count": 0,
+  "claims_count": 3,
   "verified_claims": [],
-  "unverified_claims": [],
+  "unverified_claims": [
+    "development:task-001-cover-policy",
+    "development:task-002-cover-rendering",
+    "development:task-003-hut-cover-verification"
+  ],
   "blockers": [],
-  "warnings": []
+  "warnings": [
+    "codegraph:claim-unverified:development:task-001-cover-policy",
+    "codegraph:claim-unverified:development:task-002-cover-rendering",
+    "codegraph:claim-unverified:development:task-003-hut-cover-verification"
+  ]
 }

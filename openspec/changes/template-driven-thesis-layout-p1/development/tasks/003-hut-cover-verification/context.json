@@ -1,0 +1,46 @@
+{
+  "task_id": "003-hut-cover-verification",
+  "goal": "Configure and verify the HUT template-driven cover end to end.",
+  "must_read": [
+    "openspec/changes/template-driven-thesis-layout-p1/development/tasks/003-hut-cover-verification/brief.md",
+    "openspec/changes/template-driven-thesis-layout-p1/requirements.md",
+    "openspec/changes/template-driven-thesis-layout-p1/acceptance.md",
+    "openspec/changes/template-driven-thesis-layout-p1/spec-map.json",
+    "openspec/changes/template-driven-thesis-layout-p1/component-impact-map.json",
+    "openspec/changes/template-driven-thesis-layout-p1/prototype/handoff.md",
+    "openspec/changes/template-driven-thesis-layout-p1/prototype/decision.json",
+    "openspec/changes/template-driven-thesis-layout-p1/prototype/component/component-map.md",
+    "openspec/specs/ui-design/design.md",
+    "openspec/specs/system-architecture/design.md",
+    "openspec/specs/frontend-backend-data-flow/design.md",
+    "openspec/specs/component-architecture/design.md"
+  ],
+  "allowed_files": [
+    "templates/schools/hunan-university-of-technology/master-2026.yaml",
+    "templates/schools/example-university/2026.yaml",
+    "tests/test_template.py",
+    "tests/test_docx_renderer.py",
+    "tests/test_acceptance.py",
+    "docs/TEMPLATE_SPEC.md",
+    "openspec/changes/template-driven-thesis-layout-p1/**"
+  ],
+  "test_paths": [
+    "tests/test_template.py",
+    "tests/test_docx_renderer.py",
+    "tests/test_acceptance.py"
+  ],
+  "non_goals": [
+    "Do not implement non-cover P1 gaps.",
+    "Do not add a UI template editor.",
+    "Do not promise pixel-identical pagination."
+  ],
+  "expected_evidence": [
+    "Explicit HUT YAML cover policy",
+    "Two-template semantic equivalence and style difference",
+    "Complete offline build and OOXML assertions"
+  ],
+  "unsafe_assumptions": [
+    "One Office client's pagination proves pixel identity in every client."
+  ],
+  "stop_condition": "Stop if the HUT cover requires absolute-position layout outside this slice."
+}

@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "owners": [
+    {
+      "path": "src/thesis_forge/templates",
+      "owner": "template-policy"
+    },
+    {
+      "path": "src/thesis_forge/core/render_plan.py",
+      "owner": "renderer-neutral-contracts"
+    },
+    {
+      "path": "src/thesis_forge/renderers/docx",
+      "owner": "docx-translation"
+    },
+    {
+      "path": "tests",
+      "owner": "verification"
+    },
+    {
+      "path": "templates",
+      "owner": "school-template-policy"
+    },
+    {
+      "path": "docs",
+      "owner": "template-contract-documentation"
+    },
+    {
+      "path": "openspec/changes/template-driven-thesis-layout-p1",
+      "owner": "specnav-evidence"
+    }
+  ]
+}

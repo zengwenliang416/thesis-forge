@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "promotion_policy": "reimplement_under_development_gate",
+  "allowed_to_copy": [
+    "Closed cover field names and exact-one-of contract",
+    "Approved dependency direction and test inventory"
+  ],
+  "must_reimplement": [
+    "Pydantic cover policy models and validation",
+    "CoverInstruction semantic value access",
+    "DOCX cover paragraph rendering",
+    "Production tests, HUT template and documentation"
+  ],
+  "blocked_direct_copies": [
+    "Review-only component map prose as executable behavior",
+    "Any DOCX or OOXML object in Parser, Domain, Template Model or RenderPlan",
+    "Any school-specific font, label or dimension in Renderer code"
+  ]
+}

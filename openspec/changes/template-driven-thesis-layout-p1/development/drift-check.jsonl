@@ -1,0 +1,3 @@
+{"task_id":"001-cover-policy","blocking":false,"reason":"Implementation matches approved CoverSpec policy and stays renderer neutral."}
+{"task_id":"002-cover-rendering","blocking":false,"reason":"Renderer uses CoverSpec order and shared apply_paragraph_style without school constants."}
+{"task_id":"003-hut-cover-verification","blocking":false,"reason":"HUT values remain in YAML; non-cover P1 gaps remain explicitly out of scope."}

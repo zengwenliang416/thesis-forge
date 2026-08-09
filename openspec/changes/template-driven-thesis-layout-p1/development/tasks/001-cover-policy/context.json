@@ -1,0 +1,44 @@
+{
+  "task_id": "001-cover-policy",
+  "goal": "Implement the renderer-neutral ordered cover policy and validation.",
+  "must_read": [
+    "openspec/changes/template-driven-thesis-layout-p1/development/tasks/001-cover-policy/brief.md",
+    "openspec/changes/template-driven-thesis-layout-p1/requirements.md",
+    "openspec/changes/template-driven-thesis-layout-p1/acceptance.md",
+    "openspec/changes/template-driven-thesis-layout-p1/spec-map.json",
+    "openspec/changes/template-driven-thesis-layout-p1/component-impact-map.json",
+    "openspec/changes/template-driven-thesis-layout-p1/prototype/handoff.md",
+    "openspec/changes/template-driven-thesis-layout-p1/prototype/decision.json",
+    "openspec/changes/template-driven-thesis-layout-p1/prototype/component/component-map.md",
+    "openspec/specs/ui-design/design.md",
+    "openspec/specs/system-architecture/design.md",
+    "openspec/specs/frontend-backend-data-flow/design.md",
+    "openspec/specs/component-architecture/design.md"
+  ],
+  "allowed_files": [
+    "src/thesis_forge/templates/model.py",
+    "src/thesis_forge/templates/__init__.py",
+    "tests/test_template.py",
+    "tests/test_architecture.py",
+    "docs/TEMPLATE_SPEC.md",
+    "openspec/changes/template-driven-thesis-layout-p1/development/tasks/001-cover-policy/**"
+  ],
+  "test_paths": [
+    "tests/test_template.py",
+    "tests/test_architecture.py"
+  ],
+  "non_goals": [
+    "Do not implement DOCX rendering.",
+    "Do not add school-specific values.",
+    "Do not change Markdown syntax."
+  ],
+  "expected_evidence": [
+    "Cover model default and validation tests",
+    "Architecture assertions",
+    "Updated template specification"
+  ],
+  "unsafe_assumptions": [
+    "A generic default can be inferred without testing all built-in templates."
+  ],
+  "stop_condition": "Stop if the model needs DOCX objects or absolute positioning."
+}

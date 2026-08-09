@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "budgets": [
+    {
+      "area": "template policy",
+      "limit": "one CoverItemSpec and one CoverSpec; do not add school-specific subclasses"
+    },
+    {
+      "area": "coupling",
+      "limit": "Parser, Domain, Template Model and RenderPlan import no docx, lxml or renderer modules"
+    },
+    {
+      "area": "rendering",
+      "limit": "cover formatting must reuse apply_paragraph_style; no second font or spacing translator"
+    },
+    {
+      "area": "scope",
+      "limit": "no UI, absolute positioning, shapes, declaration pages or non-cover P1 gaps"
+    }
+  ]
+}
