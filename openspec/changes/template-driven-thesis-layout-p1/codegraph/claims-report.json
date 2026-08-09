@@ -1,6 +1,6 @@
 {
   "schema": "specnav.codegraph.claims_report.v1",
-  "generated_at": "2026-08-09T06:17:33.316Z",
+  "generated_at": "2026-08-09T06:18:09.427Z",
   "active_change": "template-driven-thesis-layout-p1",
   "claims_file": "openspec/changes/template-driven-thesis-layout-p1/codegraph/claims-map.json",
   "evidence_index": "openspec/changes/template-driven-thesis-layout-p1/codegraph/evidence-index.json",

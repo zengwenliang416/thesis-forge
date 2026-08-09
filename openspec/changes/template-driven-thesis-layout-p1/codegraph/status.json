@@ -1,7 +1,7 @@
 {
   "schema": "specnav.codegraph.status.v1",
   "ok": true,
-  "generated_at": "2026-08-09T06:17:33.315Z",
+  "generated_at": "2026-08-09T06:18:09.426Z",
   "project_root": "/Volumes/zwl/open_sources/thesis-forge",
   "active_change": "template-driven-thesis-layout-p1",
   "policy": {
@@ -15,8 +15,8 @@
   "execution_surface": "cli",
   "decision": {
     "stage": "development",
-    "result": "warn",
-    "reason": "CodeGraph policy has advisory warnings for development."
+    "result": "pass",
+    "reason": "CodeGraph policy satisfied for development."
   },
   "cli": {
     "available": true,
@@ -44,16 +44,14 @@
     "edgeCount": 6439,
     "pendingChanges": {
       "added": 0,
-      "modified": 10,
+      "modified": 0,
       "removed": 0
     },
     "reindexRecommended": false,
     "worktreeMismatch": null
   },
   "blockers": [],
-  "warnings": [
-    "codegraph:index-stale"
-  ],
+  "warnings": [],
   "raw_codegraph_status": {
     "initialized": true,
     "version": "1.3.1",
@@ -89,7 +87,7 @@
     ],
     "pendingChanges": {
       "added": 0,
-      "modified": 10,
+      "modified": 0,
       "removed": 0
     },
     "worktreeMismatch": null,

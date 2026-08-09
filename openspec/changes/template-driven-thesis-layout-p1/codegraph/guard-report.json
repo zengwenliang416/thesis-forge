@@ -1,6 +1,6 @@
 {
   "schema": "specnav.codegraph.guard_report.v1",
-  "generated_at": "2026-08-09T06:17:33.316Z",
+  "generated_at": "2026-08-09T06:18:09.427Z",
   "active_change": "template-driven-thesis-layout-p1",
   "stage": "development",
   "ok": true,
@@ -40,7 +40,7 @@
       "edgeCount": 6439,
       "pendingChanges": {
         "added": 0,
-        "modified": 10,
+        "modified": 0,
         "removed": 0
       },
       "reindexRecommended": false,
@@ -54,16 +54,14 @@
     "effective_mode": "advisory",
     "required_for_stage": false,
     "execution_surface": "cli",
-    "result": "warn",
+    "result": "pass",
     "blockers": [],
-    "warnings": [
-      "codegraph:index-stale"
-    ],
-    "explanation": "CodeGraph policy has advisory warnings for development."
+    "warnings": [],
+    "explanation": "CodeGraph policy satisfied for development."
   },
   "evidence_index": {
     "schema": "specnav.codegraph.evidence_index.v1",
-    "generated_at": "2026-08-09T06:17:33.315Z",
+    "generated_at": "2026-08-09T06:18:09.426Z",
     "active_change": "template-driven-thesis-layout-p1",
     "source_raw": "openspec/changes/template-driven-thesis-layout-p1/codegraph/evidence.jsonl",
     "by_claim": {},
@@ -74,7 +72,7 @@
   },
   "claims_report": {
     "schema": "specnav.codegraph.claims_report.v1",
-    "generated_at": "2026-08-09T06:17:33.316Z",
+    "generated_at": "2026-08-09T06:18:09.427Z",
     "active_change": "template-driven-thesis-layout-p1",
     "claims_file": "openspec/changes/template-driven-thesis-layout-p1/codegraph/claims-map.json",
     "evidence_index": "openspec/changes/template-driven-thesis-layout-p1/codegraph/evidence-index.json",
@@ -100,7 +98,6 @@
   },
   "blockers": [],
   "warnings": [
-    "codegraph:index-stale",
     "codegraph:claim-unverified:development:task-001-cover-policy",
     "codegraph:claim-unverified:development:task-002-cover-rendering",
     "codegraph:claim-unverified:development:task-003-hut-cover-verification"
