@@ -68,4 +68,5 @@ approved
 
 ## Required Fixes
 
-- None.
+- The approved task has no remaining blocking quality correction after the
+  requested failure-path, equivalence and package-consistency evidence.

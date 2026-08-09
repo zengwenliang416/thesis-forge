@@ -1,0 +1,33 @@
+{
+  "schema": "specnav.codegraph.impact.v1",
+  "generated_at": "2026-08-09T04:52:58.020Z",
+  "change_id": "template-driven-thesis-formatting-p0",
+  "source_evidence_ids": [
+    "ev-mslbtxyc"
+  ],
+  "affected_files": [
+    {
+      "path": "invalid.md",
+      "evidence_refs": [
+        "ev-mslbtxyc"
+      ]
+    },
+    {
+      "path": "number.rs",
+      "evidence_refs": [
+        "ev-mslbtxyc"
+      ]
+    },
+    {
+      "path": "tests/test_application_services.py",
+      "evidence_refs": [
+        "ev-mslbtxyc"
+      ]
+    }
+  ],
+  "affected_case_ids": [],
+  "evidence_refs": [
+    "codegraph/evidence.jsonl#ev-mslbtxyc"
+  ],
+  "blockers": []
+}

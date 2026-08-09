@@ -6,7 +6,8 @@ approved
 
 ## Missing Requirements
 
-- None.
+- All task 005 requirements were satisfied before approval; no requirement is
+  missing.
 
 ## Extra Behavior
 
@@ -49,4 +50,4 @@ approved
 
 ## Required Fixes
 
-- None.
+- The approved task has no remaining blocking spec correction.

@@ -149,7 +149,7 @@ def test_docx_renderer_translates_complete_body_and_heading_policy_xml(
     heading = template.heading.level1
     heading.font = None
     heading.size = LengthSpec.model_validate("20pt")
-    heading.color = "336699"
+    heading.color = "abcdef"
     heading.first_line_indent = None
     heading.hanging_indent = LengthSpec.model_validate("1.5em")
     heading.space_before = LengthSpec.model_validate("10pt")
@@ -208,7 +208,7 @@ def test_docx_renderer_translates_complete_body_and_heading_policy_xml(
     ]
     assert heading_xml.xpath("./w:rPr/w:sz/@w:val", namespaces=NS) == ["40"]
     assert heading_xml.xpath("./w:rPr/w:color/@w:val", namespaces=NS) == [
-        "336699"
+        "ABCDEF"
     ]
     assert not heading_xml.xpath("./w:rPr/w:color/@w:themeColor", namespaces=NS)
     assert not heading_xml.xpath("./w:rPr/w:color/@w:themeTint", namespaces=NS)

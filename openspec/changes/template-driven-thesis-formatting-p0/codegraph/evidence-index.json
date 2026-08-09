@@ -1,6 +1,6 @@
 {
   "schema": "specnav.codegraph.evidence_index.v1",
-  "generated_at": "2026-08-06T12:27:50.107Z",
+  "generated_at": "2026-08-09T04:52:58.033Z",
   "active_change": "template-driven-thesis-formatting-p0",
   "source_raw": "openspec/changes/template-driven-thesis-formatting-p0/codegraph/evidence.jsonl",
   "by_claim": {
@@ -142,11 +142,59 @@
       ],
       "symbols": [],
       "blockers": []
+    },
+    "development:task-008-regression-office-handoff": {
+      "status": "matched",
+      "evidence_ids": [
+        "ev-msl8kt4w",
+        "ev-msl8kt51",
+        "ev-mslbt98x"
+      ],
+      "files": [
+        "tests/test_acceptance.py",
+        "tests/test_frontend_contract.py",
+        "tests/test_ui_controller.py",
+        "invalid.md",
+        "thesis.md",
+        "tests/test_architecture.py",
+        "src/thesis_forge/bibliography/bibtex.py",
+        "tests/test_application_services.py",
+        "src/thesis_forge/templates/model.py",
+        "src/thesis_forge/renderers/docx/renderer.py",
+        "number.rs"
+      ],
+      "symbols": [],
+      "blockers": []
+    },
+    "unmapped": {
+      "status": "matched",
+      "evidence_ids": [
+        "ev-msl8kt5y",
+        "ev-mslbtxyc"
+      ],
+      "files": [
+        "src/thesis_forge/renderers/docx/inlines.py",
+        "tests/test_frontend_contract.py",
+        "tests/test_ui_controller.py",
+        "invalid.md",
+        "thesis.md",
+        "tests/test_application_services.py",
+        "number.rs"
+      ],
+      "symbols": [],
+      "blockers": []
     }
   },
   "by_stage": {
     "development": {
-      "verified": 15,
+      "verified": 18,
+      "partial": 0,
+      "missing": 0,
+      "stale": 0,
+      "blocking": 0
+    },
+    "operations": {
+      "verified": 2,
       "partial": 0,
       "missing": 0,
       "stale": 0,
@@ -155,5 +203,5 @@
   },
   "blockers": [],
   "raw_exists": true,
-  "record_count": 15
+  "record_count": 20
 }

@@ -86,10 +86,10 @@
 
 **用户结果：** 维护者和审核者可以通过完整自动化证据与真实 Office 客户端确认 P0 功能可用、可维护且不会破坏既有编译能力。
 
-- [ ] 8.1 执行聚焦模板、Compiler、RenderPlan、bibliography 和 DOCX renderer 测试并记录系统执行证据。（A1-A9）
-- [ ] 8.2 执行完整 `.venv/bin/python -m pytest`、`ruff check .`、包构建、`pip check`、`git diff --check` 和 OpenSpec validation。（A8、A9）
-- [ ] 8.3 执行 CodeGraph claims/impact 验证并复核学校值、DOCX import 和重复格式转换逻辑。（A7、A8）
-- [ ] 8.4 使用 Microsoft Word 或 WPS 打开完整 P0 DOCX，审阅正文节奏、中英文摘要/关键词、目录、参考文献、奇偶页眉和页码。（A10）
-- [ ] 8.5 记录 Word/WPS 感官审阅证据，并将 LibreOffice 转换结果仅作为兼容性补充证据。（A10）
-- [ ] 8.6 完成每个纵向切片的 report、spec review、quality review、validation ledger 和 drift check。（A1-A10）
-- [ ] 8.7 更新 `acceptance.json` 的 A1-A10 状态与证据引用，并让 development handoff contract 达到 `ok:true`。（A1-A10）
+- [x] 8.1 执行聚焦模板、Compiler、RenderPlan、bibliography 和 DOCX renderer 测试并记录系统执行证据。（A1-A9）
+- [x] 8.2 执行完整 `.venv/bin/python -m pytest`、`ruff check .`、包构建、`pip check`、`git diff --check` 和 OpenSpec validation。（A8、A9）
+- [x] 8.3 执行 CodeGraph claims/impact 验证并复核学校值、DOCX import 和重复格式转换逻辑。（A7、A8）
+- [x] 8.4 使用 Microsoft Word 或 WPS 打开完整 P0 DOCX，审阅正文节奏、中英文摘要/关键词、目录、参考文献、奇偶页眉和页码。（A10）
+- [x] 8.5 记录 Word/WPS 感官审阅证据，并将 LibreOffice 转换结果仅作为兼容性补充证据。（A10）
+- [x] 8.6 完成每个纵向切片的 report、spec review、quality review、validation ledger 和 drift check。（A1-A10）
+- [x] 8.7 更新 `acceptance.json` 的 A1-A10 状态与证据引用，并让 development handoff contract 达到 `ok:true`。（A1-A10）

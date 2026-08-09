@@ -58,4 +58,5 @@ approved
 
 ## Required Fixes
 
-- None.
+- The approved task has no remaining blocking spec correction after explicit
+  HUT selection and complete acceptance evidence were added.

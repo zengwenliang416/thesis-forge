@@ -67,7 +67,8 @@ template-controlled.
 
 ## Required Fixes
 
-None.
+The approved task has no remaining spec correction; its real TOC and style
+requirements are directly covered.
 
 ## Independent Validation
 

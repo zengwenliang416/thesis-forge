@@ -82,11 +82,13 @@ current reproducible validation evidence.
 
 ## Blocking Items
 
-- None.
+- The approved task has no blocking quality correction; all review findings
+  were resolved before the recorded approval.
 
 ## Required Fixes
 
-- None.
+- The approved task has no remaining blocking quality correction; its typed
+  paragraph-policy findings were resolved before the recorded approval.
 
 ## Deferred Boundaries
 

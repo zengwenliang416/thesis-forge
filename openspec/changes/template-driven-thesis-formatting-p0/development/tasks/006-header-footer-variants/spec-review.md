@@ -60,4 +60,5 @@ approved
 
 ## Required Fixes
 
-- None.
+- The approved task has no remaining blocking spec correction after physical
+  page-margin validation was added.

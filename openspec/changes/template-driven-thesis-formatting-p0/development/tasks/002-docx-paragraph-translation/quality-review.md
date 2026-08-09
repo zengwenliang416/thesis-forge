@@ -102,11 +102,13 @@ task 002 changes before handoff.
 
 ## Blocking Items
 
-- None.
+- The approved task has no remaining blocking quality correction after its
+  recorded review fixes.
 
 ## Required Fixes
 
-- None.
+- The approved task has no remaining blocking quality correction after the
+  saved-package, line-spacing and body-size review fixes.
 
 ## Deferred Boundaries
 

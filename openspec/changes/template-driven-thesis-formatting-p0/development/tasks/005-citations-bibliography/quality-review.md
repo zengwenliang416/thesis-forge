@@ -49,6 +49,6 @@ approved
 
 ## Required Fixes
 
-- None.
+- The approved task has no remaining blocking quality correction.
 - Non-blocking reviewer suggestions for omitted-policy persistence and stronger
   bibliography font/layout assertions were incorporated before closure.

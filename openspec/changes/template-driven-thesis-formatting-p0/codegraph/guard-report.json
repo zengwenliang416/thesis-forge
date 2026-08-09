@@ -1,6 +1,6 @@
 {
   "schema": "specnav.codegraph.guard_report.v1",
-  "generated_at": "2026-08-06T12:27:49.422Z",
+  "generated_at": "2026-08-09T05:11:53.094Z",
   "active_change": "template-driven-thesis-formatting-p0",
   "stage": "development",
   "ok": true,
@@ -34,10 +34,10 @@
       "initialized": true,
       "projectPath": "/Volumes/zwl/open_sources/thesis-forge",
       "indexPath": "/Volumes/zwl/open_sources/thesis-forge/.codegraph",
-      "lastIndexed": "2026-08-06T12:27:22.371Z",
+      "lastIndexed": "2026-08-09T05:09:10.552Z",
       "fileCount": 146,
-      "nodeCount": 2162,
-      "edgeCount": 6430,
+      "nodeCount": 2166,
+      "edgeCount": 6439,
       "pendingChanges": {
         "added": 0,
         "modified": 0,
@@ -61,7 +61,7 @@
   },
   "evidence_index": {
     "schema": "specnav.codegraph.evidence_index.v1",
-    "generated_at": "2026-08-06T11:57:02.747Z",
+    "generated_at": "2026-08-09T04:52:58.033Z",
     "active_change": "template-driven-thesis-formatting-p0",
     "source_raw": "openspec/changes/template-driven-thesis-formatting-p0/codegraph/evidence.jsonl",
     "by_claim": {
@@ -177,7 +177,8 @@
       "development:task-007-school-template-e2e": {
         "status": "matched",
         "evidence_ids": [
-          "ev-mshgnr85"
+          "ev-mshgnr85",
+          "ev-mshhrcno"
         ],
         "files": [
           "tests/test_acceptance.py",
@@ -193,7 +194,53 @@
           "tauri-windows.acceptance.ts",
           "package.js",
           "lib.rs",
-          "tauri.conf.js"
+          "tauri.conf.js",
+          "tests/test_frontend_contract.py",
+          "tests/test_ui_controller.py",
+          "tests/test_adapters.py",
+          "workspace-state-v1.js",
+          "WorkbenchTransport.ts"
+        ],
+        "symbols": [],
+        "blockers": []
+      },
+      "development:task-008-regression-office-handoff": {
+        "status": "matched",
+        "evidence_ids": [
+          "ev-msl8kt4w",
+          "ev-msl8kt51",
+          "ev-mslbt98x"
+        ],
+        "files": [
+          "tests/test_acceptance.py",
+          "tests/test_frontend_contract.py",
+          "tests/test_ui_controller.py",
+          "invalid.md",
+          "thesis.md",
+          "tests/test_architecture.py",
+          "src/thesis_forge/bibliography/bibtex.py",
+          "tests/test_application_services.py",
+          "src/thesis_forge/templates/model.py",
+          "src/thesis_forge/renderers/docx/renderer.py",
+          "number.rs"
+        ],
+        "symbols": [],
+        "blockers": []
+      },
+      "unmapped": {
+        "status": "matched",
+        "evidence_ids": [
+          "ev-msl8kt5y",
+          "ev-mslbtxyc"
+        ],
+        "files": [
+          "src/thesis_forge/renderers/docx/inlines.py",
+          "tests/test_frontend_contract.py",
+          "tests/test_ui_controller.py",
+          "invalid.md",
+          "thesis.md",
+          "tests/test_application_services.py",
+          "number.rs"
         ],
         "symbols": [],
         "blockers": []
@@ -201,7 +248,14 @@
     },
     "by_stage": {
       "development": {
-        "verified": 14,
+        "verified": 18,
+        "partial": 0,
+        "missing": 0,
+        "stale": 0,
+        "blocking": 0
+      },
+      "operations": {
+        "verified": 2,
         "partial": 0,
         "missing": 0,
         "stale": 0,
@@ -210,11 +264,11 @@
     },
     "blockers": [],
     "raw_exists": true,
-    "record_count": 14
+    "record_count": 20
   },
   "claims_report": {
     "schema": "specnav.codegraph.claims_report.v1",
-    "generated_at": "2026-08-06T12:27:49.422Z",
+    "generated_at": "2026-08-09T05:11:53.094Z",
     "active_change": "template-driven-thesis-formatting-p0",
     "claims_file": "openspec/changes/template-driven-thesis-formatting-p0/codegraph/claims-map.json",
     "evidence_index": "openspec/changes/template-driven-thesis-formatting-p0/codegraph/evidence-index.json",
@@ -226,15 +280,12 @@
       "development:task-004-toc-styles",
       "development:task-005-citations-bibliography",
       "development:task-006-header-footer-variants",
-      "development:task-007-school-template-e2e"
-    ],
-    "unverified_claims": [
+      "development:task-007-school-template-e2e",
       "development:task-008-regression-office-handoff"
     ],
+    "unverified_claims": [],
     "blockers": [],
-    "warnings": [
-      "codegraph:claim-unverified:development:task-008-regression-office-handoff"
-    ]
+    "warnings": []
   },
   "drift": {
     "schema": "specnav.codegraph.drift.v1",
@@ -243,7 +294,5 @@
     "blockers": []
   },
   "blockers": [],
-  "warnings": [
-    "codegraph:claim-unverified:development:task-008-regression-office-handoff"
-  ]
+  "warnings": []
 }

@@ -137,7 +137,8 @@ were not modified.
 
 ## Required Fixes
 
-None.
+The approved task has no remaining blocking quality correction after the
+inherited-em review fix.
 
 ## Independent Evidence
 

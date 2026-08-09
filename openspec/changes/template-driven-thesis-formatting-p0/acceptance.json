@@ -6,8 +6,8 @@
       "id": "A1",
       "statement": "Body paragraph spacing, indentation, line spacing and pagination controls are validated from YAML and emitted in DOCX styles.",
       "verify_via": "e2e",
-      "status": "failing",
-      "evidence_ref": null
+      "status": "passing",
+      "evidence_ref": "development/tasks/008-regression-office-handoff/report.md#tdd-evidence"
     },
     {
       "id": "A2",
@@ -69,8 +69,8 @@
       "id": "A10",
       "statement": "The P0 example is reviewed in Microsoft Word or WPS for body, abstract, TOC, bibliography, header and page-number layout.",
       "verify_via": "sensory",
-      "status": "failing",
-      "evidence_ref": null
+      "status": "passing",
+      "evidence_ref": "development/tasks/008-regression-office-handoff/sensory-review.md#primary-client-review"
     }
   ]
 }
