@@ -1,10 +1,10 @@
 {
-  "status": "blocked",
+  "status": "approved",
   "prototype_code": "required_present",
   "prototype_type": "component-seam",
-  "approved_variant": "",
+  "approved_variant": "list-policy-docx-seam-v1",
   "promotion": "requires_development_gate",
-  "blocked_reasons": [
-    "Explicit user approval for list-policy-docx-seam-v1 has not been recorded."
-  ]
+  "approved_by": "user",
+  "approved_at": "2026-08-09",
+  "blocked_reasons": []
 }

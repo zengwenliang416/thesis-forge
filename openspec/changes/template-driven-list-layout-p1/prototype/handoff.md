@@ -2,8 +2,10 @@
 
 ## Approved Branch Variant
 
-- Branch: `component-seam`
-- Candidate variant pending explicit approval: `list-policy-docx-seam-v1`
+- Approved branch: `component-seam`.
+- Approved variant: `list-policy-docx-seam-v1`.
+- User approval recorded on August 9, 2026 through the explicit instruction to enter development.
+- Promotion remains subject to the SpecNav development entry gate.
 
 ## Screens Or Flows
 
