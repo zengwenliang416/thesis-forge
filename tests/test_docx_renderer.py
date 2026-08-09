@@ -49,6 +49,7 @@ from thesis_forge.renderers.docx.styles import (
 from thesis_forge.templates import (
     AbstractStyleSpec,
     BibliographySpec,
+    CoverSpec,
     DocumentGridSpec,
     FontSpec,
     LengthSpec,
@@ -993,6 +994,78 @@ def test_docx_renderer_writes_metadata_cover_before_front_matter(tmp_path: Path)
     assert len(document_xml.xpath(".//w:sectPr", namespaces=NS)) == 3
     assert document_xml.xpath(".//w:headerReference", namespaces=NS)
     assert document_xml.xpath(".//w:footerReference", namespaces=NS)
+
+
+def test_docx_renderer_uses_template_cover_order_content_and_style(tmp_path: Path):
+    template = load_template("templates/schools/example-university/2026.yaml")
+    template.cover = CoverSpec.model_validate(
+        {
+            "items": [
+                {
+                    "field": "thesis.title",
+                    "prefix": "题目：",
+                    "style": {
+                        "font": {
+                            "east_asia": "黑体",
+                            "latin": "Arial",
+                        },
+                        "size": "18pt",
+                        "color": "123456",
+                        "bold": True,
+                        "alignment": "right",
+                        "space_before": "10pt",
+                        "space_after": "12pt",
+                    },
+                },
+                {
+                    "text": "硕士学位论文",
+                    "style": {
+                        "alignment": "center",
+                    },
+                },
+                {
+                    "field": "advisor.title",
+                    "prefix": "导师职称：",
+                    "skip_if_empty": True,
+                },
+            ]
+        }
+    )
+    document = ThesisDocument(
+        source_path=tmp_path / "thesis.md",
+        metadata={
+            "thesis": {"title": "参数化封面"},
+        },
+        blocks=[Heading(id="chap:introduction", level=1, text="绪论")],
+    )
+    output = tmp_path / "parameterized-cover.docx"
+
+    DocxRenderer().render(compile_document(document, template=template), output)
+
+    document_xml = _xml_part(output, "word/document.xml")
+    paragraphs = document_xml.xpath(".//w:body/w:p", namespaces=NS)
+    paragraph_text = [
+        "".join(paragraph.xpath(".//w:t/text()", namespaces=NS))
+        for paragraph in paragraphs
+    ]
+    assert paragraph_text[:2] == ["题目：参数化封面", "硕士学位论文"]
+    assert "导师职称：" not in paragraph_text
+
+    title = paragraphs[0]
+    assert title.xpath("./w:pPr/w:jc/@w:val", namespaces=NS) == ["right"]
+    assert title.xpath("./w:pPr/w:spacing/@w:before", namespaces=NS) == ["200"]
+    assert title.xpath("./w:pPr/w:spacing/@w:after", namespaces=NS) == ["240"]
+    assert title.xpath("./w:r/w:rPr/w:rFonts/@w:eastAsia", namespaces=NS) == [
+        "黑体"
+    ]
+    assert title.xpath("./w:r/w:rPr/w:rFonts/@w:ascii", namespaces=NS) == [
+        "Arial"
+    ]
+    assert title.xpath("./w:r/w:rPr/w:sz/@w:val", namespaces=NS) == ["36"]
+    assert title.xpath("./w:r/w:rPr/w:color/@w:val", namespaces=NS) == [
+        "123456"
+    ]
+    assert title.xpath("./w:r/w:rPr/w:b", namespaces=NS)
 
 
 def test_docx_renderer_bookmarks_listing_and_algorithm_objects(tmp_path: Path):

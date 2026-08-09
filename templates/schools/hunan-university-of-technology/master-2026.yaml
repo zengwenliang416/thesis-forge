@@ -16,6 +16,184 @@ page:
     type: lines
     line_pitch: 20pt
 
+cover:
+  items:
+    - field: university.name
+      style:
+        font:
+          east_asia: 黑体
+          latin: Times New Roman
+        size: 24pt
+        color: "000000"
+        bold: true
+        alignment: center
+        space_before: 12pt
+        space_after: 18pt
+        line_spacing:
+          type: fixed
+          value: 28pt
+    - text: 硕士学位论文
+      style:
+        font:
+          east_asia: 黑体
+          latin: Times New Roman
+        size: 22pt
+        color: "000000"
+        bold: true
+        alignment: center
+        space_before: 0pt
+        space_after: 36pt
+        line_spacing:
+          type: fixed
+          value: 28pt
+    - field: thesis.title
+      style:
+        font:
+          east_asia: 黑体
+          latin: Times New Roman
+        size: 22pt
+        color: "000000"
+        bold: true
+        alignment: center
+        space_before: 0pt
+        space_after: 12pt
+        line_spacing:
+          type: fixed
+          value: 30pt
+        keep_together: true
+    - field: thesis.title_en
+      style:
+        font:
+          east_asia: 宋体
+          latin: Times New Roman
+        size: 14pt
+        color: "000000"
+        bold: true
+        alignment: center
+        space_before: 0pt
+        space_after: 36pt
+        line_spacing:
+          type: fixed
+          value: 20pt
+    - field: university.college
+      prefix: "培养单位："
+      style:
+        font:
+          east_asia: 宋体
+          latin: Times New Roman
+        size: 14pt
+        color: "000000"
+        alignment: left
+        left_indent: 45mm
+        space_before: 0pt
+        space_after: 6pt
+        line_spacing:
+          type: fixed
+          value: 20pt
+    - field: thesis.major
+      prefix: "学科专业："
+      style:
+        font:
+          east_asia: 宋体
+          latin: Times New Roman
+        size: 14pt
+        color: "000000"
+        alignment: left
+        left_indent: 45mm
+        space_before: 0pt
+        space_after: 6pt
+        line_spacing:
+          type: fixed
+          value: 20pt
+    - field: thesis.degree
+      prefix: "学位类别："
+      style:
+        font:
+          east_asia: 宋体
+          latin: Times New Roman
+        size: 14pt
+        color: "000000"
+        alignment: left
+        left_indent: 45mm
+        space_before: 0pt
+        space_after: 6pt
+        line_spacing:
+          type: fixed
+          value: 20pt
+    - field: author.name
+      prefix: "研究生："
+      style:
+        font:
+          east_asia: 宋体
+          latin: Times New Roman
+        size: 14pt
+        color: "000000"
+        alignment: left
+        left_indent: 45mm
+        space_before: 0pt
+        space_after: 6pt
+        line_spacing:
+          type: fixed
+          value: 20pt
+    - field: author.student_id
+      prefix: "学号："
+      style:
+        font:
+          east_asia: 宋体
+          latin: Times New Roman
+        size: 14pt
+        color: "000000"
+        alignment: left
+        left_indent: 45mm
+        space_before: 0pt
+        space_after: 6pt
+        line_spacing:
+          type: fixed
+          value: 20pt
+    - field: advisor.name
+      prefix: "指导教师："
+      style:
+        font:
+          east_asia: 宋体
+          latin: Times New Roman
+        size: 14pt
+        color: "000000"
+        alignment: left
+        left_indent: 45mm
+        space_before: 0pt
+        space_after: 6pt
+        line_spacing:
+          type: fixed
+          value: 20pt
+    - field: advisor.title
+      prefix: "导师职称："
+      style:
+        font:
+          east_asia: 宋体
+          latin: Times New Roman
+        size: 14pt
+        color: "000000"
+        alignment: left
+        left_indent: 45mm
+        space_before: 0pt
+        space_after: 6pt
+        line_spacing:
+          type: fixed
+          value: 20pt
+    - field: dates.completed
+      style:
+        font:
+          east_asia: 宋体
+          latin: Times New Roman
+        size: 14pt
+        color: "000000"
+        alignment: center
+        space_before: 24pt
+        space_after: 0pt
+        line_spacing:
+          type: fixed
+          value: 20pt
+
 body:
   font:
     east_asia: 宋体

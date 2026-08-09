@@ -1,36 +1,32 @@
 from __future__ import annotations
 
 from docx.document import Document as DocumentObject
-from docx.enum.text import WD_ALIGN_PARAGRAPH
 
 from thesis_forge.core.render_plan import CoverInstruction
+from thesis_forge.templates.model import ThesisTemplate
+
+from .styles import apply_paragraph_style
 
 
-def _centered_paragraph(
+def render_cover(
     document: DocumentObject,
-    text: str,
+    instruction: CoverInstruction,
+    template: ThesisTemplate,
 ) -> None:
-    if not text:
-        return
-    paragraph = document.add_paragraph()
-    paragraph.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    paragraph.add_run(text)
+    for item in template.cover.items:
+        value = (
+            item.text
+            if item.text is not None
+            else instruction.value_for(item.field or "")
+        )
+        if not value and item.skip_if_empty:
+            continue
 
-
-def render_cover(document: DocumentObject, instruction: CoverInstruction) -> None:
-    _centered_paragraph(document, instruction.university)
-    _centered_paragraph(document, instruction.college)
-    document.add_paragraph()
-    _centered_paragraph(document, instruction.title)
-    _centered_paragraph(document, instruction.title_en)
-    document.add_paragraph()
-    for value in (
-        instruction.major,
-        instruction.degree,
-        instruction.author,
-        instruction.student_id,
-        instruction.advisor,
-        instruction.advisor_title,
-        instruction.completed,
-    ):
-        _centered_paragraph(document, value)
+        paragraph = document.add_paragraph()
+        paragraph.add_run(f"{item.prefix}{value}{item.suffix}")
+        apply_paragraph_style(
+            paragraph,
+            item.style,
+            fallback_font=template.body.font,
+            fallback_size=template.body.size,
+        )

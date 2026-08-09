@@ -131,7 +131,9 @@ def _render_typed(
     footnotes: FootnoteManager,
 ) -> None:
     if isinstance(instruction, CoverInstruction):
-        render_cover(document, instruction)
+        if template is None:
+            raise DocxRenderError("cover", "cover rendering requires a template")
+        render_cover(document, instruction, template)
     elif isinstance(instruction, HeadingInstruction):
         style = f"Heading {min(instruction.level, 9)}"
         if instruction.role is not None:

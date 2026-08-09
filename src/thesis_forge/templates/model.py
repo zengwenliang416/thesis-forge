@@ -185,6 +185,76 @@ class ParagraphStyleSpec(TemplateModel):
         return value
 
 
+CoverField = Literal[
+    "university.name",
+    "university.college",
+    "thesis.title",
+    "thesis.title_en",
+    "thesis.major",
+    "thesis.degree",
+    "author.name",
+    "author.student_id",
+    "advisor.name",
+    "advisor.title",
+    "dates.completed",
+]
+
+
+class CoverItemSpec(TemplateModel):
+    field: CoverField | None = None
+    text: str | None = None
+    prefix: str = ""
+    suffix: str = ""
+    skip_if_empty: bool = True
+    style: ParagraphStyleSpec = Field(
+        default_factory=lambda: ParagraphStyleSpec(alignment="center")
+    )
+
+    @model_validator(mode="after")
+    def validate_content_source(self) -> CoverItemSpec:
+        if (self.field is None) == (self.text is None):
+            raise ValueError("cover item 必须且只能配置 field 或 text")
+        if self.text is not None:
+            self.text = self.text.strip()
+            if not self.text:
+                raise ValueError("cover item text 不能为空")
+        return self
+
+
+def _default_cover_items() -> tuple[CoverItemSpec, ...]:
+    fields: tuple[CoverField, ...] = (
+        "university.name",
+        "university.college",
+        "thesis.title",
+        "thesis.title_en",
+        "thesis.major",
+        "thesis.degree",
+        "author.name",
+        "author.student_id",
+        "advisor.name",
+        "advisor.title",
+        "dates.completed",
+    )
+    return tuple(CoverItemSpec(field=field) for field in fields)
+
+
+class CoverSpec(TemplateModel):
+    items: tuple[CoverItemSpec, ...] = Field(
+        default_factory=_default_cover_items,
+        min_length=1,
+    )
+
+    @model_validator(mode="after")
+    def validate_unique_fields(self) -> CoverSpec:
+        fields = [item.field for item in self.items if item.field is not None]
+        duplicates = sorted({field for field in fields if fields.count(field) > 1})
+        if duplicates:
+            raise ValueError(
+                f"cover.items 包含重复 field: {', '.join(duplicates)}"
+            )
+        return self
+
+
 class BodySpec(ParagraphStyleSpec):
     font: FontSpec = Field(default_factory=FontSpec)
     size: LengthSpec
@@ -439,6 +509,7 @@ class ThesisTemplate(TemplateModel):
     name: str = Field(min_length=1)
     year: int | str
     page: PageSpec
+    cover: CoverSpec = Field(default_factory=CoverSpec)
     body: BodySpec
     heading: HeadingSpec
     semantic_styles: SemanticStylesSpec = Field(default_factory=SemanticStylesSpec)

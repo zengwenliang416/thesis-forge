@@ -693,6 +693,17 @@ def test_hut_template_contains_school_values_without_renderer_hardcoding():
     assert template.sections.main.footer.default is not None
     assert template.sections.main.footer.default.page_number is not None
     assert template.sections.main.footer.default.page_number.include_total is False
+    assert [item.field or item.text for item in template.cover.items[:4]] == [
+        "university.name",
+        "硕士学位论文",
+        "thesis.title",
+        "thesis.title_en",
+    ]
+    assert template.cover.items[0].style.font is not None
+    assert template.cover.items[0].style.font.east_asia == "黑体"
+    assert str(template.cover.items[0].style.size) == "24pt"
+    assert template.cover.items[4].prefix == "培养单位："
+    assert str(template.cover.items[4].style.left_indent) == "45mm"
     for level in range(1, 4):
         heading = template.heading.for_level(level)
         assert heading is not None

@@ -1,9 +1,12 @@
 from decimal import Decimal
 from typing import get_args
 
+import pytest
+
 from thesis_forge.core.render_plan import (
     BibliographyEntryInstruction,
     BibliographyInstruction,
+    CoverInstruction,
     FigureInstruction,
     FigureWidthInstruction,
     HeadingInstruction,
@@ -18,6 +21,21 @@ from thesis_forge.core.render_plan import (
     TableRowInstruction,
     TextRun,
 )
+
+
+def test_cover_instruction_resolves_closed_renderer_neutral_fields():
+    instruction = CoverInstruction(
+        university="湖南工业大学",
+        title="确定性论文编译",
+        author="曾文亮",
+    )
+
+    assert instruction.value_for("university.name") == "湖南工业大学"
+    assert instruction.value_for("thesis.title") == "确定性论文编译"
+    assert instruction.value_for("author.name") == "曾文亮"
+    assert instruction.value_for("advisor.title") == ""
+    with pytest.raises(ValueError, match="unsupported cover field"):
+        instruction.value_for("word.style")
 
 
 def test_typed_instruction_preserves_generic_render_node_contract():

@@ -61,6 +61,7 @@ id: <非空字符串>
 name: <非空字符串>
 year: <整数或字符串>
 page: <PageSpec>
+cover: <CoverSpec，可省略>
 body: <BodySpec>
 heading: <HeadingSpec>
 semantic_styles: <SemanticStylesSpec，可省略>
@@ -81,6 +82,7 @@ citation: <CitationSpec，可省略>
 | `name` | `str` | 必填，长度至少 1 | 人类可读名称 |
 | `year` | `int \| str` | 必填 | 可使用 `2026` 或 `base` |
 | `page` | `PageSpec` | 必填 | 页面几何和文档网格 |
+| `cover` | `CoverSpec` | 默认通用字段顺序 | 封面字段、静态文本、顺序和段落样式 |
 | `body` | `BodySpec` | 必填 | 正文段落样式 |
 | `heading` | `HeadingSpec` | 必填 | `level1` 必填，`level2/3` 可选 |
 | `semantic_styles` | `SemanticStylesSpec` | 默认空对象 | 摘要、关键词和特殊角色样式 |
@@ -301,7 +303,56 @@ snap_to_chars
 默认类型是 `lines`。当类型不是 `default` 时，必须提供绝对单位且大于 0 的
 `line_pitch`。`char_space` 是可选整数；模型不为它添加额外的范围约束。
 
-### 5.2 正文与标题
+### 5.2 CoverSpec
+
+封面内容来自 Markdown Front Matter，字段顺序、静态文字和排版来自模板：
+
+```yaml
+cover:
+  items:
+    - field: university.name
+      style:
+        font:
+          east_asia: 黑体
+          latin: Times New Roman
+        size: 24pt
+        bold: true
+        alignment: center
+        space_after: 18pt
+    - text: 硕士学位论文
+      style:
+        alignment: center
+        space_after: 36pt
+    - field: thesis.title
+      prefix: "题目："
+      skip_if_empty: true
+      style:
+        alignment: center
+```
+
+每个 `CoverItemSpec` 必须且只能配置一个内容来源：
+
+- `field`：从 `CoverInstruction` 读取受支持的 Front Matter 语义字段；
+- `text`：由模板提供的非空静态文字。
+
+公共字段为：
+
+| 字段 | 默认 | 说明 |
+| --- | --- | --- |
+| `prefix` | `""` | 内容前缀 |
+| `suffix` | `""` | 内容后缀 |
+| `skip_if_empty` | `true` | metadata 为空时是否跳过整个段落 |
+| `style` | 居中 `ParagraphStyleSpec` | 复用全部公共段落属性 |
+
+支持的 `field` 为 `university.name`、`university.college`、`thesis.title`、
+`thesis.title_en`、`thesis.major`、`thesis.degree`、`author.name`、
+`author.student_id`、`advisor.name`、`advisor.title` 和 `dates.completed`。
+同一 `CoverSpec` 中 metadata field 不允许重复，静态 `text` 可以重复。
+
+省略 `cover` 时，模型按上述 metadata field 的通用顺序生成居中段落。模板应通过
+`space_before` 和 `space_after` 控制垂直节奏，不使用 Renderer 固定空白段落。
+
+### 5.3 正文与标题
 
 正文使用 `body`，标题使用 `heading.level1`、`heading.level2` 和
 `heading.level3`。标题级别缺失而论文实际使用时，Validator 报告

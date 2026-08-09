@@ -379,6 +379,25 @@ class CoverInstruction(_Instruction):
     advisor_title: str = ""
     completed: str = ""
 
+    def value_for(self, field: str) -> str:
+        values = {
+            "university.name": self.university,
+            "university.college": self.college,
+            "thesis.title": self.title,
+            "thesis.title_en": self.title_en,
+            "thesis.major": self.major,
+            "thesis.degree": self.degree,
+            "author.name": self.author,
+            "author.student_id": self.student_id,
+            "advisor.name": self.advisor,
+            "advisor.title": self.advisor_title,
+            "dates.completed": self.completed,
+        }
+        try:
+            return values[field]
+        except KeyError as error:
+            raise ValueError(f"unsupported cover field: {field}") from error
+
     @property
     def payload(self) -> dict[str, Any]:
         return {
