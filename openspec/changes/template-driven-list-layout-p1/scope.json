@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "change_id": "template-driven-list-layout-p1",
+  "stage": "development",
+  "allowed_roots": [
+    "src",
+    "tests",
+    "templates",
+    "docs",
+    "examples",
+    "openspec/changes/template-driven-list-layout-p1"
+  ],
+  "denied_roots": [
+    ".git",
+    ".venv",
+    "node_modules",
+    "dist",
+    "build",
+    "coverage"
+  ],
+  "requires_review_on": [
+    "pyproject.toml",
+    "src/thesis_forge/core/parser.py",
+    "src/thesis_forge/core/model.py",
+    "src/thesis_forge/core/render_plan.py",
+    "openspec/changes/template-driven-list-layout-p1/tasks.md"
+  ],
+  "allowed_operations": {
+    "create": true,
+    "modify": true,
+    "delete": false,
+    "rename": false
+  },
+  "prototype_sources": [
+    "openspec/changes/template-driven-list-layout-p1/prototype/component/component-map.md"
+  ],
+  "expires_when": "verification_started"
+}

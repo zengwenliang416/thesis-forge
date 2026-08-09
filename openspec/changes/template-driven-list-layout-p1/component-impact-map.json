@@ -1,0 +1,62 @@
+{
+  "new_components": [
+    "OrderedListLevelSpec",
+    "UnorderedListLevelSpec",
+    "OrderedListSpec",
+    "UnorderedListSpec",
+    "ListSpec",
+    "list-level-policy-resolver",
+    "semantic-number-format-mapper"
+  ],
+  "reused_components": [
+    "ParagraphStyleSpec",
+    "LengthSpec",
+    "ThesisTemplate",
+    "ListInstruction",
+    "RenderPlan",
+    "docx-paragraph-style-applicator",
+    "docx-unit-helper"
+  ],
+  "extraction_triggers": [
+    "ordered-and-unordered-levels-share-list-geometry",
+    "list-paragraphs-share-common-paragraph-policy",
+    "word-numbering-values-must-not-leak-into-template-yaml"
+  ],
+  "forbidden_dependencies": [
+    "parser->template-model",
+    "parser->docx",
+    "domain->word-objects",
+    "compiler->python-docx",
+    "render-plan->template-model",
+    "render-plan->python-docx",
+    "renderer->markdown-parser",
+    "renderer->hard-coded-school-list-style",
+    "core-command->network-or-ai"
+  ],
+  "hooks": [
+    "none:new-runtime-hooks-not-required"
+  ],
+  "utilities": [
+    "list-level-validation",
+    "list-policy-level-resolution",
+    "semantic-number-format-translation",
+    "docx-paragraph-style-translation",
+    "ooxml-list-test-helpers"
+  ],
+  "services": [
+    "template-loading-service",
+    "compile-service",
+    "render-service"
+  ],
+  "required_component_tests": [
+    "list-model-default-and-validation-tests",
+    "list-render-plan-neutrality-tests",
+    "numbering-policy-resolution-tests",
+    "list-numbering-ooxml-tests",
+    "list-paragraph-ooxml-tests",
+    "two-template-list-difference-test",
+    "complete-hut-list-build-test"
+  ],
+  "unresolved_gaps": [
+  ]
+}

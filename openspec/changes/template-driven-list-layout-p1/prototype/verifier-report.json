@@ -1,0 +1,47 @@
+{
+  "schema": "specnav.prototype.verifier.v1",
+  "status": "green",
+  "checked_entry": "component/component-map.md",
+  "project_fidelity": {
+    "status": "green",
+    "inventory": "not-applicable",
+    "shell_checked": false,
+    "generic_shell_detected": false,
+    "notes": [
+      "The approved requirements declare no production UI change.",
+      "The seam reuses current Template Model, ListInstruction, DOCX list helper, and paragraph style translator boundaries."
+    ]
+  },
+  "visual_matrix": {
+    "viewports": [],
+    "theme_modes": [
+      "light-only:not-applicable-to-component-seam"
+    ],
+    "locales": [
+      "zh-CN:fixed-product-copy"
+    ],
+    "states": [
+      "component-seam:static-inspection"
+    ]
+  },
+  "checks": [
+    "Requirements contract returned ok:true for template-driven-list-layout-p1.",
+    "OpenSpec strict validation passed for template-driven-list-layout-p1.",
+    "CodeGraph confirmed ListInstruction is renderer neutral and RenderPlan already carries the selected ThesisTemplate.",
+    "Current lists.py isolates numbering.xml construction inside the DOCX Renderer boundary.",
+    "Current ParagraphStyleSpec and shared paragraph-style applicator can be reused without a second formatting path.",
+    "The proposed seam keeps Word format names, twips, python-docx, lxml and OOXML out of Parser, Domain and RenderPlan."
+  ],
+  "evidence": [
+    "openspec/changes/template-driven-list-layout-p1/requirements.md",
+    "openspec/changes/template-driven-list-layout-p1/acceptance.md",
+    "openspec/changes/template-driven-list-layout-p1/component-impact-map.json",
+    "openspec/changes/template-driven-list-layout-p1/prototype/component/component-map.md",
+    "src/thesis_forge/core/render_plan.py",
+    "src/thesis_forge/templates/model.py",
+    "src/thesis_forge/renderers/docx/lists.py",
+    "src/thesis_forge/renderers/docx/renderer.py",
+    "src/thesis_forge/renderers/docx/styles.py"
+  ],
+  "blockers": []
+}
