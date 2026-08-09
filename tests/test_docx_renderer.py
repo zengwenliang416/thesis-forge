@@ -129,6 +129,7 @@ def test_docx_renderer_translates_complete_body_and_heading_policy_xml(
     template = load_template("templates/base/bachelor.yaml")
     template.body.font = FontSpec(east_asia="楷体", latin="Arial")
     template.body.size = LengthSpec.model_validate("10pt")
+    template.body.color = "auto"
     template.body.bold = True
     template.body.italic = True
     template.body.alignment = "right"
@@ -148,6 +149,7 @@ def test_docx_renderer_translates_complete_body_and_heading_policy_xml(
     heading = template.heading.level1
     heading.font = None
     heading.size = LengthSpec.model_validate("20pt")
+    heading.color = "336699"
     heading.first_line_indent = None
     heading.hanging_indent = LengthSpec.model_validate("1.5em")
     heading.space_before = LengthSpec.model_validate("10pt")
@@ -176,6 +178,7 @@ def test_docx_renderer_translates_complete_body_and_heading_policy_xml(
     assert normal.xpath("./w:rPr/w:rFonts/@w:eastAsia", namespaces=NS) == ["楷体"]
     assert normal.xpath("./w:rPr/w:rFonts/@w:ascii", namespaces=NS) == ["Arial"]
     assert normal.xpath("./w:rPr/w:sz/@w:val", namespaces=NS) == ["20"]
+    assert normal.xpath("./w:rPr/w:color/@w:val", namespaces=NS) == ["auto"]
     assert normal.xpath("./w:rPr/w:b", namespaces=NS)
     assert normal.xpath("./w:rPr/w:i", namespaces=NS)
     assert normal.xpath("./w:pPr/w:jc/@w:val", namespaces=NS) == ["right"]
@@ -204,6 +207,12 @@ def test_docx_renderer_translates_complete_body_and_heading_policy_xml(
         "Arial"
     ]
     assert heading_xml.xpath("./w:rPr/w:sz/@w:val", namespaces=NS) == ["40"]
+    assert heading_xml.xpath("./w:rPr/w:color/@w:val", namespaces=NS) == [
+        "336699"
+    ]
+    assert not heading_xml.xpath("./w:rPr/w:color/@w:themeColor", namespaces=NS)
+    assert not heading_xml.xpath("./w:rPr/w:color/@w:themeTint", namespaces=NS)
+    assert not heading_xml.xpath("./w:rPr/w:color/@w:themeShade", namespaces=NS)
     assert heading_xml.xpath("./w:pPr/w:ind/@w:hanging", namespaces=NS) == ["600"]
     assert heading_xml.xpath("./w:pPr/w:spacing/@w:before", namespaces=NS) == ["200"]
     assert heading_xml.xpath("./w:pPr/w:spacing/@w:after", namespaces=NS) == ["80"]

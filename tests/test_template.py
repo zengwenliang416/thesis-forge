@@ -556,6 +556,17 @@ def test_body_and_heading_inheritance_preserves_required_fields_and_defaults():
     assert heading_schema["properties"]["page_break_before"]["default"] is False
 
 
+@pytest.mark.parametrize("color", ["auto", "000000", "336699", "abcdef"])
+def test_paragraph_style_accepts_auto_or_six_digit_color(color: str):
+    assert ParagraphStyleSpec(color=color).color == color
+
+
+@pytest.mark.parametrize("color", ["#000000", "000", "GGGGGG", "transparent"])
+def test_paragraph_style_rejects_invalid_color(color: str):
+    with pytest.raises(ValueError):
+        ParagraphStyleSpec(color=color)
+
+
 def test_body_font_size_rejects_em_without_absolute_base(tmp_path: Path):
     path = tmp_path / "relative-body-size.yaml"
     path.write_text(

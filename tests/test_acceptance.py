@@ -308,6 +308,31 @@ def test_complete_example_docx_contains_required_visible_content_and_word_object
     document_xml = _xml_part(output, "word/document.xml")
     styles_xml = _xml_part(output, "word/styles.xml")
     settings_xml = _xml_part(output, "word/settings.xml")
+    for level in range(1, 4):
+        heading_style = styles_xml.xpath(
+            f".//w:style[@w:styleId='Heading{level}']",
+            namespaces=NS,
+        )[0]
+        assert heading_style.xpath("./w:rPr/w:color/@w:val", namespaces=NS) == [
+            "000000"
+        ]
+        assert not heading_style.xpath(
+            "./w:rPr/w:color/@w:themeColor",
+            namespaces=NS,
+        )
+        assert heading_style.xpath("./w:pPr/w:jc/@w:val", namespaces=NS) == [
+            "left"
+        ]
+        assert heading_style.xpath("./w:pPr/w:ind/@w:left", namespaces=NS) == [
+            "0"
+        ]
+        assert heading_style.xpath("./w:pPr/w:ind/@w:right", namespaces=NS) == [
+            "0"
+        ]
+        assert heading_style.xpath(
+            "./w:pPr/w:ind/@w:firstLine",
+            namespaces=NS,
+        ) == ["0"]
     document_text = "".join(document_xml.xpath(".//w:body//w:t/text()", namespaces=NS))
     for expected in (
         "湖南工业大学",
@@ -668,6 +693,14 @@ def test_hut_template_contains_school_values_without_renderer_hardcoding():
     assert template.sections.main.footer.default is not None
     assert template.sections.main.footer.default.page_number is not None
     assert template.sections.main.footer.default.page_number.include_total is False
+    for level in range(1, 4):
+        heading = template.heading.for_level(level)
+        assert heading is not None
+        assert heading.color == "000000"
+        assert heading.alignment == "left"
+        assert str(heading.left_indent) == "0pt"
+        assert str(heading.right_indent) == "0pt"
+        assert str(heading.first_line_indent) == "0pt"
 
     renderer_text = "\n".join(
         path.read_text(encoding="utf-8")

@@ -2,7 +2,7 @@
 
 **用户结果：** 模板维护者可以配置完整段落属性，现有 YAML 模板无需迁移且错误配置会得到精确诊断。
 
-- [x] 1.1 定义严格的 `ParagraphStyleSpec`，覆盖字体、字号、粗斜体、对齐、左右/首行/悬挂缩进、段前段后、行距、孤行控制、段落同页、与下段同页、分页前、outline level 和文档网格对齐。（A1）
+- [x] 1.1 定义严格的 `ParagraphStyleSpec`，覆盖字体、文字颜色、字号、粗斜体、对齐、左右/首行/悬挂缩进、段前段后、行距、孤行控制、段落同页、与下段同页、分页前、outline level 和文档网格对齐。（A1）
 - [x] 1.2 为互斥或矛盾的首行/悬挂缩进、固定/多倍行距和非法枚举增加字段级 Pydantic 校验。（A1）
 - [x] 1.3 让 `BodySpec` 与 `HeadingLevelSpec` 复用公共段落策略，同时保留现有必填字段和默认输出语义。（A1、A2）
 - [x] 1.4 定义语义样式、TOC、参考文献、页眉页脚变体和页码显示所需的强类型模板模型。（A3、A4、A5、A6）
@@ -14,7 +14,7 @@
 
 **用户结果：** 正文与标题严格使用模板中的字体、缩进、段距、行距和分页控制，不再依赖 Word 默认值或重复实现。
 
-- [x] 2.1 抽取共享 DOCX paragraph-style translator，统一应用字体、字号、强调、对齐、缩进、段距和行距。（A1）
+- [x] 2.1 抽取共享 DOCX paragraph-style translator，统一应用字体、文字颜色、字号、强调、对齐、缩进、段距和行距。（A1）
 - [x] 2.2 增加 `w:widowControl`、`w:keepNext`、`w:keepLines`、`w:pageBreakBefore`、`w:outlineLvl` 和 `w:snapToGrid` 的聚焦 OOXML helpers。（A1）
 - [x] 2.3 使用目标样式字号解析 `em`，避免全局 12 pt 假设。（A1）
 - [x] 2.4 将 Normal/body 和 Heading 1-3 迁移到共享 translator，并保持旧模板生成语义兼容。（A1、A2）

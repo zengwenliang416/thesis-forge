@@ -171,6 +171,7 @@ hanging_indent: 0em
 | --- | --- | --- | --- |
 | `font` | `FontSpec \| None` | `null` | 中西文字体槽位 |
 | `size` | `LengthSpec \| None` | `null` | 字号；可使用相对 `em`，但 `body.size` 除外 |
+| `color` | `auto \| RRGGBB \| None` | `null`；6 位十六进制不带 `#` | 文字颜色；显式值会清除 Word 主题色覆盖 |
 | `bold` | `bool \| None` | `null` | 是否加粗 |
 | `italic` | `bool \| None` | `null` | 是否斜体 |
 | `alignment` | `left \| center \| right \| justify` | `null` | 段落对齐 |
@@ -307,8 +308,8 @@ snap_to_chars
 `missing-template-style`，目标为对应的 `heading.levelN`。
 
 Renderer 将这些规则写入真实 Word paragraph style 和段落属性，包括字体槽位、
-字号、对齐、缩进、段距、行距、孤行控制、同页控制、分页前、大纲级别和文档
-网格对齐；模板本身不直接写 Word `style_id` 或 OOXML 标签。
+文字颜色、字号、对齐、缩进、段距、行距、孤行控制、同页控制、分页前、
+大纲级别和文档网格对齐；模板本身不直接写 Word `style_id` 或 OOXML 标签。
 
 ## 6. semantic_styles 与特殊角色
 
@@ -723,8 +724,12 @@ heading:
       east_asia: 黑体
       latin: Times New Roman
     size: 16pt
+    color: "000000"
     bold: true
-    alignment: center
+    alignment: left
+    left_indent: 0pt
+    right_indent: 0pt
+    first_line_indent: 0pt
     space_before: 0pt
     space_after: 12pt
     line_spacing:
@@ -739,8 +744,12 @@ heading:
       east_asia: 黑体
       latin: Times New Roman
     size: 14pt
+    color: "000000"
     bold: true
     alignment: left
+    left_indent: 0pt
+    right_indent: 0pt
+    first_line_indent: 0pt
     space_before: 6pt
     space_after: 6pt
     line_spacing:
@@ -754,8 +763,12 @@ heading:
       east_asia: 黑体
       latin: Times New Roman
     size: 12pt
+    color: "000000"
     bold: true
     alignment: left
+    left_indent: 0pt
+    right_indent: 0pt
+    first_line_indent: 0pt
     space_before: 3pt
     space_after: 3pt
     line_spacing:

@@ -2,7 +2,7 @@
 
 ## User-Visible Criteria
 
-- A template can configure正文的中西文字体、字号、首行缩进、段前、段后、固定 20 pt
+- A template can configure正文和标题的中西文字体、文字颜色、字号、首行缩进、段前、段后、固定 20 pt
   行距、两端对齐和孤行控制，生成 DOCX 使用这些值而不是 Word 默认值。
 - Existing templates that omit the new fields continue to load and preserve their prior output semantics.
 - A school template can independently style Chinese abstract body, English abstract body,

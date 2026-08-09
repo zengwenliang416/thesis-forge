@@ -37,8 +37,12 @@ heading:
       east_asia: 黑体
       latin: Times New Roman
     size: 16pt
+    color: "000000"
     bold: true
-    alignment: center
+    alignment: left
+    left_indent: 0pt
+    right_indent: 0pt
+    first_line_indent: 0pt
     space_before: 0pt
     space_after: 12pt
     line_spacing:
@@ -53,8 +57,12 @@ heading:
       east_asia: 黑体
       latin: Times New Roman
     size: 14pt
+    color: "000000"
     bold: true
     alignment: left
+    left_indent: 0pt
+    right_indent: 0pt
+    first_line_indent: 0pt
     space_before: 6pt
     space_after: 6pt
     line_spacing:
@@ -68,8 +76,12 @@ heading:
       east_asia: 黑体
       latin: Times New Roman
     size: 12pt
+    color: "000000"
     bold: true
     alignment: left
+    left_indent: 0pt
+    right_indent: 0pt
+    first_line_indent: 0pt
     space_before: 3pt
     space_after: 3pt
     line_spacing:
@@ -86,6 +98,7 @@ semantic_styles:
         east_asia: 黑体
         latin: Times New Roman
       size: 16pt
+      color: "000000"
       bold: true
       alignment: center
       space_before: 0pt
@@ -129,6 +142,7 @@ semantic_styles:
         east_asia: 黑体
         latin: Times New Roman
       size: 16pt
+      color: "000000"
       bold: true
       alignment: center
       space_before: 0pt
@@ -171,6 +185,7 @@ semantic_styles:
       east_asia: 黑体
       latin: Times New Roman
     size: 16pt
+    color: "000000"
     bold: true
     alignment: center
     space_before: 0pt
@@ -186,6 +201,7 @@ semantic_styles:
       east_asia: 黑体
       latin: Times New Roman
     size: 16pt
+    color: "000000"
     bold: true
     alignment: center
     space_before: 0pt
@@ -203,6 +219,7 @@ toc:
       east_asia: 黑体
       latin: Times New Roman
     size: 16pt
+    color: "000000"
     bold: true
     alignment: center
     space_before: 0pt
@@ -264,6 +281,7 @@ bibliography:
       east_asia: 黑体
       latin: Times New Roman
     size: 16pt
+    color: "000000"
     bold: true
     alignment: center
     space_before: 0pt

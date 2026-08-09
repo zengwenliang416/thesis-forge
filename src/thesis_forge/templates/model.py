@@ -144,6 +144,10 @@ class LineSpacingSpec(TemplateModel):
 class ParagraphStyleSpec(TemplateModel):
     font: FontSpec | None = None
     size: LengthSpec | None = None
+    color: str | None = Field(
+        default=None,
+        pattern=r"^(?:auto|[0-9A-Fa-f]{6})$",
+    )
     bold: bool | None = None
     italic: bool | None = None
     alignment: Literal["left", "center", "right", "justify"] | None = None
