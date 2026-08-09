@@ -1,0 +1,48 @@
+{
+  "schema": "specnav.prototype.verifier.v1",
+  "status": "green",
+  "checked_entry": "component/component-map.md",
+  "project_fidelity": {
+    "status": "green",
+    "inventory": "not-applicable: component-seam",
+    "shell_checked": false,
+    "generic_shell_detected": false,
+    "notes": [
+      "This change has no production UI impact.",
+      "The seam was compared with the current Template Model, Compiler, CoverInstruction, cover renderer and shared paragraph translator.",
+      "The prototype itself modifies no production source file."
+    ]
+  },
+  "visual_matrix": {
+    "viewports": [],
+    "theme_modes": [
+      "not-applicable: no UI change"
+    ],
+    "locales": [
+      "zh-CN requirements and fixed documentation"
+    ],
+    "states": [
+      "generic default cover",
+      "explicit school cover",
+      "empty optional metadata",
+      "invalid cover item"
+    ]
+  },
+  "checks": [
+    "Confirmed Front Matter remains the source of thesis metadata values.",
+    "Confirmed CoverSpec owns item order and paragraph policy.",
+    "Confirmed CoverInstruction remains renderer neutral.",
+    "Confirmed DOCX rendering can reuse the existing shared paragraph-style translator.",
+    "Confirmed the proposal does not introduce UI, database, network, AI or absolute-positioning behavior.",
+    "Confirmed strict OpenSpec validation passes for the P1 change."
+  ],
+  "evidence": [
+    "component/component-map.md",
+    "component-tree.md",
+    "requirements.md",
+    "acceptance.md",
+    "command: OPENSPEC_TELEMETRY=0 openspec validate template-driven-thesis-layout-p1 --strict",
+    "result: valid=true"
+  ],
+  "blockers": []
+}

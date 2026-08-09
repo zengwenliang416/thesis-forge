@@ -1,0 +1,53 @@
+{
+  "touched_specs": [
+    "ui-design",
+    "system-architecture",
+    "frontend-backend-data-flow",
+    "component-architecture"
+  ],
+  "ui_rules": [],
+  "architecture_modules": [
+    "template-model",
+    "compiler",
+    "render-plan",
+    "docx-renderer",
+    "cli"
+  ],
+  "api_contracts": [
+    "load_template(path)->ThesisTemplate",
+    "compile_document(document,template,bibliography)->RenderPlan",
+    "DocxRenderer.render(plan,output)->Path",
+    "cli:validate",
+    "cli:build"
+  ],
+  "database_entities": [
+    "none:v1-local-files-only"
+  ],
+  "permissions": [
+    "inputs-read-only",
+    "write-explicit-output-only",
+    "no-secret-required-for-core"
+  ],
+  "operational_constraints": [
+    "offline-first",
+    "deterministic-build",
+    "additive-template-default",
+    "ooxml-structure-verification",
+    "word-or-wps-primary-sensory-review"
+  ],
+  "data_flows": [
+    "FLOW-VALIDATE",
+    "FLOW-BUILD"
+  ],
+  "theme_modes": [
+    "light-only",
+    "theme-toggle:none",
+    "prototype:no-change"
+  ],
+  "locale_policy": [
+    "i18n:disabled",
+    "locales:zh-CN",
+    "default-locale:zh-CN"
+  ],
+  "unresolved_gaps": []
+}
