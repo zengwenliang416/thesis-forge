@@ -1,0 +1,12 @@
+{
+  "schema": "specnav.codegraph.claims_report.v1",
+  "generated_at": "2026-08-10T14:25:40.447Z",
+  "active_change": "automatic-docx-toc-refresh-p1",
+  "claims_file": "openspec/changes/automatic-docx-toc-refresh-p1/codegraph/claims-map.json",
+  "evidence_index": "openspec/changes/automatic-docx-toc-refresh-p1/codegraph/evidence-index.json",
+  "claims_count": 0,
+  "verified_claims": [],
+  "unverified_claims": [],
+  "blockers": [],
+  "warnings": []
+}

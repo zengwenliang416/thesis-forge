@@ -1,0 +1,11 @@
+{
+  "status": "approved",
+  "prototype_code": "required_present",
+  "prototype_type": "component-seam",
+  "approved_variant": "toc-field-office-refresh-seam-v1",
+  "promotion": "requires_development_gate",
+  "approved_by": "user",
+  "approved_at": "2026-08-10",
+  "approval_evidence": "补齐这个缺口",
+  "blocked_reasons": []
+}

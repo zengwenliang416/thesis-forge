@@ -1,0 +1,51 @@
+{
+  "schema": "specnav.prototype.verifier.v1",
+  "status": "green",
+  "checked_entry": "component/component-map.md",
+  "project_fidelity": {
+    "status": "green",
+    "inventory": "not-applicable",
+    "shell_checked": false,
+    "generic_shell_detected": false,
+    "notes": [
+      "The approved requirements declare no production UI change.",
+      "The seam reuses the current real TOC field helper, application finalization and atomic output boundaries."
+    ]
+  },
+  "visual_matrix": {
+    "viewports": [],
+    "theme_modes": [
+      "light-only:not-applicable-to-component-seam"
+    ],
+    "locales": [
+      "zh-CN:fixed-product-copy"
+    ],
+    "states": [
+      "component-seam:static-inspection",
+      "office-present",
+      "office-missing",
+      "office-refresh-failure"
+    ]
+  },
+  "checks": [
+    "Requirements contract returned ok:true for automatic-docx-toc-refresh-p1.",
+    "OpenSpec strict validation passed for automatic-docx-toc-refresh-p1.",
+    "CodeGraph confirmed build_service owns temporary render, package validation and atomic replacement.",
+    "Current Renderer creates a real dirty TOC field and w:updateFields but incorrectly places the title inside its cached result.",
+    "The proposed seam keeps pagination and Office process automation out of Parser, Domain, Compiler, RenderPlan and DOCX Renderer.",
+    "The optional refresher preserves offline build correctness because the existing dirty field remains valid without LibreOffice.",
+    "Local capability inspection found LibreOffice soffice and bundled Python on macOS; production proof remains a development task."
+  ],
+  "evidence": [
+    "openspec/changes/automatic-docx-toc-refresh-p1/requirements.md",
+    "openspec/changes/automatic-docx-toc-refresh-p1/acceptance.md",
+    "openspec/changes/automatic-docx-toc-refresh-p1/component-impact-map.json",
+    "openspec/changes/automatic-docx-toc-refresh-p1/prototype/component/component-map.md",
+    "src/thesis_forge/core/render_plan.py",
+    "src/thesis_forge/renderers/docx/renderer.py",
+    "src/thesis_forge/renderers/docx/fields.py",
+    "src/thesis_forge/application/services.py",
+    "src/thesis_forge/application/output.py"
+  ],
+  "blockers": []
+}

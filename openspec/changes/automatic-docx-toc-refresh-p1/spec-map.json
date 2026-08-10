@@ -1,0 +1,56 @@
+{
+  "touched_specs": [
+    "ui-design",
+    "system-architecture",
+    "frontend-backend-data-flow",
+    "component-architecture"
+  ],
+  "ui_rules": [],
+  "architecture_modules": [
+    "docx-renderer",
+    "docx-field-helper",
+    "application-build-service",
+    "office-document-refresher",
+    "cli-web-tauri-shared-build-flow"
+  ],
+  "api_contracts": [
+    "DocxRenderer.render(plan,output)->Path",
+    "DocumentRefresher.refresh(path)->bool",
+    "build_service(source,output,template,dependencies)->BuildResult",
+    "cli:build",
+    "http:/api/v1/build",
+    "tauri:build"
+  ],
+  "database_entities": [
+    "none:v1-local-files-only"
+  ],
+  "permissions": [
+    "inputs-read-only",
+    "write-explicit-output-and-bounded-temporary-files-only",
+    "local-process-execution-optional",
+    "no-secret-required-for-core"
+  ],
+  "operational_constraints": [
+    "offline-first",
+    "libreoffice-optional",
+    "cross-platform-executable-discovery",
+    "isolated-office-profile",
+    "bounded-timeout-and-process-cleanup",
+    "valid-dirty-field-fallback",
+    "package-validation-before-atomic-replace"
+  ],
+  "data_flows": [
+    "FLOW-BUILD"
+  ],
+  "theme_modes": [
+    "light-only",
+    "theme-toggle:none",
+    "prototype:no-ui-change"
+  ],
+  "locale_policy": [
+    "i18n:disabled",
+    "locales:zh-CN",
+    "default-locale:zh-CN"
+  ],
+  "unresolved_gaps": []
+}

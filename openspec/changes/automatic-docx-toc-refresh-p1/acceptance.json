@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "change_id": "automatic-docx-toc-refresh-p1",
+  "assertions": [
+    {
+      "id": "A1",
+      "statement": "The TOC title is a standalone styled paragraph followed by a real editable dirty TOC field whose update cannot remove the title.",
+      "verify_via": "unit",
+      "status": "failing",
+      "evidence_ref": null
+    },
+    {
+      "id": "A2",
+      "statement": "A compatible local LibreOffice refreshes TOC entries and page numbers before package validation and atomic output replacement.",
+      "verify_via": "e2e",
+      "status": "failing",
+      "evidence_ref": null
+    },
+    {
+      "id": "A3",
+      "statement": "Missing, failed, or timed-out Office refresh safely preserves the valid rendered DOCX and never corrupts or replaces a previous output.",
+      "verify_via": "redteam",
+      "status": "failing",
+      "evidence_ref": null
+    }
+  ]
+}

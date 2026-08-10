@@ -1,0 +1,58 @@
+{
+  "new_components": [
+    "DocumentRefresher",
+    "LibreOfficeDocumentRefresher",
+    "libreoffice-executable-discovery",
+    "isolated-uno-refresh-runner"
+  ],
+  "reused_components": [
+    "TocInstruction",
+    "DocxRenderer",
+    "add_complex_field",
+    "set_update_fields",
+    "ApplicationDependencies",
+    "temporary_output_path",
+    "validate_docx_package",
+    "replace_output"
+  ],
+  "extraction_triggers": [
+    "office-process-lifecycle-must-not-enter-renderer",
+    "cli-web-tauri-must-share-one-refresh-service",
+    "platform-specific-discovery-must-have-one-implementation"
+  ],
+  "forbidden_dependencies": [
+    "parser->office-refresh",
+    "domain->office-refresh",
+    "compiler->office-refresh",
+    "render-plan->office-refresh",
+    "docx-renderer->subprocess-or-uno",
+    "office-refresh->markdown-parser",
+    "adapter->duplicated-office-automation",
+    "core-build->network-or-ai"
+  ],
+  "hooks": [
+    "ApplicationDependencies.document_refresher"
+  ],
+  "utilities": [
+    "libreoffice-candidate-resolution",
+    "file-url-conversion",
+    "isolated-user-profile-allocation",
+    "bounded-process-and-uno-cleanup"
+  ],
+  "services": [
+    "build-service",
+    "office-document-refresh-service",
+    "docx-package-validation-service",
+    "atomic-output-service"
+  ],
+  "required_component_tests": [
+    "toc-title-field-separation-ooxml-test",
+    "dirty-toc-field-fallback-test",
+    "macos-linux-windows-discovery-tests",
+    "missing-office-no-op-test",
+    "refresh-order-injection-test",
+    "timeout-and-failure-preserves-output-tests",
+    "real-libreoffice-hut-toc-e2e-test"
+  ],
+  "unresolved_gaps": []
+}
