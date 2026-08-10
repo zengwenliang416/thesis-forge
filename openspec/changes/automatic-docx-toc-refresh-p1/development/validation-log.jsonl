@@ -1,0 +1,3 @@
+{"task_id":"001-toc-field-structure","status":"passed","command":".venv/bin/python -m pytest tests/test_docx_renderer.py -k toc","result":"11 passed, 54 deselected","attestation":"system-executed"}
+{"task_id":"001-toc-field-structure","status":"passed","command":".venv/bin/ruff check src/thesis_forge/renderers/docx/renderer.py tests/test_docx_renderer.py","result":"All checks passed","attestation":"system-executed"}
+{"task_id":"001-toc-field-structure","status":"passed","command":"git diff --check -- src/thesis_forge/renderers/docx/renderer.py tests/test_docx_renderer.py","result":"passed","attestation":"system-executed"}

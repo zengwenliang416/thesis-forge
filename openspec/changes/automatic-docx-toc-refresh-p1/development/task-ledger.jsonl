@@ -1,0 +1,3 @@
+{"task_id":"001-toc-field-structure","status":"spec_review_passed","source":"independent-review","completed_at":"2026-08-10T14:40:00Z","evidence":"development/tasks/001-toc-field-structure/spec-review.md"}
+{"task_id":"001-toc-field-structure","status":"quality_review_passed","source":"independent-review","completed_at":"2026-08-10T14:40:00Z","evidence":"development/tasks/001-toc-field-structure/quality-review.md"}
+{"task_id":"001-toc-field-structure","status":"complete","source":"specnav-controller","completed_at":"2026-08-10T14:40:00Z","evidence":"Tasks 1.1-1.3 complete; 11 focused TOC tests and Ruff passed."}

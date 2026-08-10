@@ -1,0 +1,82 @@
+{
+  "schema": "specnav.codegraph.claims.v1",
+  "generated_at": "2026-08-10T14:29:45.992Z",
+  "active_change": "automatic-docx-toc-refresh-p1",
+  "claims": [
+    {
+      "id": "development:task-001-toc-field-structure",
+      "kind": "development-task",
+      "stage": "development",
+      "task_id": "001-toc-field-structure",
+      "text": "Implement one user-visible flow from UI entry through state, API/data boundary,",
+      "required": true,
+      "source": "specnav-codegraph-plan",
+      "source_paths": [
+        "openspec/changes/automatic-docx-toc-refresh-p1/development/tasks/001-toc-field-structure/brief.md",
+        "openspec/changes/automatic-docx-toc-refresh-p1/development/tasks/001-toc-field-structure/context.json"
+      ],
+      "expected_evidence": [
+        "Focused tests or command output",
+        "Task report",
+        "Spec review",
+        "Quality review"
+      ],
+      "allowed_files": [
+        "src"
+      ],
+      "query_ids": [
+        "development:task-001-toc-field-structure:evidence"
+      ]
+    },
+    {
+      "id": "development:task-002-libreoffice-refresh",
+      "kind": "development-task",
+      "stage": "development",
+      "task_id": "002-libreoffice-refresh",
+      "text": "Implement one user-visible flow from UI entry through state, API/data boundary,",
+      "required": true,
+      "source": "specnav-codegraph-plan",
+      "source_paths": [
+        "openspec/changes/automatic-docx-toc-refresh-p1/development/tasks/002-libreoffice-refresh/brief.md",
+        "openspec/changes/automatic-docx-toc-refresh-p1/development/tasks/002-libreoffice-refresh/context.json"
+      ],
+      "expected_evidence": [
+        "Focused tests or command output",
+        "Task report",
+        "Spec review",
+        "Quality review"
+      ],
+      "allowed_files": [
+        "src"
+      ],
+      "query_ids": [
+        "development:task-002-libreoffice-refresh:evidence"
+      ]
+    },
+    {
+      "id": "development:task-003-build-finalization-verification",
+      "kind": "development-task",
+      "stage": "development",
+      "task_id": "003-build-finalization-verification",
+      "text": "Implement one user-visible flow from UI entry through state, API/data boundary,",
+      "required": true,
+      "source": "specnav-codegraph-plan",
+      "source_paths": [
+        "openspec/changes/automatic-docx-toc-refresh-p1/development/tasks/003-build-finalization-verification/brief.md",
+        "openspec/changes/automatic-docx-toc-refresh-p1/development/tasks/003-build-finalization-verification/context.json"
+      ],
+      "expected_evidence": [
+        "Focused tests or command output",
+        "Task report",
+        "Spec review",
+        "Quality review"
+      ],
+      "allowed_files": [
+        "src"
+      ],
+      "query_ids": [
+        "development:task-003-build-finalization-verification:evidence"
+      ]
+    }
+  ]
+}

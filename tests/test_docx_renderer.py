@@ -473,6 +473,20 @@ def test_toc_level_styles_use_deterministic_defaults_and_real_field(tmp_path: Pa
         for node in document_xml.xpath(".//w:instrText", namespaces=NS)
     ]
     assert field_codes == ['TOC \\o "1-3" \\h \\z \\u']
+    toc_title = document_xml.xpath(
+        ".//w:p[w:pPr/w:pStyle[@w:val='TFTOCTitle']]",
+        namespaces=NS,
+    )
+    assert len(toc_title) == 1
+    assert toc_title[0].xpath(".//w:t/text()", namespaces=NS) == ["目录"]
+    toc_field_paragraph = document_xml.xpath(
+        ".//w:p[.//w:instrText[contains(., 'TOC')]]",
+        namespaces=NS,
+    )
+    assert len(toc_field_paragraph) == 1
+    assert toc_field_paragraph[0] is not toc_title[0]
+    assert toc_field_paragraph[0].getprevious() is toc_title[0]
+    assert toc_field_paragraph[0].xpath(".//w:t/text()", namespaces=NS) == []
     assert document_xml.xpath(
         ".//w:instrText/../..//w:fldChar/@w:fldCharType",
         namespaces=NS,

@@ -1,6 +1,6 @@
 {
   "schema": "specnav.codegraph.evidence_index.v1",
-  "generated_at": "2026-08-10T14:25:40.442Z",
+  "generated_at": "2026-08-10T14:33:31.183Z",
   "active_change": "automatic-docx-toc-refresh-p1",
   "source_raw": "openspec/changes/automatic-docx-toc-refresh-p1/codegraph/evidence.jsonl",
   "by_claim": {},

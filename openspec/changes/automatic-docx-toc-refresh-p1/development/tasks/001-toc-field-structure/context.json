@@ -1,0 +1,45 @@
+{
+  "task_id": "001-toc-field-structure",
+  "goal": "Render a standalone TOC title followed by a real editable dirty TOC field whose update cannot remove the title.",
+  "must_read": [
+    "openspec/changes/automatic-docx-toc-refresh-p1/development/tasks/001-toc-field-structure/brief.md",
+    "openspec/changes/automatic-docx-toc-refresh-p1/requirements.md",
+    "openspec/changes/automatic-docx-toc-refresh-p1/acceptance.md",
+    "openspec/changes/automatic-docx-toc-refresh-p1/spec-map.json",
+    "openspec/changes/automatic-docx-toc-refresh-p1/component-impact-map.json",
+    "openspec/changes/automatic-docx-toc-refresh-p1/prototype/handoff.md",
+    "openspec/changes/automatic-docx-toc-refresh-p1/prototype/decision.json",
+    "openspec/changes/automatic-docx-toc-refresh-p1/prototype/component/component-map.md",
+    "openspec/specs/ui-design/design.md",
+    "openspec/specs/system-architecture/design.md",
+    "openspec/specs/frontend-backend-data-flow/design.md",
+    "openspec/specs/component-architecture/design.md",
+    "src/thesis_forge/renderers/docx/renderer.py",
+    "src/thesis_forge/renderers/docx/fields.py",
+    "tests/test_docx_renderer.py"
+  ],
+  "allowed_files": [
+    "src/thesis_forge/renderers/docx/renderer.py",
+    "tests/test_docx_renderer.py",
+    "openspec/changes/automatic-docx-toc-refresh-p1/development/tasks/001-toc-field-structure",
+    "openspec/changes/automatic-docx-toc-refresh-p1/development"
+  ],
+  "test_paths": [
+    "tests/test_docx_renderer.py"
+  ],
+  "non_goals": [
+    "Do not expand scope beyond the active change.",
+    "Do not bypass component extraction rules."
+  ],
+  "expected_evidence": [
+    "Focused tests or command output",
+    "Task report",
+    "Spec review",
+    "Quality review"
+  ],
+  "unsafe_assumptions": [
+    "Office applications cannot be assumed to refresh the TOC on open.",
+    "The visible title cannot remain inside the field result."
+  ],
+  "stop_condition": "Stop if the task requires Office process automation, template schema changes, or edits outside the listed files."
+}

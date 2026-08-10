@@ -3,9 +3,9 @@
 **用户结果：** “目录”标题不会再被目录更新吞掉；即使本机没有 Office 布局引擎，
 DOCX 仍包含可手动更新的真实目录对象。
 
-- [ ] 1.1 把 `toc.title` 普通文本段落与下一段 TOC complex field 分离。
-- [ ] 1.2 保留 field instruction、dirty 标记、begin/separate/end 和 `w:updateFields=true`。
-- [ ] 1.3 增加 OOXML 测试，证明标题与 field 的段落顺序、样式和独立生命周期。
+- [x] 1.1 把 `toc.title` 普通文本段落与下一段 TOC complex field 分离。
+- [x] 1.2 保留 field instruction、dirty 标记、begin/separate/end 和 `w:updateFields=true`。
+- [x] 1.3 增加 OOXML 测试，证明标题与 field 的段落顺序、样式和独立生命周期。
 
 ## 2. Cross-Platform Office Refresh
 

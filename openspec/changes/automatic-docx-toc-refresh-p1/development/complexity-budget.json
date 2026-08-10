@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "budgets": [
+    {
+      "area": "renderer cohesion",
+      "limit": "TOC rendering changes only paragraph and field structure; no subprocess, UNO or platform discovery"
+    },
+    {
+      "area": "coupling",
+      "limit": "Parser, Domain, Compiler and RenderPlan import no Office, subprocess or application refresh modules"
+    },
+    {
+      "area": "office runtime",
+      "limit": "one optional refresher, one isolated LibreOffice process per build and bounded startup/update/cleanup"
+    },
+    {
+      "area": "scope",
+      "limit": "no UI, template schema, network, AI, Word/WPS private automation or cross-suite pagination guarantee"
+    }
+  ]
+}

@@ -213,11 +213,11 @@ def _render_typed(
             "toc.title",
             heading_level=1,
         )
-        paragraph = document.add_paragraph(style=style)
+        document.add_paragraph("目录", style=style)
+        paragraph = document.add_paragraph()
         add_complex_field(
             paragraph,
             f'TOC \\o "{instruction.min_level}-{instruction.max_level}" \\h \\z \\u',
-            result="目录",
         )
     elif isinstance(instruction, SectionBreakInstruction):
         add_section(

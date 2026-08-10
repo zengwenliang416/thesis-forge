@@ -1,0 +1,53 @@
+{
+  "task_id": "003-build-finalization-verification",
+  "goal": "Integrate optional TOC refresh before validation and atomic publication, then prove the complete HUT DOCX result and failure safety.",
+  "must_read": [
+    "openspec/changes/automatic-docx-toc-refresh-p1/development/tasks/003-build-finalization-verification/brief.md",
+    "openspec/changes/automatic-docx-toc-refresh-p1/requirements.md",
+    "openspec/changes/automatic-docx-toc-refresh-p1/acceptance.md",
+    "openspec/changes/automatic-docx-toc-refresh-p1/spec-map.json",
+    "openspec/changes/automatic-docx-toc-refresh-p1/component-impact-map.json",
+    "openspec/changes/automatic-docx-toc-refresh-p1/prototype/handoff.md",
+    "openspec/changes/automatic-docx-toc-refresh-p1/prototype/decision.json",
+    "openspec/changes/automatic-docx-toc-refresh-p1/prototype/component/component-map.md",
+    "openspec/specs/ui-design/design.md",
+    "openspec/specs/system-architecture/design.md",
+    "openspec/specs/frontend-backend-data-flow/design.md",
+    "openspec/specs/component-architecture/design.md",
+    "src/thesis_forge/application/services.py",
+    "src/thesis_forge/application/office_refresh.py",
+    "src/thesis_forge/application/output.py",
+    "src/thesis_forge/renderers/docx/package.py",
+    "tests/test_application_services.py",
+    "docs/TEMPLATE_SPEC.md"
+  ],
+  "allowed_files": [
+    "src/thesis_forge/application/services.py",
+    "src/thesis_forge/application/office_refresh.py",
+    "tests/test_application_services.py",
+    "tests/test_docx_renderer.py",
+    "docs/TEMPLATE_SPEC.md",
+    "output/verification/automatic-docx-toc-refresh-p1",
+    "openspec/changes/automatic-docx-toc-refresh-p1"
+  ],
+  "test_paths": [
+    "tests/test_application_services.py",
+    "tests/test_docx_renderer.py"
+  ],
+  "non_goals": [
+    "Do not expand scope beyond the active change.",
+    "Do not bypass component extraction rules."
+  ],
+  "expected_evidence": [
+    "Focused tests or command output",
+    "Task report",
+    "Spec review",
+    "Quality review"
+  ],
+  "unsafe_assumptions": [
+    "A refreshed file still requires package validation.",
+    "LibreOffice pagination is evidence for materialized entries, not proof of cross-suite pixel identity.",
+    "Existing progress stages and public build result remain stable."
+  ],
+  "stop_condition": "Stop if integration requires public DTO changes, UI work, mandatory Office installation, or edits outside the listed files."
+}

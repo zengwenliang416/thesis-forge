@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "planning_status": "ready",
+  "tasks": [
+    {
+      "task_id": "001-toc-field-structure",
+      "depends_on": [],
+      "covers": [
+        "1.1-1.3",
+        "standalone title and real dirty TOC field OOXML"
+      ]
+    },
+    {
+      "task_id": "002-libreoffice-refresh",
+      "depends_on": [
+        "001-toc-field-structure"
+      ],
+      "covers": [
+        "2.1-2.3",
+        "cross-platform discovery and isolated best-effort LibreOffice refresh"
+      ]
+    },
+    {
+      "task_id": "003-build-finalization-verification",
+      "depends_on": [
+        "001-toc-field-structure",
+        "002-libreoffice-refresh"
+      ],
+      "covers": [
+        "2.4-3.3",
+        "application sequencing, documentation and complete HUT verification"
+      ]
+    }
+  ]
+}

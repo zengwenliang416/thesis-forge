@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "owners": [
+    {
+      "path": "src/thesis_forge/renderers/docx/renderer.py",
+      "owner": "docx-instruction-rendering"
+    },
+    {
+      "path": "src/thesis_forge/application/office_refresh.py",
+      "owner": "office-runtime-integration"
+    },
+    {
+      "path": "src/thesis_forge/application/services.py",
+      "owner": "application-build-orchestration"
+    },
+    {
+      "path": "tests",
+      "owner": "verification"
+    },
+    {
+      "path": "docs/TEMPLATE_SPEC.md",
+      "owner": "template-contract-documentation"
+    },
+    {
+      "path": "openspec/changes/automatic-docx-toc-refresh-p1",
+      "owner": "specnav-evidence"
+    }
+  ]
+}

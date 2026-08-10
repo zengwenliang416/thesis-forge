@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "promotion_policy": "reimplement_under_development_gate",
+  "allowed_to_copy": [
+    "Approved dependency direction, refresh sequence and failure policy",
+    "Approved TOC title/field paragraph structure and test inventory"
+  ],
+  "must_reimplement": [
+    "Production Renderer paragraph changes",
+    "Cross-platform executable discovery and isolated LibreOffice runner",
+    "Application dependency injection and finalization sequencing",
+    "Production OOXML, failure-protection and complete-build tests",
+    "Template contract documentation"
+  ],
+  "blocked_direct_copies": [
+    "Review-only component map prose as executable behavior",
+    "Office process or UNO logic inside DOCX Renderer",
+    "Office or subprocess objects in Parser, Domain, Compiler or RenderPlan",
+    "Platform-specific duplicated implementations in CLI, Web or Tauri adapters"
+  ]
+}

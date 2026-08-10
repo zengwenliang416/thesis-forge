@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "component_rules": [
+    "Represent optional document refresh once through DocumentRefresher in the application layer.",
+    "Keep LibreOffice executable discovery in one cross-platform resolver.",
+    "Keep process startup, UNO connection, update, save and cleanup in one isolated runner.",
+    "Reuse DOCX field helpers instead of creating a second TOC field implementation.",
+    "Reuse package validation and atomic output services after refresh.",
+    "Do not add Office-specific branches to CLI, Web, Tauri or DOCX Renderer."
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "active_change": "automatic-docx-toc-refresh-p1",
+  "status": "ready",
+  "ok": true,
+  "checked_at": "2026-08-10T14:30:00.000Z",
+  "requirements_contract": "ok",
+  "prototype_contract": "ok",
+  "prototype_decision": "approved",
+  "approved_variant": "toc-field-office-refresh-seam-v1",
+  "tasks_baseline_commit": "5277fb7",
+  "scope_lock": "openspec/changes/automatic-docx-toc-refresh-p1/scope.json",
+  "blockers": []
+}

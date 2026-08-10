@@ -1,6 +1,6 @@
 {
   "schema": "specnav.codegraph.guard_report.v1",
-  "generated_at": "2026-08-10T14:25:40.447Z",
+  "generated_at": "2026-08-10T14:33:31.189Z",
   "active_change": "automatic-docx-toc-refresh-p1",
   "stage": "development",
   "ok": true,
@@ -61,7 +61,7 @@
   },
   "evidence_index": {
     "schema": "specnav.codegraph.evidence_index.v1",
-    "generated_at": "2026-08-10T14:25:40.442Z",
+    "generated_at": "2026-08-10T14:33:31.183Z",
     "active_change": "automatic-docx-toc-refresh-p1",
     "source_raw": "openspec/changes/automatic-docx-toc-refresh-p1/codegraph/evidence.jsonl",
     "by_claim": {},
@@ -72,15 +72,23 @@
   },
   "claims_report": {
     "schema": "specnav.codegraph.claims_report.v1",
-    "generated_at": "2026-08-10T14:25:40.447Z",
+    "generated_at": "2026-08-10T14:33:31.188Z",
     "active_change": "automatic-docx-toc-refresh-p1",
     "claims_file": "openspec/changes/automatic-docx-toc-refresh-p1/codegraph/claims-map.json",
     "evidence_index": "openspec/changes/automatic-docx-toc-refresh-p1/codegraph/evidence-index.json",
-    "claims_count": 0,
+    "claims_count": 3,
     "verified_claims": [],
-    "unverified_claims": [],
+    "unverified_claims": [
+      "development:task-001-toc-field-structure",
+      "development:task-002-libreoffice-refresh",
+      "development:task-003-build-finalization-verification"
+    ],
     "blockers": [],
-    "warnings": []
+    "warnings": [
+      "codegraph:claim-unverified:development:task-001-toc-field-structure",
+      "codegraph:claim-unverified:development:task-002-libreoffice-refresh",
+      "codegraph:claim-unverified:development:task-003-build-finalization-verification"
+    ]
   },
   "drift": {
     "schema": "specnav.codegraph.drift.v1",
@@ -89,5 +97,9 @@
     "blockers": []
   },
   "blockers": [],
-  "warnings": []
+  "warnings": [
+    "codegraph:claim-unverified:development:task-001-toc-field-structure",
+    "codegraph:claim-unverified:development:task-002-libreoffice-refresh",
+    "codegraph:claim-unverified:development:task-003-build-finalization-verification"
+  ]
 }
