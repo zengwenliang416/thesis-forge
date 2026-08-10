@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "promotion_policy": "reimplement_under_development_gate",
+  "allowed_to_copy": [
+    "Approved semantic ordered format names and list-level contracts",
+    "Approved dependency direction, default values and test inventory"
+  ],
+  "must_reimplement": [
+    "Pydantic ordered and unordered list policy models and validation",
+    "DOCX semantic format mapping and numbering.xml construction",
+    "List paragraph policy selection and shared style application",
+    "Production tests, HUT template and documentation"
+  ],
+  "blocked_direct_copies": [
+    "Review-only component map prose as executable behavior",
+    "Any DOCX or OOXML object in Parser, Domain, Template Model or RenderPlan",
+    "Any school-specific marker, font or dimension in Renderer code"
+  ]
+}

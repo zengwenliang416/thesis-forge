@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "component_rules": [
+    "Represent ordered and unordered list presentation once in ListSpec and typed level models.",
+    "Reuse LengthSpec for absolute numbering geometry and ParagraphStyleSpec for list paragraph policy.",
+    "Keep semantic Word numbering format translation in one DOCX Renderer mapping.",
+    "Reuse apply_paragraph_style instead of adding list-specific font, spacing or pagination code.",
+    "Resolve configured levels through one deterministic final-level fallback helper."
+  ]
+}

@@ -1,0 +1,6 @@
+{"task_id":"001-list-policy","status":"planned","source":"specnav-development-entry","note":"Implement tasks 1.1-1.4 in the renderer-neutral Template Model, exports, tests and template documentation."}
+{"task_id":"002-docx-list-rendering","status":"planned","source":"specnav-development-entry","note":"Implement tasks 2.1-2.4 in the DOCX numbering helper and typed instruction renderer while preserving ListInstruction semantics."}
+{"task_id":"003-hut-list-verification","status":"planned","source":"specnav-development-entry","note":"Implement tasks 3.1-3.4 in the HUT YAML, focused model/OOXML/acceptance tests and final local validation."}
+{"task_id":"001-list-policy","status":"task-ready","source":"specnav-vertical-slices","note":"Task packet names exact model, documentation and focused test boundaries."}
+{"task_id":"002-docx-list-rendering","status":"task-ready","source":"specnav-vertical-slices","note":"Task packet names exact numbering translation, paragraph styling and OOXML verification boundaries."}
+{"task_id":"003-hut-list-verification","status":"task-ready","source":"specnav-vertical-slices","note":"Task packet names exact HUT configuration, two-template and complete build verification boundaries."}

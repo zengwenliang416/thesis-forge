@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "active_change": "template-driven-list-layout-p1",
+  "status": "ready",
+  "ok": true,
+  "checked_at": "2026-08-10T13:15:00.000Z",
+  "requirements_contract": "ok",
+  "prototype_contract": "ok",
+  "prototype_decision": "approved",
+  "approved_variant": "list-policy-docx-seam-v1",
+  "tasks_baseline_commit": "a6b606b",
+  "scope_lock": "openspec/changes/template-driven-list-layout-p1/scope.json",
+  "blockers": []
+}

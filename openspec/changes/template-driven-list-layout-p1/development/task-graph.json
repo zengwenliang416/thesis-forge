@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "planning_status": "ready",
+  "tasks": [
+    {
+      "task_id": "001-list-policy",
+      "depends_on": [],
+      "covers": ["1.1-1.4", "typed list policy and validation"]
+    },
+    {
+      "task_id": "002-docx-list-rendering",
+      "depends_on": ["001-list-policy"],
+      "covers": ["2.1-2.4", "true Word numbering and styled list paragraphs"]
+    },
+    {
+      "task_id": "003-hut-list-verification",
+      "depends_on": ["001-list-policy", "002-docx-list-rendering"],
+      "covers": ["3.1-3.4", "HUT YAML, OOXML and offline build verification"]
+    }
+  ]
+}

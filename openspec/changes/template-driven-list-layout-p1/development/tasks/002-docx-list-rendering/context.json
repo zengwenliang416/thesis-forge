@@ -1,0 +1,43 @@
+{
+  "task_id": "002-docx-list-rendering",
+  "goal": "Render true template-driven Word numbering and styled list paragraphs without changing ListInstruction.",
+  "must_read": [
+    "openspec/changes/template-driven-list-layout-p1/development/tasks/002-docx-list-rendering/brief.md",
+    "openspec/changes/template-driven-list-layout-p1/requirements.md",
+    "openspec/changes/template-driven-list-layout-p1/acceptance.md",
+    "openspec/changes/template-driven-list-layout-p1/spec-map.json",
+    "openspec/changes/template-driven-list-layout-p1/component-impact-map.json",
+    "openspec/changes/template-driven-list-layout-p1/prototype/handoff.md",
+    "openspec/changes/template-driven-list-layout-p1/prototype/decision.json",
+    "openspec/changes/template-driven-list-layout-p1/prototype/component/component-map.md",
+    "openspec/specs/ui-design/design.md",
+    "openspec/specs/system-architecture/design.md",
+    "openspec/specs/frontend-backend-data-flow/design.md",
+    "openspec/specs/component-architecture/design.md"
+  ],
+  "allowed_files": [
+    "src/thesis_forge/renderers/docx/lists.py",
+    "src/thesis_forge/renderers/docx/renderer.py",
+    "tests/test_docx_renderer.py",
+    "tests/test_architecture.py",
+    "openspec/changes/template-driven-list-layout-p1/development/tasks/002-docx-list-rendering/**"
+  ],
+  "test_paths": [
+    "tests/test_docx_renderer.py",
+    "tests/test_architecture.py"
+  ],
+  "non_goals": [
+    "Do not change Markdown parsing, Domain Model, Compiler or RenderPlan.",
+    "Do not add HUT-specific values.",
+    "Do not add picture bullets, checkboxes or cross-block numbering continuation."
+  ],
+  "expected_evidence": [
+    "numbering.xml format, marker, start, alignment and indentation assertions",
+    "document.xml numPr and paragraph style assertions",
+    "Architecture assertions for renderer-neutral boundaries"
+  ],
+  "unsafe_assumptions": [
+    "Paragraph style application order does not affect run-level font and emphasis output."
+  ],
+  "stop_condition": "Stop if rendering requires Markdown parsing, school constants or Word objects outside the DOCX Renderer."
+}

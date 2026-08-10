@@ -1,0 +1,95 @@
+{
+  "schema": "specnav.codegraph.claims.v1",
+  "generated_at": "2026-08-10T13:17:42.601Z",
+  "active_change": "template-driven-list-layout-p1",
+  "claims": [
+    {
+      "id": "development:task-001-list-policy",
+      "kind": "development-task",
+      "stage": "development",
+      "task_id": "001-list-policy",
+      "text": "Complete tasks 1.1-1.4 at the Template Model, public export, focused test and documentation",
+      "required": true,
+      "source": "specnav-codegraph-plan",
+      "source_paths": [
+        "openspec/changes/template-driven-list-layout-p1/development/tasks/001-list-policy/brief.md",
+        "openspec/changes/template-driven-list-layout-p1/development/tasks/001-list-policy/context.json"
+      ],
+      "expected_evidence": [
+        "List model defaults and validation tests",
+        "Architecture assertions",
+        "Updated template specification"
+      ],
+      "allowed_files": [
+        "src/thesis_forge/templates/model.py",
+        "src/thesis_forge/templates/__init__.py",
+        "tests/test_template.py",
+        "tests/test_architecture.py",
+        "docs/TEMPLATE_SPEC.md",
+        "openspec/changes/template-driven-list-layout-p1/development/tasks/001-list-policy/**"
+      ],
+      "query_ids": [
+        "development:task-001-list-policy:evidence"
+      ]
+    },
+    {
+      "id": "development:task-002-docx-list-rendering",
+      "kind": "development-task",
+      "stage": "development",
+      "task_id": "002-docx-list-rendering",
+      "text": "Complete tasks 2.1-2.4 by replacing fixed numbering constants with typed policy translation and",
+      "required": true,
+      "source": "specnav-codegraph-plan",
+      "source_paths": [
+        "openspec/changes/template-driven-list-layout-p1/development/tasks/002-docx-list-rendering/brief.md",
+        "openspec/changes/template-driven-list-layout-p1/development/tasks/002-docx-list-rendering/context.json"
+      ],
+      "expected_evidence": [
+        "numbering.xml format, marker, start, alignment and indentation assertions",
+        "document.xml numPr and paragraph style assertions",
+        "Architecture assertions for renderer-neutral boundaries"
+      ],
+      "allowed_files": [
+        "src/thesis_forge/renderers/docx/lists.py",
+        "src/thesis_forge/renderers/docx/renderer.py",
+        "tests/test_docx_renderer.py",
+        "tests/test_architecture.py",
+        "openspec/changes/template-driven-list-layout-p1/development/tasks/002-docx-list-rendering/**"
+      ],
+      "query_ids": [
+        "development:task-002-docx-list-rendering:evidence"
+      ]
+    },
+    {
+      "id": "development:task-003-hut-list-verification",
+      "kind": "development-task",
+      "stage": "development",
+      "task_id": "003-hut-list-verification",
+      "text": "Complete tasks 3.1-3.4 with HUT YAML, two-template differences, acceptance tests, full regression",
+      "required": true,
+      "source": "specnav-codegraph-plan",
+      "source_paths": [
+        "openspec/changes/template-driven-list-layout-p1/development/tasks/003-hut-list-verification/brief.md",
+        "openspec/changes/template-driven-list-layout-p1/development/tasks/003-hut-list-verification/context.json"
+      ],
+      "expected_evidence": [
+        "Explicit HUT YAML list policy",
+        "Two-template semantic equivalence and style difference",
+        "Complete offline build and OOXML assertions",
+        "Full local pytest, Ruff, OpenSpec and SpecNav handoff output"
+      ],
+      "allowed_files": [
+        "templates/schools/hunan-university-of-technology/master-2026.yaml",
+        "templates/schools/example-university/2026.yaml",
+        "tests/test_template.py",
+        "tests/test_docx_renderer.py",
+        "tests/test_acceptance.py",
+        "docs/TEMPLATE_SPEC.md",
+        "openspec/changes/template-driven-list-layout-p1/**"
+      ],
+      "query_ids": [
+        "development:task-003-hut-list-verification:evidence"
+      ]
+    }
+  ]
+}

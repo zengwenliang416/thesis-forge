@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "change_id": "template-driven-list-layout-p1",
+  "required": false,
+  "status": "not_required",
+  "migrations": [],
+  "rollback": [],
+  "rollback_strategy": "No database or seed migration is required for this change.",
+  "verification": {
+    "commands": [
+      "git diff --name-only -- src tests templates docs openspec/changes/template-driven-list-layout-p1"
+    ],
+    "evidence": [
+      "The approved requirements and task graph contain no database, seed, menu or permission work."
+    ]
+  },
+  "notes": [
+    "This change is limited to Template Model, DOCX rendering, YAML, documentation and tests.",
+    "If scope later adds persisted data work, set required=true before implementation and add executable migration plus rollback files."
+  ]
+}

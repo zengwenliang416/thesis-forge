@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "budgets": [
+    {
+      "area": "template policy",
+      "limit": "one ListSpec with ordered and unordered policies; no school-specific subclasses"
+    },
+    {
+      "area": "coupling",
+      "limit": "Parser, Domain, Compiler and RenderPlan import no docx, lxml or renderer modules"
+    },
+    {
+      "area": "rendering",
+      "limit": "one semantic numbering mapper and reuse of apply_paragraph_style; no duplicate formatting translator"
+    },
+    {
+      "area": "scope",
+      "limit": "no Markdown syntax, UI, picture bullets, checkboxes, cross-block continuation or more than nine Word levels"
+    }
+  ]
+}
