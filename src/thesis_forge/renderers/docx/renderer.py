@@ -25,7 +25,7 @@ from thesis_forge.core.render_plan import (
     TableInstruction,
     TocInstruction,
 )
-from thesis_forge.templates.model import ThesisTemplate
+from thesis_forge.templates.model import ListSpec, ThesisTemplate
 
 from .bookmarks import wrap_paragraph_in_bookmark
 from .cover import render_cover
@@ -36,10 +36,11 @@ from .fields import add_complex_field, add_reference_field, set_update_fields
 from .figures import render_figure
 from .footnotes import FootnoteManager
 from .inlines import InlineHandlers, citation_run_element, render_inline_runs
-from .lists import apply_list_numbering, create_list_numbering
+from .lists import apply_list_numbering, create_list_numbering, resolve_list_level
 from .sections import add_section, configure_initial_section
 from .styles import (
     HEADING_BASE_ROLES,
+    apply_paragraph_style,
     ensure_paragraph_style,
     resolve_paragraph_style,
     resolve_role_em_size_points,
@@ -151,23 +152,36 @@ def _render_typed(
         paragraph = document.add_paragraph(style=style)
         _add_runs(paragraph, instruction.inlines, footnotes, template)
     elif isinstance(instruction, ListInstruction):
+        list_spec = template.list if template is not None else ListSpec()
+        policy = (
+            list_spec.ordered
+            if instruction.ordered
+            else list_spec.unordered
+        )
         first_ordinal = next(
             (item.ordinal for item in instruction.items if item.ordinal is not None),
             None,
         )
         number_id = create_list_numbering(
             document,
-            ordered=instruction.ordered,
+            policy=policy,
             start=instruction.start or first_ordinal or 1,
         )
         for item in instruction.items:
+            word_level, level_spec = resolve_list_level(policy, item.level)
             paragraph = document.add_paragraph()
+            _add_runs(paragraph, item.inlines, footnotes, template)
+            apply_paragraph_style(
+                paragraph,
+                level_spec.style,
+                fallback_font=template.body.font if template is not None else None,
+                fallback_size=template.body.size if template is not None else None,
+            )
             apply_list_numbering(
                 paragraph,
                 number_id=number_id,
-                level=item.level,
+                level=word_level,
             )
-            _add_runs(paragraph, item.inlines, footnotes, template)
     elif isinstance(instruction, FigureInstruction):
         render_figure(document, instruction, template)
     elif isinstance(instruction, TableInstruction):

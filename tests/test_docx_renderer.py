@@ -54,10 +54,15 @@ from thesis_forge.templates import (
     FontSpec,
     LengthSpec,
     LineSpacingSpec,
+    ListSpec,
+    OrderedListLevelSpec,
+    OrderedListSpec,
     ParagraphStyleSpec,
     SectionsSpec,
     TocLevelSpec,
     TocSpec,
+    UnorderedListLevelSpec,
+    UnorderedListSpec,
     load_template,
 )
 
@@ -77,6 +82,22 @@ PNG_1X1 = base64.b64decode(
 
 def _xml_part(path: Path, name: str):
     return etree.fromstring(read_package_part(path, name))
+
+
+def _numbering_definition_for_paragraph(numbering_xml, paragraph):
+    number_id = paragraph.xpath(
+        "./w:pPr/w:numPr/w:numId/@w:val",
+        namespaces=NS,
+    )[0]
+    abstract_id = numbering_xml.xpath(
+        f"./w:num[@w:numId='{number_id}']/w:abstractNumId/@w:val",
+        namespaces=NS,
+    )[0]
+    abstract = numbering_xml.xpath(
+        f"./w:abstractNum[@w:abstractNumId='{abstract_id}']",
+        namespaces=NS,
+    )[0]
+    return number_id, abstract
 
 
 def test_docx_renderer_applies_template_page_body_and_heading_xml(tmp_path: Path):
@@ -1153,20 +1174,42 @@ def test_docx_renderer_preserves_list_start_and_nesting_xml(tmp_path: Path):
 
     document_xml = _xml_part(output, "word/document.xml")
     numbering_xml = _xml_part(output, "word/numbering.xml")
-    assert document_xml.xpath(".//w:p/w:pPr/w:numPr/w:ilvl/@w:val", namespaces=NS) == [
+    list_paragraphs = document_xml.xpath(
+        ".//w:p[w:pPr/w:numPr]",
+        namespaces=NS,
+    )
+    assert [
+        paragraph.xpath("./w:pPr/w:numPr/w:ilvl/@w:val", namespaces=NS)[0]
+        for paragraph in list_paragraphs
+    ] == [
         "0",
         "1",
         "0",
     ]
-    assert len(document_xml.xpath(".//w:p/w:pPr/w:numPr/w:numId", namespaces=NS)) == 3
-    assert "3" in numbering_xml.xpath(
-        ".//w:abstractNum/w:lvl[@w:ilvl='0']/w:start/@w:val",
-        namespaces=NS,
+    number_ids = {
+        paragraph.xpath(
+            "./w:pPr/w:numPr/w:numId/@w:val",
+            namespaces=NS,
+        )[0]
+        for paragraph in list_paragraphs
+    }
+    assert len(number_ids) == 1
+    _, abstract = _numbering_definition_for_paragraph(
+        numbering_xml,
+        list_paragraphs[0],
     )
-    assert numbering_xml.xpath(
-        ".//w:abstractNum/w:lvl/w:numFmt/@w:val",
+    assert abstract.xpath(
+        "./w:lvl[@w:ilvl='0']/w:start/@w:val",
         namespaces=NS,
-    )
+    ) == ["3"]
+    assert abstract.xpath(
+        "./w:lvl/w:numFmt/@w:val",
+        namespaces=NS,
+    ) == ["decimal"] * 9
+    assert abstract.xpath(
+        "./w:lvl/w:lvlText/@w:val",
+        namespaces=NS,
+    ) == [f"%{level}." for level in range(1, 10)]
     children = [etree.QName(child).localname for child in numbering_xml]
     assert max(index for index, name in enumerate(children) if name == "abstractNum") < min(
         index for index, name in enumerate(children) if name == "num"
@@ -1178,6 +1221,223 @@ def test_docx_renderer_preserves_list_start_and_nesting_xml(tmp_path: Path):
         numbering_xml.xpath("./w:num/w:abstractNumId/@w:val", namespaces=NS)
     )
     assert referenced_ids <= abstract_ids
+
+
+def test_docx_renderer_applies_independent_template_list_policies_and_styles(
+    tmp_path: Path,
+):
+    template = load_template("templates/base/bachelor.yaml")
+    list_style = ParagraphStyleSpec(
+        font=FontSpec(east_asia="楷体", latin="Arial"),
+        size=LengthSpec.model_validate("11pt"),
+        color="123456",
+        bold=True,
+        italic=True,
+        alignment="justify",
+        space_before=LengthSpec.model_validate("6pt"),
+        space_after=LengthSpec.model_validate("8pt"),
+        line_spacing=LineSpacingSpec(type="fixed", value="18pt"),
+    )
+    template.list = ListSpec(
+        ordered=OrderedListSpec(
+            levels=(
+                OrderedListLevelSpec(
+                    format="lower_roman",
+                    prefix="(",
+                    suffix=")",
+                    alignment="right",
+                    left_indent="42pt",
+                    hanging_indent="12pt",
+                    style=list_style,
+                ),
+                OrderedListLevelSpec(
+                    format="upper_letter",
+                    prefix="[",
+                    suffix="]",
+                    alignment="center",
+                    left_indent="60pt",
+                    hanging_indent="18pt",
+                    style=list_style,
+                ),
+            )
+        ),
+        unordered=UnorderedListSpec(
+            levels=(
+                UnorderedListLevelSpec(
+                    marker="◆",
+                    alignment="center",
+                    left_indent="30pt",
+                    hanging_indent="10pt",
+                    style=ParagraphStyleSpec(
+                        font=FontSpec(east_asia="仿宋", latin="Courier New"),
+                        size=LengthSpec.model_validate("10pt"),
+                        color="654321",
+                        space_after=LengthSpec.model_validate("4pt"),
+                    ),
+                ),
+            )
+        ),
+    )
+    document = ThesisDocument(
+        source_path=tmp_path / "thesis.md",
+        blocks=[
+            ListBlock(
+                ordered=True,
+                start=3,
+                items=[
+                    ListItem(
+                        text="第三项",
+                        level=0,
+                        ordinal=3,
+                        inlines=[Text(value="第三项")],
+                    ),
+                    ListItem(
+                        text="深层项",
+                        level=12,
+                        ordinal=1,
+                        inlines=[Text(value="深层项")],
+                    ),
+                ],
+            ),
+            ListBlock(
+                ordered=False,
+                items=[
+                    ListItem(
+                        text="项目符号",
+                        level=0,
+                        inlines=[Text(value="项目符号")],
+                    ),
+                ],
+            ),
+        ],
+    )
+    output = tmp_path / "custom-list.docx"
+
+    DocxRenderer().render(compile_document(document, template=template), output)
+
+    document_xml = _xml_part(output, "word/document.xml")
+    numbering_xml = _xml_part(output, "word/numbering.xml")
+    paragraphs = document_xml.xpath(".//w:p[w:pPr/w:numPr]", namespaces=NS)
+    assert len(paragraphs) == 3
+    ordered_num_id, ordered_abstract = _numbering_definition_for_paragraph(
+        numbering_xml,
+        paragraphs[0],
+    )
+    deep_num_id, deep_abstract = _numbering_definition_for_paragraph(
+        numbering_xml,
+        paragraphs[1],
+    )
+    unordered_num_id, unordered_abstract = _numbering_definition_for_paragraph(
+        numbering_xml,
+        paragraphs[2],
+    )
+    assert ordered_num_id == deep_num_id
+    assert ordered_abstract is deep_abstract
+    assert unordered_num_id != ordered_num_id
+    assert paragraphs[1].xpath(
+        "./w:pPr/w:numPr/w:ilvl/@w:val",
+        namespaces=NS,
+    ) == ["8"]
+
+    ordered_level = ordered_abstract.xpath(
+        "./w:lvl[@w:ilvl='0']",
+        namespaces=NS,
+    )[0]
+    assert ordered_level.xpath("./w:start/@w:val", namespaces=NS) == ["3"]
+    assert ordered_level.xpath("./w:numFmt/@w:val", namespaces=NS) == [
+        "lowerRoman"
+    ]
+    assert ordered_level.xpath("./w:lvlText/@w:val", namespaces=NS) == ["(%1)"]
+    assert ordered_level.xpath("./w:lvlJc/@w:val", namespaces=NS) == ["right"]
+    assert ordered_level.xpath("./w:pPr/w:ind/@w:left", namespaces=NS) == ["840"]
+    assert ordered_level.xpath("./w:pPr/w:ind/@w:hanging", namespaces=NS) == [
+        "240"
+    ]
+    assert [etree.QName(child).localname for child in ordered_level] == [
+        "start",
+        "numFmt",
+        "lvlText",
+        "lvlJc",
+        "pPr",
+    ]
+
+    fallback_level = ordered_abstract.xpath(
+        "./w:lvl[@w:ilvl='8']",
+        namespaces=NS,
+    )[0]
+    assert fallback_level.xpath("./w:numFmt/@w:val", namespaces=NS) == [
+        "upperLetter"
+    ]
+    assert fallback_level.xpath("./w:lvlText/@w:val", namespaces=NS) == ["[%9]"]
+    assert fallback_level.xpath("./w:lvlJc/@w:val", namespaces=NS) == ["center"]
+    assert fallback_level.xpath("./w:pPr/w:ind/@w:left", namespaces=NS) == [
+        "1200"
+    ]
+
+    unordered_level = unordered_abstract.xpath(
+        "./w:lvl[@w:ilvl='0']",
+        namespaces=NS,
+    )[0]
+    assert unordered_level.xpath("./w:numFmt/@w:val", namespaces=NS) == ["bullet"]
+    assert unordered_level.xpath("./w:lvlText/@w:val", namespaces=NS) == ["◆"]
+    assert unordered_level.xpath("./w:lvlJc/@w:val", namespaces=NS) == ["center"]
+    assert unordered_level.xpath("./w:pPr/w:ind/@w:left", namespaces=NS) == [
+        "600"
+    ]
+    assert unordered_level.xpath(
+        "./w:pPr/w:ind/@w:hanging",
+        namespaces=NS,
+    ) == ["200"]
+
+    styled_paragraph = paragraphs[0]
+    assert styled_paragraph.xpath(
+        "./w:r/w:rPr/w:rFonts/@w:eastAsia",
+        namespaces=NS,
+    ) == ["楷体"]
+    assert styled_paragraph.xpath(
+        "./w:r/w:rPr/w:rFonts/@w:ascii",
+        namespaces=NS,
+    ) == ["Arial"]
+    assert styled_paragraph.xpath("./w:r/w:rPr/w:sz/@w:val", namespaces=NS) == [
+        "22"
+    ]
+    assert styled_paragraph.xpath(
+        "./w:r/w:rPr/w:color/@w:val",
+        namespaces=NS,
+    ) == ["123456"]
+    assert styled_paragraph.xpath("./w:r/w:rPr/w:b", namespaces=NS)
+    assert styled_paragraph.xpath("./w:r/w:rPr/w:i", namespaces=NS)
+    assert styled_paragraph.xpath("./w:pPr/w:jc/@w:val", namespaces=NS) == [
+        "both"
+    ]
+    assert styled_paragraph.xpath(
+        "./w:pPr/w:spacing/@w:before",
+        namespaces=NS,
+    ) == ["120"]
+    assert styled_paragraph.xpath(
+        "./w:pPr/w:spacing/@w:after",
+        namespaces=NS,
+    ) == ["160"]
+    assert styled_paragraph.xpath(
+        "./w:pPr/w:spacing/@w:line",
+        namespaces=NS,
+    ) == ["360"]
+    assert styled_paragraph.xpath(
+        "./w:pPr/w:spacing/@w:lineRule",
+        namespaces=NS,
+    ) == ["exact"]
+
+    abstract_ids = set(
+        numbering_xml.xpath("./w:abstractNum/@w:abstractNumId", namespaces=NS)
+    )
+    referenced_ids = set(
+        numbering_xml.xpath("./w:num/w:abstractNumId/@w:val", namespaces=NS)
+    )
+    assert referenced_ids <= abstract_ids
+    children = [etree.QName(child).localname for child in numbering_xml]
+    assert max(index for index, name in enumerate(children) if name == "abstractNum") < min(
+        index for index, name in enumerate(children) if name == "num"
+    )
 
 
 def test_docx_renderer_creates_real_figures_captions_bookmarks_and_three_line_table(
