@@ -61,6 +61,45 @@ def test_list_policy_has_deterministic_renderer_neutral_defaults():
     )
 
 
+def test_hut_list_policy_is_explicit_while_legacy_template_uses_defaults():
+    hut = load_template(
+        "templates/schools/hunan-university-of-technology/master-2026.yaml"
+    )
+    example = load_template("templates/schools/example-university/2026.yaml")
+
+    assert [level.format for level in hut.list.ordered.levels] == [
+        "decimal",
+        "lower_letter",
+        "lower_roman",
+    ]
+    assert [level.suffix for level in hut.list.ordered.levels] == ["、", ")", ")"]
+    assert [str(level.left_indent) for level in hut.list.ordered.levels] == [
+        "24pt",
+        "48pt",
+        "72pt",
+    ]
+    assert [level.marker for level in hut.list.unordered.levels] == ["●", "○", "■"]
+    assert all(
+        level.style.font is not None
+        and level.style.font.east_asia == "宋体"
+        and str(level.style.size) == "12pt"
+        and str(level.style.line_spacing.value) == "20pt"
+        for level in (*hut.list.ordered.levels, *hut.list.unordered.levels)
+    )
+    assert hut.list.ordered.for_level(8) is hut.list.ordered.levels[-1]
+    assert hut.list.unordered.for_level(8) is hut.list.unordered.levels[-1]
+
+    assert len(example.list.ordered.levels) == 9
+    assert [level.format for level in example.list.ordered.levels] == [
+        "decimal"
+    ] * 9
+    assert [level.marker for level in example.list.unordered.levels[:3]] == [
+        "•",
+        "◦",
+        "▪",
+    ]
+
+
 def test_list_policy_accepts_semantic_formats_markers_and_paragraph_styles():
     policy = ListSpec(
         ordered=OrderedListSpec(

@@ -209,6 +209,126 @@ body:
   widow_control: true
   snap_to_grid: true
 
+list:
+  ordered:
+    levels:
+      - format: decimal
+        prefix: ""
+        suffix: "、"
+        alignment: right
+        left_indent: 24pt
+        hanging_indent: 18pt
+        style:
+          font:
+            east_asia: 宋体
+            latin: Times New Roman
+          size: 12pt
+          color: "000000"
+          alignment: justify
+          space_before: 0pt
+          space_after: 0pt
+          line_spacing:
+            type: fixed
+            value: 20pt
+          widow_control: true
+          snap_to_grid: true
+      - format: lower_letter
+        prefix: "("
+        suffix: ")"
+        alignment: right
+        left_indent: 48pt
+        hanging_indent: 18pt
+        style:
+          font:
+            east_asia: 宋体
+            latin: Times New Roman
+          size: 12pt
+          color: "000000"
+          alignment: justify
+          space_before: 0pt
+          space_after: 0pt
+          line_spacing:
+            type: fixed
+            value: 20pt
+          widow_control: true
+          snap_to_grid: true
+      - format: lower_roman
+        prefix: "("
+        suffix: ")"
+        alignment: right
+        left_indent: 72pt
+        hanging_indent: 18pt
+        style:
+          font:
+            east_asia: 宋体
+            latin: Times New Roman
+          size: 12pt
+          color: "000000"
+          alignment: justify
+          space_before: 0pt
+          space_after: 0pt
+          line_spacing:
+            type: fixed
+            value: 20pt
+          widow_control: true
+          snap_to_grid: true
+  unordered:
+    levels:
+      - marker: "●"
+        alignment: left
+        left_indent: 24pt
+        hanging_indent: 18pt
+        style:
+          font:
+            east_asia: 宋体
+            latin: Times New Roman
+          size: 12pt
+          color: "000000"
+          alignment: justify
+          space_before: 0pt
+          space_after: 0pt
+          line_spacing:
+            type: fixed
+            value: 20pt
+          widow_control: true
+          snap_to_grid: true
+      - marker: "○"
+        alignment: left
+        left_indent: 48pt
+        hanging_indent: 18pt
+        style:
+          font:
+            east_asia: 宋体
+            latin: Times New Roman
+          size: 12pt
+          color: "000000"
+          alignment: justify
+          space_before: 0pt
+          space_after: 0pt
+          line_spacing:
+            type: fixed
+            value: 20pt
+          widow_control: true
+          snap_to_grid: true
+      - marker: "■"
+        alignment: left
+        left_indent: 72pt
+        hanging_indent: 18pt
+        style:
+          font:
+            east_asia: 宋体
+            latin: Times New Roman
+          size: 12pt
+          color: "000000"
+          alignment: justify
+          space_before: 0pt
+          space_after: 0pt
+          line_spacing:
+            type: fixed
+            value: 20pt
+          widow_control: true
+          snap_to_grid: true
+
 heading:
   level1:
     font:

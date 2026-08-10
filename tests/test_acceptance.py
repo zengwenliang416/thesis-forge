@@ -191,6 +191,47 @@ render:
     )
 
 
+def _write_list_source(path: Path) -> None:
+    path.write_text(
+        """---
+thesis:
+  title: List policy fixture
+author:
+  name: ThesisForge
+---
+
+# 列表验收 {#chap:list}
+
+3. 有序一级
+  1. 有序二级
+    1. 有序三级
+      1. 有序四级复用
+
+- 无序一级
+  - 无序二级
+    - 无序三级
+      - 无序四级复用
+""",
+        encoding="utf-8",
+    )
+
+
+def _numbering_definition_for_paragraph(numbering_xml, paragraph):
+    number_id = paragraph.xpath(
+        "./w:pPr/w:numPr/w:numId/@w:val",
+        namespaces=NS,
+    )[0]
+    abstract_id = numbering_xml.xpath(
+        f"./w:num[@w:numId='{number_id}']/w:abstractNumId/@w:val",
+        namespaces=NS,
+    )[0]
+    abstract = numbering_xml.xpath(
+        f"./w:abstractNum[@w:abstractNumId='{abstract_id}']",
+        namespaces=NS,
+    )[0]
+    return number_id, abstract
+
+
 def _relationship_targets(path: Path) -> dict[str, str]:
     relationships = _xml_part(path, "word/_rels/document.xml.rels")
     return {
@@ -681,6 +722,163 @@ def test_complete_example_two_templates_change_style_not_semantics(tmp_path: Pat
     assert hut_ooxml["word/styles.xml"] != alternate_ooxml["word/styles.xml"]
 
 
+def test_same_list_markdown_uses_hut_and_default_template_policies_offline(
+    tmp_path: Path,
+):
+    source = tmp_path / "list-policy.md"
+    hut_output = tmp_path / "hut-list.docx"
+    hut_repeat_output = tmp_path / "hut-list-repeat.docx"
+    example_output = tmp_path / "example-list.docx"
+    _write_list_source(source)
+    input_paths = (source, HUT_TEMPLATE, EXAMPLE_TEMPLATE)
+    before = {path: _digest(path) for path in input_paths}
+
+    assert _render_plan_snapshot(
+        source,
+        template_path=HUT_TEMPLATE,
+    ) == _render_plan_snapshot(
+        source,
+        template_path=EXAMPLE_TEMPLATE,
+    )
+
+    for template_path, output in (
+        (HUT_TEMPLATE, hut_output),
+        (HUT_TEMPLATE, hut_repeat_output),
+        (EXAMPLE_TEMPLATE, example_output),
+    ):
+        result = _run_cli(
+            tmp_path,
+            "build",
+            str(source),
+            "--template",
+            str(template_path),
+            "-o",
+            str(output),
+        )
+        assert result.returncode == 0, result.stderr or result.stdout
+        validate_docx_package(output)
+
+    assert {path: _digest(path) for path in input_paths} == before
+    assert _semantic_snapshot(hut_output) == _semantic_snapshot(hut_repeat_output)
+    assert _normalized_word_ooxml(hut_output)[
+        "word/numbering.xml"
+    ] == _normalized_word_ooxml(hut_repeat_output)["word/numbering.xml"]
+    assert _normalized_word_ooxml(hut_output)[
+        "word/document.xml"
+    ] == _normalized_word_ooxml(hut_repeat_output)["word/document.xml"]
+
+    hut_document = _xml_part(hut_output, "word/document.xml")
+    hut_numbering = _xml_part(hut_output, "word/numbering.xml")
+    example_document = _xml_part(example_output, "word/document.xml")
+    example_numbering = _xml_part(example_output, "word/numbering.xml")
+    hut_paragraphs = hut_document.xpath(".//w:p[w:pPr/w:numPr]", namespaces=NS)
+    example_paragraphs = example_document.xpath(
+        ".//w:p[w:pPr/w:numPr]",
+        namespaces=NS,
+    )
+    assert len(hut_paragraphs) == len(example_paragraphs) == 8
+    assert [
+        "".join(paragraph.xpath(".//w:t/text()", namespaces=NS))
+        for paragraph in hut_paragraphs
+    ] == [
+        "".join(paragraph.xpath(".//w:t/text()", namespaces=NS))
+        for paragraph in example_paragraphs
+    ]
+    assert [
+        paragraph.xpath("./w:pPr/w:numPr/w:ilvl/@w:val", namespaces=NS)[0]
+        for paragraph in hut_paragraphs
+    ] == ["0", "1", "2", "3", "0", "1", "2", "3"]
+
+    hut_ordered_id, hut_ordered = _numbering_definition_for_paragraph(
+        hut_numbering,
+        hut_paragraphs[0],
+    )
+    hut_unordered_id, hut_unordered = _numbering_definition_for_paragraph(
+        hut_numbering,
+        hut_paragraphs[4],
+    )
+    example_ordered_id, example_ordered = _numbering_definition_for_paragraph(
+        example_numbering,
+        example_paragraphs[0],
+    )
+    example_unordered_id, example_unordered = _numbering_definition_for_paragraph(
+        example_numbering,
+        example_paragraphs[4],
+    )
+    assert hut_ordered_id != hut_unordered_id
+    assert example_ordered_id != example_unordered_id
+
+    assert hut_ordered.xpath(
+        "./w:lvl[@w:ilvl='0']/w:start/@w:val",
+        namespaces=NS,
+    ) == ["3"]
+    assert hut_ordered.xpath(
+        "./w:lvl[@w:ilvl='0']/w:lvlText/@w:val",
+        namespaces=NS,
+    ) == ["%1、"]
+    assert hut_ordered.xpath(
+        "./w:lvl[@w:ilvl='1']/w:numFmt/@w:val",
+        namespaces=NS,
+    ) == ["lowerLetter"]
+    assert hut_ordered.xpath(
+        "./w:lvl[@w:ilvl='2']/w:numFmt/@w:val",
+        namespaces=NS,
+    ) == ["lowerRoman"]
+    assert hut_ordered.xpath(
+        "./w:lvl[@w:ilvl='3']/w:lvlText/@w:val",
+        namespaces=NS,
+    ) == ["(%4)"]
+    assert hut_ordered.xpath(
+        "./w:lvl[@w:ilvl='3']/w:pPr/w:ind/@w:left",
+        namespaces=NS,
+    ) == ["1440"]
+    assert hut_unordered.xpath(
+        "./w:lvl[@w:ilvl='0']/w:lvlText/@w:val",
+        namespaces=NS,
+    ) == ["●"]
+    assert hut_unordered.xpath(
+        "./w:lvl[@w:ilvl='3']/w:lvlText/@w:val",
+        namespaces=NS,
+    ) == ["■"]
+
+    assert example_ordered.xpath(
+        "./w:lvl[@w:ilvl='0']/w:lvlText/@w:val",
+        namespaces=NS,
+    ) == ["%1."]
+    assert example_ordered.xpath(
+        "./w:lvl[@w:ilvl='3']/w:pPr/w:ind/@w:left",
+        namespaces=NS,
+    ) == ["2880"]
+    assert example_unordered.xpath(
+        "./w:lvl[@w:ilvl='3']/w:lvlText/@w:val",
+        namespaces=NS,
+    ) == ["•"]
+    assert etree.tostring(hut_ordered) != etree.tostring(example_ordered)
+    assert etree.tostring(hut_unordered) != etree.tostring(example_unordered)
+
+    first_hut_list_paragraph = hut_paragraphs[0]
+    assert first_hut_list_paragraph.xpath(
+        "./w:r/w:rPr/w:rFonts/@w:eastAsia",
+        namespaces=NS,
+    ) == ["宋体"]
+    assert first_hut_list_paragraph.xpath(
+        "./w:r/w:rPr/w:sz/@w:val",
+        namespaces=NS,
+    ) == ["24"]
+    assert first_hut_list_paragraph.xpath(
+        "./w:pPr/w:spacing/@w:line",
+        namespaces=NS,
+    ) == ["400"]
+    assert first_hut_list_paragraph.xpath(
+        "./w:pPr/w:spacing/@w:lineRule",
+        namespaces=NS,
+    ) == ["exact"]
+    assert first_hut_list_paragraph.xpath(
+        "./w:pPr/w:jc/@w:val",
+        namespaces=NS,
+    ) == ["both"]
+
+
 def test_hut_template_contains_school_values_without_renderer_hardcoding():
     template = load_template(HUT_TEMPLATE)
     assert template.id == "hut-master-2026"
@@ -712,6 +910,12 @@ def test_hut_template_contains_school_values_without_renderer_hardcoding():
         assert str(heading.left_indent) == "0pt"
         assert str(heading.right_indent) == "0pt"
         assert str(heading.first_line_indent) == "0pt"
+    assert [level.format for level in template.list.ordered.levels] == [
+        "decimal",
+        "lower_letter",
+        "lower_roman",
+    ]
+    assert [level.marker for level in template.list.unordered.levels] == ["●", "○", "■"]
 
     renderer_text = "\n".join(
         path.read_text(encoding="utf-8")
@@ -722,5 +926,7 @@ def test_hut_template_contains_school_values_without_renderer_hardcoding():
         "湖南工业大学",
         "HUNAN UNIVERSITY OF TECHNOLOGY",
         "17.5mm",
+        "%1、",
+        "●",
     ):
         assert school_value not in renderer_text
