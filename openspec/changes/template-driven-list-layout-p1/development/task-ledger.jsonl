@@ -1,1 +1,12 @@
-{"task_id":"001-list-policy","status":"planned","source":"vertical-slice-scaffold"}
+{"task_id":"001-list-policy","status":"done","source":"system-executed","evidence":"Typed ListSpec models, validation, deterministic defaults, public exports, template documentation and focused tests."}
+{"task_id":"002-docx-list-rendering","status":"done","source":"system-executed","evidence":"Template-driven numbering.xml translation, level fallback, paragraph styling and precise OOXML tests."}
+{"task_id":"003-hut-list-verification","status":"done","source":"system-executed","evidence":"Explicit HUT YAML policy, two-template offline acceptance, full regression and validated DOCX artifact."}
+{"task_id":"001-list-policy","status":"spec_review_passed","source":"independent-review","completed_at":"2026-08-10T13:42:04Z","evidence":"development/tasks/001-list-policy/spec-review.md"}
+{"task_id":"001-list-policy","status":"quality_review_passed","source":"independent-review","completed_at":"2026-08-10T13:42:04Z","evidence":"development/tasks/001-list-policy/quality-review.md"}
+{"task_id":"001-list-policy","status":"complete","source":"specnav-controller","completed_at":"2026-08-10T13:42:04Z","evidence":"Tasks 1.1-1.4 complete; 82 focused tests and full regression passed."}
+{"task_id":"002-docx-list-rendering","status":"spec_review_passed","source":"independent-review","completed_at":"2026-08-10T13:42:04Z","evidence":"development/tasks/002-docx-list-rendering/spec-review.md"}
+{"task_id":"002-docx-list-rendering","status":"quality_review_passed","source":"independent-review","completed_at":"2026-08-10T13:42:04Z","evidence":"development/tasks/002-docx-list-rendering/quality-review.md"}
+{"task_id":"002-docx-list-rendering","status":"complete","source":"specnav-controller","completed_at":"2026-08-10T13:42:04Z","evidence":"Tasks 2.1-2.4 complete; 65 DOCX renderer tests and architecture checks passed."}
+{"task_id":"003-hut-list-verification","status":"spec_review_passed","source":"independent-review","completed_at":"2026-08-10T13:42:04Z","evidence":"development/tasks/003-hut-list-verification/spec-review.md"}
+{"task_id":"003-hut-list-verification","status":"quality_review_passed","source":"independent-review","completed_at":"2026-08-10T13:42:04Z","evidence":"development/tasks/003-hut-list-verification/quality-review.md"}
+{"task_id":"003-hut-list-verification","status":"complete","source":"specnav-controller","completed_at":"2026-08-10T13:42:04Z","evidence":"Tasks 3.1-3.4 complete; 147 focused, 383 full, Ruff, OpenSpec, CodeGraph and HUT DOCX checks passed."}

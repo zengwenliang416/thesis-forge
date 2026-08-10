@@ -1,11 +1,64 @@
 {
   "schema": "specnav.codegraph.evidence_index.v1",
-  "generated_at": "2026-08-10T13:18:51.996Z",
+  "generated_at": "2026-08-10T13:47:35.411Z",
   "active_change": "template-driven-list-layout-p1",
   "source_raw": "openspec/changes/template-driven-list-layout-p1/codegraph/evidence.jsonl",
-  "by_claim": {},
-  "by_stage": {},
+  "by_claim": {
+    "development:task-001-list-policy": {
+      "status": "matched",
+      "evidence_ids": [
+        "ev-msnacgfy"
+      ],
+      "files": [
+        "tests/test_template.py",
+        "tests/test_architecture.py",
+        "docs/TEMPLATE_SPEC.md",
+        "src/thesis_forge/templates/model.py",
+        "templates/base/bachelor.yaml",
+        "thesis.md",
+        "semantic-fragment.md",
+        "templates/schools/example-university/2026.yaml"
+      ],
+      "symbols": [],
+      "blockers": []
+    },
+    "development:task-002-docx-list-rendering": {
+      "status": "matched",
+      "evidence_ids": [
+        "ev-msnacuc1"
+      ],
+      "files": [
+        "tests/test_docx_renderer.py",
+        "src/thesis_forge/renderers/docx/lists.py",
+        "src/thesis_forge/renderers/docx/styles.py"
+      ],
+      "symbols": [],
+      "blockers": []
+    },
+    "development:task-003-hut-list-verification": {
+      "status": "matched",
+      "evidence_ids": [
+        "ev-msnadbou"
+      ],
+      "files": [
+        "templates/schools/hunan-university-of-technology/master-2026.yaml",
+        "src/thesis_forge/templates/resolver.py",
+        "src/thesis_forge/templates/model.py"
+      ],
+      "symbols": [],
+      "blockers": []
+    }
+  },
+  "by_stage": {
+    "development": {
+      "verified": 3,
+      "partial": 0,
+      "missing": 0,
+      "stale": 0,
+      "blocking": 0
+    }
+  },
   "blockers": [],
-  "raw_exists": false,
-  "record_count": 0
+  "raw_exists": true,
+  "record_count": 3
 }

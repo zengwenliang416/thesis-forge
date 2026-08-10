@@ -2,32 +2,32 @@
 
 ## Verdict
 
-blocked
+approved
 
 ## Separation Of Concerns
 
-- Replace this scaffold with direct review.
+- Template values remain in the model; Word format names and XML construction remain local to `lists.py`.
 
 ## Component Cohesion / Coupling
 
-- Confirm high cohesion, low coupling, and required extraction.
+- `resolve_list_level` centralizes clamping/fallback; rendering reuses existing unit and paragraph-style helpers.
 
 ## Test Quality
 
-- Replace this scaffold with direct review.
+- Tests resolve actual paragraph `numId` references and assert exact OOXML rather than matching unrelated built-in definitions.
 
 ## Error Handling
 
-- Replace this scaffold with direct review.
+- Invalid policies fail during template loading; renderer receives validated typed objects.
 
 ## Reuse / Duplication
 
-- Replace this scaffold with direct review.
+- Fixed bullet tuple, decimal format, alignment and indentation constants were removed.
 
 ## Complexity Delta
 
-- Replace this scaffold with direct review.
+- One format map and one level resolver replace the previous hard-coded branch without touching core layers.
 
 ## Required Fixes
 
-- Replace this scaffold with direct review.
+- No blocking fixes remain.

@@ -2,27 +2,27 @@
 
 ## Status
 
-DONE_WITH_CONCERNS
+DONE
 
 ## Files Changed
 
-- `<decision-required>`
+- `templates/schools/hunan-university-of-technology/master-2026.yaml`, `tests/test_template.py`, `tests/test_acceptance.py`, lifecycle evidence.
 
 ## What Changed
 
-- `<decision-required>`
+- Added explicit three-level HUT ordered/unordered policies and complete list paragraph styles; added offline same-source HUT/default builds, repeatability and OOXML difference assertions.
 
 ## TDD Evidence
 
-- `<decision-required>`
+- Added HUT/default loading assertions and a nested, non-1-start list fixture that verifies RenderPlan equality, last-level fallback, numbering references and direct paragraph/run properties.
 
 ## Verification Commands
 
-- `<decision-required>`
+- Focused `147 passed`; full `383 passed`; Ruff, strict OpenSpec and three CodeGraph claims passed; complete HUT DOCX package validated.
 
 ## Concerns
 
-- Replace this scaffold before handoff.
+- HUT values are explicit editable template policy; visual glyph choice still depends on Office client fonts.
 
 ## Scope Deviations
 
@@ -30,8 +30,8 @@ DONE_WITH_CONCERNS
 
 ## Follow-up Needed
 
-- Replace this scaffold before handoff.
+- Open the generated DOCX in Word or WPS for sensory list-flow review.
 
 ## Adjudication
 
-Controller must adjudicate scaffold concerns before verification handoff.
+Approved against tasks 3.1-3.4 in commit `8d6f225`.

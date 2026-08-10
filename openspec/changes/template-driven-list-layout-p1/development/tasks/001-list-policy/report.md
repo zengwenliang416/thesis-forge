@@ -2,27 +2,27 @@
 
 ## Status
 
-DONE_WITH_CONCERNS
+DONE
 
 ## Files Changed
 
-- `<decision-required>`
+- `src/thesis_forge/templates/model.py`, `src/thesis_forge/templates/__init__.py`, `tests/test_template.py`, `tests/test_architecture.py`, `docs/TEMPLATE_SPEC.md`.
 
 ## What Changed
 
-- `<decision-required>`
+- Added closed semantic ordered formats, typed ordered/unordered levels, shared geometry, strict validation, 1-9 level policies, deterministic fallback and legacy-equivalent defaults.
 
 ## TDD Evidence
 
-- `<decision-required>`
+- Added default, valid custom policy, invalid format/marker/level/geometry and renderer-neutral architecture tests.
 
 ## Verification Commands
 
-- `<decision-required>`
+- `.venv/bin/python -m pytest tests/test_template.py tests/test_architecture.py -q` -> `82 passed`.
 
 ## Concerns
 
-- Replace this scaffold before handoff.
+- Generic defaults intentionally reproduce the previous Renderer behavior; no migration is required.
 
 ## Scope Deviations
 
@@ -30,8 +30,8 @@ DONE_WITH_CONCERNS
 
 ## Follow-up Needed
 
-- Replace this scaffold before handoff.
+- No model follow-up is required; downstream Office sensory review is owned by task 003.
 
 ## Adjudication
 
-Controller must adjudicate scaffold concerns before verification handoff.
+Approved against tasks 1.1-1.4 in commit `2863338`.

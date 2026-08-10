@@ -6,22 +6,22 @@
       "id": "A1",
       "statement": "A template controls ordered and unordered list numbering, markers, indentation, and paragraph styles without changing Markdown.",
       "verify_via": "e2e",
-      "status": "failing",
-      "evidence_ref": null
+      "status": "passing",
+      "evidence_ref": "tests/test_acceptance.py::test_same_list_markdown_uses_hut_and_default_template_policies_offline"
     },
     {
       "id": "A2",
       "statement": "Templates that omit list policy preserve the previous deterministic nine-level Word numbering behavior.",
       "verify_via": "unit",
-      "status": "failing",
-      "evidence_ref": null
+      "status": "passing",
+      "evidence_ref": "tests/test_template.py::test_list_policy_has_deterministic_renderer_neutral_defaults"
     },
     {
       "id": "A3",
       "statement": "ListInstruction remains renderer neutral while DOCX output uses true numbering definitions and configured paragraph properties.",
       "verify_via": "facticity",
-      "status": "failing",
-      "evidence_ref": null
+      "status": "passing",
+      "evidence_ref": "tests/test_docx_renderer.py::test_docx_renderer_applies_independent_template_list_policies_and_styles"
     }
   ]
 }

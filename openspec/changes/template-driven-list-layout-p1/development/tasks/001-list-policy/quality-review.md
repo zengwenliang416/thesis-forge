@@ -2,32 +2,32 @@
 
 ## Verdict
 
-blocked
+approved
 
 ## Separation Of Concerns
 
-- Replace this scaffold with direct review.
+- Template policy contains no DOCX/OOXML objects and no Markdown parsing behavior moved into the model.
 
 ## Component Cohesion / Coupling
 
-- Confirm high cohesion, low coupling, and required extraction.
+- Shared geometry owns common fields; ordered/unordered subclasses own only valid type-specific fields.
 
 ## Test Quality
 
-- Replace this scaffold with direct review.
+- Tests cover defaults, accepted values, every declared validation boundary and last-level fallback.
 
 ## Error Handling
 
-- Replace this scaffold with direct review.
+- Pydantic reports unsupported format, blank marker, invalid depth and invalid geometry before rendering.
 
 ## Reuse / Duplication
 
-- Replace this scaffold with direct review.
+- Reuses `LengthSpec` and `ParagraphStyleSpec`; no duplicate paragraph policy was introduced.
 
 ## Complexity Delta
 
-- Replace this scaffold with direct review.
+- Additive surface is bounded to one `ListSpec` with two typed policies and no school subclass.
 
 ## Required Fixes
 
-- Replace this scaffold with direct review.
+- No blocking fixes remain.

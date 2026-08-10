@@ -1,20 +1,16 @@
 {
   "schema": "specnav.codegraph.claims_report.v1",
-  "generated_at": "2026-08-10T13:18:51.997Z",
+  "generated_at": "2026-08-10T13:48:11.880Z",
   "active_change": "template-driven-list-layout-p1",
   "claims_file": "openspec/changes/template-driven-list-layout-p1/codegraph/claims-map.json",
   "evidence_index": "openspec/changes/template-driven-list-layout-p1/codegraph/evidence-index.json",
   "claims_count": 3,
-  "verified_claims": [],
-  "unverified_claims": [
+  "verified_claims": [
     "development:task-001-list-policy",
     "development:task-002-docx-list-rendering",
     "development:task-003-hut-list-verification"
   ],
+  "unverified_claims": [],
   "blockers": [],
-  "warnings": [
-    "codegraph:claim-unverified:development:task-001-list-policy",
-    "codegraph:claim-unverified:development:task-002-docx-list-rendering",
-    "codegraph:claim-unverified:development:task-003-hut-list-verification"
-  ]
+  "warnings": []
 }

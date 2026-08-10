@@ -1,1 +1,3 @@
-{"task_id":"001-list-policy","blocking":true,"reason":"Replace scaffold with actual drift check before handoff."}
+{"task_id":"001-list-policy","blocking":false,"reason":"Implementation matches the approved typed policy, validation, defaults and renderer-neutral model boundary."}
+{"task_id":"002-docx-list-rendering","blocking":false,"reason":"Renderer consumes typed policy, reuses shared units/styles and keeps Parser, Domain, Compiler and RenderPlan unchanged."}
+{"task_id":"003-hut-list-verification","blocking":false,"reason":"HUT values remain in YAML; tests prove semantic preservation, policy fallback and true editable Word numbering."}

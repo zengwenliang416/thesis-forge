@@ -2,11 +2,11 @@
 
 ## Verdict
 
-blocked
+approved
 
 ## Missing Requirements
 
-- Replace this scaffold with direct review.
+- None; tasks 2.1-2.4 are implemented.
 
 ## Extra Behavior
 
@@ -18,12 +18,12 @@ blocked
 
 ## Cannot Verify From Diff
 
-- Replace this scaffold with direct review.
+- Cross-client visual appearance and pagination require sensory verification.
 
 ## Acceptance Assertions Verified
 
-- Replace this scaffold with the acceptance.json assertion ids verified during review (e.g. A1, A3), or "not applicable" when the change has no acceptance.json.
+- `A1` and `A3`; `A2` remains covered by the generic-default renderer test.
 
 ## Required Fixes
 
-- Replace this scaffold with direct review.
+- No blocking fixes remain; precise `numbering.xml` and `document.xml` assertions pass.

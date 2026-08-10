@@ -2,11 +2,11 @@
 
 ## Verdict
 
-blocked
+approved
 
 ## Missing Requirements
 
-- Replace this scaffold with direct review.
+- None; tasks 1.1-1.4 are implemented.
 
 ## Extra Behavior
 
@@ -18,12 +18,12 @@ blocked
 
 ## Cannot Verify From Diff
 
-- Replace this scaffold with direct review.
+- Office rendering is outside this model-only task and covered by tasks 002/003.
 
 ## Acceptance Assertions Verified
 
-- Replace this scaffold with the acceptance.json assertion ids verified during review (e.g. A1, A3), or "not applicable" when the change has no acceptance.json.
+- `A2`, plus the Template Model portion of `A1` and renderer-neutral model portion of `A3`.
 
 ## Required Fixes
 
-- Replace this scaffold with direct review.
+- No blocking fixes remain; focused and full tests pass.
