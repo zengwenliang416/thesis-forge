@@ -62,6 +62,7 @@ name: <非空字符串>
 year: <整数或字符串>
 page: <PageSpec>
 cover: <CoverSpec，可省略>
+list: <ListSpec，可省略>
 body: <BodySpec>
 heading: <HeadingSpec>
 semantic_styles: <SemanticStylesSpec，可省略>
@@ -83,6 +84,7 @@ citation: <CitationSpec，可省略>
 | `year` | `int \| str` | 必填 | 可使用 `2026` 或 `base` |
 | `page` | `PageSpec` | 必填 | 页面几何和文档网格 |
 | `cover` | `CoverSpec` | 默认通用字段顺序 | 封面字段、静态文本、顺序和段落样式 |
+| `list` | `ListSpec` | 默认兼容旧 Renderer 的 9 层策略 | 有序编号、项目符号、缩进和段落样式 |
 | `body` | `BodySpec` | 必填 | 正文段落样式 |
 | `heading` | `HeadingSpec` | 必填 | `level1` 必填，`level2/3` 可选 |
 | `semantic_styles` | `SemanticStylesSpec` | 默认空对象 | 摘要、关键词和特殊角色样式 |
@@ -143,6 +145,8 @@ margin: large
 | `page.header_distance`、`page.footer_distance` | 可选；绝对单位 |
 | `page.document_grid.line_pitch` | 非 `default` 网格时必填；绝对单位且大于 0 |
 | `body.size` | 必填；绝对单位 |
+| `list.ordered.levels[].left_indent/hanging_indent` | 必填或使用层级默认；绝对单位，悬挂不大于左缩进 |
+| `list.unordered.levels[].left_indent/hanging_indent` | 必填或使用层级默认；绝对单位，悬挂不大于左缩进 |
 | `sections.*.header/footer.*.bottom_border.width` | 可选；绝对单位且大于 0 |
 | `sections.*.header/footer.*.bottom_border.space` | 可选；绝对单位 |
 
@@ -352,7 +356,90 @@ cover:
 省略 `cover` 时，模型按上述 metadata field 的通用顺序生成居中段落。模板应通过
 `space_before` 和 `space_after` 控制垂直节奏，不使用 Renderer 固定空白段落。
 
-### 5.3 正文与标题
+### 5.3 ListSpec
+
+Markdown 负责列表类型、文本、嵌套层级和有序列表起始值；模板只负责列表呈现：
+
+```yaml
+list:
+  ordered:
+    levels:
+      - format: lower_roman
+        prefix: "("
+        suffix: ")"
+        alignment: right
+        left_indent: 36pt
+        hanging_indent: 18pt
+        style:
+          font:
+            east_asia: 宋体
+            latin: Times New Roman
+          size: 12pt
+          color: "000000"
+          space_before: 0pt
+          space_after: 0pt
+          line_spacing:
+            type: fixed
+            value: 20pt
+  unordered:
+    levels:
+      - marker: "•"
+        alignment: left
+        left_indent: 36pt
+        hanging_indent: 18pt
+        style:
+          size: 12pt
+          line_spacing:
+            type: fixed
+            value: 20pt
+```
+
+`ordered.levels` 和 `unordered.levels` 都必须包含 1 至 9 个层级。Markdown 嵌套
+深度超过模板声明层数时，Renderer 确定性复用最后一个层级策略，并把 Word
+`ilvl` 限制在 `0..8`。模板不需要为了支持深层 Markdown 手工复制 9 份相同规则。
+
+有序层级字段为：
+
+| 字段 | 默认/约束 | 说明 |
+| --- | --- | --- |
+| `format` | `decimal` | 语义编号格式 |
+| `prefix` | `""` | 编号占位符之前的文字 |
+| `suffix` | `"."` | 编号占位符之后的文字 |
+| `alignment` | `left` | marker 在编号区域内的对齐 |
+| `left_indent` | `36pt` | 编号层级左缩进，必须是绝对单位 |
+| `hanging_indent` | `18pt` | 悬挂缩进，必须是绝对单位且不能大于左缩进 |
+| `style` | 空 `ParagraphStyleSpec` | 列表文本和段落属性 |
+
+`format` 只接受以下 Renderer-neutral 枚举：
+
+```text
+decimal
+lower_letter
+upper_letter
+lower_roman
+upper_roman
+```
+
+模板不得使用 Word 的 `lowerLetter`、`upperRoman`、`w:numFmt` 或 `w:lvlText`。
+这些实现值由 DOCX Renderer 统一翻译。
+
+无序层级使用同一组 `alignment`、缩进和 `style` 字段，并以非空 `marker`
+替代 `format/prefix/suffix`。marker 是普通 Unicode 文本，例如 `•`、`◦`、
+`▪` 或 `◆`；模板不能注入图片项目符号或 raw OOXML。
+
+省略整个 `list` 时，模型创建与旧 Renderer 等价的通用 9 层默认：
+
+- 有序列表全部使用 `decimal`、空前缀和 `"."` 后缀；
+- 无序列表按 `•`、`◦`、`▪` 循环；
+- marker 全部左对齐；
+- 左缩进依次为 `36pt`、`72pt` 至 `324pt`；
+- 悬挂缩进全部为 `18pt`；
+- 每层 `style` 为空，由 Word `Normal` 样式和 `body` fallback 提供正文格式。
+
+Markdown 非 1 起始编号仍属于文档语义，不由模板覆盖。首层使用 Markdown
+`start` 或首项 ordinal，深层 numbering level 从 1 开始。
+
+### 5.4 正文与标题
 
 正文使用 `body`，标题使用 `heading.level1`、`heading.level2` 和
 `heading.level3`。标题级别缺失而论文实际使用时，Validator 报告

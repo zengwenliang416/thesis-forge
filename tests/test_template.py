@@ -10,6 +10,9 @@ from thesis_forge.templates import (
     HeaderFooterVariantSpec,
     HeadingLevelSpec,
     LengthSpec,
+    ListSpec,
+    OrderedListLevelSpec,
+    OrderedListSpec,
     PageNumberDisplaySpec,
     PageNumberSpec,
     ParagraphStyleSpec,
@@ -17,10 +20,126 @@ from thesis_forge.templates import (
     TemplateLoadError,
     TemplateNotFoundError,
     TocLevelSpec,
+    UnorderedListLevelSpec,
+    UnorderedListSpec,
     default_template_search_roots,
     load_template,
     resolve_template,
 )
+
+
+def test_list_policy_has_deterministic_renderer_neutral_defaults():
+    template = load_template("templates/base/bachelor.yaml")
+
+    assert len(template.list.ordered.levels) == 9
+    assert [level.format for level in template.list.ordered.levels] == [
+        "decimal"
+    ] * 9
+    assert [level.prefix for level in template.list.ordered.levels] == [""] * 9
+    assert [level.suffix for level in template.list.ordered.levels] == ["."] * 9
+    assert [str(level.left_indent) for level in template.list.ordered.levels] == [
+        f"{36 * level}pt" for level in range(1, 10)
+    ]
+    assert [str(level.hanging_indent) for level in template.list.ordered.levels] == [
+        "18pt"
+    ] * 9
+    assert [level.marker for level in template.list.unordered.levels] == [
+        "•",
+        "◦",
+        "▪",
+        "•",
+        "◦",
+        "▪",
+        "•",
+        "◦",
+        "▪",
+    ]
+    assert template.list.ordered.for_level(20) is template.list.ordered.levels[-1]
+    assert (
+        template.list.unordered.for_level(20)
+        is template.list.unordered.levels[-1]
+    )
+
+
+def test_list_policy_accepts_semantic_formats_markers_and_paragraph_styles():
+    policy = ListSpec(
+        ordered=OrderedListSpec(
+            levels=(
+                OrderedListLevelSpec(
+                    format="lower_roman",
+                    prefix="(",
+                    suffix=")",
+                    alignment="right",
+                    left_indent="20mm",
+                    hanging_indent="5mm",
+                    style=ParagraphStyleSpec(
+                        font={"east_asia": "宋体", "latin": "Times New Roman"},
+                        size="11pt",
+                        color="112233",
+                        space_after="6pt",
+                        line_spacing={"type": "multiple", "value": 1.25},
+                    ),
+                ),
+            )
+        ),
+        unordered=UnorderedListSpec(
+            levels=(
+                UnorderedListLevelSpec(
+                    marker="◆",
+                    left_indent="30pt",
+                    hanging_indent="12pt",
+                ),
+            )
+        ),
+    )
+
+    assert policy.ordered.levels[0].format == "lower_roman"
+    assert policy.ordered.levels[0].prefix == "("
+    assert policy.ordered.levels[0].suffix == ")"
+    assert policy.ordered.levels[0].style.color == "112233"
+    assert policy.unordered.levels[0].marker == "◆"
+
+
+@pytest.mark.parametrize(
+    ("factory", "message"),
+    [
+        (
+            lambda: OrderedListLevelSpec(format="greek"),
+            "Input should be",
+        ),
+        (
+            lambda: UnorderedListLevelSpec(marker="   "),
+            "marker 不能为空",
+        ),
+        (
+            lambda: OrderedListLevelSpec(left_indent="2em"),
+            "绝对单位",
+        ),
+        (
+            lambda: OrderedListLevelSpec(
+                left_indent="10pt",
+                hanging_indent="11pt",
+            ),
+            "不能大于",
+        ),
+        (
+            lambda: OrderedListSpec(levels=()),
+            "at least 1",
+        ),
+        (
+            lambda: UnorderedListSpec(
+                levels=tuple(UnorderedListLevelSpec() for _ in range(10))
+            ),
+            "at most 9",
+        ),
+    ],
+)
+def test_list_policy_rejects_invalid_formats_markers_levels_and_geometry(
+    factory,
+    message: str,
+):
+    with pytest.raises(ValueError, match=message):
+        factory()
 
 
 def test_cover_policy_has_deterministic_renderer_neutral_defaults():

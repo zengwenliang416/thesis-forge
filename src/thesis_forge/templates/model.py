@@ -200,6 +200,115 @@ CoverField = Literal[
 ]
 
 
+OrderedListFormat = Literal[
+    "decimal",
+    "lower_letter",
+    "upper_letter",
+    "lower_roman",
+    "upper_roman",
+]
+ListMarkerAlignment = Literal["left", "center", "right"]
+
+
+def _absolute_length_points(value: LengthSpec) -> Decimal:
+    if value.unit == "pt":
+        return value.value
+    if value.unit == "mm":
+        return value.value * Decimal(72) / Decimal("25.4")
+    if value.unit == "cm":
+        return value.value * Decimal(72) / Decimal("2.54")
+    raise ValueError("列表缩进必须使用绝对单位 mm / cm / pt")
+
+
+class ListLevelGeometrySpec(TemplateModel):
+    alignment: ListMarkerAlignment = "left"
+    left_indent: LengthSpec = Field(
+        default_factory=lambda: LengthSpec.model_validate("36pt")
+    )
+    hanging_indent: LengthSpec = Field(
+        default_factory=lambda: LengthSpec.model_validate("18pt")
+    )
+    style: ParagraphStyleSpec = Field(default_factory=ParagraphStyleSpec)
+
+    @field_validator("left_indent", "hanging_indent")
+    @classmethod
+    def validate_absolute_indent(cls, value: LengthSpec) -> LengthSpec:
+        validated = _require_absolute_length(value)
+        assert validated is not None
+        return validated
+
+    @model_validator(mode="after")
+    def validate_indent_geometry(self) -> ListLevelGeometrySpec:
+        if _absolute_length_points(self.hanging_indent) > _absolute_length_points(
+            self.left_indent
+        ):
+            raise ValueError("hanging_indent 不能大于 left_indent")
+        return self
+
+
+class OrderedListLevelSpec(ListLevelGeometrySpec):
+    format: OrderedListFormat = "decimal"
+    prefix: str = ""
+    suffix: str = "."
+
+
+class UnorderedListLevelSpec(ListLevelGeometrySpec):
+    marker: str = "•"
+
+    @field_validator("marker")
+    @classmethod
+    def validate_marker(cls, value: str) -> str:
+        marker = value.strip()
+        if not marker:
+            raise ValueError("unordered list marker 不能为空")
+        return marker
+
+
+def _default_ordered_list_levels() -> tuple[OrderedListLevelSpec, ...]:
+    return tuple(
+        OrderedListLevelSpec(left_indent=LengthSpec.model_validate(f"{36 * level}pt"))
+        for level in range(1, 10)
+    )
+
+
+def _default_unordered_list_levels() -> tuple[UnorderedListLevelSpec, ...]:
+    markers = ("•", "◦", "▪")
+    return tuple(
+        UnorderedListLevelSpec(
+            marker=markers[(level - 1) % len(markers)],
+            left_indent=LengthSpec.model_validate(f"{36 * level}pt"),
+        )
+        for level in range(1, 10)
+    )
+
+
+class OrderedListSpec(TemplateModel):
+    levels: tuple[OrderedListLevelSpec, ...] = Field(
+        default_factory=_default_ordered_list_levels,
+        min_length=1,
+        max_length=9,
+    )
+
+    def for_level(self, level: int) -> OrderedListLevelSpec:
+        return self.levels[max(0, min(level, len(self.levels) - 1))]
+
+
+class UnorderedListSpec(TemplateModel):
+    levels: tuple[UnorderedListLevelSpec, ...] = Field(
+        default_factory=_default_unordered_list_levels,
+        min_length=1,
+        max_length=9,
+    )
+
+    def for_level(self, level: int) -> UnorderedListLevelSpec:
+        return self.levels[max(0, min(level, len(self.levels) - 1))]
+
+
+class ListSpec(TemplateModel):
+    ordered: OrderedListSpec = Field(default_factory=OrderedListSpec)
+    unordered: UnorderedListSpec = Field(default_factory=UnorderedListSpec)
+
+
 class CoverItemSpec(TemplateModel):
     field: CoverField | None = None
     text: str | None = None
@@ -510,6 +619,7 @@ class ThesisTemplate(TemplateModel):
     year: int | str
     page: PageSpec
     cover: CoverSpec = Field(default_factory=CoverSpec)
+    list: ListSpec = Field(default_factory=ListSpec)
     body: BodySpec
     heading: HeadingSpec
     semantic_styles: SemanticStylesSpec = Field(default_factory=SemanticStylesSpec)
