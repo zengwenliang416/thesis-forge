@@ -665,7 +665,7 @@ sections:
           page_suffix: ""
           include_total: false
     page_number:
-      format: roman-lower
+      format: roman-upper
       restart: 1
       display:
         alignment: center

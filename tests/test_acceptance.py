@@ -321,6 +321,12 @@ def test_complete_example_validates_and_builds_offline_without_mutating_inputs(
     assert build.returncode == 0, build.stderr or build.stdout
     assert output.is_file()
     validate_docx_package(output)
+    document_xml = _xml_part(output, "word/document.xml")
+    sections = document_xml.xpath(".//w:sectPr", namespaces=NS)
+    assert len(sections) == 3
+    assert sections[1].xpath("./w:pgNumType/@w:fmt", namespaces=NS) == [
+        "upperRoman"
+    ]
     assert {path: _digest(path) for path in input_paths} == before
     assert sorted(path.name for path in tmp_path.iterdir()) == ["acceptance.docx", "offline"]
 
@@ -887,6 +893,8 @@ def test_hut_template_contains_school_values_without_renderer_hardcoding():
     assert template.citation is not None
     assert template.citation.presentation == "superscript"
     assert template.sections.main is not None
+    assert template.sections.front_matter is not None
+    assert template.sections.front_matter.page_number.format == "roman-upper"
     assert template.sections.main.header.even is not None
     assert template.sections.main.footer.default is not None
     assert template.sections.main.footer.default.page_number is not None
