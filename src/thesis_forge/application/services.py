@@ -23,6 +23,11 @@ from .contracts import (
     PreviewResult,
     ValidationResult,
 )
+from .office_refresh import (
+    DocumentRefresher,
+    LibreOfficeDocumentRefresher,
+    refresh_document_safely,
+)
 from .output import ReplaceFile, replace_output, temporary_output_path
 
 Parser = Callable[[str | Path], ThesisDocument]
@@ -52,6 +57,9 @@ class ApplicationDependencies:
     validator: Validator = validate_document
     compiler: Compiler = compile_document
     renderer: DocumentRenderer = field(default_factory=DocxRenderer)
+    document_refresher: DocumentRefresher = field(
+        default_factory=LibreOfficeDocumentRefresher
+    )
     package_validator: PackageValidator = validate_docx_package
     replace_file: ReplaceFile = os.replace
 
@@ -215,6 +223,10 @@ def build_service(
             _check_canceled(should_cancel, BuildStage.FINALIZE)
             _notify(on_progress, BuildStage.FINALIZE)
             try:
+                refresh_document_safely(
+                    active.document_refresher,
+                    temporary_path,
+                )
                 active.package_validator(temporary_path)
                 _check_canceled(should_cancel, BuildStage.FINALIZE)
                 replace_output(

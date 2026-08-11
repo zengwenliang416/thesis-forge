@@ -479,6 +479,10 @@ def test_toc_level_styles_use_deterministic_defaults_and_real_field(tmp_path: Pa
     )
     assert len(toc_title) == 1
     assert toc_title[0].xpath(".//w:t/text()", namespaces=NS) == ["目录"]
+    assert toc_title[0].xpath(
+        "./w:pPr/w:outlineLvl/@w:val",
+        namespaces=NS,
+    ) == ["9"]
     toc_field_paragraph = document_xml.xpath(
         ".//w:p[.//w:instrText[contains(., 'TOC')]]",
         namespaces=NS,
@@ -487,6 +491,17 @@ def test_toc_level_styles_use_deterministic_defaults_and_real_field(tmp_path: Pa
     assert toc_field_paragraph[0] is not toc_title[0]
     assert toc_field_paragraph[0].getprevious() is toc_title[0]
     assert toc_field_paragraph[0].xpath(".//w:t/text()", namespaces=NS) == []
+    assert toc_field_paragraph[0].xpath(
+        ".//w:bookmarkStart/@w:name",
+        namespaces=NS,
+    ) == ["tf_toc_index"]
+    assert toc_field_paragraph[0].xpath(
+        ".//w:bookmarkEnd/@w:id",
+        namespaces=NS,
+    ) == toc_field_paragraph[0].xpath(
+        ".//w:bookmarkStart/@w:id",
+        namespaces=NS,
+    )
     assert document_xml.xpath(
         ".//w:instrText/../..//w:fldChar/@w:fldCharType",
         namespaces=NS,

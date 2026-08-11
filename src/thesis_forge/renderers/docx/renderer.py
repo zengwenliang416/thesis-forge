@@ -4,6 +4,8 @@ from pathlib import Path
 
 from docx.document import Document as DocumentObject
 from docx.enum.text import WD_ALIGN_PARAGRAPH, WD_LINE_SPACING
+from docx.oxml import OxmlElement
+from docx.oxml.ns import qn
 
 from thesis_forge.core.math import MathConversionError
 from thesis_forge.core.render_plan import (
@@ -84,6 +86,15 @@ def _add_preformatted_paragraph(document: DocumentObject, text: str):
     paragraph.alignment = WD_ALIGN_PARAGRAPH.LEFT
     paragraph.paragraph_format.line_spacing_rule = WD_LINE_SPACING.SINGLE
     return paragraph
+
+
+def _exclude_from_outline(paragraph) -> None:
+    properties = paragraph._p.get_or_add_pPr()
+    outline_level = properties.find(qn("w:outlineLvl"))
+    if outline_level is None:
+        outline_level = OxmlElement("w:outlineLvl")
+        properties.append(outline_level)
+    outline_level.set(qn("w:val"), "9")
 
 
 def _semantic_word_style(
@@ -213,12 +224,14 @@ def _render_typed(
             "toc.title",
             heading_level=1,
         )
-        document.add_paragraph("目录", style=style)
+        title = document.add_paragraph("目录", style=style)
+        _exclude_from_outline(title)
         paragraph = document.add_paragraph()
         add_complex_field(
             paragraph,
             f'TOC \\o "{instruction.min_level}-{instruction.max_level}" \\h \\z \\u',
         )
+        wrap_paragraph_in_bookmark(paragraph, "tf_toc_index")
     elif isinstance(instruction, SectionBreakInstruction):
         add_section(
             document,

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import struct
+import subprocess
 from dataclasses import replace
 from pathlib import Path
 from zipfile import ZIP_DEFLATED, ZIP_STORED, ZipFile
@@ -18,6 +19,21 @@ from thesis_forge.application import (
     inspect_service,
     validation_service,
 )
+from thesis_forge.application.office_refresh import (
+    _CREATE_NEW_PROCESS_GROUP,
+    _CREATE_NO_WINDOW,
+    _CREATE_SUSPENDED,
+    LibreOfficeDocumentRefresher,
+    _automatic_refresh_enabled,
+    _create_windows_job,
+    _run_libreoffice_refresh,
+    _start_office_process,
+    _terminate_process_tree,
+    _toc_max_level,
+    discover_libreoffice_executable,
+    discover_libreoffice_python,
+    refresh_document_safely,
+)
 from thesis_forge.application.output import replace_output, temporary_output_path
 from thesis_forge.renderers.docx.package import (
     DocxPackageValidationError,
@@ -30,6 +46,756 @@ EXAMPLE_SOURCE = PROJECT_ROOT / "examples" / "bachelor-thesis" / "thesis.md"
 
 def _temporary_outputs(output: Path) -> list[Path]:
     return sorted(output.parent.glob(f".{output.name}.*.tmp.docx"))
+
+
+def test_libreoffice_discovery_prefers_macos_application_bundle():
+    expected = Path("/Applications/LibreOffice.app/Contents/MacOS/soffice")
+
+    discovered = discover_libreoffice_executable(
+        platform_name="darwin",
+        environ={},
+        which=lambda _name: "/opt/homebrew/bin/soffice",
+        is_file=lambda path: path == expected,
+    )
+
+    assert discovered == expected
+
+
+def test_libreoffice_discovery_uses_windows_program_files():
+    expected = Path("C:/Program Files/LibreOffice/program/soffice.exe")
+
+    discovered = discover_libreoffice_executable(
+        platform_name="win32",
+        environ={"ProgramFiles": "C:/Program Files"},
+        which=lambda _name: None,
+        is_file=lambda path: path == expected,
+    )
+
+    assert discovered == expected
+
+
+def test_libreoffice_discovery_uses_linux_path_candidate():
+    expected = Path("/opt/libreoffice/program/soffice")
+
+    discovered = discover_libreoffice_executable(
+        platform_name="linux",
+        environ={},
+        which=lambda name: str(expected) if name == "soffice" else None,
+        is_file=lambda path: path == expected,
+    )
+
+    assert discovered == expected
+
+
+def test_libreoffice_discovery_returns_none_when_runtime_is_missing():
+    assert (
+        discover_libreoffice_executable(
+            platform_name="linux",
+            environ={},
+            which=lambda _name: None,
+            is_file=lambda _path: False,
+        )
+        is None
+    )
+
+
+def test_libreoffice_discovery_prefers_explicit_override():
+    expected = Path("/custom/libreoffice")
+
+    discovered = discover_libreoffice_executable(
+        platform_name="linux",
+        environ={"THESISFORGE_LIBREOFFICE": str(expected)},
+        which=lambda _name: None,
+        is_file=lambda path: path == expected,
+    )
+
+    assert discovered == expected
+
+
+def test_libreoffice_python_discovery_uses_macos_bundled_runtime():
+    executable = Path("/Applications/LibreOffice.app/Contents/MacOS/soffice")
+    expected = Path("/Applications/LibreOffice.app/Contents/Resources/python")
+
+    discovered = discover_libreoffice_python(
+        executable,
+        environ={},
+        is_file=lambda path: path == expected,
+        which=lambda _name: None,
+        can_import_uno=lambda path: path == expected,
+    )
+
+    assert discovered == expected
+
+
+def test_libreoffice_python_discovery_rejects_runtime_without_uno(tmp_path: Path):
+    executable = tmp_path / "soffice"
+    incompatible = tmp_path / "python"
+    incompatible.touch()
+
+    discovered = discover_libreoffice_python(
+        executable,
+        environ={},
+        is_file=Path.is_file,
+        which=lambda _name: None,
+        can_import_uno=lambda _path: False,
+    )
+
+    assert discovered is None
+
+
+@pytest.mark.parametrize("value", ["0", "false", "NO", " off ", "disabled"])
+def test_automatic_office_refresh_can_be_disabled(value: str):
+    assert not _automatic_refresh_enabled({"THESISFORGE_OFFICE_REFRESH": value})
+
+
+def test_automatic_office_refresh_defaults_to_enabled_for_empty_environment():
+    assert _automatic_refresh_enabled({})
+
+
+@pytest.mark.parametrize(
+    ("field_xml", "expected"),
+    [
+        (b'TOC \\o "1-3" \\h \\z \\u', 3),
+        (b"TOC \\o &quot;1-5&quot; \\h", 5),
+        (b"REF fig_example \\h", None),
+    ],
+)
+def test_toc_max_level_reads_real_field_switch(
+    tmp_path: Path,
+    field_xml: bytes,
+    expected: int | None,
+):
+    document = tmp_path / "thesis.docx"
+    _write_minimal_package(
+        document,
+        document_xml=(
+            b"<w:document "
+            b"xmlns:w='http://schemas.openxmlformats.org/wordprocessingml/2006/main'>"
+            b"<w:body><w:p><w:r><w:instrText>"
+            + field_xml
+            + b"</w:instrText></w:r></w:p></w:body></w:document>"
+        ),
+    )
+
+    assert _toc_max_level(document) == expected
+
+
+@pytest.mark.parametrize("mode", ["false", "error"])
+def test_safe_document_refresh_restores_rendered_docx_on_failure(
+    tmp_path: Path,
+    mode: str,
+):
+    document = tmp_path / "thesis.docx"
+    document.write_bytes(b"rendered-docx")
+
+    class FailingRefresher:
+        def refresh(self, path):
+            Path(path).write_bytes(b"corrupted")
+            if mode == "error":
+                raise RuntimeError("refresh exploded")
+            return False
+
+    assert not refresh_document_safely(FailingRefresher(), document)
+    assert document.read_bytes() == b"rendered-docx"
+
+
+def test_safe_document_refresh_restores_rendered_docx_on_timeout(tmp_path: Path):
+    document = tmp_path / "thesis.docx"
+    document.write_bytes(b"rendered-docx")
+
+    class TimingOutRefresher:
+        def refresh(self, path):
+            Path(path).write_bytes(b"corrupted")
+            raise subprocess.TimeoutExpired("soffice", 1)
+
+    assert not refresh_document_safely(TimingOutRefresher(), document)
+    assert document.read_bytes() == b"rendered-docx"
+
+
+def test_libreoffice_refresher_uses_discovered_runtime_and_injected_runner(
+    tmp_path: Path,
+):
+    document = tmp_path / "thesis.docx"
+    _write_minimal_package(
+        document,
+        document_xml=(
+            b"<w:document "
+            b"xmlns:w='http://schemas.openxmlformats.org/wordprocessingml/2006/main'>"
+            b"<w:body><w:p><w:r><w:instrText>TOC "
+            b'\\o "1-3"</w:instrText></w:r></w:p></w:body></w:document>'
+        ),
+    )
+    executable = tmp_path / "soffice"
+    python_executable = tmp_path / "python"
+    calls: list[tuple[Path, Path, Path, float, int]] = []
+
+    def recording_runner(office, python, path, timeout, max_level):
+        calls.append((office, python, path, timeout, max_level))
+        path.write_bytes(b"refreshed-docx")
+
+    refresher = LibreOfficeDocumentRefresher(
+        executable=executable,
+        python_executable=python_executable,
+        timeout_seconds=12.5,
+        runner=recording_runner,
+    )
+
+    assert refresher.refresh(document)
+    assert calls == [(executable, python_executable, document, 12.5, 3)]
+    assert document.read_bytes() == b"refreshed-docx"
+
+
+def test_libreoffice_refresher_skips_document_without_toc_field(tmp_path: Path):
+    document = tmp_path / "thesis.docx"
+    _write_minimal_package(document)
+    calls: list[Path] = []
+
+    def unexpected_runner(_office, _python, path, _timeout, _max_level):
+        calls.append(path)
+
+    refresher = LibreOfficeDocumentRefresher(
+        executable=tmp_path / "soffice",
+        python_executable=tmp_path / "python",
+        runner=unexpected_runner,
+    )
+
+    assert not refresher.refresh(document)
+    assert calls == []
+
+
+def test_libreoffice_refresher_restores_document_after_runner_failure(
+    tmp_path: Path,
+):
+    document = tmp_path / "thesis.docx"
+    _write_minimal_package(
+        document,
+        document_xml=(
+            b"<w:document "
+            b"xmlns:w='http://schemas.openxmlformats.org/wordprocessingml/2006/main'>"
+            b"<w:body><w:p><w:r><w:instrText>TOC "
+            b'\\o "1-3"</w:instrText></w:r></w:p></w:body></w:document>'
+        ),
+    )
+    original = document.read_bytes()
+    seen: list[bytes] = []
+
+    def failing_runner(_office, _python, path, _timeout, _max_level):
+        seen.append(path.read_bytes())
+        path.write_bytes(b"corrupted")
+        raise RuntimeError("refresh failed")
+
+    refresher = LibreOfficeDocumentRefresher(
+        executable=tmp_path / "soffice",
+        python_executable=tmp_path / "python",
+        runner=failing_runner,
+    )
+
+    assert not refresher.refresh(document)
+    assert seen == [original]
+    assert document.read_bytes() == original
+
+
+def test_libreoffice_runner_uses_headless_unique_process_state_and_cleans_profiles(
+    tmp_path: Path,
+    monkeypatch,
+):
+    document = tmp_path / "thesis.docx"
+    document.write_bytes(b"docx")
+    office_commands: list[tuple[str, ...]] = []
+    helper_commands: list[tuple[str, ...]] = []
+    terminated: list[object] = []
+
+    class FakeProcess:
+        pid = 42
+
+        def poll(self):
+            return None
+
+    def fake_popen(command, **_kwargs):
+        office_commands.append(tuple(command))
+        return FakeProcess()
+
+    def fake_run(command, **_kwargs):
+        helper_commands.append(tuple(command))
+        return subprocess.CompletedProcess(command, 0, "", "")
+
+    def record_termination(process, *, windows_job=None):
+        terminated.append((process, windows_job))
+
+    monkeypatch.setattr(subprocess, "Popen", fake_popen)
+    monkeypatch.setattr(subprocess, "run", fake_run)
+    monkeypatch.setattr(
+        "thesis_forge.application.office_refresh._terminate_process_tree",
+        record_termination,
+    )
+
+    for _ in range(2):
+        _run_libreoffice_refresh(
+            tmp_path / "soffice",
+            tmp_path / "python",
+            document,
+            15.0,
+            3,
+        )
+
+    assert len(office_commands) == 2
+    assert all("--headless" in command for command in office_commands)
+    assert office_commands[0] != office_commands[1]
+    assert helper_commands[0][4] != helper_commands[1][4]
+    profile_arguments = [
+        next(part for part in command if part.startswith("-env:UserInstallation="))
+        for command in office_commands
+    ]
+    assert profile_arguments[0] != profile_arguments[1]
+    for argument in profile_arguments:
+        assert not Path(argument.removeprefix("-env:UserInstallation=file://")).exists()
+    assert len(terminated) == 2
+
+
+def test_windows_process_tree_cleanup_falls_back_when_taskkill_fails(monkeypatch):
+    calls: list[tuple[str, ...]] = []
+
+    class FakeProcess:
+        pid = 42
+        killed = False
+        waits = 0
+
+        def poll(self):
+            return None
+
+        def kill(self):
+            self.killed = True
+
+        def wait(self, timeout):
+            self.waits += 1
+            return 0
+
+    def failing_taskkill(command, **_kwargs):
+        calls.append(tuple(command))
+        raise subprocess.CalledProcessError(1, command)
+
+    process = FakeProcess()
+    monkeypatch.setattr("thesis_forge.application.office_refresh.os.name", "nt")
+    monkeypatch.setattr(subprocess, "run", failing_taskkill)
+
+    _terminate_process_tree(process)
+
+    assert calls == [("taskkill", "/PID", "42", "/T", "/F")]
+    assert process.killed
+    assert process.waits == 1
+
+
+def test_windows_job_owns_and_terminates_entire_office_process_tree():
+    calls: list[tuple[object, ...]] = []
+
+    class FakeKernel32:
+        def CreateJobObjectW(self, security, name):
+            calls.append(("create", security, name))
+            return 101
+
+        def SetInformationJobObject(self, handle, info_class, pointer, size):
+            calls.append(
+                (
+                    "configure",
+                    handle,
+                    info_class,
+                    pointer._obj.basic_limit_information.limit_flags,
+                    size,
+                )
+            )
+            return 1
+
+        def AssignProcessToJobObject(self, handle, process_handle):
+            calls.append(("assign", handle, process_handle))
+            return 1
+
+        def TerminateJobObject(self, handle, exit_code):
+            calls.append(("terminate", handle, exit_code))
+            return 1
+
+        def CloseHandle(self, handle):
+            calls.append(("close", handle))
+            return 1
+
+    class FakeProcess:
+        _handle = 202
+        waited = False
+        killed = False
+
+        def wait(self, timeout):
+            self.waited = True
+            return 0
+
+        def kill(self):
+            self.killed = True
+
+    process = FakeProcess()
+    job = _create_windows_job(process, kernel32=FakeKernel32())
+
+    assert job is not None
+    _terminate_process_tree(process, windows_job=job)
+
+    assert calls[0] == ("create", None, None)
+    assert calls[1][0:4] == ("configure", 101, 9, 0x00002000)
+    assert ("assign", 101, 202) in calls
+    assert ("terminate", 101, 1) in calls
+    assert ("close", 101) in calls
+    assert process.waited
+    assert not process.killed
+
+
+def test_windows_office_process_is_assigned_to_job_before_resume():
+    calls: list[tuple[object, ...]] = []
+
+    class FakeWinapi:
+        INFINITE = 0xFFFFFFFF
+        WAIT_OBJECT_0 = 0
+        WAIT_TIMEOUT = 258
+
+        def CreateProcess(
+            self,
+            application,
+            command_line,
+            process_attributes,
+            thread_attributes,
+            inherit_handles,
+            creation_flags,
+            environment,
+            current_directory,
+            startup_info,
+        ):
+            calls.append(
+                (
+                    "create-process",
+                    application,
+                    command_line,
+                    process_attributes,
+                    thread_attributes,
+                    inherit_handles,
+                    creation_flags,
+                    environment,
+                    current_directory,
+                    startup_info,
+                )
+            )
+            return 301, 302, 303, 304
+
+        def WaitForSingleObject(self, handle, timeout):
+            calls.append(("wait", handle, timeout))
+            return self.WAIT_OBJECT_0
+
+        def GetExitCodeProcess(self, handle):
+            calls.append(("exit-code", handle))
+            return 0
+
+        def TerminateProcess(self, handle, exit_code):
+            calls.append(("terminate-process", handle, exit_code))
+
+        def CloseHandle(self, handle):
+            calls.append(("close-process-handle", handle))
+
+    class FakeKernel32:
+        def CreateJobObjectW(self, security, name):
+            calls.append(("create-job", security, name))
+            return 401
+
+        def SetInformationJobObject(self, handle, info_class, pointer, size):
+            calls.append(("configure-job", handle, info_class, size))
+            return 1
+
+        def AssignProcessToJobObject(self, handle, process_handle):
+            calls.append(("assign-job", handle, process_handle))
+            return 1
+
+        def ResumeThread(self, thread_handle):
+            calls.append(("resume-thread", thread_handle))
+            return 1
+
+        def TerminateJobObject(self, handle, exit_code):
+            calls.append(("terminate-job", handle, exit_code))
+            return 1
+
+        def CloseHandle(self, handle):
+            calls.append(("close-kernel-handle", handle))
+            return 1
+
+    startup_info = object()
+    process, job = _start_office_process(
+        ("soffice.exe", "--headless"),
+        winapi=FakeWinapi(),
+        kernel32=FakeKernel32(),
+        startup_info=startup_info,
+    )
+
+    create_call = calls[0]
+    assert create_call[0] == "create-process"
+    assert create_call[6] == (
+        _CREATE_NEW_PROCESS_GROUP | _CREATE_SUSPENDED | _CREATE_NO_WINDOW
+    )
+    assert create_call[9] is startup_info
+    assert calls.index(("assign-job", 401, 301)) < calls.index(
+        ("resume-thread", 302)
+    )
+    assert ("close-kernel-handle", 302) in calls
+
+    assert job is not None
+    _terminate_process_tree(process, windows_job=job)
+
+    assert ("terminate-job", 401, 1) in calls
+    assert ("close-kernel-handle", 401) in calls
+    assert ("close-process-handle", 301) in calls
+
+
+def test_windows_office_resume_failure_closes_job_thread_and_process_handles():
+    calls: list[tuple[object, ...]] = []
+
+    class FakeWinapi:
+        def CreateProcess(self, *_args):
+            calls.append(("create-process",))
+            return 301, 302, 303, 304
+
+        def WaitForSingleObject(self, _handle, _timeout):
+            return 258
+
+        def TerminateProcess(self, handle, exit_code):
+            calls.append(("terminate-process", handle, exit_code))
+
+        def CloseHandle(self, handle):
+            calls.append(("close-process-handle", handle))
+
+    class FakeKernel32:
+        def CreateJobObjectW(self, _security, _name):
+            return 401
+
+        def SetInformationJobObject(self, *_args):
+            return 1
+
+        def AssignProcessToJobObject(self, *_args):
+            return 1
+
+        def ResumeThread(self, thread_handle):
+            calls.append(("resume-thread", thread_handle))
+            return 0xFFFFFFFF
+
+        def CloseHandle(self, handle):
+            calls.append(("close-kernel-handle", handle))
+            return 1
+
+    with pytest.raises(OSError, match="Windows API call failed"):
+        _start_office_process(
+            ("soffice.exe", "--headless"),
+            winapi=FakeWinapi(),
+            kernel32=FakeKernel32(),
+            startup_info=object(),
+        )
+
+    assert ("close-kernel-handle", 401) in calls
+    assert ("close-kernel-handle", 302) in calls
+    assert ("close-process-handle", 301) in calls
+
+
+def test_windows_job_assignment_failure_terminates_suspended_process():
+    calls: list[tuple[object, ...]] = []
+
+    class FakeWinapi:
+        INFINITE = 0xFFFFFFFF
+        WAIT_OBJECT_0 = 0
+        WAIT_TIMEOUT = 258
+
+        def CreateProcess(self, *_args):
+            calls.append(("create-process",))
+            return 301, 302, 303, 304
+
+        def WaitForSingleObject(self, handle, timeout):
+            calls.append(("wait", handle, timeout))
+            return self.WAIT_TIMEOUT
+
+        def TerminateProcess(self, handle, exit_code):
+            calls.append(("terminate-process", handle, exit_code))
+
+        def CloseHandle(self, handle):
+            calls.append(("close-process-handle", handle))
+
+    class FakeKernel32:
+        def CreateJobObjectW(self, _security, _name):
+            return 401
+
+        def SetInformationJobObject(self, *_args):
+            return 1
+
+        def AssignProcessToJobObject(self, handle, process_handle):
+            calls.append(("assign-job", handle, process_handle))
+            return 0
+
+        def ResumeThread(self, thread_handle):
+            calls.append(("resume-thread", thread_handle))
+            return 1
+
+        def CloseHandle(self, handle):
+            calls.append(("close-kernel-handle", handle))
+            return 1
+
+    with pytest.raises(OSError, match="Windows API call failed"):
+        _start_office_process(
+            ("soffice.exe", "--headless"),
+            winapi=FakeWinapi(),
+            kernel32=FakeKernel32(),
+            startup_info=object(),
+        )
+
+    assert ("assign-job", 401, 301) in calls
+    assert not any(call[0] == "resume-thread" for call in calls)
+    assert ("close-kernel-handle", 401) in calls
+    assert ("terminate-process", 301, 1) in calls
+    assert ("close-process-handle", 301) in calls
+    assert ("close-kernel-handle", 302) in calls
+
+
+def test_windows_job_cleanup_closes_process_handle_after_terminate_error():
+    calls: list[str] = []
+
+    class FailingJob:
+        def terminate(self):
+            calls.append("terminate-job")
+            raise OSError("terminate failed")
+
+        def close(self):
+            calls.append("close-job")
+
+    class FakeProcess:
+        def wait(self, timeout):
+            calls.append(f"wait-{timeout}")
+            return 0
+
+        def kill(self):
+            calls.append("kill-process")
+
+        def close(self):
+            calls.append("close-process")
+
+    with pytest.raises(OSError, match="terminate failed"):
+        _terminate_process_tree(
+            FakeProcess(),
+            windows_job=FailingJob(),
+        )
+
+    assert calls == [
+        "terminate-job",
+        "close-job",
+        "wait-5",
+        "close-process",
+    ]
+
+
+def test_build_service_refreshes_before_validation_and_atomic_replace(
+    tmp_path: Path,
+):
+    output = tmp_path / "thesis.docx"
+    calls: list[str] = []
+
+    class MinimalRenderer:
+        def render(self, _plan, path):
+            calls.append("render")
+            _write_minimal_package(Path(path))
+            return Path(path)
+
+    class RecordingRefresher:
+        def refresh(self, _path):
+            calls.append("refresh")
+            return True
+
+    def recording_validator(path):
+        calls.append("validate")
+        validate_docx_package(path)
+
+    def recording_replace(source, target):
+        calls.append("replace")
+        source.replace(target)
+
+    build_service(
+        EXAMPLE_SOURCE,
+        output,
+        dependencies=ApplicationDependencies(
+            renderer=MinimalRenderer(),
+            document_refresher=RecordingRefresher(),
+            package_validator=recording_validator,
+            replace_file=recording_replace,
+        ),
+    )
+
+    assert calls == ["render", "refresh", "validate", "replace"]
+    validate_docx_package(output)
+
+
+@pytest.mark.parametrize("mode", ["false", "error"])
+def test_build_service_restores_rendered_package_after_optional_refresh_failure(
+    tmp_path: Path,
+    mode: str,
+):
+    output = tmp_path / "thesis.docx"
+    validated_bytes: list[bytes] = []
+
+    class MinimalRenderer:
+        def render(self, _plan, path):
+            _write_minimal_package(Path(path))
+            return Path(path)
+
+    class FailingRefresher:
+        def refresh(self, path):
+            Path(path).write_bytes(b"corrupted")
+            if mode == "error":
+                raise RuntimeError("refresh exploded")
+            return False
+
+    def recording_validator(path):
+        validated_bytes.append(Path(path).read_bytes())
+        validate_docx_package(path)
+
+    build_service(
+        EXAMPLE_SOURCE,
+        output,
+        dependencies=ApplicationDependencies(
+            renderer=MinimalRenderer(),
+            document_refresher=FailingRefresher(),
+            package_validator=recording_validator,
+        ),
+    )
+
+    assert len(validated_bytes) == 1
+    assert validated_bytes[0] != b"corrupted"
+    assert output.read_bytes() == validated_bytes[0]
+    validate_docx_package(output)
+
+
+def test_successful_refresh_with_corrupt_package_preserves_previous_output(
+    tmp_path: Path,
+):
+    output = tmp_path / "thesis.docx"
+    output.write_bytes(b"previous-valid-output")
+
+    class MinimalRenderer:
+        def render(self, _plan, path):
+            _write_minimal_package(Path(path))
+            return Path(path)
+
+    class CorruptingRefresher:
+        def refresh(self, path):
+            Path(path).write_bytes(b"corrupted")
+            return True
+
+    with pytest.raises(ApplicationStageError) as captured:
+        build_service(
+            EXAMPLE_SOURCE,
+            output,
+            dependencies=ApplicationDependencies(
+                renderer=MinimalRenderer(),
+                document_refresher=CorruptingRefresher(),
+            ),
+        )
+
+    assert captured.value.stage is BuildStage.FINALIZE
+    assert output.read_bytes() == b"previous-valid-output"
+    assert _temporary_outputs(output) == []
 
 
 def _write_minimal_package(
