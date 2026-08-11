@@ -1,0 +1,65 @@
+{
+  "touched_specs": [
+    "ui-design",
+    "system-architecture",
+    "frontend-backend-data-flow",
+    "component-architecture"
+  ],
+  "ui_rules": [
+    "reuse-current-workbench-shell",
+    "segmented-preview-mode-control",
+    "engine-and-freshness-text-labels",
+    "desktop-and-mobile-width-coverage"
+  ],
+  "architecture_modules": [
+    "application-pdf-preview-exporter",
+    "application-build-result",
+    "web-workspace-artifact-reader",
+    "tauri-pdf-picker-and-reader",
+    "frontend-final-layout-preview"
+  ],
+  "api_contracts": [
+    "PdfPreviewExporter.export(docx_path,pdf_path)->PdfPreviewArtifact|None",
+    "build_service(...)->BuildResult.final_preview",
+    "build-event:output.finalPreview",
+    "http:GET /api/v1/workspaces/{workspace_id}/files/{file_name}",
+    "tauri:pick_pdf_preview",
+    "tauri:read_pdf_preview",
+    "WorkbenchTransport.resolveFinalPreview",
+    "WorkbenchTransport.pickFinalPreview"
+  ],
+  "database_entities": [
+    "none:v1-local-files-only"
+  ],
+  "permissions": [
+    "inputs-read-only",
+    "write-explicit-docx-and-derived-pdf-only",
+    "web-workspace-bound-pdf-read",
+    "tauri-user-selected-or-derived-pdf-read",
+    "no-network-or-secret-required"
+  ],
+  "operational_constraints": [
+    "offline-first",
+    "office-export-optional",
+    "engine-label-must-be-truthful",
+    "bounded-timeout-and-process-cleanup",
+    "pdf-signature-validation",
+    "object-url-revocation",
+    "docx-success-independent-from-pdf-success"
+  ],
+  "data_flows": [
+    "FLOW-BUILD",
+    "FLOW-FINAL-PREVIEW"
+  ],
+  "theme_modes": [
+    "light-only",
+    "theme-toggle:none",
+    "prototype:desktop-and-mobile"
+  ],
+  "locale_policy": [
+    "i18n:disabled",
+    "locales:zh-CN",
+    "default-locale:zh-CN"
+  ],
+  "unresolved_gaps": []
+}

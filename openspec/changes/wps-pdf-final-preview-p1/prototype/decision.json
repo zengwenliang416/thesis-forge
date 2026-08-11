@@ -1,0 +1,11 @@
+{
+  "status": "approved",
+  "prototype_code": "required_present",
+  "prototype_type": "ui-html",
+  "approved_variant": "dual-preview-final-layout-v1",
+  "promotion": "requires_development_gate",
+  "approved_by": "user",
+  "approved_at": "2026-08-11",
+  "approval_text": "批准 dual-preview-final-layout-v1 原型，进入开发。",
+  "blocked_reasons": []
+}

@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "change_id": "wps-pdf-final-preview-p1",
+  "assertions": [
+    {
+      "id": "A1",
+      "statement": "The right rail switches between navigable structural preview and a real PDF final-layout preview with a truthful Office engine label.",
+      "verify_via": "e2e",
+      "status": "failing",
+      "evidence_ref": null
+    },
+    {
+      "id": "A2",
+      "statement": "A compatible LibreOffice can export an atomic validated PDF without making PDF availability a condition of DOCX build success.",
+      "verify_via": "redteam",
+      "status": "failing",
+      "evidence_ref": null
+    },
+    {
+      "id": "A3",
+      "statement": "Web, macOS, and Windows can display an explicitly selected WPS-exported PDF and mark it stale after source or template changes.",
+      "verify_via": "sensory",
+      "status": "failing",
+      "evidence_ref": null
+    }
+  ]
+}

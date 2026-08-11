@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>ThesisForge 双预览原型</title>
+    <link rel="stylesheet" href="./styles.css">
+  </head>
+  <body>
+    <main
+      class="app-shell"
+      data-specnav-project-shell="thesisforge-workbench"
+      data-specnav-screen="thesis-workbench-dual-preview"
+      data-specnav-variant="dual-preview-final-layout-v1"
+      data-specnav-state="libreoffice-ready"
+      data-preview-mode="final"
+    >
+      <header class="product-bar" data-specnav-component="product-bar">
+        <div class="brand">
+          <span class="brand-mark">TF</span>
+          <div><strong>ThesisForge</strong><small>学术论文编译工作台</small></div>
+        </div>
+        <div class="document-name"><span class="status-dot"></span>complete-thesis.md</div>
+        <div class="actions">
+          <button>保存</button>
+          <button>验证</button>
+          <button class="primary">构建 DOCX</button>
+        </div>
+      </header>
+
+      <section class="status-strip" data-specnav-component="workspace-status">
+        <div><strong>文稿、模板与预览已同步</strong><span>当前内容来自同一份已保存快照。</span></div>
+        <div class="template-chip">模板 <b>HUT 硕士论文</b></div>
+      </section>
+
+      <section class="prototype-controls" aria-label="原型评审控制">
+        <strong>评审状态</strong>
+        <div class="control-group">
+          <button data-preview-mode="structure">结构预览</button>
+          <button data-preview-mode="final" aria-pressed="true">最终版式</button>
+        </div>
+        <div class="control-group state-controls">
+          <button data-set-state="libreoffice-ready" aria-pressed="true">LibreOffice</button>
+          <button data-set-state="wps-ready">WPS</button>
+          <button data-set-state="building">构建中</button>
+          <button data-set-state="stale">已过期</button>
+          <button data-set-state="unavailable">不可用</button>
+          <button data-set-state="failed">失败</button>
+        </div>
+      </section>
+
+      <nav class="mobile-tabs" aria-label="工作台面板">
+        <button>大纲</button><button>编辑</button><button aria-pressed="true">预览</button><button>诊断</button>
+      </nav>
+
+      <section class="workbench">
+        <aside class="panel outline-panel" data-specnav-component="outline-panel">
+          <header class="panel-header"><span>◎</span><div><small>THESIS DOCUMENT</small><strong>论文大纲</strong></div></header>
+          <div class="outline-root">▤ complete-thesis.md</div>
+          <ol class="outline">
+            <li><span>摘要</span><code>sec:abstract</code></li>
+            <li><span>1 绪论</span><code>chap:intro</code></li>
+            <li class="nested"><span>1.1 研究背景</span><code>sec:background</code></li>
+            <li><span>2 系统设计</span><code>chap:design</code></li>
+            <li class="nested"><span>2.1 技术路线</span><code>sec:route</code></li>
+            <li><span>参考文献</span><code>sec:bib</code></li>
+          </ol>
+        </aside>
+
+        <section class="panel editor-panel" data-specnav-component="markdown-editor">
+          <header class="panel-header"><span>⌘</span><div><small>MARKDOWN SOURCE</small><strong>论文文稿</strong></div></header>
+          <pre><code>---
+title: 面向模板驱动的学术论文编译方法研究
+template: hut-master-2026
+---
+
+# 绪论 {#chap:intro}
+
+## 研究背景 {#sec:background}
+
+学位论文的格式要求涉及页面、段落、标题、
+图表、公式、目录和参考文献等多个层次。
+
+# 系统设计 {#chap:design}
+
+本文采用 Markdown → RenderPlan → DOCX 的
+确定性编译链路。</code></pre>
+          <footer>Ln 18, Col 24 <span>UTF-8</span><span>Markdown</span></footer>
+        </section>
+
+        <section class="right-rail">
+          <section class="panel preview-panel" data-specnav-component="paper-preview">
+            <header class="panel-header preview-header">
+              <div class="header-title"><span>▧</span><div><small>DOCUMENT PREVIEW</small><strong>论文预览</strong></div></div>
+              <div class="mode-switch" data-specnav-component="preview-mode-control" role="tablist">
+                <button role="tab" data-preview-mode="structure">结构</button>
+                <button role="tab" data-preview-mode="final" aria-pressed="true">最终版式</button>
+              </div>
+            </header>
+
+            <section class="structure-preview" data-specnav-state="structure">
+              <article class="paper structure-paper">
+                <small>本科毕业论文 · 结构预览</small>
+                <h1>1 绪论</h1>
+                <h2>1.1 研究背景</h2>
+                <p>学位论文的格式要求涉及页面、段落、标题、图表、公式、目录和参考文献等多个层次。</p>
+                <div class="figure-placeholder">本地图片资源</div>
+                <p class="caption">图 1-1 ThesisForge 确定性编译链路</p>
+                <p class="disclaimer">结构预览用于检查语义、编号和引用，不代表最终分页。</p>
+              </article>
+            </section>
+
+            <section class="final-preview" data-specnav-component="final-layout-preview">
+              <div class="preview-meta">
+                <span class="engine-badge libreoffice">LibreOffice PDF</span>
+                <span class="engine-badge wps">WPS PDF</span>
+                <span class="fresh-badge">当前构建</span>
+                <button class="link-button">选择 WPS PDF</button>
+              </div>
+
+              <div class="state-card building" data-specnav-state="building">
+                <span class="spinner"></span><strong>正在生成最终版式</strong>
+                <p>DOCX 已进入最终化，完成后将加载真实 PDF。</p>
+              </div>
+              <div class="state-card unavailable" data-specnav-state="unavailable">
+                <strong>自动 PDF 不可用</strong>
+                <p>未发现兼容的 LibreOffice。DOCX 已正常生成，可选择 WPS 导出的 PDF。</p>
+                <button class="primary">选择 WPS PDF</button>
+              </div>
+              <div class="state-card failed" data-specnav-state="failed">
+                <strong>PDF 导出失败</strong>
+                <p>DOCX 构建成功，最终版式未更新。请重新构建或选择 WPS PDF。</p>
+                <button>重新构建</button><button class="primary">选择 WPS PDF</button>
+              </div>
+
+              <div class="pdf-stage" data-specnav-state="ready">
+                <div class="stale-banner"><strong>预览已过期</strong><span>文稿或模板已改变，请重新构建。</span><button>重新构建</button></div>
+                <article class="pdf-page">
+                  <div class="university">湖南工业大学</div>
+                  <h1>面向模板驱动的学术论文编译方法研究</h1>
+                  <div class="cover-rule"></div>
+                  <dl><div><dt>研究生姓名</dt><dd>曾文亮</dd></div><div><dt>指导教师</dt><dd>示例导师</dd></div><div><dt>学科专业</dt><dd>计算机技术</dd></div></dl>
+                  <footer>二〇二六年八月</footer>
+                </article>
+                <article class="pdf-page content-page">
+                  <span class="page-number">I</span>
+                  <h2>摘 要</h2>
+                  <p>本文设计并实现一个本地优先、确定性、模板驱动的学术论文编译器。</p>
+                  <p>系统通过中立 RenderPlan 隔离 Markdown 语义与 DOCX 实现细节。</p>
+                  <p class="keywords"><b>关键词：</b>学位论文；模板驱动；DOCX；确定性编译</p>
+                </article>
+              </div>
+            </section>
+          </section>
+
+          <section class="panel diagnostics" data-specnav-component="diagnostics-panel">
+            <header><strong>诊断</strong><span class="success">0 错误</span><span>2 提示</span></header>
+            <p>PDF 最终预览不替代结构诊断；两者来自同一保存快照。</p>
+          </section>
+        </section>
+      </section>
+    </main>
+    <script src="./app.js"></script>
+  </body>
+</html>

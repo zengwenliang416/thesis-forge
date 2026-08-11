@@ -1,0 +1,57 @@
+{
+  "schema": "specnav.prototype.verifier.v1",
+  "status": "green",
+  "checked_entry": "artifact/index.html",
+  "project_fidelity": {
+    "status": "green",
+    "inventory": "visual-inventory.json",
+    "shell_checked": true,
+    "generic_shell_detected": false,
+    "notes": [
+      "The prototype mirrors the current ThesisForge product bar, saved-snapshot strip, outline, Markdown editor, right preview rail and diagnostics panel.",
+      "Business copy and density were taken from the current React components, CSS and user-manual screenshots.",
+      "No theme, locale, account or generic dashboard controls were introduced."
+    ]
+  },
+  "visual_matrix": {
+    "viewports": [
+      "desktop-1440x900",
+      "mobile-390x844"
+    ],
+    "theme_modes": [
+      "light"
+    ],
+    "locales": [
+      "zh-CN-fixed-copy"
+    ],
+    "states": [
+      "structure",
+      "libreoffice-ready",
+      "wps-ready",
+      "building",
+      "stale",
+      "unavailable",
+      "failed"
+    ]
+  },
+  "checks": [
+    "Requirements contract returned ok:true for wps-pdf-final-preview-p1.",
+    "OpenSpec strict validation passed for wps-pdf-final-preview-p1.",
+    "artifact/index.html loaded successfully through a local HTTP server in installed Google Chrome.",
+    "Desktop ready and stale states rendered the current ThesisForge three-column shell and visible engine/freshness labels.",
+    "The 390px WPS state rendered without horizontal overflow and kept the preview mode and recovery action visible.",
+    "The artifact exposes data-specnav-screen, data-specnav-project-shell, component, state and variant anchors.",
+    "The prototype uses static PDF-like pages only to review layout and state behavior; production must render real PDF bytes."
+  ],
+  "evidence": [
+    "openspec/changes/wps-pdf-final-preview-p1/prototype/desktop-ready.png",
+    "openspec/changes/wps-pdf-final-preview-p1/prototype/desktop-stale.png",
+    "openspec/changes/wps-pdf-final-preview-p1/prototype/mobile-wps.png",
+    "openspec/changes/wps-pdf-final-preview-p1/prototype/visual-inventory.json",
+    "openspec/changes/wps-pdf-final-preview-p1/prototype/screen-map.json",
+    "frontend/src/components/WorkbenchShell.tsx",
+    "frontend/src/components/PreviewPanels.tsx",
+    "frontend/src/styles.css"
+  ],
+  "blockers": []
+}

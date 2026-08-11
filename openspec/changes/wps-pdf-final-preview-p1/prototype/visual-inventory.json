@@ -1,0 +1,105 @@
+{
+  "schema": "specnav.prototype.visualInventory.v1",
+  "version": "1",
+  "discovery_status": "complete",
+  "source_project": "ThesisForge",
+  "evidence": {
+    "screenshots": [
+      "docs/user-manual/images/02-workbench-overview.png",
+      "docs/user-manual/images/04-build-progress.png",
+      "docs/user-manual/images/05-build-complete.png"
+    ],
+    "routes": [
+      "frontend/src/main.tsx"
+    ],
+    "design_specs": [
+      "openspec/specs/ui-design/design.md",
+      "frontend/src/styles.css"
+    ],
+    "component_sources": [
+      "frontend/src/components/WorkbenchShell.tsx",
+      "frontend/src/components/PreviewPanels.tsx",
+      "frontend/src/components/WorkbenchPanels.tsx",
+      "openspec/changes/wps-pdf-final-preview-p1/component-impact-map.json"
+    ],
+    "codegraph_claims": [
+      "PreviewResult",
+      "BuildOutput",
+      "PaperPreview",
+      "WorkspaceState"
+    ]
+  },
+  "project_shell": {
+    "source": "current React workbench",
+    "required_elements": [
+      "ThesisForge product bar",
+      "saved snapshot status strip",
+      "outline panel",
+      "Markdown editor",
+      "right preview rail",
+      "diagnostics summary",
+      "build action"
+    ],
+    "omitted_elements": [
+      "theme toggle",
+      "locale switcher",
+      "account menu"
+    ],
+    "theme_policy": "light-only",
+    "i18n_policy": "fixed zh-CN"
+  },
+  "business_surface": {
+    "screens": [
+      "thesis-workbench-dual-preview"
+    ],
+    "fields": [
+      "论文大纲",
+      "Markdown 文稿",
+      "结构预览",
+      "最终版式",
+      "PDF 引擎",
+      "预览新鲜度"
+    ],
+    "actions": [
+      "构建 DOCX",
+      "切换预览模式",
+      "选择 WPS PDF",
+      "重新构建"
+    ],
+    "states": [
+      "structure",
+      "building",
+      "libreoffice-ready",
+      "wps-ready",
+      "stale",
+      "unavailable",
+      "failed"
+    ]
+  },
+  "verification_matrix": {
+    "viewports": [
+      "desktop-1440x900",
+      "mobile-390x844"
+    ],
+    "theme_modes": [
+      "light"
+    ],
+    "locales": [
+      "zh-CN"
+    ],
+    "states": [
+      "structure",
+      "building",
+      "libreoffice-ready",
+      "wps-ready",
+      "stale",
+      "unavailable",
+      "failed"
+    ]
+  },
+  "unsupported_capabilities": [
+    "dark-mode",
+    "locale-switching",
+    "real-pdf-rendering-in-prototype"
+  ]
+}

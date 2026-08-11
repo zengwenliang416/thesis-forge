@@ -1,0 +1,50 @@
+{
+  "screens": [
+    {
+      "id": "thesis-workbench-dual-preview",
+      "label": "ThesisForge 论文编译工作台双预览",
+      "requirements": [
+        "requirements.md#UI Design Impact",
+        "requirements.md#Frontend-Backend Data Flow Impact"
+      ],
+      "acceptance": [
+        "acceptance.md#User-Visible Criteria",
+        "acceptance.md#System Criteria"
+      ],
+      "components": [
+        "PaperPreview",
+        "PreviewModeControl",
+        "FinalLayoutPreview",
+        "DiagnosticsPanel"
+      ],
+      "visual_evidence": [
+        "visual-inventory.json#project_shell"
+      ],
+      "data_flows": [
+        "FLOW-BUILD",
+        "FLOW-FINAL-PREVIEW"
+      ],
+      "theme_modes": [
+        "light"
+      ],
+      "locales": [
+        "zh-CN"
+      ],
+      "implementation_files": [
+        "frontend/src/components/PreviewPanels.tsx",
+        "frontend/src/components/WorkbenchShell.tsx",
+        "frontend/src/state/workspace.ts",
+        "frontend/src/styles.css"
+      ]
+    }
+  ],
+  "variants": [
+    "structure",
+    "libreoffice-ready",
+    "wps-ready",
+    "building",
+    "stale",
+    "unavailable",
+    "failed"
+  ]
+}

@@ -1,0 +1,57 @@
+{
+  "new_components": [
+    "PdfPreviewArtifact",
+    "PdfPreviewExporter",
+    "LibreOfficePdfPreviewExporter",
+    "FinalLayoutPreview",
+    "PreviewModeControl"
+  ],
+  "reused_components": [
+    "ApplicationDependencies",
+    "BuildResult",
+    "WorkbenchCommandDispatcher",
+    "WebWorkspaceRuntime",
+    "WorkbenchHttpApp",
+    "WorkbenchTransport",
+    "WorkspaceState",
+    "PaperPreview",
+    "PanelHeader"
+  ],
+  "extraction_triggers": [
+    "Web and Tauri must share one FinalPreviewDescriptor and reducer state machine.",
+    "Automatic and imported PDF sources must share one object URL lifecycle.",
+    "LibreOffice discovery/process helpers must be reused instead of copied from office_refresh.py."
+  ],
+  "forbidden_dependencies": [
+    "core/parser.py -> pdf preview",
+    "core/model.py -> pdf preview",
+    "core/compiler.py -> pdf preview",
+    "core/render_plan.py -> pdf preview",
+    "renderers/docx -> HTTP/Tauri/PDF viewer",
+    "React components -> fetch/invoke directly",
+    "LibreOffice preview -> WPS engine label",
+    "macOS WPS preview -> Accessibility UI automation"
+  ],
+  "hooks": [
+    "frontend object URL create/revoke lifecycle",
+    "workspace reducer stale transition"
+  ],
+  "utilities": [
+    "PDF signature validator",
+    "derived preview path resolver",
+    "plain workspace PDF name validator"
+  ],
+  "services": [
+    "application PDF export orchestration",
+    "Web PDF artifact response",
+    "Tauri PDF picker and binary reader"
+  ],
+  "required_component_tests": [
+    "Python exporter and build integration tests",
+    "HTTP artifact security tests",
+    "TypeScript descriptor/reducer/component tests",
+    "Rust PDF picker/reader contract tests",
+    "Web and desktop preview flow E2E tests"
+  ],
+  "unresolved_gaps": []
+}
