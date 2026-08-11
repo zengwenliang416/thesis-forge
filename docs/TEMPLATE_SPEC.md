@@ -541,8 +541,33 @@ middle_dot
 
 Renderer 为 TOC 1、TOC 2、TOC 3 创建或更新真实 Word 样式，并在右侧写入页码
 制表位和 leader。`page_number_tab` 省略时使用页面内容宽度；提供 `em` 时
-按该级 TOC 样式的有效字号解析。目录内容使用真实 `TOC` field，不生成静态
-目录文本。
+按该级 TOC 样式的有效字号解析。
+
+模板只控制“目录”标题和各级目录条目的样式，不保存目录条目、页码或静态目录
+文本。Renderer 会先创建独立的 `toc.title` 标题段落，再在下一段创建真实、
+可编辑且标记为 dirty 的 Word `TOC` complex field；文档设置
+`w:updateFields=true`，因此没有可用 Office 布局引擎时，Word、WPS 或
+LibreOffice 仍可在打开文档后手动更新目录。
+
+默认构建服务会在 DOCX Renderer 完成后尝试使用本机 LibreOffice 计算目录条目
+和页码，再执行 DOCX package validation 和原子替换。该步骤是可选增强：
+LibreOffice 未安装、无法连接、刷新失败或超时时，构建服务恢复 Renderer 生成
+的原始有效 DOCX，保留 dirty TOC field，不把失败或部分写入的文件替换为最终
+输出。整个刷新流程只访问本地进程和文件，不访问网络或 AI 服务。
+
+运行时环境变量如下：
+
+| 环境变量 | 默认/作用 |
+| --- | --- |
+| `THESISFORGE_OFFICE_REFRESH` | 默认 `auto`；设为 `0`、`false`、`no`、`off` 或 `disabled` 可关闭自动刷新 |
+| `THESISFORGE_LIBREOFFICE` | 可选；显式指定 `soffice` / `soffice.exe` 路径 |
+| `THESISFORGE_LIBREOFFICE_PYTHON` | 可选；显式指定能够 import UNO 的 Python 解释器 |
+
+macOS 默认发现 `/Applications/LibreOffice.app`。macOS、Linux 和 Windows
+都使用 `--headless`、隔离 profile、私有 UNO pipe 和 hidden document load，
+每次构建最多启动一个 LibreOffice 进程。CLI、Web 服务和 macOS/Windows 桌面端共用同一
+`build_service`；是否能预填页码取决于实际执行构建的主机是否安装兼容的
+LibreOffice 及 UNO Python。未安装时不会影响 DOCX 的可编辑性和后续手动更新。
 
 ## 8. bibliography 与 citation presentation
 
@@ -780,7 +805,7 @@ page_number:
 
 | 字段 | 默认/约束 |
 | --- | --- |
-| `format` | `decimal`、`roman-lower`、`roman-upper`、`none`；默认 `decimal` |
+| `format` | `decimal`、`roman-lower`（i/ii/iii）、`roman-upper`（I/II/III）、`none`；默认 `decimal` |
 | `restart` | 默认 `None`；提供时必须是大于等于 1 的整数 |
 | `display` | `PageNumberDisplaySpec`，默认使用下表的 legacy 文本 |
 
@@ -1187,7 +1212,7 @@ sections:
           page_suffix: ""
           include_total: false
     page_number:
-      format: roman-lower
+      format: roman-upper
       restart: 1
       display:
         alignment: center

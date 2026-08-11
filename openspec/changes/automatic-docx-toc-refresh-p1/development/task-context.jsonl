@@ -4,3 +4,5 @@
 {"task_id":"001-toc-field-structure","status":"task-ready","source":"specnav-vertical-slices","note":"Task packet created; fill brief.md and context.json before development entry can pass."}
 {"task_id":"002-libreoffice-refresh","status":"task-ready","source":"specnav-vertical-slices","note":"Task packet created; fill brief.md and context.json before development entry can pass."}
 {"task_id":"003-build-finalization-verification","status":"task-ready","source":"specnav-vertical-slices","note":"Task packet created; fill brief.md and context.json before development entry can pass."}
+{"task_id":"002-libreoffice-refresh","status":"completed","source":"specnav-controller","note":"Cross-platform discovery, isolated UNO refresh, failure restoration and Windows Job Object process ownership are implemented and reviewed."}
+{"task_id":"003-build-finalization-verification","status":"completed","source":"specnav-controller","note":"Shared build finalization, documentation, configurable uppercase HUT front-matter page numbers and complete verification are implemented."}

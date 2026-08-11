@@ -6,22 +6,22 @@
       "id": "A1",
       "statement": "The TOC title is a standalone styled paragraph followed by a real editable dirty TOC field whose update cannot remove the title.",
       "verify_via": "unit",
-      "status": "failing",
-      "evidence_ref": null
+      "status": "passing",
+      "evidence_ref": "development/tasks/001-toc-field-structure/report.md; tests/test_docx_renderer.py"
     },
     {
       "id": "A2",
       "statement": "A compatible local LibreOffice refreshes TOC entries and page numbers before package validation and atomic output replacement.",
       "verify_via": "e2e",
-      "status": "failing",
-      "evidence_ref": null
+      "status": "passing",
+      "evidence_ref": "development/tasks/003-build-finalization-verification/report.md; output/verification/automatic-docx-toc-refresh-p1/hut-toc-refreshed.docx"
     },
     {
       "id": "A3",
       "statement": "Missing, failed, or timed-out Office refresh safely preserves the valid rendered DOCX and never corrupts or replaces a previous output.",
       "verify_via": "redteam",
-      "status": "failing",
-      "evidence_ref": null
+      "status": "passing",
+      "evidence_ref": "development/tasks/002-libreoffice-refresh/report.md; development/tasks/003-build-finalization-verification/report.md; tests/test_application_services.py"
     }
   ]
 }

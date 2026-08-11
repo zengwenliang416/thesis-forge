@@ -1,20 +1,16 @@
 {
   "schema": "specnav.codegraph.claims_report.v1",
-  "generated_at": "2026-08-10T14:33:31.188Z",
+  "generated_at": "2026-08-11T03:16:15.258Z",
   "active_change": "automatic-docx-toc-refresh-p1",
   "claims_file": "openspec/changes/automatic-docx-toc-refresh-p1/codegraph/claims-map.json",
   "evidence_index": "openspec/changes/automatic-docx-toc-refresh-p1/codegraph/evidence-index.json",
   "claims_count": 3,
-  "verified_claims": [],
-  "unverified_claims": [
+  "verified_claims": [
     "development:task-001-toc-field-structure",
     "development:task-002-libreoffice-refresh",
     "development:task-003-build-finalization-verification"
   ],
+  "unverified_claims": [],
   "blockers": [],
-  "warnings": [
-    "codegraph:claim-unverified:development:task-001-toc-field-structure",
-    "codegraph:claim-unverified:development:task-002-libreoffice-refresh",
-    "codegraph:claim-unverified:development:task-003-build-finalization-verification"
-  ]
+  "warnings": []
 }

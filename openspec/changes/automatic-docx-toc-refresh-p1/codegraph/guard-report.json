@@ -1,6 +1,6 @@
 {
   "schema": "specnav.codegraph.guard_report.v1",
-  "generated_at": "2026-08-10T14:33:31.189Z",
+  "generated_at": "2026-08-11T03:16:15.258Z",
   "active_change": "automatic-docx-toc-refresh-p1",
   "stage": "development",
   "ok": true,
@@ -34,10 +34,10 @@
       "initialized": true,
       "projectPath": "/Volumes/zwl/open_sources/thesis-forge",
       "indexPath": "/Volumes/zwl/open_sources/thesis-forge/.codegraph",
-      "lastIndexed": "2026-08-10T13:46:14.794Z",
-      "fileCount": 148,
-      "nodeCount": 2209,
-      "edgeCount": 6639,
+      "lastIndexed": "2026-08-11T03:04:13.227Z",
+      "fileCount": 151,
+      "nodeCount": 2387,
+      "edgeCount": 6981,
       "pendingChanges": {
         "added": 0,
         "modified": 0,
@@ -61,34 +61,83 @@
   },
   "evidence_index": {
     "schema": "specnav.codegraph.evidence_index.v1",
-    "generated_at": "2026-08-10T14:33:31.183Z",
+    "generated_at": "2026-08-11T03:07:03.110Z",
     "active_change": "automatic-docx-toc-refresh-p1",
     "source_raw": "openspec/changes/automatic-docx-toc-refresh-p1/codegraph/evidence.jsonl",
-    "by_claim": {},
-    "by_stage": {},
+    "by_claim": {
+      "development:task-001-toc-field-structure": {
+        "status": "matched",
+        "evidence_ids": [
+          "ev-mso2usik"
+        ],
+        "files": [
+          "src/thesis_forge/renderers/docx/fields.py",
+          "src/thesis_forge/renderers/docx/renderer.py",
+          "src/thesis_forge/renderers/docx/bookmarks.py",
+          "src/thesis_forge/renderers/docx/errors.py",
+          "bookmarks.py"
+        ],
+        "symbols": [],
+        "blockers": []
+      },
+      "development:task-002-libreoffice-refresh": {
+        "status": "matched",
+        "evidence_ids": [
+          "ev-mso2vyyt"
+        ],
+        "files": [
+          "src/thesis_forge/application/office_refresh.py"
+        ],
+        "symbols": [],
+        "blockers": []
+      },
+      "development:task-003-build-finalization-verification": {
+        "status": "matched",
+        "evidence_ids": [
+          "ev-mso2xfs9"
+        ],
+        "files": [
+          "tests/test_application_services.py",
+          "src/thesis_forge/application/services.py",
+          "src/thesis_forge/application/output.py",
+          "src/thesis_forge/renderers/docx/renderer.py",
+          "src/thesis_forge/renderers/docx/errors.py",
+          "src/thesis_forge/application/office_refresh.py",
+          "src/thesis_forge/renderers/docx/package.py",
+          "self.py"
+        ],
+        "symbols": [],
+        "blockers": []
+      }
+    },
+    "by_stage": {
+      "development": {
+        "verified": 3,
+        "partial": 0,
+        "missing": 0,
+        "stale": 0,
+        "blocking": 0
+      }
+    },
     "blockers": [],
-    "raw_exists": false,
-    "record_count": 0
+    "raw_exists": true,
+    "record_count": 3
   },
   "claims_report": {
     "schema": "specnav.codegraph.claims_report.v1",
-    "generated_at": "2026-08-10T14:33:31.188Z",
+    "generated_at": "2026-08-11T03:16:15.258Z",
     "active_change": "automatic-docx-toc-refresh-p1",
     "claims_file": "openspec/changes/automatic-docx-toc-refresh-p1/codegraph/claims-map.json",
     "evidence_index": "openspec/changes/automatic-docx-toc-refresh-p1/codegraph/evidence-index.json",
     "claims_count": 3,
-    "verified_claims": [],
-    "unverified_claims": [
+    "verified_claims": [
       "development:task-001-toc-field-structure",
       "development:task-002-libreoffice-refresh",
       "development:task-003-build-finalization-verification"
     ],
+    "unverified_claims": [],
     "blockers": [],
-    "warnings": [
-      "codegraph:claim-unverified:development:task-001-toc-field-structure",
-      "codegraph:claim-unverified:development:task-002-libreoffice-refresh",
-      "codegraph:claim-unverified:development:task-003-build-finalization-verification"
-    ]
+    "warnings": []
   },
   "drift": {
     "schema": "specnav.codegraph.drift.v1",
@@ -97,9 +146,5 @@
     "blockers": []
   },
   "blockers": [],
-  "warnings": [
-    "codegraph:claim-unverified:development:task-001-toc-field-structure",
-    "codegraph:claim-unverified:development:task-002-libreoffice-refresh",
-    "codegraph:claim-unverified:development:task-003-build-finalization-verification"
-  ]
+  "warnings": []
 }

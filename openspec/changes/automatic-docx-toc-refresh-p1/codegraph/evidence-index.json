@@ -1,11 +1,64 @@
 {
   "schema": "specnav.codegraph.evidence_index.v1",
-  "generated_at": "2026-08-10T14:33:31.183Z",
+  "generated_at": "2026-08-11T03:07:03.110Z",
   "active_change": "automatic-docx-toc-refresh-p1",
   "source_raw": "openspec/changes/automatic-docx-toc-refresh-p1/codegraph/evidence.jsonl",
-  "by_claim": {},
-  "by_stage": {},
+  "by_claim": {
+    "development:task-001-toc-field-structure": {
+      "status": "matched",
+      "evidence_ids": [
+        "ev-mso2usik"
+      ],
+      "files": [
+        "src/thesis_forge/renderers/docx/fields.py",
+        "src/thesis_forge/renderers/docx/renderer.py",
+        "src/thesis_forge/renderers/docx/bookmarks.py",
+        "src/thesis_forge/renderers/docx/errors.py",
+        "bookmarks.py"
+      ],
+      "symbols": [],
+      "blockers": []
+    },
+    "development:task-002-libreoffice-refresh": {
+      "status": "matched",
+      "evidence_ids": [
+        "ev-mso2vyyt"
+      ],
+      "files": [
+        "src/thesis_forge/application/office_refresh.py"
+      ],
+      "symbols": [],
+      "blockers": []
+    },
+    "development:task-003-build-finalization-verification": {
+      "status": "matched",
+      "evidence_ids": [
+        "ev-mso2xfs9"
+      ],
+      "files": [
+        "tests/test_application_services.py",
+        "src/thesis_forge/application/services.py",
+        "src/thesis_forge/application/output.py",
+        "src/thesis_forge/renderers/docx/renderer.py",
+        "src/thesis_forge/renderers/docx/errors.py",
+        "src/thesis_forge/application/office_refresh.py",
+        "src/thesis_forge/renderers/docx/package.py",
+        "self.py"
+      ],
+      "symbols": [],
+      "blockers": []
+    }
+  },
+  "by_stage": {
+    "development": {
+      "verified": 3,
+      "partial": 0,
+      "missing": 0,
+      "stale": 0,
+      "blocking": 0
+    }
+  },
   "blockers": [],
-  "raw_exists": false,
-  "record_count": 0
+  "raw_exists": true,
+  "record_count": 3
 }

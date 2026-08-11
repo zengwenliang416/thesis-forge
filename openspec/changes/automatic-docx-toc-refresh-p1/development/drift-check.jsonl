@@ -1,1 +1,3 @@
 {"task_id":"001-toc-field-structure","blocking":false,"reason":"Implementation matches the approved standalone-title and following real dirty TOC field boundary; no Office process logic entered Renderer."}
+{"task_id":"002-libreoffice-refresh","blocking":false,"reason":"Office runtime discovery, isolated refresh, restoration and process-tree ownership remain behind the injectable application seam and do not enter Parser, Domain, Compiler or Renderer."}
+{"task_id":"003-build-finalization-verification","blocking":false,"reason":"Finalization order, package safety, documentation and HUT roman-upper template selection match the approved behavior; the added page-number case setting uses an existing typed template parameter without architecture drift."}

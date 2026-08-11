@@ -12,20 +12,22 @@ DOCX 仍包含可手动更新的真实目录对象。
 **用户结果：** Web、macOS 和 Windows 在安装 LibreOffice 时可直接得到已计算的目录条目
 和页码；未安装或刷新失败时不影响正常导出。
 
-- [ ] 2.1 新增可注入 `DocumentRefresher` 和默认 `LibreOfficeDocumentRefresher`。
-- [ ] 2.2 实现 macOS、Linux 和 Windows executable discovery。
-- [ ] 2.3 使用隔离 user profile、私有 UNO endpoint、hidden load、index/field update、
+- [x] 2.1 新增可注入 `DocumentRefresher` 和默认 `LibreOfficeDocumentRefresher`。
+- [x] 2.2 实现 macOS、Linux 和 Windows executable discovery。
+- [x] 2.3 使用隔离 user profile、私有 UNO endpoint、hidden load、index/field update、
   原文件保存、有界超时和进程/profile 清理。
-- [ ] 2.4 在 render 之后、package validation 和 atomic replace 之前接入刷新器。
-- [ ] 2.5 增加 missing、failure、timeout、corrupt-output、cancellation 和调用顺序测试。
+- [x] 2.4 在 render 之后、package validation 和 atomic replace 之前接入刷新器。
+- [x] 2.5 增加 missing、failure、timeout、corrupt-output、cancellation 和调用顺序测试。
 
 ## 3. Documentation And Complete Verification
 
 **用户结果：** 完整 HUT 论文导出后目录可见、可编辑、页码已填充，并且失败降级和跨平台
 安装边界有明确文档与证据。
 
-- [ ] 3.1 更新 `docs/TEMPLATE_SPEC.md`，说明 TOC 模板样式与 Office 刷新职责边界。
-- [ ] 3.2 使用本机真实 LibreOffice 构建完整 HUT 论文，检查 cached entries、field、
+- [x] 3.1 更新 `docs/TEMPLATE_SPEC.md`，说明 TOC 模板样式与 Office 刷新职责边界。
+- [x] 3.2 使用本机真实 LibreOffice 构建完整 HUT 论文，检查 cached entries、field、
   title、styles 和 DOCX package。
-- [ ] 3.3 执行聚焦测试、完整 pytest、Ruff、OpenSpec strict validation、CodeGraph、
+- [x] 3.3 执行聚焦测试、完整 pytest、Ruff、OpenSpec strict validation、CodeGraph、
   sensory review 和 SpecNav development handoff。
+- [x] 3.4 使用 `sections.front_matter.page_number.format` 配置罗马页码大小写，并将
+  HUT 模板设置为 `roman-upper`，验证 DOCX `upperRoman` 和 Office 中的 `I/II/III`。
