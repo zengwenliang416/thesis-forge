@@ -9,11 +9,13 @@ from typing import Protocol
 from uuid import uuid4
 
 from thesis_forge.application import (
+    ApplicationDependencies,
     ApplicationStageError,
     BuildCanceledError,
     BuildResult,
     BuildValidationError,
     InspectionResult,
+    LibreOfficePdfPreviewExporter,
     PreviewResult,
     ValidationResult,
     build_service,
@@ -36,6 +38,21 @@ BuildEventSink = Callable[[dict], None]
 CancellationPredicate = Callable[[], bool]
 
 
+def final_preview_build_service(
+    source: str | Path,
+    output: str | Path,
+    **kwargs,
+) -> BuildResult:
+    return build_service(
+        source,
+        output,
+        dependencies=ApplicationDependencies(
+            pdf_preview_exporter=LibreOfficePdfPreviewExporter(),
+        ),
+        **kwargs,
+    )
+
+
 class RuntimePaths(Protocol):
     def source_path(self, source: dict) -> Path: ...
 
@@ -45,7 +62,62 @@ class RuntimePaths(Protocol):
 
     def present_source(self, source: dict, path: Path) -> dict: ...
 
-    def present_output(self, output: dict, path: Path) -> dict: ...
+    def present_output(
+        self,
+        output: dict,
+        path: Path,
+        final_preview: object | None = None,
+    ) -> dict: ...
+
+
+def _artifact_field(artifact: object, name: str) -> object:
+    if isinstance(artifact, dict):
+        return artifact.get(name)
+    return getattr(artifact, name, None)
+
+
+def _final_preview_descriptor(
+    artifact: object | None,
+    *,
+    output_path: Path,
+    download_id: str | None = None,
+) -> dict | None:
+    if artifact is None:
+        return None
+    artifact_path_value = _artifact_field(artifact, "path")
+    if artifact_path_value is None:
+        raise ValueError("final preview artifact path is required")
+    artifact_path = Path(artifact_path_value)
+    expected_path = output_path.with_suffix(".preview.pdf")
+    if artifact_path != expected_path:
+        raise ValueError("final preview must be the derived PDF output")
+
+    name_value = _artifact_field(artifact, "name")
+    file_name = name_value if isinstance(name_value, str) else artifact_path.name
+    if (
+        not file_name
+        or Path(file_name).name != file_name
+        or "/" in file_name
+        or "\\" in file_name
+        or not file_name.lower().endswith(".pdf")
+        or artifact_path.name != file_name
+    ):
+        raise ValueError("final preview fileName must be a plain PDF file name")
+
+    engine_value = _artifact_field(artifact, "engine")
+    engine = getattr(engine_value, "value", engine_value)
+    label = _artifact_field(artifact, "label")
+    if engine != "libreoffice" or label != "LibreOffice PDF":
+        raise ValueError("automatic final preview metadata is invalid")
+
+    descriptor = {
+        "engine": "libreoffice",
+        "label": "LibreOffice PDF",
+        "fileName": file_name,
+    }
+    if download_id is not None:
+        descriptor["downloadId"] = download_id
+    return descriptor
 
 
 class DesktopRuntime:
@@ -70,8 +142,20 @@ class DesktopRuntime:
     def present_source(self, source: dict, path: Path) -> dict:
         return {"kind": "desktop", "name": source.get("fileName") or path.name}
 
-    def present_output(self, output: dict, path: Path) -> dict:
-        return {"kind": "desktop", "name": output.get("fileName") or path.name}
+    def present_output(
+        self,
+        output: dict,
+        path: Path,
+        final_preview: object | None = None,
+    ) -> dict:
+        presented = {"kind": "desktop", "name": output.get("fileName") or path.name}
+        descriptor = _final_preview_descriptor(
+            final_preview,
+            output_path=path,
+        )
+        if descriptor is not None:
+            presented["finalPreview"] = descriptor
+        return presented
 
 
 class WebWorkspaceRuntime:
@@ -142,12 +226,46 @@ class WebWorkspaceRuntime:
     def present_source(self, source: dict, path: Path) -> dict:
         return {"kind": source["kind"], "name": source.get("fileName") or path.name}
 
-    def present_output(self, output: dict, path: Path) -> dict:
-        return {
+    def present_output(
+        self,
+        output: dict,
+        path: Path,
+        final_preview: object | None = None,
+    ) -> dict:
+        workspace_id = self._workspace_id(output.get("workspaceId"))
+        presented = {
             "kind": "web-download",
             "name": output.get("fileName") or path.name,
-            "downloadId": output.get("workspaceId"),
+            "downloadId": workspace_id,
         }
+        descriptor = _final_preview_descriptor(
+            final_preview,
+            output_path=path,
+            download_id=workspace_id,
+        )
+        if descriptor is not None:
+            presented["finalPreview"] = descriptor
+        return presented
+
+    def read_pdf(self, workspace_id: object, file_name: object) -> bytes:
+        safe_workspace_id = self._workspace_id(workspace_id)
+        safe_name = self._plain_file_name(file_name)
+        if not safe_name.lower().endswith(".pdf"):
+            raise ValueError("web workspace artifact must be a PDF")
+        workspace = self.root / safe_workspace_id
+        if not workspace.is_dir():
+            raise FileNotFoundError("web workspace does not exist")
+        path = workspace / safe_name
+        if not path.exists():
+            raise FileNotFoundError("web workspace PDF does not exist")
+        if path.is_symlink() or path.resolve().parent != workspace.resolve():
+            raise ValueError("web workspace PDF escapes its workspace")
+        if not path.is_file():
+            raise FileNotFoundError("web workspace PDF does not exist")
+        content = path.read_bytes()
+        if not content.startswith(b"%PDF-"):
+            raise ValueError("web workspace artifact is not a valid PDF")
+        return content
 
 
 class WorkbenchCommandDispatcher:
@@ -460,7 +578,11 @@ class WorkbenchCommandDispatcher:
         )
         return {
             "source": self._runtime.present_source(source, source_path),
-            "output": self._runtime.present_output(output, result.output_path),
+            "output": self._runtime.present_output(
+                output,
+                result.output_path,
+                getattr(result, "final_preview", None),
+            ),
             "diagnostics": [asdict(issue) for issue in result.issues],
             "progress": stages,
         }

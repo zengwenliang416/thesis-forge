@@ -128,6 +128,77 @@ describe("runtime transports", () => {
     expect(calls).toEqual(["pick_source"]);
   });
 
+  it("resolves a Web preview from its opaque workspace descriptor", async () => {
+    const calls: string[] = [];
+    const transport = new WebWorkbenchTransport({
+      baseUrl: "http://127.0.0.1:8765",
+      fetch: async (url) => {
+        calls.push(String(url));
+        return new Response(new TextEncoder().encode("%PDF-1.7\n"), {
+          status: 200,
+          headers: { "content-type": "application/pdf" },
+        });
+      },
+    });
+
+    const bytes = await transport.resolveFinalPreview({
+      engine: "libreoffice",
+      label: "LibreOffice PDF",
+      fileName: "thesis.preview.pdf",
+      downloadId: "a".repeat(32),
+    });
+
+    expect(new TextDecoder().decode(bytes)).toBe("%PDF-1.7\n");
+    expect(calls).toEqual([
+      `http://127.0.0.1:8765/api/v1/workspaces/${"a".repeat(32)}/files/thesis.preview.pdf`,
+    ]);
+  });
+
+  it("imports a browser-selected WPS PDF through the transport contract", async () => {
+    const transport = new WebWorkbenchTransport({
+      pickPdf: async () => ({
+        fileName: "wps-export.pdf",
+        bytes: new TextEncoder().encode("%PDF-1.7\n"),
+      }),
+    });
+
+    const selected = await transport.pickFinalPreview();
+    expect(selected?.descriptor).toEqual({
+      engine: "wps",
+      label: "WPS PDF",
+      fileName: "wps-export.pdf",
+    });
+    expect(selected?.bytes).toBeInstanceOf(Uint8Array);
+  });
+
+  it("uses Tauri picker authorization and raw PDF reader commands", async () => {
+    const calls: Array<{ command: string; args?: Record<string, unknown> }> = [];
+    const descriptor = {
+      engine: "wps" as const,
+      label: "WPS PDF" as const,
+      fileName: "wps-export.pdf",
+      authorizationId: "b".repeat(32),
+    };
+    const transport = new TauriWorkbenchTransport(async (command, args) => {
+      calls.push({ command, args });
+      if (command === "pick_pdf_preview") {
+        return descriptor;
+      }
+      return new TextEncoder().encode("%PDF-1.7\n").buffer;
+    });
+
+    const selected = await transport.pickFinalPreview();
+    expect(selected?.descriptor).toEqual(descriptor);
+    expect(selected?.bytes).toBeInstanceOf(Uint8Array);
+    expect(calls).toEqual([
+      { command: "pick_pdf_preview", args: undefined },
+      {
+        command: "read_pdf_preview",
+        args: { descriptor },
+      },
+    ]);
+  });
+
   it("rejects incomplete success and failure envelopes", () => {
     expect(() =>
       assertCommandResponse({

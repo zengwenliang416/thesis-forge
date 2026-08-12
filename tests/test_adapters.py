@@ -3,6 +3,7 @@ from __future__ import annotations
 import io
 import json
 from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
 
@@ -513,6 +514,114 @@ def test_web_workspace_save_and_build_share_one_opaque_workspace(tmp_path: Path)
     assert build_calls == [
         (source_path, runtime.root / source["workspaceId"] / "thesis.docx")
     ]
+
+
+@pytest.mark.parametrize(
+    ("runtime_kind", "expected_download_id"),
+    [("desktop", None), ("web", "a" * 32)],
+)
+def test_build_serializes_strict_final_preview_without_private_paths(
+    tmp_path: Path,
+    runtime_kind: str,
+    expected_download_id: str | None,
+):
+    if runtime_kind == "web":
+        runtime = WebWorkspaceRuntime(tmp_path / "workspaces")
+        source = runtime.create_workspace("thesis.md", "# 绪论\n")
+        output_path = runtime.root / source["workspaceId"] / "thesis.docx"
+        output = {
+            "kind": "web-download",
+            "workspaceId": source["workspaceId"],
+            "fileName": "thesis.docx",
+        }
+    else:
+        runtime = DesktopRuntime()
+        source_path = tmp_path / "thesis.md"
+        source_path.write_text("# 绪论\n", encoding="utf-8")
+        source = {
+            "kind": "desktop",
+            "path": str(source_path),
+            "fileName": source_path.name,
+        }
+        output_path = tmp_path / "thesis.docx"
+        output = {
+            "kind": "desktop",
+            "path": str(output_path),
+            "fileName": output_path.name,
+        }
+
+    def build(_source, target, **_kwargs):
+        target = Path(target)
+        target.write_bytes(b"docx")
+        preview_path = target.with_suffix(".preview.pdf")
+        preview_path.write_bytes(b"%PDF-1.7\n")
+        return SimpleNamespace(
+            output_path=target,
+            issues=(),
+            final_preview=SimpleNamespace(
+                path=preview_path,
+                name=preview_path.name,
+                engine="libreoffice",
+                label="LibreOffice PDF",
+            ),
+        )
+
+    response = WorkbenchCommandDispatcher(runtime=runtime, build=build).dispatch(
+        {
+            "protocol": PROTOCOL_VERSION,
+            "requestId": "build-preview-1",
+            "operation": "build",
+            "payload": {"source": source, "output": output},
+        }
+    )
+
+    descriptor = response["result"]["output"]["finalPreview"]
+    assert descriptor == {
+        "engine": "libreoffice",
+        "label": "LibreOffice PDF",
+        "fileName": "thesis.preview.pdf",
+        **(
+            {"downloadId": source["workspaceId"]}
+            if expected_download_id is not None
+            else {}
+        ),
+    }
+    encoded = json.dumps(response)
+    assert str(tmp_path) not in encoded
+
+
+def test_build_rejects_a_final_preview_that_is_not_the_derived_pdf(
+    tmp_path: Path,
+):
+    source = tmp_path / "thesis.md"
+    source.write_text("# 绪论\n", encoding="utf-8")
+    output = tmp_path / "thesis.docx"
+
+    def build(_source, target, **_kwargs):
+        return SimpleNamespace(
+            output_path=Path(target),
+            issues=(),
+            final_preview=SimpleNamespace(
+                path=tmp_path / "other.pdf",
+                name="other.pdf",
+                engine="libreoffice",
+                label="LibreOffice PDF",
+            ),
+        )
+
+    request = _request("build", source)
+    request["payload"]["output"] = {
+        "kind": "desktop",
+        "path": str(output),
+        "fileName": output.name,
+    }
+    response = WorkbenchCommandDispatcher(
+        runtime=DesktopRuntime(),
+        build=build,
+    ).dispatch(request)
+
+    assert response["ok"] is False
+    assert response["error"]["kind"] == "request"
 
 
 def test_build_event_stream_emits_ordered_progress_and_one_success(tmp_path: Path):

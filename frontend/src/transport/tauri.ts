@@ -2,6 +2,12 @@ import { Channel } from "@tauri-apps/api/core";
 import { assertCommandResponse, type CommandEnvelope } from "./dto";
 import { assertBuildEvent, type BuildEvent } from "./buildEvents";
 import type { OpenedSource, WorkbenchTransport } from "./WorkbenchTransport";
+import {
+  readFinalPreviewDescriptor,
+  readPdfBytes,
+  type FinalPreviewDescriptor,
+  type ResolvedFinalPreview,
+} from "./finalPreview";
 
 export type TauriInvoke = (
   command: string,
@@ -70,5 +76,32 @@ export class TauriWorkbenchTransport implements WorkbenchTransport {
     } finally {
       signal.removeEventListener("abort", cancel);
     }
+  }
+
+  async resolveFinalPreview(
+    descriptor: FinalPreviewDescriptor,
+  ): Promise<Uint8Array> {
+    const preview = readFinalPreviewDescriptor(descriptor);
+    if (preview.downloadId !== undefined) {
+      throw new Error("Tauri 最终预览不能包含 Web workspace ID");
+    }
+    if (!preview.authorizationId) {
+      throw new Error("Tauri 最终预览缺少授权定位信息");
+    }
+    return readPdfBytes(
+      await this.invoke("read_pdf_preview", { descriptor: preview }),
+    );
+  }
+
+  async pickFinalPreview(): Promise<ResolvedFinalPreview | null> {
+    const result = await this.invoke("pick_pdf_preview");
+    if (result === null) {
+      return null;
+    }
+    const descriptor = readFinalPreviewDescriptor(result);
+    return {
+      descriptor,
+      bytes: await this.resolveFinalPreview(descriptor),
+    };
   }
 }

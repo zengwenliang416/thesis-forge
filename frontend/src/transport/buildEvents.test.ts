@@ -17,11 +17,27 @@ describe("build event DTO", () => {
         requestId: "build-1",
         type: "success",
         result: {
-          output: { kind: "desktop", name: "thesis.docx" },
+          output: {
+            kind: "desktop",
+            name: "thesis.docx",
+            finalPreview: {
+              engine: "libreoffice",
+              label: "LibreOffice PDF",
+              fileName: "thesis.preview.pdf",
+              authorizationId: "b".repeat(32),
+            },
+          },
           diagnostics: [],
         },
       }),
-    ).toMatchObject({ type: "success" });
+    ).toMatchObject({
+      type: "success",
+      result: {
+        output: {
+          finalPreview: { engine: "libreoffice" },
+        },
+      },
+    });
     expect(
       assertBuildEvent({
         protocol: PROTOCOL_VERSION,
@@ -66,5 +82,24 @@ describe("build event DTO", () => {
         "build-1",
       ),
     ).toThrow("无效的 ThesisForge 构建事件");
+    expect(() =>
+      assertBuildEvent({
+        protocol: PROTOCOL_VERSION,
+        requestId: "build-1",
+        type: "success",
+        result: {
+          output: {
+            kind: "desktop",
+            name: "thesis.docx",
+            finalPreview: {
+              engine: "libreoffice",
+              label: "LibreOffice PDF",
+              fileName: "../thesis.preview.pdf",
+            },
+          },
+          diagnostics: [],
+        },
+      }),
+    ).toThrow("无效的最终预览描述");
   });
 });

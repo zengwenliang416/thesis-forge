@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 import sys
 from pathlib import Path
+from types import SimpleNamespace
 
 from thesis_forge.adapters import (
     PROTOCOL_VERSION,
@@ -135,3 +136,55 @@ def test_sidecar_build_stream_passes_per_request_cancellation(tmp_path: Path):
 
     assert observed == [True]
     assert json.loads(events[-1])["type"] == "error"
+
+
+def test_sidecar_build_event_exposes_only_the_strict_preview_descriptor(
+    tmp_path: Path,
+):
+    source = tmp_path / "thesis.md"
+    source.write_text("# 绪论\n", encoding="utf-8")
+    output = tmp_path / "thesis.docx"
+
+    def build(_source, output_path, **_kwargs):
+        output_path = Path(output_path)
+        preview_path = output_path.with_suffix(".preview.pdf")
+        return SimpleNamespace(
+            output_path=output_path,
+            issues=(),
+            final_preview=SimpleNamespace(
+                path=preview_path,
+                name=preview_path.name,
+                engine="libreoffice",
+                label="LibreOffice PDF",
+            ),
+        )
+
+    dispatcher = WorkbenchCommandDispatcher(runtime=DesktopRuntime(), build=build)
+    request = {
+        "protocol": PROTOCOL_VERSION,
+        "requestId": "sidecar-preview-1",
+        "operation": "build",
+        "payload": {
+            "source": {
+                "kind": "desktop",
+                "path": str(source),
+                "fileName": source.name,
+            },
+            "output": {
+                "kind": "desktop",
+                "path": str(output),
+                "fileName": output.name,
+            },
+        },
+    }
+
+    event = json.loads(
+        list(stream_json_lines(dispatcher, json.dumps(request)))[-1]
+    )
+
+    assert event["result"]["output"]["finalPreview"] == {
+        "engine": "libreoffice",
+        "label": "LibreOffice PDF",
+        "fileName": "thesis.preview.pdf",
+    }
+    assert str(tmp_path) not in json.dumps(event)

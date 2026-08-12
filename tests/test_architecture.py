@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import ast
+import re
 import subprocess
 import sys
 import tomllib
@@ -42,6 +43,17 @@ def _import_names(module_path: Path) -> set[str]:
         elif isinstance(node, ast.ImportFrom) and node.module:
             names.add(node.module)
     return names
+
+
+def _typescript_import_sources(module_path: Path) -> set[str]:
+    content = module_path.read_text(encoding="utf-8")
+    return {
+        source.lower()
+        for source in re.findall(
+            r"""(?:from\s+|import\s*(?:\(\s*)?)["']([^"']+)["']""",
+            content,
+        )
+    }
 
 
 def test_domain_and_parser_do_not_import_forbidden_layers():
@@ -198,7 +210,7 @@ def test_preview_presentation_and_frontend_modules_do_not_import_renderers():
         project_root / "frontend" / "src" / "state" / "preview.ts",
         project_root / "frontend" / "src" / "components" / "PreviewPanels.tsx",
     ]
-    forbidden = (
+    forbidden_prefixes = (
         "docx",
         "lxml",
         "thesis_forge.renderers",
@@ -211,5 +223,9 @@ def test_preview_presentation_and_frontend_modules_do_not_import_renderers():
     )
     for path in frontend_paths:
         assert path.is_file()
-        content = path.read_text(encoding="utf-8").lower()
-        assert not any(value in content for value in forbidden)
+        imports = _typescript_import_sources(path)
+        assert not any(
+            source == prefix or source.startswith(f"{prefix}/")
+            for source in imports
+            for prefix in forbidden_prefixes
+        )

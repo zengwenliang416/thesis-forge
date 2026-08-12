@@ -1,3 +1,4 @@
+use serde::{Deserialize, Serialize};
 use serde_json::Value;
 use std::collections::HashMap;
 use std::env;
@@ -7,12 +8,13 @@ use std::path::{Path, PathBuf};
 use std::process::{Command, Stdio};
 use std::sync::atomic::{AtomicU64, Ordering};
 use std::sync::{Arc, Mutex};
-use tauri::ipc::Channel;
+use tauri::ipc::{Channel, Response};
 use tauri::{AppHandle, State};
 use tauri_plugin_shell::{
     ShellExt,
     process::{CommandEvent, TerminatedPayload},
 };
+use uuid::Uuid;
 
 pub const PROTOCOL_VERSION: &str = "thesisforge.workbench.v1";
 const WINDOWS_ACCEPTANCE_CDP_PORT_ENV: &str = "THESISFORGE_WINDOWS_CDP_PORT";
@@ -43,6 +45,82 @@ fn is_markdown_source(path: &Path) -> bool {
         .is_some_and(|extension| {
             extension.eq_ignore_ascii_case("md") || extension.eq_ignore_ascii_case("markdown")
         })
+}
+
+fn is_plain_pdf_name(file_name: &str) -> bool {
+    !file_name.is_empty()
+        && !file_name.contains('/')
+        && !file_name.contains('\\')
+        && Path::new(file_name).file_name() == Some(OsStr::new(file_name))
+        && Path::new(file_name)
+            .extension()
+            .and_then(|extension| extension.to_str())
+            .is_some_and(|extension| extension.eq_ignore_ascii_case("pdf"))
+}
+
+#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+pub struct FinalPreviewDescriptor {
+    pub engine: String,
+    pub label: String,
+    pub file_name: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub download_id: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub authorization_id: Option<String>,
+}
+
+pub fn validate_final_preview_descriptor(value: &Value) -> Result<FinalPreviewDescriptor, String> {
+    let descriptor: FinalPreviewDescriptor = serde_json::from_value(value.clone())
+        .map_err(|_| "invalid final preview descriptor".to_string())?;
+    if !is_plain_pdf_name(&descriptor.file_name) {
+        return Err("final preview fileName must be a plain PDF file name".to_string());
+    }
+    match (descriptor.engine.as_str(), descriptor.label.as_str()) {
+        ("libreoffice", "LibreOffice PDF") | ("wps", "WPS PDF") => {}
+        _ => return Err("final preview engine and label do not match".to_string()),
+    }
+    if descriptor.download_id.is_some() {
+        return Err("desktop final preview cannot contain a downloadId".to_string());
+    }
+    if descriptor.authorization_id.as_ref().is_some_and(|value| {
+        value.len() != 32 || !value.chars().all(|character| character.is_ascii_hexdigit())
+    }) {
+        return Err("desktop final preview authorizationId is invalid".to_string());
+    }
+    Ok(descriptor)
+}
+
+pub fn derived_preview_path(output_path: &Path, file_name: &str) -> Result<PathBuf, String> {
+    if !is_plain_pdf_name(file_name) {
+        return Err("final preview fileName must be a plain PDF file name".to_string());
+    }
+    let expected = output_path.with_extension("preview.pdf");
+    if expected.file_name() != Some(OsStr::new(file_name)) {
+        return Err("final preview is not the derived DOCX sibling".to_string());
+    }
+    Ok(expected)
+}
+
+pub fn read_pdf_preview_path(path: &Path) -> Result<Vec<u8>, String> {
+    if !is_plain_pdf_name(
+        path.file_name()
+            .and_then(|value| value.to_str())
+            .unwrap_or_default(),
+    ) {
+        return Err("preview must be a PDF file".to_string());
+    }
+    let metadata = std::fs::symlink_metadata(path)
+        .map_err(|error| format!("failed to read PDF preview: {error}"))?;
+    if metadata.file_type().is_symlink() || !metadata.is_file() {
+        return Err("preview must be a regular PDF file".to_string());
+    }
+    let bytes =
+        std::fs::read(path).map_err(|error| format!("failed to read PDF preview: {error}"))?;
+    if !bytes.starts_with(b"%PDF-") {
+        return Err("preview is not a valid PDF".to_string());
+    }
+    Ok(bytes)
 }
 
 pub fn validate_request(request: &Value) -> Result<(), String> {
@@ -205,6 +283,173 @@ struct BuildCancellationState {
     paths: Arc<Mutex<HashMap<String, PathBuf>>>,
 }
 
+#[derive(Clone, Debug, Eq, PartialEq)]
+struct AuthorizedPreview {
+    engine: String,
+    file_name: String,
+    path: PathBuf,
+}
+
+#[derive(Clone, Default)]
+pub struct PreviewAuthorizationState {
+    previews: Arc<Mutex<HashMap<String, AuthorizedPreview>>>,
+}
+
+impl PreviewAuthorizationState {
+    fn stable_path_identity(path: &Path) -> Result<PathBuf, String> {
+        let parent = path
+            .parent()
+            .ok_or_else(|| "PDF preview parent directory is required".to_string())?;
+        let file_name = path
+            .file_name()
+            .ok_or_else(|| "PDF preview file name is required".to_string())?;
+        parent
+            .canonicalize()
+            .map(|canonical_parent| canonical_parent.join(file_name))
+            .map_err(|error| format!("failed to resolve PDF preview path: {error}"))
+    }
+
+    pub fn authorize(
+        &self,
+        descriptor: &FinalPreviewDescriptor,
+        path: PathBuf,
+    ) -> Result<FinalPreviewDescriptor, String> {
+        if descriptor.download_id.is_some() || descriptor.authorization_id.is_some() {
+            return Err("preview authorization requires an unlocated descriptor".to_string());
+        }
+        let stable_path = Self::stable_path_identity(&path)?;
+        let authorization_id = Uuid::new_v4().simple().to_string();
+        self.previews
+            .lock()
+            .map_err(|_| "preview authorization state is unavailable".to_string())?
+            .insert(
+                authorization_id.clone(),
+                AuthorizedPreview {
+                    engine: descriptor.engine.clone(),
+                    file_name: descriptor.file_name.clone(),
+                    path: stable_path,
+                },
+            );
+        Ok(FinalPreviewDescriptor {
+            authorization_id: Some(authorization_id),
+            ..descriptor.clone()
+        })
+    }
+
+    pub fn resolve(&self, descriptor: &FinalPreviewDescriptor) -> Result<PathBuf, String> {
+        let authorization_id = descriptor
+            .authorization_id
+            .as_ref()
+            .ok_or_else(|| "PDF preview authorizationId is required".to_string())?;
+        let preview = self
+            .previews
+            .lock()
+            .map_err(|_| "preview authorization state is unavailable".to_string())?
+            .get(authorization_id)
+            .cloned()
+            .ok_or_else(|| "PDF preview is not authorized".to_string())?;
+        if preview.engine != descriptor.engine || preview.file_name != descriptor.file_name {
+            return Err("PDF preview authorization does not match descriptor".to_string());
+        }
+        Ok(preview.path)
+    }
+
+    pub fn revoke(&self, descriptor: &FinalPreviewDescriptor) -> Result<(), String> {
+        let Some(authorization_id) = descriptor.authorization_id.as_ref() else {
+            return Ok(());
+        };
+        self.previews
+            .lock()
+            .map_err(|_| "preview authorization state is unavailable".to_string())?
+            .remove(authorization_id);
+        Ok(())
+    }
+
+    pub fn revoke_path(&self, path: &Path) -> Result<(), String> {
+        let stable_path = Self::stable_path_identity(path)?;
+        self.previews
+            .lock()
+            .map_err(|_| "preview authorization state is unavailable".to_string())?
+            .retain(|_, preview| preview.path != stable_path);
+        Ok(())
+    }
+}
+
+fn requested_build_preview(
+    request: &Value,
+) -> Result<Option<(FinalPreviewDescriptor, PathBuf)>, String> {
+    let Some(output) = request
+        .get("payload")
+        .and_then(|payload| payload.get("output"))
+    else {
+        return Ok(None);
+    };
+    if output.get("kind").and_then(Value::as_str) != Some("desktop") {
+        return Ok(None);
+    }
+    let output_path = output
+        .get("path")
+        .and_then(Value::as_str)
+        .ok_or_else(|| "desktop build output path is required".to_string())?;
+    let preview_path = Path::new(output_path).with_extension("preview.pdf");
+    let file_name = preview_path
+        .file_name()
+        .and_then(|value| value.to_str())
+        .ok_or_else(|| "derived preview file name is invalid".to_string())?
+        .to_string();
+    Ok(Some((
+        FinalPreviewDescriptor {
+            engine: "libreoffice".to_string(),
+            label: "LibreOffice PDF".to_string(),
+            file_name,
+            download_id: None,
+            authorization_id: None,
+        },
+        preview_path,
+    )))
+}
+
+pub fn prepare_build_preview_authorization(
+    state: &PreviewAuthorizationState,
+    request: &Value,
+) -> Result<(), String> {
+    if let Some((_, path)) = requested_build_preview(request)? {
+        state.revoke_path(&path)?;
+    }
+    Ok(())
+}
+
+pub fn authorize_build_preview(
+    state: &PreviewAuthorizationState,
+    request: &Value,
+    event: &Value,
+) -> Result<Value, String> {
+    if event.get("type").and_then(Value::as_str) != Some("success") {
+        return Ok(event.clone());
+    }
+    let Some(descriptor_value) = event
+        .get("result")
+        .and_then(|result| result.get("output"))
+        .and_then(|output| output.get("finalPreview"))
+    else {
+        return Ok(event.clone());
+    };
+    let descriptor = validate_final_preview_descriptor(descriptor_value)?;
+    if descriptor.engine != "libreoffice" {
+        return Err("build final preview must be a LibreOffice PDF".to_string());
+    }
+    let (_, requested_path) = requested_build_preview(request)?
+        .ok_or_else(|| "desktop build output is required".to_string())?;
+    if requested_path.file_name() != Some(OsStr::new(&descriptor.file_name)) {
+        return Err("final preview is not the derived DOCX sibling".to_string());
+    }
+    let authorized = state.authorize(&descriptor, requested_path)?;
+    let mut authorized_event = event.clone();
+    authorized_event["result"]["output"]["finalPreview"] = serde_json::to_value(authorized)
+        .map_err(|error| format!("failed to encode preview authorization: {error}"))?;
+    Ok(authorized_event)
+}
+
 static CANCEL_TOKEN: AtomicU64 = AtomicU64::new(1);
 
 fn cancellation_path() -> PathBuf {
@@ -219,6 +464,7 @@ fn stream_sidecar_events(
     request: &Value,
     cancel_path: &Path,
     on_event: &Channel<Value>,
+    preview_state: &PreviewAuthorizationState,
 ) -> Result<(), String> {
     validate_request(request)?;
     if request.get("operation").and_then(Value::as_str) != Some("build") {
@@ -253,6 +499,7 @@ fn stream_sidecar_events(
         let line = line.map_err(|error| format!("failed to read sidecar event: {error}"))?;
         let event: Value = serde_json::from_str(&line)
             .map_err(|error| format!("failed to decode sidecar event: {error}"))?;
+        let event = authorize_build_preview(preview_state, request, &event)?;
         on_event
             .send(event)
             .map_err(|error| format!("failed to forward sidecar event: {error}"))?;
@@ -275,6 +522,7 @@ async fn stream_managed_sidecar_events(
     request: &Value,
     cancel_path: &Path,
     on_event: &Channel<Value>,
+    preview_state: &PreviewAuthorizationState,
 ) -> Result<(), String> {
     validate_request(request)?;
     if request.get("operation").and_then(Value::as_str) != Some("build") {
@@ -302,6 +550,7 @@ async fn stream_managed_sidecar_events(
             CommandEvent::Stdout(line) => {
                 let event: Value = serde_json::from_slice(&line)
                     .map_err(|error| format!("failed to decode packaged sidecar event: {error}"))?;
+                let event = authorize_build_preview(preview_state, request, &event)?;
                 on_event.send(event).map_err(|error| {
                     format!("failed to forward packaged sidecar event: {error}")
                 })?;
@@ -333,12 +582,14 @@ async fn run_build(
     request: Value,
     on_event: Channel<Value>,
     state: State<'_, BuildCancellationState>,
+    preview_state: State<'_, PreviewAuthorizationState>,
 ) -> Result<(), String> {
     let request_id = request
         .get("requestId")
         .and_then(Value::as_str)
         .ok_or_else(|| "requestId is required".to_string())?
         .to_string();
+    prepare_build_preview_authorization(preview_state.inner(), &request)?;
     let cancel_path = cancellation_path();
     let _ = std::fs::remove_file(&cancel_path);
     state
@@ -350,13 +601,21 @@ async fn run_build(
     let result = if use_development_sidecar() {
         let request = request.clone();
         let cancel_path = cancel_path.clone();
+        let preview_state = preview_state.inner().clone();
         tauri::async_runtime::spawn_blocking(move || {
-            stream_sidecar_events(&request, &cancel_path, &on_event)
+            stream_sidecar_events(&request, &cancel_path, &on_event, &preview_state)
         })
         .await
         .map_err(|error| format!("sidecar build task failed: {error}"))?
     } else {
-        stream_managed_sidecar_events(&app, &request, &cancel_path, &on_event).await
+        stream_managed_sidecar_events(
+            &app,
+            &request,
+            &cancel_path,
+            &on_event,
+            preview_state.inner(),
+        )
+        .await
     };
     let _ = std::fs::remove_file(&cancel_path);
     if let Ok(mut paths) = active.paths.lock() {
@@ -398,11 +657,54 @@ async fn pick_source() -> Result<Option<Value>, String> {
     handle.map(|file| open_source_path(file.path())).transpose()
 }
 
+#[tauri::command]
+async fn pick_pdf_preview(
+    state: State<'_, PreviewAuthorizationState>,
+) -> Result<Option<Value>, String> {
+    let handle = rfd::AsyncFileDialog::new()
+        .set_title("选择 WPS 导出的 PDF")
+        .add_filter("PDF", &["pdf"])
+        .pick_file()
+        .await;
+    let Some(file) = handle else {
+        return Ok(None);
+    };
+    let path = file.path();
+    read_pdf_preview_path(path)?;
+    let file_name = path
+        .file_name()
+        .and_then(|value| value.to_str())
+        .ok_or_else(|| "PDF preview file name is invalid".to_string())?
+        .to_string();
+    let descriptor = FinalPreviewDescriptor {
+        engine: "wps".to_string(),
+        label: "WPS PDF".to_string(),
+        file_name,
+        download_id: None,
+        authorization_id: None,
+    };
+    let descriptor = state.authorize(&descriptor, path.to_path_buf())?;
+    Ok(Some(serde_json::to_value(descriptor).map_err(|error| {
+        format!("failed to encode preview authorization: {error}")
+    })?))
+}
+
+#[tauri::command]
+async fn read_pdf_preview(
+    descriptor: Value,
+    state: State<'_, PreviewAuthorizationState>,
+) -> Result<Response, String> {
+    let descriptor = validate_final_preview_descriptor(&descriptor)?;
+    let path = state.resolve(&descriptor)?;
+    Ok(Response::new(read_pdf_preview_path(&path)?))
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
         .plugin(tauri_plugin_shell::init())
         .manage(BuildCancellationState::default())
+        .manage(PreviewAuthorizationState::default())
         .setup(|app| {
             let window_config = app
                 .config()
@@ -431,7 +733,9 @@ pub fn run() {
             dispatch_workbench,
             run_build,
             cancel_build,
-            pick_source
+            pick_source,
+            pick_pdf_preview,
+            read_pdf_preview
         ])
         .run(tauri::generate_context!())
         .expect("error while running ThesisForge desktop");

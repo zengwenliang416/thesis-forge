@@ -15,6 +15,8 @@ class Dispatcher(Protocol):
 class WebRuntime(Protocol):
     def create_workspace(self, file_name: str, text: str) -> dict: ...
 
+    def read_pdf(self, workspace_id: object, file_name: object) -> bytes: ...
+
 
 StartResponse = Callable[[str, list[tuple[str, str]]], object]
 
@@ -38,6 +40,8 @@ class WorkbenchHttpApp:
     ) -> Iterable[bytes]:
         method = environ.get("REQUEST_METHOD")
         path = environ.get("PATH_INFO")
+        if method == "GET":
+            return self._get(path, start_response)
         if method != "POST":
             payload = {"ok": False, "error": {"kind": "request", "message": "not found"}}
             status = "404 Not Found"
@@ -121,6 +125,61 @@ class WorkbenchHttpApp:
                 ("Content-Type", "application/json; charset=utf-8"),
                 ("Content-Length", str(len(body))),
                 ("Cache-Control", "no-store"),
+            ],
+        )
+        return [body]
+
+    def _get(
+        self,
+        path: object,
+        start_response: StartResponse,
+    ) -> Iterable[bytes]:
+        prefix = "/api/v1/workspaces/"
+        if (
+            self._web_runtime is None
+            or not isinstance(path, str)
+            or not path.startswith(prefix)
+        ):
+            return self._json_error(start_response, "404 Not Found", "not found")
+        remainder = path[len(prefix) :]
+        parts = remainder.split("/")
+        if len(parts) != 3 or parts[1] != "files":
+            return self._json_error(start_response, "404 Not Found", "not found")
+        workspace_id, _, file_name = parts
+        try:
+            content = self._web_runtime.read_pdf(workspace_id, file_name)
+        except FileNotFoundError as error:
+            return self._json_error(start_response, "404 Not Found", str(error))
+        except (PermissionError, TypeError, ValueError) as error:
+            return self._json_error(start_response, "400 Bad Request", str(error))
+        start_response(
+            "200 OK",
+            [
+                ("Content-Type", "application/pdf"),
+                ("Content-Length", str(len(content))),
+                ("Cache-Control", "no-store"),
+                ("X-Content-Type-Options", "nosniff"),
+            ],
+        )
+        return [content]
+
+    @staticmethod
+    def _json_error(
+        start_response: StartResponse,
+        status: str,
+        message: str,
+    ) -> Iterable[bytes]:
+        body = json.dumps(
+            {"ok": False, "error": {"kind": "request", "message": message}},
+            ensure_ascii=False,
+        ).encode("utf-8")
+        start_response(
+            status,
+            [
+                ("Content-Type", "application/json; charset=utf-8"),
+                ("Content-Length", str(len(body))),
+                ("Cache-Control", "no-store"),
+                ("X-Content-Type-Options", "nosniff"),
             ],
         )
         return [body]

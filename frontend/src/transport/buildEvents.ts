@@ -3,6 +3,12 @@ import {
   readSerializedDiagnostics,
   type SerializedDiagnostic,
 } from "./dto";
+import {
+  readFinalPreviewDescriptor,
+  type FinalPreviewDescriptor,
+} from "./finalPreview";
+
+export type { FinalPreviewDescriptor } from "./finalPreview";
 
 export type BuildStage =
   | "parse"
@@ -23,6 +29,7 @@ export interface BuildOutput {
   kind: "desktop" | "web-download";
   name: string;
   downloadId?: string;
+  finalPreview?: FinalPreviewDescriptor;
 }
 
 interface BuildEventBase {
@@ -68,7 +75,7 @@ function isStage(value: unknown): value is BuildStage {
 function readOutput(value: unknown): BuildOutput {
   if (
     !isObject(value) ||
-    !hasOnlyKeys(value, ["kind", "name", "downloadId"]) ||
+    !hasOnlyKeys(value, ["kind", "name", "downloadId", "finalPreview"]) ||
     !["desktop", "web-download"].includes(String(value.kind)) ||
     typeof value.name !== "string" ||
     value.name.length === 0 ||
@@ -76,7 +83,16 @@ function readOutput(value: unknown): BuildOutput {
   ) {
     throw new Error("无效的 ThesisForge 构建事件");
   }
-  return value as unknown as BuildOutput;
+  return {
+    kind: value.kind as BuildOutput["kind"],
+    name: value.name,
+    ...(value.downloadId !== undefined
+      ? { downloadId: value.downloadId as string }
+      : {}),
+    ...(value.finalPreview !== undefined
+      ? { finalPreview: readFinalPreviewDescriptor(value.finalPreview) }
+      : {}),
+  };
 }
 
 export function assertBuildEvent(

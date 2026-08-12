@@ -1,7 +1,10 @@
 use serde_json::json;
+use std::path::Path;
 use thesisforge_desktop::{
-    PROTOCOL_VERSION, acceptance_source_override, open_source_path, validate_request,
-    windows_acceptance_browser_args,
+    FinalPreviewDescriptor, PROTOCOL_VERSION, PreviewAuthorizationState,
+    acceptance_source_override, authorize_build_preview, derived_preview_path, open_source_path,
+    prepare_build_preview_authorization, read_pdf_preview_path, validate_final_preview_descriptor,
+    validate_request, windows_acceptance_browser_args,
 };
 
 #[test]
@@ -129,4 +132,333 @@ fn rejects_unsafe_native_acceptance_cdp_ports() {
         windows_acceptance_browser_args(Some("80")).unwrap_err(),
         "THESISFORGE_WINDOWS_CDP_PORT must be an integer from 1024 to 65535"
     );
+}
+
+#[test]
+fn accepts_only_strict_path_free_desktop_preview_descriptors() {
+    let descriptor = json!({
+        "engine": "libreoffice",
+        "label": "LibreOffice PDF",
+        "fileName": "thesis.preview.pdf",
+        "authorizationId": "a".repeat(32)
+    });
+
+    assert!(validate_final_preview_descriptor(&descriptor).is_ok());
+    assert!(
+        validate_final_preview_descriptor(&json!({
+            "engine": "libreoffice",
+            "label": "WPS PDF",
+            "fileName": "thesis.preview.pdf"
+        }))
+        .is_err()
+    );
+    assert!(
+        validate_final_preview_descriptor(&json!({
+            "engine": "wps",
+            "label": "WPS PDF",
+            "fileName": "../private.pdf"
+        }))
+        .is_err()
+    );
+    assert!(
+        validate_final_preview_descriptor(&json!({
+            "engine": "libreoffice",
+            "label": "LibreOffice PDF",
+            "fileName": "thesis.preview.pdf",
+            "path": "/private/thesis.preview.pdf"
+        }))
+        .is_err()
+    );
+}
+
+fn preview_descriptor(engine: &str, label: &str, file_name: &str) -> FinalPreviewDescriptor {
+    FinalPreviewDescriptor {
+        engine: engine.to_string(),
+        label: label.to_string(),
+        file_name: file_name.to_string(),
+        download_id: None,
+        authorization_id: None,
+    }
+}
+
+#[test]
+fn authorization_handles_keep_same_named_pdfs_bound_to_their_selected_paths() {
+    let first = tempfile::tempdir().unwrap();
+    let second = tempfile::tempdir().unwrap();
+    let first_pdf = first.path().join("export.pdf");
+    let second_pdf = second.path().join("export.pdf");
+    std::fs::write(&first_pdf, b"%PDF-1.7\nfirst").unwrap();
+    std::fs::write(&second_pdf, b"%PDF-1.7\nsecond").unwrap();
+    let state = PreviewAuthorizationState::default();
+    let descriptor = preview_descriptor("wps", "WPS PDF", "export.pdf");
+
+    let first_authorized = state.authorize(&descriptor, first_pdf.clone()).unwrap();
+    let second_authorized = state.authorize(&descriptor, second_pdf.clone()).unwrap();
+
+    assert_ne!(
+        first_authorized.authorization_id,
+        second_authorized.authorization_id
+    );
+    assert_eq!(
+        state.resolve(&first_authorized).unwrap(),
+        first_pdf.canonicalize().unwrap()
+    );
+    assert_eq!(
+        state.resolve(&second_authorized).unwrap(),
+        second_pdf.canonicalize().unwrap()
+    );
+    assert_eq!(
+        read_pdf_preview_path(&state.resolve(&first_authorized).unwrap()).unwrap(),
+        b"%PDF-1.7\nfirst"
+    );
+}
+
+#[test]
+fn authorization_rejects_descriptor_drift_and_revocation() {
+    let directory = tempfile::tempdir().unwrap();
+    let pdf = directory.path().join("export.pdf");
+    std::fs::write(&pdf, b"%PDF-1.7\npreview").unwrap();
+    let state = PreviewAuthorizationState::default();
+    let descriptor = preview_descriptor("wps", "WPS PDF", "export.pdf");
+    let authorized = state.authorize(&descriptor, pdf).unwrap();
+    let mut drifted = authorized.clone();
+    drifted.file_name = "other.pdf".to_string();
+
+    assert!(state.resolve(&drifted).is_err());
+    state.revoke(&authorized).unwrap();
+    assert!(state.resolve(&authorized).is_err());
+}
+
+#[test]
+fn build_success_authorizes_only_the_derived_preview_and_injects_an_opaque_id() {
+    let directory = tempfile::tempdir().unwrap();
+    let output = directory.path().join("thesis.docx");
+    let preview = directory.path().join("thesis.preview.pdf");
+    std::fs::write(&output, b"docx").unwrap();
+    std::fs::write(&preview, b"%PDF-1.7\npreview").unwrap();
+    let request = json!({
+        "protocol": PROTOCOL_VERSION,
+        "requestId": "build-1",
+        "operation": "build",
+        "payload": {
+            "output": {
+                "kind": "desktop",
+                "path": output,
+                "fileName": "thesis.docx"
+            }
+        }
+    });
+    let event = json!({
+        "protocol": PROTOCOL_VERSION,
+        "requestId": "build-1",
+        "type": "success",
+        "result": {
+            "output": {
+                "kind": "desktop",
+                "name": "thesis.docx",
+                "finalPreview": {
+                    "engine": "libreoffice",
+                    "label": "LibreOffice PDF",
+                    "fileName": "thesis.preview.pdf"
+                }
+            },
+            "diagnostics": []
+        }
+    });
+    let state = PreviewAuthorizationState::default();
+
+    let authorized_event = authorize_build_preview(&state, &request, &event).unwrap();
+    let descriptor =
+        validate_final_preview_descriptor(&authorized_event["result"]["output"]["finalPreview"])
+            .unwrap();
+
+    assert_eq!(
+        descriptor.authorization_id.as_deref().map(str::len),
+        Some(32)
+    );
+    assert_eq!(
+        read_pdf_preview_path(&state.resolve(&descriptor).unwrap()).unwrap(),
+        b"%PDF-1.7\npreview"
+    );
+}
+
+#[test]
+fn a_new_failed_or_canceled_build_revokes_the_previous_derived_authorization() {
+    let directory = tempfile::tempdir().unwrap();
+    let output = directory.path().join("thesis.docx");
+    let preview = directory.path().join("thesis.preview.pdf");
+    std::fs::write(&output, b"docx").unwrap();
+    std::fs::write(&preview, b"%PDF-1.7\npreview").unwrap();
+    let request = json!({
+        "protocol": PROTOCOL_VERSION,
+        "requestId": "build-1",
+        "operation": "build",
+        "payload": {
+            "output": {
+                "kind": "desktop",
+                "path": output,
+                "fileName": "thesis.docx"
+            }
+        }
+    });
+    let state = PreviewAuthorizationState::default();
+    let descriptor = state
+        .authorize(
+            &preview_descriptor("libreoffice", "LibreOffice PDF", "thesis.preview.pdf"),
+            preview,
+        )
+        .unwrap();
+
+    prepare_build_preview_authorization(&state, &request).unwrap();
+    assert!(state.resolve(&descriptor).is_err());
+
+    for event_type in ["error", "canceled"] {
+        let event = json!({ "type": event_type });
+        assert_eq!(
+            authorize_build_preview(&state, &request, &event).unwrap(),
+            event
+        );
+    }
+}
+
+#[test]
+fn a_new_build_revokes_authorization_after_the_old_preview_is_deleted() {
+    let directory = tempfile::tempdir().unwrap();
+    let output = directory.path().join("thesis.docx");
+    let preview = directory.path().join("thesis.preview.pdf");
+    std::fs::write(&output, b"docx").unwrap();
+    std::fs::write(&preview, b"%PDF-1.7\npreview").unwrap();
+    let request = json!({
+        "protocol": PROTOCOL_VERSION,
+        "requestId": "build-2",
+        "operation": "build",
+        "payload": {
+            "output": {
+                "kind": "desktop",
+                "path": output,
+                "fileName": "thesis.docx"
+            }
+        }
+    });
+    let state = PreviewAuthorizationState::default();
+    let descriptor = state
+        .authorize(
+            &preview_descriptor("libreoffice", "LibreOffice PDF", "thesis.preview.pdf"),
+            preview.clone(),
+        )
+        .unwrap();
+    std::fs::remove_file(preview).unwrap();
+
+    prepare_build_preview_authorization(&state, &request).unwrap();
+
+    assert!(state.resolve(&descriptor).is_err());
+}
+
+#[cfg(unix)]
+#[test]
+fn a_new_build_revokes_old_authorization_after_preview_becomes_a_symlink() {
+    use std::os::unix::fs::symlink;
+
+    let directory = tempfile::tempdir().unwrap();
+    let output = directory.path().join("thesis.docx");
+    let preview = directory.path().join("thesis.preview.pdf");
+    let target = directory.path().join("target.pdf");
+    std::fs::write(&output, b"docx").unwrap();
+    std::fs::write(&preview, b"%PDF-1.7\nold preview").unwrap();
+    std::fs::write(&target, b"%PDF-1.7\nsymlink target").unwrap();
+    let request = json!({
+        "protocol": PROTOCOL_VERSION,
+        "requestId": "build-3",
+        "operation": "build",
+        "payload": {
+            "output": {
+                "kind": "desktop",
+                "path": output,
+                "fileName": "thesis.docx"
+            }
+        }
+    });
+    let state = PreviewAuthorizationState::default();
+    let descriptor = state
+        .authorize(
+            &preview_descriptor("libreoffice", "LibreOffice PDF", "thesis.preview.pdf"),
+            preview.clone(),
+        )
+        .unwrap();
+
+    std::fs::remove_file(&preview).unwrap();
+    symlink(&target, &preview).unwrap();
+    prepare_build_preview_authorization(&state, &request).unwrap();
+    std::fs::remove_file(&preview).unwrap();
+    std::fs::write(&preview, b"%PDF-1.7\nnew preview").unwrap();
+
+    assert!(state.resolve(&descriptor).is_err());
+}
+
+#[test]
+fn authorization_revalidates_symlinks_and_pdf_content_at_read_time() {
+    let directory = tempfile::tempdir().unwrap();
+    let pdf = directory.path().join("preview.pdf");
+    std::fs::write(&pdf, b"%PDF-1.7\npreview").unwrap();
+    let state = PreviewAuthorizationState::default();
+    let descriptor = state
+        .authorize(
+            &preview_descriptor("wps", "WPS PDF", "preview.pdf"),
+            pdf.clone(),
+        )
+        .unwrap();
+
+    std::fs::write(&pdf, b"not a pdf").unwrap();
+    assert!(read_pdf_preview_path(&state.resolve(&descriptor).unwrap()).is_err());
+}
+
+#[cfg(unix)]
+#[test]
+fn authorization_rejects_a_file_replaced_by_a_symlink_at_read_time() {
+    use std::os::unix::fs::symlink;
+
+    let directory = tempfile::tempdir().unwrap();
+    let pdf = directory.path().join("preview.pdf");
+    let target = directory.path().join("target.pdf");
+    std::fs::write(&pdf, b"%PDF-1.7\npreview").unwrap();
+    std::fs::write(&target, b"%PDF-1.7\ntarget").unwrap();
+    let state = PreviewAuthorizationState::default();
+    let descriptor = state
+        .authorize(
+            &preview_descriptor("wps", "WPS PDF", "preview.pdf"),
+            pdf.clone(),
+        )
+        .unwrap();
+
+    std::fs::remove_file(&pdf).unwrap();
+    symlink(&target, &pdf).unwrap();
+
+    assert!(read_pdf_preview_path(&state.resolve(&descriptor).unwrap()).is_err());
+}
+
+#[test]
+fn derives_only_the_fixed_preview_pdf_sibling() {
+    let output = Path::new("/tmp/thesis.docx");
+
+    assert_eq!(
+        derived_preview_path(output, "thesis.preview.pdf").unwrap(),
+        Path::new("/tmp/thesis.preview.pdf")
+    );
+    assert!(derived_preview_path(output, "other.pdf").is_err());
+    assert!(derived_preview_path(output, "../thesis.preview.pdf").is_err());
+}
+
+#[test]
+fn reads_only_regular_pdf_signature_files() {
+    let directory = tempfile::tempdir().unwrap();
+    let pdf = directory.path().join("preview.pdf");
+    let invalid = directory.path().join("invalid.pdf");
+    let wrong_extension = directory.path().join("preview.txt");
+    std::fs::write(&pdf, b"%PDF-1.7\npreview").unwrap();
+    std::fs::write(&invalid, b"not a pdf").unwrap();
+    std::fs::write(&wrong_extension, b"%PDF-1.7\npreview").unwrap();
+
+    assert_eq!(read_pdf_preview_path(&pdf).unwrap(), b"%PDF-1.7\npreview");
+    assert!(read_pdf_preview_path(&invalid).is_err());
+    assert!(read_pdf_preview_path(&wrong_extension).is_err());
 }

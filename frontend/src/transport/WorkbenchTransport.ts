@@ -5,6 +5,10 @@ import type {
   SourceRef,
 } from "./dto";
 import type { BuildEvent } from "./buildEvents";
+import type {
+  FinalPreviewDescriptor,
+  ResolvedFinalPreview,
+} from "./finalPreview";
 
 export interface RuntimeCapabilities {
   nativePaths: boolean;
@@ -33,4 +37,8 @@ export interface WorkbenchTransport {
     onEvent: (event: BuildEvent) => void,
     signal: AbortSignal,
   ): Promise<void>;
+  resolveFinalPreview(
+    descriptor: FinalPreviewDescriptor,
+  ): Promise<Uint8Array>;
+  pickFinalPreview(): Promise<ResolvedFinalPreview | null>;
 }

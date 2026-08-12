@@ -5,10 +5,17 @@ import type {
   OpenedSource,
   WorkbenchTransport,
 } from "./WorkbenchTransport";
+import {
+  readFinalPreviewDescriptor,
+  readPdfBytes,
+  type FinalPreviewDescriptor,
+  type ResolvedFinalPreview,
+} from "./finalPreview";
 
 interface WebTransportOptions {
   baseUrl?: string;
   fetch?: typeof globalThis.fetch;
+  pickPdf?: () => Promise<{ fileName: string; bytes: Uint8Array } | null>;
 }
 
 export class WebWorkbenchTransport implements WorkbenchTransport {
@@ -22,10 +29,15 @@ export class WebWorkbenchTransport implements WorkbenchTransport {
 
   readonly #baseUrl: string;
   readonly #fetch: typeof globalThis.fetch;
+  readonly #pickPdf: () => Promise<{
+    fileName: string;
+    bytes: Uint8Array;
+  } | null>;
 
   constructor(options: WebTransportOptions = {}) {
     this.#baseUrl = (options.baseUrl ?? "").replace(/\/$/, "");
     this.#fetch = options.fetch ?? globalThis.fetch.bind(globalThis);
+    this.#pickPdf = options.pickPdf ?? pickBrowserPdf;
   }
 
   async openSource(input?: OpenSourceInput): Promise<OpenedSource> {
@@ -133,4 +145,74 @@ export class WebWorkbenchTransport implements WorkbenchTransport {
       signal.removeEventListener("abort", cancel);
     }
   }
+
+  async resolveFinalPreview(
+    descriptor: FinalPreviewDescriptor,
+  ): Promise<Uint8Array> {
+    const preview = readFinalPreviewDescriptor(descriptor);
+    if (preview.engine !== "libreoffice" || !preview.downloadId) {
+      throw new Error("Web 自动预览缺少工作区定位信息");
+    }
+    const response = await this.#fetch(
+      `${this.#baseUrl}/api/v1/workspaces/${preview.downloadId}/files/${encodeURIComponent(preview.fileName)}`,
+      {
+        method: "GET",
+        headers: { accept: "application/pdf" },
+      },
+    );
+    if (
+      !response.ok ||
+      response.headers.get("content-type")?.split(";")[0].trim() !==
+        "application/pdf"
+    ) {
+      throw new Error(`读取 Web PDF 失败（HTTP ${response.status}）`);
+    }
+    return readPdfBytes(await response.arrayBuffer());
+  }
+
+  async pickFinalPreview(): Promise<ResolvedFinalPreview | null> {
+    const picked = await this.#pickPdf();
+    if (!picked) {
+      return null;
+    }
+    const descriptor = readFinalPreviewDescriptor({
+      engine: "wps",
+      label: "WPS PDF",
+      fileName: picked.fileName,
+    });
+    return {
+      descriptor,
+      bytes: readPdfBytes(picked.bytes),
+    };
+  }
+}
+
+async function pickBrowserPdf(): Promise<{
+  fileName: string;
+  bytes: Uint8Array;
+} | null> {
+  return new Promise((resolve) => {
+    const input = document.createElement("input");
+    input.type = "file";
+    input.accept = "application/pdf,.pdf";
+    input.addEventListener(
+      "change",
+      () => {
+        const file = input.files?.[0];
+        if (!file) {
+          resolve(null);
+          return;
+        }
+        void file
+          .arrayBuffer()
+          .then((buffer) =>
+            resolve({ fileName: file.name, bytes: new Uint8Array(buffer) }),
+          )
+          .catch(() => resolve(null));
+      },
+      { once: true },
+    );
+    input.addEventListener("cancel", () => resolve(null), { once: true });
+    input.click();
+  });
 }
