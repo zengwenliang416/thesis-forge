@@ -573,6 +573,10 @@ def _terminate_process_tree(
             pass
 
 
+start_office_process = _start_office_process
+terminate_office_process_tree = _terminate_process_tree
+
+
 def _run_libreoffice_refresh(
     executable: Path,
     python_executable: Path,

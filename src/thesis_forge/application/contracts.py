@@ -8,6 +8,8 @@ from thesis_forge.core.model import ThesisDocument, ValidationIssue
 from thesis_forge.core.render_plan import RenderPlan
 from thesis_forge.core.validator import ValidationContext
 
+from .pdf_preview import PdfPreviewArtifact
+
 
 class BuildStage(StrEnum):
     PARSE = "parse"
@@ -37,6 +39,7 @@ class ValidationResult:
 class BuildResult:
     output_path: Path
     issues: tuple[ValidationIssue, ...]
+    final_preview: PdfPreviewArtifact | None = None
 
 
 @dataclass(frozen=True, slots=True)

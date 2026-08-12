@@ -15,6 +15,7 @@ from thesis_forge.application import (
     ApplicationStageError,
     BuildStage,
     BuildValidationError,
+    PdfPreviewArtifact,
     build_service,
     inspect_service,
     validation_service,
@@ -42,6 +43,14 @@ from thesis_forge.renderers.docx.package import (
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 EXAMPLE_SOURCE = PROJECT_ROOT / "examples" / "bachelor-thesis" / "thesis.md"
+
+
+@pytest.fixture(autouse=True)
+def _disable_default_pdf_preview(monkeypatch):
+    monkeypatch.setattr(
+        "thesis_forge.application.pdf_preview.discover_libreoffice_executable",
+        lambda: None,
+    )
 
 
 def _temporary_outputs(output: Path) -> list[Path]:
@@ -712,7 +721,21 @@ def test_build_service_refreshes_before_validation_and_atomic_replace(
         calls.append("replace")
         source.replace(target)
 
-    build_service(
+    class RecordingPdfExporter:
+        def export(self, docx_path, pdf_path):
+            calls.append("export-pdf")
+            assert Path(docx_path) == output
+            assert Path(docx_path).is_file()
+            assert Path(pdf_path) == tmp_path / "thesis.preview.pdf"
+            Path(pdf_path).write_bytes(b"%PDF-1.7\npreview")
+            return PdfPreviewArtifact(
+                path=Path(pdf_path),
+                name=Path(pdf_path).name,
+                engine="libreoffice",
+                label="LibreOffice PDF",
+            )
+
+    result = build_service(
         EXAMPLE_SOURCE,
         output,
         dependencies=ApplicationDependencies(
@@ -720,11 +743,63 @@ def test_build_service_refreshes_before_validation_and_atomic_replace(
             document_refresher=RecordingRefresher(),
             package_validator=recording_validator,
             replace_file=recording_replace,
+            pdf_preview_exporter=RecordingPdfExporter(),
         ),
     )
 
-    assert calls == ["render", "refresh", "validate", "replace"]
+    assert calls == ["render", "refresh", "validate", "replace", "export-pdf"]
+    assert result.final_preview == PdfPreviewArtifact(
+        path=tmp_path / "thesis.preview.pdf",
+        name="thesis.preview.pdf",
+        engine="libreoffice",
+        label="LibreOffice PDF",
+    )
     validate_docx_package(output)
+
+
+@pytest.mark.parametrize("mode", ["none", "error"])
+def test_build_service_pdf_preview_failure_does_not_fail_published_docx(
+    tmp_path: Path,
+    mode: str,
+):
+    output = tmp_path / "thesis.docx"
+
+    class PreviewMissExporter:
+        def export(self, docx_path, pdf_path):
+            assert Path(docx_path) == output
+            assert Path(docx_path).is_file()
+            assert Path(pdf_path) == tmp_path / "thesis.preview.pdf"
+            if mode == "error":
+                raise RuntimeError("preview exploded")
+
+    result = build_service(
+        EXAMPLE_SOURCE,
+        output,
+        dependencies=ApplicationDependencies(
+            pdf_preview_exporter=PreviewMissExporter(),
+        ),
+    )
+
+    assert result.output_path == output
+    assert result.final_preview is None
+    validate_docx_package(output)
+
+
+def test_build_service_allows_pdf_preview_export_to_be_disabled(tmp_path: Path):
+    output = tmp_path / "thesis.docx"
+
+    result = build_service(
+        EXAMPLE_SOURCE,
+        output,
+        dependencies=ApplicationDependencies(pdf_preview_exporter=None),
+    )
+
+    assert result.final_preview is None
+    validate_docx_package(output)
+
+
+def test_application_dependencies_disable_pdf_preview_by_default():
+    assert ApplicationDependencies().pdf_preview_exporter is None
 
 
 @pytest.mark.parametrize("mode", ["false", "error"])

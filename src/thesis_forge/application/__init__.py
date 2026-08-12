@@ -8,6 +8,12 @@ from .contracts import (
     PreviewResult,
     ValidationResult,
 )
+from .pdf_preview import (
+    LibreOfficePdfPreviewExporter,
+    PdfPreviewArtifact,
+    PdfPreviewExporter,
+    derived_pdf_preview_path,
+)
 from .services import (
     ApplicationDependencies,
     build_service,
@@ -24,9 +30,13 @@ __all__ = [
     "BuildStage",
     "BuildValidationError",
     "InspectionResult",
+    "LibreOfficePdfPreviewExporter",
+    "PdfPreviewArtifact",
+    "PdfPreviewExporter",
     "PreviewResult",
     "ValidationResult",
     "build_service",
+    "derived_pdf_preview_path",
     "inspect_service",
     "preview_service",
     "validation_service",

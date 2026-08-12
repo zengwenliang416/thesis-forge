@@ -29,6 +29,11 @@ from .office_refresh import (
     refresh_document_safely,
 )
 from .output import ReplaceFile, replace_output, temporary_output_path
+from .pdf_preview import (
+    PdfPreviewArtifact,
+    PdfPreviewExporter,
+    derived_pdf_preview_path,
+)
 
 Parser = Callable[[str | Path], ThesisDocument]
 ContextFactory = Callable[[ThesisDocument, str | Path | None], ValidationContext]
@@ -60,6 +65,7 @@ class ApplicationDependencies:
     document_refresher: DocumentRefresher = field(
         default_factory=LibreOfficeDocumentRefresher
     )
+    pdf_preview_exporter: PdfPreviewExporter | None = None
     package_validator: PackageValidator = validate_docx_package
     replace_file: ReplaceFile = os.replace
 
@@ -185,6 +191,7 @@ def build_service(
 ) -> BuildResult:
     active = _dependencies(dependencies)
     output_path = Path(output)
+    final_preview: PdfPreviewArtifact | None = None
 
     _check_canceled(should_cancel, BuildStage.PARSE)
     _notify(on_progress, BuildStage.PARSE)
@@ -243,4 +250,18 @@ def build_service(
     except Exception as error:
         raise ApplicationStageError(BuildStage.RENDER, error) from error
 
-    return BuildResult(output_path=output_path, issues=validation.issues)
+    if active.pdf_preview_exporter is not None:
+        try:
+            final_preview = active.pdf_preview_exporter.export(
+                output_path,
+                derived_pdf_preview_path(output_path),
+            )
+        # A third-party exporter must never downgrade a published DOCX build.
+        except Exception:  # noqa: BLE001
+            final_preview = None
+
+    return BuildResult(
+        output_path=output_path,
+        issues=validation.issues,
+        final_preview=final_preview,
+    )
