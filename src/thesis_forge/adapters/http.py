@@ -17,6 +17,16 @@ class WebRuntime(Protocol):
 
     def read_pdf(self, workspace_id: object, file_name: object) -> bytes: ...
 
+    def prepare_live_preview_output(self, source: dict) -> dict: ...
+
+    def release_live_preview_output(self, output: dict) -> None: ...
+
+    def read_live_preview(
+        self,
+        workspace_id: object,
+        live_preview_id: object,
+    ) -> bytes: ...
+
 
 StartResponse = Callable[[str, list[tuple[str, str]]], object]
 
@@ -100,6 +110,33 @@ class WorkbenchHttpApp:
                         "text": text,
                     }
                     status = "201 Created"
+                elif (
+                    path == "/api/v1/live-previews"
+                    and self._web_runtime is not None
+                ):
+                    source = request.get("source")
+                    if not isinstance(source, dict):
+                        raise ValueError("source is required")
+                    output = self._web_runtime.prepare_live_preview_output(source)
+                    payload = {
+                        "protocol": PROTOCOL_VERSION,
+                        "ok": True,
+                        "output": output,
+                    }
+                    status = "201 Created"
+                elif (
+                    path == "/api/v1/live-previews/discard"
+                    and self._web_runtime is not None
+                ):
+                    output = request.get("output")
+                    if not isinstance(output, dict):
+                        raise ValueError("output is required")
+                    self._web_runtime.release_live_preview_output(output)
+                    payload = {
+                        "protocol": PROTOCOL_VERSION,
+                        "ok": True,
+                    }
+                    status = "200 OK"
                 else:
                     payload = {
                         "ok": False,
@@ -143,11 +180,15 @@ class WorkbenchHttpApp:
             return self._json_error(start_response, "404 Not Found", "not found")
         remainder = path[len(prefix) :]
         parts = remainder.split("/")
-        if len(parts) != 3 or parts[1] != "files":
+        if len(parts) != 3 or parts[1] not in {"files", "live-previews"}:
             return self._json_error(start_response, "404 Not Found", "not found")
-        workspace_id, _, file_name = parts
+        workspace_id, resource_kind, locator = parts
         try:
-            content = self._web_runtime.read_pdf(workspace_id, file_name)
+            content = (
+                self._web_runtime.read_pdf(workspace_id, locator)
+                if resource_kind == "files"
+                else self._web_runtime.read_live_preview(workspace_id, locator)
+            )
         except FileNotFoundError as error:
             return self._json_error(start_response, "404 Not Found", str(error))
         except (PermissionError, TypeError, ValueError) as error:

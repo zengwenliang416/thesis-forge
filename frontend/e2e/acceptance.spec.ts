@@ -13,6 +13,41 @@ const acceptedPreview = {
   diagnostics: [],
 };
 
+test.beforeEach(async ({ page }) => {
+  let livePreviewSequence = 0;
+  await page.route("**/api/v1/live-previews", async (route) => {
+    livePreviewSequence += 1;
+    const request = route.request().postDataJSON() as {
+      source: { workspaceId: string };
+    };
+    const livePreviewId = livePreviewSequence.toString(16).padStart(32, "0");
+    await route.fulfill({
+      status: 201,
+      contentType: "application/json",
+      body: JSON.stringify({
+        protocol: "thesisforge.workbench.v1",
+        ok: true,
+        output: {
+          kind: "web-download",
+          workspaceId: request.source.workspaceId,
+          fileName: `.thesisforge-live-preview-${livePreviewId}.docx`,
+          livePreviewId,
+        },
+      }),
+    });
+  });
+  await page.route("**/api/v1/live-previews/discard", async (route) => {
+    await route.fulfill({
+      status: 200,
+      contentType: "application/json",
+      body: JSON.stringify({
+        protocol: "thesisforge.workbench.v1",
+        ok: true,
+      }),
+    });
+  });
+});
+
 function contrastRatio(
   foreground: [number, number, number],
   background: [number, number, number],
@@ -288,6 +323,7 @@ test("verifies populated, dirty, and successful output states with the complete 
   });
 
   await expect(page.getByText("文稿、模板与预览已同步")).toBeVisible();
+  await page.getByRole("tab", { name: "结构" }).click();
   await expect(page.getByText("结构预览不代表 Word 最终分页。")).toBeVisible();
   const editor = page.getByRole("textbox", { name: "Markdown 文稿内容" });
   await editor.fill("# 绪论\n\n已修改。\n");

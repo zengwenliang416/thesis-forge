@@ -230,12 +230,16 @@ def _parse_container(kind: str, block_id: str | None, body: list[str], line: int
     raise ParseError(f"未知容器类型: {kind}")
 
 
-def parse_markdown(path: str | Path) -> ThesisDocument:
-    source_path = Path(path).resolve()
-    lines = source_path.read_text(encoding="utf-8").splitlines()
+def parse_markdown_text(
+    text: str,
+    *,
+    source_path: str | Path,
+) -> ThesisDocument:
+    resolved_source_path = Path(source_path).resolve()
+    lines = text.splitlines()
     metadata, start = _parse_front_matter(lines)
     doc = ThesisDocument(
-        source_path=source_path,
+        source_path=resolved_source_path,
         metadata=metadata,
         bibliography=_bibliography_config(metadata),
     )
@@ -382,3 +386,11 @@ def parse_markdown(path: str | Path) -> ThesisDocument:
 
     flush_paragraph()
     return doc
+
+
+def parse_markdown(path: str | Path) -> ThesisDocument:
+    source_path = Path(path).resolve()
+    return parse_markdown_text(
+        source_path.read_text(encoding="utf-8"),
+        source_path=source_path,
+    )

@@ -348,6 +348,9 @@ function PaperPreviewBody({ state, onActivated }: PreviewPanelProps) {
     <div className="paper-stage">
       <article className="paper">
         <span className="paper-running-head">本科毕业论文 · 结构预览</span>
+        <div className="structure-preview-warning" role="note">
+          快速结构预览，不代表 Word/WPS 最终排版与分页
+        </div>
         {preview.status === "empty" ? (
           <div className="preview-message">
             <h1>等待载入论文</h1>
@@ -400,7 +403,7 @@ export function PreviewModeControl({
         aria-selected={mode === "final-layout"}
         onClick={() => onChanged("final-layout")}
       >
-        最终版式
+        实时版式
       </button>
     </div>
   );
@@ -415,7 +418,7 @@ function FinalPreviewActions({
     <div className="final-preview-actions">
       <button type="button" className="button secondary" onClick={onBuild}>
         <RefreshCw aria-hidden="true" />
-        重新构建
+        立即刷新预览
       </button>
     </div>
   );
@@ -436,11 +439,11 @@ export function FinalLayoutPreview({
     state.operation?.kind === "build" || preview.status === "building";
   const descriptor = preview.descriptor;
   const statusLabel = building
-    ? "构建中"
+    ? "实时更新中"
     : preview.status === "ready"
       ? descriptor?.engine === "wps"
-        ? "当前预览"
-        : "当前构建"
+        ? "WPS 对照稿"
+        : "当前实时预览"
       : preview.status === "stale"
         ? "已过期"
         : preview.status === "unavailable"
@@ -470,8 +473,14 @@ export function FinalLayoutPreview({
         <div className="final-preview-banner" role="status">
           <span>预览已过期。{preview.message}</span>
           <button type="button" onClick={onBuild}>
-            重新构建
+            立即刷新
           </button>
+        </div>
+      ) : null}
+      {building && objectUrl ? (
+        <div className="final-preview-banner final-preview-banner-live" role="status">
+          <LoaderCircle className="spin" aria-hidden="true" />
+          <span>{preview.message ?? "正在生成最新 PDF，当前仍显示上一版页面。"}</span>
         </div>
       ) : null}
       {preview.status === "ready" && objectUrl && preview.message ? (
@@ -483,7 +492,10 @@ export function FinalLayoutPreview({
         </div>
       ) : null}
 
-      {objectUrl && (preview.status === "ready" || preview.status === "stale") ? (
+      {objectUrl &&
+      (preview.status === "ready" ||
+        preview.status === "stale" ||
+        preview.status === "building") ? (
         <iframe
           className="final-preview-frame"
           title="最终版式 PDF"
@@ -493,7 +505,7 @@ export function FinalLayoutPreview({
         <div className="final-preview-state" role="status">
           <LoaderCircle className="spin" aria-hidden="true" />
           <h3>正在生成最终版式</h3>
-          <p>DOCX 完成后将读取真实 PDF 页面，请稍候。</p>
+          <p>正在根据当前编辑内容生成临时 DOCX 与真实 PDF 页面。</p>
         </div>
       ) : (
         <div className="final-preview-state">
@@ -507,7 +519,7 @@ export function FinalLayoutPreview({
           </h3>
           <p>
             {preview.message ??
-              "构建 DOCX 生成 LibreOffice PDF，或选择由 WPS 导出的 PDF。"}
+              "实时预览会自动生成 LibreOffice PDF，也可选择由 WPS 导出的 PDF 进行对照。"}
           </p>
           <FinalPreviewActions onBuild={onBuild} />
         </div>

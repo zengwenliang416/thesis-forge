@@ -1,10 +1,13 @@
 from __future__ import annotations
 
+import re
+import tempfile
 from collections.abc import Callable, Iterator
-from dataclasses import asdict
+from dataclasses import asdict, dataclass
 from pathlib import Path
 from queue import Queue
-from threading import Thread
+from threading import Lock, Thread
+from time import monotonic, time
 from typing import Protocol
 from uuid import uuid4
 
@@ -36,6 +39,9 @@ BuildService = Callable[..., BuildResult]
 PreviewService = Callable[..., PreviewResult]
 BuildEventSink = Callable[[dict], None]
 CancellationPredicate = Callable[[], bool]
+LIVE_PREVIEW_STEM_RE = re.compile(
+    r"^\.?thesisforge-live-preview-[0-9a-f]{32}$"
+)
 
 
 def final_preview_build_service(
@@ -68,6 +74,10 @@ class RuntimePaths(Protocol):
         path: Path,
         final_preview: object | None = None,
     ) -> dict: ...
+
+    def validate_live_preview_output(self, output: dict, path: Path) -> None: ...
+
+    def release_live_preview_output(self, output: dict) -> None: ...
 
 
 def _artifact_field(artifact: object, name: str) -> object:
@@ -120,6 +130,30 @@ def _final_preview_descriptor(
     return descriptor
 
 
+def _cleanup_live_preview_artifacts(output_path: Path) -> None:
+    if LIVE_PREVIEW_STEM_RE.fullmatch(output_path.stem) is None:
+        return
+    output_path.unlink(missing_ok=True)
+    output_path.with_suffix(".preview.pdf").unlink(missing_ok=True)
+    parent = output_path.parent
+    if LIVE_PREVIEW_STEM_RE.fullmatch(parent.name):
+        try:
+            parent.rmdir()
+        except OSError:
+            pass
+
+
+def _is_live_preview_artifact(path: Path) -> bool:
+    name = path.name
+    if name.endswith(".preview.pdf"):
+        stem = name.removesuffix(".preview.pdf")
+    elif name.endswith(".docx"):
+        stem = name.removesuffix(".docx")
+    else:
+        return False
+    return LIVE_PREVIEW_STEM_RE.fullmatch(stem) is not None
+
+
 class DesktopRuntime:
     def __init__(self) -> None:
         self._filesystem = LocalWorkspaceFileSystem()
@@ -157,12 +191,59 @@ class DesktopRuntime:
             presented["finalPreview"] = descriptor
         return presented
 
+    def validate_live_preview_output(self, output: dict, path: Path) -> None:
+        stem = path.stem
+        parent = path.parent
+        if (
+            output.get("kind") != "desktop"
+            or LIVE_PREVIEW_STEM_RE.fullmatch(stem) is None
+            or parent.name != stem
+            or output.get("fileName") != path.name
+            or parent.is_symlink()
+            or not parent.is_dir()
+            or parent.resolve().parent != Path(tempfile.gettempdir()).resolve()
+            or not _is_token(output.get("livePreviewId"))
+        ):
+            raise ValueError("desktop live-preview output must use an authorized temporary path")
+
+    def release_live_preview_output(self, output: dict) -> None:
+        path = self.output_path(output)
+        _cleanup_live_preview_artifacts(path)
+
+
+def _is_token(value: object) -> bool:
+    return (
+        isinstance(value, str)
+        and len(value) == 32
+        and all(character in "0123456789abcdef" for character in value)
+    )
+
+
+@dataclass(frozen=True, slots=True)
+class _WebLivePreviewGrant:
+    workspace_id: str
+    output_path: Path
+    created_at: float
+
 
 class WebWorkspaceRuntime:
-    def __init__(self, root: Path) -> None:
+    def __init__(
+        self,
+        root: Path,
+        *,
+        live_preview_ttl_seconds: float = 3600.0,
+        clock: Callable[[], float] = monotonic,
+        wall_clock: Callable[[], float] = time,
+    ) -> None:
         self.root = Path(root).resolve()
         self.root.mkdir(parents=True, exist_ok=True)
         self._filesystem = LocalWorkspaceFileSystem()
+        self._live_preview_ttl_seconds = live_preview_ttl_seconds
+        self._clock = clock
+        self._wall_clock = wall_clock
+        self._live_previews: dict[str, _WebLivePreviewGrant] = {}
+        self._live_preview_lock = Lock()
+        self._sweep_orphaned_live_preview_files()
 
     @staticmethod
     def _plain_file_name(file_name: object) -> str:
@@ -198,6 +279,95 @@ class WebWorkspaceRuntime:
             "fileName": safe_name,
         }
 
+    def _cleanup_live_preview_grant(self, grant: _WebLivePreviewGrant) -> None:
+        _cleanup_live_preview_artifacts(grant.output_path)
+
+    def _sweep_expired_live_previews(self) -> None:
+        cutoff = self._clock() - self._live_preview_ttl_seconds
+        expired: list[_WebLivePreviewGrant] = []
+        with self._live_preview_lock:
+            for live_preview_id, grant in tuple(self._live_previews.items()):
+                if grant.created_at <= cutoff:
+                    expired.append(self._live_previews.pop(live_preview_id))
+        for grant in expired:
+            self._cleanup_live_preview_grant(grant)
+        self._sweep_orphaned_live_preview_files()
+
+    def _sweep_orphaned_live_preview_files(self) -> None:
+        cutoff = self._wall_clock() - self._live_preview_ttl_seconds
+        with self._live_preview_lock:
+            active_paths = {
+                grant.output_path
+                for grant in self._live_previews.values()
+            }
+        active_artifacts = active_paths | {
+            path.with_suffix(".preview.pdf")
+            for path in active_paths
+        }
+        active_directories = {path.parent for path in active_paths}
+        for directory in self.root.glob("*/.thesisforge-live-previews"):
+            if directory.is_symlink() or not directory.is_dir():
+                continue
+            for artifact in directory.iterdir():
+                if (
+                    artifact in active_artifacts
+                    or
+                    artifact.is_symlink()
+                    or not artifact.is_file()
+                    or not _is_live_preview_artifact(artifact)
+                ):
+                    continue
+                try:
+                    if artifact.stat().st_mtime <= cutoff:
+                        artifact.unlink(missing_ok=True)
+                except OSError:
+                    continue
+            if directory not in active_directories:
+                try:
+                    directory.rmdir()
+                except OSError:
+                    pass
+
+    def prepare_live_preview_output(self, source: dict) -> dict:
+        source_path = self.source_path(source)
+        workspace_id = self._workspace_id(source.get("workspaceId"))
+        self._sweep_expired_live_previews()
+        live_preview_id = uuid4().hex
+        file_name = f".thesisforge-live-preview-{live_preview_id}.docx"
+        output_directory = source_path.parent / ".thesisforge-live-previews"
+        output_directory.mkdir(mode=0o700, exist_ok=True)
+        output_path = output_directory / file_name
+        grant = _WebLivePreviewGrant(
+            workspace_id=workspace_id,
+            output_path=output_path,
+            created_at=self._clock(),
+        )
+        with self._live_preview_lock:
+            self._live_previews[live_preview_id] = grant
+        return {
+            "kind": "web-download",
+            "workspaceId": workspace_id,
+            "fileName": file_name,
+            "livePreviewId": live_preview_id,
+        }
+
+    def _live_preview_grant(
+        self,
+        live_preview_id: object,
+        *,
+        workspace_id: object | None = None,
+    ) -> _WebLivePreviewGrant:
+        if not _is_token(live_preview_id):
+            raise ValueError("invalid live preview ID")
+        self._sweep_expired_live_previews()
+        with self._live_preview_lock:
+            grant = self._live_previews.get(live_preview_id)
+        if grant is None:
+            raise ValueError("live preview is not authorized")
+        if workspace_id is not None and grant.workspace_id != self._workspace_id(workspace_id):
+            raise ValueError("live preview workspace does not match")
+        return grant
+
     def source_path(self, source: dict) -> Path:
         if source.get("kind") not in {"web-workspace", "web-upload"}:
             raise ValueError("web workspace source is required")
@@ -216,6 +386,15 @@ class WebWorkspaceRuntime:
         workspace = self.root / workspace_id
         if not workspace.is_dir():
             raise ValueError("web workspace does not exist")
+        live_preview_id = output.get("livePreviewId")
+        if live_preview_id is not None:
+            grant = self._live_preview_grant(
+                live_preview_id,
+                workspace_id=workspace_id,
+            )
+            if grant.output_path.name != file_name:
+                raise ValueError("live preview output does not match authorization")
+            return grant.output_path
         return workspace / file_name
 
     def save_source(self, source: dict, text: str) -> Path:
@@ -244,8 +423,68 @@ class WebWorkspaceRuntime:
             download_id=workspace_id,
         )
         if descriptor is not None:
+            live_preview_id = output.get("livePreviewId")
+            if live_preview_id is not None:
+                grant = self._live_preview_grant(
+                    live_preview_id,
+                    workspace_id=workspace_id,
+                )
+                if grant.output_path != path:
+                    raise ValueError("live preview output does not match authorization")
+                descriptor["livePreviewId"] = live_preview_id
             presented["finalPreview"] = descriptor
         return presented
+
+    def validate_live_preview_output(self, output: dict, path: Path) -> None:
+        workspace_id = self._workspace_id(output.get("workspaceId"))
+        grant = self._live_preview_grant(
+            output.get("livePreviewId"),
+            workspace_id=workspace_id,
+        )
+        if (
+            output.get("kind") != "web-download"
+            or output.get("fileName") != path.name
+            or path != grant.output_path
+        ):
+            raise ValueError("web live-preview output does not match authorization")
+
+    def release_live_preview_output(self, output: dict) -> None:
+        live_preview_id = output.get("livePreviewId")
+        if not _is_token(live_preview_id):
+            raise ValueError("invalid live preview ID")
+        workspace_id = self._workspace_id(output.get("workspaceId"))
+        with self._live_preview_lock:
+            grant = self._live_previews.get(live_preview_id)
+            if grant is None:
+                return
+            if grant.workspace_id != workspace_id:
+                raise ValueError("live preview workspace does not match")
+            if output.get("fileName") != grant.output_path.name:
+                raise ValueError("live preview output does not match authorization")
+            self._live_previews.pop(live_preview_id)
+        self._cleanup_live_preview_grant(grant)
+
+    def read_live_preview(
+        self,
+        workspace_id: object,
+        live_preview_id: object,
+    ) -> bytes:
+        grant = self._live_preview_grant(
+            live_preview_id,
+            workspace_id=workspace_id,
+        )
+        pdf_path = grant.output_path.with_suffix(".preview.pdf")
+        try:
+            content = self._read_pdf_path(pdf_path, grant.output_path.parent)
+            return content
+        finally:
+            self.release_live_preview_output(
+                {
+                    "workspaceId": grant.workspace_id,
+                    "fileName": grant.output_path.name,
+                    "livePreviewId": live_preview_id,
+                }
+            )
 
     def read_pdf(self, workspace_id: object, file_name: object) -> bytes:
         safe_workspace_id = self._workspace_id(workspace_id)
@@ -256,6 +495,16 @@ class WebWorkspaceRuntime:
         if not workspace.is_dir():
             raise FileNotFoundError("web workspace does not exist")
         path = workspace / safe_name
+        if not path.exists():
+            raise FileNotFoundError("web workspace PDF does not exist")
+        if path.is_symlink() or path.resolve().parent != workspace.resolve():
+            raise ValueError("web workspace PDF escapes its workspace")
+        if not path.is_file():
+            raise FileNotFoundError("web workspace PDF does not exist")
+        return self._read_pdf_path(path, workspace)
+
+    @staticmethod
+    def _read_pdf_path(path: Path, workspace: Path) -> bytes:
         if not path.exists():
             raise FileNotFoundError("web workspace PDF does not exist")
         if path.is_symlink() or path.resolve().parent != workspace.resolve():
@@ -533,9 +782,18 @@ class WorkbenchCommandDispatcher:
 
     def _preview_result(self, payload: dict) -> dict:
         source, source_path = self._source(payload)
+        source_text = payload.get("text")
+        if source_text is not None and not isinstance(source_text, str):
+            raise TypeError("text must be a string")
+        snapshot_options = (
+            {"source_text": source_text}
+            if source_text is not None
+            else {}
+        )
         result = self._preview(
             source_path,
             template_path=self._template_path(payload, source_path),
+            **snapshot_options,
         )
         return {
             "source": self._runtime.present_source(source, source_path),
@@ -563,29 +821,54 @@ class WorkbenchCommandDispatcher:
         should_cancel: CancellationPredicate | None = None,
     ) -> dict:
         source, source_path = self._source(payload)
+        source_text = payload.get("text")
+        if source_text is not None and not isinstance(source_text, str):
+            raise TypeError("text must be a string")
+        intent = payload.get("intent", "publish")
+        if intent not in {"publish", "live-preview"}:
+            raise ValueError("intent must be publish or live-preview")
+        if intent == "live-preview" and source_text is None:
+            raise ValueError("live-preview requires text")
+        snapshot_options = (
+            {"source_text": source_text}
+            if source_text is not None
+            else {}
+        )
         output = payload.get("output")
         if not isinstance(output, dict):
             raise TypeError("output must be an object")
         output_path = self._runtime.output_path(output)
+        if intent == "live-preview":
+            self._runtime.validate_live_preview_output(output, output_path)
         stages: list[str] = []
         progress = on_progress or (lambda stage: stages.append(stage.value))
-        result = self._build(
-            source_path,
-            output_path,
-            template_path=self._template_path(payload, source_path),
-            on_progress=progress,
-            should_cancel=should_cancel,
-        )
-        return {
-            "source": self._runtime.present_source(source, source_path),
-            "output": self._runtime.present_output(
+        try:
+            result = self._build(
+                source_path,
+                output_path,
+                template_path=self._template_path(payload, source_path),
+                on_progress=progress,
+                should_cancel=should_cancel,
+                **snapshot_options,
+            )
+            final_preview = getattr(result, "final_preview", None)
+            presented_output = self._runtime.present_output(
                 output,
                 result.output_path,
-                getattr(result, "final_preview", None),
-            ),
-            "diagnostics": [asdict(issue) for issue in result.issues],
-            "progress": stages,
-        }
+                final_preview,
+            )
+            if intent == "live-preview" and final_preview is None:
+                self._runtime.release_live_preview_output(output)
+            return {
+                "source": self._runtime.present_source(source, source_path),
+                "output": presented_output,
+                "diagnostics": [asdict(issue) for issue in result.issues],
+                "progress": stages,
+            }
+        except Exception:
+            if intent == "live-preview":
+                self._runtime.release_live_preview_output(output)
+            raise
 
 
 def iter_build_events(

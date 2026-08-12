@@ -5,6 +5,7 @@ export type FinalPreviewDescriptor =
       fileName: string;
       downloadId?: string;
       authorizationId?: string;
+      livePreviewId?: string;
     }
   | {
       engine: "wps";
@@ -61,27 +62,36 @@ export function readFinalPreviewDescriptor(
         "fileName",
         "downloadId",
         "authorizationId",
+        "livePreviewId",
       ].includes(key),
     ) ||
     !isPlainPdfName(value.fileName) ||
     (value.authorizationId !== undefined &&
-      !isAuthorizationId(value.authorizationId))
+      !isAuthorizationId(value.authorizationId)) ||
+    (value.livePreviewId !== undefined &&
+      !isAuthorizationId(value.livePreviewId))
   ) {
     throw new Error("无效的最终预览描述");
   }
   if (
     value.engine === "libreoffice" &&
     value.label === "LibreOffice PDF" &&
-    ((isDownloadId(value.downloadId) && value.authorizationId === undefined) ||
+    ((isDownloadId(value.downloadId) &&
+      value.authorizationId === undefined) ||
       (value.downloadId === undefined &&
-        isAuthorizationId(value.authorizationId)))
+        isAuthorizationId(value.authorizationId))) &&
+    !(
+      value.livePreviewId !== undefined &&
+      value.downloadId === undefined
+    )
   ) {
     return value as FinalPreviewDescriptor;
   }
   if (
     value.engine === "wps" &&
     value.label === "WPS PDF" &&
-    value.downloadId === undefined
+    value.downloadId === undefined &&
+    value.livePreviewId === undefined
   ) {
     return value as FinalPreviewDescriptor;
   }

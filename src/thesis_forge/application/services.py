@@ -8,7 +8,7 @@ from typing import Protocol
 
 from thesis_forge.core.compiler import compile_document
 from thesis_forge.core.model import ThesisDocument, ValidationIssue
-from thesis_forge.core.parser import parse_markdown
+from thesis_forge.core.parser import parse_markdown, parse_markdown_text
 from thesis_forge.core.render_plan import RenderPlan
 from thesis_forge.core.validator import ValidationContext, validate_document
 from thesis_forge.renderers.docx import DocxRenderer
@@ -36,6 +36,7 @@ from .pdf_preview import (
 )
 
 Parser = Callable[[str | Path], ThesisDocument]
+SnapshotParser = Callable[..., ThesisDocument]
 ContextFactory = Callable[[ThesisDocument, str | Path | None], ValidationContext]
 Validator = Callable[[ThesisDocument, ValidationContext], list[ValidationIssue]]
 Compiler = Callable[..., RenderPlan]
@@ -58,6 +59,7 @@ def _create_validation_context(
 @dataclass(frozen=True, slots=True)
 class ApplicationDependencies:
     parser: Parser = parse_markdown
+    snapshot_parser: SnapshotParser = parse_markdown_text
     context_factory: ContextFactory = _create_validation_context
     validator: Validator = validate_document
     compiler: Compiler = compile_document
@@ -101,11 +103,16 @@ def _check_canceled(
 def inspect_service(
     source: str | Path,
     *,
+    source_text: str | None = None,
     dependencies: ApplicationDependencies | None = None,
 ) -> InspectionResult:
     active = _dependencies(dependencies)
     try:
-        document = active.parser(source)
+        document = (
+            active.parser(source)
+            if source_text is None
+            else active.snapshot_parser(source_text, source_path=source)
+        )
     except ApplicationStageError:
         raise
     except Exception as error:
@@ -135,22 +142,32 @@ def _validate_inspection(
 def validation_service(
     source: str | Path,
     *,
+    source_text: str | None = None,
     template_path: str | Path | None = None,
     dependencies: ApplicationDependencies | None = None,
 ) -> ValidationResult:
     active = _dependencies(dependencies)
-    inspection = inspect_service(source, dependencies=active)
+    inspection = inspect_service(
+        source,
+        source_text=source_text,
+        dependencies=active,
+    )
     return _validate_inspection(inspection, template_path, active)
 
 
 def preview_service(
     source: str | Path,
     *,
+    source_text: str | None = None,
     template_path: str | Path | None = None,
     dependencies: ApplicationDependencies | None = None,
 ) -> PreviewResult:
     active = _dependencies(dependencies)
-    inspection = inspect_service(source, dependencies=active)
+    inspection = inspect_service(
+        source,
+        source_text=source_text,
+        dependencies=active,
+    )
     validation = _validate_inspection(inspection, template_path, active)
     if validation.errors or validation.context.template is None:
         return PreviewResult(
@@ -184,6 +201,7 @@ def build_service(
     source: str | Path,
     output: str | Path,
     *,
+    source_text: str | None = None,
     template_path: str | Path | None = None,
     on_progress: ProgressCallback | None = None,
     should_cancel: CancellationPredicate | None = None,
@@ -195,7 +213,11 @@ def build_service(
 
     _check_canceled(should_cancel, BuildStage.PARSE)
     _notify(on_progress, BuildStage.PARSE)
-    inspection = inspect_service(source, dependencies=active)
+    inspection = inspect_service(
+        source,
+        source_text=source_text,
+        dependencies=active,
+    )
 
     _check_canceled(should_cancel, BuildStage.VALIDATE)
     _notify(on_progress, BuildStage.VALIDATE)

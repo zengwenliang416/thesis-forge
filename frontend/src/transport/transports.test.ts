@@ -154,6 +154,59 @@ describe("runtime transports", () => {
     ]);
   });
 
+  it("prepares and discards a Web live preview through server capabilities", async () => {
+    const calls: Array<{ url: string; body: unknown }> = [];
+    const output = {
+      kind: "web-download" as const,
+      workspaceId: "a".repeat(32),
+      fileName: `.thesisforge-live-preview-${"b".repeat(32)}.docx`,
+      livePreviewId: "b".repeat(32),
+    };
+    const transport = new WebWorkbenchTransport({
+      baseUrl: "http://127.0.0.1:8765",
+      fetch: async (url, init) => {
+        calls.push({
+          url: String(url),
+          body: JSON.parse(String(init?.body)),
+        });
+        return Response.json(
+          String(url).endsWith("/api/v1/live-previews")
+            ? {
+                protocol: PROTOCOL_VERSION,
+                ok: true,
+                output,
+              }
+            : {
+                protocol: PROTOCOL_VERSION,
+                ok: true,
+              },
+          { status: String(url).endsWith("/api/v1/live-previews") ? 201 : 200 },
+        );
+      },
+    });
+    const source = {
+      kind: "web-workspace" as const,
+      workspaceId: "a".repeat(32),
+      fileName: "thesis.md",
+    };
+
+    await expect(transport.prepareLivePreviewOutput(source)).resolves.toEqual(
+      output,
+    );
+    await transport.discardLivePreviewOutput(output);
+
+    expect(calls).toEqual([
+      {
+        url: "http://127.0.0.1:8765/api/v1/live-previews",
+        body: { source },
+      },
+      {
+        url: "http://127.0.0.1:8765/api/v1/live-previews/discard",
+        body: { output },
+      },
+    ]);
+  });
+
   it("imports a browser-selected WPS PDF through the transport contract", async () => {
     const transport = new WebWorkbenchTransport({
       pickPdf: async () => ({
@@ -196,6 +249,33 @@ describe("runtime transports", () => {
         command: "read_pdf_preview",
         args: { descriptor },
       },
+    ]);
+  });
+
+  it("prepares and discards a Tauri live preview output through native commands", async () => {
+    const calls: Array<{ command: string; args?: Record<string, unknown> }> = [];
+    const output = {
+      kind: "desktop" as const,
+      path: "/tmp/thesisforge-live-preview-a/thesisforge-live-preview-a.docx",
+      fileName: "thesisforge-live-preview-a.docx",
+    };
+    const transport = new TauriWorkbenchTransport(async (command, args) => {
+      calls.push({ command, args });
+      return command === "prepare_live_preview_output" ? output : null;
+    });
+
+    await expect(
+      transport.prepareLivePreviewOutput({
+        kind: "desktop",
+        path: "/Users/test/thesis.md",
+        fileName: "thesis.md",
+      }),
+    ).resolves.toEqual(output);
+    await transport.discardLivePreviewOutput(output);
+
+    expect(calls).toEqual([
+      { command: "prepare_live_preview_output", args: undefined },
+      { command: "discard_live_preview_output", args: { output } },
     ]);
   });
 

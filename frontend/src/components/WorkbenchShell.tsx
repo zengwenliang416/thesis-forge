@@ -54,6 +54,7 @@ interface WorkbenchShellProps {
   onDiagnosticActivated(diagnostic: DiagnosticPresentation): void;
   onContentActivated(selection: ContentSelection): void;
   onPreviewModeChanged(mode: PreviewMode): void;
+  onRefreshFinalPreview(): void;
   onSelectWpsPdf(): void;
   onEdit(text: string): void;
   onMobilePanelSelected(panel: WorkspaceState["mobilePanel"]): void;
@@ -85,6 +86,7 @@ export function WorkbenchShell({
   onDiagnosticActivated,
   onContentActivated,
   onPreviewModeChanged,
+  onRefreshFinalPreview,
   onSelectWpsPdf,
   onEdit,
   onMobilePanelSelected,
@@ -167,7 +169,7 @@ export function WorkbenchShell({
             state={state}
             onActivated={onContentActivated}
             onModeChanged={onPreviewModeChanged}
-            onBuild={onBuild}
+            onBuild={onRefreshFinalPreview}
             onSelectWpsPdf={onSelectWpsPdf}
           />
           <DiagnosticsPanel

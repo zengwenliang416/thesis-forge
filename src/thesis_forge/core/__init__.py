@@ -40,7 +40,7 @@ from .model import (
     ThesisDocument,
     ValidationIssue,
 )
-from .parser import ParseError, parse_markdown
+from .parser import ParseError, parse_markdown, parse_markdown_text
 from .render_plan import (
     BibliographyEntryInstruction,
     BibliographyInstruction,
@@ -95,6 +95,7 @@ __all__ = [
     "compile_document",
     "is_valid_stable_id",
     "parse_markdown",
+    "parse_markdown_text",
     "split_stable_id",
     "validate_document",
 ]

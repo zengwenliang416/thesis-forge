@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import io
 import json
+import tempfile
+from os import utime
 from pathlib import Path
 from types import SimpleNamespace
 
@@ -514,6 +516,197 @@ def test_web_workspace_save_and_build_share_one_opaque_workspace(tmp_path: Path)
     assert build_calls == [
         (source_path, runtime.root / source["workspaceId"] / "thesis.docx")
     ]
+
+
+def test_live_preview_build_uses_editor_text_without_mutating_source(tmp_path: Path):
+    source = tmp_path / "thesis.md"
+    source.write_text("# 磁盘旧内容\n", encoding="utf-8")
+    token = "a" * 32
+    preview_dir = Path(tempfile.gettempdir()) / f"thesisforge-live-preview-{token}"
+    preview_dir.mkdir(exist_ok=True)
+    output = preview_dir / f"thesisforge-live-preview-{token}.docx"
+    calls: list[tuple[Path, Path, str]] = []
+
+    def build(source_path, output_path, *, source_text, **_kwargs):
+        source_path = Path(source_path)
+        output_path = Path(output_path)
+        calls.append((source_path, output_path, source_text))
+        output_path.write_bytes(b"docx")
+        return SimpleNamespace(
+            output_path=output_path,
+            issues=(),
+            final_preview=None,
+        )
+
+    response = WorkbenchCommandDispatcher(
+        runtime=DesktopRuntime(),
+        build=build,
+    ).dispatch(
+        {
+            "protocol": PROTOCOL_VERSION,
+            "requestId": "live-preview-1",
+            "operation": "build",
+            "payload": {
+                "intent": "live-preview",
+                "source": {
+                    "kind": "desktop",
+                    "path": str(source),
+                    "fileName": source.name,
+                },
+                "text": "# 编辑器新内容\n",
+                "output": {
+                    "kind": "desktop",
+                    "path": str(output),
+                    "fileName": output.name,
+                    "livePreviewId": token,
+                },
+            },
+        }
+    )
+
+    assert response["ok"] is True
+    assert calls == [(source.resolve(), output, "# 编辑器新内容\n")]
+    assert source.read_text(encoding="utf-8") == "# 磁盘旧内容\n"
+    assert not output.exists()
+    assert not preview_dir.exists()
+
+
+def test_live_preview_requires_editor_text(tmp_path: Path):
+    source = tmp_path / "thesis.md"
+    source.write_text("# 绪论\n", encoding="utf-8")
+    token = "b" * 32
+    output = (
+        Path(tempfile.gettempdir())
+        / f"thesisforge-live-preview-{token}"
+        / f"thesisforge-live-preview-{token}.docx"
+    )
+    request = _request("build", source)
+    request["payload"].update(
+        {
+            "intent": "live-preview",
+            "output": {
+                "kind": "desktop",
+                "path": str(output),
+                "fileName": output.name,
+                "livePreviewId": token,
+            },
+        }
+    )
+
+    response = WorkbenchCommandDispatcher(
+        runtime=DesktopRuntime(),
+    ).dispatch(request)
+
+    assert response["ok"] is False
+    assert response["error"]["kind"] == "request"
+    assert "requires text" in response["error"]["message"]
+
+
+def test_live_preview_rejects_a_normal_desktop_output_path(tmp_path: Path):
+    source = tmp_path / "thesis.md"
+    source.write_text("# 绪论\n", encoding="utf-8")
+    output = tmp_path / "thesis.docx"
+    request = _request("build", source)
+    request["payload"].update(
+        {
+            "intent": "live-preview",
+            "text": "# 编辑器内容\n",
+            "output": {
+                "kind": "desktop",
+                "path": str(output),
+                "fileName": output.name,
+                "livePreviewId": "d" * 32,
+            },
+        }
+    )
+
+    response = WorkbenchCommandDispatcher(
+        runtime=DesktopRuntime(),
+    ).dispatch(request)
+
+    assert response["ok"] is False
+    assert response["error"]["kind"] == "request"
+    assert "temporary path" in response["error"]["message"]
+    assert not output.exists()
+
+
+def test_web_live_preview_rejects_a_forged_capability(tmp_path: Path):
+    runtime = WebWorkspaceRuntime(tmp_path / "workspaces")
+    source = runtime.create_workspace("thesis.md", "# 绪论\n")
+    token = "e" * 32
+    request = {
+        "protocol": PROTOCOL_VERSION,
+        "requestId": "live-preview-forged",
+        "operation": "build",
+        "payload": {
+            "intent": "live-preview",
+            "source": source,
+            "text": "# 编辑器内容\n",
+            "output": {
+                "kind": "web-download",
+                "workspaceId": source["workspaceId"],
+                "fileName": f".thesisforge-live-preview-{token}.docx",
+                "livePreviewId": token,
+            },
+        },
+    }
+
+    response = WorkbenchCommandDispatcher(runtime=runtime).dispatch(request)
+
+    assert response["ok"] is False
+    assert response["error"]["kind"] == "request"
+    assert "not authorized" in response["error"]["message"]
+
+
+def test_web_live_preview_expired_capability_is_swept(tmp_path: Path):
+    now = [10.0]
+    runtime = WebWorkspaceRuntime(
+        tmp_path / "workspaces",
+        live_preview_ttl_seconds=5.0,
+        clock=lambda: now[0],
+    )
+    source = runtime.create_workspace("thesis.md", "# 绪论\n")
+    expired = runtime.prepare_live_preview_output(source)
+    expired_docx = runtime.output_path(expired)
+    expired_pdf = expired_docx.with_suffix(".preview.pdf")
+    expired_docx.write_bytes(b"docx")
+    expired_pdf.write_bytes(b"%PDF-1.7\npreview")
+
+    now[0] = 16.0
+    current = runtime.prepare_live_preview_output(source)
+
+    assert not expired_docx.exists()
+    assert not expired_pdf.exists()
+    assert runtime.output_path(current).parent == expired_docx.parent
+
+
+def test_web_live_preview_orphans_are_swept_after_runtime_restart(tmp_path: Path):
+    root = tmp_path / "workspaces"
+    now = [100.0]
+    first_runtime = WebWorkspaceRuntime(
+        root,
+        live_preview_ttl_seconds=5.0,
+        wall_clock=lambda: now[0],
+    )
+    source = first_runtime.create_workspace("thesis.md", "# 绪论\n")
+    output = first_runtime.prepare_live_preview_output(source)
+    docx = first_runtime.output_path(output)
+    pdf = docx.with_suffix(".preview.pdf")
+    docx.write_bytes(b"docx")
+    pdf.write_bytes(b"%PDF-1.7\npreview")
+    utime(docx, (90.0, 90.0))
+    utime(pdf, (90.0, 90.0))
+
+    now[0] = 101.0
+    WebWorkspaceRuntime(
+        root,
+        live_preview_ttl_seconds=5.0,
+        wall_clock=lambda: now[0],
+    )
+
+    assert not docx.exists()
+    assert not pdf.exists()
+    assert not docx.parent.exists()
 
 
 @pytest.mark.parametrize(

@@ -155,6 +155,93 @@ def test_http_serves_only_workspace_bound_pdf_bytes_with_safe_headers(
     assert ("X-Content-Type-Options", "nosniff") in headers[0]
 
 
+def test_http_live_preview_pdf_is_consumed_and_cleans_its_docx(tmp_path: Path):
+    runtime = WebWorkspaceRuntime(tmp_path / "workspaces")
+    source = runtime.create_workspace("thesis.md", "# 绪论\n")
+    output = runtime.prepare_live_preview_output(source)
+    docx = runtime.output_path(output)
+    pdf = docx.with_suffix(".preview.pdf")
+    docx.write_bytes(b"docx")
+    pdf.write_bytes(b"%PDF-1.7\npreview")
+    app = WorkbenchHttpApp(
+        WorkbenchCommandDispatcher(runtime=runtime),
+        web_runtime=runtime,
+    )
+
+    body = b"".join(
+        app(
+            _get_environ(
+                f"/api/v1/workspaces/{source['workspaceId']}/live-previews/"
+                f"{output['livePreviewId']}"
+            ),
+            lambda _status, _headers: None,
+        )
+    )
+
+    assert body == b"%PDF-1.7\npreview"
+    assert not pdf.exists()
+    assert not docx.exists()
+
+
+def test_http_named_like_live_preview_regular_pdf_is_not_consumed(tmp_path: Path):
+    runtime = WebWorkspaceRuntime(tmp_path / "workspaces")
+    source = runtime.create_workspace("thesis.md", "# 绪论\n")
+    workspace = runtime.root / source["workspaceId"]
+    token = "c" * 32
+    docx = workspace / f".thesisforge-live-preview-{token}.docx"
+    pdf = workspace / f".thesisforge-live-preview-{token}.preview.pdf"
+    docx.write_bytes(b"formal docx")
+    pdf.write_bytes(b"%PDF-1.7\nformal")
+    app = WorkbenchHttpApp(
+        WorkbenchCommandDispatcher(runtime=runtime),
+        web_runtime=runtime,
+    )
+
+    body = b"".join(
+        app(
+            _get_environ(
+                f"/api/v1/workspaces/{source['workspaceId']}/files/{pdf.name}"
+            ),
+            lambda _status, _headers: None,
+        )
+    )
+
+    assert body == b"%PDF-1.7\nformal"
+    assert pdf.exists()
+    assert docx.exists()
+
+
+def test_http_can_discard_unread_live_preview_idempotently(tmp_path: Path):
+    runtime = WebWorkspaceRuntime(tmp_path / "workspaces")
+    source = runtime.create_workspace("thesis.md", "# 绪论\n")
+    output = runtime.prepare_live_preview_output(source)
+    docx = runtime.output_path(output)
+    pdf = docx.with_suffix(".preview.pdf")
+    docx.write_bytes(b"docx")
+    pdf.write_bytes(b"%PDF-1.7\npreview")
+    app = WorkbenchHttpApp(
+        WorkbenchCommandDispatcher(runtime=runtime),
+        web_runtime=runtime,
+    )
+
+    for _ in range(2):
+        statuses: list[str] = []
+        body = b"".join(
+            app(
+                _environ(
+                    "/api/v1/live-previews/discard",
+                    {"output": output},
+                ),
+                lambda status, _headers, statuses=statuses: statuses.append(status),
+            )
+        )
+        assert statuses == ["200 OK"]
+        assert json.loads(body)["ok"] is True
+
+    assert not pdf.exists()
+    assert not docx.exists()
+
+
 def test_http_rejects_invalid_workspace_pdf_requests(tmp_path: Path):
     runtime = WebWorkspaceRuntime(tmp_path / "workspaces")
     source = runtime.create_workspace("thesis.md", "# 绪论\n")

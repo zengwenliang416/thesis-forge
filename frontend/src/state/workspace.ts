@@ -144,10 +144,28 @@ export type WorkspaceEvent =
       type: "finalPreviewResolved";
       requestKey: string;
       bytes: Uint8Array;
+      descriptor?: FinalPreviewDescriptor;
     }
   | {
       type: "finalPreviewResolutionFailed";
       requestKey: string;
+      message: string;
+    }
+  | {
+      type: "livePreviewStarted";
+      requestKey: string;
+      revision: number;
+    }
+  | {
+      type: "livePreviewBuildSucceeded";
+      requestKey: string;
+      revision: number;
+      descriptor: FinalPreviewDescriptor | null;
+    }
+  | {
+      type: "livePreviewFailed";
+      requestKey: string;
+      revision: number;
       message: string;
     }
   | {
@@ -207,7 +225,7 @@ export function createInitialWorkspaceState(): WorkspaceState {
     buildErrorKind: null,
     output: null,
     contentRevision: 0,
-    previewMode: "structure",
+    previewMode: "final-layout",
     finalPreview: {
       status: "empty",
       descriptor: null,
@@ -273,6 +291,7 @@ export function reduceWorkspaceState(
         buildErrorKind: null,
         output: null,
         contentRevision: state.contentRevision + 1,
+        previewMode: "final-layout",
         finalPreview: {
           status: "empty",
           descriptor: null,
@@ -350,6 +369,11 @@ export function reduceWorkspaceState(
         mobilePanel: event.line === null ? state.mobilePanel : "editor",
       };
     case "operationStarted":
+      {
+        const replacesLivePreview =
+          event.operation.kind === "build" &&
+          state.finalPreview.status === "building" &&
+          state.finalPreview.requestKey?.startsWith("live-preview:");
       return {
         ...state,
         status: "loading",
@@ -359,7 +383,30 @@ export function reduceWorkspaceState(
           event.operation.kind === "build" ? [] : state.buildProgress,
         buildErrorKind:
           event.operation.kind === "build" ? null : state.buildErrorKind,
+        previewMode:
+          event.operation.kind === "build"
+            ? "final-layout"
+            : state.previewMode,
+        finalPreview: replacesLivePreview
+          ? state.finalPreview.bytes
+            ? {
+                ...state.finalPreview,
+                status: "stale",
+                message:
+                  "正式 DOCX 构建已开始，当前仍显示上一版实时预览。",
+                requestKey: null,
+              }
+            : {
+                status: "empty",
+                descriptor: null,
+                bytes: null,
+                message: null,
+                revision: null,
+                requestKey: null,
+              }
+          : state.finalPreview,
       };
+      }
     case "buildProgressed": {
       if (!isCurrent(state, event.operation)) {
         return state;
@@ -397,6 +444,7 @@ export function reduceWorkspaceState(
           errorMessage: null,
           buildErrorKind: null,
           output: event.output,
+          previewMode: "final-layout",
           finalPreview: descriptor
             ? {
                 status: "building",
@@ -430,10 +478,89 @@ export function reduceWorkspaceState(
         finalPreview: {
           ...state.finalPreview,
           status: "ready",
+          descriptor: event.descriptor ?? state.finalPreview.descriptor,
           bytes: event.bytes,
           message: null,
           requestKey: null,
         },
+      };
+    case "livePreviewStarted":
+      if (event.revision !== state.contentRevision) {
+        return state;
+      }
+      return {
+        ...state,
+        finalPreview: {
+          ...state.finalPreview,
+          status: "building",
+          message: "正在根据当前编辑内容更新实时预览。",
+          revision: event.revision,
+          requestKey: event.requestKey,
+        },
+      };
+    case "livePreviewBuildSucceeded":
+      if (
+        state.finalPreview.requestKey !== event.requestKey ||
+        event.revision !== state.contentRevision
+      ) {
+        return state;
+      }
+      if (!event.descriptor) {
+        return {
+          ...state,
+          finalPreview: state.finalPreview.bytes
+            ? {
+                ...state.finalPreview,
+                status: "stale",
+                message:
+                  "实时 PDF 暂不可用，仍显示上一次预览。请确认已安装 LibreOffice。",
+                requestKey: null,
+              }
+            : {
+                status: "unavailable",
+                descriptor: null,
+                bytes: null,
+                message:
+                  "实时 PDF 暂不可用。请安装 LibreOffice，或选择 WPS 导出的 PDF。",
+                revision: event.revision,
+                requestKey: null,
+              },
+        };
+      }
+      return {
+        ...state,
+        finalPreview: {
+          ...state.finalPreview,
+          status: "building",
+          message: "正在载入最新 PDF 页面。",
+          revision: event.revision,
+          requestKey: event.requestKey,
+        },
+      };
+    case "livePreviewFailed":
+      if (
+        state.finalPreview.requestKey !== event.requestKey ||
+        event.revision !== state.contentRevision
+      ) {
+        return state;
+      }
+      return {
+        ...state,
+        finalPreview: state.finalPreview.bytes
+          ? {
+              ...state.finalPreview,
+              status: "stale",
+              message: `实时预览更新失败：${event.message}`,
+              requestKey: null,
+            }
+          : {
+              ...state.finalPreview,
+              status: "failed",
+              bytes: null,
+              message: `实时预览更新失败：${event.message}`,
+              revision: event.revision,
+              requestKey: null,
+            },
       };
     case "finalPreviewResolutionFailed":
       if (
@@ -445,13 +572,22 @@ export function reduceWorkspaceState(
       }
       return {
         ...state,
-        finalPreview: {
-          ...state.finalPreview,
-          status: "failed",
-          bytes: null,
-          message: event.message,
-          requestKey: null,
-        },
+        finalPreview:
+          event.requestKey.startsWith("live-preview:") &&
+          state.finalPreview.bytes
+            ? {
+                ...state.finalPreview,
+                status: "stale",
+                message: `实时预览更新失败：${event.message}`,
+                requestKey: null,
+              }
+            : {
+                ...state.finalPreview,
+                status: "failed",
+                bytes: null,
+                message: event.message,
+                requestKey: null,
+              },
       };
     case "finalPreviewSelectionStarted":
       return {

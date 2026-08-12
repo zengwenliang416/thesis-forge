@@ -35,21 +35,25 @@ export type SourceRef =
   | WebWorkspaceSourceRef
   | WebUploadSourceRef;
 
+export interface CommandOutputRef {
+  kind: "desktop" | "web-download";
+  path?: string;
+  workspaceId?: string;
+  fileName?: string;
+  livePreviewId?: string;
+}
+
 export interface CommandEnvelope {
   protocol: typeof PROTOCOL_VERSION;
   requestId: string;
   operation: CommandOperation;
   payload: {
     source?: SourceRef;
-    output?: {
-      kind: "desktop" | "web-download";
-      path?: string;
-      workspaceId?: string;
-      fileName?: string;
-    };
+    output?: CommandOutputRef;
     templateId?: string | null;
     templatePath?: string | null;
     text?: string;
+    intent?: "publish" | "live-preview";
   };
 }
 

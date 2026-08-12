@@ -80,6 +80,7 @@ describe("Workbench preview flow", () => {
     expect(
       within(outline).getByRole("button", { name: /绪论.*第 8 行/ }),
     ).toBeVisible();
+    await user.click(screen.getByRole("tab", { name: "结构" }));
     expect(screen.getByText("系统架构")).toBeVisible();
   });
 
@@ -138,6 +139,7 @@ describe("Workbench preview flow", () => {
       }),
     );
 
+    await user.click(screen.getByRole("tab", { name: "结构" }));
     await user.click(screen.getByRole("button", { name: /系统架构.*第 12 行/ }));
     const editor = screen.getByRole("textbox", {
       name: "Markdown 文稿内容",

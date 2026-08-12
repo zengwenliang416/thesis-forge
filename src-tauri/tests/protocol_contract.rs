@@ -1,8 +1,9 @@
 use serde_json::json;
 use std::path::Path;
 use thesisforge_desktop::{
-    FinalPreviewDescriptor, PROTOCOL_VERSION, PreviewAuthorizationState,
-    acceptance_source_override, authorize_build_preview, derived_preview_path, open_source_path,
+    FinalPreviewDescriptor, LivePreviewOutputState, PROTOCOL_VERSION, PreviewAuthorizationState,
+    acceptance_source_override, authorize_build_preview, cleanup_live_preview_output_path,
+    cleanup_live_preview_path, derived_preview_path, live_preview_output_path, open_source_path,
     prepare_build_preview_authorization, read_pdf_preview_path, validate_final_preview_descriptor,
     validate_request, windows_acceptance_browser_args,
 };
@@ -178,6 +179,7 @@ fn preview_descriptor(engine: &str, label: &str, file_name: &str) -> FinalPrevie
         file_name: file_name.to_string(),
         download_id: None,
         authorization_id: None,
+        live_preview_id: None,
     }
 }
 
@@ -461,4 +463,82 @@ fn reads_only_regular_pdf_signature_files() {
     assert_eq!(read_pdf_preview_path(&pdf).unwrap(), b"%PDF-1.7\npreview");
     assert!(read_pdf_preview_path(&invalid).is_err());
     assert!(read_pdf_preview_path(&wrong_extension).is_err());
+}
+
+#[test]
+fn live_preview_output_is_unique_and_cleanup_is_scoped_to_its_directory() {
+    let first = live_preview_output_path().unwrap();
+    let second = live_preview_output_path().unwrap();
+    assert_ne!(first, second);
+    assert!(
+        first
+            .file_name()
+            .and_then(|value| value.to_str())
+            .is_some_and(|value| value.starts_with("thesisforge-live-preview-"))
+    );
+
+    std::fs::write(&first, b"docx").unwrap();
+    let pdf = first.with_extension("preview.pdf");
+    std::fs::write(&pdf, b"%PDF-1.7\npreview").unwrap();
+    let parent = first.parent().unwrap().to_path_buf();
+
+    cleanup_live_preview_path(&pdf.canonicalize().unwrap());
+
+    assert!(!first.exists());
+    assert!(!pdf.exists());
+    assert!(!parent.exists());
+    let _ = std::fs::remove_dir_all(second.parent().unwrap());
+}
+
+#[test]
+fn prepared_live_preview_output_can_be_discarded_before_build_starts() {
+    let output = live_preview_output_path().unwrap();
+    let parent = output.parent().unwrap().to_path_buf();
+
+    cleanup_live_preview_output_path(&output).unwrap();
+
+    assert!(!parent.exists());
+}
+
+#[test]
+fn live_preview_output_state_rejects_forged_capabilities_and_releases_idempotently() {
+    let state = LivePreviewOutputState::default();
+    let (live_preview_id, output) = state.prepare().unwrap();
+    let value = json!({
+        "kind": "desktop",
+        "path": output,
+        "fileName": output.file_name().unwrap().to_str().unwrap(),
+        "livePreviewId": live_preview_id,
+    });
+    let forged = json!({
+        "kind": "desktop",
+        "path": output,
+        "fileName": output.file_name().unwrap().to_str().unwrap(),
+        "livePreviewId": "f".repeat(32),
+    });
+
+    assert!(state.validate_output(&forged).is_err());
+    state.release(&value).unwrap();
+    state.release(&value).unwrap();
+    assert!(!output.parent().unwrap().exists());
+}
+
+#[test]
+fn formal_preview_authorization_never_requests_live_cleanup() {
+    let directory = tempfile::tempdir().unwrap();
+    let pdf = directory.path().join("thesis.preview.pdf");
+    std::fs::write(&pdf, b"%PDF-1.7\nformal").unwrap();
+    let state = PreviewAuthorizationState::default();
+    let descriptor = state
+        .authorize(
+            &preview_descriptor("libreoffice", "LibreOffice PDF", "thesis.preview.pdf"),
+            pdf.clone(),
+        )
+        .unwrap();
+
+    let (resolved, cleanup_after_read) = state.resolve_with_cleanup(&descriptor).unwrap();
+
+    assert_eq!(resolved, pdf.canonicalize().unwrap());
+    assert!(!cleanup_after_read);
+    assert!(pdf.exists());
 }

@@ -48,7 +48,9 @@ describe("WorkbenchApp", () => {
     expect(screen.getByRole("button", { name: "构建 DOCX" })).toBeDisabled();
     expect(screen.getByRole("complementary", { name: "论文大纲" })).toBeVisible();
     expect(screen.getByRole("region", { name: "Markdown 编辑器" })).toBeVisible();
-    expect(screen.getByRole("region", { name: "论文结构预览" })).toBeVisible();
+    expect(
+      screen.getByRole("region", { name: "论文最终版式预览" }),
+    ).toBeVisible();
     expect(screen.getByRole("region", { name: "诊断结果" })).toBeVisible();
     expect(screen.getByLabelText("学校模板")).toBeDisabled();
     expect(screen.getByRole("status", { name: "构建进度" })).toBeVisible();

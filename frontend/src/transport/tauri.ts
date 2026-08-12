@@ -1,5 +1,10 @@
 import { Channel } from "@tauri-apps/api/core";
-import { assertCommandResponse, type CommandEnvelope } from "./dto";
+import {
+  assertCommandResponse,
+  type CommandEnvelope,
+  type CommandOutputRef,
+  type SourceRef,
+} from "./dto";
 import { assertBuildEvent, type BuildEvent } from "./buildEvents";
 import type { OpenedSource, WorkbenchTransport } from "./WorkbenchTransport";
 import {
@@ -76,6 +81,32 @@ export class TauriWorkbenchTransport implements WorkbenchTransport {
     } finally {
       signal.removeEventListener("abort", cancel);
     }
+  }
+
+  async prepareLivePreviewOutput(
+    source: SourceRef,
+  ): Promise<CommandOutputRef> {
+    if (source.kind !== "desktop") {
+      throw new Error("Tauri 实时预览需要本地 Markdown 文稿");
+    }
+    const output = await this.invoke("prepare_live_preview_output");
+    if (
+      typeof output !== "object" ||
+      output === null ||
+      !("kind" in output) ||
+      output.kind !== "desktop" ||
+      !("path" in output) ||
+      typeof output.path !== "string" ||
+      !("fileName" in output) ||
+      typeof output.fileName !== "string"
+    ) {
+      throw new Error("无效的 Tauri 实时预览输出响应");
+    }
+    return output as CommandOutputRef;
+  }
+
+  async discardLivePreviewOutput(output: CommandOutputRef): Promise<void> {
+    await this.invoke("discard_live_preview_output", { output });
   }
 
   async resolveFinalPreview(

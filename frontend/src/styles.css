@@ -600,6 +600,19 @@ svg {
   font-family: "Songti SC", "STSong", SimSun, serif;
 }
 
+.structure-preview-warning {
+  margin: 14px 0 20px;
+  border: 1px solid #d9aa4b;
+  border-radius: 4px;
+  padding: 7px 9px;
+  background: #fff5d9;
+  color: #74541c;
+  font-family: "SFMono-Regular", Menlo, monospace;
+  font-size: 9px;
+  line-height: 1.5;
+  text-align: center;
+}
+
 .preview-document {
   display: grid;
   gap: 12px;
@@ -891,6 +904,10 @@ svg {
   color: var(--danger);
 }
 
+.final-preview[data-preview-status="building"] .freshness-label {
+  color: var(--accent-strong);
+}
+
 .final-preview-picker {
   height: 30px;
   border-color: #fff;
@@ -930,6 +947,19 @@ svg {
   font-size: 10px;
   font-weight: 700;
   cursor: pointer;
+}
+
+.final-preview-banner-live {
+  justify-content: flex-start;
+  border-color: #9ebfd7;
+  background: #eaf4fb;
+  color: #234d69;
+}
+
+.final-preview-banner-live svg {
+  width: 14px;
+  height: 14px;
+  flex: 0 0 auto;
 }
 
 .final-preview-frame {

@@ -146,7 +146,7 @@ describe("renderer-neutral preview panels", () => {
     );
 
     expect(screen.getByText("LibreOffice PDF")).toBeVisible();
-    expect(screen.getByText("当前构建")).toBeVisible();
+    expect(screen.getByText("当前实时预览")).toBeVisible();
     expect(screen.getByTitle("最终版式 PDF")).toHaveAttribute(
       "src",
       "blob:thesis-preview",

@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { act, fireEvent, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { createInitialWorkspaceState } from "../state/workspace";
 import type { WorkbenchTransport } from "../transport/WorkbenchTransport";
@@ -174,8 +174,6 @@ describe("Workbench build flow", () => {
     );
 
     await user.click(screen.getByRole("button", { name: "构建 DOCX" }));
-    await user.click(screen.getByRole("tab", { name: "最终版式" }));
-
     expect(await screen.findByText("LibreOffice PDF")).toBeVisible();
     expect(screen.getByTitle("最终版式 PDF")).toHaveAttribute(
       "src",
@@ -202,11 +200,10 @@ describe("Workbench build flow", () => {
       />,
     );
 
-    await user.click(screen.getByRole("tab", { name: "最终版式" }));
     await user.click(screen.getByRole("button", { name: "选择 WPS PDF" }));
 
     expect(await screen.findByText("WPS PDF")).toBeVisible();
-    expect(screen.getByText("当前预览")).toBeVisible();
+    expect(screen.getByText("WPS 对照稿")).toBeVisible();
     expect(screen.getByTitle("最终版式 PDF")).toBeVisible();
     expect(pickFinalPreview).toHaveBeenCalledOnce();
   });
@@ -241,6 +238,94 @@ describe("Workbench build flow", () => {
 
     expect(await screen.findByText(/选择新的 WPS PDF 失败/)).toBeVisible();
     expect(screen.getByTitle("最终版式 PDF")).toBeVisible();
-    expect(screen.getByText("当前预览")).toBeVisible();
+    expect(screen.getByText("WPS 对照稿")).toBeVisible();
+  });
+
+  it("debounces editor snapshots into disposable live PDF builds", async () => {
+    vi.useFakeTimers();
+    const requests: CommandEnvelope[] = [];
+    const abortSignals: AbortSignal[] = [];
+    const discardedOutputs: CommandEnvelope["payload"]["output"][] = [];
+    const descriptor = {
+      engine: "libreoffice" as const,
+      label: "LibreOffice PDF" as const,
+      fileName: "live.preview.pdf",
+      authorizationId: "e".repeat(32),
+    };
+    const liveTransport = transport(
+      async (request, onEvent, signal) => {
+        requests.push(request);
+        abortSignals.push(signal);
+        onEvent({
+          protocol: PROTOCOL_VERSION,
+          requestId: request.requestId,
+          type: "success",
+          result: {
+            output: {
+              kind: "desktop",
+              name: "live.docx",
+              finalPreview: descriptor,
+            },
+            diagnostics: [],
+          },
+        });
+        if (requests.length === 1) {
+          await new Promise<void>((resolve) => {
+            signal.addEventListener("abort", () => resolve(), { once: true });
+          });
+        }
+      },
+      {
+        prepareLivePreviewOutput: async () => ({
+          kind: "desktop",
+          path: "/tmp/live.docx",
+          fileName: "live.docx",
+        }),
+        discardLivePreviewOutput: async (output) => {
+          discardedOutputs.push(output);
+        },
+      },
+    );
+    try {
+      render(
+        <WorkbenchApp
+          transport={liveTransport}
+          initialState={initialState()}
+        />,
+      );
+
+      expect(requests).toHaveLength(0);
+      await act(async () => {
+        await vi.advanceTimersByTimeAsync(900);
+      });
+      expect(requests).toHaveLength(1);
+      expect(requests[0].payload).toMatchObject({
+        intent: "live-preview",
+        text: "# 绪论\n",
+      });
+      expect(screen.getByText("当前实时预览")).toBeVisible();
+
+      fireEvent.change(
+        screen.getByRole("textbox", { name: "Markdown 文稿内容" }),
+        { target: { value: "# 绪论\n新增" } },
+      );
+      await act(async () => {
+        await vi.advanceTimersByTimeAsync(899);
+      });
+      expect(requests).toHaveLength(1);
+      await act(async () => {
+        await vi.advanceTimersByTimeAsync(1);
+      });
+      expect(requests).toHaveLength(2);
+      expect(requests[1].payload.text).toBe("# 绪论\n新增");
+      expect(abortSignals[0].aborted).toBe(true);
+      await act(async () => {
+        await Promise.resolve();
+        await Promise.resolve();
+      });
+      expect(discardedOutputs).toHaveLength(2);
+    } finally {
+      vi.useRealTimers();
+    }
   });
 });

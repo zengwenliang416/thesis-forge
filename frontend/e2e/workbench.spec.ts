@@ -15,6 +15,41 @@ const previewResult = {
   diagnostics: [],
 };
 
+test.beforeEach(async ({ page }) => {
+  let livePreviewSequence = 0;
+  await page.route("**/api/v1/live-previews", async (route) => {
+    livePreviewSequence += 1;
+    const request = route.request().postDataJSON() as {
+      source: { workspaceId: string };
+    };
+    const livePreviewId = livePreviewSequence.toString(16).padStart(32, "0");
+    await route.fulfill({
+      status: 201,
+      contentType: "application/json",
+      body: JSON.stringify({
+        protocol: "thesisforge.workbench.v1",
+        ok: true,
+        output: {
+          kind: "web-download",
+          workspaceId: request.source.workspaceId,
+          fileName: `.thesisforge-live-preview-${livePreviewId}.docx`,
+          livePreviewId,
+        },
+      }),
+    });
+  });
+  await page.route("**/api/v1/live-previews/discard", async (route) => {
+    await route.fulfill({
+      status: 200,
+      contentType: "application/json",
+      body: JSON.stringify({
+        protocol: "thesisforge.workbench.v1",
+        ok: true,
+      }),
+    });
+  });
+});
+
 function onePagePdf(): Buffer {
   const objects = [
     "<< /Type /Catalog /Pages 2 0 R >>",
@@ -53,7 +88,9 @@ test("launches the shared workbench with keyboard-visible controls", async (
   await expect(page.getByRole("button", { name: "打开 Markdown 文稿" })).toBeVisible();
   await expect(page.getByRole("region", { name: "Markdown 编辑器" })).toBeVisible();
   if (testInfo.project.name !== "mobile-chromium") {
-    await expect(page.getByRole("region", { name: "论文结构预览" })).toBeVisible();
+    await expect(
+      page.getByRole("region", { name: "论文最终版式预览" }),
+    ).toBeVisible();
     await expect(page.getByRole("region", { name: "诊断结果" })).toBeVisible();
   } else {
     await expect(page.getByRole("tab", { name: "编辑" })).toHaveAttribute(
@@ -80,8 +117,7 @@ test("uses mobile panel navigation without horizontal overflow", async ({ page }
     "true",
   );
   await page.getByRole("tab", { name: "预览" }).click();
-  await expect(page.getByRole("tab", { name: "最终版式" })).toBeVisible();
-  await page.getByRole("tab", { name: "最终版式" }).click();
+  await expect(page.getByRole("tab", { name: "实时版式" })).toBeVisible();
   await expect(
     page.getByRole("region", { name: "论文最终版式预览" }),
   ).toBeVisible();
@@ -192,6 +228,7 @@ test("opens, edits, explicitly saves, refreshes, and builds through HTTP", async
   });
   const editor = page.getByRole("textbox", { name: "Markdown 文稿内容" });
   await expect(editor).toHaveValue("# 绪论\n");
+  await page.getByRole("tab", { name: "结构" }).click();
   const outline = page.getByRole("complementary", { name: "论文大纲" });
   const outlineHeading = outline.getByRole("button", {
     name: /绪论.*第 8 行/,
@@ -207,14 +244,28 @@ test("opens, edits, explicitly saves, refreshes, and builds through HTTP", async
   await expect(page.getByText("文稿、模板与预览已同步")).toBeVisible();
   await page.getByRole("button", { name: "构建 DOCX" }).click();
 
-  await expect.poll(() => operations.length).toBe(4);
-  expect(operations.map((request) => request.operation)).toEqual([
+  await expect
+    .poll(
+      () =>
+        operations.filter(
+          (request) =>
+            request.operation !== "build" ||
+            (request.payload as { intent?: string }).intent === "publish",
+        ).length,
+    )
+    .toBe(4);
+  const userOperations = operations.filter(
+    (request) =>
+      request.operation !== "build" ||
+      (request.payload as { intent?: string }).intent === "publish",
+  );
+  expect(userOperations.map((request) => request.operation)).toEqual([
     "preview",
     "save",
     "preview",
     "build",
   ]);
-  expect(operations[1]).toMatchObject({
+  expect(userOperations[1]).toMatchObject({
     operation: "save",
     payload: {
       source: {
@@ -225,9 +276,10 @@ test("opens, edits, explicitly saves, refreshes, and builds through HTTP", async
       text: "# 绪论\n\n正文。\n",
     },
   });
-  expect(operations[3]).toMatchObject({
+  expect(userOperations[3]).toMatchObject({
     operation: "build",
     payload: {
+      intent: "publish",
       output: {
         kind: "web-download",
         workspaceId,
@@ -239,11 +291,13 @@ test("opens, edits, explicitly saves, refreshes, and builds through HTTP", async
   await expect(page.getByText("thesis.docx")).toBeVisible();
 });
 
-test("loads a complete automatic PDF and marks it stale after an edit", async ({
+test("loads and refreshes a complete automatic PDF after an edit", async ({
   page,
 }, testInfo) => {
   test.skip(testInfo.project.name !== "desktop-chromium");
   const pdfBytes = onePagePdf();
+  let livePreviewBuilds = 0;
+  let livePreviewReads = 0;
   await page.route("**/api/v1/workspaces", async (route) => {
     await route.fulfill({
       status: 201,
@@ -277,7 +331,21 @@ test("loads a complete automatic PDF and marks it stale after an edit", async ({
     });
   });
   await page.route("**/api/v1/build-stream", async (route) => {
-    const request = route.request().postDataJSON() as { requestId: string };
+    const request = route.request().postDataJSON() as {
+      requestId: string;
+      payload: {
+        intent?: string;
+        output: {
+          fileName: string;
+          livePreviewId?: string;
+        };
+      };
+    };
+    const livePreview = request.payload.intent === "live-preview";
+    if (livePreview) {
+      livePreviewBuilds += 1;
+    }
+    const outputName = request.payload.output.fileName;
     await route.fulfill({
       status: 200,
       contentType: "application/x-ndjson",
@@ -288,13 +356,16 @@ test("loads a complete automatic PDF and marks it stale after an edit", async ({
         result: {
           output: {
             kind: "web-download",
-            name: "thesis.docx",
+            name: outputName,
             downloadId: workspaceId,
             finalPreview: {
               engine: "libreoffice",
               label: "LibreOffice PDF",
-              fileName: "thesis.preview.pdf",
+              fileName: outputName.replace(/\.docx$/i, ".preview.pdf"),
               downloadId: workspaceId,
+              ...(livePreview
+                ? { livePreviewId: request.payload.output.livePreviewId }
+                : {}),
             },
           },
           diagnostics: [],
@@ -303,8 +374,9 @@ test("loads a complete automatic PDF and marks it stale after an edit", async ({
     });
   });
   await page.route(
-    `**/api/v1/workspaces/${workspaceId}/files/thesis.preview.pdf`,
+    `**/api/v1/workspaces/${workspaceId}/live-previews/*`,
     async (route) => {
+      livePreviewReads += 1;
       await route.fulfill({
         status: 200,
         contentType: "application/pdf",
@@ -323,11 +395,10 @@ test("loads a complete automatic PDF and marks it stale after an edit", async ({
     buffer: Buffer.from("# 绪论\n"),
   });
 
-  await page.getByRole("button", { name: "构建 DOCX" }).click();
-  await page.getByRole("tab", { name: "最终版式" }).click();
-
   await expect(page.getByText("LibreOffice PDF")).toBeVisible();
-  await expect(page.getByText("当前构建")).toBeVisible();
+  await expect(page.getByText("当前实时预览")).toBeVisible();
+  await expect.poll(() => livePreviewBuilds).toBe(1);
+  await expect.poll(() => livePreviewReads).toBe(1);
   await expect(page.getByTitle("最终版式 PDF")).toHaveAttribute(
     "src",
     /^blob:/,
@@ -337,7 +408,9 @@ test("loads a complete automatic PDF and marks it stale after an edit", async ({
     .getByRole("textbox", { name: "Markdown 文稿内容" })
     .fill("# 绪论\n\n修改后的正文。\n");
   await expect(page.getByText("已过期", { exact: true })).toBeVisible();
-  await expect(page.getByText(/预览已过期/)).toBeVisible();
+  await expect.poll(() => livePreviewBuilds).toBe(2);
+  await expect.poll(() => livePreviewReads).toBe(2);
+  await expect(page.getByText("当前实时预览")).toBeVisible();
   await expect(page.getByTitle("最终版式 PDF")).toBeVisible();
 });
 

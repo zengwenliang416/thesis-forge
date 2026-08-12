@@ -1,5 +1,6 @@
 import type {
   CommandEnvelope,
+  CommandOutputRef,
   CommandResponse,
   RuntimeKind,
   SourceRef,
@@ -37,6 +38,10 @@ export interface WorkbenchTransport {
     onEvent: (event: BuildEvent) => void,
     signal: AbortSignal,
   ): Promise<void>;
+  prepareLivePreviewOutput?(
+    source: SourceRef,
+  ): Promise<CommandOutputRef>;
+  discardLivePreviewOutput?(output: CommandOutputRef): Promise<void>;
   resolveFinalPreview(
     descriptor: FinalPreviewDescriptor,
   ): Promise<Uint8Array>;

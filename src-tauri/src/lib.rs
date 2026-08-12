@@ -68,6 +68,8 @@ pub struct FinalPreviewDescriptor {
     pub download_id: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub authorization_id: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub live_preview_id: Option<String>,
 }
 
 pub fn validate_final_preview_descriptor(value: &Value) -> Result<FinalPreviewDescriptor, String> {
@@ -82,6 +84,9 @@ pub fn validate_final_preview_descriptor(value: &Value) -> Result<FinalPreviewDe
     }
     if descriptor.download_id.is_some() {
         return Err("desktop final preview cannot contain a downloadId".to_string());
+    }
+    if descriptor.live_preview_id.is_some() {
+        return Err("desktop final preview cannot contain a livePreviewId".to_string());
     }
     if descriptor.authorization_id.as_ref().is_some_and(|value| {
         value.len() != 32 || !value.chars().all(|character| character.is_ascii_hexdigit())
@@ -288,6 +293,7 @@ struct AuthorizedPreview {
     engine: String,
     file_name: String,
     path: PathBuf,
+    cleanup_after_read: bool,
 }
 
 #[derive(Clone, Default)]
@@ -314,7 +320,19 @@ impl PreviewAuthorizationState {
         descriptor: &FinalPreviewDescriptor,
         path: PathBuf,
     ) -> Result<FinalPreviewDescriptor, String> {
-        if descriptor.download_id.is_some() || descriptor.authorization_id.is_some() {
+        self.authorize_with_cleanup(descriptor, path, false)
+    }
+
+    pub fn authorize_with_cleanup(
+        &self,
+        descriptor: &FinalPreviewDescriptor,
+        path: PathBuf,
+        cleanup_after_read: bool,
+    ) -> Result<FinalPreviewDescriptor, String> {
+        if descriptor.download_id.is_some()
+            || descriptor.authorization_id.is_some()
+            || descriptor.live_preview_id.is_some()
+        {
             return Err("preview authorization requires an unlocated descriptor".to_string());
         }
         let stable_path = Self::stable_path_identity(&path)?;
@@ -328,6 +346,7 @@ impl PreviewAuthorizationState {
                     engine: descriptor.engine.clone(),
                     file_name: descriptor.file_name.clone(),
                     path: stable_path,
+                    cleanup_after_read,
                 },
             );
         Ok(FinalPreviewDescriptor {
@@ -337,6 +356,13 @@ impl PreviewAuthorizationState {
     }
 
     pub fn resolve(&self, descriptor: &FinalPreviewDescriptor) -> Result<PathBuf, String> {
+        self.resolve_with_cleanup(descriptor).map(|(path, _)| path)
+    }
+
+    pub fn resolve_with_cleanup(
+        &self,
+        descriptor: &FinalPreviewDescriptor,
+    ) -> Result<(PathBuf, bool), String> {
         let authorization_id = descriptor
             .authorization_id
             .as_ref()
@@ -351,7 +377,7 @@ impl PreviewAuthorizationState {
         if preview.engine != descriptor.engine || preview.file_name != descriptor.file_name {
             return Err("PDF preview authorization does not match descriptor".to_string());
         }
-        Ok(preview.path)
+        Ok((preview.path, preview.cleanup_after_read))
     }
 
     pub fn revoke(&self, descriptor: &FinalPreviewDescriptor) -> Result<(), String> {
@@ -371,6 +397,93 @@ impl PreviewAuthorizationState {
             .lock()
             .map_err(|_| "preview authorization state is unavailable".to_string())?
             .retain(|_, preview| preview.path != stable_path);
+        Ok(())
+    }
+}
+
+#[derive(Clone, Default)]
+pub struct LivePreviewOutputState {
+    outputs: Arc<Mutex<HashMap<String, PathBuf>>>,
+}
+
+impl LivePreviewOutputState {
+    pub fn prepare(&self) -> Result<(String, PathBuf), String> {
+        let path = live_preview_output_path()?;
+        let live_preview_id = path
+            .file_stem()
+            .and_then(|value| value.to_str())
+            .and_then(|value| value.strip_prefix("thesisforge-live-preview-"))
+            .ok_or_else(|| "prepared live preview path is invalid".to_string())?
+            .to_string();
+        self.outputs
+            .lock()
+            .map_err(|_| "live preview output state is unavailable".to_string())?
+            .insert(live_preview_id.clone(), path.clone());
+        Ok((live_preview_id, path))
+    }
+
+    pub fn validate_output(&self, output: &Value) -> Result<PathBuf, String> {
+        if output.get("kind").and_then(Value::as_str) != Some("desktop") {
+            return Err("live preview output must be a desktop path".to_string());
+        }
+        let live_preview_id = output
+            .get("livePreviewId")
+            .and_then(Value::as_str)
+            .ok_or_else(|| "live preview output livePreviewId is required".to_string())?;
+        let path = output
+            .get("path")
+            .and_then(Value::as_str)
+            .ok_or_else(|| "live preview output path is required".to_string())?;
+        let file_name = output
+            .get("fileName")
+            .and_then(Value::as_str)
+            .ok_or_else(|| "live preview output fileName is required".to_string())?;
+        let expected = self
+            .outputs
+            .lock()
+            .map_err(|_| "live preview output state is unavailable".to_string())?
+            .get(live_preview_id)
+            .cloned()
+            .ok_or_else(|| "live preview output is not authorized".to_string())?;
+        if expected != Path::new(path) || expected.file_name() != Some(OsStr::new(file_name)) {
+            return Err("live preview output does not match authorization".to_string());
+        }
+        Ok(expected)
+    }
+
+    pub fn release(&self, output: &Value) -> Result<(), String> {
+        let live_preview_id = output
+            .get("livePreviewId")
+            .and_then(Value::as_str)
+            .ok_or_else(|| "live preview output livePreviewId is required".to_string())?;
+        let path = output
+            .get("path")
+            .and_then(Value::as_str)
+            .ok_or_else(|| "live preview output path is required".to_string())?;
+        let file_name = output
+            .get("fileName")
+            .and_then(Value::as_str)
+            .ok_or_else(|| "live preview output fileName is required".to_string())?;
+        let mut outputs = self
+            .outputs
+            .lock()
+            .map_err(|_| "live preview output state is unavailable".to_string())?;
+        let Some(expected) = outputs.get(live_preview_id).cloned() else {
+            return Ok(());
+        };
+        if expected != Path::new(path) || expected.file_name() != Some(OsStr::new(file_name)) {
+            return Err("live preview output does not match authorization".to_string());
+        }
+        outputs.remove(live_preview_id);
+        drop(outputs);
+        cleanup_live_preview_output_path(&expected)
+    }
+
+    pub fn forget_path(&self, path: &Path) -> Result<(), String> {
+        self.outputs
+            .lock()
+            .map_err(|_| "live preview output state is unavailable".to_string())?
+            .retain(|_, output_path| output_path != path);
         Ok(())
     }
 }
@@ -404,6 +517,7 @@ fn requested_build_preview(
             file_name,
             download_id: None,
             authorization_id: None,
+            live_preview_id: None,
         },
         preview_path,
     )))
@@ -443,7 +557,13 @@ pub fn authorize_build_preview(
     if requested_path.file_name() != Some(OsStr::new(&descriptor.file_name)) {
         return Err("final preview is not the derived DOCX sibling".to_string());
     }
-    let authorized = state.authorize(&descriptor, requested_path)?;
+    let cleanup_after_read = request
+        .get("payload")
+        .and_then(|payload| payload.get("intent"))
+        .and_then(Value::as_str)
+        == Some("live-preview");
+    let authorized =
+        state.authorize_with_cleanup(&descriptor, requested_path, cleanup_after_read)?;
     let mut authorized_event = event.clone();
     authorized_event["result"]["output"]["finalPreview"] = serde_json::to_value(authorized)
         .map_err(|error| format!("failed to encode preview authorization: {error}"))?;
@@ -458,6 +578,81 @@ fn cancellation_path() -> PathBuf {
         std::process::id(),
         CANCEL_TOKEN.fetch_add(1, Ordering::Relaxed)
     ))
+}
+
+pub fn live_preview_output_path() -> Result<PathBuf, String> {
+    let token = Uuid::new_v4().simple().to_string();
+    let directory = env::temp_dir().join(format!("thesisforge-live-preview-{token}"));
+    std::fs::create_dir_all(&directory)
+        .map_err(|error| format!("failed to prepare live preview directory: {error}"))?;
+    Ok(directory.join(format!("thesisforge-live-preview-{token}.docx")))
+}
+
+fn is_live_preview_directory_name(value: &str) -> bool {
+    value
+        .strip_prefix("thesisforge-live-preview-")
+        .is_some_and(|token| {
+            token.len() == 32 && token.bytes().all(|byte| byte.is_ascii_hexdigit())
+        })
+}
+
+pub fn cleanup_live_preview_path(path: &Path) {
+    let Some(parent) = path.parent() else {
+        return;
+    };
+    let file_name = path
+        .file_name()
+        .and_then(|value| value.to_str())
+        .unwrap_or_default();
+    let directory_name = parent
+        .file_name()
+        .and_then(|value| value.to_str())
+        .unwrap_or_default();
+    let temporary_root = env::temp_dir()
+        .canonicalize()
+        .unwrap_or_else(|_| env::temp_dir());
+    if !file_name.starts_with("thesisforge-live-preview-")
+        || !file_name.ends_with(".preview.pdf")
+        || !is_live_preview_directory_name(directory_name)
+        || parent.parent() != Some(temporary_root.as_path())
+    {
+        return;
+    }
+    let docx_name = format!("{}.docx", file_name.trim_end_matches(".preview.pdf"));
+    let _ = std::fs::remove_file(path);
+    let _ = std::fs::remove_file(parent.join(docx_name));
+    let _ = std::fs::remove_dir(parent);
+}
+
+pub fn cleanup_live_preview_output_path(path: &Path) -> Result<(), String> {
+    let parent = path
+        .parent()
+        .ok_or_else(|| "live preview output parent is required".to_string())?;
+    let file_name = path
+        .file_name()
+        .and_then(|value| value.to_str())
+        .ok_or_else(|| "live preview output file name is invalid".to_string())?;
+    let directory_name = parent
+        .file_name()
+        .and_then(|value| value.to_str())
+        .ok_or_else(|| "live preview output directory is invalid".to_string())?;
+    let temporary_root = env::temp_dir()
+        .canonicalize()
+        .map_err(|error| format!("failed to resolve temporary directory: {error}"))?;
+    let canonical_parent = parent
+        .canonicalize()
+        .map_err(|error| format!("failed to resolve live preview directory: {error}"))?;
+    if file_name != format!("{directory_name}.docx")
+        || !is_live_preview_directory_name(directory_name)
+        || canonical_parent.parent() != Some(temporary_root.as_path())
+    {
+        return Err("live preview output is not an authorized temporary path".to_string());
+    }
+    let pdf = canonical_parent.join(format!("{directory_name}.preview.pdf"));
+    let _ = std::fs::remove_file(canonical_parent.join(file_name));
+    let _ = std::fs::remove_file(pdf);
+    let _ = std::fs::remove_dir(canonical_parent);
+    Ok(())
 }
 
 fn stream_sidecar_events(
@@ -567,7 +762,23 @@ async fn stream_managed_sidecar_events(
 }
 
 #[tauri::command]
-async fn dispatch_workbench(app: AppHandle, request: Value) -> Result<Value, String> {
+async fn dispatch_workbench(
+    app: AppHandle,
+    request: Value,
+    live_preview_state: State<'_, LivePreviewOutputState>,
+) -> Result<Value, String> {
+    if request
+        .get("payload")
+        .and_then(|payload| payload.get("intent"))
+        .and_then(Value::as_str)
+        == Some("live-preview")
+    {
+        let output = request
+            .get("payload")
+            .and_then(|payload| payload.get("output"))
+            .ok_or_else(|| "live preview output is required".to_string())?;
+        live_preview_state.validate_output(output)?;
+    }
     if use_development_sidecar() {
         return tauri::async_runtime::spawn_blocking(move || dispatch_to_sidecar(&request))
             .await
@@ -583,6 +794,7 @@ async fn run_build(
     on_event: Channel<Value>,
     state: State<'_, BuildCancellationState>,
     preview_state: State<'_, PreviewAuthorizationState>,
+    live_preview_state: State<'_, LivePreviewOutputState>,
 ) -> Result<(), String> {
     let request_id = request
         .get("requestId")
@@ -590,6 +802,18 @@ async fn run_build(
         .ok_or_else(|| "requestId is required".to_string())?
         .to_string();
     prepare_build_preview_authorization(preview_state.inner(), &request)?;
+    if request
+        .get("payload")
+        .and_then(|payload| payload.get("intent"))
+        .and_then(Value::as_str)
+        == Some("live-preview")
+    {
+        let output = request
+            .get("payload")
+            .and_then(|payload| payload.get("output"))
+            .ok_or_else(|| "live preview output is required".to_string())?;
+        live_preview_state.validate_output(output)?;
+    }
     let cancel_path = cancellation_path();
     let _ = std::fs::remove_file(&cancel_path);
     state
@@ -644,6 +868,29 @@ async fn cancel_build(
 }
 
 #[tauri::command]
+fn prepare_live_preview_output(state: State<'_, LivePreviewOutputState>) -> Result<Value, String> {
+    let (live_preview_id, path) = state.prepare()?;
+    let file_name = path
+        .file_name()
+        .and_then(|value| value.to_str())
+        .ok_or_else(|| "live preview file name is invalid".to_string())?;
+    Ok(serde_json::json!({
+        "kind": "desktop",
+        "path": path,
+        "fileName": file_name,
+        "livePreviewId": live_preview_id
+    }))
+}
+
+#[tauri::command]
+fn discard_live_preview_output(
+    output: Value,
+    state: State<'_, LivePreviewOutputState>,
+) -> Result<(), String> {
+    state.release(&output)
+}
+
+#[tauri::command]
 async fn pick_source() -> Result<Option<Value>, String> {
     if let Some(opened) =
         acceptance_source_override(env::var_os(WINDOWS_ACCEPTANCE_SOURCE_ENV).as_deref())?
@@ -682,6 +929,7 @@ async fn pick_pdf_preview(
         file_name,
         download_id: None,
         authorization_id: None,
+        live_preview_id: None,
     };
     let descriptor = state.authorize(&descriptor, path.to_path_buf())?;
     Ok(Some(serde_json::to_value(descriptor).map_err(|error| {
@@ -693,10 +941,24 @@ async fn pick_pdf_preview(
 async fn read_pdf_preview(
     descriptor: Value,
     state: State<'_, PreviewAuthorizationState>,
+    live_preview_state: State<'_, LivePreviewOutputState>,
 ) -> Result<Response, String> {
     let descriptor = validate_final_preview_descriptor(&descriptor)?;
-    let path = state.resolve(&descriptor)?;
-    Ok(Response::new(read_pdf_preview_path(&path)?))
+    let (path, cleanup_after_read) = state.resolve_with_cleanup(&descriptor)?;
+    let bytes = read_pdf_preview_path(&path);
+    if cleanup_after_read {
+        cleanup_live_preview_path(&path);
+        let docx_name = format!(
+            "{}.docx",
+            path.file_name()
+                .and_then(|value| value.to_str())
+                .unwrap_or_default()
+                .trim_end_matches(".preview.pdf")
+        );
+        live_preview_state.forget_path(&path.with_file_name(docx_name))?;
+    }
+    state.revoke(&descriptor)?;
+    Ok(Response::new(bytes?))
 }
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
@@ -705,6 +967,7 @@ pub fn run() {
         .plugin(tauri_plugin_shell::init())
         .manage(BuildCancellationState::default())
         .manage(PreviewAuthorizationState::default())
+        .manage(LivePreviewOutputState::default())
         .setup(|app| {
             let window_config = app
                 .config()
@@ -733,6 +996,8 @@ pub fn run() {
             dispatch_workbench,
             run_build,
             cancel_build,
+            prepare_live_preview_output,
+            discard_live_preview_output,
             pick_source,
             pick_pdf_preview,
             read_pdf_preview

@@ -19,7 +19,7 @@ from thesis_forge.core.model import (
     Table,
     Text,
 )
-from thesis_forge.core.parser import ParseError, parse_markdown
+from thesis_forge.core.parser import ParseError, parse_markdown, parse_markdown_text
 
 
 def test_parse_front_matter_and_blocks(tmp_path: Path):
@@ -53,6 +53,22 @@ width: "80%"
     assert any(isinstance(x, Heading) and x.id == "chap:intro" for x in doc.blocks)
     assert any(isinstance(x, Figure) and x.id == "fig:model" for x in doc.blocks)
     assert [x.target for x in doc.cross_references] == ["fig:model"]
+
+
+def test_parse_markdown_text_preserves_the_logical_source_path(tmp_path: Path):
+    source = tmp_path / "thesis.md"
+    source.write_text("# 磁盘旧标题\n", encoding="utf-8")
+
+    doc = parse_markdown_text(
+        "# 编辑器新标题\n\n::: figure {#fig:model}\nsrc: \"./model.png\"\n:::",
+        source_path=source,
+    )
+
+    assert doc.source_path == source.resolve()
+    assert any(
+        isinstance(block, Heading) and block.text == "编辑器新标题"
+        for block in doc.blocks
+    )
 
 
 def test_parse_all_v1_semantic_objects_and_inline_order(tmp_path: Path):

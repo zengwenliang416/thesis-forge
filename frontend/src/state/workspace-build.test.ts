@@ -20,6 +20,87 @@ function populated(): WorkspaceState {
 }
 
 describe("workspace build lifecycle", () => {
+  it("defaults to live layout and switches there when a publish build starts", () => {
+    let state: WorkspaceState = {
+      ...populated(),
+      previewMode: "structure" as const,
+    };
+
+    state = reduceWorkspaceState(state, {
+      type: "operationStarted",
+      operation: build,
+    });
+
+    expect(state.previewMode).toBe("final-layout");
+  });
+
+  it("keeps the previous PDF visible while refreshing and rejects stale results", () => {
+    let state: WorkspaceState = {
+      ...populated(),
+      contentRevision: 4,
+      finalPreview: {
+        status: "ready",
+        descriptor: {
+          engine: "libreoffice",
+          label: "LibreOffice PDF",
+          fileName: "previous.preview.pdf",
+        },
+        bytes: new Uint8Array([37, 80, 68, 70, 45]),
+        message: null,
+        revision: 3,
+        requestKey: null,
+      },
+    };
+
+    state = reduceWorkspaceState(state, {
+      type: "livePreviewStarted",
+      requestKey: "live-preview:2:4",
+      revision: 4,
+    });
+    expect(state.finalPreview.status).toBe("building");
+    expect(state.finalPreview.bytes).not.toBeNull();
+
+    state = reduceWorkspaceState(state, {
+      type: "livePreviewBuildSucceeded",
+      requestKey: "live-preview:1:3",
+      revision: 3,
+      descriptor: {
+        engine: "libreoffice",
+        label: "LibreOffice PDF",
+        fileName: "stale.preview.pdf",
+      },
+    });
+    expect(state.finalPreview.descriptor?.fileName).toBe(
+      "previous.preview.pdf",
+    );
+
+    state = reduceWorkspaceState(state, {
+      type: "livePreviewBuildSucceeded",
+      requestKey: "live-preview:2:4",
+      revision: 4,
+      descriptor: {
+        engine: "libreoffice",
+        label: "LibreOffice PDF",
+        fileName: "current.preview.pdf",
+      },
+    });
+    state = reduceWorkspaceState(state, {
+      type: "finalPreviewResolved",
+      requestKey: "live-preview:2:4",
+      bytes: new Uint8Array([37, 80, 68, 70, 45, 49]),
+      descriptor: {
+        engine: "libreoffice",
+        label: "LibreOffice PDF",
+        fileName: "current.preview.pdf",
+      },
+    });
+
+    expect(state.finalPreview.status).toBe("ready");
+    expect(state.finalPreview.descriptor?.fileName).toBe(
+      "current.preview.pdf",
+    );
+  });
+
   it("stores ordered progress and replaces output only on current success", () => {
     let state = reduceWorkspaceState(populated(), {
       type: "operationStarted",

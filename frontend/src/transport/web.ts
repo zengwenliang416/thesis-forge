@@ -1,4 +1,9 @@
-import { assertCommandResponse, type CommandEnvelope } from "./dto";
+import {
+  assertCommandResponse,
+  type CommandEnvelope,
+  type CommandOutputRef,
+  type SourceRef,
+} from "./dto";
 import { assertBuildEvent, type BuildEvent } from "./buildEvents";
 import type {
   OpenSourceInput,
@@ -146,6 +151,41 @@ export class WebWorkbenchTransport implements WorkbenchTransport {
     }
   }
 
+  async prepareLivePreviewOutput(
+    source: SourceRef,
+  ): Promise<CommandOutputRef> {
+    if (source.kind !== "web-workspace") {
+      throw new Error("Web 实时预览需要持久工作区");
+    }
+    const response = await this.#fetch(`${this.#baseUrl}/api/v1/live-previews`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ source }),
+    });
+    const body: unknown = await response.json();
+    if (
+      !response.ok ||
+      typeof body !== "object" ||
+      body === null ||
+      !("ok" in body) ||
+      body.ok !== true ||
+      !("output" in body) ||
+      typeof body.output !== "object" ||
+      body.output === null
+    ) {
+      throw new Error("准备 Web 实时预览失败");
+    }
+    return body.output as CommandOutputRef;
+  }
+
+  async discardLivePreviewOutput(output: CommandOutputRef): Promise<void> {
+    await this.#fetch(`${this.#baseUrl}/api/v1/live-previews/discard`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ output }),
+    });
+  }
+
   async resolveFinalPreview(
     descriptor: FinalPreviewDescriptor,
   ): Promise<Uint8Array> {
@@ -153,8 +193,11 @@ export class WebWorkbenchTransport implements WorkbenchTransport {
     if (preview.engine !== "libreoffice" || !preview.downloadId) {
       throw new Error("Web 自动预览缺少工作区定位信息");
     }
+    const resource = preview.livePreviewId
+      ? `live-previews/${preview.livePreviewId}`
+      : `files/${encodeURIComponent(preview.fileName)}`;
     const response = await this.#fetch(
-      `${this.#baseUrl}/api/v1/workspaces/${preview.downloadId}/files/${encodeURIComponent(preview.fileName)}`,
+      `${this.#baseUrl}/api/v1/workspaces/${preview.downloadId}/${resource}`,
       {
         method: "GET",
         headers: { accept: "application/pdf" },

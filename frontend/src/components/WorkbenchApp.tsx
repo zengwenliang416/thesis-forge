@@ -1,6 +1,7 @@
 import {
   type PointerEvent as ReactPointerEvent,
   useEffect,
+  useEffectEvent,
   useReducer,
   useRef,
 } from "react";
@@ -35,8 +36,11 @@ interface WorkbenchAppProps {
 const statusCopy = {
   empty: ["当前工作区没有 Markdown 文稿", "选择一个 .md 文件开始论文编译。"],
   loading: ["正在读取工作区", "正在同步保存快照和结构化结果。"],
-  populated: ["文稿、模板与预览已同步", "当前内容来自同一份已保存快照。"],
-  dirty: ["文稿有未保存修改", "请先显式保存，再验证或构建 DOCX。"],
+  populated: ["文稿、模板与预览已同步", "右侧实时版式与当前编辑内容同步。"],
+  dirty: [
+    "文稿有未保存修改",
+    "实时版式会自动更新；正式验证或构建 DOCX 前请先保存。",
+  ],
   error: ["工作台操作失败", "保留现有内容，可恢复后重试。"],
   disabled: ["本机 DOCX 构建器尚未启用", "编辑器仍可使用。"],
   permission: ["目标位置不可写", "请选择有权限的位置后重试。"],
@@ -64,6 +68,12 @@ export function WorkbenchApp({
   const generationRef = useRef(0);
   const previewSelectionGenerationRef = useRef(0);
   const buildAbortRef = useRef<AbortController | null>(null);
+  const livePreviewAbortRef = useRef<AbortController | null>(null);
+  const livePreviewDebounceRef = useRef<ReturnType<typeof setTimeout> | null>(
+    null,
+  );
+  const livePreviewAttemptedRevisionRef = useRef<number | null>(null);
+  const livePreviewGenerationRef = useRef(0);
 
   const nextOperation = (kind: OperationKind) => {
     generationRef.current += 1;
@@ -160,6 +170,14 @@ export function WorkbenchApp({
     if (!source) {
       return;
     }
+    if (kind === "build") {
+      if (livePreviewDebounceRef.current) {
+        clearTimeout(livePreviewDebounceRef.current);
+        livePreviewDebounceRef.current = null;
+      }
+      livePreviewAbortRef.current?.abort();
+      livePreviewAttemptedRevisionRef.current = state.contentRevision;
+    }
     const operation = nextOperation(kind);
     const output =
       kind === "build" && source.kind === "desktop"
@@ -179,6 +197,7 @@ export function WorkbenchApp({
     const request = requestFor(command, operation.generation, {
       source,
       templateId,
+      ...(kind === "build" ? { intent: "publish" as const } : {}),
       ...(output ? { output } : {}),
     });
     dispatch({ type: "operationStarted", operation });
@@ -302,6 +321,208 @@ export function WorkbenchApp({
     } catch (error) {
       failOperation(operation, error);
     }
+  };
+
+  const runLivePreview = async ({
+    source,
+    text,
+    templateId,
+    revision,
+  }: {
+    source: NonNullable<WorkspaceState["source"]>["reference"];
+    text: string;
+    templateId: string | null;
+    revision: number;
+  }) => {
+    if (
+      !source ||
+      !transport.runBuild ||
+      !transport.prepareLivePreviewOutput
+    ) {
+      return;
+    }
+
+    livePreviewAbortRef.current?.abort();
+    const controller = new AbortController();
+    livePreviewAbortRef.current = controller;
+    livePreviewGenerationRef.current += 1;
+    const requestKey = `live-preview:${livePreviewGenerationRef.current}:${revision}`;
+    let output: CommandEnvelope["payload"]["output"];
+    dispatch({ type: "livePreviewStarted", requestKey, revision });
+
+    try {
+      output = await transport.prepareLivePreviewOutput(source);
+      if (controller.signal.aborted) {
+        return;
+      }
+      const request = requestFor("build", revision, {
+        source,
+        output,
+        templateId,
+        text,
+        intent: "live-preview",
+      });
+      request.requestId = requestKey;
+      let terminal = false;
+      let resolution: Promise<void> | null = null;
+
+      await transport.runBuild(
+        request,
+        (event: BuildEvent) => {
+          if (event.type === "progress") {
+            return;
+          }
+          terminal = true;
+          if (event.type === "success") {
+            const descriptor = event.result.output.finalPreview ?? null;
+            dispatch({
+              type: "livePreviewBuildSucceeded",
+              requestKey,
+              revision,
+              descriptor,
+            });
+            if (!descriptor) {
+              return;
+            }
+            resolution = transport
+              .resolveFinalPreview(descriptor)
+              .then((bytes) => {
+                if (!controller.signal.aborted) {
+                  dispatch({
+                    type: "finalPreviewResolved",
+                    requestKey,
+                    bytes,
+                    descriptor,
+                  });
+                }
+              })
+              .catch((error: unknown) => {
+                if (!controller.signal.aborted) {
+                  dispatch({
+                    type: "finalPreviewResolutionFailed",
+                    requestKey,
+                    message:
+                      error instanceof Error
+                        ? error.message
+                        : "实时预览 PDF 读取失败。",
+                  });
+                }
+              });
+            return;
+          }
+          if (
+            event.error.kind !== "canceled" &&
+            !controller.signal.aborted
+          ) {
+            dispatch({
+              type: "livePreviewFailed",
+              requestKey,
+              revision,
+              message: event.error.message,
+            });
+          }
+        },
+        controller.signal,
+      );
+      await resolution;
+      if (!terminal && !controller.signal.aborted) {
+        dispatch({
+          type: "livePreviewFailed",
+          requestKey,
+          revision,
+          message: "实时预览构建未返回终态",
+        });
+      }
+    } catch (error) {
+      if (!controller.signal.aborted) {
+        dispatch({
+          type: "livePreviewFailed",
+          requestKey,
+          revision,
+          message: error instanceof Error ? error.message : String(error),
+        });
+      }
+    } finally {
+      if (output && transport.discardLivePreviewOutput) {
+        try {
+          await transport.discardLivePreviewOutput(output);
+        } catch {
+          // Cleanup is best-effort; the runtime still validates every preview path.
+        }
+      }
+      if (livePreviewAbortRef.current === controller) {
+        livePreviewAbortRef.current = null;
+      }
+    }
+  };
+  const startLivePreviewFromEffect = useEffectEvent(runLivePreview);
+
+  useEffect(() => {
+    const source = state.source?.reference;
+    if (
+      !source ||
+      state.operation !== null ||
+      !transport.runBuild ||
+      !transport.prepareLivePreviewOutput ||
+      livePreviewAttemptedRevisionRef.current === state.contentRevision
+    ) {
+      return;
+    }
+
+    livePreviewAbortRef.current?.abort();
+    livePreviewDebounceRef.current = setTimeout(() => {
+      livePreviewDebounceRef.current = null;
+      livePreviewAttemptedRevisionRef.current = state.contentRevision;
+      void startLivePreviewFromEffect({
+        source,
+        text: state.editorText,
+        templateId: state.templateId,
+        revision: state.contentRevision,
+      });
+    }, 900);
+
+    return () => {
+      if (livePreviewDebounceRef.current) {
+        clearTimeout(livePreviewDebounceRef.current);
+        livePreviewDebounceRef.current = null;
+      }
+    };
+  }, [
+    state.contentRevision,
+    state.editorText,
+    state.operation,
+    state.source,
+    state.templateId,
+    transport,
+  ]);
+
+  useEffect(
+    () => () => {
+      livePreviewAbortRef.current?.abort();
+    },
+    [],
+  );
+
+  const refreshLivePreview = () => {
+    const source = state.source?.reference;
+    if (
+      !source ||
+      !transport.runBuild ||
+      !transport.prepareLivePreviewOutput
+    ) {
+      return;
+    }
+    if (livePreviewDebounceRef.current) {
+      clearTimeout(livePreviewDebounceRef.current);
+      livePreviewDebounceRef.current = null;
+    }
+    livePreviewAttemptedRevisionRef.current = state.contentRevision;
+    void runLivePreview({
+      source,
+      text: state.editorText,
+      templateId: state.templateId,
+      revision: state.contentRevision,
+    });
   };
 
   const cancelBuild = () => {
@@ -428,6 +649,12 @@ export function WorkbenchApp({
   };
 
   const chooseWpsPdf = async () => {
+    if (livePreviewDebounceRef.current) {
+      clearTimeout(livePreviewDebounceRef.current);
+      livePreviewDebounceRef.current = null;
+    }
+    livePreviewAbortRef.current?.abort();
+    livePreviewAttemptedRevisionRef.current = state.contentRevision;
     previewSelectionGenerationRef.current += 1;
     const requestKey = `selection:${previewSelectionGenerationRef.current}`;
     dispatch({ type: "finalPreviewSelectionStarted", requestKey });
@@ -564,6 +791,7 @@ export function WorkbenchApp({
       onPreviewModeChanged={(mode) =>
         dispatch({ type: "previewModeSelected", mode })
       }
+      onRefreshFinalPreview={refreshLivePreview}
       onSelectWpsPdf={() => void chooseWpsPdf()}
       onEdit={(text) => dispatch({ type: "textEdited", text })}
       onMobilePanelSelected={(panel) =>

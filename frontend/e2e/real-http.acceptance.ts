@@ -54,6 +54,7 @@ test("runs the Web workbench through the real Python HTTP adapter", async ({
 
   const editor = page.getByRole("textbox", { name: "Markdown 文稿内容" });
   await expect(editor).toHaveValue(sourceText);
+  await page.getByRole("tab", { name: "结构" }).click();
   await expect(page.getByText("结构预览不代表 Word 最终分页。")).toBeVisible();
 
   await editor.fill(savedText);
@@ -83,13 +84,19 @@ test("runs the Web workbench through the real Python HTTP adapter", async ({
   ).json()) as { ok: boolean };
   expect(validatePayload.ok).toBe(true);
 
-  const buildResponsePromise = page.waitForResponse((response) =>
-    response.url().endsWith("/api/v1/build-stream"),
-  );
+  const buildResponsePromise = page.waitForResponse((response) => {
+    if (!response.url().endsWith("/api/v1/build-stream")) {
+      return false;
+    }
+    const request = response.request().postDataJSON() as {
+      payload?: { intent?: string };
+    };
+    return request.payload?.intent === "publish";
+  });
   await page.getByRole("button", { name: "构建 DOCX" }).click();
   expect((await buildResponsePromise).status()).toBe(200);
-  await expect(page.getByText("构建完成")).toBeVisible();
-  await expect(page.getByText("thesis.docx")).toBeVisible();
+  await expect(page.getByText("构建完成")).toBeVisible({ timeout: 30_000 });
+  await expect(page.getByText("thesis.docx")).toBeVisible({ timeout: 30_000 });
 
   expect(
     await readFile(`${workspaceRoot}/${workspaceId}/thesis.md`, "utf8"),
