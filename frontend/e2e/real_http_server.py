@@ -10,6 +10,7 @@ from thesis_forge.adapters import (
     WebWorkspaceRuntime,
     WorkbenchCommandDispatcher,
     WorkbenchHttpApp,
+    final_preview_build_service,
 )
 
 FRONTEND_ROOT = Path(__file__).resolve().parents[1]
@@ -27,7 +28,10 @@ class RealHttpAcceptanceApp:
     def __init__(self) -> None:
         runtime = WebWorkspaceRuntime(WORKSPACE_ROOT)
         self._api = WorkbenchHttpApp(
-            WorkbenchCommandDispatcher(runtime=runtime),
+            WorkbenchCommandDispatcher(
+                runtime=runtime,
+                build=final_preview_build_service,
+            ),
             web_runtime=runtime,
         )
 

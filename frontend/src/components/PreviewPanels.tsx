@@ -1,10 +1,21 @@
-import { BookOpen, FileText, PanelRight } from "lucide-react";
+import {
+  BookOpen,
+  FileText,
+  FileWarning,
+  LoaderCircle,
+  PanelRight,
+  RefreshCw,
+  Upload,
+} from "lucide-react";
 import type { CSSProperties, KeyboardEvent } from "react";
 import type {
   ContentSelection,
   OutlineItem,
 } from "../state/preview";
-import type { WorkspaceState } from "../state/workspace";
+import type {
+  PreviewMode,
+  WorkspaceState,
+} from "../state/workspace";
 import type {
   SerializedPreviewBlock,
   SerializedPreviewContent,
@@ -12,6 +23,7 @@ import type {
   SerializedPreviewRun,
 } from "../transport/dto";
 import { PanelHeader } from "./PanelHeader";
+import { usePdfObjectUrl } from "./usePdfObjectUrl";
 
 interface PreviewPanelProps {
   state: WorkspaceState;
@@ -313,7 +325,6 @@ function PreviewBlock({
 }
 
 export function PaperPreview({ state, onActivated }: PreviewPanelProps) {
-  const preview = state.preview;
   return (
     <section
       className="panel preview-panel"
@@ -326,35 +337,221 @@ export function PaperPreview({ state, onActivated }: PreviewPanelProps) {
         kicker="RENDER PLAN"
         title="论文结构预览"
       />
-      <div className="paper-stage">
-        <article className="paper">
-          <span className="paper-running-head">本科毕业论文 · 结构预览</span>
-          {preview.status === "empty" ? (
-            <div className="preview-message">
-              <h1>等待载入论文</h1>
-              <p>打开文稿后，预览与大纲将来自同一保存快照。</p>
-            </div>
-          ) : preview.status === "blocked" ? (
-            <div className="preview-message preview-message-blocked">
-              <h1>结构预览暂不可用</h1>
-              <p>{preview.message}</p>
-            </div>
-          ) : (
-            <div className="preview-document">
-              {preview.blocks.map((block) => (
-                <PreviewBlock
-                  key={block.selectionId}
-                  block={block}
-                  active={state.activeSelectionId === block.selectionId}
-                  onActivated={onActivated}
-                />
-              ))}
-            </div>
-          )}
-          <div className="paper-rule" />
-          <p className="paper-note">{preview.disclaimer}</p>
-        </article>
+      <PaperPreviewBody state={state} onActivated={onActivated} />
+    </section>
+  );
+}
+
+function PaperPreviewBody({ state, onActivated }: PreviewPanelProps) {
+  const preview = state.preview;
+  return (
+    <div className="paper-stage">
+      <article className="paper">
+        <span className="paper-running-head">本科毕业论文 · 结构预览</span>
+        {preview.status === "empty" ? (
+          <div className="preview-message">
+            <h1>等待载入论文</h1>
+            <p>打开文稿后，预览与大纲将来自同一保存快照。</p>
+          </div>
+        ) : preview.status === "blocked" ? (
+          <div className="preview-message preview-message-blocked">
+            <h1>结构预览暂不可用</h1>
+            <p>{preview.message}</p>
+          </div>
+        ) : (
+          <div className="preview-document">
+            {preview.blocks.map((block) => (
+              <PreviewBlock
+                key={block.selectionId}
+                block={block}
+                active={state.activeSelectionId === block.selectionId}
+                onActivated={onActivated}
+              />
+            ))}
+          </div>
+        )}
+        <div className="paper-rule" />
+        <p className="paper-note">{preview.disclaimer}</p>
+      </article>
+    </div>
+  );
+}
+
+export function PreviewModeControl({
+  mode,
+  onChanged,
+}: {
+  mode: PreviewMode;
+  onChanged(mode: PreviewMode): void;
+}) {
+  return (
+    <div className="preview-mode-control" role="tablist" aria-label="预览模式">
+      <button
+        type="button"
+        role="tab"
+        aria-selected={mode === "structure"}
+        onClick={() => onChanged("structure")}
+      >
+        结构
+      </button>
+      <button
+        type="button"
+        role="tab"
+        aria-selected={mode === "final-layout"}
+        onClick={() => onChanged("final-layout")}
+      >
+        最终版式
+      </button>
+    </div>
+  );
+}
+
+function FinalPreviewActions({
+  onBuild,
+}: {
+  onBuild(): void;
+}) {
+  return (
+    <div className="final-preview-actions">
+      <button type="button" className="button secondary" onClick={onBuild}>
+        <RefreshCw aria-hidden="true" />
+        重新构建
+      </button>
+    </div>
+  );
+}
+
+export function FinalLayoutPreview({
+  state,
+  onBuild,
+  onSelectWpsPdf,
+}: {
+  state: WorkspaceState;
+  onBuild(): void;
+  onSelectWpsPdf(): void;
+}) {
+  const preview = state.finalPreview;
+  const objectUrl = usePdfObjectUrl(preview.bytes);
+  const building =
+    state.operation?.kind === "build" || preview.status === "building";
+  const descriptor = preview.descriptor;
+  const statusLabel = building
+    ? "构建中"
+    : preview.status === "ready"
+      ? descriptor?.engine === "wps"
+        ? "当前预览"
+        : "当前构建"
+      : preview.status === "stale"
+        ? "已过期"
+        : preview.status === "unavailable"
+          ? "不可用"
+          : preview.status === "failed"
+            ? "失败"
+            : "未生成";
+
+  return (
+    <div className="final-preview" data-preview-status={building ? "building" : preview.status}>
+      <div className="final-preview-toolbar">
+        <div className="final-preview-labels" aria-label="最终预览状态">
+          {descriptor ? <span className="engine-label">{descriptor.label}</span> : null}
+          <span className="freshness-label">{statusLabel}</span>
+        </div>
+        <button
+          type="button"
+          className="button secondary final-preview-picker"
+          onClick={onSelectWpsPdf}
+        >
+          <Upload aria-hidden="true" />
+          选择 WPS PDF
+        </button>
       </div>
+
+      {preview.status === "stale" && objectUrl ? (
+        <div className="final-preview-banner" role="status">
+          <span>预览已过期。{preview.message}</span>
+          <button type="button" onClick={onBuild}>
+            重新构建
+          </button>
+        </div>
+      ) : null}
+      {preview.status === "ready" && objectUrl && preview.message ? (
+        <div className="final-preview-banner" role="alert">
+          <span>{preview.message}</span>
+          <button type="button" onClick={onSelectWpsPdf}>
+            重新选择
+          </button>
+        </div>
+      ) : null}
+
+      {objectUrl && (preview.status === "ready" || preview.status === "stale") ? (
+        <iframe
+          className="final-preview-frame"
+          title="最终版式 PDF"
+          src={objectUrl}
+        />
+      ) : building ? (
+        <div className="final-preview-state" role="status">
+          <LoaderCircle className="spin" aria-hidden="true" />
+          <h3>正在生成最终版式</h3>
+          <p>DOCX 完成后将读取真实 PDF 页面，请稍候。</p>
+        </div>
+      ) : (
+        <div className="final-preview-state">
+          <FileWarning aria-hidden="true" />
+          <h3>
+            {preview.status === "failed"
+              ? "最终预览加载失败"
+              : preview.status === "unavailable"
+                ? "自动 PDF 不可用"
+                : "尚无最终版式"}
+          </h3>
+          <p>
+            {preview.message ??
+              "构建 DOCX 生成 LibreOffice PDF，或选择由 WPS 导出的 PDF。"}
+          </p>
+          <FinalPreviewActions onBuild={onBuild} />
+        </div>
+      )}
+    </div>
+  );
+}
+
+export function DualPreviewPanel({
+  state,
+  onActivated,
+  onModeChanged,
+  onBuild,
+  onSelectWpsPdf,
+}: PreviewPanelProps & {
+  onModeChanged(mode: PreviewMode): void;
+  onBuild(): void;
+  onSelectWpsPdf(): void;
+}) {
+  const finalLayout = state.previewMode === "final-layout";
+  return (
+    <section
+      className="panel preview-panel dual-preview-panel"
+      role="region"
+      aria-label={finalLayout ? "论文最终版式预览" : "论文结构预览"}
+      data-mobile-active={state.mobilePanel === "preview"}
+    >
+      <div className="preview-panel-toolbar">
+        <PanelHeader
+          icon={<PanelRight />}
+          kicker="DOCUMENT PREVIEW"
+          title="论文预览"
+        />
+        <PreviewModeControl mode={state.previewMode} onChanged={onModeChanged} />
+      </div>
+      {finalLayout ? (
+        <FinalLayoutPreview
+          state={state}
+          onBuild={onBuild}
+          onSelectWpsPdf={onSelectWpsPdf}
+        />
+      ) : (
+        <PaperPreviewBody state={state} onActivated={onActivated} />
+      )}
     </section>
   );
 }

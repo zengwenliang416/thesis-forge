@@ -11,7 +11,14 @@ const previewResult = {
   diagnostics: [],
 };
 
+const finalPreviewMethods = {
+  resolveFinalPreview: async () =>
+    new Uint8Array([0x25, 0x50, 0x44, 0x46, 0x2d]),
+  pickFinalPreview: async () => null,
+};
+
 const transport: WorkbenchTransport = {
+  ...finalPreviewMethods,
   runtime: "web",
   capabilities: {
     nativePaths: false,
@@ -124,6 +131,7 @@ describe("WorkbenchApp", () => {
       result: { output: { kind: "desktop", name: "thesis.docx" } },
     });
     const desktopTransport: WorkbenchTransport = {
+      ...finalPreviewMethods,
       runtime: "tauri",
       capabilities: {
         nativePaths: true,
@@ -189,6 +197,7 @@ describe("WorkbenchApp", () => {
         result: previewResult,
       });
     const desktopTransport: WorkbenchTransport = {
+      ...finalPreviewMethods,
       runtime: "tauri",
       capabilities: {
         nativePaths: true,
@@ -255,6 +264,7 @@ describe("WorkbenchApp", () => {
       result: {},
     });
     const desktopTransport: WorkbenchTransport = {
+      ...finalPreviewMethods,
       runtime: "tauri",
       capabilities: {
         nativePaths: true,
@@ -311,6 +321,7 @@ describe("WorkbenchApp", () => {
       },
     });
     const desktopTransport: WorkbenchTransport = {
+      ...finalPreviewMethods,
       runtime: "tauri",
       capabilities: {
         nativePaths: true,
@@ -450,6 +461,7 @@ describe("WorkbenchApp", () => {
         result: previewResult,
       });
     const desktopTransport: WorkbenchTransport = {
+      ...finalPreviewMethods,
       runtime: "tauri",
       capabilities: {
         nativePaths: true,
@@ -506,6 +518,7 @@ describe("WorkbenchApp", () => {
       result: previewResult,
     });
     const desktopTransport: WorkbenchTransport = {
+      ...finalPreviewMethods,
       runtime: "tauri",
       capabilities: {
         nativePaths: true,
@@ -727,6 +740,7 @@ describe("WorkbenchApp", () => {
         result: previewResult,
       });
     const desktopTransport: WorkbenchTransport = {
+      ...finalPreviewMethods,
       runtime: "tauri",
       capabilities: {
         nativePaths: true,

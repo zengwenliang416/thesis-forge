@@ -15,6 +15,34 @@ const previewResult = {
   diagnostics: [],
 };
 
+function onePagePdf(): Buffer {
+  const objects = [
+    "<< /Type /Catalog /Pages 2 0 R >>",
+    "<< /Type /Pages /Kids [3 0 R] /Count 1 >>",
+    "<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 5 0 R >> >> /Contents 4 0 R >>",
+    "<< /Length 61 >>\nstream\nBT /F1 24 Tf 72 720 Td (ThesisForge PDF Preview) Tj ET\nendstream",
+    "<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>",
+  ];
+  const chunks = [Buffer.from("%PDF-1.4\n%\xe2\xe3\xcf\xd3\n", "binary")];
+  const offsets = [0];
+  for (const [index, object] of objects.entries()) {
+    offsets.push(Buffer.concat(chunks).length);
+    chunks.push(Buffer.from(`${index + 1} 0 obj\n${object}\nendobj\n`, "ascii"));
+  }
+  const xrefOffset = Buffer.concat(chunks).length;
+  const xref = [
+    `xref\n0 ${objects.length + 1}\n`,
+    "0000000000 65535 f \n",
+    ...offsets
+      .slice(1)
+      .map((offset) => `${String(offset).padStart(10, "0")} 00000 n \n`),
+    `trailer\n<< /Size ${objects.length + 1} /Root 1 0 R >>\n`,
+    `startxref\n${xrefOffset}\n%%EOF\n`,
+  ].join("");
+  chunks.push(Buffer.from(xref, "ascii"));
+  return Buffer.concat(chunks);
+}
+
 test("launches the shared workbench with keyboard-visible controls", async (
   { page },
   testInfo,
@@ -51,6 +79,13 @@ test("uses mobile panel navigation without horizontal overflow", async ({ page }
     "data-mobile-active",
     "true",
   );
+  await page.getByRole("tab", { name: "预览" }).click();
+  await expect(page.getByRole("tab", { name: "最终版式" })).toBeVisible();
+  await page.getByRole("tab", { name: "最终版式" }).click();
+  await expect(
+    page.getByRole("region", { name: "论文最终版式预览" }),
+  ).toBeVisible();
+  await expect(page.getByText("尚无最终版式")).toBeVisible();
   expect(
     await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth),
   ).toBe(true);
@@ -202,6 +237,108 @@ test("opens, edits, explicitly saves, refreshes, and builds through HTTP", async
   });
   await expect(page.getByText("构建完成")).toBeVisible();
   await expect(page.getByText("thesis.docx")).toBeVisible();
+});
+
+test("loads a complete automatic PDF and marks it stale after an edit", async ({
+  page,
+}, testInfo) => {
+  test.skip(testInfo.project.name !== "desktop-chromium");
+  const pdfBytes = onePagePdf();
+  await page.route("**/api/v1/workspaces", async (route) => {
+    await route.fulfill({
+      status: 201,
+      contentType: "application/json",
+      body: JSON.stringify({
+        protocol: "thesisforge.workbench.v1",
+        ok: true,
+        source: {
+          kind: "web-workspace",
+          workspaceId,
+          fileName: "thesis.md",
+        },
+        text: "# 绪论\n",
+      }),
+    });
+  });
+  await page.route("**/api/v1/dispatch", async (route) => {
+    const request = route.request().postDataJSON() as {
+      requestId: string;
+      operation: string;
+    };
+    await route.fulfill({
+      status: 200,
+      contentType: "application/json",
+      body: JSON.stringify({
+        protocol: "thesisforge.workbench.v1",
+        requestId: request.requestId,
+        ok: true,
+        result: request.operation === "preview" ? previewResult : {},
+      }),
+    });
+  });
+  await page.route("**/api/v1/build-stream", async (route) => {
+    const request = route.request().postDataJSON() as { requestId: string };
+    await route.fulfill({
+      status: 200,
+      contentType: "application/x-ndjson",
+      body: `${JSON.stringify({
+        protocol: "thesisforge.workbench.v1",
+        requestId: request.requestId,
+        type: "success",
+        result: {
+          output: {
+            kind: "web-download",
+            name: "thesis.docx",
+            downloadId: workspaceId,
+            finalPreview: {
+              engine: "libreoffice",
+              label: "LibreOffice PDF",
+              fileName: "thesis.preview.pdf",
+              downloadId: workspaceId,
+            },
+          },
+          diagnostics: [],
+        },
+      })}\n`,
+    });
+  });
+  await page.route(
+    `**/api/v1/workspaces/${workspaceId}/files/thesis.preview.pdf`,
+    async (route) => {
+      await route.fulfill({
+        status: 200,
+        contentType: "application/pdf",
+        body: pdfBytes,
+        headers: {
+          "cache-control": "no-store",
+          "x-content-type-options": "nosniff",
+        },
+      });
+    },
+  );
+  await page.goto("/");
+  await page.locator('input[type="file"]').setInputFiles({
+    name: "thesis.md",
+    mimeType: "text/markdown",
+    buffer: Buffer.from("# 绪论\n"),
+  });
+
+  await page.getByRole("button", { name: "构建 DOCX" }).click();
+  await page.getByRole("tab", { name: "最终版式" }).click();
+
+  await expect(page.getByText("LibreOffice PDF")).toBeVisible();
+  await expect(page.getByText("当前构建")).toBeVisible();
+  await expect(page.getByTitle("最终版式 PDF")).toHaveAttribute(
+    "src",
+    /^blob:/,
+  );
+
+  await page
+    .getByRole("textbox", { name: "Markdown 文稿内容" })
+    .fill("# 绪论\n\n修改后的正文。\n");
+  await expect(page.getByText("已过期", { exact: true })).toBeVisible();
+  await expect(page.getByText(/预览已过期/)).toBeVisible();
+  await expect(page.getByTitle("最终版式 PDF")).toBeVisible();
 });
 
 test("cancels an active Web build and retries without losing prior output", async ({

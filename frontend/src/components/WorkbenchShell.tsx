@@ -4,6 +4,7 @@ import type {
   RefObject,
 } from "react";
 import type {
+  PreviewMode,
   WorkspaceActions,
   WorkspaceState,
 } from "../state/workspace";
@@ -22,7 +23,7 @@ import {
   DiagnosticsPanel,
   MarkdownEditor,
 } from "./WorkbenchPanels";
-import { OutlinePanel, PaperPreview } from "./PreviewPanels";
+import { DualPreviewPanel, OutlinePanel } from "./PreviewPanels";
 import type { ContentSelection } from "../state/preview";
 
 const panels = [
@@ -52,6 +53,8 @@ interface WorkbenchShellProps {
   onDiagnosticFilterChanged(filter: DiagnosticFilter): void;
   onDiagnosticActivated(diagnostic: DiagnosticPresentation): void;
   onContentActivated(selection: ContentSelection): void;
+  onPreviewModeChanged(mode: PreviewMode): void;
+  onSelectWpsPdf(): void;
   onEdit(text: string): void;
   onMobilePanelSelected(panel: WorkspaceState["mobilePanel"]): void;
   onPanelsResized(outlineWidth: number, previewWidth: number): void;
@@ -81,6 +84,8 @@ export function WorkbenchShell({
   onDiagnosticFilterChanged,
   onDiagnosticActivated,
   onContentActivated,
+  onPreviewModeChanged,
+  onSelectWpsPdf,
   onEdit,
   onMobilePanelSelected,
   onPanelsResized,
@@ -158,7 +163,13 @@ export function WorkbenchShell({
             state.mobilePanel === "diagnostics"
           }
         >
-          <PaperPreview state={state} onActivated={onContentActivated} />
+          <DualPreviewPanel
+            state={state}
+            onActivated={onContentActivated}
+            onModeChanged={onPreviewModeChanged}
+            onBuild={onBuild}
+            onSelectWpsPdf={onSelectWpsPdf}
+          />
           <DiagnosticsPanel
             state={state}
             onFilterChanged={onDiagnosticFilterChanged}

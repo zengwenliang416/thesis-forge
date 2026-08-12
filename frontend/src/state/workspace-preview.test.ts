@@ -87,4 +87,122 @@ describe("workspace preview state", () => {
     expect(state.outline).toEqual(fixture.outline);
     expect(state.preview).toEqual(fixture.preview);
   });
+
+  it("marks a ready final preview stale on template change and clears it for a new source", () => {
+    let state = {
+      ...createInitialWorkspaceState(),
+      status: "populated" as const,
+      source: {
+        kind: "desktop" as const,
+        name: "thesis.md",
+        writable: true,
+      },
+      finalPreview: {
+        status: "ready" as const,
+        descriptor: {
+          engine: "wps" as const,
+          label: "WPS PDF" as const,
+          fileName: "thesis.pdf",
+          authorizationId: "a".repeat(32),
+        },
+        bytes: new Uint8Array([37, 80, 68, 70, 45]),
+        message: null,
+        revision: 0,
+        requestKey: null,
+      },
+    } as WorkspaceState;
+
+    state = reduceWorkspaceState(state, {
+      type: "templateSelected",
+      templateId: "hut-master-2026",
+    });
+    expect(state.finalPreview.status).toBe("stale");
+    expect(state.finalPreview.bytes).not.toBeNull();
+
+    state = reduceWorkspaceState(state, {
+      type: "sourceOpened",
+      source: {
+        kind: "desktop",
+        name: "other.md",
+        writable: true,
+      },
+      text: "# Other\n",
+    });
+    expect(state.finalPreview.status).toBe("empty");
+    expect(state.finalPreview.bytes).toBeNull();
+  });
+
+  it("accepts only the current WPS PDF selection request", () => {
+    let state = reduceWorkspaceState(
+      {
+        ...createInitialWorkspaceState(),
+        status: "populated",
+        source: {
+          kind: "desktop",
+          name: "thesis.md",
+          writable: true,
+        },
+      },
+      { type: "finalPreviewSelectionStarted", requestKey: "selection:2" },
+    );
+
+    state = reduceWorkspaceState(state, {
+      type: "finalPreviewSelected",
+      requestKey: "selection:1",
+      descriptor: {
+        engine: "wps",
+        label: "WPS PDF",
+        fileName: "old.pdf",
+        authorizationId: "b".repeat(32),
+      },
+      bytes: new Uint8Array([1]),
+    });
+    expect(state.finalPreview.status).toBe("empty");
+
+    state = reduceWorkspaceState(state, {
+      type: "finalPreviewSelected",
+      requestKey: "selection:2",
+      descriptor: {
+        engine: "wps",
+        label: "WPS PDF",
+        fileName: "current.pdf",
+        authorizationId: "c".repeat(32),
+      },
+      bytes: new Uint8Array([37, 80, 68, 70, 45]),
+    });
+    expect(state.finalPreview.status).toBe("ready");
+    expect(state.finalPreview.descriptor?.fileName).toBe("current.pdf");
+  });
+
+  it("keeps an existing preview visible when replacement selection fails", () => {
+    let state = reduceWorkspaceState(
+      {
+        ...createInitialWorkspaceState(),
+        finalPreview: {
+          status: "ready",
+          descriptor: {
+            engine: "wps",
+            label: "WPS PDF",
+            fileName: "current.pdf",
+            authorizationId: "d".repeat(32),
+          },
+          bytes: new Uint8Array([37, 80, 68, 70, 45]),
+          message: null,
+          revision: 0,
+          requestKey: null,
+        },
+      },
+      { type: "finalPreviewSelectionStarted", requestKey: "selection:3" },
+    );
+
+    state = reduceWorkspaceState(state, {
+      type: "finalPreviewSelectionFailed",
+      requestKey: "selection:3",
+      message: "文件已损坏",
+    });
+
+    expect(state.finalPreview.status).toBe("ready");
+    expect(state.finalPreview.bytes).not.toBeNull();
+    expect(state.finalPreview.message).toContain("文件已损坏");
+  });
 });

@@ -62,6 +62,7 @@ export function WorkbenchApp({
       ? `存在 ${fatalDiagnosticCount} 个错误诊断，构建已禁用。`
       : defaultStatusDetail;
   const generationRef = useRef(0);
+  const previewSelectionGenerationRef = useRef(0);
   const buildAbortRef = useRef<AbortController | null>(null);
 
   const nextOperation = (kind: OperationKind) => {
@@ -199,6 +200,7 @@ export function WorkbenchApp({
             }
             terminal = true;
             if (event.type === "success") {
+              const output = event.result.output;
               dispatch({
                 type: "diagnosticsLoaded",
                 operation,
@@ -207,8 +209,38 @@ export function WorkbenchApp({
               dispatch({
                 type: "buildSucceeded",
                 operation,
-                output: event.result.output,
+                output,
               });
+              if (output.finalPreview) {
+                const requestKey = `build:${operation.generation}`;
+                if (!transport.resolveFinalPreview) {
+                  dispatch({
+                    type: "finalPreviewResolutionFailed",
+                    requestKey,
+                    message: "当前运行时无法读取最终版式 PDF。",
+                  });
+                  return;
+                }
+                void transport
+                  .resolveFinalPreview(output.finalPreview)
+                  .then((bytes) =>
+                    dispatch({
+                      type: "finalPreviewResolved",
+                      requestKey,
+                      bytes,
+                    }),
+                  )
+                  .catch((error: unknown) =>
+                    dispatch({
+                      type: "finalPreviewResolutionFailed",
+                      requestKey,
+                      message:
+                        error instanceof Error
+                          ? error.message
+                          : "最终版式 PDF 读取失败。",
+                    }),
+                  );
+              }
               return;
             }
             if (event.error.kind === "canceled") {
@@ -395,6 +427,40 @@ export function WorkbenchApp({
     }
   };
 
+  const chooseWpsPdf = async () => {
+    previewSelectionGenerationRef.current += 1;
+    const requestKey = `selection:${previewSelectionGenerationRef.current}`;
+    dispatch({ type: "finalPreviewSelectionStarted", requestKey });
+    if (!transport.pickFinalPreview) {
+      dispatch({
+        type: "finalPreviewSelectionFailed",
+        requestKey,
+        message: "当前运行时不支持选择本地 WPS PDF。",
+      });
+      return;
+    }
+    try {
+      const selected = await transport.pickFinalPreview();
+      if (!selected) {
+        dispatch({ type: "finalPreviewSelectionCanceled", requestKey });
+        return;
+      }
+      dispatch({
+        type: "finalPreviewSelected",
+        requestKey,
+        descriptor: selected.descriptor,
+        bytes: selected.bytes,
+      });
+    } catch (error) {
+      dispatch({
+        type: "finalPreviewSelectionFailed",
+        requestKey,
+        message:
+          error instanceof Error ? error.message : "WPS PDF 读取失败。",
+      });
+    }
+  };
+
   const recoverWorkspace = () => {
     const source = state.source?.reference;
     if (source && !state.dirty) {
@@ -495,6 +561,10 @@ export function WorkbenchApp({
       }
       onDiagnosticActivated={activateDiagnostic}
       onContentActivated={activateContent}
+      onPreviewModeChanged={(mode) =>
+        dispatch({ type: "previewModeSelected", mode })
+      }
+      onSelectWpsPdf={() => void chooseWpsPdf()}
       onEdit={(text) => dispatch({ type: "textEdited", text })}
       onMobilePanelSelected={(panel) =>
         dispatch({ type: "mobilePanelSelected", panel })

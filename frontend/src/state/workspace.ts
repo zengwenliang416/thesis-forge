@@ -4,6 +4,7 @@ import type {
   BuildOutput,
   BuildStage,
 } from "../transport/buildEvents";
+import type { FinalPreviewDescriptor } from "../transport/finalPreview";
 import {
   hasFatalDiagnostics,
   type DiagnosticFilter,
@@ -37,6 +38,25 @@ export interface WorkspaceSource {
   reference?: SourceRef;
 }
 
+export type PreviewMode = "structure" | "final-layout";
+
+export type FinalPreviewStatus =
+  | "empty"
+  | "building"
+  | "ready"
+  | "stale"
+  | "unavailable"
+  | "failed";
+
+export interface FinalPreviewState {
+  status: FinalPreviewStatus;
+  descriptor: FinalPreviewDescriptor | null;
+  bytes: Uint8Array | null;
+  message: string | null;
+  revision: number | null;
+  requestKey: string | null;
+}
+
 export interface WorkspaceState {
   status: WorkspaceStatus;
   source: WorkspaceSource | null;
@@ -55,6 +75,9 @@ export interface WorkspaceState {
   buildProgress: BuildStage[];
   buildErrorKind: BuildErrorKind | null;
   output: BuildOutput | null;
+  contentRevision: number;
+  previewMode: PreviewMode;
+  finalPreview: FinalPreviewState;
   mobilePanel: "outline" | "editor" | "preview" | "diagnostics";
   outlineWidth: number;
   previewWidth: number;
@@ -118,6 +141,36 @@ export type WorkspaceEvent =
       output: BuildOutput;
     }
   | {
+      type: "finalPreviewResolved";
+      requestKey: string;
+      bytes: Uint8Array;
+    }
+  | {
+      type: "finalPreviewResolutionFailed";
+      requestKey: string;
+      message: string;
+    }
+  | {
+      type: "finalPreviewSelectionStarted";
+      requestKey: string;
+    }
+  | {
+      type: "finalPreviewSelectionCanceled";
+      requestKey: string;
+    }
+  | {
+      type: "finalPreviewSelected";
+      requestKey: string;
+      descriptor: FinalPreviewDescriptor;
+      bytes: Uint8Array;
+    }
+  | {
+      type: "finalPreviewSelectionFailed";
+      requestKey: string;
+      message: string;
+    }
+  | { type: "previewModeSelected"; mode: PreviewMode }
+  | {
       type: "buildFailed";
       operation: OperationToken;
       kind: BuildErrorKind;
@@ -153,6 +206,16 @@ export function createInitialWorkspaceState(): WorkspaceState {
     buildProgress: [],
     buildErrorKind: null,
     output: null,
+    contentRevision: 0,
+    previewMode: "structure",
+    finalPreview: {
+      status: "empty",
+      descriptor: null,
+      bytes: null,
+      message: null,
+      revision: null,
+      requestKey: null,
+    },
     mobilePanel: "editor",
     outlineWidth: 260,
     previewWidth: 430,
@@ -164,6 +227,24 @@ function isCurrent(state: WorkspaceState, operation: OperationToken) {
     state.operation?.kind === operation.kind &&
     state.operation.generation === operation.generation
   );
+}
+
+function staleFinalPreview(
+  preview: FinalPreviewState,
+): FinalPreviewState {
+  if (
+    preview.status !== "ready" &&
+    preview.status !== "building" &&
+    preview.status !== "stale"
+  ) {
+    return preview;
+  }
+  return {
+    ...preview,
+    status: "stale",
+    message: "文稿或模板已改变，请重新构建或选择新的 WPS PDF。",
+    requestKey: null,
+  };
 }
 
 export function reduceWorkspaceState(
@@ -191,9 +272,19 @@ export function reduceWorkspaceState(
         buildProgress: [],
         buildErrorKind: null,
         output: null,
+        contentRevision: state.contentRevision + 1,
+        finalPreview: {
+          status: "empty",
+          descriptor: null,
+          bytes: null,
+          message: null,
+          revision: null,
+          requestKey: null,
+        },
       };
     case "textEdited": {
       const dirty = event.text !== state.savedText;
+      const changed = event.text !== state.editorText;
       return {
         ...state,
         status: dirty ? "dirty" : "populated",
@@ -201,16 +292,30 @@ export function reduceWorkspaceState(
         dirty,
         operation: null,
         errorMessage: null,
+        contentRevision: changed
+          ? state.contentRevision + 1
+          : state.contentRevision,
+        finalPreview: changed
+          ? staleFinalPreview(state.finalPreview)
+          : state.finalPreview,
       };
     }
-    case "templateSelected":
+    case "templateSelected": {
+      const changed = event.templateId !== state.templateId;
       return {
         ...state,
         templateId: event.templateId,
         diagnostics: [],
         diagnosticFilter: "all",
         activeDiagnosticId: null,
+        contentRevision: changed
+          ? state.contentRevision + 1
+          : state.contentRevision,
+        finalPreview: changed
+          ? staleFinalPreview(state.finalPreview)
+          : state.finalPreview,
       };
+    }
     case "diagnosticsLoaded":
       if (!isCurrent(state, event.operation)) {
         return state;
@@ -282,14 +387,144 @@ export function reduceWorkspaceState(
       if (!isCurrent(state, event.operation)) {
         return state;
       }
+      {
+        const descriptor = event.output.finalPreview ?? null;
+        const requestKey = `build:${event.operation.generation}`;
+        return {
+          ...state,
+          status: state.dirty ? "dirty" : state.source ? "populated" : "empty",
+          operation: null,
+          errorMessage: null,
+          buildErrorKind: null,
+          output: event.output,
+          finalPreview: descriptor
+            ? {
+                status: "building",
+                descriptor,
+                bytes: null,
+                message: "正在读取最终版式 PDF。",
+                revision: state.contentRevision,
+                requestKey,
+              }
+            : {
+                status: "unavailable",
+                descriptor: null,
+                bytes: null,
+                message:
+                  "DOCX 已生成，但自动 PDF 不可用。可重新构建或选择 WPS 导出的 PDF。",
+                revision: state.contentRevision,
+                requestKey: null,
+              },
+        };
+      }
+    case "finalPreviewResolved":
+      if (
+        state.finalPreview.status !== "building" ||
+        state.finalPreview.requestKey !== event.requestKey ||
+        state.finalPreview.revision !== state.contentRevision
+      ) {
+        return state;
+      }
       return {
         ...state,
-        status: state.dirty ? "dirty" : state.source ? "populated" : "empty",
-        operation: null,
-        errorMessage: null,
-        buildErrorKind: null,
-        output: event.output,
+        finalPreview: {
+          ...state.finalPreview,
+          status: "ready",
+          bytes: event.bytes,
+          message: null,
+          requestKey: null,
+        },
       };
+    case "finalPreviewResolutionFailed":
+      if (
+        state.finalPreview.status !== "building" ||
+        state.finalPreview.requestKey !== event.requestKey ||
+        state.finalPreview.revision !== state.contentRevision
+      ) {
+        return state;
+      }
+      return {
+        ...state,
+        finalPreview: {
+          ...state.finalPreview,
+          status: "failed",
+          bytes: null,
+          message: event.message,
+          requestKey: null,
+        },
+      };
+    case "finalPreviewSelectionStarted":
+      return {
+        ...state,
+        previewMode: "final-layout",
+        finalPreview: {
+          ...state.finalPreview,
+          revision: state.contentRevision,
+          requestKey: event.requestKey,
+        },
+      };
+    case "finalPreviewSelectionCanceled":
+      if (state.finalPreview.requestKey !== event.requestKey) {
+        return state;
+      }
+      return {
+        ...state,
+        finalPreview: {
+          ...state.finalPreview,
+          requestKey: null,
+        },
+      };
+    case "finalPreviewSelected":
+      if (
+        state.finalPreview.requestKey !== event.requestKey ||
+        state.finalPreview.revision !== state.contentRevision
+      ) {
+        return state;
+      }
+      return {
+        ...state,
+        previewMode: "final-layout",
+        finalPreview: {
+          status: "ready",
+          descriptor: event.descriptor,
+          bytes: event.bytes,
+          message: null,
+          revision: state.contentRevision,
+          requestKey: null,
+        },
+      };
+    case "finalPreviewSelectionFailed":
+      if (state.finalPreview.requestKey !== event.requestKey) {
+        return state;
+      }
+      if (
+        state.finalPreview.bytes &&
+        (state.finalPreview.status === "ready" ||
+          state.finalPreview.status === "stale")
+      ) {
+        return {
+          ...state,
+          finalPreview: {
+            ...state.finalPreview,
+            message:
+              state.finalPreview.status === "stale"
+                ? `文稿或模板已改变；选择新的 WPS PDF 失败：${event.message}`
+                : `选择新的 WPS PDF 失败：${event.message}`,
+            requestKey: null,
+          },
+        };
+      }
+      return {
+        ...state,
+        finalPreview: {
+          ...state.finalPreview,
+          status: "failed",
+          message: event.message,
+          requestKey: null,
+        },
+      };
+    case "previewModeSelected":
+      return { ...state, previewMode: event.mode };
     case "buildFailed":
       if (!isCurrent(state, event.operation)) {
         return state;

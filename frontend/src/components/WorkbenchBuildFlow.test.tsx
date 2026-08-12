@@ -31,6 +31,7 @@ function transport(
     onEvent: (event: BuildEvent) => void,
     signal: AbortSignal,
   ) => Promise<void>,
+  overrides: Partial<WorkbenchTransport> = {},
 ): WorkbenchTransport {
   return {
     runtime: "tauri",
@@ -44,11 +45,29 @@ function transport(
     dispatch: async () => {
       throw new Error("unexpected dispatch");
     },
+    resolveFinalPreview: async () =>
+      new Uint8Array([0x25, 0x50, 0x44, 0x46, 0x2d]),
+    pickFinalPreview: async () => null,
     runBuild,
+    ...overrides,
   };
 }
 
 describe("Workbench build flow", () => {
+  beforeEach(() => {
+    vi.stubGlobal(
+      "URL",
+      Object.assign(URL, {
+        createObjectURL: vi.fn(() => "blob:built-preview"),
+        revokeObjectURL: vi.fn(),
+      }),
+    );
+  });
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
   it("shows ordered progress and the successful output", async () => {
     const user = userEvent.setup();
     render(
@@ -117,5 +136,111 @@ describe("Workbench build flow", () => {
     expect(screen.getByText("previous.docx")).toBeVisible();
     expect(screen.getByRole("button", { name: "构建 DOCX" })).toBeEnabled();
     pending.resolve?.();
+  });
+
+  it("resolves the current build PDF and renders the final-layout viewer", async () => {
+    const user = userEvent.setup();
+    const descriptor = {
+      engine: "libreoffice" as const,
+      label: "LibreOffice PDF" as const,
+      fileName: "thesis.preview.pdf",
+      authorizationId: "b".repeat(32),
+    };
+    const resolveFinalPreview = vi
+      .fn()
+      .mockResolvedValue(new TextEncoder().encode("%PDF-1.7\n"));
+    render(
+      <WorkbenchApp
+        transport={transport(
+          async (request, onEvent) => {
+            onEvent({
+              protocol: PROTOCOL_VERSION,
+              requestId: request.requestId,
+              type: "success",
+              result: {
+                output: {
+                  kind: "desktop",
+                  name: "thesis.docx",
+                  finalPreview: descriptor,
+                },
+                diagnostics: [],
+              },
+            });
+          },
+          { resolveFinalPreview },
+        )}
+        initialState={initialState()}
+      />,
+    );
+
+    await user.click(screen.getByRole("button", { name: "构建 DOCX" }));
+    await user.click(screen.getByRole("tab", { name: "最终版式" }));
+
+    expect(await screen.findByText("LibreOffice PDF")).toBeVisible();
+    expect(screen.getByTitle("最终版式 PDF")).toHaveAttribute(
+      "src",
+      "blob:built-preview",
+    );
+    expect(resolveFinalPreview).toHaveBeenCalledWith(descriptor);
+  });
+
+  it("imports a selected WPS PDF without calling a runtime API from the component", async () => {
+    const user = userEvent.setup();
+    const pickFinalPreview = vi.fn().mockResolvedValue({
+      descriptor: {
+        engine: "wps",
+        label: "WPS PDF",
+        fileName: "wps-export.pdf",
+        authorizationId: "c".repeat(32),
+      },
+      bytes: new TextEncoder().encode("%PDF-1.7\n"),
+    });
+    render(
+      <WorkbenchApp
+        transport={transport(async () => undefined, { pickFinalPreview })}
+        initialState={initialState()}
+      />,
+    );
+
+    await user.click(screen.getByRole("tab", { name: "最终版式" }));
+    await user.click(screen.getByRole("button", { name: "选择 WPS PDF" }));
+
+    expect(await screen.findByText("WPS PDF")).toBeVisible();
+    expect(screen.getByText("当前预览")).toBeVisible();
+    expect(screen.getByTitle("最终版式 PDF")).toBeVisible();
+    expect(pickFinalPreview).toHaveBeenCalledOnce();
+  });
+
+  it("keeps the existing PDF visible when selecting a replacement fails", async () => {
+    const user = userEvent.setup();
+    const pickFinalPreview = vi.fn().mockRejectedValue(new Error("文件已损坏"));
+    render(
+      <WorkbenchApp
+        transport={transport(async () => undefined, { pickFinalPreview })}
+        initialState={{
+          ...initialState(),
+          previewMode: "final-layout",
+          finalPreview: {
+            status: "ready",
+            descriptor: {
+              engine: "wps",
+              label: "WPS PDF",
+              fileName: "existing.pdf",
+              authorizationId: "d".repeat(32),
+            },
+            bytes: new TextEncoder().encode("%PDF-1.7\n"),
+            message: null,
+            revision: 0,
+            requestKey: null,
+          },
+        }}
+      />,
+    );
+
+    await user.click(screen.getByRole("button", { name: "选择 WPS PDF" }));
+
+    expect(await screen.findByText(/选择新的 WPS PDF 失败/)).toBeVisible();
+    expect(screen.getByTitle("最终版式 PDF")).toBeVisible();
+    expect(screen.getByText("当前预览")).toBeVisible();
   });
 });
