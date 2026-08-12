@@ -2,10 +2,13 @@
 
 ## User-Visible Criteria
 
-- 用户可在同一右侧面板切换“结构预览”和“最终版式”。
+- 用户可在同一右侧面板切换“结构”和“实时版式”，默认显示实时版式。
+- 打开文稿后自动生成 PDF；编辑 Markdown 停止约 900ms 后自动刷新，无需先保存。
+- 实时刷新使用当前编辑器文本，不写回源 Markdown，也不覆盖正式 DOCX。
+- 更新期间上一版 PDF 保持可见，并显示“实时更新中”。
 - 成功自动导出后显示真实 PDF，并明确显示 `LibreOffice PDF`。
 - 用户可选择 WPS 已导出的 PDF，显示真实文件并明确显示 `WPS PDF`。
-- 修改 Markdown、切换模板或打开其他文稿后，旧 PDF 显示“预览已过期”。
+- 修改 Markdown 或切换模板后旧 PDF 先显示过期并自动刷新；打开其他文稿清空旧 PDF。
 - 没有 Office 导出器或导出失败时，DOCX 仍可下载/打开，界面提供重新构建或选择 WPS PDF
   的恢复动作。
 
@@ -18,11 +21,15 @@
 - Web PDF 路由拒绝 traversal、非 workspace 文件、非 `.pdf` 名称和不存在的产物。
 - Tauri PDF picker 只接受 `.pdf`，读取命令只读取用户选择或本次构建派生的 PDF。
 - frontend 严格校验 preview descriptor，管理 object URL 创建与撤销。
+- 新 revision 必须取消旧实时任务，旧 revision 的构建或读取结果不能覆盖当前 PDF。
 
 ## Data Criteria
 
 - Markdown、YAML、BibTeX、图片和最终 DOCX 不因 PDF 失败而被修改或回滚。
+- 实时预览以原 Markdown 路径解析相对图片、参考文献和模板，但只使用未保存文本快照。
 - 自动 PDF 先写临时文件，验证 `%PDF-` signature 和非空大小后再原子替换。
+- Web/Tauri 实时 DOCX/PDF 使用服务端 capability 绑定的唯一临时路径，并在读取、失败
+  或取消后清理；Web 重启后按专属目录文件时间清扫过期孤儿产物。
 - 失败构建不得把旧 PDF 标记为最新；成功 DOCX 但 PDF 失败返回 `unavailable/failed`。
 - Web 响应使用 `application/pdf`、准确长度、`nosniff` 和 `no-store`。
 
@@ -40,7 +47,8 @@
 - Static: Ruff, TypeScript, Rust, architecture tests, OpenSpec strict and `git diff --check`.
 - Unit: exporter discovery/commands/failure safety, descriptors, reducer stale transitions, URL cleanup.
 - Redteam: traversal, wrong extension, corrupt/empty PDF, timeout, stale build event and canceled build.
-- E2E: Web automatic PDF read; Tauri automatic PDF read; Web/Tauri WPS PDF selection flow.
+- E2E: Web automatic live PDF read; Tauri automatic live PDF read; debounce/stale revision;
+  Web/Tauri WPS PDF selection flow.
 - Sensory: compare one WPS-exported PDF in WPS and the right-side final preview page-by-page.
 
 ## Unresolved Gaps

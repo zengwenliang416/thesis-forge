@@ -2,13 +2,14 @@
 
 ## Summary
 
-把当前右侧“结构预览”扩展为双预览：保留快速、可导航的 RenderPlan 结构预览，并在
-成功构建 DOCX 后显示由真实 Office 布局引擎导出的 PDF 最终版式。自动导出与用户从
-WPS 手工导入的 PDF 必须标明真实引擎，源文稿或模板变化后必须明确显示预览已过期。
+把当前右侧“结构预览”扩展为双预览：保留快速、可导航的 RenderPlan 结构预览，并把
+真实 PDF 版式作为默认预览。打开文稿或编辑停止约 900ms 后，系统使用编辑器当前文本
+构建一次性临时 DOCX，再由真实 Office 布局引擎导出 PDF；不要求先保存，也不覆盖正式
+DOCX。自动导出与用户从 WPS 手工导入的 PDF 必须标明真实引擎。
 
 ## Users & Actors
 
-- 论文作者：编辑时使用快速结构预览，构建后检查真实分页、字体、目录和图表版式。
+- 论文作者：编辑时持续检查真实分页、字体、目录和图表版式，必要时切换结构预览定位。
 - WPS 用户：可把 WPS 导出的 PDF 关联为最终预览，并看到 `WPS PDF` 引擎标识。
 - Web、macOS 和 Windows 用户：使用同一 React 交互和同一 application 导出契约。
 - 部署维护者：可选安装 LibreOffice 以启用自动 PDF，不把 Office 变成核心构建依赖。
@@ -16,6 +17,10 @@ WPS 手工导入的 PDF 必须标明真实引擎，源文稿或模板变化后�
 ## In Scope
 
 - 右侧预览提供“结构预览 / 最终版式”可访问切换控件。
+- 打开文稿或 Markdown 编辑停止约 900ms 后，自动基于编辑器当前未保存文本刷新 PDF。
+- 实时刷新使用一次性临时 DOCX/PDF，不写回 Markdown，不覆盖或伪装正式构建产物。
+- 新 revision 取消旧实时任务，旧 revision 的 PDF 不得覆盖当前页面。
+- 实时更新期间保留上一版 PDF，并明确显示更新状态，避免页面闪白。
 - DOCX 构建成功后，通过可注入 `PdfPreviewExporter` 尝试生成同一文档的 PDF。
 - 默认 `LibreOfficePdfPreviewExporter` 跨平台发现 LibreOffice，使用隔离 profile、
   hidden conversion、有界超时和临时输出，再原子发布 PDF。
@@ -24,8 +29,8 @@ WPS 手工导入的 PDF 必须标明真实引擎，源文稿或模板变化后�
 - macOS/Windows Tauri 通过受限原生命令读取自动生成 PDF 或用户明确选择的 PDF。
 - Web 通过浏览器 file picker、Tauri 通过原生 file picker 关联 WPS 导出的 PDF。
 - 自动生成与手工关联 PDF 均使用浏览器/WebView 的真实 PDF 显示能力。
-- 源 Markdown、模板选择或工作区切换后，当前最终预览标记为过期；成功重建或重新关联
-  后恢复为最新。
+- 源 Markdown 或模板选择变化后，当前 PDF 先标记为过期并自动刷新；工作区切换后清空
+  旧 PDF。成功实时刷新、正式重建或重新关联后恢复为最新。
 - 自动导出缺失或失败不影响已成功生成的 DOCX，并提供准确恢复提示。
 
 ## Out of Scope
@@ -42,6 +47,7 @@ WPS 手工导入的 PDF 必须标明真实引擎，源文稿或模板变化后�
 
 - Foundation spec: `openspec/specs/ui-design/design.md`
 - 在现有 `PaperPreview` 面板内增加紧凑 segmented control，不新增路由或第二套 shell。
+- 默认选择“实时版式”；“结构”明确标注为快速辅助预览，不代表 Word/WPS 最终分页。
 - 结构预览保留大纲联动；最终版式使用完整面板宽度显示 PDF 页面或浏览器 PDF viewer。
 - 最终预览必须覆盖 empty、building、ready、stale、unavailable、failed 六种状态。
 - 引擎标签与 stale/error 文本同时呈现，不能只用颜色表达。
@@ -69,6 +75,8 @@ WPS 手工导入的 PDF 必须标明真实引擎，源文稿或模板变化后�
 - Foundation spec: `openspec/specs/frontend-backend-data-flow/design.md`
 - Extend `FLOW-BUILD`: publish DOCX -> optional Office PDF export -> return output plus preview
   descriptor. PDF failure is a non-fatal preview result, not a false build failure.
+- Add `FLOW-LIVE-PREVIEW`: debounce current editor text -> parse with the original source path ->
+  build isolated temporary DOCX -> export/read one-shot PDF -> discard temporary artifacts.
 - Add `FLOW-FINAL-PREVIEW`: resolve a trusted automatic PDF or explicitly selected WPS PDF ->
   create/revoke browser object URL -> render -> mark stale on source/template mutation.
 - Web artifact reads stay inside the opaque workspace and accept plain PDF names only.
@@ -84,5 +92,6 @@ WPS 手工导入的 PDF 必须标明真实引擎，源文稿或模板变化后�
 
 ## Unresolved Gaps
 
-None for P1. Native unattended WPS export remains explicitly out of scope until WPS exposes a
-documented, testable cross-platform automation surface.
+Native unattended WPS export remains explicitly out of scope until WPS exposes a documented,
+testable cross-platform automation surface. LibreOffice PDF and WPS PDF may differ because they use
+different layout engines.

@@ -12,7 +12,8 @@ are installed.
 - Node.js and pnpm 10.34.5 for frontend builds.
 - Rust and Tauri CLI 2 for native desktop builds.
 - OpenSpec CLI for lifecycle validation.
-- LibreOffice is optional for manual Office compatibility review.
+- LibreOffice is optional for TOC refresh, automatic final-layout PDF preview,
+  and manual Office compatibility review.
 
 Create the development environment:
 
@@ -86,7 +87,10 @@ make build-example
 
 The default output is `output/thesis.docx`. Build uses a same-directory
 temporary file, validates the DOCX package and atomically replaces the target
-only after all stages succeed.
+only after all required stages succeed. After DOCX publication it may derive
+`output/thesis.preview.pdf` through LibreOffice. The PDF is signature-checked
+and atomically replaced; exporter absence, timeout or failure must not downgrade
+the valid DOCX build.
 
 ## Distribution Boundary
 
@@ -118,6 +122,16 @@ embed Python or a compiler service. At runtime the Web product must use the
 configured versioned ThesisForge HTTP adapter. Browser source persistence uses
 workspace-save or download semantics and must not claim native filesystem
 paths.
+
+Automatic final-preview bytes are served only through
+`GET /api/v1/workspaces/{workspace_id}/files/{plain_pdf_name}` with
+`application/pdf`, `no-store` and `nosniff`. The runtime rejects malformed
+workspace IDs, traversal, non-PDF names, workspace-escaping symlinks and invalid
+PDF signatures. Live-preview artifacts use a separate server-issued capability
+route and a runtime-owned `.thesisforge-live-previews/` directory; reads and
+explicit discard consume the capability, while startup/allocation sweeps remove
+expired files left by a process restart. User-selected WPS PDFs stay
+browser-local.
 
 ## Desktop Sidecar
 
@@ -200,6 +214,11 @@ Desktop source writes occur only after explicit Save / `Cmd/Ctrl+S`. Build /
 provides another output path. Web builds require the configured HTTP service
 and return browser-appropriate output identity/download behavior.
 
+The Tauri bridge authorizes only the derived `.preview.pdf` sibling from a
+successful build or a PDF returned by the native picker. `read_pdf_preview`
+returns raw IPC bytes and rejects arbitrary paths, symlinks, non-PDF files and
+invalid signatures.
+
 ## Signing, Checksums, And Publication
 
 Current local and CI test artifacts are unsigned development distributions.
@@ -227,6 +246,12 @@ as production releases.
   dirty and the prior file must remain unchanged.
 - Build cancellation or failure: retry from the workbench; the previous valid
   DOCX must remain intact.
+- Final preview is unavailable: confirm LibreOffice is installed for automatic
+  `LibreOffice PDF`, click the live-preview refresh action, or select a PDF
+  explicitly exported by WPS.
+- Final preview is marked stale: the Markdown, template or workspace changed
+  after the PDF was bound. Stop editing briefly for automatic refresh, click
+  refresh, or select a new WPS PDF.
 - `Bundle contains AppleDouble files`: run `dot_clean -m` on the bundle root,
   then rerun the verifier and checksums.
 - Web actions cannot reach the compiler: configure and start the ThesisForge

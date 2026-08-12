@@ -8,10 +8,13 @@ CLI / Future UI
 Application Services
       ↓
 Parser → ThesisDocument → Validator → Compiler → RenderPlan → DOCX Renderer
+                                                               ↓
+                                                optional PDF preview exporter
 ```
 
 `application` 层统一 inspect、validate、build、进度阶段、临时输出、DOCX package
-校验和原子替换。CLI 只负责参数、结构化展示和退出码；未来 UI 复用相同服务。
+校验和原子替换。成功发布 DOCX 后可通过可注入 exporter 派生最终版式 PDF；该步骤
+失败不得改变 DOCX 成功语义。CLI 只负责参数、结构化展示和退出码；UI 复用相同服务。
 
 ## 2. Parser
 
@@ -109,14 +112,29 @@ sidecar，二者最终调用相同的 application services。
 Parser、Validator、Compiler、编号和 DOCX Renderer 不得在前端复制。核心编译器必须
 可以在没有 Node.js、Rust、Tauri 和 HTTP server 时纯 CLI 使用。
 
+右侧预览分为两种：
+
+- 结构预览：由序列化 RenderPlan 驱动，快速且可与大纲、编辑器联动。
+- 实时版式：默认模式。打开文稿或编辑停止约 900ms 后，以当前未保存文本构建一次性
+  临时 DOCX，并显示其 LibreOffice PDF；也可显示用户明确选择的 WPS PDF。
+
+Web 通过 workspace-bound PDF route 读取自动产物；Tauri 只读取本次构建派生或用户
+选择并授权的 PDF。实时构建保留原 Markdown 路径解析相对资源，但不写回源文件，也不
+覆盖正式 DOCX；旧 revision 取消后不能覆盖新页面。Web/Tauri 的实时输出都必须由
+runtime 生成不可伪造的 capability，并在读取、取消或显式释放后销毁；Web 还在专属
+隐藏目录中按 mtime 清理跨进程重启遗留的过期产物。React components 只调用
+`WorkbenchTransport`，不直接调用 HTTP 或 Tauri command。
+
 ## 10. 安全构建与发行
 
 ```text
 parse → validate → compile → render temporary DOCX
-      → package validation → atomic replace
+      → package validation → atomic DOCX replace
+      → optional PDF export → PDF validation → atomic PDF replace
 ```
 
-任一阶段失败时不得覆盖已有有效输出。wheel 将内置模板放在
+DOCX 发布前任一阶段失败时不得覆盖已有有效输出；PDF 导出失败只让最终预览不可用，
+不得回滚或伪装 DOCX 失败。wheel 将内置模板放在
 `thesis_forge/template_data/`，Template Resolver 优先使用论文最近祖先目录的
 `templates/`，不存在项目模板树时才使用包内模板。发行验证必须从仓库外安装 wheel
 并运行离线 inspect、validate、build，具体命令见 `docs/MAINTENANCE.md`。

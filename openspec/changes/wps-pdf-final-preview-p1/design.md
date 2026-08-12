@@ -14,7 +14,9 @@ automatic conversion.
 
 **Goals:**
 
-- Preserve fast structural feedback and add a real final-layout PDF view.
+- Preserve fast structural feedback and make a real PDF view the default preview.
+- Refresh the PDF automatically from current unsaved editor text after a bounded debounce.
+- Keep live-preview DOCX/PDF artifacts isolated from the saved source and published output.
 - Keep engine identity truthful and visible.
 - Support automatic LibreOffice PDF generation and explicit WPS PDF selection.
 - Share behavior across Web, macOS and Windows without leaking private paths.
@@ -35,6 +37,11 @@ automatic conversion.
 Add `PdfPreviewExporter` beside `DocumentRefresher`. `build_service` publishes the validated DOCX
 first, then attempts a best-effort derived PDF. The result is typed metadata on `BuildResult`;
 export failure never converts a valid DOCX build into failure.
+
+The same service accepts an optional source-text snapshot for live preview. Parsing preserves the
+original Markdown path so relative images, bibliography files and template discovery keep their
+normal semantics. Live preview passes an isolated output path and never writes the snapshot back to
+the source file.
 
 ### Reuse LibreOffice process boundaries
 
@@ -57,7 +64,18 @@ already authorized DOCX output request, then reads it through a restricted comma
 
 The reducer records preview mode and final-preview state. A successful build or explicit PDF
 selection creates a fresh preview. Text edits, template changes and source replacement mark or clear
-it deterministically. Stale results from older operations cannot replace current state.
+it deterministically. The controller debounces edits, aborts superseded work and tags every request
+with its content revision. Stale results from older operations cannot replace current state, and the
+previous PDF remains visible while a replacement is being generated.
+
+### Consume live-preview artifacts once
+
+Web live previews use server-issued capabilities inside a runtime-owned hidden workspace directory.
+The runtime deletes their temporary DOCX/PDF after reading or explicit release, and sweeps expired
+files by mtime on startup and later allocations so process restarts cannot make them permanent.
+Tauri records a capability-to-canonical-path mapping, authorizes only its derived PDF, and removes
+the directory after reading or explicit cancellation. Formal build outputs and user-selected WPS
+PDFs are never deleted by either cleanup path.
 
 ## Risks / Trade-offs
 
@@ -69,6 +87,9 @@ it deterministically. Stale results from older operations cannot replace current
   -> Use binary IPC response rather than JSON byte arrays; revoke object URLs when replaced.
 - [Risk] A previous PDF may remain on disk after a failed export.
   -> The returned descriptor is authoritative; failed export is never marked fresh.
+- [Risk] Rapid edits may finish out of order or accumulate temporary files.
+  -> Abort superseded requests, reject stale revisions, use unique paths and perform best-effort
+     cleanup in both frontend and runtime boundaries.
 
 ## Migration Plan
 
