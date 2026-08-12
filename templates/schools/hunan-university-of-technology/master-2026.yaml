@@ -622,6 +622,10 @@ figure:
 
 table:
   style: three_line
+  three_line:
+    top_width: 1.5pt
+    header_width: 0.75pt
+    bottom_width: 1.5pt
   numbering:
     mode: chapter
     separator: "-"

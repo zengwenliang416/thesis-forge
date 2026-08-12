@@ -1586,13 +1586,86 @@ def test_docx_renderer_creates_real_figures_captions_bookmarks_and_three_line_ta
     assert table.xpath(".//w:tr[2]/w:tc//w:t/text()", namespaces=NS) == ["A", "0.91"]
     borders = table.xpath("./w:tblPr/w:tblBorders", namespaces=NS)[0]
     assert borders.xpath("./w:top/@w:val", namespaces=NS) == ["single"]
+    assert borders.xpath("./w:top/@w:sz", namespaces=NS) == ["12"]
     assert borders.xpath("./w:bottom/@w:val", namespaces=NS) == ["single"]
+    assert borders.xpath("./w:bottom/@w:sz", namespaces=NS) == ["12"]
     for edge in ("left", "right", "insideH", "insideV"):
         assert borders.xpath(f"./w:{edge}/@w:val", namespaces=NS) == ["nil"]
     assert table.xpath(
         ".//w:tr[1]/w:tc/w:tcPr/w:tcBorders/w:bottom/@w:val",
         namespaces=NS,
     ) == ["single", "single"]
+    assert table.xpath(
+        ".//w:tr[1]/w:tc/w:tcPr/w:tcBorders/w:bottom/@w:sz",
+        namespaces=NS,
+    ) == ["6", "6"]
+
+
+def test_docx_renderer_honors_configured_three_line_table_widths(tmp_path: Path):
+    template = load_template("templates/base/bachelor.yaml")
+    template.table.three_line.top_width = LengthSpec.model_validate("2pt")
+    template.table.three_line.header_width = LengthSpec.model_validate("0.5pt")
+    template.table.three_line.bottom_width = LengthSpec.model_validate("1pt")
+    document = ThesisDocument(
+        source_path=tmp_path / "thesis.md",
+        blocks=[
+            Table(
+                id="tbl:results",
+                caption="实验结果",
+                markdown="| 模型 | AUROC |\n| --- | ---: |\n| A | 0.91 |",
+            )
+        ],
+    )
+    output = tmp_path / "configured-three-line.docx"
+
+    DocxRenderer().render(compile_document(document, template=template), output)
+
+    document_xml = _xml_part(output, "word/document.xml")
+    table = document_xml.xpath(".//w:tbl", namespaces=NS)[0]
+    assert table.xpath(
+        "./w:tblPr/w:tblBorders/w:top/@w:sz",
+        namespaces=NS,
+    ) == ["16"]
+    assert table.xpath(
+        "./w:tblPr/w:tblBorders/w:bottom/@w:sz",
+        namespaces=NS,
+    ) == ["8"]
+    assert table.xpath(
+        ".//w:tr[1]/w:tc/w:tcPr/w:tcBorders/w:bottom/@w:sz",
+        namespaces=NS,
+    ) == ["4", "4"]
+
+
+@pytest.mark.parametrize(
+    ("width", "expected_size"),
+    [("0.25pt", "2"), ("12pt", "96")],
+)
+def test_docx_renderer_supports_word_border_width_limits(
+    tmp_path: Path,
+    width: str,
+    expected_size: str,
+):
+    template = load_template("templates/base/bachelor.yaml")
+    template.table.three_line.top_width = LengthSpec.model_validate(width)
+    document = ThesisDocument(
+        source_path=tmp_path / "thesis.md",
+        blocks=[
+            Table(
+                id="tbl:limits",
+                caption="线宽边界",
+                markdown="| 项目 | 值 |\n| --- | --- |\n| A | 1 |",
+            )
+        ],
+    )
+    output = tmp_path / "three-line-width-limit.docx"
+
+    DocxRenderer().render(compile_document(document, template=template), output)
+
+    document_xml = _xml_part(output, "word/document.xml")
+    assert document_xml.xpath(
+        ".//w:tbl/w:tblPr/w:tblBorders/w:top/@w:sz",
+        namespaces=NS,
+    ) == [expected_size]
 
 
 def test_docx_renderer_honors_non_default_caption_positions(tmp_path: Path):

@@ -472,8 +472,31 @@ class FigureSpec(TemplateModel):
     default_width: LengthSpec | None = None
 
 
+class ThreeLineTableSpec(TemplateModel):
+    top_width: LengthSpec = Field(
+        default_factory=lambda: LengthSpec.model_validate("1.5pt")
+    )
+    header_width: LengthSpec = Field(
+        default_factory=lambda: LengthSpec.model_validate("0.75pt")
+    )
+    bottom_width: LengthSpec = Field(
+        default_factory=lambda: LengthSpec.model_validate("1.5pt")
+    )
+
+    @field_validator("top_width", "header_width", "bottom_width")
+    @classmethod
+    def validate_border_width(cls, value: LengthSpec) -> LengthSpec:
+        validated = _require_absolute_length(value, positive=True)
+        assert validated is not None
+        points = _absolute_length_points(validated)
+        if not Decimal("0.25") <= points <= Decimal(12):
+            raise ValueError("Word 表格线宽必须在 0.25pt 到 12pt 之间")
+        return validated
+
+
 class TableSpec(TemplateModel):
     style: Literal["three_line", "grid", "plain"] = "three_line"
+    three_line: ThreeLineTableSpec = Field(default_factory=ThreeLineTableSpec)
     numbering: NumberingSpec = Field(default_factory=NumberingSpec)
     caption: CaptionSpec
 

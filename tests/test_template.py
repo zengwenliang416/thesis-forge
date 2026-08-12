@@ -1127,6 +1127,89 @@ sections:
     )
 
 
+def test_table_three_line_widths_are_configurable(tmp_path: Path):
+    path = tmp_path / "table-three-line.yaml"
+    path.write_text(
+        """id: table-three-line
+name: Table Three Line
+year: 2026
+page:
+  margin:
+    top: 25mm
+    bottom: 25mm
+    left: 30mm
+    right: 25mm
+body:
+  size: 12pt
+  first_line_indent: 2em
+  line_spacing:
+    type: fixed
+    value: 20pt
+heading:
+  level1:
+    size: 16pt
+table:
+  style: three_line
+  three_line:
+    top_width: 2pt
+    header_width: 0.5pt
+    bottom_width: 1pt
+  caption:
+    position: top
+    prefix: 表
+""",
+        encoding="utf-8",
+    )
+
+    template = load_template(path)
+
+    assert str(template.table.three_line.top_width) == "2pt"
+    assert str(template.table.three_line.header_width) == "0.5pt"
+    assert str(template.table.three_line.bottom_width) == "1pt"
+
+
+@pytest.mark.parametrize("header_width", ["1em", "0.1pt", "13pt"])
+def test_invalid_table_three_line_width_reports_complete_path(
+    tmp_path: Path,
+    header_width: str,
+):
+    path = tmp_path / "invalid-table-three-line.yaml"
+    path.write_text(
+        f"""id: invalid-table-three-line
+name: Invalid Table Three Line
+year: 2026
+page:
+  margin:
+    top: 25mm
+    bottom: 25mm
+    left: 30mm
+    right: 25mm
+body:
+  size: 12pt
+  first_line_indent: 2em
+  line_spacing:
+    type: fixed
+    value: 20pt
+heading:
+  level1:
+    size: 16pt
+table:
+  style: three_line
+  three_line:
+    header_width: {header_width}
+  caption:
+    position: top
+    prefix: 表
+""",
+        encoding="utf-8",
+    )
+
+    with pytest.raises(TemplateLoadError) as exc_info:
+        load_template(path)
+
+    assert exc_info.value.field_errors[0][0] == "table.three_line.header_width"
+
+
 @pytest.mark.parametrize(
     ("part", "variant", "include_total"),
     [

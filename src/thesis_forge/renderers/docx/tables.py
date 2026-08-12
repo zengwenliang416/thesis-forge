@@ -6,22 +6,37 @@ from docx.oxml.ns import qn
 from docx.table import Table
 
 from thesis_forge.core.render_plan import TableInstruction
-from thesis_forge.templates.model import ThesisTemplate
+from thesis_forge.templates.model import LengthSpec, TableSpec, ThesisTemplate
 
 from .captions import add_caption
 from .styles import ALIGNMENTS
+from .units import to_points
 
 TABLE_EDGES = ("top", "left", "bottom", "right", "insideH", "insideV")
 
 
-def _replace_border(parent, edge: str, value: str) -> None:
+def _border_size(width: LengthSpec | None) -> int:
+    width_points = to_points(width) if width is not None else 1
+    size = round(width_points * 8)
+    if not 2 <= size <= 96:
+        raise ValueError("Word table border width must be between 0.25pt and 12pt")
+    return size
+
+
+def _replace_border(
+    parent,
+    edge: str,
+    value: str,
+    *,
+    width: LengthSpec | None = None,
+) -> None:
     existing = parent.find(qn(f"w:{edge}"))
     if existing is not None:
         parent.remove(existing)
     border = OxmlElement(f"w:{edge}")
     border.set(qn("w:val"), value)
     if value == "single":
-        border.set(qn("w:sz"), "8")
+        border.set(qn("w:sz"), str(_border_size(width)))
         border.set(qn("w:space"), "0")
         border.set(qn("w:color"), "auto")
     parent.append(border)
@@ -36,7 +51,12 @@ def _table_borders(table: Table):
     return borders
 
 
-def _set_header_bottom_border(table: Table, value: str) -> None:
+def _set_header_bottom_border(
+    table: Table,
+    value: str,
+    *,
+    width: LengthSpec | None = None,
+) -> None:
     if not table.rows:
         return
     for cell in table.rows[0].cells:
@@ -45,11 +65,12 @@ def _set_header_bottom_border(table: Table, value: str) -> None:
         if borders is None:
             borders = OxmlElement("w:tcBorders")
             cell_properties.append(borders)
-        _replace_border(borders, "bottom", value)
+        _replace_border(borders, "bottom", value, width=width)
 
 
-def _apply_border_policy(table: Table, style: str) -> None:
+def _apply_border_policy(table: Table, table_spec: TableSpec | None) -> None:
     borders = _table_borders(table)
+    style = table_spec.style if table_spec is not None else "plain"
     if style == "grid":
         for edge in TABLE_EDGES:
             _replace_border(borders, edge, "single")
@@ -58,9 +79,15 @@ def _apply_border_policy(table: Table, style: str) -> None:
     for edge in TABLE_EDGES:
         _replace_border(borders, edge, "nil")
     if style == "three_line":
-        _replace_border(borders, "top", "single")
-        _replace_border(borders, "bottom", "single")
-        _set_header_bottom_border(table, "single")
+        assert table_spec is not None
+        policy = table_spec.three_line
+        _replace_border(borders, "top", "single", width=policy.top_width)
+        _replace_border(borders, "bottom", "single", width=policy.bottom_width)
+        _set_header_bottom_border(
+            table,
+            "single",
+            width=policy.header_width,
+        )
 
 
 def render_table(
@@ -103,6 +130,6 @@ def render_table(
             if cell_instruction.alignment is not None:
                 cell.paragraphs[0].alignment = ALIGNMENTS[cell_instruction.alignment]
 
-    _apply_border_policy(table, table_spec.style if table_spec is not None else "plain")
+    _apply_border_policy(table, table_spec)
     if position == "bottom":
         render_caption()

@@ -655,6 +655,10 @@ figure:
 ```yaml
 table:
   style: three_line
+  three_line:
+    top_width: 1.5pt
+    header_width: 0.75pt
+    bottom_width: 1.5pt
   numbering: chapter
   caption:
     position: top
@@ -663,9 +667,13 @@ table:
 ```
 
 `style` 支持 `three_line`、`grid`、`plain`，默认 `three_line`。
-`numbering` 和 `caption` 的规则与图一致。`three_line`、`grid` 和 `plain`
-只描述当前模型支持的表格边框策略；模型不包含列宽、单元格边距、合并单元格、
-重复表头或跨页控制字段。
+`numbering` 和 `caption` 的规则与图一致。`three_line` 用
+`top_width`、`header_width`、`bottom_width` 分别控制顶线、栏目线和底线，
+默认值依次为 `1.5pt`、`0.75pt`、`1.5pt`。三个字段必须是 `0.25pt` 到
+`12pt` 范围内的绝对长度；Word 使用 `1/8pt` 整数保存表格线宽，其他绝对单位会
+换算为磅并取最接近的 `1/8pt`。
+`three_line`、`grid` 和 `plain` 只描述当前模型支持的表格边框策略；模型不包含
+列宽、单元格边距、合并单元格、重复表头或跨页控制字段。
 
 ### 9.3 EquationSpec
 
