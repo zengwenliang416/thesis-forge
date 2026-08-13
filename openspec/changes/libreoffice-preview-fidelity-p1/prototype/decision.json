@@ -1,0 +1,11 @@
+{
+  "status": "approved",
+  "prototype_code": "required_present",
+  "prototype_type": "logic-state",
+  "approved_variant": "macos-temporary-font-alias-v1",
+  "promotion": "requires_development_gate",
+  "approved_by": "user",
+  "approved_at": "2026-08-13",
+  "approval_text": "那还是用LibreOffice吧 能优化一下吗",
+  "blocked_reasons": []
+}

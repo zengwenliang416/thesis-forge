@@ -1,0 +1,47 @@
+{
+  "touched_specs": [
+    "system-architecture",
+    "frontend-backend-data-flow",
+    "component-architecture"
+  ],
+  "ui_rules": [
+    "no-ui-change",
+    "preserve-libreoffice-engine-label"
+  ],
+  "architecture_modules": [
+    "application-pdf-preview-exporter",
+    "school-example-template"
+  ],
+  "api_contracts": [
+    "PdfPreviewExporter.export(docx_path,pdf_path)->PdfPreviewArtifact|None"
+  ],
+  "database_entities": [
+    "none:v1-local-files-only"
+  ],
+  "permissions": [
+    "input-docx-read-only",
+    "temporary-profile-write-only",
+    "derived-pdf-write-only"
+  ],
+  "operational_constraints": [
+    "offline-first",
+    "libreoffice-optional",
+    "platform-fonts-not-bundled",
+    "bounded-timeout-and-process-cleanup",
+    "published-docx-semantics-unchanged"
+  ],
+  "data_flows": [
+    "FLOW-BUILD",
+    "FLOW-LIVE-PREVIEW"
+  ],
+  "theme_modes": [
+    "light-only",
+    "theme-toggle:none"
+  ],
+  "locale_policy": [
+    "i18n:disabled",
+    "locales:zh-CN",
+    "default-locale:zh-CN"
+  ],
+  "unresolved_gaps": []
+}

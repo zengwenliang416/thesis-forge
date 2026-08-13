@@ -1,0 +1,37 @@
+{
+  "new_components": [
+    "LibreOfficeFontSubstitutionProfile"
+  ],
+  "reused_components": [
+    "LibreOfficePdfPreviewExporter",
+    "discover_libreoffice_executable",
+    "start_office_process",
+    "terminate_office_process_tree"
+  ],
+  "extraction_triggers": [
+    "Font substitution XML generation must be a pure helper shared by real conversion and unit tests."
+  ],
+  "forbidden_dependencies": [
+    "core/parser.py -> platform font discovery",
+    "core/model.py -> LibreOffice profile",
+    "core/compiler.py -> LibreOffice profile",
+    "renderers/docx -> macOS font aliases",
+    "frontend -> font discovery subprocess"
+  ],
+  "hooks": [],
+  "utilities": [
+    "platform-aware font candidate resolver",
+    "LibreOffice registrymodifications.xcu builder"
+  ],
+  "services": [
+    "application PDF preview export"
+  ],
+  "required_component_tests": [
+    "font candidate resolution tests",
+    "profile XML tests",
+    "conversion cleanup tests",
+    "example template heading OOXML tests",
+    "real PDF font audit"
+  ],
+  "unresolved_gaps": []
+}

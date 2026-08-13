@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "change_id": "libreoffice-preview-fidelity-p1",
+  "assertions": [
+    {
+      "id": "A1",
+      "statement": "A LibreOffice PDF conversion uses an isolated, platform-aware font substitution profile without modifying the input or published DOCX.",
+      "verify_via": "unit",
+      "status": "failing",
+      "evidence_ref": null
+    },
+    {
+      "id": "A2",
+      "statement": "On macOS with an available Songti candidate, the complete thesis PDF no longer embeds Arial Unicode MS for template body text.",
+      "verify_via": "e2e",
+      "status": "failing",
+      "evidence_ref": null
+    },
+    {
+      "id": "A3",
+      "statement": "The example template emits explicit black Heading 1, Heading 2, and Heading 3 styles while retaining Chinese template font names in DOCX.",
+      "verify_via": "unit",
+      "status": "failing",
+      "evidence_ref": null
+    }
+  ]
+}
