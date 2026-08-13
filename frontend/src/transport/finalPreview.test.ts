@@ -74,7 +74,15 @@ describe("final preview descriptor", () => {
     expect(readPdfBytes(new TextEncoder().encode("%PDF-1.7"))).toBeInstanceOf(
       Uint8Array,
     );
+    expect(readPdfBytes(Array.from(new TextEncoder().encode("%PDF-1.7"))))
+      .toBeInstanceOf(Uint8Array);
     expect(() => readPdfBytes(new TextEncoder().encode("not-pdf"))).toThrow(
+      "无效的 PDF 数据",
+    );
+    expect(() => readPdfBytes([0x25, 0x50, 0x44, 0x46, 256])).toThrow(
+      "无效的 PDF 数据",
+    );
+    expect(() => readPdfBytes([0x25, 0x50, 0x44, 0x46, 1.5])).toThrow(
       "无效的 PDF 数据",
     );
   });

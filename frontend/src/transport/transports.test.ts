@@ -252,6 +252,23 @@ describe("runtime transports", () => {
     ]);
   });
 
+  it("accepts PDF bytes serialized by the Tauri postMessage fallback", async () => {
+    const descriptor = {
+      engine: "wps" as const,
+      label: "WPS PDF" as const,
+      fileName: "wps-export.pdf",
+      authorizationId: "b".repeat(32),
+    };
+    const serializedBytes = Array.from(
+      new TextEncoder().encode("%PDF-1.7\n"),
+    );
+    const transport = new TauriWorkbenchTransport(async () => serializedBytes);
+
+    await expect(transport.resolveFinalPreview(descriptor)).resolves.toEqual(
+      new Uint8Array(serializedBytes),
+    );
+  });
+
   it("prepares and discards a Tauri live preview output through native commands", async () => {
     const calls: Array<{ command: string; args?: Record<string, unknown> }> = [];
     const output = {

@@ -103,7 +103,16 @@ export function readPdfBytes(value: unknown): Uint8Array {
     ? new Uint8Array(value.buffer, value.byteOffset, value.byteLength)
     : Object.prototype.toString.call(value) === "[object ArrayBuffer]"
       ? new Uint8Array(value as ArrayBuffer)
-      : null;
+      : Array.isArray(value) &&
+          value.every(
+            (byte) =>
+              typeof byte === "number" &&
+              Number.isInteger(byte) &&
+              byte >= 0 &&
+              byte <= 255,
+          )
+        ? Uint8Array.from(value)
+        : null;
   if (!bytes || bytes.length < 5) {
     throw new Error("无效的 PDF 数据");
   }
