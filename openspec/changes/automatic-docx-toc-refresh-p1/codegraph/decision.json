@@ -5,8 +5,10 @@
   "effective_mode": "advisory",
   "required_for_stage": false,
   "execution_surface": "cli",
-  "result": "pass",
+  "result": "warn",
   "blockers": [],
-  "warnings": [],
-  "explanation": "CodeGraph policy satisfied for development."
+  "warnings": [
+    "codegraph:index-stale"
+  ],
+  "explanation": "CodeGraph policy has advisory warnings for development."
 }

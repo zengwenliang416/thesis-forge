@@ -1,6 +1,6 @@
 {
   "schema": "specnav.codegraph.guard_report.v1",
-  "generated_at": "2026-08-10T13:48:11.880Z",
+  "generated_at": "2026-08-10T13:49:02.837Z",
   "active_change": "template-driven-list-layout-p1",
   "stage": "development",
   "ok": true,
@@ -125,7 +125,7 @@
   },
   "claims_report": {
     "schema": "specnav.codegraph.claims_report.v1",
-    "generated_at": "2026-08-10T13:48:11.880Z",
+    "generated_at": "2026-08-10T13:49:02.837Z",
     "active_change": "template-driven-list-layout-p1",
     "claims_file": "openspec/changes/template-driven-list-layout-p1/codegraph/claims-map.json",
     "evidence_index": "openspec/changes/template-driven-list-layout-p1/codegraph/evidence-index.json",
