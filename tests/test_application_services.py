@@ -221,6 +221,102 @@ def test_safe_document_refresh_restores_rendered_docx_on_timeout(tmp_path: Path)
     assert document.read_bytes() == b"rendered-docx"
 
 
+def test_safe_document_refresh_preserves_renderer_owned_style_parts(
+    tmp_path: Path,
+):
+    document = tmp_path / "thesis.docx"
+    original_parts = {
+        "word/document.xml": b"<document>dirty TOC field</document>",
+        "word/styles.xml": "<styles>宋体 黑体 000000</styles>".encode(),
+        "word/fontTable.xml": "<fonts>宋体 黑体</fonts>".encode(),
+    }
+    with ZipFile(document, "w", compression=ZIP_DEFLATED) as package:
+        for name, content in original_parts.items():
+            package.writestr(name, content)
+
+    class MutatingRefresher:
+        def refresh(self, path):
+            with ZipFile(path) as source:
+                entries = {
+                    entry.filename: source.read(entry)
+                    for entry in source.infolist()
+                }
+            entries["word/document.xml"] = b"<document>refreshed TOC result</document>"
+            entries["word/styles.xml"] = b"<styles>MS Gothic theme blue</styles>"
+            entries["word/fontTable.xml"] = b"<fonts>MS Gothic</fonts>"
+            with ZipFile(path, "w", compression=ZIP_DEFLATED) as package:
+                for name, content in entries.items():
+                    package.writestr(name, content)
+            return True
+
+    assert refresh_document_safely(MutatingRefresher(), document)
+
+    with ZipFile(document) as package:
+        assert (
+            package.read("word/document.xml")
+            == b"<document>refreshed TOC result</document>"
+        )
+        assert package.read("word/styles.xml") == original_parts["word/styles.xml"]
+        assert (
+            package.read("word/fontTable.xml")
+            == original_parts["word/fontTable.xml"]
+        )
+
+
+def test_safe_document_refresh_restores_renderer_parts_deleted_by_office(
+    tmp_path: Path,
+):
+    document = tmp_path / "thesis.docx"
+    original_parts = {
+        "word/document.xml": b"<document>dirty TOC field</document>",
+        "word/styles.xml": b"<styles>renderer styles</styles>",
+        "word/fontTable.xml": b"<fonts>renderer fonts</fonts>",
+    }
+    with ZipFile(document, "w", compression=ZIP_DEFLATED) as package:
+        for name, content in original_parts.items():
+            package.writestr(name, content)
+
+    class DeletingRefresher:
+        def refresh(self, path):
+            with ZipFile(path, "w", compression=ZIP_DEFLATED) as package:
+                package.writestr(
+                    "word/document.xml",
+                    b"<document>refreshed TOC result</document>",
+                )
+            return True
+
+    assert refresh_document_safely(DeletingRefresher(), document)
+
+    with ZipFile(document) as package:
+        assert (
+            package.read("word/document.xml")
+            == b"<document>refreshed TOC result</document>"
+        )
+        assert package.read("word/styles.xml") == original_parts["word/styles.xml"]
+        assert (
+            package.read("word/fontTable.xml")
+            == original_parts["word/fontTable.xml"]
+        )
+
+
+def test_safe_document_refresh_restores_original_when_office_writes_invalid_zip(
+    tmp_path: Path,
+):
+    document = tmp_path / "thesis.docx"
+    with ZipFile(document, "w", compression=ZIP_DEFLATED) as package:
+        package.writestr("word/document.xml", b"<document/>")
+        package.writestr("word/styles.xml", b"<styles/>")
+    original = document.read_bytes()
+
+    class CorruptingRefresher:
+        def refresh(self, path):
+            Path(path).write_bytes(b"not-a-docx")
+            return True
+
+    assert not refresh_document_safely(CorruptingRefresher(), document)
+    assert document.read_bytes() == original
+
+
 def test_libreoffice_refresher_uses_discovered_runtime_and_injected_runner(
     tmp_path: Path,
 ):

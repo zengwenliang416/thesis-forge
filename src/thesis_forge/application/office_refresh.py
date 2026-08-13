@@ -12,14 +12,19 @@ import uuid
 from collections.abc import Callable, Mapping
 from dataclasses import dataclass
 from html import unescape
+from io import BytesIO
 from pathlib import Path
 from typing import Any, Protocol
-from zipfile import BadZipFile, ZipFile
+from zipfile import BadZipFile, ZipFile, ZipInfo
 
 ExecutableFinder = Callable[[str], str | None]
 FilePredicate = Callable[[Path], bool]
 PythonProbe = Callable[[Path], bool]
 RefreshRunner = Callable[[Path, Path, Path, float, int], None]
+_RENDERER_OWNED_PARTS = (
+    "word/styles.xml",
+    "word/fontTable.xml",
+)
 _CREATE_NEW_PROCESS_GROUP = 0x00000200
 _CREATE_SUSPENDED = 0x00000004
 _CREATE_NO_WINDOW = 0x08000000
@@ -640,14 +645,68 @@ def refresh_document_safely(
 ) -> bool:
     document_path = Path(path)
     original = document_path.read_bytes()
+    preserved_parts = _read_package_parts(original, _RENDERER_OWNED_PARTS)
     try:
         refreshed = refresher.refresh(document_path)
-    except (OSError, RuntimeError, subprocess.SubprocessError):
+        if refreshed and preserved_parts:
+            _restore_package_parts(document_path, preserved_parts)
+    except (BadZipFile, OSError, RuntimeError, subprocess.SubprocessError):
         refreshed = False
     if refreshed:
         return True
     document_path.write_bytes(original)
     return False
+
+
+@dataclass(frozen=True, slots=True)
+class _PackagePart:
+    entry: ZipInfo
+    content: bytes
+
+
+def _read_package_parts(
+    package_bytes: bytes,
+    part_names: tuple[str, ...],
+) -> dict[str, _PackagePart]:
+    try:
+        with ZipFile(BytesIO(package_bytes)) as package:
+            entries = {entry.filename: entry for entry in package.infolist()}
+            return {
+                name: _PackagePart(
+                    entry=entries[name],
+                    content=package.read(name),
+                )
+                for name in part_names
+                if name in entries
+            }
+    except (BadZipFile, OSError):
+        return {}
+
+
+def _restore_package_parts(
+    package_path: Path,
+    preserved_parts: Mapping[str, _PackagePart],
+) -> None:
+    refreshed_bytes = package_path.read_bytes()
+    output = BytesIO()
+    with (
+        ZipFile(BytesIO(refreshed_bytes)) as refreshed,
+        ZipFile(output, "w") as restored,
+    ):
+        restored.comment = refreshed.comment
+        restored_names: set[str] = set()
+        for entry in refreshed.infolist():
+            restored_names.add(entry.filename)
+            preserved = preserved_parts.get(entry.filename)
+            restored.writestr(
+                entry,
+                preserved.content if preserved is not None else refreshed.read(entry),
+            )
+        for name in _RENDERER_OWNED_PARTS:
+            preserved = preserved_parts.get(name)
+            if preserved is not None and name not in restored_names:
+                restored.writestr(preserved.entry, preserved.content)
+    package_path.write_bytes(output.getvalue())
 
 
 @dataclass(frozen=True, slots=True)
