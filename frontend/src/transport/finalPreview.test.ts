@@ -7,6 +7,14 @@ describe("final preview descriptor", () => {
   it("accepts strict Web and desktop descriptors", () => {
     expect(
       readFinalPreviewDescriptor({
+        engine: "microsoft-word",
+        label: "Microsoft Word PDF",
+        fileName: "thesis.preview.pdf",
+        authorizationId: "c".repeat(32),
+      }),
+    ).toMatchObject({ engine: "microsoft-word" });
+    expect(
+      readFinalPreviewDescriptor({
         engine: "libreoffice",
         label: "LibreOffice PDF",
         fileName: "thesis.preview.pdf",
@@ -24,6 +32,17 @@ describe("final preview descriptor", () => {
   });
 
   it.each([
+    {
+      engine: "microsoft-word",
+      label: "Microsoft Word PDF",
+      fileName: "preview.pdf",
+    },
+    {
+      engine: "microsoft-word",
+      label: "LibreOffice PDF",
+      fileName: "preview.pdf",
+      authorizationId: "c".repeat(32),
+    },
     {
       engine: "libreoffice",
       label: "LibreOffice PDF",

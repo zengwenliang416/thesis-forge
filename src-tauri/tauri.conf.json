@@ -31,6 +31,10 @@
     "icon": ["icons/icon.png", "icons/icon.ico"],
     "targets": ["app", "dmg", "msi", "nsis"],
     "category": "Productivity",
-    "shortDescription": "确定性学术论文编译工作台"
+    "shortDescription": "确定性学术论文编译工作台",
+    "macOS": {
+      "infoPlist": "Info.plist",
+      "entitlements": "entitlements.plist"
+    }
   }
 }

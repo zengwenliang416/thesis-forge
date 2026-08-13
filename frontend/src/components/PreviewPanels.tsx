@@ -519,7 +519,7 @@ export function FinalLayoutPreview({
           </h3>
           <p>
             {preview.message ??
-              "实时预览会自动生成 LibreOffice PDF，也可选择由 WPS 导出的 PDF 进行对照。"}
+              "桌面端优先使用 Microsoft Word 生成实时 PDF，Word 不可用时自动降级到 LibreOffice；也可选择由 WPS 导出的 PDF 进行对照。"}
           </p>
           <FinalPreviewActions onBuild={onBuild} />
         </div>

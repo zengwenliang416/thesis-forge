@@ -10,7 +10,7 @@ from pathlib import Path
 from .runtime import (
     DesktopRuntime,
     WorkbenchCommandDispatcher,
-    final_preview_build_service,
+    desktop_final_preview_build_service,
     iter_build_events,
 )
 
@@ -77,7 +77,7 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
     dispatcher = WorkbenchCommandDispatcher(
         runtime=DesktopRuntime(),
-        build=final_preview_build_service,
+        build=desktop_final_preview_build_service,
     )
     if args.stream:
         cancel_file = os.environ.get("THESISFORGE_CANCEL_FILE")

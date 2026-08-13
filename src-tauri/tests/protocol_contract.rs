@@ -137,6 +137,12 @@ fn rejects_unsafe_native_acceptance_cdp_ports() {
 
 #[test]
 fn accepts_only_strict_path_free_desktop_preview_descriptors() {
+    let word_descriptor = json!({
+        "engine": "microsoft-word",
+        "label": "Microsoft Word PDF",
+        "fileName": "thesis.preview.pdf",
+        "authorizationId": "b".repeat(32)
+    });
     let descriptor = json!({
         "engine": "libreoffice",
         "label": "LibreOffice PDF",
@@ -144,6 +150,7 @@ fn accepts_only_strict_path_free_desktop_preview_descriptors() {
         "authorizationId": "a".repeat(32)
     });
 
+    assert!(validate_final_preview_descriptor(&word_descriptor).is_ok());
     assert!(validate_final_preview_descriptor(&descriptor).is_ok());
     assert!(
         validate_final_preview_descriptor(&json!({
@@ -259,8 +266,8 @@ fn build_success_authorizes_only_the_derived_preview_and_injects_an_opaque_id() 
                 "kind": "desktop",
                 "name": "thesis.docx",
                 "finalPreview": {
-                    "engine": "libreoffice",
-                    "label": "LibreOffice PDF",
+                    "engine": "microsoft-word",
+                    "label": "Microsoft Word PDF",
                     "fileName": "thesis.preview.pdf"
                 }
             },
@@ -274,6 +281,7 @@ fn build_success_authorizes_only_the_derived_preview_and_injects_an_opaque_id() 
         validate_final_preview_descriptor(&authorized_event["result"]["output"]["finalPreview"])
             .unwrap();
 
+    assert_eq!(descriptor.engine, "microsoft-word");
     assert_eq!(
         descriptor.authorization_id.as_deref().map(str::len),
         Some(32)

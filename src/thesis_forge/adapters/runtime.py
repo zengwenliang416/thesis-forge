@@ -23,6 +23,7 @@ from thesis_forge.application import (
     ValidationResult,
     build_service,
     inspect_service,
+    preferred_pdf_preview_exporter,
     preview_service,
     validation_service,
 )
@@ -54,6 +55,21 @@ def final_preview_build_service(
         output,
         dependencies=ApplicationDependencies(
             pdf_preview_exporter=LibreOfficePdfPreviewExporter(),
+        ),
+        **kwargs,
+    )
+
+
+def desktop_final_preview_build_service(
+    source: str | Path,
+    output: str | Path,
+    **kwargs,
+) -> BuildResult:
+    return build_service(
+        source,
+        output,
+        dependencies=ApplicationDependencies(
+            pdf_preview_exporter=preferred_pdf_preview_exporter(),
         ),
         **kwargs,
     )
@@ -117,12 +133,16 @@ def _final_preview_descriptor(
     engine_value = _artifact_field(artifact, "engine")
     engine = getattr(engine_value, "value", engine_value)
     label = _artifact_field(artifact, "label")
-    if engine != "libreoffice" or label != "LibreOffice PDF":
+    supported = {
+        "microsoft-word": "Microsoft Word PDF",
+        "libreoffice": "LibreOffice PDF",
+    }
+    if engine not in supported or label != supported[engine]:
         raise ValueError("automatic final preview metadata is invalid")
 
     descriptor = {
-        "engine": "libreoffice",
-        "label": "LibreOffice PDF",
+        "engine": engine,
+        "label": label,
         "fileName": file_name,
     }
     if download_id is not None:
@@ -423,6 +443,8 @@ class WebWorkspaceRuntime:
             download_id=workspace_id,
         )
         if descriptor is not None:
+            if descriptor["engine"] != "libreoffice":
+                raise ValueError("web automatic preview must use LibreOffice")
             live_preview_id = output.get("livePreviewId")
             if live_preview_id is not None:
                 grant = self._live_preview_grant(

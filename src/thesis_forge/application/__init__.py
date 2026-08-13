@@ -9,10 +9,13 @@ from .contracts import (
     ValidationResult,
 )
 from .pdf_preview import (
+    FallbackPdfPreviewExporter,
     LibreOfficePdfPreviewExporter,
+    MicrosoftWordPdfPreviewExporter,
     PdfPreviewArtifact,
     PdfPreviewExporter,
     derived_pdf_preview_path,
+    preferred_pdf_preview_exporter,
 )
 from .services import (
     ApplicationDependencies,
@@ -29,8 +32,10 @@ __all__ = [
     "BuildResult",
     "BuildStage",
     "BuildValidationError",
+    "FallbackPdfPreviewExporter",
     "InspectionResult",
     "LibreOfficePdfPreviewExporter",
+    "MicrosoftWordPdfPreviewExporter",
     "PdfPreviewArtifact",
     "PdfPreviewExporter",
     "PreviewResult",
@@ -38,6 +43,7 @@ __all__ = [
     "build_service",
     "derived_pdf_preview_path",
     "inspect_service",
+    "preferred_pdf_preview_exporter",
     "preview_service",
     "validation_service",
 ]

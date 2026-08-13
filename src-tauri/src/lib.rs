@@ -79,7 +79,9 @@ pub fn validate_final_preview_descriptor(value: &Value) -> Result<FinalPreviewDe
         return Err("final preview fileName must be a plain PDF file name".to_string());
     }
     match (descriptor.engine.as_str(), descriptor.label.as_str()) {
-        ("libreoffice", "LibreOffice PDF") | ("wps", "WPS PDF") => {}
+        ("microsoft-word", "Microsoft Word PDF")
+        | ("libreoffice", "LibreOffice PDF")
+        | ("wps", "WPS PDF") => {}
         _ => return Err("final preview engine and label do not match".to_string()),
     }
     if descriptor.download_id.is_some() {
@@ -549,8 +551,8 @@ pub fn authorize_build_preview(
         return Ok(event.clone());
     };
     let descriptor = validate_final_preview_descriptor(descriptor_value)?;
-    if descriptor.engine != "libreoffice" {
-        return Err("build final preview must be a LibreOffice PDF".to_string());
+    if !matches!(descriptor.engine.as_str(), "microsoft-word" | "libreoffice") {
+        return Err("build final preview must be an automatic PDF".to_string());
     }
     let (_, requested_path) = requested_build_preview(request)?
         .ok_or_else(|| "desktop build output is required".to_string())?;

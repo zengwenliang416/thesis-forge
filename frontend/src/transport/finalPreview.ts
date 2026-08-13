@@ -1,5 +1,13 @@
 export type FinalPreviewDescriptor =
   | {
+      engine: "microsoft-word";
+      label: "Microsoft Word PDF";
+      fileName: string;
+      downloadId?: never;
+      authorizationId?: string;
+      livePreviewId?: never;
+    }
+  | {
       engine: "libreoffice";
       label: "LibreOffice PDF";
       fileName: string;
@@ -72,6 +80,15 @@ export function readFinalPreviewDescriptor(
       !isAuthorizationId(value.livePreviewId))
   ) {
     throw new Error("无效的最终预览描述");
+  }
+  if (
+    value.engine === "microsoft-word" &&
+    value.label === "Microsoft Word PDF" &&
+    value.downloadId === undefined &&
+    isAuthorizationId(value.authorizationId) &&
+    value.livePreviewId === undefined
+  ) {
+    return value as FinalPreviewDescriptor;
   }
   if (
     value.engine === "libreoffice" &&
