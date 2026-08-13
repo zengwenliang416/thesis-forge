@@ -1,0 +1,76 @@
+{
+  "schema": "specnav.codegraph.evidence_index.v1",
+  "generated_at": "2026-08-11T10:35:31.384Z",
+  "active_change": "wps-pdf-final-preview-p1",
+  "source_raw": "openspec/changes/wps-pdf-final-preview-p1/codegraph/evidence.jsonl",
+  "by_claim": {
+    "development:task-001-pdf-export-build-contract": {
+      "status": "matched",
+      "evidence_ids": [
+        "ev-msohxvi4"
+      ],
+      "files": [
+        "tests/test_application_services.py",
+        "src/thesis_forge/application/services.py",
+        "src/thesis_forge/application/output.py",
+        "tests/test_adapters.py",
+        "src/thesis_forge/application/pdf_preview.py",
+        "frontend/src/transport/buildEvents.ts",
+        "src/thesis_forge/core/validator.py"
+      ],
+      "symbols": [],
+      "blockers": []
+    },
+    "development:task-002-runtime-artifact-access": {
+      "status": "matched",
+      "evidence_ids": [
+        "ev-msohysoh"
+      ],
+      "files": [
+        "src/thesis_forge/core/math.py",
+        "src/thesis_forge/application/pdf_preview.py",
+        "frontend/src/transport/finalPreview.ts",
+        "WorkbenchTransport.ts"
+      ],
+      "symbols": [],
+      "blockers": []
+    },
+    "development:task-003-dual-preview-ui": {
+      "status": "matched",
+      "evidence_ids": [
+        "ev-msoixt3m"
+      ],
+      "files": [
+        "frontend/src/state/workspace.ts"
+      ],
+      "symbols": [],
+      "blockers": []
+    },
+    "development:task-004-docs-verification": {
+      "status": "matched",
+      "evidence_ids": [
+        "ev-msoiy6cy"
+      ],
+      "files": [
+        "tests/test_adapters.py",
+        "frontend/src/transport/finalPreview.ts",
+        "src/thesis_forge/application/pdf_preview.py",
+        "src/thesis_forge/presentation/preview.py"
+      ],
+      "symbols": [],
+      "blockers": []
+    }
+  },
+  "by_stage": {
+    "development": {
+      "verified": 4,
+      "partial": 0,
+      "missing": 0,
+      "stale": 0,
+      "blocking": 0
+    }
+  },
+  "blockers": [],
+  "raw_exists": true,
+  "record_count": 4
+}

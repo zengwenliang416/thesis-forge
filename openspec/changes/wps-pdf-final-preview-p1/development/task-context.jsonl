@@ -1,0 +1,4 @@
+{"task_id":"001-pdf-export-build-contract","task_items":["1.1","1.2","1.3"],"status":"task-ready","source":"specnav-vertical-slices","note":"Task packet owns the PDF export and build contract checklist items."}
+{"task_id":"002-runtime-artifact-access","task_items":["2.1","2.2","2.3","2.4"],"status":"task-ready","source":"specnav-vertical-slices","note":"Task packet owns the Web and Tauri artifact access checklist items."}
+{"task_id":"003-dual-preview-ui","task_items":["3.1","3.2","3.3","3.4"],"status":"task-ready","source":"specnav-vertical-slices","note":"Task packet owns the dual preview UI and freshness checklist items."}
+{"task_id":"004-docs-verification","task_items":["4.1","4.2","4.3"],"status":"task-ready","source":"specnav-vertical-slices","note":"Task packet owns the documentation and complete verification checklist items."}

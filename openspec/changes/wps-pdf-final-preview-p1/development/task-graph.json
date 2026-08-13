@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "nodes": [
+    {
+      "id": "001-pdf-export-build-contract",
+      "task_items": [
+        "1.1",
+        "1.2",
+        "1.3"
+      ]
+    },
+    {
+      "id": "002-runtime-artifact-access",
+      "task_items": [
+        "2.1",
+        "2.2",
+        "2.3",
+        "2.4"
+      ]
+    },
+    {
+      "id": "003-dual-preview-ui",
+      "task_items": [
+        "3.1",
+        "3.2",
+        "3.3",
+        "3.4"
+      ]
+    },
+    {
+      "id": "004-docs-verification",
+      "task_items": [
+        "4.1",
+        "4.2",
+        "4.3"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "from": "001-pdf-export-build-contract",
+      "to": "002-runtime-artifact-access"
+    },
+    {
+      "from": "001-pdf-export-build-contract",
+      "to": "003-dual-preview-ui"
+    },
+    {
+      "from": "002-runtime-artifact-access",
+      "to": "003-dual-preview-ui"
+    },
+    {
+      "from": "001-pdf-export-build-contract",
+      "to": "004-docs-verification"
+    },
+    {
+      "from": "002-runtime-artifact-access",
+      "to": "004-docs-verification"
+    },
+    {
+      "from": "003-dual-preview-ui",
+      "to": "004-docs-verification"
+    }
+  ]
+}

@@ -1,0 +1,118 @@
+{
+  "schema": "specnav.task-acceptance-evidence.v2",
+  "generated_by": "specnav-development/task-acceptance-evidence",
+  "task_id": "001-pdf-export-build-contract",
+  "generated_at": "2026-08-12T12:16:24.080Z",
+  "recorded_at": "2026-08-12T12:11:07.868Z",
+  "status": "approved",
+  "reviewed_git_head": "9939b36f8dff9c6bbf3cf6c4cf404614e427a92f",
+  "reviewed_git_tree": "2cda4ca9f0b5bdab4e2ba7707943e03fec6c861c",
+  "implementation_scope": {
+    "included_patterns": [
+      "openspec/changes/wps-pdf-final-preview-p1/development",
+      "src/thesis_forge/application/__init__.py",
+      "src/thesis_forge/application/contracts.py",
+      "src/thesis_forge/application/office_refresh.py",
+      "src/thesis_forge/application/pdf_preview.py",
+      "src/thesis_forge/application/services.py",
+      "tests/test_application_services.py",
+      "tests/test_pdf_preview.py"
+    ],
+    "entries": [
+      {
+        "path": "src/thesis_forge/application/__init__.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "c0873aa0472009bf6999cf3c2b3d9a2bc0189146"
+      },
+      {
+        "path": "src/thesis_forge/application/contracts.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "2eed1383c6a213bc50f531ec3d3565e58dcc9243"
+      },
+      {
+        "path": "src/thesis_forge/application/office_refresh.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "cb37fbca8be838efeed2aa0f9fc26d8b4f7fc4c8"
+      },
+      {
+        "path": "src/thesis_forge/application/pdf_preview.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "8d5acd1d53f9e5866cac03912f544fb7e85335a5"
+      },
+      {
+        "path": "src/thesis_forge/application/services.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "a8f4541347e2ae42f36a0e77901b12ae320e95a2"
+      },
+      {
+        "path": "tests/test_application_services.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "eab82d9225b3585d72e1aa0f3ac6d63f905cfab1"
+      },
+      {
+        "path": "tests/test_pdf_preview.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "cb19dfbccf03dff793cdbf9823ef330214ef806a"
+      }
+    ],
+    "sha256": "049896def0277c96ec561acdcbdbdc920229da765c5d2e56310b98a7d498bcd7"
+  },
+  "artifacts": {
+    "context": {
+      "path": "development/tasks/001-pdf-export-build-contract/context.json",
+      "sha256": "0f414de8274081c6e1caf17f39d7d785cb21cd3027cc637255e53df542900445"
+    },
+    "report": {
+      "path": "development/tasks/001-pdf-export-build-contract/report.md",
+      "sha256": "c0816b3a1b2a1640ea860f00696a376053521e292b648b29d20bc076130d0664",
+      "status": "DONE"
+    },
+    "spec_review": {
+      "path": "development/tasks/001-pdf-export-build-contract/spec-review.md",
+      "sha256": "099d9d5b47f4a82446ab1291cb020f682a36409fd1e5ca9a693b12b13f3f9948",
+      "verdict": "approved"
+    },
+    "quality_review": {
+      "path": "development/tasks/001-pdf-export-build-contract/quality-review.md",
+      "sha256": "85f46004d5d47cdee663c5979af4cb0cbb936103f1f805b0c16fcc79d95c2c76",
+      "verdict": "approved"
+    }
+  },
+  "test_runs": [
+    {
+      "id": "receipt-68ab917d4eebf0aac93afb87e5b3fb6716209106a96c140020fba918d6221a35",
+      "command": ".venv/bin/python -m pytest -p no:cacheprovider tests/test_pdf_preview.py tests/test_application_services.py",
+      "assertion_ids": [
+        "A2"
+      ],
+      "recorded_at": "2026-08-12T12:11:07.868Z",
+      "validation_receipt_sha256": "1f14e475fe47f1ae81623fa156ec674035452b7380b725a62638b28ee27ae096",
+      "evidence_log": {
+        "path": "development/evidence/001-001-pdf-export-build-contract.log",
+        "sha256": "fdb2da4cfba65d93615c59e2f5be41d387a6d2bb6df9907a73f870bc0783a5bb",
+        "size": 755
+      }
+    }
+  ],
+  "assertions": [
+    {
+      "id": "A2",
+      "parent_id": "A2",
+      "status": "passing",
+      "test_run_ids": [
+        "receipt-68ab917d4eebf0aac93afb87e5b3fb6716209106a96c140020fba918d6221a35"
+      ],
+      "direct_evidence": [],
+      "reused_evidence": [],
+      "claim": "A compatible LibreOffice can export an atomic validated PDF without making PDF availability a condition of DOCX build success."
+    }
+  ],
+  "fallback_used": false
+}

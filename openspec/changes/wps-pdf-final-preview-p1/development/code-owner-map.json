@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "owners": [
+    {
+      "path": "src/thesis_forge/application",
+      "owner": "task-001"
+    },
+    {
+      "path": "src/thesis_forge/adapters",
+      "owner": "task-002"
+    },
+    {
+      "path": "src-tauri",
+      "owner": "task-002"
+    },
+    {
+      "path": "frontend/src",
+      "owner": "task-003"
+    },
+    {
+      "path": "docs",
+      "owner": "task-004"
+    },
+    {
+      "path": "openspec/changes/wps-pdf-final-preview-p1",
+      "owner": "specnav-main-thread"
+    }
+  ]
+}

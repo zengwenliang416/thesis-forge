@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "active_change": "wps-pdf-final-preview-p1",
+  "status": "ready",
+  "ok": true,
+  "checked_at": "2026-08-11T08:00:00.000Z",
+  "requirements_contract": "ok",
+  "prototype_contract": "ok",
+  "prototype_decision": "approved",
+  "approved_variant": "dual-preview-final-layout-v1",
+  "tasks_baseline_commit": "a3bf261",
+  "scope_lock": "openspec/changes/wps-pdf-final-preview-p1/scope.json",
+  "blockers": []
+}

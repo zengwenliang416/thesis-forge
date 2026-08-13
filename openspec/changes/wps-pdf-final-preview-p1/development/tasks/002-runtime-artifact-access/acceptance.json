@@ -1,0 +1,147 @@
+{
+  "schema": "specnav.task-acceptance-evidence.v2",
+  "generated_by": "specnav-development/task-acceptance-evidence",
+  "task_id": "002-runtime-artifact-access",
+  "generated_at": "2026-08-12T12:16:24.118Z",
+  "recorded_at": "2026-08-12T12:13:30.902Z",
+  "status": "approved",
+  "reviewed_git_head": "9939b36f8dff9c6bbf3cf6c4cf404614e427a92f",
+  "reviewed_git_tree": "2cda4ca9f0b5bdab4e2ba7707943e03fec6c861c",
+  "implementation_scope": {
+    "included_patterns": [
+      "frontend/src/transport",
+      "openspec/changes/wps-pdf-final-preview-p1/development",
+      "src-tauri/src",
+      "src-tauri/tauri.conf.json",
+      "src-tauri/tests",
+      "src/thesis_forge/adapters",
+      "tests/test_adapters.py",
+      "tests/test_http_adapter.py",
+      "tests/test_sidecar.py"
+    ],
+    "entries": [
+      {
+        "path": "src-tauri/tauri.conf.json",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "33d6c508c80fa10c91bbe9a7f7f94672059f131b"
+      },
+      {
+        "path": "tests/test_adapters.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "6a7fd613b0beefaf3dba500d3511fd1fa4eae26b"
+      },
+      {
+        "path": "tests/test_http_adapter.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "93d935ae44b8f37de517c6ed6837d55e7b0e8f7a"
+      },
+      {
+        "path": "tests/test_sidecar.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "0ae43ae075fe733d59943fc6e96d783fbe48bbde"
+      }
+    ],
+    "sha256": "e6b00840a10b763ff3ae68e96f5a67659f7290ff663a6f6fa6fba498658b77bb"
+  },
+  "artifacts": {
+    "context": {
+      "path": "development/tasks/002-runtime-artifact-access/context.json",
+      "sha256": "5fc8ce5d86775955513a8b522def1900affdb73e653e5236b51ef00ea5b2c25b"
+    },
+    "report": {
+      "path": "development/tasks/002-runtime-artifact-access/report.md",
+      "sha256": "c595bddcffd73c4a4357f3542d12048574a6e73acb7c0d58467f9a603e105d0d",
+      "status": "DONE"
+    },
+    "spec_review": {
+      "path": "development/tasks/002-runtime-artifact-access/spec-review.md",
+      "sha256": "924168da6f22e4ae4cdd13b45c7131e9797ffc85f41deb2125878f7f7b59a4cc",
+      "verdict": "approved"
+    },
+    "quality_review": {
+      "path": "development/tasks/002-runtime-artifact-access/quality-review.md",
+      "sha256": "53c1cae2617dcf61e28750f288f7dcdbf89c038098bac04ffe33246712f0c1d2",
+      "verdict": "approved"
+    }
+  },
+  "test_runs": [
+    {
+      "id": "receipt-3639c464748983baba01073141e934e5f6b78628f32d1aa0ca4c5de0f9fcf2bc",
+      "command": "cargo test --manifest-path src-tauri/Cargo.toml",
+      "assertion_ids": [
+        "A2",
+        "A3"
+      ],
+      "recorded_at": "2026-08-12T12:13:30.902Z",
+      "validation_receipt_sha256": "d8daf9923aab0efe327489e8a9da7f731186b6bd8fa8ef24fd5a7b91228316ff",
+      "evidence_log": {
+        "path": "development/evidence/004-002-runtime-artifact-access.log",
+        "sha256": "ea0b49ce7462ea858b8bd8494a572e9a24eb91b6bc579a8067259b132885f0f7",
+        "size": 10265
+      }
+    },
+    {
+      "id": "receipt-8bd5b0cf73462c6badbc4081392685bffdb704812248787db3425292bf8424c5",
+      "command": ".venv/bin/python -m pytest -p no:cacheprovider tests/test_adapters.py tests/test_http_adapter.py tests/test_sidecar.py",
+      "assertion_ids": [
+        "A2",
+        "A3"
+      ],
+      "recorded_at": "2026-08-12T12:11:09.841Z",
+      "validation_receipt_sha256": "a467e5ba55b62c687c8ceeee239a4cfc0c7e76b0dbae31cbb88b7b3257a508c3",
+      "evidence_log": {
+        "path": "development/evidence/002-002-runtime-artifact-access.log",
+        "sha256": "6da7ea479a1cfa8acbae826142f6e328673474357dc49c12e357d5c73844f6b8",
+        "size": 766
+      }
+    },
+    {
+      "id": "receipt-94f7fe5bfaa5d33e4cd77977b20402eb9278323db129536900e4b669cb2cc4f8",
+      "command": "pnpm --dir frontend exec vitest run src/transport/finalPreview.test.ts src/transport/buildEvents.test.ts src/transport/transports.test.ts --pool=forks --maxWorkers=1 --testTimeout=15000",
+      "assertion_ids": [
+        "A2",
+        "A3"
+      ],
+      "recorded_at": "2026-08-12T12:11:17.302Z",
+      "validation_receipt_sha256": "3adc7d50b74744b977f396b084ff5846e0fea820195f3ad223e78ebb342ee6a7",
+      "evidence_log": {
+        "path": "development/evidence/003-002-runtime-artifact-access.log",
+        "sha256": "f8306a0335e3969e73bc7d2014859bfc8f23a36a9474ab263bc046e02d46a9b3",
+        "size": 511
+      }
+    }
+  ],
+  "assertions": [
+    {
+      "id": "A2",
+      "parent_id": "A2",
+      "status": "passing",
+      "test_run_ids": [
+        "receipt-3639c464748983baba01073141e934e5f6b78628f32d1aa0ca4c5de0f9fcf2bc",
+        "receipt-8bd5b0cf73462c6badbc4081392685bffdb704812248787db3425292bf8424c5",
+        "receipt-94f7fe5bfaa5d33e4cd77977b20402eb9278323db129536900e4b669cb2cc4f8"
+      ],
+      "direct_evidence": [],
+      "reused_evidence": [],
+      "claim": "A compatible LibreOffice can export an atomic validated PDF without making PDF availability a condition of DOCX build success."
+    },
+    {
+      "id": "A3",
+      "parent_id": "A3",
+      "status": "passing",
+      "test_run_ids": [
+        "receipt-3639c464748983baba01073141e934e5f6b78628f32d1aa0ca4c5de0f9fcf2bc",
+        "receipt-8bd5b0cf73462c6badbc4081392685bffdb704812248787db3425292bf8424c5",
+        "receipt-94f7fe5bfaa5d33e4cd77977b20402eb9278323db129536900e4b669cb2cc4f8"
+      ],
+      "direct_evidence": [],
+      "reused_evidence": [],
+      "claim": "Web, macOS, and Windows can display an explicitly selected WPS-exported PDF and mark it stale after source or template changes."
+    }
+  ],
+  "fallback_used": false
+}

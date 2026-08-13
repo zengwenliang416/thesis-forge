@@ -1,0 +1,18 @@
+# command: pnpm --dir frontend exec vitest run --pool=forks --maxWorkers=1 --testTimeout=15000
+# exit_status: 0
+# duration_ms: 17765
+
+## stdout
+
+ RUN  v4.1.10 /private/tmp/thesis-forge-dual-preview-evidence/frontend
+
+
+ Test Files  13 passed (13)
+      Tests  75 passed (75)
+   Start at  20:13:31
+   Duration  16.69s (transform 385ms, setup 975ms, import 1.98s, tests 2.69s, environment 9.19s)
+
+
+
+## stderr
+(empty)

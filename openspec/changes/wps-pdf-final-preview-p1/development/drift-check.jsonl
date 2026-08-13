@@ -1,0 +1,4 @@
+{"task_id":"001-pdf-export-build-contract","blocking":false,"checked_at":"2026-08-11T10:00:56Z","evidence":"Application remains renderer-neutral above DOCX output; PDF is optional and core/CLI default is disabled."}
+{"task_id":"002-runtime-artifact-access","blocking":false,"checked_at":"2026-08-11T10:00:56Z","evidence":"Public DTOs remain path-free; runtime-specific path authorization stays in Web/Tauri adapters."}
+{"task_id":"003-dual-preview-ui","blocking":false,"checked_at":"2026-08-11T10:00:56Z","evidence":"React components use WorkbenchTransport and do not call fetch or invoke directly."}
+{"task_id":"004-docs-verification","blocking":false,"checked_at":"2026-08-11T10:00:56Z","evidence":"Documentation preserves the non-equivalence boundary between LibreOffice and WPS; exact WPS sensory is carried to verification."}

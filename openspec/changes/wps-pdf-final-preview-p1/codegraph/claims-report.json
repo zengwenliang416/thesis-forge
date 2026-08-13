@@ -1,0 +1,17 @@
+{
+  "schema": "specnav.codegraph.claims_report.v1",
+  "generated_at": "2026-08-12T14:34:53.303Z",
+  "active_change": "wps-pdf-final-preview-p1",
+  "claims_file": "openspec/changes/wps-pdf-final-preview-p1/codegraph/claims-map.json",
+  "evidence_index": "openspec/changes/wps-pdf-final-preview-p1/codegraph/evidence-index.json",
+  "claims_count": 4,
+  "verified_claims": [
+    "development:task-001-pdf-export-build-contract",
+    "development:task-002-runtime-artifact-access",
+    "development:task-003-dual-preview-ui",
+    "development:task-004-docs-verification"
+  ],
+  "unverified_claims": [],
+  "blockers": [],
+  "warnings": []
+}

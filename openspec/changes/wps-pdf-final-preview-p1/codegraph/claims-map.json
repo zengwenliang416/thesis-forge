@@ -1,0 +1,107 @@
+{
+  "schema": "specnav.codegraph.claims.v1",
+  "generated_at": "2026-08-11T07:54:59.445Z",
+  "active_change": "wps-pdf-final-preview-p1",
+  "claims": [
+    {
+      "id": "development:task-001-pdf-export-build-contract",
+      "kind": "development-task",
+      "stage": "development",
+      "task_id": "001-pdf-export-build-contract",
+      "text": "Implement one user-visible flow from UI entry through state, API/data boundary,",
+      "required": true,
+      "source": "specnav-codegraph-plan",
+      "source_paths": [
+        "openspec/changes/wps-pdf-final-preview-p1/development/tasks/001-pdf-export-build-contract/brief.md",
+        "openspec/changes/wps-pdf-final-preview-p1/development/tasks/001-pdf-export-build-contract/context.json"
+      ],
+      "expected_evidence": [
+        "Focused tests or command output",
+        "Task report",
+        "Spec review",
+        "Quality review"
+      ],
+      "allowed_files": [
+        "src"
+      ],
+      "query_ids": [
+        "development:task-001-pdf-export-build-contract:evidence"
+      ]
+    },
+    {
+      "id": "development:task-002-runtime-artifact-access",
+      "kind": "development-task",
+      "stage": "development",
+      "task_id": "002-runtime-artifact-access",
+      "text": "Implement one user-visible flow from UI entry through state, API/data boundary,",
+      "required": true,
+      "source": "specnav-codegraph-plan",
+      "source_paths": [
+        "openspec/changes/wps-pdf-final-preview-p1/development/tasks/002-runtime-artifact-access/brief.md",
+        "openspec/changes/wps-pdf-final-preview-p1/development/tasks/002-runtime-artifact-access/context.json"
+      ],
+      "expected_evidence": [
+        "Focused tests or command output",
+        "Task report",
+        "Spec review",
+        "Quality review"
+      ],
+      "allowed_files": [
+        "src"
+      ],
+      "query_ids": [
+        "development:task-002-runtime-artifact-access:evidence"
+      ]
+    },
+    {
+      "id": "development:task-003-dual-preview-ui",
+      "kind": "development-task",
+      "stage": "development",
+      "task_id": "003-dual-preview-ui",
+      "text": "Implement one user-visible flow from UI entry through state, API/data boundary,",
+      "required": true,
+      "source": "specnav-codegraph-plan",
+      "source_paths": [
+        "openspec/changes/wps-pdf-final-preview-p1/development/tasks/003-dual-preview-ui/brief.md",
+        "openspec/changes/wps-pdf-final-preview-p1/development/tasks/003-dual-preview-ui/context.json"
+      ],
+      "expected_evidence": [
+        "Focused tests or command output",
+        "Task report",
+        "Spec review",
+        "Quality review"
+      ],
+      "allowed_files": [
+        "src"
+      ],
+      "query_ids": [
+        "development:task-003-dual-preview-ui:evidence"
+      ]
+    },
+    {
+      "id": "development:task-004-docs-verification",
+      "kind": "development-task",
+      "stage": "development",
+      "task_id": "004-docs-verification",
+      "text": "Implement one user-visible flow from UI entry through state, API/data boundary,",
+      "required": true,
+      "source": "specnav-codegraph-plan",
+      "source_paths": [
+        "openspec/changes/wps-pdf-final-preview-p1/development/tasks/004-docs-verification/brief.md",
+        "openspec/changes/wps-pdf-final-preview-p1/development/tasks/004-docs-verification/context.json"
+      ],
+      "expected_evidence": [
+        "Focused tests or command output",
+        "Task report",
+        "Spec review",
+        "Quality review"
+      ],
+      "allowed_files": [
+        "src"
+      ],
+      "query_ids": [
+        "development:task-004-docs-verification:evidence"
+      ]
+    }
+  ]
+}

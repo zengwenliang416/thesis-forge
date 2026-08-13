@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "change_id": "wps-pdf-final-preview-p1",
+  "stage": "development",
+  "allowed_roots": [
+    "src/thesis_forge/application",
+    "src/thesis_forge/adapters",
+    "frontend/src",
+    "frontend/e2e",
+    "src-tauri/src",
+    "src-tauri/tests",
+    "src-tauri/tauri.conf.json",
+    "tests",
+    "docs",
+    "output/verification/wps-pdf-final-preview-p1",
+    "openspec/changes/wps-pdf-final-preview-p1"
+  ],
+  "denied_roots": [
+    ".git",
+    ".venv",
+    "node_modules",
+    "dist",
+    "build",
+    "coverage"
+  ],
+  "requires_review_on": [
+    "pyproject.toml",
+    "frontend/package.json",
+    "frontend/pnpm-lock.yaml",
+    "src-tauri/Cargo.toml",
+    "src-tauri/Cargo.lock",
+    "src/thesis_forge/core",
+    "src/thesis_forge/renderers",
+    "openspec/changes/wps-pdf-final-preview-p1/tasks.md"
+  ],
+  "allowed_operations": {
+    "create": true,
+    "modify": true,
+    "delete": false,
+    "rename": false
+  },
+  "prototype_sources": [
+    "openspec/changes/wps-pdf-final-preview-p1/prototype/artifact/index.html"
+  ],
+  "expires_when": "verification_started"
+}

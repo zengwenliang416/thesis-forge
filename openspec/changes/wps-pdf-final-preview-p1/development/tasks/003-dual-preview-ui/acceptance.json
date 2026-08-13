@@ -1,0 +1,115 @@
+{
+  "schema": "specnav.task-acceptance-evidence.v2",
+  "generated_by": "specnav-development/task-acceptance-evidence",
+  "task_id": "003-dual-preview-ui",
+  "generated_at": "2026-08-12T12:16:24.156Z",
+  "recorded_at": "2026-08-12T12:15:33.868Z",
+  "status": "approved",
+  "reviewed_git_head": "9939b36f8dff9c6bbf3cf6c4cf404614e427a92f",
+  "reviewed_git_tree": "2cda4ca9f0b5bdab4e2ba7707943e03fec6c861c",
+  "implementation_scope": {
+    "included_patterns": [
+      "frontend/e2e",
+      "frontend/src/components",
+      "frontend/src/state",
+      "frontend/src/styles.css",
+      "openspec/changes/wps-pdf-final-preview-p1/development",
+      "src-tauri/tauri.conf.json"
+    ],
+    "entries": [
+      {
+        "path": "frontend/src/styles.css",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "fc9276be002e27354a073e4ae8b917ebc4b39493"
+      },
+      {
+        "path": "src-tauri/tauri.conf.json",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "33d6c508c80fa10c91bbe9a7f7f94672059f131b"
+      }
+    ],
+    "sha256": "c43e9d092311974a24ca6a61f73f7d7922ecc35be6de3035366b8180e5205028"
+  },
+  "artifacts": {
+    "context": {
+      "path": "development/tasks/003-dual-preview-ui/context.json",
+      "sha256": "d604f1427a2a93c8de9122ef49e2a40058b98ddf22d01ea19043e1bf361ae4ac"
+    },
+    "report": {
+      "path": "development/tasks/003-dual-preview-ui/report.md",
+      "sha256": "1bdba9d36e795c7dd07a38414c0e280f6fea8bc5d5a8600825e7c39b85f0c14c",
+      "status": "DONE"
+    },
+    "spec_review": {
+      "path": "development/tasks/003-dual-preview-ui/spec-review.md",
+      "sha256": "3414569eb966df48b9c81bae3c58f7da091f28ce289d344fbf19fa1fd16284fc",
+      "verdict": "approved"
+    },
+    "quality_review": {
+      "path": "development/tasks/003-dual-preview-ui/quality-review.md",
+      "sha256": "f5fc7c7ad1377b6a84c32e5e963f37e22e10fa619ca59f9af626a162664b6871",
+      "verdict": "approved"
+    }
+  },
+  "test_runs": [
+    {
+      "id": "receipt-0ff5b3c41d89d898591c4a62c303745463cd0517caf8a2704cfd68335fdeb423",
+      "command": "pnpm --dir frontend exec vitest run --pool=forks --maxWorkers=1 --testTimeout=15000",
+      "assertion_ids": [
+        "A1",
+        "A3"
+      ],
+      "recorded_at": "2026-08-12T12:13:48.685Z",
+      "validation_receipt_sha256": "fdd03d11d0d426bf30cf30927d36663764028f215193fb25785709dcc10a633b",
+      "evidence_log": {
+        "path": "development/evidence/005-003-dual-preview-ui.log",
+        "sha256": "5a4c473ff04af5af4e308e972c290568d7c8a431d7ea4ce129d00274f18887ba",
+        "size": 414
+      }
+    },
+    {
+      "id": "receipt-62801adfa1274990f2497d164212d3e1e533bff29342f672370146160b68395c",
+      "command": "pnpm --dir frontend exec playwright test --workers=1",
+      "assertion_ids": [
+        "A1",
+        "A3"
+      ],
+      "recorded_at": "2026-08-12T12:15:33.868Z",
+      "validation_receipt_sha256": "79bc2ed4347ad19a77089b252217ef969ff7507afbc37c5ef17e4e611ee8520a",
+      "evidence_log": {
+        "path": "development/evidence/006-003-dual-preview-ui.log",
+        "sha256": "a0c4b82cdc32ba3321b1b4a6a22bd1ae1838bebfaf0803efeea93f3a0b8bde45",
+        "size": 6057
+      }
+    }
+  ],
+  "assertions": [
+    {
+      "id": "A1",
+      "parent_id": "A1",
+      "status": "passing",
+      "test_run_ids": [
+        "receipt-0ff5b3c41d89d898591c4a62c303745463cd0517caf8a2704cfd68335fdeb423",
+        "receipt-62801adfa1274990f2497d164212d3e1e533bff29342f672370146160b68395c"
+      ],
+      "direct_evidence": [],
+      "reused_evidence": [],
+      "claim": "The right rail switches between navigable structural preview and a real PDF final-layout preview with a truthful Office engine label."
+    },
+    {
+      "id": "A3",
+      "parent_id": "A3",
+      "status": "passing",
+      "test_run_ids": [
+        "receipt-0ff5b3c41d89d898591c4a62c303745463cd0517caf8a2704cfd68335fdeb423",
+        "receipt-62801adfa1274990f2497d164212d3e1e533bff29342f672370146160b68395c"
+      ],
+      "direct_evidence": [],
+      "reused_evidence": [],
+      "claim": "Web, macOS, and Windows can display an explicitly selected WPS-exported PDF and mark it stale after source or template changes."
+    }
+  ],
+  "fallback_used": false
+}

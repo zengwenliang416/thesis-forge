@@ -1,0 +1,9 @@
+{
+  "schema_version": 1,
+  "component_rules": [
+    "Reuse LibreOffice discovery and process cleanup instead of duplicating subprocess ownership.",
+    "Extract one strict FinalPreviewDescriptor shared by reducer and transports.",
+    "Extract one object URL lifecycle shared by automatic and user-selected PDF bytes.",
+    "Keep Web and Tauri locator resolution inside transports, not React components."
+  ]
+}

@@ -1,0 +1,59 @@
+{
+  "task_id": "001-pdf-export-build-contract",
+  "task_items": [
+    "1.1",
+    "1.2",
+    "1.3"
+  ],
+  "acceptance_assertions": [
+    "A2"
+  ],
+  "goal": "Publish an optional validated LibreOffice PDF preview without changing DOCX build success semantics.",
+  "must_read": [
+    "openspec/changes/wps-pdf-final-preview-p1/development/tasks/001-pdf-export-build-contract/brief.md",
+    "openspec/specs/ui-design/design.md",
+    "openspec/specs/system-architecture/design.md",
+    "openspec/specs/frontend-backend-data-flow/design.md",
+    "openspec/specs/component-architecture/design.md",
+    "openspec/changes/wps-pdf-final-preview-p1/requirements.md",
+    "openspec/changes/wps-pdf-final-preview-p1/acceptance.md",
+    "openspec/changes/wps-pdf-final-preview-p1/spec-map.json",
+    "openspec/changes/wps-pdf-final-preview-p1/component-impact-map.json",
+    "openspec/changes/wps-pdf-final-preview-p1/prototype/decision.json",
+    "openspec/changes/wps-pdf-final-preview-p1/prototype/artifact/index.html",
+    "openspec/changes/wps-pdf-final-preview-p1/prototype/handoff.md",
+    "src/thesis_forge/application/contracts.py",
+    "src/thesis_forge/application/services.py",
+    "src/thesis_forge/application/office_refresh.py",
+    "tests/test_application_services.py"
+  ],
+  "allowed_files": [
+    "src/thesis_forge/application/contracts.py",
+    "src/thesis_forge/application/services.py",
+    "src/thesis_forge/application/office_refresh.py",
+    "src/thesis_forge/application/pdf_preview.py",
+    "src/thesis_forge/application/__init__.py",
+    "tests/test_pdf_preview.py",
+    "tests/test_application_services.py",
+    "openspec/changes/wps-pdf-final-preview-p1/development/tasks/001-pdf-export-build-contract",
+    "openspec/changes/wps-pdf-final-preview-p1/development"
+  ],
+  "test_paths": [
+    ".venv/bin/python -m pytest -p no:cacheprovider tests/test_pdf_preview.py tests/test_application_services.py"
+  ],
+  "non_goals": [
+    "Do not edit adapters, frontend, Tauri, Parser, Domain, Compiler, RenderPlan or DOCX Renderer.",
+    "Do not automate WPS."
+  ],
+  "expected_evidence": [
+    "Focused Python tests",
+    "Task report",
+    "Spec review",
+    "Quality review"
+  ],
+  "unsafe_assumptions": [
+    "LibreOffice is optional.",
+    "A successful process exit does not prove PDF validity."
+  ],
+  "stop_condition": "Stop if DOCX success would depend on PDF availability or production edits exceed the listed files."
+}
