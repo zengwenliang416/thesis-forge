@@ -135,12 +135,36 @@ def test_docx_renderer_applies_template_page_body_and_heading_xml(tmp_path: Path
     assert normal.xpath("./w:pPr/w:spacing/@w:line", namespaces=NS) == ["400"]
     assert normal.xpath("./w:pPr/w:jc/@w:val", namespaces=NS) == ["both"]
 
-    heading = styles_xml.xpath(".//w:style[@w:styleId='Heading1']", namespaces=NS)[0]
-    assert heading.xpath("./w:rPr/w:rFonts/@w:eastAsia", namespaces=NS) == ["黑体"]
-    assert heading.xpath("./w:rPr/w:b", namespaces=NS)
-    assert heading.xpath("./w:pPr/w:jc/@w:val", namespaces=NS) == ["center"]
-    assert heading.xpath("./w:pPr/w:keepNext", namespaces=NS)
-    assert heading.xpath("./w:pPr/w:keepLines", namespaces=NS)
+    headings = [
+        styles_xml.xpath(
+            f".//w:style[@w:styleId='Heading{level}']",
+            namespaces=NS,
+        )[0]
+        for level in range(1, 4)
+    ]
+    for heading in headings:
+        assert heading.xpath("./w:rPr/w:rFonts/@w:eastAsia", namespaces=NS) == [
+            "黑体"
+        ]
+        assert heading.xpath("./w:rPr/w:color/@w:val", namespaces=NS) == [
+            "000000"
+        ]
+        assert not heading.xpath(
+            "./w:rPr/w:color/@w:themeColor",
+            namespaces=NS,
+        )
+        assert not heading.xpath(
+            "./w:rPr/w:color/@w:themeTint",
+            namespaces=NS,
+        )
+        assert not heading.xpath(
+            "./w:rPr/w:color/@w:themeShade",
+            namespaces=NS,
+        )
+        assert heading.xpath("./w:rPr/w:b", namespaces=NS)
+    assert headings[0].xpath("./w:pPr/w:jc/@w:val", namespaces=NS) == ["center"]
+    assert headings[0].xpath("./w:pPr/w:keepNext", namespaces=NS)
+    assert headings[0].xpath("./w:pPr/w:keepLines", namespaces=NS)
     assert "[TODO:" not in etree.tostring(document_xml, encoding="unicode")
     assert "word/document.xml" in list_package_parts(output)
 

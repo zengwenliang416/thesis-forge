@@ -28,6 +28,7 @@ heading:
       east_asia: 黑体
       latin: Times New Roman
     size: 16pt
+    color: "000000"
     bold: true
     alignment: center
   level2:
@@ -35,6 +36,14 @@ heading:
       east_asia: 黑体
       latin: Times New Roman
     size: 14pt
+    color: "000000"
+    bold: true
+  level3:
+    font:
+      east_asia: 黑体
+      latin: Times New Roman
+    size: 12pt
+    color: "000000"
     bold: true
 
 figure:

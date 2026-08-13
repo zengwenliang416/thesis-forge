@@ -224,7 +224,19 @@ def test_load_example_template():
     assert template.id == "example-university-2026"
     assert template.body.font.east_asia == "宋体"
     assert str(template.page.margin.top) == "25mm"
+    assert template.heading.level1.font.east_asia == "黑体"
+    assert template.heading.level1.color == "000000"
     assert str(template.heading.level1.size) == "16pt"
+    assert template.heading.level2 is not None
+    assert template.heading.level2.font.east_asia == "黑体"
+    assert template.heading.level2.color == "000000"
+    assert str(template.heading.level2.size) == "14pt"
+    assert template.heading.level3 is not None
+    assert template.heading.level3.font.east_asia == "黑体"
+    assert template.heading.level3.font.latin == "Times New Roman"
+    assert template.heading.level3.color == "000000"
+    assert str(template.heading.level3.size) == "12pt"
+    assert template.heading.level3.bold is True
     assert template.figure is not None
     assert template.figure.numbering.mode == "chapter"
     assert template.figure.caption.position == "bottom"

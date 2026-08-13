@@ -666,9 +666,20 @@ def test_template_failures_return_structured_validation_issues(tmp_path: Path):
         ("invalid-template", "body.unknown_policy")
     }
 
+    missing_style_data = yaml.safe_load(EXAMPLE_TEMPLATE.read_text(encoding="utf-8"))
+    missing_style_data["heading"].pop("level3")
+    missing_style_template = tmp_path / "missing-style.yaml"
+    missing_style_template.write_text(
+        yaml.safe_dump(
+            missing_style_data,
+            allow_unicode=True,
+            sort_keys=False,
+        ),
+        encoding="utf-8",
+    )
     missing_style = validation_service(
         SOURCE,
-        template_path=EXAMPLE_TEMPLATE,
+        template_path=missing_style_template,
     )
     assert {(issue.code, issue.target) for issue in missing_style.errors} == {
         ("missing-template-style", "heading.level3")
