@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "planning_status": "ready",
+  "nodes": [
+    {
+      "id": "001-preview-font-adaptation",
+      "task_items": [
+        "1.1",
+        "1.2",
+        "1.3"
+      ]
+    },
+    {
+      "id": "002-heading-color-verification",
+      "task_items": [
+        "2.1",
+        "2.2",
+        "3.1",
+        "3.2",
+        "3.3"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "from": "001-preview-font-adaptation",
+      "to": "002-heading-color-verification"
+    }
+  ]
+}

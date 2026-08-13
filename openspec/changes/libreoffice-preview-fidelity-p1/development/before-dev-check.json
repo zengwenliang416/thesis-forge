@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "active_change": "libreoffice-preview-fidelity-p1",
+  "status": "ready",
+  "ok": true,
+  "checked_at": "2026-08-13T03:20:18.000Z",
+  "requirements_contract": "ok",
+  "prototype_contract": "ok",
+  "prototype_decision": "approved",
+  "approved_variant": "macos-temporary-font-alias-v1",
+  "tasks_baseline_commit": "8e03e32ece86fa877f8a0aeed354f44813d6b833",
+  "scope_lock": "openspec/changes/libreoffice-preview-fidelity-p1/scope.json",
+  "blockers": []
+}

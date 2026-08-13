@@ -1,0 +1,2 @@
+{"task_id":"001-preview-font-adaptation","blocking":false,"reason":"Platform font detection, disposable DOCX adaptation and Office refresh restoration remain inside application integrations; Parser, Domain, Compiler, RenderPlan, Renderer public contracts and frontend are unchanged."}
+{"task_id":"002-heading-color-verification","blocking":false,"reason":"Heading presentation remains declarative template data translated by existing Template Model and DOCX style rendering; verification and installation add no architecture or data-flow change."}

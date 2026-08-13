@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "promotion_policy": "reimplement_under_development_gate",
+  "allowed_to_copy": [
+    "The verified exact alias mapping values from prototype/logic/harness.js"
+  ],
+  "must_reimplement": [
+    "Production DOCX package adaptation, platform selection, cleanup, and LibreOffice integration"
+  ],
+  "blocked_direct_copies": [
+    "Prototype-only state harness, fixtures, and review evidence"
+  ]
+}

@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "owners": [
+    {
+      "path": "src/thesis_forge/application/pdf_preview.py",
+      "owner": "preview-font-adaptation"
+    },
+    {
+      "path": "src/thesis_forge/application/office_refresh.py",
+      "owner": "published-docx-style-preservation"
+    },
+    {
+      "path": "templates/schools/example-university/2026.yaml",
+      "owner": "example-template-formatting"
+    },
+    {
+      "path": "tests/test_pdf_preview.py",
+      "owner": "preview-export-verification"
+    },
+    {
+      "path": "tests/test_application_services.py",
+      "owner": "office-refresh-verification"
+    },
+    {
+      "path": "tests/test_template.py",
+      "owner": "template-verification"
+    },
+    {
+      "path": "tests/test_docx_renderer.py",
+      "owner": "docx-ooxml-verification"
+    },
+    {
+      "path": "tests/test_acceptance.py",
+      "owner": "complete-fixture-verification"
+    },
+    {
+      "path": "output/verification/libreoffice-preview-fidelity-p1",
+      "owner": "real-pdf-verification"
+    },
+    {
+      "path": "openspec/changes/libreoffice-preview-fidelity-p1",
+      "owner": "specnav-evidence"
+    }
+  ]
+}

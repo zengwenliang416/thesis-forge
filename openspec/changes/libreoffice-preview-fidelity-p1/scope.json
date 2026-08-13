@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "change_id": "libreoffice-preview-fidelity-p1",
+  "stage": "development",
+  "allowed_roots": [
+    "src/thesis_forge/application/pdf_preview.py",
+    "src/thesis_forge/application/office_refresh.py",
+    "tests/test_pdf_preview.py",
+    "tests/test_application_services.py",
+    "templates/schools/example-university/2026.yaml",
+    "tests/test_template.py",
+    "tests/test_docx_renderer.py",
+    "tests/test_acceptance.py",
+    "output/verification/libreoffice-preview-fidelity-p1",
+    "openspec/changes/libreoffice-preview-fidelity-p1"
+  ],
+  "denied_roots": [
+    ".git",
+    ".venv",
+    "node_modules",
+    "dist",
+    "build",
+    "coverage",
+    "src/thesis_forge/core",
+    "src/thesis_forge/renderers"
+  ],
+  "requires_review_on": [
+    "pyproject.toml",
+    "src/thesis_forge/application/contracts.py",
+    "src/thesis_forge/application/services.py",
+    "templates/schools/example-university/2026.yaml",
+    "tests/test_acceptance.py",
+    "openspec/changes/libreoffice-preview-fidelity-p1/tasks.md"
+  ],
+  "allowed_operations": {
+    "create": true,
+    "modify": true,
+    "delete": false,
+    "rename": false
+  },
+  "prototype_sources": [
+    "openspec/changes/libreoffice-preview-fidelity-p1/prototype/logic/harness.js"
+  ],
+  "expires_when": "verification_started"
+}

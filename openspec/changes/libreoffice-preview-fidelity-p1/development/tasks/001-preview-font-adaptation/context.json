@@ -1,0 +1,59 @@
+{
+  "task_id": "001-preview-font-adaptation",
+  "task_items": [
+    "1.1",
+    "1.2",
+    "1.3"
+  ],
+  "acceptance_assertions": [
+    "A1"
+  ],
+  "goal": "Adapt only a disposable macOS preview DOCX so LibreOffice uses verified Chinese font aliases without changing the authoritative DOCX.",
+  "must_read": [
+    "openspec/changes/libreoffice-preview-fidelity-p1/development/tasks/001-preview-font-adaptation/brief.md",
+    "openspec/specs/ui-design/design.md",
+    "openspec/specs/system-architecture/design.md",
+    "openspec/specs/frontend-backend-data-flow/design.md",
+    "openspec/specs/component-architecture/design.md",
+    "openspec/changes/libreoffice-preview-fidelity-p1/requirements.md",
+    "openspec/changes/libreoffice-preview-fidelity-p1/acceptance.md",
+    "openspec/changes/libreoffice-preview-fidelity-p1/spec-map.json",
+    "openspec/changes/libreoffice-preview-fidelity-p1/component-impact-map.json",
+    "openspec/changes/libreoffice-preview-fidelity-p1/prototype/handoff.md",
+    "openspec/changes/libreoffice-preview-fidelity-p1/prototype/decision.json",
+    "openspec/changes/libreoffice-preview-fidelity-p1/prototype/logic/harness.js",
+    "src/thesis_forge/application/pdf_preview.py",
+    "src/thesis_forge/application/office_refresh.py",
+    "tests/test_pdf_preview.py",
+    "tests/test_application_services.py"
+  ],
+  "allowed_files": [
+    "src/thesis_forge/application/pdf_preview.py",
+    "src/thesis_forge/application/office_refresh.py",
+    "tests/test_pdf_preview.py",
+    "tests/test_application_services.py",
+    "output/verification/libreoffice-preview-fidelity-p1",
+    "openspec/changes/libreoffice-preview-fidelity-p1/development/tasks/001-preview-font-adaptation",
+    "openspec/changes/libreoffice-preview-fidelity-p1/development"
+  ],
+  "test_paths": [
+    ".venv/bin/python -m pytest -p no:cacheprovider tests/test_pdf_preview.py",
+    ".venv/bin/python -m pytest -p no:cacheprovider tests/test_application_services.py -k refresh"
+  ],
+  "non_goals": [
+    "Do not change Renderer, template schema, frontend or adapters.",
+    "Do not bundle fonts or modify global LibreOffice or operating-system settings."
+  ],
+  "expected_evidence": [
+    "Focused tests or command output",
+    "Task report",
+    "Spec review",
+    "Quality review"
+  ],
+  "unsafe_assumptions": [
+    "A font name that works in Word or WPS may still fall back in LibreOffice.",
+    "ZIP repacking must preserve every entry and non-font XML byte content.",
+    "Only exact OOXML font attributes may be rewritten."
+  ],
+  "stop_condition": "Stop if implementation requires changing core/Renderer layers, public exporter/refresher contracts, or files outside the allowlist."
+}

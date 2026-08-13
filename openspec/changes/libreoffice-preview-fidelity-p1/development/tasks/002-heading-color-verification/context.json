@@ -1,0 +1,63 @@
+{
+  "task_id": "002-heading-color-verification",
+  "task_items": [
+    "2.1",
+    "2.2",
+    "3.1",
+    "3.2",
+    "3.3"
+  ],
+  "acceptance_assertions": [
+    "A2",
+    "A3"
+  ],
+  "goal": "Emit explicit black Heading 1/2/3 styles, verify the complete LibreOffice PDF, and install the tested macOS application.",
+  "must_read": [
+    "openspec/changes/libreoffice-preview-fidelity-p1/development/tasks/002-heading-color-verification/brief.md",
+    "openspec/specs/ui-design/design.md",
+    "openspec/specs/system-architecture/design.md",
+    "openspec/specs/frontend-backend-data-flow/design.md",
+    "openspec/specs/component-architecture/design.md",
+    "openspec/changes/libreoffice-preview-fidelity-p1/requirements.md",
+    "openspec/changes/libreoffice-preview-fidelity-p1/acceptance.md",
+    "openspec/changes/libreoffice-preview-fidelity-p1/spec-map.json",
+    "openspec/changes/libreoffice-preview-fidelity-p1/component-impact-map.json",
+    "openspec/changes/libreoffice-preview-fidelity-p1/prototype/handoff.md",
+    "openspec/changes/libreoffice-preview-fidelity-p1/prototype/decision.json",
+    "openspec/changes/libreoffice-preview-fidelity-p1/prototype/logic/harness.js",
+    "templates/schools/example-university/2026.yaml",
+    "tests/test_template.py",
+    "tests/test_docx_renderer.py",
+    "tests/test_acceptance.py",
+    "examples/complete-thesis/thesis.md"
+  ],
+  "allowed_files": [
+    "templates/schools/example-university/2026.yaml",
+    "tests/test_template.py",
+    "tests/test_docx_renderer.py",
+    "tests/test_acceptance.py",
+    "output/verification/libreoffice-preview-fidelity-p1",
+    "openspec/changes/libreoffice-preview-fidelity-p1/development/tasks/002-heading-color-verification",
+    "openspec/changes/libreoffice-preview-fidelity-p1/development"
+  ],
+  "test_paths": [
+    ".venv/bin/python -m pytest -p no:cacheprovider tests/test_template.py tests/test_docx_renderer.py tests/test_pdf_preview.py tests/test_acceptance.py",
+    ".venv/bin/python -m pytest -p no:cacheprovider"
+  ],
+  "non_goals": [
+    "Do not change template schema or DOCX Renderer behavior.",
+    "Do not perform agent-driven UI sensory or claim WPS/Word equality."
+  ],
+  "expected_evidence": [
+    "Focused tests or command output",
+    "Task report",
+    "Spec review",
+    "Quality review"
+  ],
+  "unsafe_assumptions": [
+    "DOCX color must be verified in styles.xml, including absence of theme color modifiers.",
+    "Real PDF font embedding and page count must be inspected from the current artifact.",
+    "A successful package command does not prove the installed app is the new build."
+  ],
+  "stop_condition": "Stop if heading color requires schema or Renderer changes, validation fails, the real PDF still embeds ArialUnicodeMS for body text, or installation cannot be verified."
+}

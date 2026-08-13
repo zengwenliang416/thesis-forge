@@ -1,0 +1,57 @@
+{
+  "schema": "specnav.codegraph.claims.v1",
+  "generated_at": "2026-08-13T03:19:37.677Z",
+  "active_change": "libreoffice-preview-fidelity-p1",
+  "claims": [
+    {
+      "id": "development:task-001-preview-font-adaptation",
+      "kind": "development-task",
+      "stage": "development",
+      "task_id": "001-preview-font-adaptation",
+      "text": "Implement one user-visible flow from UI entry through state, API/data boundary,",
+      "required": true,
+      "source": "specnav-codegraph-plan",
+      "source_paths": [
+        "openspec/changes/libreoffice-preview-fidelity-p1/development/tasks/001-preview-font-adaptation/brief.md",
+        "openspec/changes/libreoffice-preview-fidelity-p1/development/tasks/001-preview-font-adaptation/context.json"
+      ],
+      "expected_evidence": [
+        "Focused tests or command output",
+        "Task report",
+        "Spec review",
+        "Quality review"
+      ],
+      "allowed_files": [
+        "src"
+      ],
+      "query_ids": [
+        "development:task-001-preview-font-adaptation:evidence"
+      ]
+    },
+    {
+      "id": "development:task-002-heading-color-verification",
+      "kind": "development-task",
+      "stage": "development",
+      "task_id": "002-heading-color-verification",
+      "text": "Implement one user-visible flow from UI entry through state, API/data boundary,",
+      "required": true,
+      "source": "specnav-codegraph-plan",
+      "source_paths": [
+        "openspec/changes/libreoffice-preview-fidelity-p1/development/tasks/002-heading-color-verification/brief.md",
+        "openspec/changes/libreoffice-preview-fidelity-p1/development/tasks/002-heading-color-verification/context.json"
+      ],
+      "expected_evidence": [
+        "Focused tests or command output",
+        "Task report",
+        "Spec review",
+        "Quality review"
+      ],
+      "allowed_files": [
+        "src"
+      ],
+      "query_ids": [
+        "development:task-002-heading-color-verification:evidence"
+      ]
+    }
+  ]
+}

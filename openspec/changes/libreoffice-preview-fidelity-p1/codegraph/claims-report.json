@@ -1,0 +1,18 @@
+{
+  "schema": "specnav.codegraph.claims_report.v1",
+  "generated_at": "2026-08-13T04:14:29.885Z",
+  "active_change": "libreoffice-preview-fidelity-p1",
+  "claims_file": "openspec/changes/libreoffice-preview-fidelity-p1/codegraph/claims-map.json",
+  "evidence_index": "openspec/changes/libreoffice-preview-fidelity-p1/codegraph/evidence-index.json",
+  "claims_count": 2,
+  "verified_claims": [],
+  "unverified_claims": [
+    "development:task-001-preview-font-adaptation",
+    "development:task-002-heading-color-verification"
+  ],
+  "blockers": [],
+  "warnings": [
+    "codegraph:claim-unverified:development:task-001-preview-font-adaptation",
+    "codegraph:claim-unverified:development:task-002-heading-color-verification"
+  ]
+}
