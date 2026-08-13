@@ -1,0 +1,12 @@
+{
+  "schema": "specnav.codegraph.claims_report.v1",
+  "generated_at": "2026-08-12T14:36:52.979Z",
+  "active_change": "illustrated-user-manual",
+  "claims_file": "openspec/changes/illustrated-user-manual/codegraph/claims-map.json",
+  "evidence_index": "openspec/changes/illustrated-user-manual/codegraph/evidence-index.json",
+  "claims_count": 0,
+  "verified_claims": [],
+  "unverified_claims": [],
+  "blockers": [],
+  "warnings": []
+}

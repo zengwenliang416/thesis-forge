@@ -1,0 +1,51 @@
+{
+  "schema": "specnav.lightChange.v2",
+  "change_id": "illustrated-user-manual",
+  "lane": "light",
+  "intent": "Write docs-only illustrated user manual; no product behavior changes",
+  "created_at": "2026-08-11T03:44:38.995Z",
+  "triage": {
+    "reason": "intent and paths both match the light lane",
+    "confidence": "high",
+    "escalation_threshold": 10,
+    "escalation_triggers": [
+      "touches auth, permissions, billing, security, database, API routes, deployment, package manifests, or SpecNav internals",
+      "adds a new user-facing workflow, page, module, data flow, or cross-component behavior",
+      "touches more than three intended paths or more than ten production files after edits",
+      "requires product decisions that are not already expressible in one acceptance assertion"
+    ]
+  },
+  "entry": {
+    "status": "ready",
+    "editable_paths": [
+      "docs/USER_MANUAL.md",
+      "docs/user-manual/index.html",
+      "docs/user-manual/images"
+    ]
+  },
+  "acceptance": [
+    {
+      "id": "LIGHT-001",
+      "statement": "User can see the requested light change reflected in docs/USER_MANUAL.md.",
+      "verify_via": "static",
+      "status": "passing",
+      "evidence_ref": "docs/USER_MANUAL.md; docs/user-manual/index.html; docs/user-manual/images/; 416 Python tests passed; 53 frontend tests passed; Ruff passed; HTML desktop/mobile render and asset checks passed"
+    }
+  ],
+  "tasks": [
+    {
+      "id": "T1",
+      "text": "User can see the requested light change reflected in docs/USER_MANUAL.md.",
+      "done": true
+    }
+  ],
+  "user_test": {
+    "status": "pending",
+    "case": "User can see the requested light change reflected in docs/USER_MANUAL.md.",
+    "user_decision": null
+  },
+  "verification_domains": [
+    "static",
+    "unit"
+  ]
+}

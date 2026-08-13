@@ -1,0 +1,903 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>ThesisForge 用户操作手册</title>
+  <style>
+    :root {
+      --ink: #1f2925;
+      --muted: #69736d;
+      --paper: #fffdf8;
+      --canvas: #eee9df;
+      --line: #d8d0c2;
+      --accent: #0b6b58;
+      --accent-soft: #dfeee8;
+      --amber: #b26425;
+      --warning: #fff0dc;
+      --danger: #a23d32;
+      --code: #17231f;
+      --shadow: 0 18px 55px rgb(45 38 27 / 12%);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 12% 8%, rgb(255 255 255 / 72%), transparent 28rem),
+        linear-gradient(135deg, #e9e3d7 0%, #f3efe7 48%, #e7e1d5 100%);
+      font-family: "PingFang SC", "Microsoft YaHei", "Noto Sans CJK SC", sans-serif;
+      line-height: 1.75;
+    }
+
+    a { color: var(--accent); }
+    img { max-width: 100%; }
+    code, pre { font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace; }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      min-height: 420px;
+      padding: 72px max(6vw, 28px) 80px;
+      color: #f8f4eb;
+      background:
+        linear-gradient(110deg, rgb(12 55 47 / 96%), rgb(20 78 64 / 88%)),
+        url("images/02-workbench-overview.png") center 28% / cover;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: auto -8% -62% 28%;
+      height: 340px;
+      border-radius: 50%;
+      background: rgb(236 182 104 / 18%);
+      filter: blur(2px);
+      transform: rotate(-8deg);
+    }
+
+    .eyebrow {
+      margin: 0 0 16px;
+      color: #d9c497;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+    }
+
+    .hero h1 {
+      max-width: 860px;
+      margin: 0;
+      font-family: "Songti SC", "STSong", Georgia, serif;
+      font-size: clamp(42px, 7vw, 86px);
+      font-weight: 700;
+      line-height: 1.06;
+      letter-spacing: -.035em;
+    }
+
+    .hero .lead {
+      max-width: 760px;
+      margin: 28px 0 0;
+      color: #e8eee9;
+      font-size: clamp(17px, 2vw, 22px);
+    }
+
+    .hero-meta {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 34px;
+    }
+
+    .hero-meta span {
+      border: 1px solid rgb(255 255 255 / 22%);
+      border-radius: 999px;
+      padding: 6px 12px;
+      background: rgb(255 255 255 / 8%);
+      font-size: 12px;
+    }
+
+    .layout {
+      width: min(1500px, calc(100% - 32px));
+      margin: -38px auto 72px;
+      display: grid;
+      grid-template-columns: 260px minmax(0, 1fr);
+      gap: 28px;
+      align-items: start;
+    }
+
+    .toc {
+      position: sticky;
+      top: 18px;
+      z-index: 2;
+      max-height: calc(100dvh - 36px);
+      overflow: auto;
+      border: 1px solid rgb(216 208 194 / 78%);
+      border-radius: 18px;
+      padding: 22px 18px;
+      background: rgb(255 253 248 / 90%);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(16px);
+    }
+
+    .toc strong {
+      display: block;
+      margin-bottom: 12px;
+      font-family: "Songti SC", "STSong", Georgia, serif;
+      font-size: 18px;
+    }
+
+    .toc a {
+      display: block;
+      border-left: 2px solid transparent;
+      padding: 7px 10px;
+      color: var(--muted);
+      font-size: 13px;
+      text-decoration: none;
+    }
+
+    .toc a:hover {
+      border-left-color: var(--accent);
+      color: var(--accent);
+      background: var(--accent-soft);
+    }
+
+    main {
+      min-width: 0;
+      border: 1px solid rgb(216 208 194 / 78%);
+      border-radius: 24px;
+      padding: clamp(28px, 5vw, 72px);
+      background: var(--paper);
+      box-shadow: var(--shadow);
+    }
+
+    section {
+      scroll-margin-top: 24px;
+      margin-bottom: 88px;
+    }
+
+    section:last-child { margin-bottom: 0; }
+
+    h2 {
+      margin: 0 0 24px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--line);
+      font-family: "Songti SC", "STSong", Georgia, serif;
+      font-size: clamp(30px, 4vw, 48px);
+      line-height: 1.2;
+      letter-spacing: -.02em;
+    }
+
+    h3 {
+      margin: 42px 0 14px;
+      font-family: "Songti SC", "STSong", Georgia, serif;
+      font-size: 25px;
+      line-height: 1.35;
+    }
+
+    h4 { margin: 30px 0 10px; font-size: 17px; }
+    p { margin: 12px 0; }
+    ul, ol { padding-left: 1.4em; }
+
+    .callout {
+      margin: 24px 0;
+      border-left: 5px solid var(--amber);
+      border-radius: 0 12px 12px 0;
+      padding: 16px 20px;
+      background: var(--warning);
+    }
+
+    .callout strong { color: #6f3610; }
+    .callout.danger { border-left-color: var(--danger); background: #fae8e4; }
+
+    .flow {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 8px;
+      margin: 26px 0;
+    }
+
+    .flow span {
+      position: relative;
+      border: 1px solid #c6d9d1;
+      border-radius: 12px;
+      padding: 16px 10px;
+      color: #124d41;
+      background: var(--accent-soft);
+      text-align: center;
+      font-size: 13px;
+      font-weight: 750;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+      margin: 22px 0;
+    }
+
+    .card {
+      border: 1px solid var(--line);
+      border-radius: 15px;
+      padding: 20px;
+      background: #faf7f0;
+    }
+
+    .card h3 { margin: 0 0 8px; font-size: 21px; }
+    .card p:last-child { margin-bottom: 0; }
+
+    figure {
+      margin: 28px 0 42px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      overflow: hidden;
+      background: #e9e6df;
+      box-shadow: 0 12px 34px rgb(49 42 32 / 10%);
+    }
+
+    figure img {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    figcaption {
+      padding: 12px 16px;
+      color: var(--muted);
+      background: var(--paper);
+      font-size: 13px;
+    }
+
+    .portrait {
+      max-width: 690px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    pre {
+      max-width: 100%;
+      overflow: auto;
+      border-radius: 14px;
+      padding: 20px;
+      color: #eaf3ee;
+      background: var(--code);
+      font-size: 13px;
+      line-height: 1.65;
+      tab-size: 2;
+    }
+
+    :not(pre) > code {
+      border-radius: 5px;
+      padding: 2px 6px;
+      color: #155244;
+      background: var(--accent-soft);
+      font-size: .92em;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 22px 0;
+      font-size: 14px;
+    }
+
+    th, td {
+      border-bottom: 1px solid var(--line);
+      padding: 12px 10px;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th { color: #315248; background: #eef3ef; }
+
+    details {
+      margin: 16px 0;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #fbf8f2;
+    }
+
+    summary {
+      cursor: pointer;
+      padding: 14px 18px;
+      font-weight: 750;
+    }
+
+    details > div { padding: 0 18px 18px; }
+
+    .checklist {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px 18px;
+      padding: 0;
+      list-style: none;
+    }
+
+    .checklist li {
+      position: relative;
+      padding: 12px 14px 12px 42px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: #fbf8f2;
+    }
+
+    .checklist li::before {
+      content: "✓";
+      position: absolute;
+      left: 14px;
+      top: 11px;
+      color: var(--accent);
+      font-weight: 900;
+    }
+
+    footer {
+      padding: 0 24px 54px;
+      color: var(--muted);
+      text-align: center;
+      font-size: 13px;
+    }
+
+    @media (max-width: 980px) {
+      .layout {
+        width: min(100% - 20px, 880px);
+        grid-template-columns: 1fr;
+        margin-top: -24px;
+      }
+      .toc { position: static; max-height: none; }
+      .toc nav { columns: 2; }
+      .flow { grid-template-columns: 1fr; }
+      .cards, .checklist { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 620px) {
+      .hero { min-height: 360px; padding: 52px 22px 64px; }
+      .layout { width: 100%; margin-top: 0; }
+      .toc, main { border-radius: 0; border-left: 0; border-right: 0; }
+      main { padding: 28px 20px 48px; }
+      .toc nav { columns: 1; }
+      table { display: block; overflow-x: auto; }
+      section { margin-bottom: 64px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <p class="eyebrow">ThesisForge · Illustrated Manual</p>
+    <h1>从 Markdown 到学校标准 Word</h1>
+    <p class="lead">覆盖 Web、macOS、Windows 与 CLI 的完整操作路径，包含真实界面、模板参数、诊断修复、DOCX 构建和目录更新。</p>
+    <div class="hero-meta">
+      <span>基线 main@3dc3069</span>
+      <span>2026-08-11</span>
+      <span>本地优先</span>
+      <span>模板驱动</span>
+      <span>无 AI 依赖</span>
+    </div>
+  </header>
+
+  <div class="layout">
+    <aside class="toc">
+      <strong>操作导航</strong>
+      <nav>
+        <a href="#start">1. 选择使用方式</a>
+        <a href="#workspace">2. 工作台界面</a>
+        <a href="#markdown">3. 编写 Markdown</a>
+        <a href="#template">4. 选择模板</a>
+        <a href="#format">5. 配置格式</a>
+        <a href="#validate">6. 验证与修复</a>
+        <a href="#build">7. 构建 DOCX</a>
+        <a href="#toc-update">8. 更新目录</a>
+        <a href="#platforms">9. 平台差异</a>
+        <a href="#troubleshooting">10. 常见问题</a>
+        <a href="#checklist">11. 最终检查</a>
+      </nav>
+    </aside>
+
+    <main>
+      <section id="start">
+        <p class="eyebrow">01 · Start</p>
+        <h2>选择使用方式</h2>
+        <p>ThesisForge 把论文内容放在 Markdown，把学校格式放在 YAML 模板。构建链固定为：</p>
+        <div class="flow">
+          <span>Markdown</span><span>Validation</span><span>Template</span><span>RenderPlan</span><span>DOCX</span>
+        </div>
+
+        <div class="cards">
+          <article class="card">
+            <h3>Web</h3>
+            <p>适合浏览器试用和集中部署。上传后保存到服务端工作区，不覆盖电脑上的原始 Markdown。</p>
+          </article>
+          <article class="card">
+            <h3>macOS / Windows</h3>
+            <p>适合本机长期写作。桌面端直接读写本地 Markdown，默认把 DOCX 生成到同一目录。</p>
+          </article>
+          <article class="card">
+            <h3>CLI</h3>
+            <p>适合自动化、批量构建和模板调试，可用 <code>--template</code> 和 <code>-o</code> 显式控制输入输出。</p>
+          </article>
+          <article class="card">
+            <h3>安装包</h3>
+            <p>macOS 使用 DMG/App，Windows 使用 MSI/NSIS。正式发布版本应完成平台签名。</p>
+          </article>
+        </div>
+
+        <div class="callout danger">
+          <strong>Web 下载现状：</strong>当前界面会显示 <code>thesis.docx</code> 输出名，但 HTTP adapter 尚无下载路由，界面也没有下载按钮。需要实际文件时使用桌面端、CLI，或由部署方导出工作区文件。
+        </div>
+
+        <figure>
+          <img src="images/01-empty-workspace.png" alt="ThesisForge 空工作区">
+          <figcaption>首次进入：点击右上角“打开”选择 Markdown 文稿。</figcaption>
+        </figure>
+
+        <h3>CLI 快速开始</h3>
+        <pre><code>python3.12 -m venv .venv
+.venv/bin/python -m pip install --upgrade pip
+make install
+
+.venv/bin/thesisforge inspect thesis.md
+.venv/bin/thesisforge validate thesis.md --template template.yaml
+.venv/bin/thesisforge build thesis.md --template template.yaml -o output/thesis.docx</code></pre>
+      </section>
+
+      <section id="workspace">
+        <p class="eyebrow">02 · Workbench</p>
+        <h2>认识工作台</h2>
+        <p>打开文稿后，左侧是论文大纲，中间是 Markdown 编辑器，右上是结构预览，右下是诊断结果。顶部负责打开、保存、验证、模板选择和构建。</p>
+        <figure>
+          <img src="images/02-workbench-overview.png" alt="ThesisForge 完整工作台">
+          <figcaption>结构预览用于检查语义和模板角色，不代表 Word 最终分页。</figcaption>
+        </figure>
+
+        <table>
+          <thead><tr><th>状态</th><th>含义与处理</th></tr></thead>
+          <tbody>
+            <tr><td>文稿有未保存修改</td><td>先保存，验证、模板切换和构建才会恢复。</td></tr>
+            <tr><td>构建已禁用</td><td>存在错误诊断，先在右下角定位并修复。</td></tr>
+            <tr><td>目标位置不可写</td><td>桌面端检查文件和目录权限，再恢复工作区。</td></tr>
+            <tr><td>构建完成</td><td>桌面端去 Markdown 同目录找 DOCX；Web 端当前只返回输出标识。</td></tr>
+          </tbody>
+        </table>
+
+        <h3>快捷键</h3>
+        <p><code>Cmd/Ctrl+K</code> 聚焦编辑器，<code>Cmd/Ctrl+S</code> 保存，<code>Cmd/Ctrl+B</code> 构建。</p>
+      </section>
+
+      <section id="markdown">
+        <p class="eyebrow">03 · Source</p>
+        <h2>编写论文 Markdown</h2>
+        <h3>最小文稿</h3>
+        <pre><code>---
+document:
+  type: master_thesis
+  language: zh-CN
+thesis:
+  title: "论文题目"
+author:
+  name: "张三"
+render:
+  template_id: "hut-master-2026"
+---
+
+# 绪论 {#chap:introduction}
+
+这里是正文。
+
+## 研究背景 {#sec:background}
+
+这里是研究背景。</code></pre>
+
+        <h3>常用语义对象</h3>
+        <details open>
+          <summary>图片与交叉引用</summary>
+          <div><pre><code>::: figure {#fig:architecture}
+src: "./images/architecture.png"
+caption: "系统总体架构"
+width: "85%"
+:::
+
+系统总体架构如 @fig:architecture 所示。</code></pre></div>
+        </details>
+        <details>
+          <summary>表格</summary>
+          <div><pre><code>::: table {#tbl:results}
+caption: "实验结果"
+
+| 模型 | 准确率 |
+| --- | ---: |
+| A | 91.2% |
+| B | 94.5% |
+
+:::</code></pre></div>
+        </details>
+        <details>
+          <summary>公式</summary>
+          <div><pre><code>::: equation {#eq:loss}
+$$
+L=-\sum_i y_i \log \hat y_i
+$$
+:::
+
+损失函数如 @eq:loss 所示。</code></pre></div>
+        </details>
+        <details>
+          <summary>引用、参考文献与脚注</summary>
+          <div><pre><code>已有研究提出该方法 [@smith2025]。[^note]
+
+# 参考文献 {#chap:bibliography}
+
+::: bibliography
+:::
+
+[^note]: 这是脚注正文。</code></pre></div>
+        </details>
+
+        <div class="callout">
+          图片和 BibTeX 默认相对 Markdown 文件解析，不能用 <code>..</code> 或符号链接越出允许目录。所有 <code>chap:</code>、<code>sec:</code>、<code>fig:</code>、<code>tbl:</code>、<code>eq:</code>、<code>alg:</code>、<code>lst:</code> ID 必须唯一。
+        </div>
+      </section>
+
+      <section id="template">
+        <p class="eyebrow">04 · Template</p>
+        <h2>选择学校模板</h2>
+        <p>工作台可显式选择基础本科和示例大学模板。HUT 或项目模板通过 Front Matter 声明，然后保持“使用文稿声明模板”。</p>
+        <pre><code>render:
+  template_id: "hut-master-2026"</code></pre>
+        <div class="callout">
+          HUT P0 YAML 是当前实现和验收使用的模板示例，不替代学校官方格式文件的最终审定。旧 wheel 或旧桌面包可能尚未包含它；出现 <code>missing-template</code> 时，把当前 YAML 放入项目 <code>templates/</code>，或重新构建当前版本安装包。
+        </div>
+        <figure>
+          <img src="images/03-template-selector.png" alt="学校模板选择器">
+          <figcaption>切换模板会重新验证并更新结构预览；有未保存修改时模板选择器会锁定。</figcaption>
+        </figure>
+
+        <h3>项目模板目录</h3>
+        <pre><code>my-thesis/
+├── thesis.md
+├── references.bib
+├── images/
+└── templates/
+    └── schools/
+        └── my-university/
+            └── 2026.yaml</code></pre>
+
+        <div class="callout">
+          当前工作台没有 YAML 编辑器，也没有任意模板路径选择按钮。需要显式路径时使用 CLI：<code>--template path/to/template.yaml</code>。
+        </div>
+      </section>
+
+      <section id="format">
+        <p class="eyebrow">05 · Formatting</p>
+        <h2>配置论文格式</h2>
+        <p>长度支持 <code>mm</code>、<code>cm</code>、<code>pt</code>、<code>em</code>。颜色使用不带 <code>#</code> 的 6 位十六进制。未知字段会被拒绝。</p>
+
+        <details open>
+          <summary>页面、页边距和正文</summary>
+          <div><pre><code>page:
+  size: A4
+  orientation: portrait
+  margin:
+    top: 25mm
+    bottom: 25mm
+    left: 30mm
+    right: 25mm
+  header_distance: 15mm
+  footer_distance: 17.5mm
+
+body:
+  font: {east_asia: 宋体, latin: Times New Roman}
+  size: 12pt
+  color: "000000"
+  alignment: justify
+  first_line_indent: 2em
+  space_before: 0pt
+  space_after: 0pt
+  line_spacing: {type: fixed, value: 20pt}</code></pre></div>
+        </details>
+
+        <details open>
+          <summary>标题颜色、顶格、段距和分页</summary>
+          <div><pre><code>heading:
+  level1:
+    font: {east_asia: 黑体, latin: Times New Roman}
+    size: 16pt
+    color: "000000"
+    bold: true
+    alignment: left
+    left_indent: 0pt
+    first_line_indent: 0pt
+    space_before: 0pt
+    space_after: 12pt
+    line_spacing: {type: fixed, value: 20pt}
+    keep_with_next: true
+    page_break_before: true
+    outline_level: 0</code></pre></div>
+        </details>
+
+        <details>
+          <summary>列表编号：把 iii 改成 III</summary>
+          <div><pre><code>list:
+  ordered:
+    levels:
+      - format: decimal
+        suffix: "、"
+        left_indent: 24pt
+        hanging_indent: 18pt
+      - format: upper_letter
+        prefix: "("
+        suffix: ")"
+        left_indent: 48pt
+        hanging_indent: 18pt
+      - format: upper_roman
+        prefix: "("
+        suffix: ")"
+        left_indent: 72pt
+        hanging_indent: 18pt</code></pre>
+          <p><code>lower_roman</code> 生成 i/ii/iii，<code>upper_roman</code> 生成 I/II/III。</p></div>
+        </details>
+
+        <details>
+          <summary>目录标题、层级和点引导符</summary>
+          <div><pre><code>toc:
+  title:
+    size: 16pt
+    color: "000000"
+    bold: true
+    alignment: center
+  level1:
+    size: 12pt
+    left_indent: 0pt
+    first_line_indent: 0pt
+    page_number_tab: 155mm
+    leader: dots
+  level2:
+    size: 12pt
+    left_indent: 1em
+    page_number_tab: 155mm
+    leader: dots
+  level3:
+    size: 12pt
+    left_indent: 2em
+    page_number_tab: 155mm
+    leader: dots</code></pre></div>
+        </details>
+
+        <details>
+          <summary>前置部分大写罗马页码，正文从 1 开始</summary>
+          <div><pre><code>sections:
+  cover:
+    page_number:
+      format: none
+  front_matter:
+    start: new_page
+    page_number:
+      format: roman-upper
+      restart: 1
+      display:
+        alignment: center
+        page_prefix: ""
+        page_suffix: ""
+        include_total: false
+  main:
+    start: odd_page
+    page_number:
+      format: decimal
+      restart: 1
+      display:
+        alignment: center
+        page_prefix: ""
+        page_suffix: ""
+        include_total: false</code></pre></div>
+        </details>
+
+        <details>
+          <summary>页眉页脚、图表公式和参考文献</summary>
+          <div><pre><code>sections:
+  main:
+    header:
+      default:
+        enabled: true
+        text: 湖南工业大学硕士学位论文
+        style: {size: 10.5pt, alignment: center}
+      even:
+        enabled: true
+        text: HUNAN UNIVERSITY OF TECHNOLOGY
+      first:
+        enabled: false
+    footer:
+      default:
+        enabled: true
+        page_number:
+          alignment: center
+          page_prefix: ""
+          page_suffix: ""
+          include_total: false
+
+figure:
+  numbering: {mode: chapter, separator: "-"}
+  caption: {position: bottom, prefix: 图, size: 10.5pt, alignment: center}
+table:
+  style: three_line
+  numbering: {mode: chapter, separator: "-"}
+  caption: {position: top, prefix: 表, size: 10.5pt, alignment: center}
+equation:
+  numbering: {mode: chapter, separator: "-"}
+  alignment: center
+
+bibliography:
+  title: {size: 16pt, bold: true, alignment: center}
+  entry:
+    size: 10.5pt
+    hanging_indent: 2em
+    line_spacing: {type: fixed, value: 20pt}
+citation:
+  style: GB-T-7714-2025
+  presentation: superscript</code></pre></div>
+        </details>
+      </section>
+
+      <section id="validate">
+        <p class="eyebrow">06 · Validation</p>
+        <h2>验证并修复问题</h2>
+        <ol>
+          <li>编辑后先保存。</li>
+          <li>点击“验证”。</li>
+          <li>在右下角筛选错误、警告或提示。</li>
+          <li>点击问题跳到对应行。</li>
+          <li>修复后再次保存和验证。</li>
+        </ol>
+        <figure>
+          <img src="images/06-diagnostics.png" alt="缺失引用诊断">
+          <figcaption><code>missing-reference</code> 表示正文引用了不存在的目标，构建会被禁用。</figcaption>
+        </figure>
+
+        <table>
+          <thead><tr><th>问题</th><th>处理</th></tr></thead>
+          <tbody>
+            <tr><td><code>missing-reference</code></td><td>补充对象或修正引用 ID。</td></tr>
+            <tr><td><code>duplicate-id</code></td><td>修改重复 ID。</td></tr>
+            <tr><td><code>missing-image</code></td><td>检查图片路径和文件名。</td></tr>
+            <tr><td><code>resource-path-escape</code></td><td>把资源放回论文允许目录。</td></tr>
+            <tr><td><code>missing-template-style</code></td><td>在模板中补充对应语义样式。</td></tr>
+          </tbody>
+        </table>
+
+        <p>窄屏使用“大纲 / 编辑 / 预览 / 诊断”标签切换面板。</p>
+      </section>
+
+      <section id="build">
+        <p class="eyebrow">07 · Build</p>
+        <h2>构建并取得 DOCX</h2>
+        <p>文稿已保存且错误为 0 时，点击“构建 DOCX”。进度依次经过解析、验证、编译、渲染和完成。</p>
+        <figure>
+          <img src="images/04-build-progress.png" alt="DOCX 构建进度">
+          <figcaption>构建期间可以取消；失败或取消不应覆盖上一份有效 DOCX。</figcaption>
+        </figure>
+        <figure>
+          <img src="images/05-build-complete.png" alt="DOCX 构建完成">
+          <figcaption>底部显示输出文件名。桌面端文件位于 Markdown 同目录。</figcaption>
+        </figure>
+
+        <h3>桌面端输出</h3>
+        <pre><code>/path/to/thesis.md
+/path/to/thesis.docx</code></pre>
+
+        <h3>CLI 输出</h3>
+        <pre><code>.venv/bin/thesisforge build thesis.md \
+  --template templates/schools/my-university/2026.yaml \
+  -o output/thesis.docx</code></pre>
+
+        <div class="callout danger">
+          Web 端当前没有可点击下载动作。看到文件名只表示服务端工作区已生成输出，不表示浏览器已下载。
+        </div>
+      </section>
+
+      <section id="toc-update">
+        <p class="eyebrow">08 · Office</p>
+        <h2>更新自动目录和页码</h2>
+        <p>ThesisForge 生成真实 TOC 和 PAGE 字段。构建服务会尝试用本机 LibreOffice 预填目录；不可用时仍保留可在 Office 中更新的字段。桌面端最终版式预览优先由 Microsoft Word 生成 PDF，Word 不可用时降级到 LibreOffice；Web 自动预览使用 LibreOffice。</p>
+        <figure class="portrait">
+          <img src="images/08-docx-toc-page.png" alt="自动目录与大写罗马页码">
+          <figcaption>真实目录字段，前置页使用大写罗马页码 I、II、III。</figcaption>
+        </figure>
+
+        <h3>Word / WPS</h3>
+        <ol>
+          <li>打开 DOCX。</li>
+          <li>点击目录并右键。</li>
+          <li>选择“更新域”或“更新目录”。</li>
+          <li>选择“更新整个目录”。</li>
+        </ol>
+
+        <figure>
+          <img src="images/10-wps-toc-updated.png" alt="WPS 更新后的目录">
+          <figcaption>WPS 更新后的目录验收。</figcaption>
+        </figure>
+      </section>
+
+      <section id="platforms">
+        <p class="eyebrow">09 · Platforms</p>
+        <h2>平台差异</h2>
+        <table>
+          <thead><tr><th>能力</th><th>Web</th><th>macOS</th><th>Windows</th></tr></thead>
+          <tbody>
+            <tr><td>Markdown 保存</td><td>服务端工作区副本</td><td>原始本地文件</td><td>原始本地文件</td></tr>
+            <tr><td>DOCX 输出</td><td>服务端工作区</td><td>Markdown 同目录</td><td>Markdown 同目录</td></tr>
+            <tr><td>直接下载</td><td>当前未接通</td><td>不需要</td><td>不需要</td></tr>
+            <tr><td>编译核心</td><td>Python HTTP adapter</td><td>Tauri + sidecar</td><td>Tauri + sidecar</td></tr>
+            <tr><td>离线</td><td>取决于部署</td><td>支持</td><td>支持</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="troubleshooting">
+        <p class="eyebrow">10 · Troubleshooting</p>
+        <h2>常见问题</h2>
+        <details open>
+          <summary>保存后电脑上的 Markdown 没变化</summary>
+          <div><p>Web 保存的是服务端工作区副本。需要直接写回本地文件时使用桌面端或本地编辑器。</p></div>
+        </details>
+        <details>
+          <summary>模板下拉框没有我的学校</summary>
+          <div><p>把模板放到项目 <code>templates/</code>，在 Front Matter 写 <code>render.template_id</code>，并选择“使用文稿声明模板”。任意模板路径使用 CLI <code>--template</code>。</p></div>
+        </details>
+        <details>
+          <summary>目录为空或页码没有更新</summary>
+          <div><p>在 Word/WPS 中更新整个目录，或安装兼容的 LibreOffice 让构建服务自动刷新。</p></div>
+        </details>
+        <details>
+          <summary>标题没有顶格、颜色不对</summary>
+          <div><pre><code>heading:
+  level1:
+    color: "000000"
+    alignment: left
+    left_indent: 0pt
+    first_line_indent: 0pt</code></pre></div>
+        </details>
+        <details>
+          <summary>首行缩进、段前段后和行距能否配置</summary>
+          <div><pre><code>first_line_indent: 2em
+space_before: 0pt
+space_after: 0pt
+line_spacing:
+  type: fixed
+  value: 20pt</code></pre></div>
+        </details>
+      </section>
+
+      <section id="checklist">
+        <p class="eyebrow">11 · Final Review</p>
+        <h2>提交前检查</h2>
+        <ul class="checklist">
+          <li>Front Matter 元数据完整。</li>
+          <li>学校模板 ID 正确。</li>
+          <li>图表公式和章节 ID 唯一。</li>
+          <li>交叉引用全部可解析。</li>
+          <li>图片和 BibTeX 路径有效。</li>
+          <li>验证结果无错误。</li>
+          <li>正文缩进、段距和行距正确。</li>
+          <li>标题颜色、顶格和分页正确。</li>
+          <li>目录层级和页码正确。</li>
+          <li>前置页罗马数字大小写正确。</li>
+          <li>页眉页脚和奇偶页正确。</li>
+          <li>最终 DOCX 已在目标 Office 中检查。</li>
+        </ul>
+
+        <h3>权威参考</h3>
+        <ul>
+          <li><code>docs/MARKDOWN_SPEC.md</code></li>
+          <li><code>docs/TEMPLATE_SPEC.md</code></li>
+          <li><code>examples/complete-thesis/thesis.md</code></li>
+          <li><code>templates/schools/hunan-university-of-technology/master-2026.yaml</code></li>
+        </ul>
+      </section>
+    </main>
+  </div>
+
+  <footer>ThesisForge 用户操作手册 · 本地优先、确定性、模板驱动</footer>
+</body>
+</html>
