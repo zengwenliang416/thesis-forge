@@ -27,13 +27,6 @@ render:
   template_id: "hut-master-2026"
   bibliography: "./references.bib"
   citation_style: "GB-T-7714-2025"
-sections:
-  abstract_zh: true
-  abstract_en: true
-  toc: true
-  references: true
-  acknowledgements: true
-  appendices: true
 ---
 
 # 摘要 {#chap:abstract-zh}
