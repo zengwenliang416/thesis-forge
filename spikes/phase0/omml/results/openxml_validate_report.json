@@ -1,0 +1,76 @@
+{
+  "file": "/Volumes/zwl/open_sources/thesis-forge/spikes/phase0/omml/output/sample.docx",
+  "ok": true,
+  "summary": {
+    "total": 13,
+    "passed": 13,
+    "failed": 0
+  },
+  "checks": [
+    {
+      "name": "zip_integrity",
+      "status": "pass",
+      "details": []
+    },
+    {
+      "name": "content_types",
+      "status": "pass",
+      "details": []
+    },
+    {
+      "name": "relationship_targets",
+      "status": "pass",
+      "details": []
+    },
+    {
+      "name": "duplicate_relationship_ids",
+      "status": "pass",
+      "details": []
+    },
+    {
+      "name": "xml_wellformed",
+      "status": "pass",
+      "details": []
+    },
+    {
+      "name": "document_root",
+      "status": "pass",
+      "details": []
+    },
+    {
+      "name": "bookmark_pairing",
+      "status": "pass",
+      "details": []
+    },
+    {
+      "name": "field_pairing",
+      "status": "pass",
+      "details": []
+    },
+    {
+      "name": "media_relationships",
+      "status": "pass",
+      "details": []
+    },
+    {
+      "name": "section_properties",
+      "status": "pass",
+      "details": []
+    },
+    {
+      "name": "style_references",
+      "status": "pass",
+      "details": []
+    },
+    {
+      "name": "numbering_references",
+      "status": "pass",
+      "details": []
+    },
+    {
+      "name": "footnote_references",
+      "status": "pass",
+      "details": []
+    }
+  ]
+}

@@ -7,15 +7,21 @@ from docx.oxml.ns import qn
 from thesis_forge.core.math import (
     LatexMathConverter,
     MathAccent,
+    MathBinomial,
     MathConverter,
+    MathDelimiter,
+    MathEquationArray,
     MathFraction,
     MathFunction,
+    MathLimitFunction,
     MathLiteral,
+    MathMatrix,
     MathNary,
     MathNode,
     MathRadical,
     MathScript,
     MathSequence,
+    MathTextRun,
 )
 from thesis_forge.core.render_plan import EquationInstruction
 
@@ -23,13 +29,87 @@ from .bookmarks import end_bookmark, start_bookmark
 from .fields import add_complex_field
 from .styles import ALIGNMENTS
 
+XML_SPACE = "{http://www.w3.org/XML/1998/namespace}space"
 
-def _math_run(text: str):
+ACCENT_CHARACTERS = {
+    "hat": "^",
+    "bar": "¯",
+    "vec": "→",
+    "dot": "˙",
+    "ddot": "¨",
+    "tilde": "~",
+}
+
+
+def _math_run(text: str, *, upright: bool = False, normal: bool = False):
     run = OxmlElement("m:r")
+    if upright or normal:
+        properties = OxmlElement("m:rPr")
+        if normal:
+            properties.append(OxmlElement("m:nor"))
+        style = OxmlElement("m:sty")
+        style.set(qn("m:val"), "p")
+        properties.append(style)
+        run.append(properties)
     value = OxmlElement("m:t")
+    if text != text.strip():
+        value.set(XML_SPACE, "preserve")
     value.text = text
     run.append(value)
     return run
+
+
+def _wrap_delimiter(left: str | None, right: str | None, element):
+    """Wrap the prepared m:e ``element`` in a growing m:d pair (``None`` hides a side)."""
+    delimiter = OxmlElement("m:d")
+    properties = OxmlElement("m:dPr")
+    begin = OxmlElement("m:begChr")
+    begin.set(qn("m:val"), left or "")
+    properties.append(begin)
+    separator = OxmlElement("m:sepChr")
+    separator.set(qn("m:val"), "")
+    properties.append(separator)
+    end = OxmlElement("m:endChr")
+    end.set(qn("m:val"), right or "")
+    properties.append(end)
+    properties.append(OxmlElement("m:grow"))
+    delimiter.append(properties)
+    delimiter.append(element)
+    return delimiter
+
+
+def _build_matrix(node: MathMatrix):
+    matrix = OxmlElement("m:m")
+    properties = OxmlElement("m:mPr")
+    base_alignment = OxmlElement("m:baseJc")
+    base_alignment.set(qn("m:val"), "center")
+    properties.append(base_alignment)
+    placeholder_hidden = OxmlElement("m:plcHide")
+    placeholder_hidden.set(qn("m:val"), "on")
+    properties.append(placeholder_hidden)
+    columns = OxmlElement("m:mcs")
+    column_count = max(len(row) for row in node.rows)
+    for _ in range(column_count):
+        column = OxmlElement("m:mc")
+        column_properties = OxmlElement("m:mcPr")
+        column_alignment = OxmlElement("m:mcJc")
+        column_alignment.set(qn("m:val"), node.column_alignment)
+        column_properties.append(column_alignment)
+        count = OxmlElement("m:count")
+        count.set(qn("m:val"), "1")
+        column_properties.append(count)
+        column.append(column_properties)
+        columns.append(column)
+    properties.append(columns)
+    matrix.append(properties)
+    for row in node.rows:
+        matrix_row = OxmlElement("m:mr")
+        for cell in row:
+            element = OxmlElement("m:e")
+            _append_math(element, cell)
+            matrix_row.append(element)
+        matrix.append(matrix_row)
+    return matrix
 
 
 def _append_math(parent, node: MathNode) -> None:
@@ -40,6 +120,15 @@ def _append_math(parent, node: MathNode) -> None:
         for item in node.items:
             _append_math(parent, item)
         return
+    if isinstance(node, MathTextRun):
+        parent.append(
+            _math_run(
+                node.text,
+                normal=node.style == "text",
+                upright=node.style == "mathrm",
+            )
+        )
+        return
     if isinstance(node, MathFraction):
         fraction = OxmlElement("m:f")
         numerator = OxmlElement("m:num")
@@ -48,6 +137,22 @@ def _append_math(parent, node: MathNode) -> None:
         _append_math(denominator, node.denominator)
         fraction.extend((numerator, denominator))
         parent.append(fraction)
+        return
+    if isinstance(node, MathBinomial):
+        fraction = OxmlElement("m:f")
+        properties = OxmlElement("m:fPr")
+        fraction_type = OxmlElement("m:type")
+        fraction_type.set(qn("m:val"), "noBar")
+        properties.append(fraction_type)
+        fraction.append(properties)
+        numerator = OxmlElement("m:num")
+        denominator = OxmlElement("m:den")
+        _append_math(numerator, node.top)
+        _append_math(denominator, node.bottom)
+        fraction.extend((numerator, denominator))
+        element = OxmlElement("m:e")
+        element.append(fraction)
+        parent.append(_wrap_delimiter("(", ")", element))
         return
     if isinstance(node, MathRadical):
         radical = OxmlElement("m:rad")
@@ -109,6 +214,28 @@ def _append_math(parent, node: MathNode) -> None:
         nary.append(OxmlElement("m:e"))
         parent.append(nary)
         return
+    if isinstance(node, MathLimitFunction):
+        current = _math_run(node.name, upright=True)
+        if node.upper is not None:
+            limit_upper = OxmlElement("m:limUpp")
+            element = OxmlElement("m:e")
+            element.append(current)
+            limit_upper.append(element)
+            limit = OxmlElement("m:lim")
+            _append_math(limit, node.upper)
+            limit_upper.append(limit)
+            current = limit_upper
+        if node.lower is not None:
+            limit_lower = OxmlElement("m:limLow")
+            element = OxmlElement("m:e")
+            element.append(current)
+            limit_lower.append(element)
+            limit = OxmlElement("m:lim")
+            _append_math(limit, node.lower)
+            limit_lower.append(limit)
+            current = limit_lower
+        parent.append(current)
+        return
     if isinstance(node, MathFunction):
         function = OxmlElement("m:func")
         name = OxmlElement("m:fName")
@@ -122,12 +249,39 @@ def _append_math(parent, node: MathNode) -> None:
         accent = OxmlElement("m:acc")
         properties = OxmlElement("m:accPr")
         character = OxmlElement("m:chr")
-        character.set(qn("m:val"), "^" if node.kind == "hat" else "¯")
+        character.set(qn("m:val"), ACCENT_CHARACTERS[node.kind])
         properties.append(character)
         element = OxmlElement("m:e")
         _append_math(element, node.base)
         accent.extend((properties, element))
         parent.append(accent)
+        return
+    if isinstance(node, MathDelimiter):
+        element = OxmlElement("m:e")
+        _append_math(element, node.body)
+        parent.append(_wrap_delimiter(node.left, node.right, element))
+        return
+    if isinstance(node, MathMatrix):
+        matrix = _build_matrix(node)
+        if node.left is None and node.right is None:
+            parent.append(matrix)
+            return
+        element = OxmlElement("m:e")
+        element.append(matrix)
+        parent.append(_wrap_delimiter(node.left, node.right, element))
+        return
+    if isinstance(node, MathEquationArray):
+        array = OxmlElement("m:eqArr")
+        for row in node.rows:
+            element = OxmlElement("m:e")
+            for index, cell in enumerate(row):
+                if index:
+                    # OMML alignment marker inside an equation array row,
+                    # same convention as pandoc/texmath output.
+                    element.append(_math_run("&"))
+                _append_math(element, cell)
+            array.append(element)
+        parent.append(array)
         return
     raise TypeError(f"Unsupported math node: {type(node).__name__}")
 
@@ -136,12 +290,26 @@ def render_equation(
     document: DocumentObject,
     instruction: EquationInstruction,
     converter: MathConverter | None = None,
+    *,
+    omml_provider=None,
 ) -> None:
-    expression = (converter or LatexMathConverter()).convert(instruction.latex)
+    """渲染公式段落（OMML + 编号/书签/SEQ 字段包装，包装点不迁移）。
+
+    ``omml_provider`` 显式传入可选外部 provider（ADR-0003 §2.4，如
+    ``PandocMathProvider``）时，``m:oMath`` 片段改由 provider 产出，
+    AST 转换路径（``converter``/``LatexMathConverter``）跳过；其余包装
+    （对齐、书签、SEQ ``\\r`` 钉值、题注）两条链路完全一致。默认 None
+    走离线确定性内建引擎，编译路径不依赖任何外部可执行文件。
+    """
+
     paragraph = document.add_paragraph()
     paragraph.alignment = ALIGNMENTS[instruction.alignment]
-    math = OxmlElement("m:oMath")
-    _append_math(math, expression.root)
+    if omml_provider is not None:
+        math = omml_provider.convert_to_omml(instruction.latex, display=True)
+    else:
+        expression = (converter or LatexMathConverter()).convert(instruction.latex)
+        math = OxmlElement("m:oMath")
+        _append_math(math, expression.root)
     paragraph._p.append(math)
 
     if instruction.sequence is not None or instruction.label:

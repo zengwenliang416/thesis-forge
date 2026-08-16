@@ -61,11 +61,14 @@ exclude = ["**/._*", "**/__pycache__", "**/*.pyc"]
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 python_files = ["test_*.py"]
+markers = [
+    "slow: 需要本机外部工具或较长运行时间的用例（如真 pandoc 渲染）",
+]
 
 [tool.ruff]
 line-length = 100
 target-version = "py311"
-extend-exclude = ["**/._*"]
+extend-exclude = ["**/._*", "tmp"]
 
 [tool.ruff.lint]
 ignore = ["EXE002"]

@@ -1,0 +1,365 @@
+{
+  "summary": {
+    "latex2mathml_version": "3.81.0",
+    "xsl": "assets/MML2OMML.XSL (Microsoft Office 版，XSLT 1.0，镜像自 PaddlePaddle/PaddleX)",
+    "total": 50,
+    "mathml_success": 50,
+    "mathml_coverage": 1.0,
+    "omml_success": 49,
+    "omml_coverage": 0.98,
+    "mathml_failures": []
+  },
+  "entries": [
+    {
+      "id": "eq01-arith-frac",
+      "latex": "a + b - c = \\frac{a \\cdot b}{c} \\times 2",
+      "mathml_status": "success",
+      "omml_status": "success",
+      "omml_omath_count": 1
+    },
+    {
+      "id": "eq02-frac-nested",
+      "latex": "\\frac{\\frac{a+b}{c+d}}{\\frac{x}{y} + 1}",
+      "mathml_status": "success",
+      "omml_status": "success",
+      "omml_omath_count": 1
+    },
+    {
+      "id": "eq03-quadratic",
+      "latex": "x = \\frac{-b \\pm \\sqrt{b^2 - 4ac}}{2a}",
+      "mathml_status": "success",
+      "omml_status": "success",
+      "omml_omath_count": 1
+    },
+    {
+      "id": "eq04-stddev",
+      "latex": "\\sigma = \\sqrt{\\frac{1}{N} \\sum_{i=1}^{N} (x_i - \\mu)^2}",
+      "mathml_status": "success",
+      "omml_status": "success",
+      "omml_omath_count": 1
+    },
+    {
+      "id": "eq05-emc2",
+      "latex": "E = mc^2",
+      "mathml_status": "success",
+      "omml_status": "success",
+      "omml_omath_count": 1
+    },
+    {
+      "id": "eq06-dl-weight",
+      "latex": "w_{ij}^{(l)} = w_{ij}^{(l)} - \\eta g_{ij}",
+      "mathml_status": "success",
+      "omml_status": "success",
+      "omml_omath_count": 1
+    },
+    {
+      "id": "eq07-gauss-kernel",
+      "latex": "K(x_i, x_j) = e^{-\\frac{d_{ij}^2}{2\\sigma^2}}",
+      "mathml_status": "success",
+      "omml_status": "success",
+      "omml_omath_count": 1
+    },
+    {
+      "id": "eq08-sum-gauss",
+      "latex": "\\sum_{i=1}^{n} i = \\frac{n(n+1)}{2}",
+      "mathml_status": "success",
+      "omml_status": "success",
+      "omml_omath_count": 1
+    },
+    {
+      "id": "eq09-sum-double",
+      "latex": "\\sum_{i=1}^{m} \\sum_{j=1}^{n} a_{ij} = \\sum_{j=1}^{n} \\sum_{i=1}^{m} a_{ij}",
+      "mathml_status": "success",
+      "omml_status": "success",
+      "omml_omath_count": 1
+    },
+    {
+      "id": "eq10-entropy",
+      "latex": "H(X) = -\\sum_{i=1}^{n} p(x_i) \\log p(x_i)",
+      "mathml_status": "success",
+      "omml_status": "success",
+      "omml_omath_count": 1
+    },
+    {
+      "id": "eq11-int-newton",
+      "latex": "\\int_{a}^{b} f(x) dx = F(b) - F(a)",
+      "mathml_status": "success",
+      "omml_status": "success",
+      "omml_omath_count": 1
+    },
+    {
+      "id": "eq12-fourier",
+      "latex": "X(\\omega) = \\int_{-\\infty}^{\\infty} x(t) e^{-j\\omega t} dt",
+      "mathml_status": "success",
+      "omml_status": "success",
+      "omml_omath_count": 1
+    },
+    {
+      "id": "eq13-prod-likelihood",
+      "latex": "L(\\theta) = \\prod_{i=1}^{n} f(x_i; \\theta)",
+      "mathml_status": "success",
+      "omml_status": "success",
+      "omml_omath_count": 1
+    },
+    {
+      "id": "eq14-lim-e",
+      "latex": "\\lim_{n \\to \\infty} (1 + \\frac{1}{n})^n = e",
+      "mathml_status": "success",
+      "omml_status": "success",
+      "omml_omath_count": 1
+    },
+    {
+      "id": "eq15-greek-basic",
+      "latex": "\\alpha \\cos \\theta + \\beta \\sin \\theta = \\gamma",
+      "mathml_status": "success",
+      "omml_status": "success",
+      "omml_omath_count": 1
+    },
+    {
+      "id": "eq16-greek-extended",
+      "latex": "\\nu \\tau \\chi \\psi \\varepsilon \\varphi",
+      "mathml_status": "success",
+      "omml_status": "success",
+      "omml_omath_count": 1
+    },
+    {
+      "id": "eq17-greek-mechanics",
+      "latex": "\\sum F = ma, \\sum M = I \\alpha",
+      "mathml_status": "success",
+      "omml_status": "success",
+      "omml_omath_count": 1
+    },
+    {
+      "id": "eq18-pmatrix",
+      "latex": "A = \\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix}",
+      "mathml_status": "success",
+      "omml_status": "success",
+      "omml_omath_count": 1
+    },
+    {
+      "id": "eq19-bmatrix-det",
+      "latex": "\\det A = \\begin{vmatrix} a & b \\\\ c & d \\end{vmatrix} = ad - bc",
+      "mathml_status": "success",
+      "omml_status": "success",
+      "omml_omath_count": 1
+    },
+    {
+      "id": "eq20-cases",
+      "latex": "f(x) = \\begin{cases} x^2, & x \\geq 0 \\\\ -x, & x < 0 \\end{cases}",
+      "mathml_status": "success",
+      "omml_status": "success",
+      "omml_omath_count": 1
+    },
+    {
+      "id": "eq21-aligned",
+      "latex": "\\begin{aligned} y &= ax + b \\\\ &= c \\end{aligned}",
+      "mathml_status": "success",
+      "omml_status": "failed",
+      "error_type": "XMLSyntaxError",
+      "message": "xmlParseEntityRef: no name, line 1, column 94 (<string>, line 1)"
+    },
+    {
+      "id": "eq22-multiline-bare",
+      "latex": "y = a + b \\\\ z = c + d",
+      "mathml_status": "success",
+      "omml_status": "success",
+      "omml_omath_count": 1
+    },
+    {
+      "id": "eq23-trig-identity",
+      "latex": "\\sin^2 \\theta + \\cos^2 \\theta = 1",
+      "mathml_status": "success",
+      "omml_status": "success",
+      "omml_omath_count": 1
+    },
+    {
+      "id": "eq24-log-decay",
+      "latex": "\\ln \\frac{N}{N_0} = -kt",
+      "mathml_status": "success",
+      "omml_status": "success",
+      "omml_omath_count": 1
+    },
+    {
+      "id": "eq25-exp-braced",
+      "latex": "\\exp{(-\\lambda t)} = e^{-\\lambda t}",
+      "mathml_status": "success",
+      "omml_status": "success",
+      "omml_omath_count": 1
+    },
+    {
+      "id": "eq26-log-sub",
+      "latex": "T(n) = O(n \\log_2 n)",
+      "mathml_status": "success",
+      "omml_status": "success",
+      "omml_omath_count": 1
+    },
+    {
+      "id": "eq27-hat-reg",
+      "latex": "\\hat y = \\beta_0 + \\beta_1 x",
+      "mathml_status": "success",
+      "omml_status": "success",
+      "omml_omath_count": 1
+    },
+    {
+      "id": "eq28-bar-mean",
+      "latex": "\\bar x = \\frac{1}{n} \\sum_{i=1}^{n} x_i",
+      "mathml_status": "success",
+      "omml_status": "success",
+      "omml_omath_count": 1
+    },
+    {
+      "id": "eq29-vec-force",
+      "latex": "\\vec F = m \\vec a",
+      "mathml_status": "success",
+      "omml_status": "success",
+      "omml_omath_count": 1
+    },
+    {
+      "id": "eq30-dot-vibration",
+      "latex": "m \\ddot x + c \\dot x + k x = F(t)",
+      "mathml_status": "success",
+      "omml_status": "success",
+      "omml_omath_count": 1
+    },
+    {
+      "id": "eq31-leftright-frac",
+      "latex": "\\left( \\frac{a+b}{c} \\right)^2",
+      "mathml_status": "success",
+      "omml_status": "success",
+      "omml_omath_count": 1
+    },
+    {
+      "id": "eq32-leftright-norm",
+      "latex": "\\left\\| x \\right\\|_2 = \\sqrt{\\sum_{i=1}^{n} x_i^2}",
+      "mathml_status": "success",
+      "omml_status": "success",
+      "omml_omath_count": 1
+    },
+    {
+      "id": "eq33-mathrm-diff",
+      "latex": "\\frac{\\mathrm{d} y}{\\mathrm{d} x} = 2x",
+      "mathml_status": "success",
+      "omml_status": "success",
+      "omml_omath_count": 1
+    },
+    {
+      "id": "eq34-text-note",
+      "latex": "F = ma, \\text{其中 } m \\text{ 为质量}",
+      "mathml_status": "success",
+      "omml_status": "success",
+      "omml_omath_count": 1
+    },
+    {
+      "id": "eq35-mse",
+      "latex": "\\mathrm{MSE} = \\frac{1}{n} \\sum_{i=1}^{n} (y_i - \\hat y_i)^2",
+      "mathml_status": "success",
+      "omml_status": "success",
+      "omml_omath_count": 1
+    },
+    {
+      "id": "eq36-ops-supported",
+      "latex": "a \\cdot b \\times c \\leq d \\neq e \\geq f \\pm g",
+      "mathml_status": "success",
+      "omml_status": "success",
+      "omml_omath_count": 1
+    },
+    {
+      "id": "eq37-set-ops",
+      "latex": "A \\subset B, x \\in A \\Rightarrow x \\in B",
+      "mathml_status": "success",
+      "omml_status": "success",
+      "omml_omath_count": 1
+    },
+    {
+      "id": "eq38-approx-propto",
+      "latex": "\\hat \\theta \\approx \\theta, \\sigma \\propto \\frac{1}{\\sqrt{n}}",
+      "mathml_status": "success",
+      "omml_status": "success",
+      "omml_omath_count": 1
+    },
+    {
+      "id": "eq39-nabla-grad",
+      "latex": "\\nabla L = \\left( \\frac{\\partial L}{\\partial w_1}, \\frac{\\partial L}{\\partial w_2} \\right)",
+      "mathml_status": "success",
+      "omml_status": "success",
+      "omml_omath_count": 1
+    },
+    {
+      "id": "eq40-partial-bp",
+      "latex": "\\frac{\\partial L}{\\partial w_{ij}} = \\delta_j x_i",
+      "mathml_status": "success",
+      "omml_status": "success",
+      "omml_omath_count": 1
+    },
+    {
+      "id": "eq41-sim-dist",
+      "latex": "x \\sim N(\\mu, \\sigma^2)",
+      "mathml_status": "success",
+      "omml_status": "success",
+      "omml_omath_count": 1
+    },
+    {
+      "id": "eq42-forall-exists",
+      "latex": "\\forall \\epsilon > 0, \\exists \\delta > 0",
+      "mathml_status": "success",
+      "omml_status": "success",
+      "omml_omath_count": 1
+    },
+    {
+      "id": "eq43-cross-entropy",
+      "latex": "L = -\\frac{1}{N} \\sum_{i=1}^{N} \\sum_{c=1}^{C} y_{ic} \\log p_{ic}",
+      "mathml_status": "success",
+      "omml_status": "success",
+      "omml_omath_count": 1
+    },
+    {
+      "id": "eq44-matrix-mult",
+      "latex": "c_{ij} = \\sum_{k=1}^{n} a_{ik} b_{kj}",
+      "mathml_status": "success",
+      "omml_status": "success",
+      "omml_omath_count": 1
+    },
+    {
+      "id": "eq45-eigen",
+      "latex": "A v = \\lambda v",
+      "mathml_status": "success",
+      "omml_status": "success",
+      "omml_omath_count": 1
+    },
+    {
+      "id": "eq46-bayes",
+      "latex": "P(A|B) = \\frac{P(B|A) P(A)}{P(B)}",
+      "mathml_status": "success",
+      "omml_status": "success",
+      "omml_omath_count": 1
+    },
+    {
+      "id": "eq47-cost-lr",
+      "latex": "J(\\theta) = \\frac{1}{2m} \\sum_{i=1}^{m} (h(x_i) - y_i)^2",
+      "mathml_status": "success",
+      "omml_status": "success",
+      "omml_omath_count": 1
+    },
+    {
+      "id": "eq48-binom",
+      "latex": "\\binom{n}{k} = \\frac{n!}{k!(n-k)!}",
+      "mathml_status": "success",
+      "omml_status": "success",
+      "omml_omath_count": 1
+    },
+    {
+      "id": "eq49-inline-complexity",
+      "latex": "O(n \\log n)",
+      "mathml_status": "success",
+      "omml_status": "success",
+      "omml_omath_count": 1
+    },
+    {
+      "id": "eq50-inline-slope",
+      "latex": "k = \\frac{y_2 - y_1}{x_2 - x_1}",
+      "mathml_status": "success",
+      "omml_status": "success",
+      "omml_omath_count": 1
+    }
+  ]
+}

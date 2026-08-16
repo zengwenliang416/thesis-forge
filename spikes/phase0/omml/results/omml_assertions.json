@@ -1,0 +1,421 @@
+{
+  "display_equations_included": 47,
+  "inline_formulas": [
+    "eq49-inline-complexity",
+    "eq50-inline-slope"
+  ],
+  "skipped_by_subset": [
+    {
+      "id": "eq22-multiline-bare",
+      "reason": "Bare \\\\ line break is only supported inside matrix/cases/aligned environments"
+    }
+  ],
+  "pipeline": {
+    "equation_instructions": 47,
+    "validation_issue_count": 0
+  },
+  "openxml_validate": {
+    "exit_code": 0,
+    "report_path": "/Volumes/zwl/open_sources/thesis-forge/spikes/phase0/omml/results/openxml_validate_report.json",
+    "stdout": "{\n  \"file\": \"/Volumes/zwl/open_sources/thesis-forge/spikes/phase0/omml/output/sample.docx\",\n  \"ok\": true,\n  \"summary\": {\n    \"total\": 13,\n    \"passed\": 13,\n    \"failed\": 0\n  },\n  \"checks\": [\n    {\n      \"name\": \"zip_integrity\",\n      \"status\": \"pass\",\n      \"details\": []\n    },\n    {\n      \"name\": \"content_types\",\n      \"status\": \"pass\",\n      \"details\": []\n    },\n    {\n      \"name\": \"relationship_targets\",\n      \"status\": \"pass\",\n      \"details\": []\n    },\n    {\n      \"name\": \"duplicate_relationship_ids\",\n      \"status\": \"pass\",\n      \"details\": []\n    },\n    {\n      \"name\": \"xml_wellformed\",\n      \"status\": \"pass\",\n      \"details\": []\n    },\n    {\n      \"name\": \"document_root\",\n      \"status\": \"pass\",\n      \"details\": []\n    },\n    {\n      \"name\": \"bookmark_pairing\",\n      \"status\": \"pass\",\n      \"details\": []\n    },\n    {\n      \"name\": \"field_pairing\",\n      \"status\": \"pass\",\n      \"details\": []\n    },\n    {\n      \"name\": \"media_relationships\",\n      \"status\": \"pass\",\n      \"details\": []\n    },\n    {\n      \"name\": \"section_properties\",\n      \"status\": \"pass\",\n      \"details\": []\n    },\n    {\n      \"name\": \"style_references\",\n      \"status\": \"pass\",\n      \"details\": []\n    },\n    {\n      \"name\": \"numbering_references\",\n      \"status\": \"pass\",\n      \"details\": []\n    },\n    {\n      \"name\": \"footnote_references\",\n      \"status\": \"pass\",\n      \"details\": []\n    }\n  ]\n}",
+    "stderr": null
+  },
+  "assertions": {
+    "omath_total": 47,
+    "omath_expected": 47,
+    "seq_equation_field_count": 47,
+    "bookmark_total": 49,
+    "per_equation": [
+      {
+        "id": "eq01-arith-frac",
+        "bookmark": "tf_eq_eq01_arith_frac",
+        "bookmark_found": true,
+        "has_omath": true,
+        "has_seq_field": true,
+        "ok": true
+      },
+      {
+        "id": "eq02-frac-nested",
+        "bookmark": "tf_eq_eq02_frac_nested",
+        "bookmark_found": true,
+        "has_omath": true,
+        "has_seq_field": true,
+        "ok": true
+      },
+      {
+        "id": "eq03-quadratic",
+        "bookmark": "tf_eq_eq03_quadratic",
+        "bookmark_found": true,
+        "has_omath": true,
+        "has_seq_field": true,
+        "ok": true
+      },
+      {
+        "id": "eq04-stddev",
+        "bookmark": "tf_eq_eq04_stddev",
+        "bookmark_found": true,
+        "has_omath": true,
+        "has_seq_field": true,
+        "ok": true
+      },
+      {
+        "id": "eq05-emc2",
+        "bookmark": "tf_eq_eq05_emc2",
+        "bookmark_found": true,
+        "has_omath": true,
+        "has_seq_field": true,
+        "ok": true
+      },
+      {
+        "id": "eq06-dl-weight",
+        "bookmark": "tf_eq_eq06_dl_weight",
+        "bookmark_found": true,
+        "has_omath": true,
+        "has_seq_field": true,
+        "ok": true
+      },
+      {
+        "id": "eq07-gauss-kernel",
+        "bookmark": "tf_eq_eq07_gauss_kernel",
+        "bookmark_found": true,
+        "has_omath": true,
+        "has_seq_field": true,
+        "ok": true
+      },
+      {
+        "id": "eq08-sum-gauss",
+        "bookmark": "tf_eq_eq08_sum_gauss",
+        "bookmark_found": true,
+        "has_omath": true,
+        "has_seq_field": true,
+        "ok": true
+      },
+      {
+        "id": "eq09-sum-double",
+        "bookmark": "tf_eq_eq09_sum_double",
+        "bookmark_found": true,
+        "has_omath": true,
+        "has_seq_field": true,
+        "ok": true
+      },
+      {
+        "id": "eq10-entropy",
+        "bookmark": "tf_eq_eq10_entropy",
+        "bookmark_found": true,
+        "has_omath": true,
+        "has_seq_field": true,
+        "ok": true
+      },
+      {
+        "id": "eq11-int-newton",
+        "bookmark": "tf_eq_eq11_int_newton",
+        "bookmark_found": true,
+        "has_omath": true,
+        "has_seq_field": true,
+        "ok": true
+      },
+      {
+        "id": "eq12-fourier",
+        "bookmark": "tf_eq_eq12_fourier",
+        "bookmark_found": true,
+        "has_omath": true,
+        "has_seq_field": true,
+        "ok": true
+      },
+      {
+        "id": "eq13-prod-likelihood",
+        "bookmark": "tf_eq_eq13_prod_likelihood",
+        "bookmark_found": true,
+        "has_omath": true,
+        "has_seq_field": true,
+        "ok": true
+      },
+      {
+        "id": "eq14-lim-e",
+        "bookmark": "tf_eq_eq14_lim_e",
+        "bookmark_found": true,
+        "has_omath": true,
+        "has_seq_field": true,
+        "ok": true
+      },
+      {
+        "id": "eq15-greek-basic",
+        "bookmark": "tf_eq_eq15_greek_basic",
+        "bookmark_found": true,
+        "has_omath": true,
+        "has_seq_field": true,
+        "ok": true
+      },
+      {
+        "id": "eq16-greek-extended",
+        "bookmark": "tf_eq_eq16_greek_extended",
+        "bookmark_found": true,
+        "has_omath": true,
+        "has_seq_field": true,
+        "ok": true
+      },
+      {
+        "id": "eq17-greek-mechanics",
+        "bookmark": "tf_eq_eq17_greek_mechanics",
+        "bookmark_found": true,
+        "has_omath": true,
+        "has_seq_field": true,
+        "ok": true
+      },
+      {
+        "id": "eq18-pmatrix",
+        "bookmark": "tf_eq_eq18_pmatrix",
+        "bookmark_found": true,
+        "has_omath": true,
+        "has_seq_field": true,
+        "ok": true
+      },
+      {
+        "id": "eq19-bmatrix-det",
+        "bookmark": "tf_eq_eq19_bmatrix_det",
+        "bookmark_found": true,
+        "has_omath": true,
+        "has_seq_field": true,
+        "ok": true
+      },
+      {
+        "id": "eq20-cases",
+        "bookmark": "tf_eq_eq20_cases",
+        "bookmark_found": true,
+        "has_omath": true,
+        "has_seq_field": true,
+        "ok": true
+      },
+      {
+        "id": "eq21-aligned",
+        "bookmark": "tf_eq_eq21_aligned",
+        "bookmark_found": true,
+        "has_omath": true,
+        "has_seq_field": true,
+        "ok": true
+      },
+      {
+        "id": "eq23-trig-identity",
+        "bookmark": "tf_eq_eq23_trig_identity",
+        "bookmark_found": true,
+        "has_omath": true,
+        "has_seq_field": true,
+        "ok": true
+      },
+      {
+        "id": "eq24-log-decay",
+        "bookmark": "tf_eq_eq24_log_decay",
+        "bookmark_found": true,
+        "has_omath": true,
+        "has_seq_field": true,
+        "ok": true
+      },
+      {
+        "id": "eq25-exp-braced",
+        "bookmark": "tf_eq_eq25_exp_braced",
+        "bookmark_found": true,
+        "has_omath": true,
+        "has_seq_field": true,
+        "ok": true
+      },
+      {
+        "id": "eq26-log-sub",
+        "bookmark": "tf_eq_eq26_log_sub",
+        "bookmark_found": true,
+        "has_omath": true,
+        "has_seq_field": true,
+        "ok": true
+      },
+      {
+        "id": "eq27-hat-reg",
+        "bookmark": "tf_eq_eq27_hat_reg",
+        "bookmark_found": true,
+        "has_omath": true,
+        "has_seq_field": true,
+        "ok": true
+      },
+      {
+        "id": "eq28-bar-mean",
+        "bookmark": "tf_eq_eq28_bar_mean",
+        "bookmark_found": true,
+        "has_omath": true,
+        "has_seq_field": true,
+        "ok": true
+      },
+      {
+        "id": "eq29-vec-force",
+        "bookmark": "tf_eq_eq29_vec_force",
+        "bookmark_found": true,
+        "has_omath": true,
+        "has_seq_field": true,
+        "ok": true
+      },
+      {
+        "id": "eq30-dot-vibration",
+        "bookmark": "tf_eq_eq30_dot_vibration",
+        "bookmark_found": true,
+        "has_omath": true,
+        "has_seq_field": true,
+        "ok": true
+      },
+      {
+        "id": "eq31-leftright-frac",
+        "bookmark": "tf_eq_eq31_leftright_frac",
+        "bookmark_found": true,
+        "has_omath": true,
+        "has_seq_field": true,
+        "ok": true
+      },
+      {
+        "id": "eq32-leftright-norm",
+        "bookmark": "tf_eq_eq32_leftright_norm",
+        "bookmark_found": true,
+        "has_omath": true,
+        "has_seq_field": true,
+        "ok": true
+      },
+      {
+        "id": "eq33-mathrm-diff",
+        "bookmark": "tf_eq_eq33_mathrm_diff",
+        "bookmark_found": true,
+        "has_omath": true,
+        "has_seq_field": true,
+        "ok": true
+      },
+      {
+        "id": "eq34-text-note",
+        "bookmark": "tf_eq_eq34_text_note",
+        "bookmark_found": true,
+        "has_omath": true,
+        "has_seq_field": true,
+        "ok": true
+      },
+      {
+        "id": "eq35-mse",
+        "bookmark": "tf_eq_eq35_mse",
+        "bookmark_found": true,
+        "has_omath": true,
+        "has_seq_field": true,
+        "ok": true
+      },
+      {
+        "id": "eq36-ops-supported",
+        "bookmark": "tf_eq_eq36_ops_supported",
+        "bookmark_found": true,
+        "has_omath": true,
+        "has_seq_field": true,
+        "ok": true
+      },
+      {
+        "id": "eq37-set-ops",
+        "bookmark": "tf_eq_eq37_set_ops",
+        "bookmark_found": true,
+        "has_omath": true,
+        "has_seq_field": true,
+        "ok": true
+      },
+      {
+        "id": "eq38-approx-propto",
+        "bookmark": "tf_eq_eq38_approx_propto",
+        "bookmark_found": true,
+        "has_omath": true,
+        "has_seq_field": true,
+        "ok": true
+      },
+      {
+        "id": "eq39-nabla-grad",
+        "bookmark": "tf_eq_eq39_nabla_grad",
+        "bookmark_found": true,
+        "has_omath": true,
+        "has_seq_field": true,
+        "ok": true
+      },
+      {
+        "id": "eq40-partial-bp",
+        "bookmark": "tf_eq_eq40_partial_bp",
+        "bookmark_found": true,
+        "has_omath": true,
+        "has_seq_field": true,
+        "ok": true
+      },
+      {
+        "id": "eq41-sim-dist",
+        "bookmark": "tf_eq_eq41_sim_dist",
+        "bookmark_found": true,
+        "has_omath": true,
+        "has_seq_field": true,
+        "ok": true
+      },
+      {
+        "id": "eq42-forall-exists",
+        "bookmark": "tf_eq_eq42_forall_exists",
+        "bookmark_found": true,
+        "has_omath": true,
+        "has_seq_field": true,
+        "ok": true
+      },
+      {
+        "id": "eq43-cross-entropy",
+        "bookmark": "tf_eq_eq43_cross_entropy",
+        "bookmark_found": true,
+        "has_omath": true,
+        "has_seq_field": true,
+        "ok": true
+      },
+      {
+        "id": "eq44-matrix-mult",
+        "bookmark": "tf_eq_eq44_matrix_mult",
+        "bookmark_found": true,
+        "has_omath": true,
+        "has_seq_field": true,
+        "ok": true
+      },
+      {
+        "id": "eq45-eigen",
+        "bookmark": "tf_eq_eq45_eigen",
+        "bookmark_found": true,
+        "has_omath": true,
+        "has_seq_field": true,
+        "ok": true
+      },
+      {
+        "id": "eq46-bayes",
+        "bookmark": "tf_eq_eq46_bayes",
+        "bookmark_found": true,
+        "has_omath": true,
+        "has_seq_field": true,
+        "ok": true
+      },
+      {
+        "id": "eq47-cost-lr",
+        "bookmark": "tf_eq_eq47_cost_lr",
+        "bookmark_found": true,
+        "has_omath": true,
+        "has_seq_field": true,
+        "ok": true
+      },
+      {
+        "id": "eq48-binom",
+        "bookmark": "tf_eq_eq48_binom",
+        "bookmark_found": true,
+        "has_omath": true,
+        "has_seq_field": true,
+        "ok": true
+      }
+    ],
+    "per_equation_all_ok": true,
+    "inline_math_converted": false,
+    "inline_literal_evidence": [
+      {
+        "id": "eq49-inline-complexity",
+        "latex": "O(n \\log n)",
+        "found_as_literal_text": true
+      },
+      {
+        "id": "eq50-inline-slope",
+        "latex": "k = \\frac{y_2 - y_1}{x_2 - x_1}",
+        "found_as_literal_text": true
+      }
+    ]
+  }
+}

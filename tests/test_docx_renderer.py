@@ -11,6 +11,7 @@ import thesis_forge.renderers.docx.renderer as renderer_module
 import thesis_forge.renderers.docx.sections as sections_module
 from thesis_forge.bibliography import Gbt7714Formatter, LocalBibTeXLoader
 from thesis_forge.core.compiler import compile_document
+from thesis_forge.core.math import MathSyntaxError
 from thesis_forge.core.model import (
     Algorithm,
     BibliographyBlock,
@@ -3100,3 +3101,284 @@ def test_docx_renderer_wraps_private_api_failures_with_capability_context(
 
     with pytest.raises(DocxRenderError, match="equation.*missing private member"):
         DocxRenderer().render(plan, tmp_path / "broken.docx")
+
+
+# ---------- ADR-0003：扩展 LaTeX 子集的 OMML 结构断言 ----------
+
+
+def _render_equation_document_xml(tmp_path: Path, equation_id: str, latex: str):
+    template = load_template("templates/base/bachelor.yaml")
+    document = ThesisDocument(
+        source_path=tmp_path / "thesis.md",
+        blocks=[
+            Heading(id="chap:math", level=1, text="公式"),
+            Equation(id=equation_id, latex=latex),
+        ],
+    )
+    output = tmp_path / f"{equation_id.replace(':', '_')}.docx"
+    DocxRenderer().render(compile_document(document, template=template), output)
+    return _xml_part(output, "word/document.xml")
+
+
+def _equation_omath(document_xml, equation_id: str):
+    bookmark = f"tf_{equation_id.replace(':', '_')}"
+    matches = document_xml.xpath(
+        f".//w:p[.//w:bookmarkStart[@w:name='{bookmark}']]//m:oMath",
+        namespaces=NS,
+    )
+    assert len(matches) == 1
+    return matches[0]
+
+
+def test_docx_renderer_pmatrix_omml_structure(tmp_path: Path):
+    document_xml = _render_equation_document_xml(
+        tmp_path, "eq:pmx", r"A = \begin{pmatrix} a & b \\ c & d \end{pmatrix}"
+    )
+    omath = _equation_omath(document_xml, "eq:pmx")
+
+    matrices = omath.xpath(
+        "./m:d[m:dPr/m:begChr[@m:val='(']]"
+        "[m:dPr/m:endChr[@m:val=')']]"
+        "[m:dPr/m:grow]/m:e/m:m",
+        namespaces=NS,
+    )
+    assert len(matrices) == 1
+    matrix = matrices[0]
+    rows = matrix.xpath("./m:mr", namespaces=NS)
+    assert len(rows) == 2
+    for row, expected in zip(rows, (("a", "b"), ("c", "d")), strict=True):
+        cells = row.xpath("./m:e", namespaces=NS)
+        assert [
+            "".join(cell.xpath(".//m:t/text()", namespaces=NS)) for cell in cells
+        ] == list(expected)
+    columns = matrix.xpath(
+        "./m:mPr/m:mcs/m:mc/m:mcPr/m:mcJc[@m:val='center']",
+        namespaces=NS,
+    )
+    assert len(columns) == 2
+
+
+def test_docx_renderer_vmatrix_uses_vertical_bar_delimiters(tmp_path: Path):
+    document_xml = _render_equation_document_xml(
+        tmp_path,
+        "eq:vmx",
+        r"\det A = \begin{vmatrix} a & b \\ c & d \end{vmatrix} = ad - bc",
+    )
+    omath = _equation_omath(document_xml, "eq:vmx")
+
+    assert omath.xpath(
+        "./m:d[m:dPr/m:begChr[@m:val='|']][m:dPr/m:endChr[@m:val='|']]/m:e/m:m",
+        namespaces=NS,
+    )
+    assert omath.xpath(".//m:func[m:fName//m:t='det']", namespaces=NS)
+
+
+def test_docx_renderer_cases_omml_structure(tmp_path: Path):
+    document_xml = _render_equation_document_xml(
+        tmp_path,
+        "eq:cases",
+        r"f(x) = \begin{cases} x^2, & x \geq 0 \\ -x, & x < 0 \end{cases}",
+    )
+    omath = _equation_omath(document_xml, "eq:cases")
+
+    matrices = omath.xpath(
+        "./m:d[m:dPr/m:begChr[@m:val='{']][m:dPr/m:endChr[@m:val='']]/m:e/m:m",
+        namespaces=NS,
+    )
+    assert len(matrices) == 1
+    matrix = matrices[0]
+    rows = matrix.xpath("./m:mr", namespaces=NS)
+    assert len(rows) == 2
+    assert all(len(row.xpath("./m:e", namespaces=NS)) == 2 for row in rows)
+    assert matrix.xpath(
+        "./m:mPr/m:mcs/m:mc/m:mcPr/m:mcJc[@m:val='left']",
+        namespaces=NS,
+    )
+    first_row_cells = rows[0].xpath("./m:e", namespaces=NS)
+    assert first_row_cells[0].xpath("./m:sSup[m:sup//m:t='2']", namespaces=NS)
+    assert (
+        "".join(first_row_cells[1].xpath(".//m:t/text()", namespaces=NS)) == "x≥0"
+    )
+
+
+def test_docx_renderer_aligned_omml_structure(tmp_path: Path):
+    document_xml = _render_equation_document_xml(
+        tmp_path, "eq:aligned", r"\begin{aligned} y &= ax + b \\ &= c \end{aligned}"
+    )
+    omath = _equation_omath(document_xml, "eq:aligned")
+
+    arrays = omath.xpath("./m:eqArr", namespaces=NS)
+    assert len(arrays) == 1
+    rows = arrays[0].xpath("./m:e", namespaces=NS)
+    assert len(rows) == 2
+    # 对齐点以 OMML 行内 & 记号表达（与 pandoc/texmath 产物同一约定）
+    assert rows[0].xpath("./m:r[m:t='&']", namespaces=NS)
+    assert rows[1].xpath("./m:r[m:t='&']", namespaces=NS)
+    assert "".join(rows[0].xpath(".//m:t/text()", namespaces=NS)) == "y&=ax+b"
+    assert "".join(rows[1].xpath(".//m:t/text()", namespaces=NS)) == "&=c"
+
+
+def test_docx_renderer_left_right_norm_omml_structure(tmp_path: Path):
+    document_xml = _render_equation_document_xml(
+        tmp_path, "eq:norm", r"\left\| x \right\|_2 = \sqrt{\sum_{i=1}^{n} x_i^2}"
+    )
+    omath = _equation_omath(document_xml, "eq:norm")
+
+    delimiters = omath.xpath(
+        "./m:sSub[m:sub//m:t='2']/m:e/m:d"
+        "[m:dPr/m:begChr[@m:val='‖']][m:dPr/m:endChr[@m:val='‖']][m:dPr/m:grow]",
+        namespaces=NS,
+    )
+    assert len(delimiters) == 1
+
+
+def test_docx_renderer_left_right_fraction_omml_structure(tmp_path: Path):
+    document_xml = _render_equation_document_xml(
+        tmp_path, "eq:grow", r"\left( \frac{a+b}{c} \right)^2"
+    )
+    omath = _equation_omath(document_xml, "eq:grow")
+
+    fractions = omath.xpath(
+        "./m:sSup[m:sup//m:t='2']/m:e/m:d"
+        "[m:dPr/m:begChr[@m:val='(']][m:dPr/m:endChr[@m:val=')']]/m:e/m:f",
+        namespaces=NS,
+    )
+    assert len(fractions) == 1
+
+
+def test_docx_renderer_lim_uses_limlow(tmp_path: Path):
+    document_xml = _render_equation_document_xml(
+        tmp_path, "eq:lime", r"\lim_{n \to \infty} (1 + \frac{1}{n})^n = e"
+    )
+    omath = _equation_omath(document_xml, "eq:lime")
+
+    limits = omath.xpath("./m:limLow", namespaces=NS)
+    assert len(limits) == 1
+    limit = limits[0]
+    assert limit.xpath(
+        "./m:e/m:r[m:rPr/m:sty[@m:val='p']][m:t='lim']",
+        namespaces=NS,
+    )
+    lower = limit.xpath("./m:lim", namespaces=NS)
+    assert len(lower) == 1
+    assert "".join(lower[0].xpath(".//m:t/text()", namespaces=NS)) == "n→∞"
+
+
+def test_docx_renderer_lim_upper_uses_limupp(tmp_path: Path):
+    document_xml = _render_equation_document_xml(
+        tmp_path, "eq:limstar", r"\lim^{*} f(x)"
+    )
+    omath = _equation_omath(document_xml, "eq:limstar")
+
+    uppers = omath.xpath("./m:limUpp", namespaces=NS)
+    assert len(uppers) == 1
+    upper = uppers[0]
+    assert upper.xpath(
+        "./m:e/m:r[m:rPr/m:sty[@m:val='p']][m:t='lim']",
+        namespaces=NS,
+    )
+    limit = upper.xpath("./m:lim", namespaces=NS)
+    assert len(limit) == 1
+    assert "".join(limit[0].xpath(".//m:t/text()", namespaces=NS)) == "*"
+
+
+def test_docx_renderer_int_and_prod_use_nary(tmp_path: Path):
+    document_xml = _render_equation_document_xml(
+        tmp_path, "eq:int", r"\int_{a}^{b} f(x) dx = F(b) - F(a)"
+    )
+    omath = _equation_omath(document_xml, "eq:int")
+
+    integrals = omath.xpath("./m:nary[m:naryPr/m:chr[@m:val='∫']]", namespaces=NS)
+    assert len(integrals) == 1
+    integral = integrals[0]
+    assert integral.xpath("./m:sub[.//m:t='a']", namespaces=NS)
+    assert integral.xpath("./m:sup[.//m:t='b']", namespaces=NS)
+    assert integral.xpath("./m:e", namespaces=NS)
+
+    document_xml = _render_equation_document_xml(
+        tmp_path, "eq:prod", r"L(\theta) = \prod_{i=1}^{n} f(x_i; \theta)"
+    )
+    omath = _equation_omath(document_xml, "eq:prod")
+    products = omath.xpath("./m:nary[m:naryPr/m:chr[@m:val='∏']]", namespaces=NS)
+    assert len(products) == 1
+    lower = products[0].xpath("./m:sub", namespaces=NS)
+    assert len(lower) == 1
+    assert "".join(lower[0].xpath(".//m:t/text()", namespaces=NS)) == "i=1"
+    assert products[0].xpath("./m:sup[.//m:t='n']", namespaces=NS)
+
+
+def test_docx_renderer_binom_uses_nobar_fraction_in_delimiters(tmp_path: Path):
+    document_xml = _render_equation_document_xml(
+        tmp_path, "eq:binom", r"\binom{n}{k} = \frac{n!}{k!(n-k)!}"
+    )
+    omath = _equation_omath(document_xml, "eq:binom")
+
+    fractions = omath.xpath(
+        "./m:d[m:dPr/m:begChr[@m:val='(']][m:dPr/m:endChr[@m:val=')']]"
+        "/m:e/m:f[m:fPr/m:type[@m:val='noBar']]",
+        namespaces=NS,
+    )
+    assert len(fractions) == 1
+    assert fractions[0].xpath("./m:num[.//m:t='n']", namespaces=NS)
+    assert fractions[0].xpath("./m:den[.//m:t='k']", namespaces=NS)
+
+
+def test_docx_renderer_mathrm_and_text_omml_structure(tmp_path: Path):
+    document_xml = _render_equation_document_xml(
+        tmp_path,
+        "eq:text",
+        r"F = ma, \text{其中 } m \text{ 为质量}, \mathrm{MSE}",
+    )
+    omath = _equation_omath(document_xml, "eq:text")
+
+    assert omath.xpath(".//m:r[m:rPr/m:nor][m:t='其中 ']", namespaces=NS)
+    assert omath.xpath(".//m:r[m:rPr/m:nor][m:t=' 为质量']", namespaces=NS)
+    assert omath.xpath(
+        ".//m:r[not(m:rPr/m:nor)][m:rPr/m:sty[@m:val='p']][m:t='MSE']",
+        namespaces=NS,
+    )
+
+
+def test_docx_renderer_extended_accents_omml(tmp_path: Path):
+    document_xml = _render_equation_document_xml(
+        tmp_path, "eq:accent", r"\vec F = m \ddot a + \tilde x"
+    )
+    omath = _equation_omath(document_xml, "eq:accent")
+
+    characters = omath.xpath(".//m:acc/m:accPr/m:chr/@m:val", namespaces=NS)
+    assert characters == ["→", "¨", "~"]
+
+
+def test_docx_renderer_function_name_scripts_omml(tmp_path: Path):
+    document_xml = _render_equation_document_xml(
+        tmp_path, "eq:funcsub", r"\sin^2 \theta + \log_2 n = 1"
+    )
+    omath = _equation_omath(document_xml, "eq:funcsub")
+
+    assert omath.xpath(
+        "./m:sSup[m:sup//m:t='2']/m:e/m:func[m:fName//m:t='sin']",
+        namespaces=NS,
+    )
+    assert omath.xpath(
+        "./m:sSub[m:sub//m:t='2']/m:e/m:func[m:fName//m:t='log']",
+        namespaces=NS,
+    )
+
+
+def test_docx_renderer_function_argument_keeps_parentheses_inside(tmp_path: Path):
+    document_xml = _render_equation_document_xml(
+        tmp_path, "eq:entropy", r"H(X) = -\sum_{i=1}^{n} p(x_i) \log p(x_i)"
+    )
+    omath = _equation_omath(document_xml, "eq:entropy")
+
+    functions = omath.xpath(".//m:func[m:fName//m:t='log']", namespaces=NS)
+    assert len(functions) == 1
+    texts = functions[0].xpath("./m:e//m:t/text()", namespaces=NS)
+    assert "".join(texts) == "p(xi)"
+
+
+def test_docx_renderer_bare_line_break_raises_explicitly(tmp_path: Path):
+    with pytest.raises(MathSyntaxError, match="Bare"):
+        _render_equation_document_xml(
+            tmp_path, "eq:broken", r"y = a + b \\ z = c + d"
+        )

@@ -1,0 +1,364 @@
+{
+  "summary": {
+    "pandoc_version": "pandoc 3.8.2.1",
+    "total": 50,
+    "success": 49,
+    "failed": 1,
+    "coverage": 0.98,
+    "combined_omath_count": 49,
+    "combined_returncode": 0
+  },
+  "combined_stderr": "[WARNING] Could not convert TeX math \n  y = a + b \\\\ z = c + d\n  , rendering as TeX:\n  \n               ^\n  unexpected control sequence \\\\\n  expecting \"%\", \"\\\\label\", \"\\\\tag\", \"\\\\nonumber\", whitespace or \"\\\\allowbreak\"",
+  "entries": [
+    {
+      "id": "eq01-arith-frac",
+      "status": "success",
+      "returncode": 0,
+      "omath_count": 1,
+      "stderr": null
+    },
+    {
+      "id": "eq02-frac-nested",
+      "status": "success",
+      "returncode": 0,
+      "omath_count": 1,
+      "stderr": null
+    },
+    {
+      "id": "eq03-quadratic",
+      "status": "success",
+      "returncode": 0,
+      "omath_count": 1,
+      "stderr": null
+    },
+    {
+      "id": "eq04-stddev",
+      "status": "success",
+      "returncode": 0,
+      "omath_count": 1,
+      "stderr": null
+    },
+    {
+      "id": "eq05-emc2",
+      "status": "success",
+      "returncode": 0,
+      "omath_count": 1,
+      "stderr": null
+    },
+    {
+      "id": "eq06-dl-weight",
+      "status": "success",
+      "returncode": 0,
+      "omath_count": 1,
+      "stderr": null
+    },
+    {
+      "id": "eq07-gauss-kernel",
+      "status": "success",
+      "returncode": 0,
+      "omath_count": 1,
+      "stderr": null
+    },
+    {
+      "id": "eq08-sum-gauss",
+      "status": "success",
+      "returncode": 0,
+      "omath_count": 1,
+      "stderr": null
+    },
+    {
+      "id": "eq09-sum-double",
+      "status": "success",
+      "returncode": 0,
+      "omath_count": 1,
+      "stderr": null
+    },
+    {
+      "id": "eq10-entropy",
+      "status": "success",
+      "returncode": 0,
+      "omath_count": 1,
+      "stderr": null
+    },
+    {
+      "id": "eq11-int-newton",
+      "status": "success",
+      "returncode": 0,
+      "omath_count": 1,
+      "stderr": null
+    },
+    {
+      "id": "eq12-fourier",
+      "status": "success",
+      "returncode": 0,
+      "omath_count": 1,
+      "stderr": null
+    },
+    {
+      "id": "eq13-prod-likelihood",
+      "status": "success",
+      "returncode": 0,
+      "omath_count": 1,
+      "stderr": null
+    },
+    {
+      "id": "eq14-lim-e",
+      "status": "success",
+      "returncode": 0,
+      "omath_count": 1,
+      "stderr": null
+    },
+    {
+      "id": "eq15-greek-basic",
+      "status": "success",
+      "returncode": 0,
+      "omath_count": 1,
+      "stderr": null
+    },
+    {
+      "id": "eq16-greek-extended",
+      "status": "success",
+      "returncode": 0,
+      "omath_count": 1,
+      "stderr": null
+    },
+    {
+      "id": "eq17-greek-mechanics",
+      "status": "success",
+      "returncode": 0,
+      "omath_count": 1,
+      "stderr": null
+    },
+    {
+      "id": "eq18-pmatrix",
+      "status": "success",
+      "returncode": 0,
+      "omath_count": 1,
+      "stderr": null
+    },
+    {
+      "id": "eq19-bmatrix-det",
+      "status": "success",
+      "returncode": 0,
+      "omath_count": 1,
+      "stderr": null
+    },
+    {
+      "id": "eq20-cases",
+      "status": "success",
+      "returncode": 0,
+      "omath_count": 1,
+      "stderr": null
+    },
+    {
+      "id": "eq21-aligned",
+      "status": "success",
+      "returncode": 0,
+      "omath_count": 1,
+      "stderr": null
+    },
+    {
+      "id": "eq22-multiline-bare",
+      "status": "failed",
+      "returncode": 0,
+      "omath_count": 0,
+      "stderr": "[WARNING] Could not convert TeX math \n  y = a + b \\\\ z = c + d\n  , rendering as TeX:\n  \n               ^\n  unexpected control sequence \\\\\n  expecting \"%\", \"\\\\label\", \"\\\\tag\", \"\\\\nonumber\", whitespace or \"\\\\allowbreak\""
+    },
+    {
+      "id": "eq23-trig-identity",
+      "status": "success",
+      "returncode": 0,
+      "omath_count": 1,
+      "stderr": null
+    },
+    {
+      "id": "eq24-log-decay",
+      "status": "success",
+      "returncode": 0,
+      "omath_count": 1,
+      "stderr": null
+    },
+    {
+      "id": "eq25-exp-braced",
+      "status": "success",
+      "returncode": 0,
+      "omath_count": 1,
+      "stderr": null
+    },
+    {
+      "id": "eq26-log-sub",
+      "status": "success",
+      "returncode": 0,
+      "omath_count": 1,
+      "stderr": null
+    },
+    {
+      "id": "eq27-hat-reg",
+      "status": "success",
+      "returncode": 0,
+      "omath_count": 1,
+      "stderr": null
+    },
+    {
+      "id": "eq28-bar-mean",
+      "status": "success",
+      "returncode": 0,
+      "omath_count": 1,
+      "stderr": null
+    },
+    {
+      "id": "eq29-vec-force",
+      "status": "success",
+      "returncode": 0,
+      "omath_count": 1,
+      "stderr": null
+    },
+    {
+      "id": "eq30-dot-vibration",
+      "status": "success",
+      "returncode": 0,
+      "omath_count": 1,
+      "stderr": null
+    },
+    {
+      "id": "eq31-leftright-frac",
+      "status": "success",
+      "returncode": 0,
+      "omath_count": 1,
+      "stderr": null
+    },
+    {
+      "id": "eq32-leftright-norm",
+      "status": "success",
+      "returncode": 0,
+      "omath_count": 1,
+      "stderr": null
+    },
+    {
+      "id": "eq33-mathrm-diff",
+      "status": "success",
+      "returncode": 0,
+      "omath_count": 1,
+      "stderr": null
+    },
+    {
+      "id": "eq34-text-note",
+      "status": "success",
+      "returncode": 0,
+      "omath_count": 1,
+      "stderr": null
+    },
+    {
+      "id": "eq35-mse",
+      "status": "success",
+      "returncode": 0,
+      "omath_count": 1,
+      "stderr": null
+    },
+    {
+      "id": "eq36-ops-supported",
+      "status": "success",
+      "returncode": 0,
+      "omath_count": 1,
+      "stderr": null
+    },
+    {
+      "id": "eq37-set-ops",
+      "status": "success",
+      "returncode": 0,
+      "omath_count": 1,
+      "stderr": null
+    },
+    {
+      "id": "eq38-approx-propto",
+      "status": "success",
+      "returncode": 0,
+      "omath_count": 1,
+      "stderr": null
+    },
+    {
+      "id": "eq39-nabla-grad",
+      "status": "success",
+      "returncode": 0,
+      "omath_count": 1,
+      "stderr": null
+    },
+    {
+      "id": "eq40-partial-bp",
+      "status": "success",
+      "returncode": 0,
+      "omath_count": 1,
+      "stderr": null
+    },
+    {
+      "id": "eq41-sim-dist",
+      "status": "success",
+      "returncode": 0,
+      "omath_count": 1,
+      "stderr": null
+    },
+    {
+      "id": "eq42-forall-exists",
+      "status": "success",
+      "returncode": 0,
+      "omath_count": 1,
+      "stderr": null
+    },
+    {
+      "id": "eq43-cross-entropy",
+      "status": "success",
+      "returncode": 0,
+      "omath_count": 1,
+      "stderr": null
+    },
+    {
+      "id": "eq44-matrix-mult",
+      "status": "success",
+      "returncode": 0,
+      "omath_count": 1,
+      "stderr": null
+    },
+    {
+      "id": "eq45-eigen",
+      "status": "success",
+      "returncode": 0,
+      "omath_count": 1,
+      "stderr": null
+    },
+    {
+      "id": "eq46-bayes",
+      "status": "success",
+      "returncode": 0,
+      "omath_count": 1,
+      "stderr": null
+    },
+    {
+      "id": "eq47-cost-lr",
+      "status": "success",
+      "returncode": 0,
+      "omath_count": 1,
+      "stderr": null
+    },
+    {
+      "id": "eq48-binom",
+      "status": "success",
+      "returncode": 0,
+      "omath_count": 1,
+      "stderr": null
+    },
+    {
+      "id": "eq49-inline-complexity",
+      "status": "success",
+      "returncode": 0,
+      "omath_count": 1,
+      "stderr": null
+    },
+    {
+      "id": "eq50-inline-slope",
+      "status": "success",
+      "returncode": 0,
+      "omath_count": 1,
+      "stderr": null
+    }
+  ]
+}

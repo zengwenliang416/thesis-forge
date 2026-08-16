@@ -1,0 +1,412 @@
+{
+  "summary": {
+    "total": 50,
+    "success": 49,
+    "failed": 1,
+    "coverage": 0.98,
+    "failure_commands": {},
+    "syntax_error_count": 1
+  },
+  "entries": [
+    {
+      "id": "eq01-arith-frac",
+      "latex": "a + b - c = \\frac{a \\cdot b}{c} \\times 2",
+      "status": "success",
+      "error_type": null,
+      "command": null,
+      "message": null
+    },
+    {
+      "id": "eq02-frac-nested",
+      "latex": "\\frac{\\frac{a+b}{c+d}}{\\frac{x}{y} + 1}",
+      "status": "success",
+      "error_type": null,
+      "command": null,
+      "message": null
+    },
+    {
+      "id": "eq03-quadratic",
+      "latex": "x = \\frac{-b \\pm \\sqrt{b^2 - 4ac}}{2a}",
+      "status": "success",
+      "error_type": null,
+      "command": null,
+      "message": null
+    },
+    {
+      "id": "eq04-stddev",
+      "latex": "\\sigma = \\sqrt{\\frac{1}{N} \\sum_{i=1}^{N} (x_i - \\mu)^2}",
+      "status": "success",
+      "error_type": null,
+      "command": null,
+      "message": null
+    },
+    {
+      "id": "eq05-emc2",
+      "latex": "E = mc^2",
+      "status": "success",
+      "error_type": null,
+      "command": null,
+      "message": null
+    },
+    {
+      "id": "eq06-dl-weight",
+      "latex": "w_{ij}^{(l)} = w_{ij}^{(l)} - \\eta g_{ij}",
+      "status": "success",
+      "error_type": null,
+      "command": null,
+      "message": null
+    },
+    {
+      "id": "eq07-gauss-kernel",
+      "latex": "K(x_i, x_j) = e^{-\\frac{d_{ij}^2}{2\\sigma^2}}",
+      "status": "success",
+      "error_type": null,
+      "command": null,
+      "message": null
+    },
+    {
+      "id": "eq08-sum-gauss",
+      "latex": "\\sum_{i=1}^{n} i = \\frac{n(n+1)}{2}",
+      "status": "success",
+      "error_type": null,
+      "command": null,
+      "message": null
+    },
+    {
+      "id": "eq09-sum-double",
+      "latex": "\\sum_{i=1}^{m} \\sum_{j=1}^{n} a_{ij} = \\sum_{j=1}^{n} \\sum_{i=1}^{m} a_{ij}",
+      "status": "success",
+      "error_type": null,
+      "command": null,
+      "message": null
+    },
+    {
+      "id": "eq10-entropy",
+      "latex": "H(X) = -\\sum_{i=1}^{n} p(x_i) \\log p(x_i)",
+      "status": "success",
+      "error_type": null,
+      "command": null,
+      "message": null
+    },
+    {
+      "id": "eq11-int-newton",
+      "latex": "\\int_{a}^{b} f(x) dx = F(b) - F(a)",
+      "status": "success",
+      "error_type": null,
+      "command": null,
+      "message": null
+    },
+    {
+      "id": "eq12-fourier",
+      "latex": "X(\\omega) = \\int_{-\\infty}^{\\infty} x(t) e^{-j\\omega t} dt",
+      "status": "success",
+      "error_type": null,
+      "command": null,
+      "message": null
+    },
+    {
+      "id": "eq13-prod-likelihood",
+      "latex": "L(\\theta) = \\prod_{i=1}^{n} f(x_i; \\theta)",
+      "status": "success",
+      "error_type": null,
+      "command": null,
+      "message": null
+    },
+    {
+      "id": "eq14-lim-e",
+      "latex": "\\lim_{n \\to \\infty} (1 + \\frac{1}{n})^n = e",
+      "status": "success",
+      "error_type": null,
+      "command": null,
+      "message": null
+    },
+    {
+      "id": "eq15-greek-basic",
+      "latex": "\\alpha \\cos \\theta + \\beta \\sin \\theta = \\gamma",
+      "status": "success",
+      "error_type": null,
+      "command": null,
+      "message": null
+    },
+    {
+      "id": "eq16-greek-extended",
+      "latex": "\\nu \\tau \\chi \\psi \\varepsilon \\varphi",
+      "status": "success",
+      "error_type": null,
+      "command": null,
+      "message": null
+    },
+    {
+      "id": "eq17-greek-mechanics",
+      "latex": "\\sum F = ma, \\sum M = I \\alpha",
+      "status": "success",
+      "error_type": null,
+      "command": null,
+      "message": null
+    },
+    {
+      "id": "eq18-pmatrix",
+      "latex": "A = \\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix}",
+      "status": "success",
+      "error_type": null,
+      "command": null,
+      "message": null
+    },
+    {
+      "id": "eq19-bmatrix-det",
+      "latex": "\\det A = \\begin{vmatrix} a & b \\\\ c & d \\end{vmatrix} = ad - bc",
+      "status": "success",
+      "error_type": null,
+      "command": null,
+      "message": null
+    },
+    {
+      "id": "eq20-cases",
+      "latex": "f(x) = \\begin{cases} x^2, & x \\geq 0 \\\\ -x, & x < 0 \\end{cases}",
+      "status": "success",
+      "error_type": null,
+      "command": null,
+      "message": null
+    },
+    {
+      "id": "eq21-aligned",
+      "latex": "\\begin{aligned} y &= ax + b \\\\ &= c \\end{aligned}",
+      "status": "success",
+      "error_type": null,
+      "command": null,
+      "message": null
+    },
+    {
+      "id": "eq22-multiline-bare",
+      "latex": "y = a + b \\\\ z = c + d",
+      "status": "syntax_error",
+      "error_type": "MathSyntaxError",
+      "command": null,
+      "message": "Bare \\\\ line break is only supported inside matrix/cases/aligned environments"
+    },
+    {
+      "id": "eq23-trig-identity",
+      "latex": "\\sin^2 \\theta + \\cos^2 \\theta = 1",
+      "status": "success",
+      "error_type": null,
+      "command": null,
+      "message": null
+    },
+    {
+      "id": "eq24-log-decay",
+      "latex": "\\ln \\frac{N}{N_0} = -kt",
+      "status": "success",
+      "error_type": null,
+      "command": null,
+      "message": null
+    },
+    {
+      "id": "eq25-exp-braced",
+      "latex": "\\exp{(-\\lambda t)} = e^{-\\lambda t}",
+      "status": "success",
+      "error_type": null,
+      "command": null,
+      "message": null
+    },
+    {
+      "id": "eq26-log-sub",
+      "latex": "T(n) = O(n \\log_2 n)",
+      "status": "success",
+      "error_type": null,
+      "command": null,
+      "message": null
+    },
+    {
+      "id": "eq27-hat-reg",
+      "latex": "\\hat y = \\beta_0 + \\beta_1 x",
+      "status": "success",
+      "error_type": null,
+      "command": null,
+      "message": null
+    },
+    {
+      "id": "eq28-bar-mean",
+      "latex": "\\bar x = \\frac{1}{n} \\sum_{i=1}^{n} x_i",
+      "status": "success",
+      "error_type": null,
+      "command": null,
+      "message": null
+    },
+    {
+      "id": "eq29-vec-force",
+      "latex": "\\vec F = m \\vec a",
+      "status": "success",
+      "error_type": null,
+      "command": null,
+      "message": null
+    },
+    {
+      "id": "eq30-dot-vibration",
+      "latex": "m \\ddot x + c \\dot x + k x = F(t)",
+      "status": "success",
+      "error_type": null,
+      "command": null,
+      "message": null
+    },
+    {
+      "id": "eq31-leftright-frac",
+      "latex": "\\left( \\frac{a+b}{c} \\right)^2",
+      "status": "success",
+      "error_type": null,
+      "command": null,
+      "message": null
+    },
+    {
+      "id": "eq32-leftright-norm",
+      "latex": "\\left\\| x \\right\\|_2 = \\sqrt{\\sum_{i=1}^{n} x_i^2}",
+      "status": "success",
+      "error_type": null,
+      "command": null,
+      "message": null
+    },
+    {
+      "id": "eq33-mathrm-diff",
+      "latex": "\\frac{\\mathrm{d} y}{\\mathrm{d} x} = 2x",
+      "status": "success",
+      "error_type": null,
+      "command": null,
+      "message": null
+    },
+    {
+      "id": "eq34-text-note",
+      "latex": "F = ma, \\text{其中 } m \\text{ 为质量}",
+      "status": "success",
+      "error_type": null,
+      "command": null,
+      "message": null
+    },
+    {
+      "id": "eq35-mse",
+      "latex": "\\mathrm{MSE} = \\frac{1}{n} \\sum_{i=1}^{n} (y_i - \\hat y_i)^2",
+      "status": "success",
+      "error_type": null,
+      "command": null,
+      "message": null
+    },
+    {
+      "id": "eq36-ops-supported",
+      "latex": "a \\cdot b \\times c \\leq d \\neq e \\geq f \\pm g",
+      "status": "success",
+      "error_type": null,
+      "command": null,
+      "message": null
+    },
+    {
+      "id": "eq37-set-ops",
+      "latex": "A \\subset B, x \\in A \\Rightarrow x \\in B",
+      "status": "success",
+      "error_type": null,
+      "command": null,
+      "message": null
+    },
+    {
+      "id": "eq38-approx-propto",
+      "latex": "\\hat \\theta \\approx \\theta, \\sigma \\propto \\frac{1}{\\sqrt{n}}",
+      "status": "success",
+      "error_type": null,
+      "command": null,
+      "message": null
+    },
+    {
+      "id": "eq39-nabla-grad",
+      "latex": "\\nabla L = \\left( \\frac{\\partial L}{\\partial w_1}, \\frac{\\partial L}{\\partial w_2} \\right)",
+      "status": "success",
+      "error_type": null,
+      "command": null,
+      "message": null
+    },
+    {
+      "id": "eq40-partial-bp",
+      "latex": "\\frac{\\partial L}{\\partial w_{ij}} = \\delta_j x_i",
+      "status": "success",
+      "error_type": null,
+      "command": null,
+      "message": null
+    },
+    {
+      "id": "eq41-sim-dist",
+      "latex": "x \\sim N(\\mu, \\sigma^2)",
+      "status": "success",
+      "error_type": null,
+      "command": null,
+      "message": null
+    },
+    {
+      "id": "eq42-forall-exists",
+      "latex": "\\forall \\epsilon > 0, \\exists \\delta > 0",
+      "status": "success",
+      "error_type": null,
+      "command": null,
+      "message": null
+    },
+    {
+      "id": "eq43-cross-entropy",
+      "latex": "L = -\\frac{1}{N} \\sum_{i=1}^{N} \\sum_{c=1}^{C} y_{ic} \\log p_{ic}",
+      "status": "success",
+      "error_type": null,
+      "command": null,
+      "message": null
+    },
+    {
+      "id": "eq44-matrix-mult",
+      "latex": "c_{ij} = \\sum_{k=1}^{n} a_{ik} b_{kj}",
+      "status": "success",
+      "error_type": null,
+      "command": null,
+      "message": null
+    },
+    {
+      "id": "eq45-eigen",
+      "latex": "A v = \\lambda v",
+      "status": "success",
+      "error_type": null,
+      "command": null,
+      "message": null
+    },
+    {
+      "id": "eq46-bayes",
+      "latex": "P(A|B) = \\frac{P(B|A) P(A)}{P(B)}",
+      "status": "success",
+      "error_type": null,
+      "command": null,
+      "message": null
+    },
+    {
+      "id": "eq47-cost-lr",
+      "latex": "J(\\theta) = \\frac{1}{2m} \\sum_{i=1}^{m} (h(x_i) - y_i)^2",
+      "status": "success",
+      "error_type": null,
+      "command": null,
+      "message": null
+    },
+    {
+      "id": "eq48-binom",
+      "latex": "\\binom{n}{k} = \\frac{n!}{k!(n-k)!}",
+      "status": "success",
+      "error_type": null,
+      "command": null,
+      "message": null
+    },
+    {
+      "id": "eq49-inline-complexity",
+      "latex": "O(n \\log n)",
+      "status": "success",
+      "error_type": null,
+      "command": null,
+      "message": null
+    },
+    {
+      "id": "eq50-inline-slope",
+      "latex": "k = \\frac{y_2 - y_1}{x_2 - x_1}",
+      "status": "success",
+      "error_type": null,
+      "command": null,
+      "message": null
+    }
+  ]
+}

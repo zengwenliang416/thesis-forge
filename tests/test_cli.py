@@ -315,9 +315,9 @@ author:
 
 # 绪论 {#chap:intro}
 
-::: equation {#eq:matrix}
+::: equation {#eq:blackboard}
 $$
-\\begin{matrix}1&2\\end{matrix}
+\\mathbb{E}[X] = \\mu
 $$
 :::
 """,
@@ -339,7 +339,7 @@ $$
 
     assert result.exit_code == 2
     assert "构建失败" in result.stdout
-    assert "Unsupported LaTeX command: \\begin" in result.stdout
+    assert "Unsupported LaTeX command: \\mathbb" in result.stdout
     assert "Traceback" not in result.stdout
     assert not output.exists()
 

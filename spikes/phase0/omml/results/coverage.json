@@ -1,0 +1,1093 @@
+{
+  "corpus_size": 50,
+  "thesisforge": {
+    "total": 50,
+    "success": 24,
+    "failed": 26,
+    "coverage": 0.48,
+    "failure_commands": {
+      "\\begin": 3,
+      "\\int": 2,
+      "\\left": 2,
+      "\\mathrm": 2,
+      "\\approx": 1,
+      "\\binom": 1,
+      "\\ddot": 1,
+      "\\det": 1,
+      "\\eta": 1,
+      "\\forall": 1,
+      "\\lim": 1,
+      "\\nabla": 1,
+      "\\nu": 1,
+      "\\partial": 1,
+      "\\prod": 1,
+      "\\sim": 1,
+      "\\subset": 1,
+      "\\text": 1,
+      "\\vec": 1
+    },
+    "syntax_error_count": 2
+  },
+  "pandoc": {
+    "pandoc_version": "pandoc 3.8.2.1",
+    "total": 50,
+    "success": 49,
+    "failed": 1,
+    "coverage": 0.98,
+    "combined_omath_count": 49,
+    "combined_returncode": 0
+  },
+  "by_category": {
+    "四则/分式/根式": {
+      "total": 4,
+      "thesisforge_ok": 4,
+      "pandoc_ok": 4
+    },
+    "上下标": {
+      "total": 3,
+      "thesisforge_ok": 2,
+      "pandoc_ok": 3
+    },
+    "求和/积分/极限/乘积": {
+      "total": 7,
+      "thesisforge_ok": 3,
+      "pandoc_ok": 7
+    },
+    "希腊字母": {
+      "total": 3,
+      "thesisforge_ok": 2,
+      "pandoc_ok": 3
+    },
+    "矩阵/行列式": {
+      "total": 2,
+      "thesisforge_ok": 0,
+      "pandoc_ok": 2
+    },
+    "分段函数": {
+      "total": 1,
+      "thesisforge_ok": 0,
+      "pandoc_ok": 1
+    },
+    "多行对齐": {
+      "total": 2,
+      "thesisforge_ok": 1,
+      "pandoc_ok": 1
+    },
+    "三角/对数/指数": {
+      "total": 4,
+      "thesisforge_ok": 2,
+      "pandoc_ok": 4
+    },
+    "accent": {
+      "total": 4,
+      "thesisforge_ok": 2,
+      "pandoc_ok": 4
+    },
+    "括号自适应": {
+      "total": 2,
+      "thesisforge_ok": 0,
+      "pandoc_ok": 2
+    },
+    "文本": {
+      "total": 3,
+      "thesisforge_ok": 0,
+      "pandoc_ok": 3
+    },
+    "运算符": {
+      "total": 7,
+      "thesisforge_ok": 1,
+      "pandoc_ok": 7
+    },
+    "综合": {
+      "total": 6,
+      "thesisforge_ok": 5,
+      "pandoc_ok": 6
+    },
+    "行内混排": {
+      "total": 2,
+      "thesisforge_ok": 2,
+      "pandoc_ok": 2
+    }
+  },
+  "both_fail": [],
+  "thesisforge_fail_but_pandoc_ok": [
+    "eq06-dl-weight",
+    "eq11-int-newton",
+    "eq12-fourier",
+    "eq13-prod-likelihood",
+    "eq14-lim-e",
+    "eq16-greek-extended",
+    "eq18-pmatrix",
+    "eq19-bmatrix-det",
+    "eq20-cases",
+    "eq21-aligned",
+    "eq23-trig-identity",
+    "eq26-log-sub",
+    "eq29-vec-force",
+    "eq30-dot-vibration",
+    "eq31-leftright-frac",
+    "eq32-leftright-norm",
+    "eq33-mathrm-diff",
+    "eq34-text-note",
+    "eq35-mse",
+    "eq37-set-ops",
+    "eq38-approx-propto",
+    "eq39-nabla-grad",
+    "eq40-partial-bp",
+    "eq41-sim-dist",
+    "eq42-forall-exists",
+    "eq48-binom"
+  ],
+  "entries": [
+    {
+      "id": "eq01-arith-frac",
+      "latex": "a + b - c = \\frac{a \\cdot b}{c} \\times 2",
+      "category": "四则/分式/根式",
+      "discipline": "管理学",
+      "scenario": "成本核算模型中的四则与分式混合运算",
+      "difficulty": "简单",
+      "usage": "display",
+      "thesisforge": {
+        "status": "success",
+        "error_type": null,
+        "command": null,
+        "message": null
+      },
+      "pandoc": {
+        "status": "success",
+        "stderr": null
+      }
+    },
+    {
+      "id": "eq02-frac-nested",
+      "latex": "\\frac{\\frac{a+b}{c+d}}{\\frac{x}{y} + 1}",
+      "category": "四则/分式/根式",
+      "discipline": "数学",
+      "scenario": "连分式化简（嵌套分式）",
+      "difficulty": "中等",
+      "usage": "display",
+      "thesisforge": {
+        "status": "success",
+        "error_type": null,
+        "command": null,
+        "message": null
+      },
+      "pandoc": {
+        "status": "success",
+        "stderr": null
+      }
+    },
+    {
+      "id": "eq03-quadratic",
+      "latex": "x = \\frac{-b \\pm \\sqrt{b^2 - 4ac}}{2a}",
+      "category": "四则/分式/根式",
+      "discipline": "数学",
+      "scenario": "一元二次方程求根公式（分式套根式）",
+      "difficulty": "简单",
+      "usage": "display",
+      "thesisforge": {
+        "status": "success",
+        "error_type": null,
+        "command": null,
+        "message": null
+      },
+      "pandoc": {
+        "status": "success",
+        "stderr": null
+      }
+    },
+    {
+      "id": "eq04-stddev",
+      "latex": "\\sigma = \\sqrt{\\frac{1}{N} \\sum_{i=1}^{N} (x_i - \\mu)^2}",
+      "category": "四则/分式/根式",
+      "discipline": "统计学",
+      "scenario": "总体标准差定义（根式+分式+求和+上下标复合）",
+      "difficulty": "中等",
+      "usage": "display",
+      "thesisforge": {
+        "status": "success",
+        "error_type": null,
+        "command": null,
+        "message": null
+      },
+      "pandoc": {
+        "status": "success",
+        "stderr": null
+      }
+    },
+    {
+      "id": "eq05-emc2",
+      "latex": "E = mc^2",
+      "category": "上下标",
+      "discipline": "物理",
+      "scenario": "质能方程（单字符上标）",
+      "difficulty": "简单",
+      "usage": "display",
+      "thesisforge": {
+        "status": "success",
+        "error_type": null,
+        "command": null,
+        "message": null
+      },
+      "pandoc": {
+        "status": "success",
+        "stderr": null
+      }
+    },
+    {
+      "id": "eq06-dl-weight",
+      "latex": "w_{ij}^{(l)} = w_{ij}^{(l)} - \\eta g_{ij}",
+      "category": "上下标",
+      "discipline": "计算机",
+      "scenario": "神经网络权重更新（复合下标 + 带括号上标）",
+      "difficulty": "简单",
+      "usage": "display",
+      "thesisforge": {
+        "status": "unsupported",
+        "error_type": "UnsupportedMathError",
+        "command": "\\eta",
+        "message": "Unsupported LaTeX command: \\eta"
+      },
+      "pandoc": {
+        "status": "success",
+        "stderr": null
+      }
+    },
+    {
+      "id": "eq07-gauss-kernel",
+      "latex": "K(x_i, x_j) = e^{-\\frac{d_{ij}^2}{2\\sigma^2}}",
+      "category": "上下标",
+      "discipline": "计算机",
+      "scenario": "SVM 高斯核函数（上标为整组分式）",
+      "difficulty": "中等",
+      "usage": "display",
+      "thesisforge": {
+        "status": "success",
+        "error_type": null,
+        "command": null,
+        "message": null
+      },
+      "pandoc": {
+        "status": "success",
+        "stderr": null
+      }
+    },
+    {
+      "id": "eq08-sum-gauss",
+      "latex": "\\sum_{i=1}^{n} i = \\frac{n(n+1)}{2}",
+      "category": "求和/积分/极限/乘积",
+      "discipline": "数学",
+      "scenario": "等差数列求和（带上下限）",
+      "difficulty": "简单",
+      "usage": "display",
+      "thesisforge": {
+        "status": "success",
+        "error_type": null,
+        "command": null,
+        "message": null
+      },
+      "pandoc": {
+        "status": "success",
+        "stderr": null
+      }
+    },
+    {
+      "id": "eq09-sum-double",
+      "latex": "\\sum_{i=1}^{m} \\sum_{j=1}^{n} a_{ij} = \\sum_{j=1}^{n} \\sum_{i=1}^{m} a_{ij}",
+      "category": "求和/积分/极限/乘积",
+      "discipline": "数学",
+      "scenario": "二重求和交换次序",
+      "difficulty": "中等",
+      "usage": "display",
+      "thesisforge": {
+        "status": "success",
+        "error_type": null,
+        "command": null,
+        "message": null
+      },
+      "pandoc": {
+        "status": "success",
+        "stderr": null
+      }
+    },
+    {
+      "id": "eq10-entropy",
+      "latex": "H(X) = -\\sum_{i=1}^{n} p(x_i) \\log p(x_i)",
+      "category": "求和/积分/极限/乘积",
+      "discipline": "计算机",
+      "scenario": "信息熵定义（求和 + 对数函数）",
+      "difficulty": "简单",
+      "usage": "display",
+      "thesisforge": {
+        "status": "success",
+        "error_type": null,
+        "command": null,
+        "message": null
+      },
+      "pandoc": {
+        "status": "success",
+        "stderr": null
+      }
+    },
+    {
+      "id": "eq11-int-newton",
+      "latex": "\\int_{a}^{b} f(x) dx = F(b) - F(a)",
+      "category": "求和/积分/极限/乘积",
+      "discipline": "数学",
+      "scenario": "牛顿-莱布尼茨公式（定积分上下限）",
+      "difficulty": "中等",
+      "usage": "display",
+      "thesisforge": {
+        "status": "unsupported",
+        "error_type": "UnsupportedMathError",
+        "command": "\\int",
+        "message": "Unsupported LaTeX command: \\int"
+      },
+      "pandoc": {
+        "status": "success",
+        "stderr": null
+      }
+    },
+    {
+      "id": "eq12-fourier",
+      "latex": "X(\\omega) = \\int_{-\\infty}^{\\infty} x(t) e^{-j\\omega t} dt",
+      "category": "求和/积分/极限/乘积",
+      "discipline": "电子",
+      "scenario": "傅里叶变换定义（无穷限积分）",
+      "difficulty": "困难",
+      "usage": "display",
+      "thesisforge": {
+        "status": "unsupported",
+        "error_type": "UnsupportedMathError",
+        "command": "\\int",
+        "message": "Unsupported LaTeX command: \\int"
+      },
+      "pandoc": {
+        "status": "success",
+        "stderr": null
+      }
+    },
+    {
+      "id": "eq13-prod-likelihood",
+      "latex": "L(\\theta) = \\prod_{i=1}^{n} f(x_i; \\theta)",
+      "category": "求和/积分/极限/乘积",
+      "discipline": "统计学",
+      "scenario": "极大似然函数（连乘上下限）",
+      "difficulty": "中等",
+      "usage": "display",
+      "thesisforge": {
+        "status": "unsupported",
+        "error_type": "UnsupportedMathError",
+        "command": "\\prod",
+        "message": "Unsupported LaTeX command: \\prod"
+      },
+      "pandoc": {
+        "status": "success",
+        "stderr": null
+      }
+    },
+    {
+      "id": "eq14-lim-e",
+      "latex": "\\lim_{n \\to \\infty} (1 + \\frac{1}{n})^n = e",
+      "category": "求和/积分/极限/乘积",
+      "discipline": "数学",
+      "scenario": "自然对数底 e 的极限定义",
+      "difficulty": "中等",
+      "usage": "display",
+      "thesisforge": {
+        "status": "unsupported",
+        "error_type": "UnsupportedMathError",
+        "command": "\\lim",
+        "message": "Unsupported LaTeX command: \\lim"
+      },
+      "pandoc": {
+        "status": "success",
+        "stderr": null
+      }
+    },
+    {
+      "id": "eq15-greek-basic",
+      "latex": "\\alpha \\cos \\theta + \\beta \\sin \\theta = \\gamma",
+      "category": "希腊字母",
+      "discipline": "数学",
+      "scenario": "三角函数线性组合（小写希腊字母 + 三角函数）",
+      "difficulty": "简单",
+      "usage": "display",
+      "thesisforge": {
+        "status": "success",
+        "error_type": null,
+        "command": null,
+        "message": null
+      },
+      "pandoc": {
+        "status": "success",
+        "stderr": null
+      }
+    },
+    {
+      "id": "eq16-greek-extended",
+      "latex": "\\nu \\tau \\chi \\psi \\varepsilon \\varphi",
+      "category": "希腊字母",
+      "discipline": "物理",
+      "scenario": "扩展希腊字母（流体力学/量子力学常用）",
+      "difficulty": "简单",
+      "usage": "display",
+      "thesisforge": {
+        "status": "unsupported",
+        "error_type": "UnsupportedMathError",
+        "command": "\\nu",
+        "message": "Unsupported LaTeX command: \\nu"
+      },
+      "pandoc": {
+        "status": "success",
+        "stderr": null
+      }
+    },
+    {
+      "id": "eq17-greek-mechanics",
+      "latex": "\\sum F = ma, \\sum M = I \\alpha",
+      "category": "希腊字母",
+      "discipline": "机械",
+      "scenario": "刚体平面运动方程（求和号无上下限 + 希腊字母）",
+      "difficulty": "简单",
+      "usage": "display",
+      "thesisforge": {
+        "status": "success",
+        "error_type": null,
+        "command": null,
+        "message": null
+      },
+      "pandoc": {
+        "status": "success",
+        "stderr": null
+      }
+    },
+    {
+      "id": "eq18-pmatrix",
+      "latex": "A = \\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix}",
+      "category": "矩阵/行列式",
+      "discipline": "数学",
+      "scenario": "二阶矩阵（pmatrix 环境）",
+      "difficulty": "中等",
+      "usage": "display",
+      "thesisforge": {
+        "status": "unsupported",
+        "error_type": "UnsupportedMathError",
+        "command": "\\begin",
+        "message": "Unsupported LaTeX command: \\begin"
+      },
+      "pandoc": {
+        "status": "success",
+        "stderr": null
+      }
+    },
+    {
+      "id": "eq19-bmatrix-det",
+      "latex": "\\det A = \\begin{vmatrix} a & b \\\\ c & d \\end{vmatrix} = ad - bc",
+      "category": "矩阵/行列式",
+      "discipline": "数学",
+      "scenario": "二阶行列式展开（vmatrix 环境 + \\det）",
+      "difficulty": "中等",
+      "usage": "display",
+      "thesisforge": {
+        "status": "unsupported",
+        "error_type": "UnsupportedMathError",
+        "command": "\\det",
+        "message": "Unsupported LaTeX command: \\det"
+      },
+      "pandoc": {
+        "status": "success",
+        "stderr": null
+      }
+    },
+    {
+      "id": "eq20-cases",
+      "latex": "f(x) = \\begin{cases} x^2, & x \\geq 0 \\\\ -x, & x < 0 \\end{cases}",
+      "category": "分段函数",
+      "discipline": "数学",
+      "scenario": "分段函数（cases 环境，信号分段定义亦常用）",
+      "difficulty": "中等",
+      "usage": "display",
+      "thesisforge": {
+        "status": "unsupported",
+        "error_type": "UnsupportedMathError",
+        "command": "\\begin",
+        "message": "Unsupported LaTeX command: \\begin"
+      },
+      "pandoc": {
+        "status": "success",
+        "stderr": null
+      }
+    },
+    {
+      "id": "eq21-aligned",
+      "latex": "\\begin{aligned} y &= ax + b \\\\ &= c \\end{aligned}",
+      "category": "多行对齐",
+      "discipline": "数学",
+      "scenario": "多行推导对齐（aligned 环境 + & 对齐点）",
+      "difficulty": "中等",
+      "usage": "display",
+      "thesisforge": {
+        "status": "unsupported",
+        "error_type": "UnsupportedMathError",
+        "command": "\\begin",
+        "message": "Unsupported LaTeX command: \\begin"
+      },
+      "pandoc": {
+        "status": "success",
+        "stderr": null
+      }
+    },
+    {
+      "id": "eq22-multiline-bare",
+      "latex": "y = a + b \\\\ z = c + d",
+      "category": "多行对齐",
+      "discipline": "计算机",
+      "scenario": "无环境换行写法（\\\\ 直接断行，常见但不规范）",
+      "difficulty": "中等",
+      "usage": "display",
+      "thesisforge": {
+        "status": "success",
+        "error_type": null,
+        "command": null,
+        "message": null
+      },
+      "pandoc": {
+        "status": "failed",
+        "stderr": "[WARNING] Could not convert TeX math \n  y = a + b \\\\ z = c + d\n  , rendering as TeX:\n  \n               ^\n  unexpected control sequence \\\\\n  expecting \"%\", \"\\\\label\", \"\\\\tag\", \"\\\\nonumber\", whitespace or \"\\\\allowbreak\""
+      }
+    },
+    {
+      "id": "eq23-trig-identity",
+      "latex": "\\sin^2 \\theta + \\cos^2 \\theta = 1",
+      "category": "三角/对数/指数",
+      "discipline": "数学",
+      "scenario": "三角恒等式（函数名直接带上标）",
+      "difficulty": "简单",
+      "usage": "display",
+      "thesisforge": {
+        "status": "syntax_error",
+        "error_type": "MathSyntaxError",
+        "command": null,
+        "message": "Unexpected '^' at offset 4"
+      },
+      "pandoc": {
+        "status": "success",
+        "stderr": null
+      }
+    },
+    {
+      "id": "eq24-log-decay",
+      "latex": "\\ln \\frac{N}{N_0} = -kt",
+      "category": "三角/对数/指数",
+      "discipline": "物理",
+      "scenario": "放射性衰变定律（对数函数 + 分式参数）",
+      "difficulty": "简单",
+      "usage": "display",
+      "thesisforge": {
+        "status": "success",
+        "error_type": null,
+        "command": null,
+        "message": null
+      },
+      "pandoc": {
+        "status": "success",
+        "stderr": null
+      }
+    },
+    {
+      "id": "eq25-exp-braced",
+      "latex": "\\exp{(-\\lambda t)} = e^{-\\lambda t}",
+      "category": "三角/对数/指数",
+      "discipline": "电子",
+      "scenario": "RC 电路放电曲线（指数函数两种写法）",
+      "difficulty": "简单",
+      "usage": "display",
+      "thesisforge": {
+        "status": "success",
+        "error_type": null,
+        "command": null,
+        "message": null
+      },
+      "pandoc": {
+        "status": "success",
+        "stderr": null
+      }
+    },
+    {
+      "id": "eq26-log-sub",
+      "latex": "T(n) = O(n \\log_2 n)",
+      "category": "三角/对数/指数",
+      "discipline": "计算机",
+      "scenario": "分治算法复杂度（对数带底数下标）",
+      "difficulty": "简单",
+      "usage": "display",
+      "thesisforge": {
+        "status": "syntax_error",
+        "error_type": "MathSyntaxError",
+        "command": null,
+        "message": "Unexpected '_' at offset 15"
+      },
+      "pandoc": {
+        "status": "success",
+        "stderr": null
+      }
+    },
+    {
+      "id": "eq27-hat-reg",
+      "latex": "\\hat y = \\beta_0 + \\beta_1 x",
+      "category": "accent",
+      "discipline": "管理学",
+      "scenario": "一元线性回归估计值（\\hat）",
+      "difficulty": "简单",
+      "usage": "display",
+      "thesisforge": {
+        "status": "success",
+        "error_type": null,
+        "command": null,
+        "message": null
+      },
+      "pandoc": {
+        "status": "success",
+        "stderr": null
+      }
+    },
+    {
+      "id": "eq28-bar-mean",
+      "latex": "\\bar x = \\frac{1}{n} \\sum_{i=1}^{n} x_i",
+      "category": "accent",
+      "discipline": "统计学",
+      "scenario": "样本均值（\\bar + 求和）",
+      "difficulty": "简单",
+      "usage": "display",
+      "thesisforge": {
+        "status": "success",
+        "error_type": null,
+        "command": null,
+        "message": null
+      },
+      "pandoc": {
+        "status": "success",
+        "stderr": null
+      }
+    },
+    {
+      "id": "eq29-vec-force",
+      "latex": "\\vec F = m \\vec a",
+      "category": "accent",
+      "discipline": "机械",
+      "scenario": "牛顿第二定律矢量形式（\\vec）",
+      "difficulty": "简单",
+      "usage": "display",
+      "thesisforge": {
+        "status": "unsupported",
+        "error_type": "UnsupportedMathError",
+        "command": "\\vec",
+        "message": "Unsupported LaTeX command: \\vec"
+      },
+      "pandoc": {
+        "status": "success",
+        "stderr": null
+      }
+    },
+    {
+      "id": "eq30-dot-vibration",
+      "latex": "m \\ddot x + c \\dot x + k x = F(t)",
+      "category": "accent",
+      "discipline": "机械",
+      "scenario": "单自由度受迫振动方程（\\dot/\\ddot 时间导数记号）",
+      "difficulty": "中等",
+      "usage": "display",
+      "thesisforge": {
+        "status": "unsupported",
+        "error_type": "UnsupportedMathError",
+        "command": "\\ddot",
+        "message": "Unsupported LaTeX command: \\ddot"
+      },
+      "pandoc": {
+        "status": "success",
+        "stderr": null
+      }
+    },
+    {
+      "id": "eq31-leftright-frac",
+      "latex": "\\left( \\frac{a+b}{c} \\right)^2",
+      "category": "括号自适应",
+      "discipline": "数学",
+      "scenario": "分式外加自适应圆括号",
+      "difficulty": "简单",
+      "usage": "display",
+      "thesisforge": {
+        "status": "unsupported",
+        "error_type": "UnsupportedMathError",
+        "command": "\\left",
+        "message": "Unsupported LaTeX command: \\left"
+      },
+      "pandoc": {
+        "status": "success",
+        "stderr": null
+      }
+    },
+    {
+      "id": "eq32-leftright-norm",
+      "latex": "\\left\\| x \\right\\|_2 = \\sqrt{\\sum_{i=1}^{n} x_i^2}",
+      "category": "括号自适应",
+      "discipline": "计算机",
+      "scenario": "向量 L2 范数（\\left\\| \\right\\| 自适应双竖线）",
+      "difficulty": "中等",
+      "usage": "display",
+      "thesisforge": {
+        "status": "unsupported",
+        "error_type": "UnsupportedMathError",
+        "command": "\\left",
+        "message": "Unsupported LaTeX command: \\left"
+      },
+      "pandoc": {
+        "status": "success",
+        "stderr": null
+      }
+    },
+    {
+      "id": "eq33-mathrm-diff",
+      "latex": "\\frac{\\mathrm{d} y}{\\mathrm{d} x} = 2x",
+      "category": "文本",
+      "discipline": "数学",
+      "scenario": "直立微分算子写法（国标推荐 \\mathrm{d}）",
+      "difficulty": "简单",
+      "usage": "display",
+      "thesisforge": {
+        "status": "unsupported",
+        "error_type": "UnsupportedMathError",
+        "command": "\\mathrm",
+        "message": "Unsupported LaTeX command: \\mathrm"
+      },
+      "pandoc": {
+        "status": "success",
+        "stderr": null
+      }
+    },
+    {
+      "id": "eq34-text-note",
+      "latex": "F = ma, \\text{其中 } m \\text{ 为质量}",
+      "category": "文本",
+      "discipline": "物理",
+      "scenario": "公式内嵌中文文字注释（\\text）",
+      "difficulty": "简单",
+      "usage": "display",
+      "thesisforge": {
+        "status": "unsupported",
+        "error_type": "UnsupportedMathError",
+        "command": "\\text",
+        "message": "Unsupported LaTeX command: \\text"
+      },
+      "pandoc": {
+        "status": "success",
+        "stderr": null
+      }
+    },
+    {
+      "id": "eq35-mse",
+      "latex": "\\mathrm{MSE} = \\frac{1}{n} \\sum_{i=1}^{n} (y_i - \\hat y_i)^2",
+      "category": "文本",
+      "discipline": "计算机",
+      "scenario": "均方误差指标（\\mathrm 多字母缩写 + \\hat 组合）",
+      "difficulty": "简单",
+      "usage": "display",
+      "thesisforge": {
+        "status": "unsupported",
+        "error_type": "UnsupportedMathError",
+        "command": "\\mathrm",
+        "message": "Unsupported LaTeX command: \\mathrm"
+      },
+      "pandoc": {
+        "status": "success",
+        "stderr": null
+      }
+    },
+    {
+      "id": "eq36-ops-supported",
+      "latex": "a \\cdot b \\times c \\leq d \\neq e \\geq f \\pm g",
+      "category": "运算符",
+      "discipline": "数学",
+      "scenario": "常用关系与算术运算符（现有子集已声明支持的部分）",
+      "difficulty": "简单",
+      "usage": "display",
+      "thesisforge": {
+        "status": "success",
+        "error_type": null,
+        "command": null,
+        "message": null
+      },
+      "pandoc": {
+        "status": "success",
+        "stderr": null
+      }
+    },
+    {
+      "id": "eq37-set-ops",
+      "latex": "A \\subset B, x \\in A \\Rightarrow x \\in B",
+      "category": "运算符",
+      "discipline": "数学",
+      "scenario": "集合包含与蕴含（\\subset \\in \\Rightarrow）",
+      "difficulty": "简单",
+      "usage": "display",
+      "thesisforge": {
+        "status": "unsupported",
+        "error_type": "UnsupportedMathError",
+        "command": "\\subset",
+        "message": "Unsupported LaTeX command: \\subset"
+      },
+      "pandoc": {
+        "status": "success",
+        "stderr": null
+      }
+    },
+    {
+      "id": "eq38-approx-propto",
+      "latex": "\\hat \\theta \\approx \\theta, \\sigma \\propto \\frac{1}{\\sqrt{n}}",
+      "category": "运算符",
+      "discipline": "统计学",
+      "scenario": "估计量近似与正比关系（\\approx \\propto）",
+      "difficulty": "简单",
+      "usage": "display",
+      "thesisforge": {
+        "status": "unsupported",
+        "error_type": "UnsupportedMathError",
+        "command": "\\approx",
+        "message": "Unsupported LaTeX command: \\approx"
+      },
+      "pandoc": {
+        "status": "success",
+        "stderr": null
+      }
+    },
+    {
+      "id": "eq39-nabla-grad",
+      "latex": "\\nabla L = \\left( \\frac{\\partial L}{\\partial w_1}, \\frac{\\partial L}{\\partial w_2} \\right)",
+      "category": "运算符",
+      "discipline": "计算机",
+      "scenario": "损失函数梯度向量（\\nabla \\partial + 自适应括号）",
+      "difficulty": "中等",
+      "usage": "display",
+      "thesisforge": {
+        "status": "unsupported",
+        "error_type": "UnsupportedMathError",
+        "command": "\\nabla",
+        "message": "Unsupported LaTeX command: \\nabla"
+      },
+      "pandoc": {
+        "status": "success",
+        "stderr": null
+      }
+    },
+    {
+      "id": "eq40-partial-bp",
+      "latex": "\\frac{\\partial L}{\\partial w_{ij}} = \\delta_j x_i",
+      "category": "运算符",
+      "discipline": "计算机",
+      "scenario": "反向传播链式求导（\\partial 偏微分）",
+      "difficulty": "中等",
+      "usage": "display",
+      "thesisforge": {
+        "status": "unsupported",
+        "error_type": "UnsupportedMathError",
+        "command": "\\partial",
+        "message": "Unsupported LaTeX command: \\partial"
+      },
+      "pandoc": {
+        "status": "success",
+        "stderr": null
+      }
+    },
+    {
+      "id": "eq41-sim-dist",
+      "latex": "x \\sim N(\\mu, \\sigma^2)",
+      "category": "运算符",
+      "discipline": "统计学",
+      "scenario": "正态分布服从记号（\\sim）",
+      "difficulty": "简单",
+      "usage": "display",
+      "thesisforge": {
+        "status": "unsupported",
+        "error_type": "UnsupportedMathError",
+        "command": "\\sim",
+        "message": "Unsupported LaTeX command: \\sim"
+      },
+      "pandoc": {
+        "status": "success",
+        "stderr": null
+      }
+    },
+    {
+      "id": "eq42-forall-exists",
+      "latex": "\\forall \\epsilon > 0, \\exists \\delta > 0",
+      "category": "运算符",
+      "discipline": "数学",
+      "scenario": "极限定义的 ε-δ 语言（\\forall \\exists 量词）",
+      "difficulty": "简单",
+      "usage": "display",
+      "thesisforge": {
+        "status": "unsupported",
+        "error_type": "UnsupportedMathError",
+        "command": "\\forall",
+        "message": "Unsupported LaTeX command: \\forall"
+      },
+      "pandoc": {
+        "status": "success",
+        "stderr": null
+      }
+    },
+    {
+      "id": "eq43-cross-entropy",
+      "latex": "L = -\\frac{1}{N} \\sum_{i=1}^{N} \\sum_{c=1}^{C} y_{ic} \\log p_{ic}",
+      "category": "综合",
+      "discipline": "计算机",
+      "scenario": "深度学习交叉熵损失函数（编号公式）",
+      "difficulty": "中等",
+      "usage": "display",
+      "thesisforge": {
+        "status": "success",
+        "error_type": null,
+        "command": null,
+        "message": null
+      },
+      "pandoc": {
+        "status": "success",
+        "stderr": null
+      }
+    },
+    {
+      "id": "eq44-matrix-mult",
+      "latex": "c_{ij} = \\sum_{k=1}^{n} a_{ik} b_{kj}",
+      "category": "综合",
+      "discipline": "数学",
+      "scenario": "矩阵乘法逐元素定义",
+      "difficulty": "简单",
+      "usage": "display",
+      "thesisforge": {
+        "status": "success",
+        "error_type": null,
+        "command": null,
+        "message": null
+      },
+      "pandoc": {
+        "status": "success",
+        "stderr": null
+      }
+    },
+    {
+      "id": "eq45-eigen",
+      "latex": "A v = \\lambda v",
+      "category": "综合",
+      "discipline": "电子",
+      "scenario": "特征值方程（PCA / 信号子空间基础）",
+      "difficulty": "简单",
+      "usage": "display",
+      "thesisforge": {
+        "status": "success",
+        "error_type": null,
+        "command": null,
+        "message": null
+      },
+      "pandoc": {
+        "status": "success",
+        "stderr": null
+      }
+    },
+    {
+      "id": "eq46-bayes",
+      "latex": "P(A|B) = \\frac{P(B|A) P(A)}{P(B)}",
+      "category": "综合",
+      "discipline": "管理学",
+      "scenario": "贝叶斯决策公式（条件竖线为普通字符）",
+      "difficulty": "简单",
+      "usage": "display",
+      "thesisforge": {
+        "status": "success",
+        "error_type": null,
+        "command": null,
+        "message": null
+      },
+      "pandoc": {
+        "status": "success",
+        "stderr": null
+      }
+    },
+    {
+      "id": "eq47-cost-lr",
+      "latex": "J(\\theta) = \\frac{1}{2m} \\sum_{i=1}^{m} (h(x_i) - y_i)^2",
+      "category": "综合",
+      "discipline": "计算机",
+      "scenario": "线性回归代价函数",
+      "difficulty": "简单",
+      "usage": "display",
+      "thesisforge": {
+        "status": "success",
+        "error_type": null,
+        "command": null,
+        "message": null
+      },
+      "pandoc": {
+        "status": "success",
+        "stderr": null
+      }
+    },
+    {
+      "id": "eq48-binom",
+      "latex": "\\binom{n}{k} = \\frac{n!}{k!(n-k)!}",
+      "category": "综合",
+      "discipline": "数学",
+      "scenario": "组合数公式（\\binom 与阶乘）",
+      "difficulty": "简单",
+      "usage": "display",
+      "thesisforge": {
+        "status": "unsupported",
+        "error_type": "UnsupportedMathError",
+        "command": "\\binom",
+        "message": "Unsupported LaTeX command: \\binom"
+      },
+      "pandoc": {
+        "status": "success",
+        "stderr": null
+      }
+    },
+    {
+      "id": "eq49-inline-complexity",
+      "latex": "O(n \\log n)",
+      "category": "行内混排",
+      "discipline": "计算机",
+      "scenario": "行内算法复杂度记号（正文夹注）",
+      "difficulty": "简单",
+      "usage": "inline",
+      "thesisforge": {
+        "status": "success",
+        "error_type": null,
+        "command": null,
+        "message": null
+      },
+      "pandoc": {
+        "status": "success",
+        "stderr": null
+      }
+    },
+    {
+      "id": "eq50-inline-slope",
+      "latex": "k = \\frac{y_2 - y_1}{x_2 - x_1}",
+      "category": "行内混排",
+      "discipline": "数学",
+      "scenario": "行内斜率公式（与文字同段出现）",
+      "difficulty": "简单",
+      "usage": "inline",
+      "thesisforge": {
+        "status": "success",
+        "error_type": null,
+        "command": null,
+        "message": null
+      },
+      "pandoc": {
+        "status": "success",
+        "stderr": null
+      }
+    }
+  ]
+}
