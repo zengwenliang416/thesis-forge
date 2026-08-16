@@ -15,19 +15,45 @@ from .engine import (
 SUPPORTED_TYPES: set[str] = {
     "article",
     "book",
+    "incollection",
     "inproceedings",
+    "collection",
     "mastersthesis",
     "phdthesis",
+    "techreport",
+    "standard",
+    "patent",
+    "online",
+    "electronic",
+    "dataset",
+    "map",
+    "unpublished",
 }
 REQUIRED_FIELDS: dict[str, tuple[str, ...]] = {
-    "article": ("author", "title", "journal", "year"),
+    # article 的 year 允许由 biblatex `date` 派生（报纸条目只有 date）。
+    "article": ("author", "title", "journal"),
     "book": ("author", "title", "publisher", "year"),
+    "incollection": ("author", "title", "booktitle", "year"),
     "inproceedings": ("author", "title", "booktitle", "year"),
+    # 汇编 [G]：著者可为 editor（责任者替代）。
+    "collection": ("title", "publisher", "year"),
     "mastersthesis": ("author", "title", "school", "year"),
     "phdthesis": ("author", "title", "school", "year"),
+    "techreport": ("author", "title", "institution", "year"),
+    # 标准 [S] 通常无个人著者（题名居首）。
+    "standard": ("title", "year"),
+    "patent": ("author", "title", "number", "year"),
+    "online": ("title", "url"),
+    "electronic": ("title", "url"),
+    "dataset": ("author", "title", "publisher", "year"),
+    "map": ("author", "title", "publisher", "year"),
+    "unpublished": ("author", "title", "year"),
 }
+# 著者可缺省（题名居首）的条目类型。
+AUTHOR_OPTIONAL_TYPES: set[str] = {"standard", "online", "electronic"}
 IDENTIFIER_RE = re.compile(r"[A-Za-z][A-Za-z0-9_:-]*")
 WHITESPACE_RE = re.compile(r"\s+")
+YEAR_PREFIX_RE = re.compile(r"\d{4}")
 
 
 def _normalize_value(value: str) -> str:
@@ -181,6 +207,23 @@ class _BibTeXParser:
         raise BibliographyParseError(self.path, line, detail)
 
 
+def _split_names(value: str | None) -> tuple[str, ...]:
+    if not value:
+        return ()
+    return tuple(
+        name.strip()
+        for name in re.split(r"\s+and\s+", value, flags=re.IGNORECASE)
+        if name.strip()
+    )
+
+
+def _year_from_date(date: str | None) -> str | None:
+    if date is None:
+        return None
+    match = YEAR_PREFIX_RE.match(date.strip())
+    return match.group(0) if match else None
+
+
 def _record(
     entry_type: str,
     key: str,
@@ -192,12 +235,20 @@ def _record(
         if not fields.get(name):
             raise MissingBibliographyFieldError(key, entry_type, name)
 
-    authors = tuple(
-        author.strip()
-        for author in re.split(r"\s+and\s+", fields["author"], flags=re.IGNORECASE)
-        if author.strip()
-    )
-    if not authors:
+    year = fields.get("year") or _year_from_date(fields.get("date"))
+    if entry_type == "article" and not year:
+        raise MissingBibliographyFieldError(key, entry_type, "year")
+    entrysubtype = fields.get("entrysubtype")
+    if entrysubtype == "newspaper" and not fields.get("date"):
+        raise MissingBibliographyFieldError(key, entry_type, "date")
+
+    authors = _split_names(fields.get("author"))
+    editors = _split_names(fields.get("editor"))
+    if (
+        not authors
+        and entry_type not in AUTHOR_OPTIONAL_TYPES
+        and not (entry_type == "collection" and editors)
+    ):
         raise MissingBibliographyFieldError(key, entry_type, "author")
 
     return BibliographyRecord(
@@ -205,7 +256,7 @@ def _record(
         entry_type=entry_type,  # type: ignore[arg-type]
         authors=authors,
         title=fields["title"],
-        year=fields["year"],
+        year=year,
         journal=fields.get("journal"),
         booktitle=fields.get("booktitle"),
         publisher=fields.get("publisher"),
@@ -215,6 +266,15 @@ def _record(
         pages=_normalize_pages(fields.get("pages")),
         school=fields.get("school") or fields.get("institution"),
         doi=fields.get("doi"),
+        date=fields.get("date"),
+        urldate=fields.get("urldate"),
+        url=fields.get("url"),
+        edition=fields.get("edition"),
+        translators=_split_names(fields.get("translator")),
+        editors=editors,
+        entrysubtype=entrysubtype,
+        language=fields.get("langid") or fields.get("language"),
+        note=fields.get("note"),
     )
 
 

@@ -8,7 +8,7 @@ from pathlib import Path
 from thesis_forge.bibliography import (
     BibliographyDatabase,
     CitationFormatter,
-    Gbt7714Formatter,
+    resolve_citation_provider,
 )
 from thesis_forge.templates.model import NumberingSpec, SectionsSpec, ThesisTemplate
 
@@ -839,6 +839,19 @@ def _citation_order(citation_numbers: dict[str, int]) -> tuple[str, ...]:
     )
 
 
+def _effective_citation_style(
+    document: ThesisDocument,
+    template: ThesisTemplate | None,
+) -> str | None:
+    """D-07：文档 render.citation_style 优先，模板 citation.style 兜底。"""
+
+    if document.bibliography is not None and document.bibliography.citation_style:
+        return document.bibliography.citation_style
+    if template is not None and template.citation is not None:
+        return template.citation.style
+    return None
+
+
 def compile_document(
     document: ThesisDocument,
     template: ThesisTemplate | None = None,
@@ -858,7 +871,14 @@ def compile_document(
         citation_formatter=(
             citation_formatter
             if citation_formatter is not None
-            else (Gbt7714Formatter() if bibliography_database is not None else None)
+            else (
+                # D-07：citation_style 真正参与 provider 选择；未知样式在此
+                # 抛出 UnsupportedCitationStyleError（正常流程由 validator 的
+                # unsupported-citation-style 诊断先行拦截）。
+                resolve_citation_provider(_effective_citation_style(document, template))
+                if bibliography_database is not None
+                else None
+            )
         ),
         semantic=_SemanticContext(),
     )

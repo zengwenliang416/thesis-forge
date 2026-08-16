@@ -406,3 +406,88 @@ render:
     context.rules = ()
     assert validate_document(document, context) == []
     assert context.bibliography_database is None
+
+
+def test_validation_reports_unsupported_citation_style(tmp_path: Path):
+    (tmp_path / "references.bib").write_text(
+        """@article{known,
+  author = {Doe, Jane},
+  title = {Known Record},
+  journal = {Journal},
+  year = {2025}
+}
+""",
+        encoding="utf-8",
+    )
+    source = tmp_path / "thesis.md"
+    source.write_text(
+        """---
+thesis:
+  title: "测试论文"
+author:
+  name: "测试作者"
+render:
+  bibliography: "./references.bib"
+  citation_style: "apa-7"
+---
+
+# 绪论 {#chap:intro}
+
+已有研究 [@known]。
+""",
+        encoding="utf-8",
+    )
+    context = ValidationContext(
+        template=load_template("templates/base/bachelor.yaml"),
+    )
+
+    issues = validate_document(parse_markdown(source), context)
+
+    unsupported = [issue for issue in issues if issue.code == "unsupported-citation-style"]
+    assert len(unsupported) == 1
+    assert unsupported[0].severity == "error"
+    assert unsupported[0].target == "apa-7"
+    assert unsupported[0].line == 13
+    assert "GB-T-7714-2025" in unsupported[0].details["supported_styles"]
+    # 样式不可解析时不应静默加载并继续渲染。
+    assert context.bibliography_database is None
+    assert not any(issue.code == "missing-citation" for issue in issues)
+
+
+def test_validation_accepts_citation_style_alias_and_template_default(tmp_path: Path):
+    (tmp_path / "references.bib").write_text(
+        """@article{known,
+  author = {Doe, Jane},
+  title = {Known Record},
+  journal = {Journal},
+  year = {2025}
+}
+""",
+        encoding="utf-8",
+    )
+    source = tmp_path / "thesis.md"
+    source.write_text(
+        """---
+thesis:
+  title: "测试论文"
+author:
+  name: "测试作者"
+render:
+  bibliography: "./references.bib"
+  citation_style: "gbt7714"
+---
+
+# 绪论 {#chap:intro}
+
+已有研究 [@known]。
+""",
+        encoding="utf-8",
+    )
+    context = ValidationContext(
+        template=load_template("templates/base/bachelor.yaml"),
+    )
+
+    issues = validate_document(parse_markdown(source), context)
+
+    assert not any(issue.code == "unsupported-citation-style" for issue in issues)
+    assert context.bibliography_database is not None

@@ -11,6 +11,8 @@ from thesis_forge.bibliography import (
     BibliographyLoader,
     BibliographyParseError,
     LocalBibTeXLoader,
+    normalize_citation_style,
+    supported_citation_styles,
 )
 from thesis_forge.templates import (
     TemplateAmbiguousError,
@@ -314,6 +316,27 @@ def _validate_bibliography(
         bibliography_path,
     )
     line = first_citation.location.line if first_citation is not None else None
+
+    # D-07：citation_style / 模板 citation.style 必须真正可解析；不支持的
+    # 样式给结构化诊断，而不是静默回落默认 GB/T 引擎。
+    style = document.bibliography.citation_style if document.bibliography else None
+    if (
+        style is None
+        and context.template is not None
+        and context.template.citation is not None
+    ):
+        style = context.template.citation.style
+    if style is not None and normalize_citation_style(style) is None:
+        yield ValidationIssue(
+            code="unsupported-citation-style",
+            severity="error",
+            message="Configured citation style is not supported",
+            line=line,
+            target=style,
+            details={"supported_styles": ", ".join(supported_citation_styles())},
+        )
+        return
+
     if escaped:
         yield ValidationIssue(
             code="resource-path-escape",

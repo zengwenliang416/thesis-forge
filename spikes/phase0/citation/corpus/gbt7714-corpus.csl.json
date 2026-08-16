@@ -1,0 +1,657 @@
+[
+  {
+    "DOI": "10.3760/cma.j.cn112149-20240115-00032",
+    "author": [
+      {
+        "family": "王晓明"
+      },
+      {
+        "family": "李红霞"
+      },
+      {
+        "family": "陈志强"
+      }
+    ],
+    "container-title": "中华放射学杂志",
+    "id": "zh-article-3",
+    "issue": "3",
+    "issued": {
+      "date-parts": [
+        [
+          2024
+        ]
+      ]
+    },
+    "page": "245-252",
+    "title": "深度学习在医学影像分析中的应用",
+    "type": "article-journal",
+    "volume": "58"
+  },
+  {
+    "author": [
+      {
+        "family": "刘洋"
+      },
+      {
+        "family": "赵敏"
+      },
+      {
+        "family": "孙建国"
+      },
+      {
+        "family": "周丽萍"
+      },
+      {
+        "family": "吴国强"
+      }
+    ],
+    "container-title": "交通运输工程学报",
+    "id": "zh-article-etal",
+    "issue": "4",
+    "issued": {
+      "date-parts": [
+        [
+          2023
+        ]
+      ]
+    },
+    "page": "1-15",
+    "title": "城市轨道交通客流预测方法综述",
+    "type": "article-journal",
+    "volume": "23"
+  },
+  {
+    "author": [
+      {
+        "family": "Smith",
+        "given": "John"
+      },
+      {
+        "family": "Doe",
+        "given": "Jane"
+      },
+      {
+        "family": "Roe",
+        "given": "Richard"
+      },
+      {
+        "family": "Poe",
+        "given": "Ann"
+      }
+    ],
+    "container-title": "Journal of Document Engineering",
+    "id": "en-article-etal",
+    "issue": "2",
+    "issued": {
+      "date-parts": [
+        [
+          2024
+        ]
+      ]
+    },
+    "language": "en-US",
+    "page": "101-118",
+    "title": "Deterministic Compilation of Academic Documents",
+    "type": "article-journal",
+    "volume": "12"
+  },
+  {
+    "DOI": "10.1145/3512345",
+    "author": [
+      {
+        "family": "Brown",
+        "given": "Alice"
+      },
+      {
+        "family": "Green",
+        "given": "Bob"
+      }
+    ],
+    "container-title": "ACM Computing Surveys",
+    "id": "en-article-doi",
+    "issue": "7",
+    "issued": {
+      "date-parts": [
+        [
+          2022
+        ]
+      ]
+    },
+    "language": "en-US",
+    "page": "1-34",
+    "title": "Template Driven Rendering Pipelines",
+    "type": "article-journal",
+    "volume": "54"
+  },
+  {
+    "author": [
+      {
+        "family": "陈思远"
+      }
+    ],
+    "container-title": "教育研究",
+    "id": "zh-article-no-volume",
+    "issue": "6",
+    "issued": {
+      "date-parts": [
+        [
+          2023
+        ]
+      ]
+    },
+    "page": "88-95",
+    "title": "乡村教师队伍建设的路径分析",
+    "type": "article-journal"
+  },
+  {
+    "author": [
+      {
+        "family": "李冬梅"
+      },
+      {
+        "family": "王海涛"
+      }
+    ],
+    "container-title": "材料导报",
+    "id": "zh-article-no-pages",
+    "issue": "11",
+    "issued": {
+      "date-parts": [
+        [
+          2024
+        ]
+      ]
+    },
+    "title": "新型储能材料研究进展",
+    "type": "article-journal",
+    "volume": "38"
+  },
+  {
+    "DOI": "10.1016/j.joi.2025.101555",
+    "author": [
+      {
+        "family": "Miller",
+        "given": "David"
+      }
+    ],
+    "container-title": "Journal of Informetrics",
+    "id": "en-article-online-first",
+    "issued": {
+      "date-parts": [
+        [
+          2025
+        ]
+      ]
+    },
+    "language": "en-US",
+    "title": "Citation Graph Analysis at Scale",
+    "type": "article-journal"
+  },
+  {
+    "author": [
+      {
+        "family": "张伟"
+      },
+      {
+        "family": "李娜"
+      }
+    ],
+    "container-title": "Chinese Journal of Computers",
+    "id": "mixed-article",
+    "issue": "9",
+    "issued": {
+      "date-parts": [
+        [
+          2023
+        ]
+      ]
+    },
+    "page": "1901-1915",
+    "title": "An Efficient Algorithm for Bibliographic Parsing",
+    "type": "article-journal",
+    "volume": "46"
+  },
+  {
+    "author": [
+      {
+        "family": "许嘉璐"
+      }
+    ],
+    "id": "zh-book",
+    "issued": {
+      "date-parts": [
+        [
+          2020
+        ]
+      ]
+    },
+    "publisher": "中华书局",
+    "publisher-place": "北京",
+    "title": "中国古代文化常识",
+    "type": "book"
+  },
+  {
+    "author": [
+      {
+        "family": "Kuhn",
+        "given": "Thomas S"
+      }
+    ],
+    "edition": "2",
+    "id": "en-book-edition",
+    "issued": {
+      "date-parts": [
+        [
+          1970
+        ]
+      ]
+    },
+    "language": "en-US",
+    "publisher": "University of Chicago Press",
+    "publisher-place": "Chicago",
+    "title": "The Structure of Scientific Revolutions",
+    "type": "book"
+  },
+  {
+    "author": [
+      {
+        "family": "Huntington",
+        "given": "Samuel P"
+      }
+    ],
+    "id": "zh-book-translator",
+    "issued": {
+      "date-parts": [
+        [
+          2010
+        ]
+      ]
+    },
+    "publisher": "新华出版社",
+    "publisher-place": "北京",
+    "title": "文明的冲突与世界秩序的重建",
+    "translator": [
+      {
+        "family": "周琪"
+      },
+      {
+        "family": "刘绯"
+      }
+    ],
+    "type": "book"
+  },
+  {
+    "author": [
+      {
+        "literal": "中华人民共和国教育部"
+      }
+    ],
+    "id": "org-book",
+    "issued": {
+      "date-parts": [
+        [
+          2023
+        ]
+      ]
+    },
+    "publisher": "中国统计出版社",
+    "publisher-place": "北京",
+    "title": "中国教育统计年鉴. 2022",
+    "type": "book"
+  },
+  {
+    "author": [
+      {
+        "family": "钱钟书"
+      }
+    ],
+    "container-title": "钱钟书论学文选",
+    "editor": [
+      {
+        "family": "舒展"
+      }
+    ],
+    "id": "zh-incollection",
+    "issued": {
+      "date-parts": [
+        [
+          1990
+        ]
+      ]
+    },
+    "page": "320-335",
+    "publisher": "花城出版社",
+    "publisher-place": "广州",
+    "title": "诗可以怨",
+    "type": "chapter"
+  },
+  {
+    "author": [
+      {
+        "family": "Gamma",
+        "given": "Erich"
+      },
+      {
+        "family": "Helm",
+        "given": "Richard"
+      }
+    ],
+    "container-title": "Pattern Languages of Program Design",
+    "editor": [
+      {
+        "family": "Coplien",
+        "given": "James O"
+      }
+    ],
+    "id": "en-incollection",
+    "issued": {
+      "date-parts": [
+        [
+          1998
+        ]
+      ]
+    },
+    "language": "en-US",
+    "page": "55-80",
+    "publisher": "Addison-Wesley",
+    "publisher-place": "Reading",
+    "title": "Design Patterns in Dynamic Languages",
+    "type": "chapter"
+  },
+  {
+    "author": [
+      {
+        "family": "王坚"
+      },
+      {
+        "family": "李晓东"
+      }
+    ],
+    "container-title": "第十二届全国计算机系统结构年会论文集",
+    "id": "zh-inproceedings",
+    "issued": {
+      "date-parts": [
+        [
+          2022
+        ]
+      ]
+    },
+    "page": "45-52",
+    "publisher": "电子科技大学出版社",
+    "publisher-place": "成都",
+    "title": "大规模分布式系统的容错机制",
+    "type": "paper-conference"
+  },
+  {
+    "author": [
+      {
+        "family": "Vaswani",
+        "given": "Ashish"
+      },
+      {
+        "family": "Shazeer",
+        "given": "Noam"
+      },
+      {
+        "family": "Parmar",
+        "given": "Niki"
+      },
+      {
+        "family": "Uszkoreit",
+        "given": "Jakob"
+      }
+    ],
+    "container-title": "Advances in Neural Information Processing Systems 30",
+    "id": "en-inproceedings",
+    "issued": {
+      "date-parts": [
+        [
+          2017
+        ]
+      ]
+    },
+    "language": "en-US",
+    "page": "5998-6008",
+    "publisher-place": "Long Beach",
+    "title": "Attention Is All You Need",
+    "type": "paper-conference"
+  },
+  {
+    "editor": [
+      {
+        "family": "中共中央文献研究室"
+      }
+    ],
+    "id": "collection-g",
+    "issued": {
+      "date-parts": [
+        [
+          2011
+        ]
+      ]
+    },
+    "publisher": "中央文献出版社",
+    "publisher-place": "北京",
+    "title": "建国以来重要文献选编",
+    "type": "book"
+  },
+  {
+    "author": [
+      {
+        "family": "新华社"
+      }
+    ],
+    "container-title": "人民日报",
+    "id": "zh-newspaper",
+    "issued": {
+      "date-parts": [
+        [
+          2025,
+          3,
+          5
+        ]
+      ]
+    },
+    "page": "1",
+    "title": "我国成功发射通信技术试验卫星",
+    "type": "article-newspaper"
+  },
+  {
+    "author": [
+      {
+        "family": "刘洋"
+      }
+    ],
+    "genre": "mathesis",
+    "id": "zh-mastersthesis",
+    "issued": {
+      "date-parts": [
+        [
+          2022
+        ]
+      ]
+    },
+    "publisher": "清华大学",
+    "publisher-place": "北京",
+    "title": "基于深度学习的文档版面分析方法研究",
+    "type": "thesis"
+  },
+  {
+    "author": [
+      {
+        "family": "王慧"
+      }
+    ],
+    "genre": "phdthesis",
+    "id": "zh-phdthesis",
+    "issued": {
+      "date-parts": [
+        [
+          2021
+        ]
+      ]
+    },
+    "publisher": "北京大学",
+    "publisher-place": "北京",
+    "title": "中文科技论文自动文摘关键技术研究",
+    "type": "thesis"
+  },
+  {
+    "author": [
+      {
+        "family": "陈志明"
+      },
+      {
+        "family": "林晓东"
+      }
+    ],
+    "id": "zh-techreport",
+    "issued": {
+      "date-parts": [
+        [
+          2023
+        ]
+      ]
+    },
+    "number": "ICT-TR-2023-05",
+    "publisher": "中国科学院计算技术研究所",
+    "publisher-place": "北京",
+    "title": "高性能计算系统评测报告",
+    "type": "report"
+  },
+  {
+    "id": "standard-gb",
+    "issued": {
+      "date-parts": [
+        [
+          2015
+        ]
+      ]
+    },
+    "number": "GB/T 7714-2015",
+    "publisher": "中国标准出版社",
+    "publisher-place": "北京",
+    "title": "信息与文献 参考文献著录规则",
+    "type": "legislation"
+  },
+  {
+    "author": [
+      {
+        "family": "华为技术有限公司"
+      }
+    ],
+    "id": "zh-patent",
+    "issued": {
+      "date-parts": [
+        [
+          2022
+        ]
+      ]
+    },
+    "number": "CN 114567890 B",
+    "title": "一种文档格式转换方法及装置",
+    "type": "patent"
+  },
+  {
+    "URL": "https://www.cnnic.net.cn/n4/2024/0322/c88-10964.html",
+    "accessed": {
+      "date-parts": [
+        [
+          2025,
+          6,
+          1
+        ]
+      ]
+    },
+    "author": [
+      {
+        "family": "中国互联网络信息中心"
+      }
+    ],
+    "id": "zh-online",
+    "issued": {
+      "date-parts": [
+        [
+          2024,
+          3,
+          22
+        ]
+      ]
+    },
+    "title": "第53次中国互联网络发展状况统计报告",
+    "type": "webpage"
+  },
+  {
+    "URL": "https://citationstyles.org/",
+    "accessed": {
+      "date-parts": [
+        [
+          2025,
+          5,
+          20
+        ]
+      ]
+    },
+    "id": "en-online-noauthor",
+    "language": "en-US",
+    "title": "The Citation Style Language: Open Citation Formatting",
+    "title-short": "The Citation Style Language",
+    "type": "webpage"
+  },
+  {
+    "URL": "https://data.cma.cn/data/cdcdetail/dataCode/SURF_CLI_CHN_MUL_DAY.html",
+    "author": [
+      {
+        "family": "国家气象信息中心"
+      }
+    ],
+    "id": "zh-dataset",
+    "issued": {
+      "date-parts": [
+        [
+          2020
+        ]
+      ]
+    },
+    "publisher": "国家气象科学数据中心",
+    "title": "中国地面气候资料日值数据集",
+    "type": "dataset"
+  },
+  {
+    "author": [
+      {
+        "family": "国家基础地理信息中心"
+      }
+    ],
+    "id": "zh-map",
+    "issued": {
+      "date-parts": [
+        [
+          2019
+        ]
+      ]
+    },
+    "publisher": "地图出版社",
+    "publisher-place": "北京",
+    "title": "中华人民共和国全图",
+    "type": ""
+  },
+  {
+    "author": [
+      {
+        "family": "国立中央研究院历史语言研究所"
+      }
+    ],
+    "id": "zh-archive",
+    "issued": {
+      "date-parts": [
+        [
+          1932
+        ]
+      ]
+    },
+    "note": "全宗号 A123",
+    "title": "明清档案：兵部题本",
+    "type": "manuscript"
+  }
+]

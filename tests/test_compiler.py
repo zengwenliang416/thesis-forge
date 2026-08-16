@@ -3,7 +3,11 @@ from pathlib import Path
 
 import pytest
 
-from thesis_forge.bibliography import Gbt7714Formatter, LocalBibTeXLoader
+from thesis_forge.bibliography import (
+    Gbt7714Formatter,
+    LocalBibTeXLoader,
+    UnsupportedCitationStyleError,
+)
 from thesis_forge.core.compiler import (
     BookmarkCollisionError,
     TableCompilationError,
@@ -12,6 +16,7 @@ from thesis_forge.core.compiler import (
 from thesis_forge.core.model import (
     Algorithm,
     BibliographyBlock,
+    BibliographyConfig,
     Citation,
     CrossReference,
     Equation,
@@ -637,3 +642,44 @@ def test_compile_document_avoids_keyword_false_positives(
     assert paragraph.role in {"abstract.zh.body", "abstract.en.body", "body"}
     assert paragraph.role not in {"keywords.zh", "keywords.en"}
     assert first == second
+
+
+def test_compile_document_selects_provider_from_citation_style():
+    fixture = Path(__file__).parent / "fixtures" / "bibliography" / "gbt7714-v1.bib"
+    database = LocalBibTeXLoader().load(fixture)
+    citation = Citation(keys=["smith2025"], raw="[@smith2025]")
+    document = ThesisDocument(
+        source_path=Path("/tmp/thesis.md"),
+        blocks=[Paragraph(text="引用", inlines=[citation])],
+        citations=[citation],
+        bibliography=BibliographyConfig(
+            path="references.bib",
+            citation_style="gbt7714-2025-numeric",
+        ),
+    )
+
+    plan = compile_document(document, bibliography_database=database)
+
+    bibliography = plan.nodes[-1]
+    assert isinstance(bibliography, BibliographyInstruction)
+    assert bibliography.entries[0].text.startswith(
+        "[1] SMITH J, WANG L. Deterministic Thesis Compilation[J]."
+    )
+
+
+def test_compile_document_rejects_unsupported_citation_style():
+    fixture = Path(__file__).parent / "fixtures" / "bibliography" / "gbt7714-v1.bib"
+    database = LocalBibTeXLoader().load(fixture)
+    citation = Citation(keys=["smith2025"], raw="[@smith2025]")
+    document = ThesisDocument(
+        source_path=Path("/tmp/thesis.md"),
+        blocks=[Paragraph(text="引用", inlines=[citation])],
+        citations=[citation],
+        bibliography=BibliographyConfig(
+            path="references.bib",
+            citation_style="not-a-style",
+        ),
+    )
+
+    with pytest.raises(UnsupportedCitationStyleError, match="not-a-style"):
+        compile_document(document, bibliography_database=database)

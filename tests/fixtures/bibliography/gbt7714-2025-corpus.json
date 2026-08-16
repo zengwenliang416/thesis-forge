@@ -1,0 +1,316 @@
+{
+  "schema": "thesisforge/gbt7714-2025-corpus-v1",
+  "source": {
+    "corpus_bib": "gbt7714-2025-corpus.bib（复制自 spikes/phase0/citation/corpus/gbt7714-corpus.bib）",
+    "spike_golden": "spikes/phase0/citation/golden/gbt7714-golden-v1.json（pandoc 3.8.2.1 + 官方 2025 CSL，CSL SHA256 3b5ab624...95faf）",
+    "engine": "thesis_forge 内建手写 GB/T 7714-2025 引擎（BuiltinGbt7714Provider）",
+    "generated_by": "tests/fixtures/bibliography/ 一次性生成脚本（ADR-0004 实施）"
+  },
+  "policy": "passed-machine-check 19 条以 text 字段逐字节锁定为内建引擎回归基线；pending-human-review 9 条仅校验 must_contain 结构完整性（candidate_text 为当前实现的候选输出），GA 前人工定稿后转为逐字节。golden 更新必须人工审查（ADR-0004 §2.6 / ADR-0006）。",
+  "engine_deltas_vs_pandoc": [
+    "西文著者姓全大写、多名首字母不空格（KUHN TS vs pandoc Kuhn T S）：GB/T 7714-2015 欧美著者姓名规则的既有亮点，保留。",
+    "西文条目按条目语言切换为半角标点 + et al；官方 CSL 固定 zh-CN locale（全角 + 等）。",
+    "含 DOI/URL 的印刷型条目不自动附加 /OL（[J]/[DS]）；/OL 仅用于 online/electronic 的 [EB/OL]。对应 4 条 pending。",
+    "[G]/[S]/[CM] 由内建引擎直接支持；pandoc BibTeX 前端盲区输出 [M]/[Z]/[Z]。对应 3 条 pending。",
+    "西文版本项输出 2nd ed（pandoc/CSL 中文 locale 输出 2 版）；中文条目输出 2 版。"
+  ],
+  "entries": [
+    {
+      "key": "zh-article-3",
+      "ordinal": 1,
+      "entry_type": "article",
+      "intended_type": "J",
+      "review": "pending-human-review",
+      "must_contain": [
+        "王晓明，李红霞，陈志强. ",
+        "深度学习在医学影像分析中的应用[J]",
+        "中华放射学杂志，2024，58（3）：245-252",
+        "DOI:10.3760/cma.j.cn112149-20240115-00032."
+      ],
+      "candidate_text": "[1] 王晓明，李红霞，陈志强. 深度学习在医学影像分析中的应用[J]. 中华放射学杂志，2024，58（3）：245-252. DOI:10.3760/cma.j.cn112149-20240115-00032.",
+      "pandoc_text": "王晓明，李红霞，陈志强. 深度学习在医学影像分析中的应用[J/OL]. 中华放射学杂志，2024，58（3）：245-252. DOI:10.3760/cma.j.cn112149-20240115-00032.",
+      "notes": "内建引擎对含 DOI 的印刷期刊不附加 /OL（输出 [J]）；是否应标 [J/OL] 待人工对照 GB/T 7714-2025 定稿（沿用 spike pending 结论）。"
+    },
+    {
+      "key": "zh-article-etal",
+      "ordinal": 2,
+      "entry_type": "article",
+      "intended_type": "J",
+      "review": "passed-machine-check",
+      "text": "[2] 刘洋，赵敏，孙建国，等. 城市轨道交通客流预测方法综述[J]. 交通运输工程学报，2023，23（4）：1-15."
+    },
+    {
+      "key": "en-article-etal",
+      "ordinal": 3,
+      "entry_type": "article",
+      "intended_type": "J",
+      "review": "pending-human-review",
+      "must_contain": [
+        "SMITH J",
+        "et al",
+        "Deterministic Compilation of Academic Documents[J]",
+        "Journal of Document Engineering, 2024, 12(2): 101-118"
+      ],
+      "candidate_text": "[3] SMITH J, DOE J, ROE R, et al. Deterministic Compilation of Academic Documents[J]. Journal of Document Engineering, 2024, 12(2): 101-118.",
+      "pandoc_text": "Smith J，Doe J，Roe R，等. Deterministic Compilation of Academic Documents[J]. Journal of Document Engineering，2024，12（2）：101-118.",
+      "notes": "内建引擎按条目语言输出 et al + 半角标点；与官方 CSL 固定 zh-CN locale（全角 + 等）的差异待人工定稿。"
+    },
+    {
+      "key": "en-article-doi",
+      "ordinal": 4,
+      "entry_type": "article",
+      "intended_type": "J",
+      "review": "pending-human-review",
+      "must_contain": [
+        "BROWN A",
+        "Template Driven Rendering Pipelines[J]",
+        "ACM Computing Surveys, 2022, 54(7): 1-34",
+        "DOI:10.1145/3512345."
+      ],
+      "candidate_text": "[4] BROWN A, GREEN B. Template Driven Rendering Pipelines[J]. ACM Computing Surveys, 2022, 54(7): 1-34. DOI:10.1145/3512345.",
+      "pandoc_text": "Brown A，Green B. Template Driven Rendering Pipelines[J/OL]. ACM Computing Surveys，2022，54（7）：1-34. DOI:10.1145/3512345.",
+      "notes": "同 zh-article-3 的 /OL 开放问题；另含西文半角标点差异。"
+    },
+    {
+      "key": "zh-article-no-volume",
+      "ordinal": 5,
+      "entry_type": "article",
+      "intended_type": "J",
+      "review": "passed-machine-check",
+      "text": "[5] 陈思远. 乡村教师队伍建设的路径分析[J]. 教育研究，2023（6）：88-95."
+    },
+    {
+      "key": "zh-article-no-pages",
+      "ordinal": 6,
+      "entry_type": "article",
+      "intended_type": "J",
+      "review": "passed-machine-check",
+      "text": "[6] 李冬梅，王海涛. 新型储能材料研究进展[J]. 材料导报，2024，38（11）."
+    },
+    {
+      "key": "en-article-online-first",
+      "ordinal": 7,
+      "entry_type": "article",
+      "intended_type": "J",
+      "review": "pending-human-review",
+      "must_contain": [
+        "MILLER D",
+        "Citation Graph Analysis at Scale[J]",
+        "Journal of Informetrics, 2025",
+        "DOI:10.1016/j.joi.2025.101555."
+      ],
+      "candidate_text": "[7] MILLER D. Citation Graph Analysis at Scale[J]. Journal of Informetrics, 2025. DOI:10.1016/j.joi.2025.101555.",
+      "pandoc_text": "Miller D. Citation Graph Analysis at Scale[J/OL]. Journal of Informetrics，2025. DOI:10.1016/j.joi.2025.101555.",
+      "notes": "同 zh-article-3 的 /OL 开放问题。"
+    },
+    {
+      "key": "mixed-article",
+      "ordinal": 8,
+      "entry_type": "article",
+      "intended_type": "J",
+      "review": "passed-machine-check",
+      "text": "[8] 张伟，李娜. An Efficient Algorithm for Bibliographic Parsing[J]. Chinese Journal of Computers，2023，46（9）：1901-1915."
+    },
+    {
+      "key": "zh-book",
+      "ordinal": 9,
+      "entry_type": "book",
+      "intended_type": "M",
+      "review": "passed-machine-check",
+      "text": "[9] 许嘉璐. 中国古代文化常识[M]. 北京：中华书局，2020."
+    },
+    {
+      "key": "en-book-edition",
+      "ordinal": 10,
+      "entry_type": "book",
+      "intended_type": "M",
+      "review": "passed-machine-check",
+      "text": "[10] KUHN TS. The Structure of Scientific Revolutions[M]. 2nd ed. Chicago: University of Chicago Press, 1970.",
+      "delta_vs_pandoc": "Kuhn T S. The Structure of Scientific Revolutions[M]. 2 版. Chicago：University of Chicago Press，1970."
+    },
+    {
+      "key": "zh-book-translator",
+      "ordinal": 11,
+      "entry_type": "book",
+      "intended_type": "M",
+      "review": "passed-machine-check",
+      "text": "[11] HUNTINGTON SP. 文明的冲突与世界秩序的重建[M]. 周琪，刘绯，译. 北京：新华出版社，2010.",
+      "delta_vs_pandoc": "Huntington S P. 文明的冲突与世界秩序的重建[M]. 周琪，刘绯，译. 北京：新华出版社，2010."
+    },
+    {
+      "key": "org-book",
+      "ordinal": 12,
+      "entry_type": "book",
+      "intended_type": "M",
+      "review": "passed-machine-check",
+      "text": "[12] 中华人民共和国教育部. 中国教育统计年鉴. 2022[M]. 北京：中国统计出版社，2023."
+    },
+    {
+      "key": "zh-incollection",
+      "ordinal": 13,
+      "entry_type": "incollection",
+      "intended_type": "M",
+      "review": "passed-machine-check",
+      "text": "[13] 钱钟书. 诗可以怨[M]//舒展. 钱钟书论学文选. 广州：花城出版社，1990：320-335."
+    },
+    {
+      "key": "en-incollection",
+      "ordinal": 14,
+      "entry_type": "incollection",
+      "intended_type": "M",
+      "review": "passed-machine-check",
+      "text": "[14] GAMMA E, HELM R. Design Patterns in Dynamic Languages[M]//COPLIEN JO. Pattern Languages of Program Design. Reading: Addison-Wesley, 1998: 55-80.",
+      "delta_vs_pandoc": "Gamma E，Helm R. Design Patterns in Dynamic Languages[M]//Coplien J O. Pattern Languages of Program Design. Reading：Addison-Wesley，1998：55-80."
+    },
+    {
+      "key": "zh-inproceedings",
+      "ordinal": 15,
+      "entry_type": "inproceedings",
+      "intended_type": "C",
+      "review": "passed-machine-check",
+      "text": "[15] 王坚，李晓东. 大规模分布式系统的容错机制[C]//第十二届全国计算机系统结构年会论文集. 成都：电子科技大学出版社，2022：45-52."
+    },
+    {
+      "key": "en-inproceedings",
+      "ordinal": 16,
+      "entry_type": "inproceedings",
+      "intended_type": "C",
+      "review": "pending-human-review",
+      "must_contain": [
+        "VASWANI A",
+        "et al",
+        "Attention Is All You Need[C]//",
+        "Advances in Neural Information Processing Systems 30",
+        "2017: 5998-6008"
+      ],
+      "candidate_text": "[16] VASWANI A, SHAZEER N, PARMAR N, et al. Attention Is All You Need[C]//Advances in Neural Information Processing Systems 30. Long Beach, 2017: 5998-6008.",
+      "pandoc_text": "Vaswani A，Shazeer N，Parmar N，等. Attention Is All You Need[C]//Advances in Neural Information Processing Systems 30. Long Beach，2017：5998-6008.",
+      "notes": "内建引擎按条目语言输出 et al；待人工定稿。"
+    },
+    {
+      "key": "collection-g",
+      "ordinal": 17,
+      "entry_type": "collection",
+      "intended_type": "G",
+      "review": "pending-human-review",
+      "must_contain": [
+        "中共中央文献研究室",
+        "建国以来重要文献选编[G]",
+        "北京：中央文献出版社，2011."
+      ],
+      "candidate_text": "[17] 中共中央文献研究室. 建国以来重要文献选编[G]. 北京：中央文献出版社，2011.",
+      "pandoc_text": "中共中央文献研究室. 建国以来重要文献选编[M]. 北京：中央文献出版社，2011.",
+      "notes": "内建引擎直接支持 [G]（pandoc BibTeX 前端盲区只能产出 [M]）；与 CSL 路径的差异待人工定稿。"
+    },
+    {
+      "key": "zh-newspaper",
+      "ordinal": 18,
+      "entry_type": "article",
+      "intended_type": "N",
+      "review": "passed-machine-check",
+      "text": "[18] 新华社. 我国成功发射通信技术试验卫星[N]. 人民日报，2025-03-05（1）."
+    },
+    {
+      "key": "zh-mastersthesis",
+      "ordinal": 19,
+      "entry_type": "mastersthesis",
+      "intended_type": "D",
+      "review": "passed-machine-check",
+      "text": "[19] 刘洋. 基于深度学习的文档版面分析方法研究[D]. 北京：清华大学，2022."
+    },
+    {
+      "key": "zh-phdthesis",
+      "ordinal": 20,
+      "entry_type": "phdthesis",
+      "intended_type": "D",
+      "review": "passed-machine-check",
+      "text": "[20] 王慧. 中文科技论文自动文摘关键技术研究[D]. 北京：北京大学，2021."
+    },
+    {
+      "key": "zh-techreport",
+      "ordinal": 21,
+      "entry_type": "techreport",
+      "intended_type": "R",
+      "review": "passed-machine-check",
+      "text": "[21] 陈志明，林晓东. 高性能计算系统评测报告：ICT-TR-2023-05[R]. 北京：中国科学院计算技术研究所，2023."
+    },
+    {
+      "key": "standard-gb",
+      "ordinal": 22,
+      "entry_type": "standard",
+      "intended_type": "S",
+      "review": "pending-human-review",
+      "must_contain": [
+        "信息与文献 参考文献著录规则：GB/T 7714-2015[S]",
+        "北京：中国标准出版社，2015."
+      ],
+      "candidate_text": "[22] 信息与文献 参考文献著录规则：GB/T 7714-2015[S]. 北京：中国标准出版社，2015.",
+      "pandoc_text": "信息与文献 参考文献著录规则：GB/T 7714-2015[Z]. 北京：中国标准出版社，2015.",
+      "notes": "内建引擎直接支持 [S]（pandoc 映射 legislation → [Z]）；待人工定稿。"
+    },
+    {
+      "key": "zh-patent",
+      "ordinal": 23,
+      "entry_type": "patent",
+      "intended_type": "P",
+      "review": "passed-machine-check",
+      "text": "[23] 华为技术有限公司. 一种文档格式转换方法及装置：CN 114567890 B[P]. 2022."
+    },
+    {
+      "key": "zh-online",
+      "ordinal": 24,
+      "entry_type": "online",
+      "intended_type": "EB/OL",
+      "review": "passed-machine-check",
+      "text": "[24] 中国互联网络信息中心. 第53次中国互联网络发展状况统计报告[EB/OL]. （2024-03-22）[2025-06-01]. https://www.cnnic.net.cn/n4/2024/0322/c88-10964.html."
+    },
+    {
+      "key": "en-online-noauthor",
+      "ordinal": 25,
+      "entry_type": "online",
+      "intended_type": "EB/OL",
+      "review": "passed-machine-check",
+      "text": "[25] The Citation Style Language: Open Citation Formatting[EB/OL]. [2025-05-20]. https://citationstyles.org/."
+    },
+    {
+      "key": "zh-dataset",
+      "ordinal": 26,
+      "entry_type": "dataset",
+      "intended_type": "DS",
+      "review": "pending-human-review",
+      "must_contain": [
+        "国家气象信息中心",
+        "中国地面气候资料日值数据集[DS",
+        "国家气象科学数据中心",
+        "2020",
+        "https://data.cma.cn/data/cdcdetail/dataCode/SURF_CLI_CHN_MUL_DAY.html"
+      ],
+      "candidate_text": "[26] 国家气象信息中心. 中国地面气候资料日值数据集[DS]. 国家气象科学数据中心，2020. https://data.cma.cn/data/cdcdetail/dataCode/SURF_CLI_CHN_MUL_DAY.html.",
+      "pandoc_text": "国家气象信息中心. 中国地面气候资料日值数据集[DS/OL]. 国家气象科学数据中心（2020）. https://data.cma.cn/data/cdcdetail/dataCode/SURF_CLI_CHN_MUL_DAY.html.",
+      "notes": "内建引擎输出 [DS] 不附加 /OL；出版者+年格式（国家气象科学数据中心，2020）与 pandoc 的 出版者（年）差异待人工定稿。"
+    },
+    {
+      "key": "zh-map",
+      "ordinal": 27,
+      "entry_type": "map",
+      "intended_type": "CM",
+      "review": "pending-human-review",
+      "must_contain": [
+        "国家基础地理信息中心",
+        "中华人民共和国全图[CM]",
+        "北京：地图出版社，2019."
+      ],
+      "candidate_text": "[27] 国家基础地理信息中心. 中华人民共和国全图[CM]. 北京：地图出版社，2019.",
+      "pandoc_text": "国家基础地理信息中心. 中华人民共和国全图[Z]. 北京：地图出版社，2019.",
+      "notes": "内建引擎直接支持 [CM]（pandoc 不识别 @map → [Z]）；待人工定稿。"
+    },
+    {
+      "key": "zh-archive",
+      "ordinal": 28,
+      "entry_type": "unpublished",
+      "intended_type": "A",
+      "review": "passed-machine-check",
+      "text": "[28] 国立中央研究院历史语言研究所. 明清档案：兵部题本[A]. 1932."
+    }
+  ]
+}

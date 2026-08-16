@@ -8,9 +8,19 @@ from typing import Literal, Protocol, TypeAlias
 SupportedEntryType: TypeAlias = Literal[
     "article",
     "book",
+    "incollection",
     "inproceedings",
+    "collection",
     "mastersthesis",
     "phdthesis",
+    "techreport",
+    "standard",
+    "patent",
+    "online",
+    "electronic",
+    "dataset",
+    "map",
+    "unpublished",
 ]
 
 
@@ -49,13 +59,25 @@ class MissingBibliographyFieldError(BibliographyError):
         )
 
 
+class UnsupportedCitationStyleError(BibliographyError):
+    """Raised when a citation style selects no registered provider (D-07)."""
+
+    def __init__(self, style: str, supported_styles: Sequence[str]):
+        self.style = style
+        self.supported_styles = tuple(supported_styles)
+        super().__init__(
+            f"unsupported citation style {style!r}: "
+            f"supported styles: {', '.join(self.supported_styles)}"
+        )
+
+
 @dataclass(frozen=True, slots=True)
 class BibliographyRecord:
     key: str
     entry_type: SupportedEntryType
     authors: tuple[str, ...]
     title: str
-    year: str
+    year: str | None = None
     journal: str | None = None
     booktitle: str | None = None
     publisher: str | None = None
@@ -65,6 +87,16 @@ class BibliographyRecord:
     pages: str | None = None
     school: str | None = None
     doi: str | None = None
+    # GB/T 7714-2025 corpus 扩展字段（ADR-0004 §2.2）
+    date: str | None = None
+    urldate: str | None = None
+    url: str | None = None
+    edition: str | None = None
+    translators: tuple[str, ...] = ()
+    editors: tuple[str, ...] = ()
+    entrysubtype: str | None = None
+    language: str | None = None
+    note: str | None = None
 
 
 @dataclass(frozen=True, slots=True)

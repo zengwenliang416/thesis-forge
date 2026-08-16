@@ -1,0 +1,333 @@
+% =============================================================================
+% GB/T 7714-2025 引用格式 golden corpus（V1 Phase 0 spike）
+%
+% 设计目标：覆盖 GB/T 7714-2025 常见文献类型与边界情形，用于对比
+%   - pandoc --citeproc（Haskell citeproc）
+%   - citeproc-py
+%   - ThesisForge 手写 Gbt7714Formatter（仅 article/book/inproceedings/
+%     mastersthesis/phdthesis）
+%
+% 说明：
+%   - 采用 biblatex 扩展字段（date/urldate/entrysubtype/langid/eventtitle），
+%     经典 BibTeX 工具可能忽略这些字段；
+%   - langid={english} 用于标记西文条目，检验引擎是否按条目语言切换
+%     "等/et al" 与标点（实证：pandoc citeproc 固定使用样式 default-locale）；
+%   - 每条前的 % 注释说明该条的覆盖点。
+% =============================================================================
+
+% ---- 期刊文章 [J] -----------------------------------------------------------
+
+% 覆盖点：中文期刊、3 著者（不触发"等"截断）、卷(期):页、含 DOI
+@article{zh-article-3,
+  author  = {王晓明 and 李红霞 and 陈志强},
+  title   = {深度学习在医学影像分析中的应用},
+  journal = {中华放射学杂志},
+  year    = {2024},
+  volume  = {58},
+  number  = {3},
+  pages   = {245--252},
+  doi     = {10.3760/cma.j.cn112149-20240115-00032}
+}
+
+% 覆盖点：中文期刊、5 著者（>3，应触发"等"截断为前 3 名）
+@article{zh-article-etal,
+  author  = {刘洋 and 赵敏 and 孙建国 and 周丽萍 and 吴国强},
+  title   = {城市轨道交通客流预测方法综述},
+  journal = {交通运输工程学报},
+  year    = {2023},
+  volume  = {23},
+  number  = {4},
+  pages   = {1--15}
+}
+
+% 覆盖点：西文期刊、4 著者（GB/T 7714 要求西文用 "et al"；
+% 实证检验引擎是否按 langid 切换术语）
+@article{en-article-etal,
+  author  = {Smith, John and Doe, Jane and Roe, Richard and Poe, Ann},
+  title   = {Deterministic Compilation of Academic Documents},
+  journal = {Journal of Document Engineering},
+  year    = {2024},
+  volume  = {12},
+  number  = {2},
+  pages   = {101--118},
+  langid  = {english}
+}
+
+% 覆盖点：西文期刊、2 著者、含 DOI
+@article{en-article-doi,
+  author  = {Brown, Alice and Green, Bob},
+  title   = {Template Driven Rendering Pipelines},
+  journal = {ACM Computing Surveys},
+  year    = {2022},
+  volume  = {54},
+  number  = {7},
+  pages   = {1--34},
+  doi     = {10.1145/3512345},
+  langid  = {english}
+}
+
+% 覆盖点：缺卷号（只有期号）
+@article{zh-article-no-volume,
+  author  = {陈思远},
+  title   = {乡村教师队伍建设的路径分析},
+  journal = {教育研究},
+  year    = {2023},
+  number  = {6},
+  pages   = {88--95}
+}
+
+% 覆盖点：缺页码（有卷有期无页码）
+@article{zh-article-no-pages,
+  author  = {李冬梅 and 王海涛},
+  title   = {新型储能材料研究进展},
+  journal = {材料导报},
+  year    = {2024},
+  volume  = {38},
+  number  = {11}
+}
+
+% 覆盖点：在线优先出版（无卷无期无页码，仅有年与 DOI）
+@article{en-article-online-first,
+  author  = {Miller, David},
+  title   = {Citation Graph Analysis at Scale},
+  journal = {Journal of Informetrics},
+  year    = {2025},
+  doi     = {10.1016/j.joi.2025.101555},
+  langid  = {english}
+}
+
+% 覆盖点：中英文混合（中文著者 + 西文刊名与题名）
+@article{mixed-article,
+  author  = {张伟 and 李娜},
+  title   = {An Efficient Algorithm for Bibliographic Parsing},
+  journal = {Chinese Journal of Computers},
+  year    = {2023},
+  volume  = {46},
+  number  = {9},
+  pages   = {1901--1915}
+}
+
+% ---- 专著 [M] ---------------------------------------------------------------
+
+% 覆盖点：中文专著、单著者
+@book{zh-book,
+  author    = {许嘉璐},
+  title     = {中国古代文化常识},
+  address   = {北京},
+  publisher = {中华书局},
+  year      = {2020}
+}
+
+% 覆盖点：西文专著、版本项（第 2 版；bibtex edition 数字，
+% GB/T 要求著录版本；CSL 按 default-locale 输出"2 版"还是 "2nd ed." 待实证）
+@book{en-book-edition,
+  author    = {Kuhn, Thomas S},
+  title     = {The Structure of Scientific Revolutions},
+  edition   = {2},
+  address   = {Chicago},
+  publisher = {University of Chicago Press},
+  year      = {1970},
+  langid    = {english}
+}
+
+% 覆盖点：译著（其他责任者：译者）
+@book{zh-book-translator,
+  author     = {Huntington, Samuel P},
+  title      = {文明的冲突与世界秩序的重建},
+  translator = {周琪 and 刘绯},
+  address    = {北京},
+  publisher  = {新华出版社},
+  year       = {2010}
+}
+
+% 覆盖点：机构著者（无个人著者，双花括号保持整体）
+@book{org-book,
+  author    = {{中华人民共和国教育部}},
+  title     = {中国教育统计年鉴. 2022},
+  address   = {北京},
+  publisher = {中国统计出版社},
+  year      = {2023}
+}
+
+% ---- 专著中的析出文献 [M]// --------------------------------------------------
+
+% 覆盖点：专著析出（析出文著者 // 专著编者. 专著题名）
+@incollection{zh-incollection,
+  author    = {钱钟书},
+  title     = {诗可以怨},
+  editor    = {舒展},
+  booktitle = {钱钟书论学文选},
+  address   = {广州},
+  publisher = {花城出版社},
+  year      = {1990},
+  pages     = {320--335}
+}
+
+% 覆盖点：西文专著析出
+@incollection{en-incollection,
+  author    = {Gamma, Erich and Helm, Richard},
+  title     = {Design Patterns in Dynamic Languages},
+  editor    = {Coplien, James O},
+  booktitle = {Pattern Languages of Program Design},
+  address   = {Reading},
+  publisher = {Addison-Wesley},
+  year      = {1998},
+  pages     = {55--80},
+  langid    = {english}
+}
+
+% ---- 会议录中的析出文献 [C]// ------------------------------------------------
+
+% 覆盖点：中文会议析出（含会议名、出版地、出版社、页码）
+@inproceedings{zh-inproceedings,
+  author    = {王坚 and 李晓东},
+  title     = {大规模分布式系统的容错机制},
+  booktitle = {第十二届全国计算机系统结构年会论文集},
+  address   = {成都},
+  publisher = {电子科技大学出版社},
+  year      = {2022},
+  pages     = {45--52}
+}
+
+% 覆盖点：西文会议析出
+@inproceedings{en-inproceedings,
+  author    = {Vaswani, Ashish and Shazeer, Noam and Parmar, Niki and Uszkoreit, Jakob},
+  title     = {Attention Is All You Need},
+  booktitle = {Advances in Neural Information Processing Systems 30},
+  address   = {Long Beach},
+  year      = {2017},
+  pages     = {5998--6008},
+  langid    = {english}
+}
+
+% ---- 汇编 [G] ---------------------------------------------------------------
+
+% 覆盖点：汇编（GB/T 7714 类型标识 [G]；实证：2025 版官方 CSL
+% entry-type-id 无 [G] 分支，检验实际输出标识）
+@collection{collection-g,
+  editor    = {中共中央文献研究室},
+  title     = {建国以来重要文献选编},
+  address   = {北京},
+  publisher = {中央文献出版社},
+  year      = {2011}
+}
+
+% ---- 报纸文章 [N] -----------------------------------------------------------
+
+% 覆盖点：报纸析出（报名, 出版日期(版次)；biblatex entrysubtype=newspaper）
+% 注意：仅用 date 表示出版日期，无 year 字段
+@article{zh-newspaper,
+  author       = {新华社},
+  title        = {我国成功发射通信技术试验卫星},
+  journal      = {人民日报},
+  date         = {2025-03-05},
+  pages        = {1},
+  entrysubtype = {newspaper}
+}
+
+% ---- 学位论文 [D] -----------------------------------------------------------
+
+% 覆盖点：硕士学位论文
+@mastersthesis{zh-mastersthesis,
+  author  = {刘洋},
+  title   = {基于深度学习的文档版面分析方法研究},
+  school  = {清华大学},
+  address = {北京},
+  year    = {2022}
+}
+
+% 覆盖点：博士学位论文
+@phdthesis{zh-phdthesis,
+  author  = {王慧},
+  title   = {中文科技论文自动文摘关键技术研究},
+  school  = {北京大学},
+  address = {北京},
+  year    = {2021}
+}
+
+% ---- 科技报告 [R] -----------------------------------------------------------
+
+% 覆盖点：科技报告（含报告编号）
+@techreport{zh-techreport,
+  author      = {陈志明 and 林晓东},
+  title       = {高性能计算系统评测报告},
+  institution = {中国科学院计算技术研究所},
+  address     = {北京},
+  number      = {ICT-TR-2023-05},
+  year        = {2023}
+}
+
+% ---- 标准 [S] ---------------------------------------------------------------
+
+% 覆盖点：国家标准（GB/T 7714 要求格式 "标准号 题名[S]. 出版地: 出版者, 年"；
+% 实证：pandoc 将 @standard 映射为 CSL legislation，检验输出标识）
+@standard{standard-gb,
+  title     = {信息与文献 参考文献著录规则},
+  number    = {GB/T 7714-2015},
+  address   = {北京},
+  publisher = {中国标准出版社},
+  year      = {2015}
+}
+
+% ---- 专利 [P] ---------------------------------------------------------------
+
+% 覆盖点：专利（专利权人/发明人. 题名: 专利号[P]. 公告日期）
+@patent{zh-patent,
+  author = {华为技术有限公司},
+  title  = {一种文档格式转换方法及装置},
+  number = {CN 114567890 B},
+  year   = {2022}
+}
+
+% ---- 电子资源 [EB/OL] --------------------------------------------------------
+
+% 覆盖点：联机网络资源（含发布日期、引用日期、URL）
+@online{zh-online,
+  author  = {中国互联网络信息中心},
+  title   = {第53次中国互联网络发展状况统计报告},
+  url     = {https://www.cnnic.net.cn/n4/2024/0322/c88-10964.html},
+  date    = {2024-03-22},
+  urldate = {2025-06-01}
+}
+
+% 覆盖点：无著者电子资源（著者缺省，题名录于首位）
+@online{en-online-noauthor,
+  title   = {The Citation Style Language: Open Citation Formatting},
+  url     = {https://citationstyles.org/},
+  urldate = {2025-05-20},
+  langid  = {english}
+}
+
+% ---- 数据集 [DS] -------------------------------------------------------------
+
+% 覆盖点：数据集（biblatex @dataset → CSL dataset → [DS]）
+@dataset{zh-dataset,
+  author    = {国家气象信息中心},
+  title     = {中国地面气候资料日值数据集},
+  publisher = {国家气象科学数据中心},
+  year      = {2020},
+  url       = {https://data.cma.cn/data/cdcdetail/dataCode/SURF_CLI_CHN_MUL_DAY.html}
+}
+
+% ---- 舆图 [CM] ---------------------------------------------------------------
+
+% 覆盖点：舆图（GB/T 7714 类型标识 [CM]；实证：pandoc 不识别 @map，
+% CSL type 为空，检验输出标识）
+@map{zh-map,
+  author    = {国家基础地理信息中心},
+  title     = {中华人民共和国全图},
+  address   = {北京},
+  publisher = {地图出版社},
+  year      = {2019}
+}
+
+% ---- 档案 [A] ----------------------------------------------------------------
+
+% 覆盖点：档案（@unpublished → CSL manuscript → [A]；
+% bibtex 无法表达 archive/archiveplace 字段，检验收藏信息是否丢失）
+@unpublished{zh-archive,
+  author = {国立中央研究院历史语言研究所},
+  title  = {明清档案：兵部题本},
+  year   = {1932},
+  note   = {全宗号 A123}
+}
