@@ -70,6 +70,11 @@ TOC_LEADERS = {
     "middle_dot": "middleDot",
 }
 
+# Character styles LibreOffice references when it writes TOC entries / footnote
+# marks during a headless refresh. Always defined so the refreshed package keeps
+# passing style-reference validation (ADR-0005 §5.3, spikes/phase0/fields §6).
+LO_REFRESH_CHARACTER_STYLE_NAMES = ("Index Link", "Footnote Characters")
+
 
 ParagraphTarget: TypeAlias = ParagraphStyle | Paragraph
 
@@ -518,3 +523,5 @@ def configure_styles(document: DocumentObject, template: ThesisTemplate) -> None
                 fallback_size=template.body.size,
             )
     configure_toc_styles(document, template)
+    for style_name in LO_REFRESH_CHARACTER_STYLE_NAMES:
+        ensure_character_style(document, style_name)

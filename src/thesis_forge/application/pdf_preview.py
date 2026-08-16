@@ -17,6 +17,7 @@ from typing import IO, Literal, Protocol
 from xml.parsers import expat
 
 from .office_refresh import (
+    _libreoffice_temporary_root,
     discover_libreoffice_executable,
     start_office_process,
     terminate_office_process_tree,
@@ -564,7 +565,7 @@ def _run_libreoffice_pdf_export(
     output_directory: Path,
     timeout_seconds: float,
 ) -> Path:
-    temporary_root = "/tmp" if sys.platform == "darwin" else None
+    temporary_root = _libreoffice_temporary_root()
     with tempfile.TemporaryDirectory(
         prefix="thesisforge-lo-pdf-",
         dir=temporary_root,

@@ -9,13 +9,15 @@ import subprocess
 import sys
 import tempfile
 import uuid
-from collections.abc import Callable, Mapping
+from collections.abc import Callable, Iterator, Mapping
 from dataclasses import dataclass
 from html import unescape
 from io import BytesIO
 from pathlib import Path
 from typing import Any, Protocol
 from zipfile import BadZipFile, ZipFile, ZipInfo
+
+from lxml import etree
 
 ExecutableFinder = Callable[[str], str | None]
 FilePredicate = Callable[[Path], bool]
@@ -25,12 +27,18 @@ _RENDERER_OWNED_PARTS = (
     "word/styles.xml",
     "word/fontTable.xml",
 )
+_W_NS = "http://schemas.openxmlformats.org/wordprocessingml/2006/main"
+_W = f"{{{_W_NS}}}"
+# 刷新后必须把指令恢复为编译期原状的字段类型（ADR-0005 §2.3/§5.3）：
+# SEQ 的 `\r` 钉值与 TOC 的 `\z \u` 开关都会被 LibreOffice 剥掉/改写。
+_RESTORED_FIELD_KINDS = ("TOC", "SEQ")
 _CREATE_NEW_PROCESS_GROUP = 0x00000200
 _CREATE_SUSPENDED = 0x00000004
 _CREATE_NO_WINDOW = 0x08000000
 _JOB_OBJECT_EXTENDED_LIMIT_INFORMATION = 9
 _JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE = 0x00002000
 _RESUME_THREAD_FAILED = 0xFFFFFFFF
+_MACOS_TEMPORARY_ROOT = "/tmp"
 
 
 def _windows_error() -> OSError:
@@ -582,6 +590,20 @@ start_office_process = _start_office_process
 terminate_office_process_tree = _terminate_process_tree
 
 
+def _libreoffice_temporary_root() -> str | None:
+    if sys.platform != "darwin":
+        return None
+    # /tmp keeps LibreOffice user-profile paths short (the macOS TMPDIR is a
+    # deep /var/folders path); fall back to the tempfile default when /tmp is
+    # missing or not writable.
+    if os.path.isdir(_MACOS_TEMPORARY_ROOT) and os.access(
+        _MACOS_TEMPORARY_ROOT,
+        os.W_OK | os.X_OK,
+    ):
+        return _MACOS_TEMPORARY_ROOT
+    return None
+
+
 def _run_libreoffice_refresh(
     executable: Path,
     python_executable: Path,
@@ -589,7 +611,7 @@ def _run_libreoffice_refresh(
     timeout_seconds: float,
     max_level: int,
 ) -> None:
-    temporary_root = "/tmp" if sys.platform == "darwin" else None
+    temporary_root = _libreoffice_temporary_root()
     with tempfile.TemporaryDirectory(
         prefix="thesisforge-lo-",
         dir=temporary_root,
@@ -639,6 +661,135 @@ def _run_libreoffice_refresh(
             )
 
 
+def _iter_field_instructions(
+    root: etree._Element,
+) -> Iterator[list[etree._Element]]:
+    """按文档顺序产出每个字段指令区的 w:instrText 元素列表。
+
+    指令区 = fldChar begin 到 separate（无 separate 则到 end）之间的
+    instrText；嵌套字段（如 TOC 缓存条目内的 PAGEREF）各自独立产出。
+    """
+    stack: list[dict[str, Any]] = []
+    for element in root.iter():
+        if element.tag == f"{_W}fldChar":
+            kind = element.get(f"{_W}fldCharType")
+            if kind == "begin":
+                stack.append({"separate": False, "instr": []})
+            elif kind == "separate" and stack:
+                stack[-1]["separate"] = True
+            elif kind == "end" and stack:
+                yield stack.pop()["instr"]
+        elif (
+            element.tag == f"{_W}instrText"
+            and stack
+            and not stack[-1]["separate"]
+        ):
+            stack[-1]["instr"].append(element)
+
+
+def _field_instruction_kind(instruction: str) -> str | None:
+    normalized = " ".join(instruction.split())
+    for kind in _RESTORED_FIELD_KINDS:
+        if normalized.startswith(f"{kind} "):
+            return kind
+    return None
+
+
+def _capture_field_instructions(package_bytes: bytes) -> dict[str, list[str]]:
+    """刷新前记录 word/document.xml 中 TOC/SEQ 字段的原始指令（按文档顺序）。
+
+    解析失败或字段缺失时返回空 dict（跳过还原），本身不抛异常。
+    """
+    captured: dict[str, list[str]] = {kind: [] for kind in _RESTORED_FIELD_KINDS}
+    parts = _read_package_parts(package_bytes, ("word/document.xml",))
+    part = parts.get("word/document.xml")
+    if part is None:
+        return captured
+    try:
+        root = etree.fromstring(part.content)
+    except etree.XMLSyntaxError:
+        return captured
+    for instr_elements in _iter_field_instructions(root):
+        instruction = "".join(element.text or "" for element in instr_elements)
+        kind = _field_instruction_kind(instruction)
+        if kind is not None:
+            # 归一化空白：LibreOffice 会给 instrText 加首尾空格，还原后
+            # 指令文本与渲染器原状逐字符一致。
+            captured[kind].append(" ".join(instruction.split()))
+    return captured
+
+
+def _restore_field_instructions(
+    package_path: Path,
+    captured: Mapping[str, list[str]],
+) -> None:
+    """把刷新后 document.xml 中 TOC/SEQ 字段指令恢复为刷新前的原状。
+
+    按字段种类 + 文档顺序配对；字段数量/种类对不上说明 LibreOffice 做了
+    结构性改写，抛 RuntimeError 让 refresh_document_safely 回滚。
+    """
+    with ZipFile(package_path) as package:
+        try:
+            document_xml = package.read("word/document.xml")
+        except KeyError as error:
+            raise RuntimeError("LibreOffice refresh dropped word/document.xml") from error
+    try:
+        root = etree.fromstring(document_xml)
+    except etree.XMLSyntaxError as error:
+        raise RuntimeError(f"LibreOffice wrote invalid document.xml: {error}") from error
+
+    remaining = {kind: list(instructions) for kind, instructions in captured.items()}
+    changed = False
+    for instr_elements in _iter_field_instructions(root):
+        instruction = "".join(element.text or "" for element in instr_elements)
+        kind = _field_instruction_kind(instruction)
+        if kind is None:
+            continue
+        queue = remaining[kind]
+        if not queue:
+            raise RuntimeError(f"LibreOffice added an unexpected {kind} field")
+        original_instruction = queue.pop(0)
+        if not instr_elements:
+            raise RuntimeError(f"LibreOffice left a {kind} field without instrText")
+        if instruction != original_instruction:
+            instr_elements[0].text = original_instruction
+            for extra in instr_elements[1:]:
+                extra.getparent().remove(extra)
+            changed = True
+    leftover = sum(len(queue) for queue in remaining.values())
+    if leftover:
+        raise RuntimeError(f"LibreOffice dropped {leftover} TOC/SEQ field(s)")
+    if not changed:
+        return
+    restored_xml = etree.tostring(
+        root,
+        xml_declaration=True,
+        encoding="UTF-8",
+        standalone=True,
+    )
+    _replace_package_part(package_path, "word/document.xml", restored_xml)
+
+
+def _replace_package_part(
+    package_path: Path,
+    part_name: str,
+    content: bytes,
+) -> None:
+    package_bytes = package_path.read_bytes()
+    output = BytesIO()
+    with (
+        ZipFile(BytesIO(package_bytes)) as source,
+        ZipFile(output, "w") as target,
+    ):
+        target.comment = source.comment
+        for entry in source.infolist():
+            target.writestr(
+                entry,
+                content if entry.filename == part_name else source.read(entry),
+            )
+    package_path.write_bytes(output.getvalue())
+
+
 def refresh_document_safely(
     refresher: DocumentRefresher,
     path: str | Path,
@@ -646,10 +797,13 @@ def refresh_document_safely(
     document_path = Path(path)
     original = document_path.read_bytes()
     preserved_parts = _read_package_parts(original, _RENDERER_OWNED_PARTS)
+    field_instructions = _capture_field_instructions(original)
     try:
         refreshed = refresher.refresh(document_path)
         if refreshed and preserved_parts:
             _restore_package_parts(document_path, preserved_parts)
+        if refreshed and any(field_instructions.values()):
+            _restore_field_instructions(document_path, field_instructions)
     except (BadZipFile, OSError, RuntimeError, subprocess.SubprocessError):
         refreshed = False
     if refreshed:

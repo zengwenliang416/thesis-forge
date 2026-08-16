@@ -799,3 +799,64 @@ def test_libreoffice_runner_cleans_process_tree_after_timeout(
         )
 
     assert terminated == [(process, job)]
+
+
+def test_libreoffice_runner_falls_back_to_default_temporary_root(
+    tmp_path: Path,
+    monkeypatch,
+):
+    document = tmp_path / "thesis.docx"
+    output_directory = tmp_path / "converted"
+    output_directory.mkdir()
+    _write_docx_package(document)
+    missing_root = tmp_path / "missing"
+    profiles: list[Path] = []
+
+    class FakeProcess:
+        pid = 42
+
+        def wait(self, timeout):
+            assert timeout == 15.0
+            return 0
+
+    def fake_start(command):
+        profile_argument = next(
+            part for part in command if part.startswith("-env:UserInstallation=")
+        )
+        profiles.append(
+            Path(profile_argument.removeprefix("-env:UserInstallation=file://"))
+        )
+        (output_directory / "thesis.pdf").write_bytes(b"%PDF-1.7\npreview")
+        return FakeProcess(), None
+
+    monkeypatch.setattr(
+        "thesis_forge.application.pdf_preview.sys.platform", "darwin"
+    )
+    monkeypatch.setattr(
+        "thesis_forge.application.office_refresh._MACOS_TEMPORARY_ROOT",
+        str(missing_root),
+    )
+    monkeypatch.setattr(
+        "thesis_forge.application.pdf_preview._installed_font_families",
+        lambda: frozenset(),
+    )
+    monkeypatch.setattr(
+        "thesis_forge.application.pdf_preview.start_office_process",
+        fake_start,
+    )
+    monkeypatch.setattr(
+        "thesis_forge.application.pdf_preview.terminate_office_process_tree",
+        lambda _process, *, windows_job=None: None,
+    )
+
+    converted = _run_libreoffice_pdf_export(
+        tmp_path / "soffice",
+        document,
+        output_directory,
+        15.0,
+    )
+
+    assert converted == output_directory / "thesis.pdf"
+    assert len(profiles) == 1
+    assert missing_root not in profiles[0].parents
+    assert not profiles[0].exists()

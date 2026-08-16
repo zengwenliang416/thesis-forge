@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import os
 import struct
 import subprocess
 from dataclasses import replace
@@ -27,6 +28,7 @@ from thesis_forge.application.office_refresh import (
     LibreOfficeDocumentRefresher,
     _automatic_refresh_enabled,
     _create_windows_job,
+    _libreoffice_temporary_root,
     _run_libreoffice_refresh,
     _start_office_process,
     _terminate_process_tree,
@@ -455,6 +457,118 @@ def test_libreoffice_runner_uses_headless_unique_process_state_and_cleans_profil
     for argument in profile_arguments:
         assert not Path(argument.removeprefix("-env:UserInstallation=file://")).exists()
     assert len(terminated) == 2
+
+
+def test_libreoffice_temporary_root_prefers_short_macos_root(
+    tmp_path: Path,
+    monkeypatch,
+):
+    monkeypatch.setattr(
+        "thesis_forge.application.office_refresh.sys.platform", "darwin"
+    )
+    monkeypatch.setattr(
+        "thesis_forge.application.office_refresh._MACOS_TEMPORARY_ROOT",
+        str(tmp_path),
+    )
+
+    assert _libreoffice_temporary_root() == str(tmp_path)
+
+
+def test_libreoffice_temporary_root_falls_back_when_macos_root_missing(
+    tmp_path: Path,
+    monkeypatch,
+):
+    monkeypatch.setattr(
+        "thesis_forge.application.office_refresh.sys.platform", "darwin"
+    )
+    monkeypatch.setattr(
+        "thesis_forge.application.office_refresh._MACOS_TEMPORARY_ROOT",
+        str(tmp_path / "missing"),
+    )
+
+    assert _libreoffice_temporary_root() is None
+
+
+def test_libreoffice_temporary_root_falls_back_when_macos_root_not_writable(
+    tmp_path: Path,
+    monkeypatch,
+):
+    read_only = tmp_path / "read-only"
+    read_only.mkdir()
+    read_only.chmod(0o555)
+    if os.access(read_only, os.W_OK):
+        pytest.skip("non-writable check requires a non-root user")
+    monkeypatch.setattr(
+        "thesis_forge.application.office_refresh.sys.platform", "darwin"
+    )
+    monkeypatch.setattr(
+        "thesis_forge.application.office_refresh._MACOS_TEMPORARY_ROOT",
+        str(read_only),
+    )
+
+    assert _libreoffice_temporary_root() is None
+
+
+def test_libreoffice_temporary_root_uses_default_off_macos(monkeypatch):
+    monkeypatch.setattr(
+        "thesis_forge.application.office_refresh.sys.platform", "linux"
+    )
+
+    assert _libreoffice_temporary_root() is None
+
+
+def test_libreoffice_runner_falls_back_to_default_temporary_root(
+    tmp_path: Path,
+    monkeypatch,
+):
+    document = tmp_path / "thesis.docx"
+    document.write_bytes(b"docx")
+    missing_root = tmp_path / "missing"
+    profiles: list[Path] = []
+
+    class FakeProcess:
+        pid = 42
+
+        def poll(self):
+            return None
+
+    def fake_popen(command, **_kwargs):
+        profile_argument = next(
+            part for part in command if part.startswith("-env:UserInstallation=")
+        )
+        profiles.append(
+            Path(profile_argument.removeprefix("-env:UserInstallation=file://"))
+        )
+        return FakeProcess()
+
+    def fake_run(command, **_kwargs):
+        return subprocess.CompletedProcess(command, 0, "", "")
+
+    monkeypatch.setattr(
+        "thesis_forge.application.office_refresh.sys.platform", "darwin"
+    )
+    monkeypatch.setattr(
+        "thesis_forge.application.office_refresh._MACOS_TEMPORARY_ROOT",
+        str(missing_root),
+    )
+    monkeypatch.setattr(subprocess, "Popen", fake_popen)
+    monkeypatch.setattr(subprocess, "run", fake_run)
+    monkeypatch.setattr(
+        "thesis_forge.application.office_refresh._terminate_process_tree",
+        lambda _process, *, windows_job=None: None,
+    )
+
+    _run_libreoffice_refresh(
+        tmp_path / "soffice",
+        tmp_path / "python",
+        document,
+        15.0,
+        3,
+    )
+
+    assert len(profiles) == 1
+    assert missing_root not in profiles[0].parents
+    assert not profiles[0].exists()
 
 
 def test_windows_process_tree_cleanup_falls_back_when_taskkill_fails(monkeypatch):
