@@ -1,0 +1,30 @@
+# 对应 tests/test_acceptance.py::test_complete_example_repeated_builds_have_identical_plan_and_word_ooxml。
+id: TF-D6-REP-004
+title: 两次 clean build 的规范化 OOXML 一致
+version: 1
+status: active
+domain: D6
+priority: P1
+automation: automated
+requirements:
+  - REL-DET-001
+releases:
+  - beta
+  - ga
+input:
+  project: examples/complete-thesis
+steps:
+  - run: thesisforge build <fixture> -o <tmp>/first.docx
+  - run: thesisforge build <fixture> -o <tmp>/second.docx
+  - compare: word/ 下 XML 与 rels 的 c14n 规范化字节
+expected:
+  exit_code: 0
+  render_plan_identical: true
+  normalized_ooxml_identical: true
+evidence:
+  required:
+    - build-report
+    - docx
+    - hash
+owners:
+  component: build-determinism

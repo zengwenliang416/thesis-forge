@@ -1,0 +1,77 @@
+# 对应用夹具 qa/fixtures/e2e/figure-reference 与
+# tests/test_qa_e2e.py::test_figure_reference_pipeline_passes_structural_gates。
+# expected 中的书签/字段断言与该测试的实际断言保持一致。
+id: TF-D4-REF-001
+title: 图/表/公式 SEQ 编号、书签与 REF 交叉引用端到端
+version: 1
+status: active
+domain: D4
+priority: P0
+automation: automated
+requirements:
+  - MD-FIG-001
+  - CMP-NUM-001
+  - CMP-REF-003
+  - DOCX-FIELD-001
+  - DOCX-FIELD-002
+  - DOCX-TOC-003
+releases:
+  - alpha
+  - beta
+  - ga
+input:
+  project: qa/fixtures/e2e/figure-reference
+  template: templates/schools/example-university/2026.yaml
+steps:
+  - run: >-
+      pytest tests/test_qa_e2e.py::test_figure_reference_pipeline_passes_structural_gates
+      （parse → validate → compile → render，不走 finalizer）
+  - run: qa/tools/openxml_validate.py <docx> --json <tmp>/openxml-report.json
+  - inspect_xpath: //w:bookmarkStart[@w:name='tf_fig_pipeline']
+  - inspect_xpath: //w:bookmarkStart[@w:name='tf_fig_dashboard']
+  - inspect_xpath: //w:bookmarkStart[@w:name='tf_tbl_metrics']
+  - inspect_xpath: //w:bookmarkStart[@w:name='tf_eq_score']
+expected:
+  exit_code: 0
+  diagnostics_errors: 0
+  openxml_validate: pass
+  artifacts:
+    - figure-reference.docx
+    - openxml-report.json
+  bookmarks:
+    - tf_fig_pipeline
+    - tf_fig_dashboard
+    - tf_tbl_metrics
+    - tf_eq_score
+  fields:
+    - type: SEQ
+      instruction_contains: "SEQ TF_Figure_1"
+    - type: SEQ
+      instruction_contains: "SEQ TF_Figure_2"
+    - type: SEQ
+      instruction_contains: "SEQ TF_Table_2"
+    - type: SEQ
+      instruction_contains: "SEQ TF_Equation_2"
+    - type: REF
+      target: tf_fig_pipeline
+    - type: REF
+      target: tf_fig_dashboard
+    - type: REF
+      target: tf_tbl_metrics
+    - type: REF
+      target: tf_eq_score
+    - type: TOC
+      instruction_contains: '\o "1-3"'
+    - type: PAGE
+      part: footer
+  settings:
+    updateFields: true
+  ref_targets_resolve_to_existing_bookmarks: true
+evidence:
+  required:
+    - build-report
+    - docx
+    - xml
+  location: pytest tmp_path（证据不落 qa/results/）
+owners:
+  component: compiler-fields

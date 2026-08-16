@@ -1,0 +1,33 @@
+# 工具已就绪：qa/tools/no_repair_open.py；Word/WPS 侧需人工确认。
+id: TF-D5-WRD-001
+title: Word/WPS/LibreOffice 无修复提示打开
+version: 1
+status: active
+domain: D5
+priority: P1
+automation: manual
+requirements:
+  - COMP-OPEN-001
+releases:
+  - beta
+  - ga
+input:
+  project: qa/fixtures/e2e/figure-reference
+  template: templates/schools/example-university/2026.yaml
+steps:
+  - run: thesisforge build qa/fixtures/e2e/figure-reference/thesis.md -o <tmp>.docx
+  - run: qa/tools/no_repair_open.py <tmp>.docx --json evidence.json
+  - manual: WPS 结果为 pending-human-review 时人工打开确认
+expected:
+  exit_code: 0
+  word: pass
+  libreoffice: pass
+  wps: pending-human-review 或 pass
+  repair_prompt: false
+evidence:
+  required:
+    - docx
+    - compatibility-json
+    - screenshot
+owners:
+  component: compatibility

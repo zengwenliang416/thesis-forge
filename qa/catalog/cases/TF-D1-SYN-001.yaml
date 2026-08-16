@@ -1,0 +1,61 @@
+# 对应 tests/test_qa_e2e.py::test_full_syntax_parser_fixture_parses_all_block_kinds。
+id: TF-D1-SYN-001
+title: 全语法 Markdown 夹具解析覆盖全部块类型
+version: 1
+status: active
+domain: D1
+priority: P0
+automation: automated
+requirements:
+  - MD-FM-001
+  - MD-FIG-001
+  - MD-TBL-001
+releases:
+  - alpha
+  - beta
+  - ga
+input:
+  project: qa/fixtures/parser/full-syntax.md
+steps:
+  - run: thesis_forge.core.parser.parse_markdown(qa/fixtures/parser/full-syntax.md)
+expected:
+  exit_code: 0
+  diagnostics_errors: 0
+  block_kinds:
+    - Heading
+    - Paragraph
+    - ListBlock
+    - Figure
+    - Table
+    - Equation
+    - Algorithm
+    - Listing
+    - FootnoteDefinition
+    - BibliographyBlock
+  block_ids:
+    - chap:introduction
+    - fig:model
+    - tbl:results
+    - eq:loss
+    - alg:train
+    - lst:predict
+  cross_reference_targets:
+    - fig:model
+    - tbl:results
+    - eq:loss
+    - alg:train
+    - lst:predict
+    - sec:background
+    - chap:introduction
+  citation_keys:
+    - smith2025
+    - wang2024
+  footnote_labels:
+    - note
+    - long
+evidence:
+  required:
+    - build-report
+  location: pytest tmp_path
+owners:
+  component: parser

@@ -1,0 +1,35 @@
+# 对应 tests/test_acceptance.py::test_hut_template_contains_school_values_without_renderer_hardcoding
+# 与 test_complete_example_two_templates_change_style_not_semantics。
+id: TF-D3-TPL-001
+title: 学校模板加载与样式取值不写死 Renderer
+version: 1
+status: active
+domain: D3
+priority: P1
+automation: automated
+requirements:
+  - TPL-STYLE-001
+  - TPL-SEC-002
+releases:
+  - beta
+  - ga
+input:
+  project: examples/complete-thesis
+  template: templates/schools/hunan-university-of-technology/master-2026.yaml
+steps:
+  - run: thesisforge validate examples/complete-thesis/thesis.md --template <模板>
+  - run: thesisforge build examples/complete-thesis/thesis.md --template <模板> -o <tmp>.docx
+expected:
+  exit_code: 0
+  diagnostics_errors: 0
+  template:
+    front_matter_page_number_format: roman-upper
+    main_footer_page_number: true
+  renderer_hardcoded_school_values: 0
+  two_templates_change_style_not_semantics: true
+evidence:
+  required:
+    - build-report
+    - docx
+owners:
+  component: template

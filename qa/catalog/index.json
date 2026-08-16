@@ -1,0 +1,107 @@
+{
+  "version": 1,
+  "cases": {
+    "total": 8,
+    "ids": [
+      "TF-D1-SYN-001",
+      "TF-D2-ID-001",
+      "TF-D2-REF-004",
+      "TF-D3-TPL-001",
+      "TF-D4-CIT-026",
+      "TF-D4-REF-001",
+      "TF-D5-WRD-001",
+      "TF-D6-REP-004"
+    ],
+    "by_domain": {
+      "D1": 1,
+      "D2": 2,
+      "D3": 1,
+      "D4": 2,
+      "D5": 1,
+      "D6": 1
+    },
+    "by_priority": {
+      "P0": 4,
+      "P1": 4
+    },
+    "by_status": {
+      "active": 7,
+      "draft": 1
+    },
+    "by_automation": {
+      "automated": 6,
+      "manual": 1,
+      "planned": 1
+    }
+  },
+  "requirements": {
+    "total": 15,
+    "coverage": {
+      "CMP-NUM-001": [
+        "TF-D4-REF-001"
+      ],
+      "CMP-REF-003": [
+        "TF-D4-REF-001"
+      ],
+      "COMP-OPEN-001": [
+        "TF-D5-WRD-001"
+      ],
+      "DOCX-CIT-004": [
+        "TF-D4-CIT-026"
+      ],
+      "DOCX-FIELD-001": [
+        "TF-D4-REF-001"
+      ],
+      "DOCX-FIELD-002": [
+        "TF-D4-REF-001"
+      ],
+      "DOCX-TOC-003": [
+        "TF-D4-REF-001"
+      ],
+      "MD-FIG-001": [
+        "TF-D1-SYN-001",
+        "TF-D4-REF-001"
+      ],
+      "MD-FM-001": [
+        "TF-D1-SYN-001"
+      ],
+      "MD-TBL-001": [
+        "TF-D1-SYN-001"
+      ],
+      "REL-DET-001": [
+        "TF-D6-REP-004"
+      ],
+      "TPL-SEC-002": [
+        "TF-D3-TPL-001"
+      ],
+      "TPL-STYLE-001": [
+        "TF-D3-TPL-001"
+      ],
+      "VAL-ID-001": [
+        "TF-D2-ID-001"
+      ],
+      "VAL-REF-002": [
+        "TF-D2-REF-004"
+      ]
+    },
+    "uncovered": []
+  },
+  "suites": {
+    "pr-gate": [
+      "TF-D1-SYN-001",
+      "TF-D3-TPL-001",
+      "TF-D4-REF-001",
+      "TF-D6-REP-004"
+    ],
+    "nightly": [
+      "TF-D1-SYN-001",
+      "TF-D2-ID-001",
+      "TF-D2-REF-004",
+      "TF-D3-TPL-001",
+      "TF-D4-CIT-026",
+      "TF-D4-REF-001",
+      "TF-D5-WRD-001",
+      "TF-D6-REP-004"
+    ]
+  }
+}

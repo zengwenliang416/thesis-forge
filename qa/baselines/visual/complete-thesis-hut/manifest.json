@@ -1,0 +1,48 @@
+{
+  "schema": "thesisforge/visual-baseline-v1",
+  "source": "thesis-final-auto.pdf（examples/complete-thesis + templates/schools/hunan-university-of-technology/master-2026.yaml，final-auto 后 soffice --convert-to pdf）",
+  "page_count": 12,
+  "text_hashes": [
+    "1d9176a74aa365536f31edb60c0cb4c326b2ba844112135d7cf2b17f266a5d1d",
+    "064c23f8691ba0c85c81c007647a70e863e15b2b583d4ec53f3f78f029352137",
+    "14b6d2464e3f177bf056e191c7bbe0a1848a7a009bba66fd553e3183db80a755",
+    "29d693bb9df8a1ddb98fcb4d2546b6c922e957cc999a1daf50f5f18814340423",
+    "a75407feedf6a148e5a6afbf84139e8b90439eb758ae43a7c4cc1281c150e85e",
+    "0b79b4bc7e3d6a89f5d36a76e13704e22add15d8a9edab3894ff604d9ac68623",
+    "c215c9f0dec60f55f2a09938daf5c709be8f73584d6d7d104295fcec3dea5d71",
+    "c7a656249fe8aca85956f678322cf8db582392db3620ed88d794586a3a7f6f9b",
+    "9a3de50fa3d51bf67736cb87977cb7dee40c1849a5819d5dce96302c3e389f98",
+    "6c1f593270d38df5b3488d3d914c7ba7bf5e70add2c53b18b62723794d557290",
+    "54ed044059f2c912c3ad4bfa1d5ee3977c4ffcf36415151ac66cb8036418488d",
+    "6279257107f7ee3c5e37b69156d03c8b4e91f5f9650b78db8748b98e19dd4b83"
+  ],
+  "raster": {
+    "dpi": 120,
+    "hashes": [
+      "c3dcc373d1eb12ecd14190f600b5f9aadd43534f79cc9629c57a9dcee5fb9923",
+      "f19c0d4eb12ed4fab1224eb0b2ec3d9259f0b1fc328b5741a190bde6b6afdc97",
+      "f9c7e2d7eee69ca629947e77c7b41e14582c57699159da1a0ae63928de3641f1",
+      "aed633e05a1eec9e17ced338575591ced98419fd51a46a4f1c799bff84affeb2",
+      "22ce24ba2230005af718ea80792dcacd45f1135aa7d0e78c806302eb0d4e35f1",
+      "8d1cef9591e98e502e98dc7af6d1bf56b837f940706106f025b37417c8367d19",
+      "d1cadfbdf705f44a7641e1a910214e4b523c45c6504530d1f5eb46ff655fba17",
+      "9b02ce0f82df777da6cb66da83fa503d5a4d0e20f4c154cfc4cbb724be91d752",
+      "f3969085d5238f43c19aa706b0ca424409027b66bac087f04b266740e74fe3f0",
+      "871dfd7a6eabf476cd02df6477f877b2d56c3167ba6f227dacb77185ea87a185",
+      "7e40d267ab84fd2237aca92a897181b98929ea5b61e03015826387a23d2ad025",
+      "98207306144eb0071a01f158292586fd942f317a776dc8e1899f4e08b79f29b7"
+    ],
+    "skipped_reason": null
+  },
+  "tools": {
+    "pdftotext": "pdftotext version 26.03.0",
+    "pdftoppm": "pdftoppm version 26.03.0"
+  },
+  "change_log": [
+    {
+      "reason": "Alpha gate 首建：complete-thesis + HUT master-2026 final-auto 产物",
+      "reviewer": "zwl",
+      "issue": ""
+    }
+  ]
+}

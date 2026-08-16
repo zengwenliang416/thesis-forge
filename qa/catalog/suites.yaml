@@ -1,0 +1,23 @@
+# 套件目录：CI 分层见 docs/update/QUALITY_STRATEGY.md 第 12 节。
+# cases 为显式成员清单；build_catalog.py 校验引用的用例存在。
+suites:
+  - id: pr-gate
+    title: PR 门禁套件
+    description: 每次 PR 必跑：快速、全自动、覆盖 P0 结构门禁。
+    cases:
+      - TF-D1-SYN-001
+      - TF-D3-TPL-001
+      - TF-D4-REF-001
+      - TF-D6-REP-004
+  - id: nightly
+    title: 夜间全量套件
+    description: 每日全量：全部 automated 用例，并登记 manual 兼容性用例结果。
+    cases:
+      - TF-D1-SYN-001
+      - TF-D2-ID-001
+      - TF-D2-REF-004
+      - TF-D3-TPL-001
+      - TF-D4-CIT-026
+      - TF-D4-REF-001
+      - TF-D5-WRD-001
+      - TF-D6-REP-004

@@ -1,0 +1,30 @@
+# 对应 tests/test_qa_e2e.py::test_duplicate_id_fixture_reports_structured_diagnostic。
+id: TF-D2-ID-001
+title: 重复稳定 ID 的结构化诊断
+version: 2
+status: active
+domain: D2
+priority: P0
+automation: automated
+requirements:
+  - VAL-ID-001
+releases:
+  - alpha
+  - beta
+  - ga
+input:
+  project: qa/fixtures/parser/duplicate-id.md
+steps:
+  - run: thesis_forge.core.parser.parse_markdown(qa/fixtures/parser/duplicate-id.md)
+  - run: thesis_forge.core.validator.validate_document(...)
+expected:
+  exit_code: 1
+  diagnostics_errors: 1
+  diagnostic_codes:
+    - duplicate-id
+evidence:
+  required:
+    - diagnostics-json
+    - build-report
+owners:
+  component: validator

@@ -1,0 +1,36 @@
+name: PR Gate
+
+# ADR-0006 质量门禁：PR 快速层。
+# 覆盖：lint、单元/契约测试、双 parser 后端 diff 门禁、qa 用例目录校验。
+# 结构类 DOCX 断言（openxml_validate / XPath）由 pytest 内的 test_qa_e2e /
+# test_qa_tools / test_docx_renderer 承载，随 pytest 一并运行。
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  gate:
+    runs-on: ubuntu-latest
+    env:
+      PYTHONIOENCODING: utf-8
+      PYTHONUTF8: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install
+        run: python -m pip install -e ".[dev]"
+      - name: Ruff
+        run: ruff check src/ tests/ qa/ spikes/
+      - name: Pytest
+        run: python -m pytest tests/ -q
+      - name: Parser dual-backend diff gate
+        run: |
+          python qa/tools/parser_diff.py qa/fixtures/parser/full-syntax.md \
+            --backend-a legacy --backend-b markdown-it
+      - name: QA catalog validation
+        run: python qa/tools/build_catalog.py

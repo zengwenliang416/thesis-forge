@@ -1,0 +1,32 @@
+# 引文 golden corpus（qa/baselines/citations/）随 Bibliography 阶段建立。
+id: TF-D4-CIT-026
+title: GB/T 7714 多文献引用与文后参考文献表
+version: 1
+status: draft
+domain: D4
+priority: P1
+automation: planned
+requirements:
+  - DOCX-CIT-004
+releases:
+  - beta
+  - ga
+input:
+  project: qa/fixtures/e2e/figure-reference（含 2 条 BibTeX，后续扩展 citation-heavy）
+  template: templates/schools/example-university/2026.yaml
+steps:
+  - run: thesisforge build <fixture> -o <tmp>.docx
+  - inspect: 正文上标/顺序编码标注与文后条目顺序
+expected:
+  exit_code: 0
+  diagnostics_errors: 0
+  citation_style: GB-T-7714-2025
+  bibliography_entries: 2
+  entries_match_golden: qa/baselines/citations/（待建）
+evidence:
+  required:
+    - build-report
+    - docx
+    - citation-golden
+owners:
+  component: bibliography

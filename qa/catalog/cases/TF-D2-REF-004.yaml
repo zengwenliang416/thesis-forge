@@ -1,0 +1,30 @@
+# 对应 tests/test_qa_e2e.py::test_missing_reference_fixture_reports_structured_diagnostic。
+id: TF-D2-REF-004
+title: 交叉引用目标缺失的诊断
+version: 2
+status: active
+domain: D2
+priority: P0
+automation: automated
+requirements:
+  - VAL-REF-002
+releases:
+  - alpha
+  - beta
+  - ga
+input:
+  project: qa/fixtures/parser/missing-reference.md
+steps:
+  - run: thesis_forge.core.parser.parse_markdown(qa/fixtures/parser/missing-reference.md)
+  - run: thesis_forge.core.validator.validate_document(...)
+expected:
+  exit_code: 1
+  diagnostics_errors: 2
+  diagnostic_codes:
+    - missing-reference
+evidence:
+  required:
+    - diagnostics-json
+    - build-report
+owners:
+  component: validator

@@ -1,0 +1,63 @@
+# 需求目录种子：按六域列 P0/P1 需求，供 cases/*.yaml 关联与覆盖统计。
+# 域定义见 docs/update/QUALITY_STRATEGY.md 第 2 节。
+requirements:
+  - id: MD-FM-001
+    title: Front Matter 元数据解析与文档类型识别
+    domain: D1
+    priority: P0
+  - id: MD-FIG-001
+    title: 图语义容器语法与稳定 ID（{#fig:…}）
+    domain: D1
+    priority: P0
+  - id: MD-TBL-001
+    title: 表格语法、对齐分隔行与题注
+    domain: D1
+    priority: P1
+  - id: VAL-ID-001
+    title: 重复稳定 ID 的结构化诊断（duplicate-id）
+    domain: D2
+    priority: P0
+  - id: VAL-REF-002
+    title: 交叉引用目标缺失的诊断（missing-reference）
+    domain: D2
+    priority: P0
+  - id: CMP-NUM-001
+    title: 图/表/公式由编译器按章统一编号
+    domain: D2
+    priority: P0
+  - id: CMP-REF-003
+    title: 交叉引用到书签的确定性映射（tf_ 前缀）
+    domain: D2
+    priority: P0
+  - id: TPL-STYLE-001
+    title: 模板样式映射完整，学校取值不写死在 Renderer
+    domain: D3
+    priority: P1
+  - id: TPL-SEC-002
+    title: 分节策略与页码格式/重启
+    domain: D3
+    priority: P1
+  - id: DOCX-FIELD-001
+    title: 图/表/公式 SEQ 编号为真实 Word 域
+    domain: D4
+    priority: P0
+  - id: DOCX-FIELD-002
+    title: REF 交叉引用域指向存在的书签
+    domain: D4
+    priority: P0
+  - id: DOCX-TOC-003
+    title: 目录域覆盖 1–3 级且打开时自动刷新
+    domain: D4
+    priority: P1
+  - id: DOCX-CIT-004
+    title: GB/T 7714 引文标注与文后参考文献表
+    domain: D4
+    priority: P1
+  - id: COMP-OPEN-001
+    title: Word/WPS/LibreOffice 无修复打开
+    domain: D5
+    priority: P1
+  - id: REL-DET-001
+    title: 重复 clean build 的规范化 OOXML 一致
+    domain: D6
+    priority: P1
