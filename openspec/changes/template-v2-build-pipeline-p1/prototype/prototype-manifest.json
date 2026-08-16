@@ -1,0 +1,54 @@
+{
+  "schema": "specnav.prototype.manifest.v1",
+  "version": "1",
+  "type": "component-seam",
+  "entry": "component/component-map.md",
+  "variant": "v2-build-pipeline-seams-v1",
+  "mock_strategy": "真实生产模块只读探针（seam_probe.py）+ 静态组件契约；无生产代码修改",
+  "touches_real_data": true,
+  "may_promote": false,
+  "promotion_requirement": "requires verifier-report.json, explicit user approval, and prototype handoff",
+  "visual_context": {
+    "required_for_ui_html": true,
+    "inventory": "not-applicable",
+    "project_shell_required": true,
+    "generic_shell_allowed": false
+  },
+  "dependencies": [
+    "python-docx",
+    "lxml",
+    "pydantic",
+    "PyYAML"
+  ],
+  "referenced_foundation_specs": [
+    "ui-design",
+    "system-architecture",
+    "frontend-backend-data-flow",
+    "component-architecture"
+  ],
+  "referenced_requirements": [
+    "requirements.md",
+    "acceptance.md",
+    "spec-map.json",
+    "component-impact-map.json"
+  ],
+  "ui_capabilities": {
+    "theme": {
+      "support": "none",
+      "modes": [
+        "none"
+      ],
+      "toggle_in_prototype": false,
+      "source": "openspec/specs/ui-design/design.md#Theme & Internationalization"
+    },
+    "i18n": {
+      "enabled": false,
+      "locales": [
+        "none"
+      ],
+      "default_locale": "none",
+      "locale_switch_in_prototype": false,
+      "source": "openspec/specs/ui-design/design.md#Theme & Internationalization"
+    }
+  }
+}

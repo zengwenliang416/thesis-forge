@@ -1,0 +1,35 @@
+{
+  "schema": "specnav.prototype.verifier.v1",
+  "status": "green",
+  "checked_entry": "component/component-map.md",
+  "project_fidelity": {
+    "status": "not-applicable",
+    "inventory": "not-applicable",
+    "shell_checked": false,
+    "generic_shell_detected": false,
+    "notes": [
+      "component-seam branch: no UI artifact; fidelity gate does not apply"
+    ]
+  },
+  "visual_matrix": {
+    "viewports": [],
+    "theme_modes": [],
+    "locales": [],
+    "states": []
+  },
+  "checks": [
+    "manifest: type=component-seam, entry=component/component-map.md, variant=v2-build-pipeline-seams-v1; matches requirements theme none / i18n disabled",
+    "seam S1 (v2 API consumption): seam_probe.py ran real load_package/lint_package/pack_package/unpack_package/merge_into_shell against spikes sample package -> sample load OK, lint L2 0 issues, .tftpl pack->unpack->reload roundtrip OK (shell preserved), merge_into_shell with real rendered docx OK (39038 bytes)",
+    "seam S2 (mapping feasibility): HUT v0.3 -> migrate_template -> v2 package load OK (26 migrated / 11 manual-required / 5 dropped); resolved_data direct ThesisTemplate.model_validate -> 28 errors characterized as 20 extra_forbidden + 5 missing + 3 model_type; concrete mapping work list recorded (headings->heading, version->year, page.margin inner/outer->left/right, body.size, styles/regions/figures/tables/equations/numbering/fonts strip-or-map, sections.*.page_number.display enum)",
+    "seam S3 (shell merge wiring): merge_into_shell(shell, compiled, output) signature confirmed from source (package_editor.py:996) and probe; HUT v2 package has no shell -> degrade path covered by requirements",
+    "cohesion/coupling: component-tree.md + component-map.md record allowed/forbidden imports, public APIs, extraction targets; mapping/template-source do not import docx/lxml/renderers/CLI",
+    "no production edits: probe is read-only; all changes live under openspec/changes/template-v2-build-pipeline-p1/prototype/"
+  ],
+  "evidence": [
+    "component/seam_probe.py",
+    "component/seam_probe_results.json",
+    "run: PYTHONPATH=<repo>/src .venv/bin/python component/seam_probe.py (exit 0)",
+    "run: ThesisTemplate.model_validate(resolved_data) error-type census (20 extra_forbidden / 5 missing / 3 model_type)"
+  ],
+  "blockers": []
+}

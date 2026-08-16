@@ -1,0 +1,111 @@
+{
+  "question": "v2 build pipeline component seams (classifier/mapping/shell-merge) feasible?",
+  "sample_package": {
+    "sample_load": {
+      "id": "hunan-university-of-technology.master.2026.sample",
+      "schema_version": 2,
+      "reference_docx": true,
+      "shell_docx": true,
+      "resolved_data_keys": [
+        "compatibility",
+        "font_policy",
+        "fonts",
+        "id",
+        "language",
+        "name",
+        "page",
+        "regions",
+        "schema_version",
+        "sections",
+        "status",
+        "styles",
+        "version",
+        "word"
+      ]
+    },
+    "lint": {
+      "has_errors": false,
+      "issues": 0
+    },
+    "tftpl_roundtrip": {
+      "packed_bytes": 80504,
+      "reload_id": "hunan-university-of-technology.master.2026.sample",
+      "shell_after_unpack": true
+    },
+    "merge_signature": {
+      "output_exists": true,
+      "ledger_keys": "n/a",
+      "output_bytes": 39038
+    }
+  },
+  "hut_mapping": {
+    "migrate": {
+      "ok": true,
+      "summary": {
+        "migrated": 26,
+        "manual-required": 11,
+        "dropped": 5
+      },
+      "entries": 42
+    },
+    "load": {
+      "id": "hut-master-2026",
+      "reference_docx": true,
+      "shell_docx": null,
+      "resolved_keys": [
+        "bibliography",
+        "body",
+        "compatibility",
+        "equations",
+        "figures",
+        "fonts",
+        "headings",
+        "id",
+        "language",
+        "name",
+        "numbering",
+        "page",
+        "regions",
+        "schema_version",
+        "sections",
+        "status",
+        "styles",
+        "tables",
+        "toc",
+        "version"
+      ]
+    },
+    "direct_validate": {
+      "ok": false,
+      "error_count": 28,
+      "missing_top_fields": [
+        "body",
+        "heading",
+        "page",
+        "year"
+      ],
+      "other_error_locs": [
+        "bibliography.presentation",
+        "bibliography.style_file",
+        "body.spacing",
+        "compatibility",
+        "equations",
+        "figures",
+        "fonts",
+        "headings",
+        "language",
+        "numbering",
+        "page.margin.inner",
+        "page.margin.outer",
+        "page.mirror_margins",
+        "regions",
+        "schema_version",
+        "sections.cover.page_number.display",
+        "sections.front_matter.page_number.display",
+        "sections.main.page_number.display",
+        "status",
+        "styles"
+      ]
+    }
+  }
+}
