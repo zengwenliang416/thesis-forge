@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import shutil
 import subprocess
 from pathlib import Path
 
@@ -118,6 +119,8 @@ def test_archived_prototype_locator_does_not_mutate_evidence(tmp_path: Path):
 
 
 def test_prototype_logic_harness_preserves_offline_safe_build_contract():
+    if shutil.which("node") is None:
+        pytest.skip("node not available (prototype logic harness requires node)")
     result = subprocess.run(
         ["node", str(PROTOTYPE / "logic" / "harness.js")],
         cwd=ROOT,
