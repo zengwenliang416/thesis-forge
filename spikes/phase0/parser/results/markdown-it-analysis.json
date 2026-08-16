@@ -1,0 +1,374 @@
+{
+  "versions": {
+    "markdown-it-py": "4.2.0",
+    "mdit-py-plugins": "0.6.1"
+  },
+  "plugins_used": [
+    "front_matter",
+    "footnote",
+    "dollarmath",
+    "attrs",
+    "container×6",
+    "core:table"
+  ],
+  "front_matter": {
+    "token_found": true,
+    "map": [
+      0,
+      13
+    ],
+    "meta_keys": [
+      "author",
+      "document",
+      "render",
+      "thesis"
+    ]
+  },
+  "headings": {
+    "levels": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "attrs_plugin_extracted_id": false,
+    "raw_id_still_in_text": true,
+    "heading_inline_sample": "绪论 {#chap:introduction}"
+  },
+  "containers": {
+    "opens": [
+      {
+        "type": "container_figure_open",
+        "info": " figure {#fig:model}",
+        "map": [
+          28,
+          32
+        ]
+      },
+      {
+        "type": "container_table_open",
+        "info": " table {#tbl:results}",
+        "map": [
+          34,
+          42
+        ]
+      },
+      {
+        "type": "container_equation_open",
+        "info": " equation {#eq:loss}",
+        "map": [
+          44,
+          48
+        ]
+      },
+      {
+        "type": "container_algorithm_open",
+        "info": " algorithm {#alg:train}",
+        "map": [
+          50,
+          57
+        ]
+      },
+      {
+        "type": "container_listing_open",
+        "info": " listing {#lst:predict}",
+        "map": [
+          59,
+          67
+        ]
+      },
+      {
+        "type": "container_bibliography_open",
+        "info": " bibliography",
+        "map": [
+          80,
+          81
+        ]
+      }
+    ],
+    "count": 6,
+    "header_info_needs_custom_parse": true,
+    "kv_lines_arrive_as": "容器内 paragraph 文本"
+  },
+  "citations_crossrefs": {
+    "plugin_available": false,
+    "citation_survives_as_text": true,
+    "crossref_survives_as_text": true,
+    "note": "mdit-py-plugins 无 pandoc 风格 citation/crossref 插件，需自写 inline rule"
+  },
+  "footnotes": {
+    "refs": [
+      {
+        "label": "note",
+        "map": null
+      },
+      {
+        "label": "long",
+        "map": null
+      }
+    ],
+    "defs": [
+      {
+        "label": "note"
+      },
+      {
+        "label": "long"
+      }
+    ],
+    "label_preserved": true,
+    "definition_maps": [
+      {
+        "label": "note",
+        "content_map": [
+          83,
+          84
+        ]
+      },
+      {
+        "label": "long",
+        "content_map": [
+          84,
+          86
+        ]
+      }
+    ],
+    "ref_token_has_own_map": false
+  },
+  "math": {
+    "tokens": [
+      {
+        "type": "math_inline",
+        "content": "E = m c^2",
+        "map": null
+      },
+      {
+        "type": "math_block",
+        "content": "L=-\\sum_i y_i \\log \\hat y_i",
+        "map": [
+          45,
+          48
+        ]
+      }
+    ]
+  },
+  "lists": {
+    "ordered_attrs": [
+      {
+        "attrs": {},
+        "map": [
+          53,
+          57
+        ]
+      },
+      {
+        "attrs": {
+          "start": 3
+        },
+        "map": [
+          75,
+          78
+        ]
+      }
+    ],
+    "start_preserved": true,
+    "nested_detected": true
+  },
+  "table": {
+    "table_open_found": true,
+    "map": [
+      37,
+      41
+    ]
+  },
+  "positions": {
+    "block_map_samples": [
+      {
+        "type": "front_matter",
+        "map": [
+          0,
+          13
+        ]
+      },
+      {
+        "type": "heading_open",
+        "map": [
+          14,
+          15
+        ]
+      },
+      {
+        "type": "inline",
+        "map": [
+          14,
+          15
+        ]
+      },
+      {
+        "type": "heading_open",
+        "map": [
+          16,
+          17
+        ]
+      },
+      {
+        "type": "inline",
+        "map": [
+          16,
+          17
+        ]
+      },
+      {
+        "type": "paragraph_open",
+        "map": [
+          18,
+          19
+        ]
+      },
+      {
+        "type": "inline",
+        "map": [
+          18,
+          19
+        ]
+      },
+      {
+        "type": "heading_open",
+        "map": [
+          20,
+          21
+        ]
+      }
+    ],
+    "map_semantics": "[start_line, end_line)，0-based，仅行，无列",
+    "inline_tokens_without_map": [
+      "footnote_anchor",
+      "footnote_ref",
+      "math_inline",
+      "softbreak",
+      "text"
+    ]
+  },
+  "unclosed_container": {
+    "container_runs_to_eof": true,
+    "no_exception": true,
+    "resulting_types": [
+      "container_figure_open",
+      "paragraph_open",
+      "inline",
+      "paragraph_close"
+    ]
+  },
+  "determinism": {
+    "two_parses_token_equal": true
+  },
+  "features": {
+    "front_matter": {
+      "status": "支持",
+      "mechanism": "plugin(front_matter) + yaml 自解析",
+      "position": "行（token.map）",
+      "evidence": "map=[0, 13], keys=['author', 'document', 'render', 'thesis']"
+    },
+    "heading_atx": {
+      "status": "支持",
+      "mechanism": "native(core heading rule)",
+      "position": "行",
+      "evidence": "levels=[1, 2, 3, 4]"
+    },
+    "heading_id": {
+      "status": "部分支持",
+      "mechanism": "attrs 插件不识别标题行尾 {#id}（实测 attrs 为空、文本原样残留）；需从 inline 文本自行提取（约 10 行）",
+      "position": "行",
+      "evidence": "attrs_extracted=False, sample='绪论 {#chap:introduction}'"
+    },
+    "paragraph": {
+      "status": "支持",
+      "mechanism": "native",
+      "position": "行",
+      "evidence": "paragraph_open token.map"
+    },
+    "citation": {
+      "status": "部分支持",
+      "mechanism": "无现成插件，[@key; @key2, locator] 需自写 inline rule（含多 key/locator 拆分）",
+      "position": "行（经宿主段落）；列需自行扫源码",
+      "evidence": "citation_survives_as_text=True"
+    },
+    "crossref": {
+      "status": "部分支持",
+      "mechanism": "无现成插件，@fig:xxx 需自写 inline rule（约 30 行，前缀白名单）",
+      "position": "行（经宿主段落）；列需自行扫源码",
+      "evidence": "crossref_survives_as_text=True"
+    },
+    "footnote": {
+      "status": "支持",
+      "mechanism": "plugin(footnote)：label 完整保留（meta.label），定义 map 覆盖续行",
+      "position": "定义：行；引用点：inline token 无自身 map，仅宿主段落行",
+      "evidence": "refs=[{'label': 'note', 'map': None}, {'label': 'long', 'map': None}], def_maps=[{'label': 'note', 'content_map': [83, 84]}, {'label': 'long', 'content_map': [84, 86]}]"
+    },
+    "math": {
+      "status": "支持",
+      "mechanism": "plugin(dollarmath)",
+      "position": "行（math_block）；inline 无 map",
+      "evidence": "tokens=[{'type': 'math_inline', 'content': 'E = m c^2', 'map': None}, {'type': 'math_block', 'content': 'L=-\\\\sum_i y_i \\\\log \\\\hat y_i', 'map': [45, 48]}]"
+    },
+    "list_ordered_start": {
+      "status": "支持",
+      "mechanism": "native(attrs.start)",
+      "position": "行",
+      "evidence": "ordered_attrs=[{'attrs': {}, 'map': [53, 57]}, {'attrs': {'start': 3}, 'map': [75, 78]}]"
+    },
+    "list_nested": {
+      "status": "支持",
+      "mechanism": "native（嵌套 token 树）",
+      "position": "行",
+      "evidence": "nested=True"
+    },
+    "pipe_table": {
+      "status": "支持",
+      "mechanism": "native(core table rule, enable('table'))",
+      "position": "行",
+      "evidence": "map=[37, 41]"
+    },
+    "containers": {
+      "status": "部分支持",
+      "mechanism": "plugin(container) 按名字注册 6 次；项目写法 ::: figure {#id} 原样兼容（info 字符串含原始头部），{#id} 需自行解析；未闭合 ::: 无报错，容器静默吞到文末",
+      "position": "行",
+      "evidence": "opens=6/6, info 样例=[' figure {#fig:model}', ' table {#tbl:results}']"
+    },
+    "container_kv_metadata": {
+      "status": "部分支持",
+      "mechanism": "kv 行为容器内段落文本，需自行解析（与现有 parser 同构）",
+      "position": "行",
+      "evidence": "容器内 paragraph 文本"
+    },
+    "sourcepos_block": {
+      "status": "部分支持",
+      "mechanism": "token.map=[start,end) 0-based 行区间，块级 token 普遍具备；无列号",
+      "position": "仅行",
+      "evidence": "samples=[{'type': 'front_matter', 'map': [0, 13]}, {'type': 'heading_open', 'map': [14, 15]}, {'type': 'inline', 'map': [14, 15]}]"
+    },
+    "sourcepos_inline": {
+      "status": "不支持",
+      "mechanism": "inline token map=None，引擎不记录任何列号；需自行按行二次扫描（成本与现有 parser 相当）",
+      "position": "无",
+      "evidence": "inline_without_map=['footnote_anchor', 'footnote_ref', 'math_inline', 'softbreak', 'text']"
+    },
+    "multi_file": {
+      "status": "部分支持",
+      "mechanism": "parse() 只接受字符串；include 需调用层自行拼接/递归解析并维护行号偏移",
+      "position": "自行维护",
+      "evidence": "库本身无 include 机制"
+    },
+    "error_diagnostics": {
+      "status": "不支持",
+      "mechanism": "未闭合 ::: 无异常无警告（容器静默吞到文末）；需自写预检",
+      "position": "n/a",
+      "evidence": "container_runs_to_eof=True, types=['container_figure_open', 'paragraph_open', 'inline', 'paragraph_close']"
+    },
+    "determinism": {
+      "status": "支持",
+      "mechanism": "同输入两次 parse token 流完全一致",
+      "position": "n/a",
+      "evidence": "token_equal=True"
+    }
+  }
+}

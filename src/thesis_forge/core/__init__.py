@@ -41,6 +41,13 @@ from .model import (
     ValidationIssue,
 )
 from .parser import ParseError, parse_markdown, parse_markdown_text
+from .parser_backend import (
+    LegacyParserBackend,
+    MarkdownItParserBackend,
+    ParserBackend,
+    get_parser_backend,
+    parser_backend_names,
+)
 from .render_plan import (
     BibliographyEntryInstruction,
     BibliographyInstruction,
@@ -69,15 +76,18 @@ __all__ = [
     "Heading",
     "Inline",
     "LatexMathConverter",
+    "LegacyParserBackend",
     "ListBlock",
     "ListItem",
     "Listing",
+    "MarkdownItParserBackend",
     "MathConversionError",
     "MathConverter",
     "MathExpression",
     "MathSyntaxError",
     "Paragraph",
     "ParseError",
+    "ParserBackend",
     "RenderNode",
     "RenderPlan",
     "SourceLocation",
@@ -93,9 +103,11 @@ __all__ = [
     "ValidationIssue",
     "ValidationRule",
     "compile_document",
+    "get_parser_backend",
     "is_valid_stable_id",
     "parse_markdown",
     "parse_markdown_text",
+    "parser_backend_names",
     "split_stable_id",
     "validate_document",
 ]

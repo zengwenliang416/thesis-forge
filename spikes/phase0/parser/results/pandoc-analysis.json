@@ -1,0 +1,388 @@
+{
+  "pandoc_version": "pandoc 3.8.2.1",
+  "profiles": {
+    "markdown": "markdown+fenced_divs+citations+footnotes+header_attributes+yaml_metadata_block+tex_math_dollars+pipe_tables",
+    "commonmark_x": "commonmark_x+sourcepos"
+  },
+  "markdown_reader": {
+    "meta_keys": [
+      "author",
+      "document",
+      "render",
+      "thesis"
+    ],
+    "block_histogram": {
+      "BulletList": 2,
+      "CodeBlock": 1,
+      "Div": 1,
+      "Header": 6,
+      "OrderedList": 2,
+      "Para": 10,
+      "Plain": 9,
+      "Table": 1
+    },
+    "header_ids": [
+      "chap:introduction",
+      "sec:background",
+      "现有方法的分类",
+      "sec:manual-limits",
+      "sec:lists",
+      "chap:references"
+    ],
+    "divs": [
+      {
+        "id": "",
+        "classes": [
+          "bibliography"
+        ]
+      }
+    ],
+    "citations": {
+      "cite_node_count": 10,
+      "citation_entries": [
+        {
+          "id": "smith2025",
+          "mode": "NormalCitation",
+          "suffix": ""
+        },
+        {
+          "id": "smith2025",
+          "mode": "NormalCitation",
+          "suffix": ""
+        },
+        {
+          "id": "wang2024",
+          "mode": "NormalCitation",
+          "suffix": ""
+        },
+        {
+          "id": "smith2025",
+          "mode": "NormalCitation",
+          "suffix": ", p. 12"
+        },
+        {
+          "id": "fig:model",
+          "mode": "AuthorInText",
+          "suffix": ""
+        },
+        {
+          "id": "tbl:results",
+          "mode": "AuthorInText",
+          "suffix": ""
+        },
+        {
+          "id": "eq:loss",
+          "mode": "AuthorInText",
+          "suffix": ""
+        },
+        {
+          "id": "alg:train",
+          "mode": "AuthorInText",
+          "suffix": ""
+        },
+        {
+          "id": "lst:predict",
+          "mode": "AuthorInText",
+          "suffix": ""
+        },
+        {
+          "id": "sec:background",
+          "mode": "AuthorInText",
+          "suffix": ""
+        },
+        {
+          "id": "chap:introduction",
+          "mode": "AuthorInText",
+          "suffix": ""
+        }
+      ],
+      "crossref_as_author_in_text": [
+        "fig:model",
+        "tbl:results",
+        "eq:loss",
+        "alg:train",
+        "lst:predict",
+        "sec:background",
+        "chap:introduction"
+      ]
+    },
+    "footnotes": {
+      "note_count": 2,
+      "label_preserved": false,
+      "note_content_pos_sample": null
+    },
+    "math_nodes": [
+      "Math(DisplayMath)",
+      "Math(InlineMath)"
+    ],
+    "ordered_list_starts": [
+      1,
+      3
+    ],
+    "has_any_data_pos": false
+  },
+  "commonmark_x_reader": {
+    "meta_keys": [
+      "author",
+      "document",
+      "render",
+      "thesis"
+    ],
+    "block_histogram": {
+      "BulletList": 2,
+      "CodeBlock": 1,
+      "Div": 24,
+      "Header": 6,
+      "OrderedList": 2,
+      "Para": 10,
+      "Plain": 9,
+      "Table": 1
+    },
+    "header_ids": [
+      "chap:introduction",
+      "sec:background",
+      "现有方法的分类",
+      "sec:manual-limits",
+      "sec:lists",
+      "chap:references"
+    ],
+    "sourcepos": {
+      "block_types_with_pos": {
+        "CodeBlock": 1,
+        "Div": 1,
+        "Div(wrapper=1)": 23,
+        "Header": 6
+      },
+      "block_types_without_pos": {
+        "BulletList": 2,
+        "OrderedList": 2,
+        "Para": 10,
+        "Plain": 9,
+        "Table": 1
+      },
+      "inline_wrapper_spans_with_pos": 181,
+      "non_span_inline_types": [
+        "Math",
+        "Note",
+        "Para",
+        "Quoted",
+        "SoftBreak",
+        "Space",
+        "Str"
+      ],
+      "pos_format_samples": [
+        "15:3-15:5",
+        "17:4-17:8",
+        "19:1-19:11"
+      ]
+    },
+    "citations": {
+      "cite_node_count": 0,
+      "citation_entries": [],
+      "crossref_as_author_in_text": []
+    },
+    "footnotes": {
+      "note_count": 2,
+      "label_preserved": false,
+      "note_content_pos_sample": "84:10-84:16"
+    },
+    "table_node_has_pos": false
+  },
+  "container_preprocess": {
+    "rewrite_rule": "::: kind {#id} -> ::: {.kind #id}",
+    "container_divs_after_rewrite": [
+      {
+        "id": "fig:model",
+        "classes": [
+          "figure"
+        ],
+        "inner_block_types": [
+          "Para"
+        ]
+      },
+      {
+        "id": "tbl:results",
+        "classes": [
+          "table"
+        ],
+        "inner_block_types": [
+          "Para",
+          "Table"
+        ]
+      },
+      {
+        "id": "eq:loss",
+        "classes": [
+          "equation"
+        ],
+        "inner_block_types": [
+          "Para"
+        ]
+      },
+      {
+        "id": "alg:train",
+        "classes": [
+          "algorithm"
+        ],
+        "inner_block_types": [
+          "Para",
+          "OrderedList"
+        ]
+      },
+      {
+        "id": "lst:predict",
+        "classes": [
+          "listing"
+        ],
+        "inner_block_types": [
+          "Para",
+          "CodeBlock"
+        ]
+      },
+      {
+        "id": "",
+        "classes": [
+          "bibliography"
+        ],
+        "inner_block_types": []
+      }
+    ],
+    "kv_lines_arrive_as": "Div 内普通 Para 文本",
+    "kv_para_sample": "src:   caption:   width:  "
+  },
+  "unclosed_container_behavior": {
+    "pandoc_error": false,
+    "resulting_block_types": [
+      "Para"
+    ]
+  },
+  "no_citations_alternative": {
+    "profile": "markdown-citations",
+    "cite_nodes": 0,
+    "note": "@fig:x 与 [@key] 均保留为纯文本，可统一后处理，但仍无 sourcepos"
+  },
+  "multi_file": {
+    "meta_keys": [
+      "thesis"
+    ],
+    "data_pos_samples": [
+      "/Volumes/zwl/open_sources/thesis-forge/spikes/phase0/parser/fixtures/include-main.md@6:1-7:1",
+      "/Volumes/zwl/open_sources/thesis-forge/spikes/phase0/parser/fixtures/include-chapter.md@1:1-2:1",
+      "/Volumes/zwl/open_sources/thesis-forge/spikes/phase0/parser/fixtures/include-chapter.md@3:1-4:1"
+    ],
+    "per_file_tracking": true
+  },
+  "determinism": {
+    "two_runs_byte_identical": true
+  },
+  "features": {
+    "front_matter": {
+      "status": "支持",
+      "mechanism": "native(yaml_metadata_block)",
+      "position": "n/a",
+      "evidence": "meta keys=['author', 'document', 'render', 'thesis']"
+    },
+    "heading_atx": {
+      "status": "支持",
+      "mechanism": "native(Header)",
+      "position": "commonmark_x: 行列; markdown: 无",
+      "evidence": "Header ids=['chap:introduction', 'sec:background', '现有方法的分类', 'sec:manual-limits', 'sec:lists', 'chap:references']"
+    },
+    "heading_id": {
+      "status": "支持",
+      "mechanism": "native(header_attributes)",
+      "position": "同 heading",
+      "evidence": "Header attr id 原样保留 chap:/sec: 前缀（含冒号）"
+    },
+    "paragraph": {
+      "status": "支持",
+      "mechanism": "native(Para)",
+      "position": "commonmark_x: wrapper Div 行列",
+      "evidence": "Para 在 commonmark_x 下被 wrapper Div 包裹携带 data-pos"
+    },
+    "citation": {
+      "status": "部分支持",
+      "mechanism": "markdown reader 原生 Cite（多 key/locator 入 suffix）；commonmark_x 无 citations 扩展只能文本后处理 → sourcepos 与原生 citation 不可兼得",
+      "position": "markdown: 无; commonmark_x: 后处理可重建",
+      "evidence": "Cite 数=10, entries=[{'id': 'smith2025', 'mode': 'NormalCitation', 'suffix': ''}, {'id': 'smith2025', 'mode': 'NormalCitation', 'suffix': ''}, {'id': 'wang2024', 'mode': 'NormalCitation', 'suffix': ''}]"
+    },
+    "crossref": {
+      "status": "部分支持",
+      "mechanism": "无原生节点；markdown reader 下裸 @fig:x 变 AuthorInText Cite（可按前缀识别），其他路线需正则后处理",
+      "position": "取决于 reader，均需后处理",
+      "evidence": "crossref_as_author_in_text=['fig:model', 'tbl:results', 'eq:loss', 'alg:train', 'lst:predict', 'sec:background', 'chap:introduction']"
+    },
+    "footnote": {
+      "status": "部分支持",
+      "mechanism": "native(Note)，但 label 丢失（Note 匿名嵌在引用点），续行被合并",
+      "position": "commonmark_x: 引用点与定义点均有行列（wrapper Span）",
+      "evidence": "Note 数=2, label_preserved=False"
+    },
+    "math": {
+      "status": "支持",
+      "mechanism": "native(Math InlineMath/DisplayMath, tex_math_dollars)",
+      "position": "commonmark_x: 行列",
+      "evidence": "math 节点=['Math(DisplayMath)', 'Math(InlineMath)']"
+    },
+    "list_ordered_start": {
+      "status": "支持",
+      "mechanism": "native(OrderedList start 属性)",
+      "position": "commonmark_x: 借 wrapper Div 行列",
+      "evidence": "ordered starts=[1, 3]"
+    },
+    "list_nested": {
+      "status": "支持",
+      "mechanism": "native(嵌套 List)",
+      "position": "commonmark_x: 借 wrapper Div 行列",
+      "evidence": "嵌套 BulletList 正常"
+    },
+    "pipe_table": {
+      "status": "支持",
+      "mechanism": "native(Table)",
+      "position": "无（Table 节点无 data-pos，位置盲区）",
+      "evidence": "table_node_has_pos=False"
+    },
+    "containers": {
+      "status": "部分支持",
+      "mechanism": "项目写法 ::: figure {#id} 两种 reader 均不识别（静默退化为段落）；需源码预处理改写成 ::: {.figure #id} 后 Div 原生（id/类/位置齐全）",
+      "position": "预处理后 commonmark_x: 行列",
+      "evidence": "预处理后可识别容器=6/6; 未闭合 ::: 无报错, blocks=['Para']"
+    },
+    "container_kv_metadata": {
+      "status": "部分支持",
+      "mechanism": "kv 行作为 Div 内普通段落文本，需自行解析",
+      "position": "n/a",
+      "evidence": "kv_para_sample='src:   caption:   width:  '"
+    },
+    "sourcepos_block": {
+      "status": "部分支持",
+      "mechanism": "仅 commonmark/gfm/commonmark_x reader 的 sourcepos 扩展提供 data-pos (file@l:c-l:c)；markdown reader 完全不支持；Table 子树（含单元格）完全无位置，List/ListItem 靠外层 wrapper Div 间接定位",
+      "position": "行列",
+      "evidence": "有位置: {'CodeBlock': 1, 'Div': 1, 'Div(wrapper=1)': 23, 'Header': 6}; 无位置: {'BulletList': 2, 'OrderedList': 2, 'Para': 10, 'Plain': 9, 'Table': 1}"
+    },
+    "sourcepos_inline": {
+      "status": "部分支持",
+      "mechanism": "commonmark_x 下每个 inline 被 wrapper Span 包裹带 data-pos（含列）；markdown reader 无任何 inline 位置",
+      "position": "行列（经 wrapper Span）",
+      "evidence": "wrapper spans=181, samples=['15:3-15:5', '17:4-17:8', '19:1-19:11']"
+    },
+    "multi_file": {
+      "status": "支持",
+      "mechanism": "pandoc 接受多输入文件，data-pos 带文件名前缀逐文件正确；front matter 仅首文件生效",
+      "position": "逐文件行列",
+      "evidence": "per_file_tracking=True, samples=['/Volumes/zwl/open_sources/thesis-forge/spikes/phase0/parser/fixtures/include-main.md@6:1-7:1', '/Volumes/zwl/open_sources/thesis-forge/spikes/phase0/parser/fixtures/include-chapter.md@1:1-2:1', '/Volumes/zwl/open_sources/thesis-forge/spikes/phase0/parser/fixtures/include-chapter.md@3:1-4:1']"
+    },
+    "error_diagnostics": {
+      "status": "不支持",
+      "mechanism": "pandoc 对未闭合 :::、非法属性静默退化为文本，不产生错误；需自写预检",
+      "position": "n/a",
+      "evidence": "unclosed blocks=['Para']"
+    },
+    "determinism": {
+      "status": "支持",
+      "mechanism": "同输入两次运行 JSON 逐字节一致",
+      "position": "n/a",
+      "evidence": "byte_identical=True"
+    }
+  }
+}

@@ -1,8 +1,35 @@
-# ThesisForge Markdown Spec v0.1
+# ThesisForge Markdown Spec v0.2
 
-ThesisForge Markdown = Markdown 基础结构 + YAML Front Matter + semantic containers + cross-reference syntax。
+ThesisForge Markdown = Markdown 基础结构（V1 子集，见下节）+ YAML Front Matter +
+semantic containers + cross-reference syntax。
+
+## Markdown 基础结构（V1 支持集）
+
+V1 Parser 是基于逐行扫描的子集解析器，不支持完整 CommonMark。明确支持的基础
+结构：
+
+- ATX 标题（`#`–`######`）
+- 段落（连续非空行合并为一个段落）
+- 有序 / 无序列表
+- 管道表格（仅 `::: table` 容器内）
+- 围栏代码块（仅 `::: listing` 容器内）
+- 数学公式（仅 `::: equation` 容器内）
+
+V1 **不支持**下列通用 Markdown 构造：
+
+- 粗体 / 斜体（`**...**`、`*...*`）
+- 链接（`[text](url)`）
+- 行内图片（`![alt](src)`）
+- 顶层 ```` ``` ```` 围栏代码块（容器之外）
+- 行内数学 `$...$` 的语义提取（按普通文本保留；数学内容应放入 equation 容器）
+
+**当前行为：静默降级。** 以上构造不会被识别，所在行按普通段落文本原样保留，
+Parser 不产生任何错误或警告。这些构造是已定方向、待 Parser 后端迁移后支持的
+能力；后端选型见 `docs/update/adr/ADR-0001.md`（Parser 后端选型，撰写中）。
 
 ## Front Matter
+
+Front Matter 可选；不提供时元数据为空映射。提供时必须以 `---` 起始并闭合：
 
 ```yaml
 ---
@@ -32,6 +59,8 @@ Word 样式。`render.template_id`、`render.bibliography` 和
 ```
 
 标题可省略 ID，但需要被交叉引用的章、节必须使用 `chap:` 或 `sec:` 前缀。
+标题文本同样做 inline 提取（CrossReference / Citation / FootnoteReference），
+行列位置从标题文本起点计算。
 
 ## Paragraph And Inline Content
 
@@ -45,6 +74,10 @@ Word 样式。`render.template_id`、`render.bibliography` 和
 - `[@smith2025, p. 12]` → Citation
 - `[^note]` → FootnoteReference
 - 其余内容 → Text
+
+Inline 提取适用于：段落、标题文本、列表项正文、容器 `caption:` 元数据值、
+`::: table` 与 `::: algorithm` 的正文行、脚注定义（含续行）。Figure 的
+`src`/`width`、Equation 的公式体、Listing 的代码体不做 inline 提取。
 
 最终编号不在 Parser 阶段计算。
 
@@ -60,8 +93,15 @@ V1 支持连续的有序列表和无序列表。两个空格表示一级缩进�
 4. 下一项
 ```
 
-Parser 保留列表类型、起始序号、marker、缩进层级、正文和源码位置。列表样式及 Word
-编号形式由 Template、Compiler 和 Renderer 决定。
+Parser 保留列表类型、起始序号、marker、缩进层级、正文和源码位置。列表项正文
+做 inline 提取。列表样式及 Word 编号形式由 Template、Compiler 和 Renderer 决定。
+
+列表块的边界规则（当前实现行为，明确为规范）：
+
+- 有序 / 无序 marker 类型切换会**截断当前列表块**，不同 marker 类型的后续行
+  另起新列表块（`- 甲` 后紧跟 `1. 乙` 会产生两个 ListBlock）。该截断是静默
+  的，不产生诊断。
+- 不匹配列表语法的行（含空行）结束当前列表块；非空行转入段落缓冲。
 
 ## Figure
 
@@ -92,6 +132,9 @@ caption: "实验结果"
 分隔行必须使用 Markdown 对齐标记；每个数据行的列数必须与表头一致。无效分隔行
 或列数不一致会在编译阶段明确失败，不会生成伪表格。
 
+表格正文行按原文保留在 `Table.markdown`，同时对其做 inline 提取（如单元格内
+的 citation 会进入文档级索引）。
+
 ## Equation
 
 ```markdown
@@ -101,6 +144,9 @@ L=-\sum_i y_i \log \hat y_i
 $$
 :::
 ```
+
+公式体可以省略 `$$` 包裹；Parser 在存在首尾 `$$` 时将其剥离，其余内容原样
+保留为 `Equation.latex`。
 
 ## Algorithm
 
@@ -115,6 +161,8 @@ caption: "训练流程"
 :::
 ```
 
+算法正文按原文保留在 `Algorithm.body`，同时对其做 inline 提取。
+
 ## Listing
 
 ````markdown
@@ -128,6 +176,10 @@ def predict(x):
 ```
 :::
 ````
+
+代码体外层的围栏可以省略。语言来源：`language:` 元数据优先；未提供时使用围栏
+info string（如 ```` ```python ````）；两者都缺失时 `Listing.language` 为
+`None`。围栏行本身不进入 `Listing.code`。
 
 ## Citation
 
@@ -202,14 +254,35 @@ lst:  listing
 ID 必须符合 `<prefix>:<name>`。`name` 可使用字母、数字、下划线、连字符、点和冒号。
 脚注 label 使用独立的 footnote namespace，不加入上述交叉引用 ID 前缀。
 
+## 源码位置粒度
+
+- Inline object（Text / CrossReference / Citation / FootnoteReference）：
+  行列位置精确（`SourceLocation.line` + `column`）。
+- 块级 object（Heading / Paragraph / ListBlock / 六种容器 / FootnoteDefinition）：
+  **只有行号，`column` 恒为 `None`**。块级列号待 Parser 后端迁移后补齐
+  （见 `docs/update/adr/ADR-0001.md`，撰写中）。
+
 ## Error Behavior
 
 - YAML Front Matter 必须闭合且根节点必须是键值映射。
 - Figure、Table、Equation、Algorithm、Listing、Bibliography semantic container
-  必须由 `:::` 闭合。
+  必须由 `:::` 闭合；未闭合抛 `ParseError`，消息含容器起始行号。
+- 未知 `:::` 容器类型与任何未识别的语法**静默降级**：相关行按普通段落文本
+  原样保留，无错误、无警告（见「Markdown 基础结构（V1 支持集）」）。
 - Parser 错误使用 `ParseError`，并尽可能提供源码行号。
 - Parser 只读取输入，不写 DOCX、不修改 Markdown、不访问网络。
+- Parser 为单文件解析：V1 无多文件 include 机制。
 
 ## 版式规则
 
 `thesis.md` 不定义宋体、小四、页边距、行距等学校样式；这些全部进入学校 YAML 模板。
+
+## 修订注记
+
+- v0.2（2026-08-15）：与现有 Parser 实现对齐。新增「Markdown 基础结构（V1
+  支持集）」明确支持/不支持构造及静默降级行为；补充标题、caption、表格与算法
+  正文、列表项的 inline 提取范围；补充 equation 可省略 `$$`、listing 围栏
+  info string 推断语言；新增列表块截断规则、「源码位置粒度」节（块级仅行号）、
+  未知容器/语法降级策略与无多文件 include 的说明；标注待 ADR-0001 后端迁移后
+  支持的能力。
+- v0.1：初始版本。

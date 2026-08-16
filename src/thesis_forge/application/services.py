@@ -8,7 +8,7 @@ from typing import Protocol
 
 from thesis_forge.core.compiler import compile_document
 from thesis_forge.core.model import ThesisDocument, ValidationIssue
-from thesis_forge.core.parser import parse_markdown, parse_markdown_text
+from thesis_forge.core.parser_backend import LegacyParserBackend, ParserBackend
 from thesis_forge.core.render_plan import RenderPlan
 from thesis_forge.core.validator import ValidationContext, validate_document
 from thesis_forge.renderers.docx import DocxRenderer
@@ -58,8 +58,11 @@ def _create_validation_context(
 
 @dataclass(frozen=True, slots=True)
 class ApplicationDependencies:
-    parser: Parser = parse_markdown
-    snapshot_parser: SnapshotParser = parse_markdown_text
+    # 解析默认经 ParserBackend（ADR-0001，默认 legacy）；parser/snapshot_parser
+    # 保留为细粒度覆盖通道，为 None 时回落到 parser_backend 的对应方法。
+    parser_backend: ParserBackend = field(default_factory=LegacyParserBackend)
+    parser: Parser | None = None
+    snapshot_parser: SnapshotParser | None = None
     context_factory: ContextFactory = _create_validation_context
     validator: Validator = validate_document
     compiler: Compiler = compile_document
@@ -107,11 +110,13 @@ def inspect_service(
     dependencies: ApplicationDependencies | None = None,
 ) -> InspectionResult:
     active = _dependencies(dependencies)
+    parse_file = active.parser or active.parser_backend.parse_file
+    parse_text = active.snapshot_parser or active.parser_backend.parse_text
     try:
         document = (
-            active.parser(source)
+            parse_file(source)
             if source_text is None
-            else active.snapshot_parser(source_text, source_path=source)
+            else parse_text(source_text, source_path=source)
         )
     except ApplicationStageError:
         raise

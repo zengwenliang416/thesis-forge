@@ -1,0 +1,393 @@
+{
+  "fixture": "spikes/phase0/parser/fixtures/full-syntax.md",
+  "backends": {
+    "existing": "src/thesis_forge/core/parser.py（手写正则+逐行扫描，396 行）",
+    "pandoc": "pandoc 3.8.2.1 JSON AST（markdown / commonmark_x+sourcepos 两种 reader）",
+    "markdownit": "markdown-it-py 4.2.0 + mdit-py-plugins 0.6.1"
+  },
+  "status_legend": {
+    "支持": "原生或低成本插件即可完整获得语义",
+    "部分支持": "需要预处理/后处理/自写规则，或能力有缺口",
+    "不支持": "该路线基本无法获得或成本极高"
+  },
+  "matrix": {
+    "front_matter": {
+      "label": "YAML front matter",
+      "existing": {
+        "status": "支持",
+        "mechanism": "native(yaml.safe_load)",
+        "position": "n/a",
+        "evidence": "keys=['author', 'document', 'render', 'thesis']"
+      },
+      "pandoc": {
+        "status": "支持",
+        "mechanism": "native(yaml_metadata_block)",
+        "position": "n/a",
+        "evidence": "meta keys=['author', 'document', 'render', 'thesis']"
+      },
+      "markdownit": {
+        "status": "支持",
+        "mechanism": "plugin(front_matter) + yaml 自解析",
+        "position": "行（token.map）",
+        "evidence": "map=[0, 13], keys=['author', 'document', 'render', 'thesis']"
+      }
+    },
+    "heading_atx": {
+      "label": "ATX 标题 1–6 级",
+      "existing": {
+        "status": "支持",
+        "mechanism": "native(正则逐行)",
+        "position": "行",
+        "evidence": "levels=[1, 2, 3, 4]"
+      },
+      "pandoc": {
+        "status": "支持",
+        "mechanism": "native(Header)",
+        "position": "commonmark_x: 行列; markdown: 无",
+        "evidence": "Header ids=['chap:introduction', 'sec:background', '现有方法的分类', 'sec:manual-limits', 'sec:lists', 'chap:references']"
+      },
+      "markdownit": {
+        "status": "支持",
+        "mechanism": "native(core heading rule)",
+        "position": "行",
+        "evidence": "levels=[1, 2, 3, 4]"
+      }
+    },
+    "heading_id": {
+      "label": "标题 {#custom-id}",
+      "existing": {
+        "status": "支持",
+        "mechanism": "native",
+        "position": "行",
+        "evidence": "ids=['chap:introduction', 'sec:background', 'sec:manual-limits', 'sec:lists', 'chap:references']"
+      },
+      "pandoc": {
+        "status": "支持",
+        "mechanism": "native(header_attributes)",
+        "position": "同 heading",
+        "evidence": "Header attr id 原样保留 chap:/sec: 前缀（含冒号）"
+      },
+      "markdownit": {
+        "status": "部分支持",
+        "mechanism": "attrs 插件不识别标题行尾 {#id}（实测 attrs 为空、文本原样残留）；需从 inline 文本自行提取（约 10 行）",
+        "position": "行",
+        "evidence": "attrs_extracted=False, sample='绪论 {#chap:introduction}'"
+      }
+    },
+    "paragraph": {
+      "label": "段落",
+      "existing": {
+        "status": "支持",
+        "mechanism": "native",
+        "position": "行",
+        "evidence": "Paragraph 数=3"
+      },
+      "pandoc": {
+        "status": "支持",
+        "mechanism": "native(Para)",
+        "position": "commonmark_x: wrapper Div 行列",
+        "evidence": "Para 在 commonmark_x 下被 wrapper Div 包裹携带 data-pos"
+      },
+      "markdownit": {
+        "status": "支持",
+        "mechanism": "native",
+        "position": "行",
+        "evidence": "paragraph_open token.map"
+      }
+    },
+    "citation": {
+      "label": "citation [@key; @key2, locator]",
+      "existing": {
+        "status": "支持",
+        "mechanism": "native(INLINE_TOKEN_RE)",
+        "position": "行列",
+        "evidence": "citations=[(['smith2025'], None), (['smith2025', 'wang2024'], None), (['smith2025'], 'p. 12')]"
+      },
+      "pandoc": {
+        "status": "部分支持",
+        "mechanism": "markdown reader 原生 Cite（多 key/locator 入 suffix）；commonmark_x 无 citations 扩展只能文本后处理 → sourcepos 与原生 citation 不可兼得",
+        "position": "markdown: 无; commonmark_x: 后处理可重建",
+        "evidence": "Cite 数=10, entries=[{'id': 'smith2025', 'mode': 'NormalCitation', 'suffix': ''}, {'id': 'smith2025', 'mode': 'NormalCitation', 'suffix': ''}, {'id': 'wang2024', 'mode': 'NormalCitation', 'suffix': ''}]"
+      },
+      "markdownit": {
+        "status": "部分支持",
+        "mechanism": "无现成插件，[@key; @key2, locator] 需自写 inline rule（含多 key/locator 拆分）",
+        "position": "行（经宿主段落）；列需自行扫源码",
+        "evidence": "citation_survives_as_text=True"
+      }
+    },
+    "crossref": {
+      "label": "crossref @fig:xxx",
+      "existing": {
+        "status": "支持",
+        "mechanism": "native(INLINE_TOKEN_RE 前缀白名单)",
+        "position": "行列",
+        "evidence": "targets=['fig:model', 'tbl:results', 'eq:loss', 'alg:train', 'lst:predict', 'sec:background', 'chap:introduction']"
+      },
+      "pandoc": {
+        "status": "部分支持",
+        "mechanism": "无原生节点；markdown reader 下裸 @fig:x 变 AuthorInText Cite（可按前缀识别），其他路线需正则后处理",
+        "position": "取决于 reader，均需后处理",
+        "evidence": "crossref_as_author_in_text=['fig:model', 'tbl:results', 'eq:loss', 'alg:train', 'lst:predict', 'sec:background', 'chap:introduction']"
+      },
+      "markdownit": {
+        "status": "部分支持",
+        "mechanism": "无现成插件，@fig:xxx 需自写 inline rule（约 30 行，前缀白名单）",
+        "position": "行（经宿主段落）；列需自行扫源码",
+        "evidence": "crossref_survives_as_text=True"
+      }
+    },
+    "footnote": {
+      "label": "脚注 [^label] 引用/定义/续行",
+      "existing": {
+        "status": "支持",
+        "mechanism": "native（label 保留，续行合并）",
+        "position": "引用点：行列；定义：仅行",
+        "evidence": "defs=[('note', 84), ('long', 85)], 续行合并=True"
+      },
+      "pandoc": {
+        "status": "部分支持",
+        "mechanism": "native(Note)，但 label 丢失（Note 匿名嵌在引用点），续行被合并",
+        "position": "commonmark_x: 引用点与定义点均有行列（wrapper Span）",
+        "evidence": "Note 数=2, label_preserved=False"
+      },
+      "markdownit": {
+        "status": "支持",
+        "mechanism": "plugin(footnote)：label 完整保留（meta.label），定义 map 覆盖续行",
+        "position": "定义：行；引用点：inline token 无自身 map，仅宿主段落行",
+        "evidence": "refs=[{'label': 'note', 'map': None}, {'label': 'long', 'map': None}], def_maps=[{'label': 'note', 'content_map': [83, 84]}, {'label': 'long', 'content_map': [84, 86]}]"
+      }
+    },
+    "math": {
+      "label": "行内/块级数学",
+      "existing": {
+        "status": "部分支持",
+        "mechanism": "模型无 Math 节点：行内 $...$ 仅作普通文本；块级数学只能经 ::: equation 容器",
+        "position": "n/a",
+        "evidence": "model.py 无 Math 类型；fixture 行内数学未产生语义节点"
+      },
+      "pandoc": {
+        "status": "支持",
+        "mechanism": "native(Math InlineMath/DisplayMath, tex_math_dollars)",
+        "position": "commonmark_x: 行列",
+        "evidence": "math 节点=['Math(DisplayMath)', 'Math(InlineMath)']"
+      },
+      "markdownit": {
+        "status": "支持",
+        "mechanism": "plugin(dollarmath)",
+        "position": "行（math_block）；inline 无 map",
+        "evidence": "tokens=[{'type': 'math_inline', 'content': 'E = m c^2', 'map': None}, {'type': 'math_block', 'content': 'L=-\\\\sum_i y_i \\\\log \\\\hat y_i', 'map': [45, 48]}]"
+      }
+    },
+    "list_ordered_start": {
+      "label": "有序列表起始序号",
+      "existing": {
+        "status": "支持",
+        "mechanism": "native(start 字段)",
+        "position": "行",
+        "evidence": "ordered.start=3"
+      },
+      "pandoc": {
+        "status": "支持",
+        "mechanism": "native(OrderedList start 属性)",
+        "position": "commonmark_x: 借 wrapper Div 行列",
+        "evidence": "ordered starts=[1, 3]"
+      },
+      "markdownit": {
+        "status": "支持",
+        "mechanism": "native(attrs.start)",
+        "position": "行",
+        "evidence": "ordered_attrs=[{'attrs': {}, 'map': [53, 57]}, {'attrs': {'start': 3}, 'map': [75, 78]}]"
+      }
+    },
+    "list_nested": {
+      "label": "嵌套列表",
+      "existing": {
+        "status": "支持",
+        "mechanism": "native（扁平 items + level=indent//2）",
+        "position": "行",
+        "evidence": "levels=[0, 1]"
+      },
+      "pandoc": {
+        "status": "支持",
+        "mechanism": "native(嵌套 List)",
+        "position": "commonmark_x: 借 wrapper Div 行列",
+        "evidence": "嵌套 BulletList 正常"
+      },
+      "markdownit": {
+        "status": "支持",
+        "mechanism": "native（嵌套 token 树）",
+        "position": "行",
+        "evidence": "nested=True"
+      }
+    },
+    "pipe_table": {
+      "label": "管道表",
+      "existing": {
+        "status": "支持",
+        "mechanism": "native（保留原始 markdown 字符串，结构校验在编译期）",
+        "position": "行",
+        "evidence": "table.markdown 含对齐行=True"
+      },
+      "pandoc": {
+        "status": "支持",
+        "mechanism": "native(Table)",
+        "position": "无（Table 节点无 data-pos，位置盲区）",
+        "evidence": "table_node_has_pos=False"
+      },
+      "markdownit": {
+        "status": "支持",
+        "mechanism": "native(core table rule, enable('table'))",
+        "position": "行",
+        "evidence": "map=[37, 41]"
+      }
+    },
+    "containers": {
+      "label": "::: 六种语义容器",
+      "existing": {
+        "status": "支持",
+        "mechanism": "native(CONTAINER_START_RE 逐行扫描；未闭合抛 ParseError)",
+        "position": "行",
+        "evidence": "容器类型=['Algorithm', 'BibliographyBlock', 'Equation', 'Figure', 'Listing', 'Table']"
+      },
+      "pandoc": {
+        "status": "部分支持",
+        "mechanism": "项目写法 ::: figure {#id} 两种 reader 均不识别（静默退化为段落）；需源码预处理改写成 ::: {.figure #id} 后 Div 原生（id/类/位置齐全）",
+        "position": "预处理后 commonmark_x: 行列",
+        "evidence": "预处理后可识别容器=6/6; 未闭合 ::: 无报错, blocks=['Para']"
+      },
+      "markdownit": {
+        "status": "部分支持",
+        "mechanism": "plugin(container) 按名字注册 6 次；项目写法 ::: figure {#id} 原样兼容（info 字符串含原始头部），{#id} 需自行解析；未闭合 ::: 无报错，容器静默吞到文末",
+        "position": "行",
+        "evidence": "opens=6/6, info 样例=[' figure {#fig:model}', ' table {#tbl:results}']"
+      }
+    },
+    "container_kv_metadata": {
+      "label": "容器头 key:value 元数据",
+      "existing": {
+        "status": "支持",
+        "mechanism": "native(KV_RE 元数据阶段解析)",
+        "position": "行",
+        "evidence": "figure: src='./images/model.png' caption='模型总体结构' width='85%'"
+      },
+      "pandoc": {
+        "status": "部分支持",
+        "mechanism": "kv 行作为 Div 内普通段落文本，需自行解析",
+        "position": "n/a",
+        "evidence": "kv_para_sample='src:   caption:   width:  '"
+      },
+      "markdownit": {
+        "status": "部分支持",
+        "mechanism": "kv 行为容器内段落文本，需自行解析（与现有 parser 同构）",
+        "position": "行",
+        "evidence": "容器内 paragraph 文本"
+      }
+    },
+    "sourcepos_block": {
+      "label": "块级 source position",
+      "existing": {
+        "status": "部分支持",
+        "mechanism": "SourceLocation.line 全部填充；column 块级为空",
+        "position": "仅行",
+        "evidence": "所有 block.location.line 非空, column=None"
+      },
+      "pandoc": {
+        "status": "部分支持",
+        "mechanism": "仅 commonmark/gfm/commonmark_x reader 的 sourcepos 扩展提供 data-pos (file@l:c-l:c)；markdown reader 完全不支持；Table 子树（含单元格）完全无位置，List/ListItem 靠外层 wrapper Div 间接定位",
+        "position": "行列",
+        "evidence": "有位置: {'CodeBlock': 1, 'Div': 1, 'Div(wrapper=1)': 23, 'Header': 6}; 无位置: {'BulletList': 2, 'OrderedList': 2, 'Para': 10, 'Plain': 9, 'Table': 1}"
+      },
+      "markdownit": {
+        "status": "部分支持",
+        "mechanism": "token.map=[start,end) 0-based 行区间，块级 token 普遍具备；无列号",
+        "position": "仅行",
+        "evidence": "samples=[{'type': 'front_matter', 'map': [0, 13]}, {'type': 'heading_open', 'map': [14, 15]}, {'type': 'inline', 'map': [14, 15]}]"
+      }
+    },
+    "sourcepos_inline": {
+      "label": "行内 source position（含列）",
+      "existing": {
+        "status": "支持",
+        "mechanism": "SourceLocation(line, column) 逐 inline 填充",
+        "position": "行列",
+        "evidence": "inline 数=51, 全部带列=True"
+      },
+      "pandoc": {
+        "status": "部分支持",
+        "mechanism": "commonmark_x 下每个 inline 被 wrapper Span 包裹带 data-pos（含列）；markdown reader 无任何 inline 位置",
+        "position": "行列（经 wrapper Span）",
+        "evidence": "wrapper spans=181, samples=['15:3-15:5', '17:4-17:8', '19:1-19:11']"
+      },
+      "markdownit": {
+        "status": "不支持",
+        "mechanism": "inline token map=None，引擎不记录任何列号；需自行按行二次扫描（成本与现有 parser 相当）",
+        "position": "无",
+        "evidence": "inline_without_map=['footnote_anchor', 'footnote_ref', 'math_inline', 'softbreak', 'text']"
+      }
+    },
+    "multi_file": {
+      "label": "多文件 include",
+      "existing": {
+        "status": "不支持",
+        "mechanism": "parse_markdown 只接受单文件；无 include 机制",
+        "position": "n/a",
+        "evidence": "需在调用层自行实现"
+      },
+      "pandoc": {
+        "status": "支持",
+        "mechanism": "pandoc 接受多输入文件，data-pos 带文件名前缀逐文件正确；front matter 仅首文件生效",
+        "position": "逐文件行列",
+        "evidence": "per_file_tracking=True, samples=['/Volumes/zwl/open_sources/thesis-forge/spikes/phase0/parser/fixtures/include-main.md@6:1-7:1', '/Volumes/zwl/open_sources/thesis-forge/spikes/phase0/parser/fixtures/include-chapter.md@1:1-2:1', '/Volumes/zwl/open_sources/thesis-forge/spikes/phase0/parser/fixtures/include-chapter.md@3:1-4:1']"
+      },
+      "markdownit": {
+        "status": "部分支持",
+        "mechanism": "parse() 只接受字符串；include 需调用层自行拼接/递归解析并维护行号偏移",
+        "position": "自行维护",
+        "evidence": "库本身无 include 机制"
+      }
+    },
+    "error_diagnostics": {
+      "label": "语法错误诊断",
+      "existing": {
+        "status": "支持",
+        "mechanism": "ParseError 带行号（未闭合容器/YAML 无效等）",
+        "position": "n/a",
+        "evidence": "unclosed -> '第 1 行的 figure 容器未闭合'"
+      },
+      "pandoc": {
+        "status": "不支持",
+        "mechanism": "pandoc 对未闭合 :::、非法属性静默退化为文本，不产生错误；需自写预检",
+        "position": "n/a",
+        "evidence": "unclosed blocks=['Para']"
+      },
+      "markdownit": {
+        "status": "不支持",
+        "mechanism": "未闭合 ::: 无异常无警告（容器静默吞到文末）；需自写预检",
+        "position": "n/a",
+        "evidence": "container_runs_to_eof=True, types=['container_figure_open', 'paragraph_open', 'inline', 'paragraph_close']"
+      }
+    },
+    "determinism": {
+      "label": "解析确定性",
+      "existing": {
+        "status": "支持",
+        "mechanism": "同输入两次解析结构一致",
+        "position": "n/a",
+        "evidence": "deterministic=True"
+      },
+      "pandoc": {
+        "status": "支持",
+        "mechanism": "同输入两次运行 JSON 逐字节一致",
+        "position": "n/a",
+        "evidence": "byte_identical=True"
+      },
+      "markdownit": {
+        "status": "支持",
+        "mechanism": "同输入两次 parse token 流完全一致",
+        "position": "n/a",
+        "evidence": "token_equal=True"
+      }
+    }
+  }
+}
