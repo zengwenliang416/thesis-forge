@@ -17,8 +17,12 @@ from thesis_forge.application import (
     validation_service,
 )
 from thesis_forge.presentation import localized_issue_message
+from thesis_forge.templates import TemplateLoadError
+from thesis_forge.templates import v2 as template_v2
 
 app = typer.Typer(help="ThesisForge — academic thesis compiler")
+template_app = typer.Typer(help="Template Package v2 工具（ADR-0002）")
+app.add_typer(template_app, name="template")
 console = Console(width=160)
 
 
@@ -129,6 +133,197 @@ def build(
         raise typer.Exit(2) from None
 
     console.print(f"[green]✓ 已生成 DOCX：{result.output_path}[/green]")
+
+
+def _print_template_issues(issues) -> None:
+    table = RichTable()
+    table.add_column("Severity", no_wrap=True)
+    table.add_column("Code", no_wrap=True)
+    table.add_column("Target", overflow="fold")
+    table.add_column("Message", overflow="fold")
+    for issue in issues:
+        table.add_row(
+            issue.severity,
+            issue.code,
+            issue.target or "",
+            issue.message,
+        )
+    console.print(table)
+
+
+@template_app.command("lint")
+def template_lint(
+    path: Path,
+    level: Annotated[
+        str | None,
+        typer.Option("--level", help="只运行指定层：L1 / L2 / L3 / L4 / L5"),
+    ] = None,
+    json_output: Annotated[
+        bool,
+        typer.Option("--json", help="以 JSON 输出结构化诊断"),
+    ] = False,
+) -> None:
+    """对 Template Package v2 目录执行 L1–L5 静态检查。"""
+    if not path.is_dir():
+        console.print(f"[red]读取失败：模板包目录不存在：{path}[/red]")
+        raise typer.Exit(2)
+    try:
+        report = template_v2.lint_package(
+            path, level=level.upper() if level else None
+        )
+    except ValueError as error:
+        console.print(f"[red]参数错误：{error}[/red]")
+        raise typer.Exit(2) from None
+
+    if json_output:
+        payload = {
+            "path": str(report.path),
+            "levels_run": list(report.levels_run),
+            "issues": [asdict(issue) for issue in report.issues],
+            "errors": report.errors,
+            "warnings": report.warnings,
+        }
+        console.print_json(json.dumps(payload, ensure_ascii=False, default=str))
+    elif not report.issues:
+        console.print("[green]✓ 模板包检查通过[/green]")
+    else:
+        _print_template_issues(report.issues)
+
+    if report.has_errors:
+        raise typer.Exit(1)
+
+
+@template_app.command("inspect")
+def template_inspect(
+    path: Path,
+    resolved: Annotated[
+        bool,
+        typer.Option("--resolved", help="输出继承合并后的完整 template.yaml 与字段来源"),
+    ] = False,
+) -> None:
+    """加载 Template Package v2 并输出结构与继承链（JSON，同 inspect 惯例）。"""
+    if not path.is_dir():
+        console.print(f"[red]读取失败：模板包目录不存在：{path}[/red]")
+        raise typer.Exit(2)
+    try:
+        package = template_v2.load_package(path)
+    except template_v2.PackageLoadError as error:
+        console.print(f"[red]模板包加载失败：{error.path}[/red]")
+        _print_template_issues(error.issues)
+        raise typer.Exit(2) from None
+
+    template = package.template
+    payload = {
+        "path": str(package.path),
+        "format": "template-package-v2",
+        "id": template.id,
+        "version": template.version,
+        "name": template.name,
+        "language": template.language,
+        "status": template.status,
+        "reference_docx": str(package.reference_docx),
+        "shell_docx": str(package.shell_docx) if package.shell_docx else None,
+        "inheritance_chain": [asdict(entry) for entry in package.inheritance_chain],
+    }
+    if resolved:
+        payload["resolved"] = package.resolved_data
+        payload["section_sources"] = package.section_sources
+    console.print_json(json.dumps(payload, ensure_ascii=False, default=str))
+
+
+@template_app.command("pack")
+def template_pack(
+    path: Path,
+    output: Annotated[Path, typer.Option("-o", "--output", help="输出 .tftpl 路径")],
+) -> None:
+    """把 Template Package v2 目录打成确定性 .tftpl（前置 lint L1+L2）。"""
+    if not path.is_dir():
+        console.print(f"[red]读取失败：模板包目录不存在：{path}[/red]")
+        raise typer.Exit(2)
+    try:
+        result = template_v2.pack_package(path, output)
+    except template_v2.PackError as error:
+        console.print(f"[red]打包失败：{error.path}[/red]")
+        _print_template_issues(error.issues)
+        raise typer.Exit(1) from None
+    console.print(f"[green]✓ 已生成 .tftpl：{result}[/green]")
+
+
+@template_app.command("verify")
+def template_verify(
+    path: Path,
+    json_output: Annotated[
+        bool,
+        typer.Option("--json", help="以 JSON 输出结构化诊断"),
+    ] = False,
+) -> None:
+    """校验 .tftpl：解包防护 + manifest 哈希对账 + L1–L3 全量。"""
+    if not path.is_file():
+        console.print(f"[red]读取失败：.tftpl 文件不存在：{path}[/red]")
+        raise typer.Exit(2)
+    report = template_v2.verify_package(path)
+    if json_output:
+        payload = {
+            "path": str(report.path),
+            "issues": [asdict(issue) for issue in report.issues],
+            "errors": report.errors,
+            "warnings": report.warnings,
+            "package_id": report.package.template.id if report.package else None,
+        }
+        console.print_json(json.dumps(payload, ensure_ascii=False, default=str))
+    elif report.has_errors:
+        console.print(f"[red]校验失败：{report.path}[/red]")
+        _print_template_issues(report.issues)
+    else:
+        console.print(f"[green]✓ .tftpl 校验通过：{report.path}[/green]")
+        non_errors = [i for i in report.issues if i.severity != "error"]
+        if non_errors:
+            _print_template_issues(non_errors)
+    if report.has_errors:
+        raise typer.Exit(1)
+
+
+@template_app.command("migrate")
+def template_migrate(
+    source: Path,
+    output: Annotated[Path, typer.Option("-o", "--output", help="输出包目录")],
+    force: Annotated[
+        bool,
+        typer.Option("--force", help="输出目录非空时仍覆盖写入"),
+    ] = False,
+) -> None:
+    """把 v0.3 单 YAML 模板迁移为 Template Package v2 目录骨架。"""
+    if not source.is_file():
+        console.print(f"[red]读取失败：v0.3 模板不存在：{source}[/red]")
+        raise typer.Exit(2)
+    try:
+        report = template_v2.migrate_template(source, output, force=force)
+    except template_v2.MigrateError as error:
+        console.print(f"[red]迁移失败：{error}[/red]")
+        raise typer.Exit(2) from None
+    except TemplateLoadError as error:
+        console.print(f"[red]v0.3 模板无效：{error}[/red]")
+        raise typer.Exit(2) from None
+
+    summary = report.summary
+    console.print(
+        f"[green]✓ 已迁移到 {report.output}[/green]：migrated={summary['migrated']} "
+        f"manual-required={summary['manual-required']} dropped={summary['dropped']}；"
+        "台账见 migration-report.json"
+    )
+    manual = [e for e in report.entries if e.status == "manual-required"]
+    if manual:
+        table = RichTable()
+        table.add_column("Field", no_wrap=True)
+        table.add_column("Reason", overflow="fold")
+        table.add_column("Suggestion", overflow="fold")
+        for entry in manual:
+            table.add_row(entry.field, entry.reason or "", entry.suggestion or "")
+        console.print(table)
+    if report.lint_report.has_errors:
+        console.print("[red]迁移产物 lint 存在 error（§8.2：非零退出）[/red]")
+        _print_template_issues(report.lint_report.issues)
+        raise typer.Exit(1)
 
 
 if __name__ == "__main__":

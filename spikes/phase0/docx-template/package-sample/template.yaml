@@ -1,0 +1,104 @@
+# ThesisForge Template Package v2 — Phase 0 最小样例
+# 这是 spike 样例，不是正式模板；用于验证「YAML + reference.docx + shell.docx」路线。
+schema_version: 2
+id: hunan-university-of-technology.master.2026.sample
+version: 0.1.0
+name: 湖南工业大学硕士学位论文模板包（Phase 0 样例）
+language: zh-CN
+status: draft
+
+compatibility:
+  thesisforge: ">=0.1,<1.0"
+  document_types:
+    - master_thesis
+  target_apps:
+    word: primary
+    wps: compatible
+    libreoffice: preview
+
+word:
+  reference_docx: reference.docx
+  shell_docx: shell.docx
+  macro_policy: forbid
+  external_relationships: forbid
+  anchors:
+    body: tf_body
+    toc: tf_toc
+
+page:
+  size: A4
+  orientation: portrait
+  margin:
+    top: 25mm
+    bottom: 25mm
+    inner: 30mm
+    outer: 25mm
+  gutter: 0mm
+  mirror_margins: false
+
+fonts:
+  body:
+    east_asia: 宋体
+    latin: Times New Roman
+    complex_script: Times New Roman
+  heading:
+    east_asia: 黑体
+    latin: Times New Roman
+
+font_policy:
+  missing_primary: error
+  missing_fallback: warning
+  embed_fonts: false
+
+styles:
+  paragraph:
+    body: TF Body
+    body_first: TF Body First
+    abstract: TF Abstract
+    bibliography: TF Bibliography
+    caption_figure: TF Figure Caption
+    caption_table: TF Table Caption
+    equation: TF Equation
+    footnote: Footnote Text
+  heading:
+    1: TF Heading 1
+    2: TF Heading 2
+    3: TF Heading 3
+    4: TF Heading 4
+  character:
+    emphasis: Emphasis
+    strong: Strong
+    code: TF Code Char
+    hyperlink: Hyperlink
+
+regions:
+  order:
+    - cover
+    - originality_statement
+    - authorization_statement
+    - abstract_zh
+    - abstract_en
+    - toc
+    - main
+    - bibliography
+    - acknowledgements
+  toc:
+    title: 目  录
+  bibliography:
+    title: 参考文献
+  acknowledgements:
+    title: 致  谢
+
+sections:
+  front_matter:
+    page_number:
+      display: true
+      format: roman-lower
+      restart: 1
+    start: new_page
+  main:
+    page_number:
+      display: true
+      format: decimal
+      restart: 1
+    start: new_page

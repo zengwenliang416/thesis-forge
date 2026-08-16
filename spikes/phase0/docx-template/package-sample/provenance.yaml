@@ -1,0 +1,28 @@
+# Phase 0 spike 样例的溯源信息（格式演示用，非正式审核记录）
+school:
+  name: 湖南工业大学
+  official_document:
+    title: 湖南工业大学硕士学位论文撰写规范
+    version: "2026"
+    issued_date: 2025-09-01
+    source_type: official-docx
+    source_hash: sha256:0000000000000000000000000000000000000000000000000000000000000000
+
+maintainers:
+  - name: ThesisForge Community
+    contact: https://example.invalid/thesisforge
+
+licenses:
+  template_code: Apache-2.0
+  school_assets: restricted
+  citation_style: CC-BY-SA-3.0
+
+review:
+  last_verified: 2026-08-15
+  verified_with:
+    - LibreOffice 25.x（soffice headless 转 PDF 冒烟通过，见 output/*-summary.json）
+
+notes: >
+  本包由 spikes/phase0/docx-template/ 下脚本编程生成：reference.docx 的样式值取自
+  templates/schools/hunan-university-of-technology/master-2026.yaml；shell.docx 的
+  封面/声明/目录均为占位内容，未复制任何学校官方文件。
