@@ -416,16 +416,39 @@ class CoverInstruction(_Instruction):
 
 
 @dataclass(frozen=True, slots=True)
+class TocEntryInstruction:
+    """One cached table-of-contents entry resolved at compile time.
+
+    Page numbers are unknown without a layout engine; renderers emit a
+    reference field (e.g. PAGEREF) per entry with a placeholder cached value.
+    """
+
+    text: str
+    level: int
+    bookmark: str | None = None
+
+    @property
+    def payload(self) -> dict[str, Any]:
+        return {
+            "text": self.text,
+            "level": self.level,
+            "bookmark": self.bookmark,
+        }
+
+
+@dataclass(frozen=True, slots=True)
 class TocInstruction(_Instruction):
     kind: ClassVar[str] = "toc"
     min_level: int = 1
     max_level: int = 3
+    entries: tuple[TocEntryInstruction, ...] = ()
 
     @property
     def payload(self) -> dict[str, Any]:
         return {
             "min_level": self.min_level,
             "max_level": self.max_level,
+            "entries": [entry.payload for entry in self.entries],
         }
 
 

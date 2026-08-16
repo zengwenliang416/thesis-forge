@@ -1,4 +1,6 @@
 import base64
+import subprocess
+import sys
 from pathlib import Path
 
 import pytest
@@ -37,6 +39,7 @@ from thesis_forge.core.render_plan import (
     ReferenceRun,
     RenderPlan,
     TextRun,
+    TocEntryInstruction,
     TocInstruction,
 )
 from thesis_forge.renderers.docx import DocxRenderer
@@ -687,9 +690,11 @@ def test_toc_em_page_number_tab_uses_effective_level_size(tmp_path: Path):
     ) == ["2000"]
 
 
-def test_template_without_toc_policy_preserves_real_field_without_style_overrides(
+def test_template_without_toc_policy_defines_toc_styles_with_deterministic_defaults(
     tmp_path: Path,
 ):
+    # ADR-0005 §5.3：即使模板无 toc 配置也恒定义 TOC1-3（默认虚线右制表位），
+    # 供 cached 条目与 LibreOffice 刷新引用，避免未定义样式引用。
     template = load_template("templates/base/bachelor.yaml")
     assert template.toc is None
     output = tmp_path / "legacy-toc-field.docx"
@@ -701,14 +706,197 @@ def test_template_without_toc_policy_preserves_real_field_without_style_override
 
     styles_xml = _xml_part(output, "word/styles.xml")
     document_xml = _xml_part(output, "word/document.xml")
-    assert not styles_xml.xpath(
-        ".//w:style[@w:styleId='TOC1' or @w:styleId='TOC2' or @w:styleId='TOC3']",
-        namespaces=NS,
-    )
+    for level in range(1, 4):
+        style = styles_xml.xpath(
+            f".//w:style[@w:styleId='TOC{level}']",
+            namespaces=NS,
+        )[0]
+        assert style.xpath("./w:name/@w:val", namespaces=NS) == [f"TOC {level}"]
+        assert style.xpath("./w:basedOn/@w:val", namespaces=NS) == ["Normal"]
+        assert style.xpath("./w:pPr/w:ind/@w:firstLine", namespaces=NS) == ["0"]
+        assert style.xpath(
+            "./w:pPr/w:tabs/w:tab/@w:val",
+            namespaces=NS,
+        ) == ["right"]
+        assert style.xpath(
+            "./w:pPr/w:tabs/w:tab/@w:pos",
+            namespaces=NS,
+        ) == ["8788"]
+        assert style.xpath(
+            "./w:pPr/w:tabs/w:tab/@w:leader",
+            namespaces=NS,
+        ) == ["dot"]
     assert [
         "".join(node.itertext()).strip()
         for node in document_xml.xpath(".//w:instrText", namespaces=NS)
     ] == ['TOC \\o "1-3" \\h \\z \\u']
+
+
+def _toc_document(tmp_path: Path) -> ThesisDocument:
+    return ThesisDocument(
+        source_path=tmp_path / "thesis.md",
+        blocks=[
+            Heading(id="chap:abstract-zh", level=1, text="摘要"),
+            Heading(id="chap:intro", level=1, text="绪论"),
+            Heading(id="sec:background", level=2, text="研究背景"),
+            Heading(id="sec:limitations", level=3, text="现有流程的局限"),
+            Heading(id=None, level=2, text="无书签小节"),
+        ],
+    )
+
+
+def _toc_sections() -> SectionsSpec:
+    return SectionsSpec.model_validate(
+        {
+            "front_matter": {
+                "start": "new_page",
+                "page_number": {"format": "roman-lower"},
+            },
+            "main": {
+                "start": "new_page",
+                "page_number": {"format": "decimal", "restart": 1},
+            },
+        }
+    )
+
+
+def test_compile_document_populates_toc_cached_entries(tmp_path: Path):
+    template = load_template("templates/base/bachelor.yaml")
+    template.sections = _toc_sections()
+
+    plan = compile_document(_toc_document(tmp_path), template=template)
+
+    toc = next(node for node in plan.nodes if isinstance(node, TocInstruction))
+    assert toc.entries == (
+        TocEntryInstruction("摘要", 1, "tf_chap_abstract_zh"),
+        TocEntryInstruction("绪论", 1, "tf_chap_intro"),
+        TocEntryInstruction("研究背景", 2, "tf_sec_background"),
+        TocEntryInstruction("现有流程的局限", 3, "tf_sec_limitations"),
+        TocEntryInstruction("无书签小节", 2, None),
+    )
+    assert toc.payload["entries"][0] == {
+        "text": "摘要",
+        "level": 1,
+        "bookmark": "tf_chap_abstract_zh",
+    }
+
+
+def test_toc_cached_entries_render_real_word_cache_structure(tmp_path: Path):
+    template = load_template("templates/base/bachelor.yaml")
+    template.sections = _toc_sections()
+    output = tmp_path / "toc-cached.docx"
+
+    DocxRenderer().render(
+        compile_document(_toc_document(tmp_path), template=template),
+        output,
+    )
+
+    document_xml = _xml_part(output, "word/document.xml")
+    field_paragraph = document_xml.xpath(
+        ".//w:p[.//w:instrText[contains(., 'TOC')]]",
+        namespaces=NS,
+    )[0]
+    # 字段段：bookmark + begin(dirty) + instr + separate，无正文文字
+    assert field_paragraph.xpath(
+        ".//w:bookmarkStart/@w:name",
+        namespaces=NS,
+    ) == ["tf_toc_index"]
+    assert [
+        "".join(node.itertext()).strip()
+        for node in field_paragraph.xpath(".//w:instrText", namespaces=NS)
+    ] == ['TOC \\o "1-3" \\h \\z \\u']
+    assert field_paragraph.xpath(".//w:t/text()", namespaces=NS) == []
+    assert field_paragraph.xpath(
+        ".//w:fldChar[@w:fldCharType='begin']/@w:dirty",
+        namespaces=NS,
+    ) == ["true"]
+
+    # cached 条目：字段段之后每条标题一段，样式按级别 TOC1/2/3
+    body = field_paragraph.getparent()
+    field_index = body.index(field_paragraph)
+    entries = body[field_index + 1 : field_index + 6]
+    assert [
+        paragraph.xpath("./w:pPr/w:pStyle/@w:val", namespaces=NS)
+        for paragraph in entries
+    ] == [["TOC1"], ["TOC1"], ["TOC2"], ["TOC3"], ["TOC2"]]
+    assert [
+        "".join(paragraph.xpath(".//w:t/text()", namespaces=NS)[:1])
+        for paragraph in entries
+    ] == ["摘要", "绪论", "研究背景", "现有流程的局限", "无书签小节"]
+
+    bookmark_names = set(
+        document_xml.xpath(".//w:bookmarkStart/@w:name", namespaces=NS)
+    )
+    expected_anchors = {
+        0: "tf_chap_abstract_zh",
+        1: "tf_chap_intro",
+        2: "tf_sec_background",
+        3: "tf_sec_limitations",
+    }
+    for index, anchor in expected_anchors.items():
+        hyperlink = entries[index].xpath("./w:hyperlink", namespaces=NS)[0]
+        assert hyperlink.xpath("@w:anchor", namespaces=NS) == [anchor]
+        assert anchor in bookmark_names
+        # \h 行为：条目文字 + 右对齐制表位 + 内嵌 PAGEREF 字段（cached 占位 1）
+        assert hyperlink.xpath("./w:r/w:tab", namespaces=NS)
+        instructions = hyperlink.xpath(
+            "./w:r/w:instrText/text()",
+            namespaces=NS,
+        )
+        assert instructions == [f"PAGEREF {anchor} \\h"]
+        field_chars = hyperlink.xpath(
+            "./w:r/w:fldChar/@w:fldCharType",
+            namespaces=NS,
+        )
+        assert field_chars == ["begin", "separate", "end"]
+        assert hyperlink.xpath(
+            "./w:r/w:fldChar[@w:fldCharType='begin']/@w:dirty",
+            namespaces=NS,
+        ) == ["true"]
+        pageref_cached = "".join(hyperlink.xpath(".//w:t/text()", namespaces=NS))
+        assert pageref_cached.endswith("1")
+
+    # 无书签标题降级为纯文本占位（无 hyperlink / PAGEREF）
+    anonymous = entries[4]
+    assert not anonymous.xpath("./w:hyperlink", namespaces=NS)
+    assert not anonymous.xpath(".//w:instrText", namespaces=NS)
+    assert anonymous.xpath("./w:r/w:tab", namespaces=NS)
+    assert anonymous.xpath(".//w:t/text()", namespaces=NS) == ["无书签小节", "1"]
+
+    # TOC 字段 end 落在最后一个条目段末尾（Word 原生结构）
+    last = entries[-1]
+    assert last.xpath("./w:r/w:fldChar/@w:fldCharType", namespaces=NS) == ["end"]
+    assert not entries[-2].xpath(
+        "./w:r/w:fldChar[@w:fldCharType='end']",
+        namespaces=NS,
+    )
+
+    # 全部字段（含嵌套 PAGEREF）配对平衡
+    field_types = document_xml.xpath(".//w:fldChar/@w:fldCharType", namespaces=NS)
+    assert field_types.count("begin") == field_types.count("separate")
+    assert field_types.count("begin") == field_types.count("end")
+
+
+def test_toc_cached_entries_pass_openxml_validate(tmp_path: Path):
+    template = load_template("templates/base/bachelor.yaml")
+    template.sections = _toc_sections()
+    output = tmp_path / "toc-cached-validate.docx"
+    DocxRenderer().render(
+        compile_document(_toc_document(tmp_path), template=template),
+        output,
+    )
+
+    result = subprocess.run(
+        [
+            sys.executable,
+            str(Path(__file__).resolve().parents[1] / "qa" / "tools" / "openxml_validate.py"),
+            str(output),
+        ],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    assert result.returncode == 0, result.stdout
 
 
 def test_partial_semantic_title_inherits_heading_style_and_overrides_false(
@@ -1062,10 +1250,14 @@ def test_docx_renderer_writes_metadata_cover_before_front_matter(tmp_path: Path)
                 namespaces=NS,
             )
         )
-    assert document_xml.xpath(
-        ".//w:p[.//w:t[text()='摘要']]/w:pPr/w:pStyle/@w:val",
-        namespaces=NS,
-    ) == ["TFAbstractZHTitle"]
+    # 标题文本同时出现在 TOC cached 条目（TOC1 样式）中，需按样式区分
+    assert len(
+        document_xml.xpath(
+            ".//w:p[w:pPr/w:pStyle[@w:val='TFAbstractZHTitle']]"
+            "[.//w:t[text()='摘要']]",
+            namespaces=NS,
+        )
+    ) == 1
     assert len(document_xml.xpath(".//w:sectPr", namespaces=NS)) == 3
     assert document_xml.xpath(".//w:headerReference", namespaces=NS)
     assert document_xml.xpath(".//w:footerReference", namespaces=NS)
@@ -1940,8 +2132,9 @@ def test_docx_renderer_creates_real_math_fields_footnotes_and_page_structures(
     assert settings_xml.xpath("./w:updateFields/@w:val", namespaces=NS) == ["true"]
     for instruction_text in document_xml.xpath(".//w:instrText", namespaces=NS):
         run = instruction_text.getparent()
-        paragraph = run.getparent()
-        runs = list(paragraph)
+        container = run.getparent()
+        code = "".join(instruction_text.itertext()).strip()
+        runs = list(container)
         instruction_index = runs.index(run)
         begin = runs[instruction_index - 1].find("w:fldChar", namespaces=NS)
         separate = runs[instruction_index + 1].find("w:fldChar", namespaces=NS)
@@ -1950,6 +2143,15 @@ def test_docx_renderer_creates_real_math_fields_footnotes_and_page_structures(
         assert begin.get(f"{{{NS['w']}}}dirty") == "true"
         assert separate is not None
         assert separate.get(f"{{{NS['w']}}}fldCharType") == "separate"
+        if code.startswith("TOC "):
+            # TOC 字段跨段落：begin/separate 在字段段，cached 条目独立成段，
+            # end 在最后一个条目段（Word 原生结构）。
+            assert any(
+                fld.get(f"{{{NS['w']}}}fldCharType") == "end"
+                for sibling in container.itersiblings()
+                for fld in sibling.iter(f"{{{NS['w']}}}fldChar")
+            )
+            continue
         assert any(
             candidate.get(f"{{{NS['w']}}}fldCharType") == "end"
             for later_run in runs[instruction_index + 2 :]

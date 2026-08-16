@@ -1,0 +1,332 @@
+{
+  "complete-thesis-example": {
+    "file": "complete-thesis-example.docx",
+    "update_fields_setting": "true",
+    "field_count": 16,
+    "fields_by_kind": {
+      "NUMPAGES": 2,
+      "PAGE": 2,
+      "REF": 8,
+      "SEQ": 3,
+      "TOC": 1
+    },
+    "parts": {
+      "word/document.xml": {
+        "fields": [
+          {
+            "instruction": "TOC \\o \"1-3\" \\h \\z \\u",
+            "dirty": true,
+            "has_cached_result": true,
+            "cached_result": ""
+          },
+          {
+            "instruction": "REF tf_fig_architecture \\h",
+            "dirty": true,
+            "has_cached_result": true,
+            "cached_result": "图1-1"
+          },
+          {
+            "instruction": "SEQ TF_Figure_1 \\r 1 \\* ARABIC",
+            "dirty": true,
+            "has_cached_result": true,
+            "cached_result": "1"
+          },
+          {
+            "instruction": "REF tf_eq_pipeline \\h",
+            "dirty": true,
+            "has_cached_result": true,
+            "cached_result": "(2-1)"
+          },
+          {
+            "instruction": "SEQ TF_Equation_2 \\r 1 \\* ARABIC",
+            "dirty": true,
+            "has_cached_result": true,
+            "cached_result": "1"
+          },
+          {
+            "instruction": "REF tf_tbl_capabilities \\h",
+            "dirty": true,
+            "has_cached_result": true,
+            "cached_result": "表2-1"
+          },
+          {
+            "instruction": "SEQ TF_Table_2 \\r 1 \\* ARABIC",
+            "dirty": true,
+            "has_cached_result": true,
+            "cached_result": "1"
+          },
+          {
+            "instruction": "REF tf_alg_build \\h",
+            "dirty": true,
+            "has_cached_result": true,
+            "cached_result": "安全构建流程"
+          },
+          {
+            "instruction": "REF tf_lst_service \\h",
+            "dirty": true,
+            "has_cached_result": true,
+            "cached_result": "安全构建服务调用"
+          },
+          {
+            "instruction": "REF tf_fig_architecture \\h",
+            "dirty": true,
+            "has_cached_result": true,
+            "cached_result": "图1-1"
+          },
+          {
+            "instruction": "REF tf_tbl_capabilities \\h",
+            "dirty": true,
+            "has_cached_result": true,
+            "cached_result": "表2-1"
+          },
+          {
+            "instruction": "REF tf_eq_pipeline \\h",
+            "dirty": true,
+            "has_cached_result": true,
+            "cached_result": "(2-1)"
+          }
+        ],
+        "bookmarks": [
+          {
+            "name": "tf_chap_abstract_zh",
+            "id": "0"
+          },
+          {
+            "name": "tf_chap_abstract_en",
+            "id": "1"
+          },
+          {
+            "name": "tf_toc_index",
+            "id": "2"
+          },
+          {
+            "name": "tf_chap_introduction",
+            "id": "3"
+          },
+          {
+            "name": "tf_sec_background",
+            "id": "4"
+          },
+          {
+            "name": "tf_sec_limitations",
+            "id": "5"
+          },
+          {
+            "name": "tf_sec_scope",
+            "id": "6"
+          },
+          {
+            "name": "tf_sec_technical_route",
+            "id": "7"
+          },
+          {
+            "name": "tf_fig_architecture",
+            "id": "8"
+          },
+          {
+            "name": "tf_chap_design",
+            "id": "9"
+          },
+          {
+            "name": "tf_sec_pipeline",
+            "id": "10"
+          },
+          {
+            "name": "tf_eq_pipeline",
+            "id": "11"
+          },
+          {
+            "name": "tf_sec_capabilities",
+            "id": "12"
+          },
+          {
+            "name": "tf_tbl_capabilities",
+            "id": "13"
+          },
+          {
+            "name": "tf_sec_safe_build",
+            "id": "14"
+          },
+          {
+            "name": "tf_alg_build",
+            "id": "15"
+          },
+          {
+            "name": "tf_sec_application_service",
+            "id": "16"
+          },
+          {
+            "name": "tf_lst_service",
+            "id": "17"
+          },
+          {
+            "name": "tf_chap_results",
+            "id": "18"
+          },
+          {
+            "name": "tf_sec_offline_acceptance",
+            "id": "19"
+          },
+          {
+            "name": "tf_sec_word_acceptance",
+            "id": "20"
+          },
+          {
+            "name": "tf_chap_conclusion",
+            "id": "21"
+          },
+          {
+            "name": "tf_chap_bibliography",
+            "id": "22"
+          },
+          {
+            "name": "tf_chap_acknowledgements",
+            "id": "23"
+          },
+          {
+            "name": "tf_chap_appendix_a",
+            "id": "24"
+          }
+        ]
+      },
+      "word/footer1.xml": {
+        "fields": [
+          {
+            "instruction": "PAGE",
+            "dirty": true,
+            "has_cached_result": true,
+            "cached_result": "1"
+          },
+          {
+            "instruction": "NUMPAGES",
+            "dirty": true,
+            "has_cached_result": true,
+            "cached_result": "1"
+          }
+        ],
+        "bookmarks": []
+      },
+      "word/footer2.xml": {
+        "fields": [
+          {
+            "instruction": "PAGE",
+            "dirty": true,
+            "has_cached_result": true,
+            "cached_result": "1"
+          },
+          {
+            "instruction": "NUMPAGES",
+            "dirty": true,
+            "has_cached_result": true,
+            "cached_result": "1"
+          }
+        ],
+        "bookmarks": []
+      }
+    }
+  },
+  "minimal-hut": {
+    "file": "minimal-hut.docx",
+    "update_fields_setting": "true",
+    "field_count": 8,
+    "fields_by_kind": {
+      "PAGE": 5,
+      "REF": 1,
+      "SEQ": 1,
+      "TOC": 1
+    },
+    "parts": {
+      "word/document.xml": {
+        "fields": [
+          {
+            "instruction": "TOC \\o \"1-3\" \\h \\z \\u",
+            "dirty": true,
+            "has_cached_result": true,
+            "cached_result": ""
+          },
+          {
+            "instruction": "REF tf_fig_arch \\h",
+            "dirty": true,
+            "has_cached_result": true,
+            "cached_result": "图1-1"
+          },
+          {
+            "instruction": "SEQ TF_Figure_1 \\r 1 \\* ARABIC",
+            "dirty": true,
+            "has_cached_result": true,
+            "cached_result": "1"
+          }
+        ],
+        "bookmarks": [
+          {
+            "name": "tf_toc_index",
+            "id": "0"
+          },
+          {
+            "name": "tf_chap_intro",
+            "id": "1"
+          },
+          {
+            "name": "tf_fig_arch",
+            "id": "2"
+          }
+        ]
+      },
+      "word/footer2.xml": {
+        "fields": [
+          {
+            "instruction": "PAGE",
+            "dirty": true,
+            "has_cached_result": true,
+            "cached_result": "1"
+          }
+        ],
+        "bookmarks": []
+      },
+      "word/footer3.xml": {
+        "fields": [
+          {
+            "instruction": "PAGE",
+            "dirty": true,
+            "has_cached_result": true,
+            "cached_result": "1"
+          }
+        ],
+        "bookmarks": []
+      },
+      "word/footer4.xml": {
+        "fields": [
+          {
+            "instruction": "PAGE",
+            "dirty": true,
+            "has_cached_result": true,
+            "cached_result": "1"
+          }
+        ],
+        "bookmarks": []
+      },
+      "word/footer5.xml": {
+        "fields": [
+          {
+            "instruction": "PAGE",
+            "dirty": true,
+            "has_cached_result": true,
+            "cached_result": "1"
+          }
+        ],
+        "bookmarks": []
+      },
+      "word/footer6.xml": {
+        "fields": [
+          {
+            "instruction": "PAGE",
+            "dirty": true,
+            "has_cached_result": true,
+            "cached_result": "1"
+          }
+        ],
+        "bookmarks": []
+      }
+    }
+  }
+}

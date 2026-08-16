@@ -421,54 +421,87 @@ def _toc_content_width_twips(document: DocumentObject) -> int:
     return Emu(content_width).twips
 
 
+def ensure_toc_level_style(
+    document: DocumentObject,
+    template: ThesisTemplate | None,
+    level: int,
+) -> ParagraphStyle:
+    """Define (idempotently) the paragraph style for one TOC level.
+
+    TOC 1-3 styles are always emitted — even when the template has no
+    ``toc:`` policy — so cached TOC entries resolve their styles and
+    LibreOffice refreshes stop referencing undefined styles
+    (spikes/phase0/fields REPORT §6, ADR-0005 §5.3).
+    """
+    style_name = TOC_STYLE_NAMES[level]
+    spec = TocLevelSpec()
+    if template is not None and template.toc is not None:
+        spec = template.toc.for_level(level) or spec
+    body_size = template.body.size if template is not None else None
+
+    style_id = style_name.replace(" ", "")
+    style = next(
+        (
+            candidate
+            for candidate in document.styles
+            if candidate.type == WD_STYLE_TYPE.PARAGRAPH
+            and candidate.style_id == style_id
+        ),
+        None,
+    )
+    if style is None:
+        style = document.styles.add_style(style_name, WD_STYLE_TYPE.PARAGRAPH)
+    style.base_style = document.styles["Normal"]
+
+    em_size_pt = _resolved_size_points(spec.size, body_size)
+    em_fallback_size = (
+        body_size if spec.size is not None and spec.size.unit == "em" else None
+    )
+    apply_paragraph_style(
+        style,
+        spec,
+        fallback_size=em_fallback_size,
+        em_size_pt=em_size_pt,
+    )
+    position_twips = _toc_content_width_twips(document)
+    if spec.page_number_tab is not None:
+        position_twips = to_docx_length(
+            spec.page_number_tab,
+            em_size_pt=em_size_pt,
+        ).twips
+    _set_right_tab(
+        style,
+        position_twips=position_twips,
+        leader=spec.leader,
+    )
+    return style
+
+
 def configure_toc_styles(
     document: DocumentObject,
     template: ThesisTemplate,
 ) -> None:
-    if template.toc is None:
-        return
+    for level in TOC_STYLE_NAMES:
+        ensure_toc_level_style(document, template, level)
 
-    normal = document.styles["Normal"]
-    default_tab_position = _toc_content_width_twips(document)
-    for level, style_name in TOC_STYLE_NAMES.items():
-        spec = template.toc.for_level(level) or TocLevelSpec()
-        style_id = style_name.replace(" ", "")
-        style = next(
-            (
-                candidate
-                for candidate in document.styles
-                if candidate.type == WD_STYLE_TYPE.PARAGRAPH
-                and candidate.style_id == style_id
-            ),
-            None,
-        )
-        if style is None:
-            style = document.styles.add_style(style_name, WD_STYLE_TYPE.PARAGRAPH)
-        style.base_style = normal
 
-        em_size_pt = _resolved_size_points(spec.size, template.body.size)
-        em_fallback_size = (
-            template.body.size
-            if spec.size is not None and spec.size.unit == "em"
-            else None
-        )
-        apply_paragraph_style(
-            style,
-            spec,
-            fallback_size=em_fallback_size,
-            em_size_pt=em_size_pt,
-        )
-        position_twips = default_tab_position
-        if spec.page_number_tab is not None:
-            position_twips = to_docx_length(
-                spec.page_number_tab,
-                em_size_pt=em_size_pt,
-            ).twips
-        _set_right_tab(
-            style,
-            position_twips=position_twips,
-            leader=spec.leader,
-        )
+def ensure_character_style(
+    document: DocumentObject,
+    style_name: str,
+) -> None:
+    """Define (idempotently) an empty character style by name."""
+    style_id = style_name.replace(" ", "")
+    existing = next(
+        (
+            candidate
+            for candidate in document.styles
+            if candidate.type == WD_STYLE_TYPE.CHARACTER
+            and candidate.style_id == style_id
+        ),
+        None,
+    )
+    if existing is None:
+        document.styles.add_style(style_name, WD_STYLE_TYPE.CHARACTER)
 
 
 def configure_styles(document: DocumentObject, template: ThesisTemplate) -> None:

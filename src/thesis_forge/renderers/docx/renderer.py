@@ -34,7 +34,7 @@ from .cover import render_cover
 from .document import create_document
 from .equations import render_equation
 from .errors import DocxRenderError
-from .fields import add_complex_field, add_reference_field, set_update_fields
+from .fields import add_reference_field, set_update_fields
 from .figures import render_figure
 from .footnotes import FootnoteManager
 from .inlines import InlineHandlers, citation_run_element, render_inline_runs
@@ -48,6 +48,7 @@ from .styles import (
     resolve_role_em_size_points,
 )
 from .tables import render_table
+from .toc import add_toc_field
 
 
 def _citation_superscript(template: ThesisTemplate | None) -> bool:
@@ -227,10 +228,7 @@ def _render_typed(
         title = document.add_paragraph("目录", style=style)
         _exclude_from_outline(title)
         paragraph = document.add_paragraph()
-        add_complex_field(
-            paragraph,
-            f'TOC \\o "{instruction.min_level}-{instruction.max_level}" \\h \\z \\u',
-        )
+        add_toc_field(document, paragraph, instruction, template)
         wrap_paragraph_in_bookmark(paragraph, "tf_toc_index")
     elif isinstance(instruction, SectionBreakInstruction):
         add_section(

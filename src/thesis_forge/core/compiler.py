@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import re
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from decimal import Decimal, InvalidOperation
 from pathlib import Path
 
@@ -59,6 +59,7 @@ from .render_plan import (
     TableInstruction,
     TableRowInstruction,
     TextRun,
+    TocEntryInstruction,
     TocInstruction,
 )
 
@@ -839,6 +840,41 @@ def _citation_order(citation_numbers: dict[str, int]) -> tuple[str, ...]:
     )
 
 
+def _attach_toc_entries(
+    instructions: list[RenderInstruction],
+) -> list[RenderInstruction]:
+    """Fill each TOC instruction with cached entries from heading instructions.
+
+    Entries mirror what a Word TOC field (``\\o "min-max" \\u``) would collect:
+    every heading inside the level range, in document order, except the TOC
+    title itself. Page numbers stay unknown at compile time (no layout engine);
+    renderers emit per-entry reference fields with placeholder cached values
+    (ADR-0005 §2.1, debt D-11).
+    """
+    headings = [
+        instruction
+        for instruction in instructions
+        if isinstance(instruction, HeadingInstruction)
+        and instruction.role != "toc.title"
+    ]
+    attached: list[RenderInstruction] = []
+    for instruction in instructions:
+        if not isinstance(instruction, TocInstruction):
+            attached.append(instruction)
+            continue
+        entries = tuple(
+            TocEntryInstruction(
+                text=heading.text,
+                level=heading.level,
+                bookmark=heading.bookmark,
+            )
+            for heading in headings
+            if instruction.min_level <= heading.level <= instruction.max_level
+        )
+        attached.append(replace(instruction, entries=entries))
+    return attached
+
+
 def _effective_citation_style(
     document: ThesisDocument,
     template: ThesisTemplate | None,
@@ -900,6 +936,7 @@ def compile_document(
         and not context.bibliography_emitted
     ):
         instructions.append(context.bibliography())
+    instructions = _attach_toc_entries(instructions)
 
     return RenderPlan(
         nodes=instructions,

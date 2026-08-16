@@ -1,0 +1,374 @@
+{
+  "complete-thesis-example": {
+    "file": "complete-thesis-example.docx",
+    "libreoffice_executable": "/Applications/LibreOffice.app/Contents/MacOS/soffice",
+    "refreshed": true,
+    "diff": {
+      "update_fields_setting": {
+        "before": "true",
+        "after": null
+      },
+      "toc_cached_result_changed": true,
+      "toc_cached_result_after_preview": "摘要iAbstracti绪论1研究背景1现有流程的局限1研究内容1技术路线1系统设计2编译流水线2能力模型2安全构建算法2应用服务接口2实验结果与分析3离线验收3Word 对象验收3结论与展望3参考文献3致谢3附录 A 验收命令3",
+      "field_diffs": [
+        {
+          "part": "word/document.xml",
+          "before": [
+            {
+              "instruction": "TOC \\o \"1-3\" \\h \\z \\u",
+              "cached_result": ""
+            },
+            {
+              "instruction": "REF tf_fig_architecture \\h",
+              "cached_result": "图1-1"
+            },
+            {
+              "instruction": "SEQ TF_Figure_1 \\r 1 \\* ARABIC",
+              "cached_result": "1"
+            },
+            {
+              "instruction": "REF tf_eq_pipeline \\h",
+              "cached_result": "(2-1)"
+            },
+            {
+              "instruction": "SEQ TF_Equation_2 \\r 1 \\* ARABIC",
+              "cached_result": "1"
+            },
+            {
+              "instruction": "REF tf_tbl_capabilities \\h",
+              "cached_result": "表2-1"
+            },
+            {
+              "instruction": "SEQ TF_Table_2 \\r 1 \\* ARABIC",
+              "cached_result": "1"
+            },
+            {
+              "instruction": "REF tf_alg_build \\h",
+              "cached_result": "安全构建流程"
+            },
+            {
+              "instruction": "REF tf_lst_service \\h",
+              "cached_result": "安全构建服务调用"
+            },
+            {
+              "instruction": "REF tf_fig_architecture \\h",
+              "cached_result": "图1-1"
+            },
+            {
+              "instruction": "REF tf_tbl_capabilities \\h",
+              "cached_result": "表2-1"
+            },
+            {
+              "instruction": "REF tf_eq_pipeline \\h",
+              "cached_result": "(2-1)"
+            }
+          ],
+          "after": [
+            {
+              "instruction": "TOC \\f \\o \"1-3\" \\h",
+              "cached_result": "摘要iAbstracti绪论1研究背景1现有流程的局限1研究内容1技术路线1系统设计2编译流水线2能力模型2安全构建算法2应用服务接口2实验结果与分析3离线验收3Word 对象验收3结论与展望3参考文献3致谢3附录 A 验收命令3"
+            },
+            {
+              "instruction": "REF tf_fig_architecture \\h",
+              "cached_result": "图1-1"
+            },
+            {
+              "instruction": "SEQ TF_Figure_1 \\* ARABIC",
+              "cached_result": "1"
+            },
+            {
+              "instruction": "REF tf_eq_pipeline \\h",
+              "cached_result": "(2-1)"
+            },
+            {
+              "instruction": "SEQ TF_Equation_2 \\* ARABIC",
+              "cached_result": "1"
+            },
+            {
+              "instruction": "REF tf_tbl_capabilities \\h",
+              "cached_result": "表2-1"
+            },
+            {
+              "instruction": "SEQ TF_Table_2 \\* ARABIC",
+              "cached_result": "1"
+            },
+            {
+              "instruction": "REF tf_alg_build \\h",
+              "cached_result": "安全构建流程"
+            },
+            {
+              "instruction": "REF tf_lst_service \\h",
+              "cached_result": "安全构建服务调用"
+            },
+            {
+              "instruction": "REF tf_fig_architecture \\h",
+              "cached_result": "图1-1"
+            },
+            {
+              "instruction": "REF tf_tbl_capabilities \\h",
+              "cached_result": "表2-1"
+            },
+            {
+              "instruction": "REF tf_eq_pipeline \\h",
+              "cached_result": "(2-1)"
+            }
+          ]
+        },
+        {
+          "part": "word/footer1.xml",
+          "before": [
+            {
+              "instruction": "PAGE",
+              "cached_result": "1"
+            },
+            {
+              "instruction": "NUMPAGES",
+              "cached_result": "1"
+            }
+          ],
+          "after": []
+        },
+        {
+          "part": "word/footer2.xml",
+          "before": [
+            {
+              "instruction": "PAGE",
+              "cached_result": "1"
+            },
+            {
+              "instruction": "NUMPAGES",
+              "cached_result": "1"
+            }
+          ],
+          "after": [
+            {
+              "instruction": "PAGE",
+              "cached_result": "ii"
+            },
+            {
+              "instruction": "NUMPAGES",
+              "cached_result": "viii"
+            }
+          ]
+        },
+        {
+          "part": "word/footer3.xml",
+          "before": [],
+          "after": [
+            {
+              "instruction": "PAGE",
+              "cached_result": "ii"
+            },
+            {
+              "instruction": "NUMPAGES",
+              "cached_result": "viii"
+            }
+          ]
+        },
+        {
+          "part": "word/footer5.xml",
+          "before": [],
+          "after": [
+            {
+              "instruction": "PAGE",
+              "cached_result": "4"
+            },
+            {
+              "instruction": "NUMPAGES",
+              "cached_result": "8"
+            }
+          ]
+        },
+        {
+          "part": "word/footer6.xml",
+          "before": [],
+          "after": [
+            {
+              "instruction": "PAGE",
+              "cached_result": "4"
+            },
+            {
+              "instruction": "NUMPAGES",
+              "cached_result": "8"
+            }
+          ]
+        }
+      ],
+      "bookmark_diffs": [
+        {
+          "part": "word/document.xml",
+          "removed": [],
+          "added": [
+            "__RefHeading___Toc277_47962243",
+            "__RefHeading___Toc279_47962243",
+            "__RefHeading___Toc281_47962243",
+            "__RefHeading___Toc283_47962243",
+            "__RefHeading___Toc285_47962243",
+            "__RefHeading___Toc287_47962243",
+            "__RefHeading___Toc289_47962243",
+            "__RefHeading___Toc291_47962243",
+            "__RefHeading___Toc293_47962243",
+            "__RefHeading___Toc295_47962243",
+            "__RefHeading___Toc297_47962243",
+            "__RefHeading___Toc299_47962243",
+            "__RefHeading___Toc301_47962243",
+            "__RefHeading___Toc303_47962243",
+            "__RefHeading___Toc305_47962243",
+            "__RefHeading___Toc307_47962243",
+            "__RefHeading___Toc309_47962243",
+            "__RefHeading___Toc311_47962243",
+            "__RefHeading___Toc313_47962243"
+          ]
+        }
+      ]
+    },
+    "openxml_validate_after": {
+      "exit_code": 1
+    },
+    "refreshed_copy": "/Volumes/zwl/open_sources/thesis-forge/spikes/phase0/fields/samples/complete-thesis-example-lo-refreshed.docx"
+  },
+  "minimal-hut": {
+    "file": "minimal-hut.docx",
+    "libreoffice_executable": "/Applications/LibreOffice.app/Contents/MacOS/soffice",
+    "refreshed": true,
+    "diff": {
+      "update_fields_setting": {
+        "before": "true",
+        "after": null
+      },
+      "toc_cached_result_changed": true,
+      "toc_cached_result_after_preview": "绪论1",
+      "field_diffs": [
+        {
+          "part": "word/document.xml",
+          "before": [
+            {
+              "instruction": "TOC \\o \"1-3\" \\h \\z \\u",
+              "cached_result": ""
+            },
+            {
+              "instruction": "REF tf_fig_arch \\h",
+              "cached_result": "图1-1"
+            },
+            {
+              "instruction": "SEQ TF_Figure_1 \\r 1 \\* ARABIC",
+              "cached_result": "1"
+            }
+          ],
+          "after": [
+            {
+              "instruction": "TOC \\f \\o \"1-3\" \\h",
+              "cached_result": "绪论1"
+            },
+            {
+              "instruction": "REF tf_fig_arch \\h",
+              "cached_result": "图1-1"
+            },
+            {
+              "instruction": "SEQ TF_Figure_1 \\* ARABIC",
+              "cached_result": "1"
+            }
+          ]
+        },
+        {
+          "part": "word/footer2.xml",
+          "before": [
+            {
+              "instruction": "PAGE",
+              "cached_result": "1"
+            }
+          ],
+          "after": []
+        },
+        {
+          "part": "word/footer3.xml",
+          "before": [
+            {
+              "instruction": "PAGE",
+              "cached_result": "1"
+            }
+          ],
+          "after": [
+            {
+              "instruction": "PAGE",
+              "cached_result": "0"
+            }
+          ]
+        },
+        {
+          "part": "word/footer4.xml",
+          "before": [
+            {
+              "instruction": "PAGE",
+              "cached_result": "1"
+            }
+          ],
+          "after": [
+            {
+              "instruction": "PAGE",
+              "cached_result": "I"
+            }
+          ]
+        },
+        {
+          "part": "word/footer5.xml",
+          "before": [
+            {
+              "instruction": "PAGE",
+              "cached_result": "1"
+            }
+          ],
+          "after": []
+        },
+        {
+          "part": "word/footer6.xml",
+          "before": [
+            {
+              "instruction": "PAGE",
+              "cached_result": "1"
+            }
+          ],
+          "after": [
+            {
+              "instruction": "PAGE",
+              "cached_result": "0"
+            }
+          ]
+        },
+        {
+          "part": "word/footer7.xml",
+          "before": [],
+          "after": [
+            {
+              "instruction": "PAGE",
+              "cached_result": "0"
+            }
+          ]
+        },
+        {
+          "part": "word/footer8.xml",
+          "before": [],
+          "after": [
+            {
+              "instruction": "PAGE",
+              "cached_result": "1"
+            }
+          ]
+        }
+      ],
+      "bookmark_diffs": [
+        {
+          "part": "word/document.xml",
+          "removed": [],
+          "added": [
+            "__RefHeading___Toc56_2795036037"
+          ]
+        }
+      ]
+    },
+    "openxml_validate_after": {
+      "exit_code": 1
+    },
+    "refreshed_copy": "/Volumes/zwl/open_sources/thesis-forge/spikes/phase0/fields/samples/minimal-hut-lo-refreshed.docx"
+  }
+}

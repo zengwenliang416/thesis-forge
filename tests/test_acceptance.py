@@ -410,14 +410,21 @@ def test_complete_example_docx_contains_required_visible_content_and_word_object
         )
     }
     assert {"摘要", "Abstract", "绪论", "系统设计"} <= heading_texts
-    assert document_xml.xpath(
-        ".//w:p[.//w:t[text()='摘要']]/w:pPr/w:pStyle/@w:val",
-        namespaces=NS,
-    ) == ["TFAbstractZHTitle"]
-    assert document_xml.xpath(
-        ".//w:p[.//w:t[text()='Abstract']]/w:pPr/w:pStyle/@w:val",
-        namespaces=NS,
-    ) == ["TFAbstractENTitle"]
+    # 标题文本同时出现在 TOC cached 条目（TOC1 样式）中，需按样式区分
+    assert len(
+        document_xml.xpath(
+            ".//w:p[w:pPr/w:pStyle[@w:val='TFAbstractZHTitle']]"
+            "[.//w:t[text()='摘要']]",
+            namespaces=NS,
+        )
+    ) == 1
+    assert len(
+        document_xml.xpath(
+            ".//w:p[w:pPr/w:pStyle[@w:val='TFAbstractENTitle']]"
+            "[.//w:t[text()='Abstract']]",
+            namespaces=NS,
+        )
+    ) == 1
     assert {
         "湖南工业大学",
         "面向结构化学术文档的确定性论文编译系统设计",
@@ -433,11 +440,14 @@ def test_complete_example_docx_contains_required_visible_content_and_word_object
         "致谢": "TFAcknowledgements",
     }
     for text, style_id in expected_roles.items():
-        assert document_xml.xpath(
-            ".//w:p[.//w:t[text()=$text]]/w:pPr/w:pStyle/@w:val",
-            namespaces=NS,
-            text=text,
-        ) == [style_id]
+        assert len(
+            document_xml.xpath(
+                ".//w:p[w:pPr/w:pStyle[@w:val=$style_id]][.//w:t[text()=$text]]",
+                namespaces=NS,
+                text=text,
+                style_id=style_id,
+            )
+        ) == 1
 
     fields = _field_instructions(document_xml)
     assert any(field.startswith("TOC ") for field in fields)
@@ -445,6 +455,35 @@ def test_complete_example_docx_contains_required_visible_content_and_word_object
     assert any(field == "REF tf_fig_architecture \\h" for field in fields)
     assert any(field == "REF tf_tbl_capabilities \\h" for field in fields)
     assert any(field == "REF tf_eq_pipeline \\h" for field in fields)
+
+    # TF-D4-TOC-019：TOC 字段带可读 cached 条目（ADR-0005 §2.1，D-11）
+    toc_entry_paragraphs = document_xml.xpath(
+        ".//w:p[w:pPr/w:pStyle[@w:val='TOC1' or @w:val='TOC2' or @w:val='TOC3']]",
+        namespaces=NS,
+    )
+    assert len(toc_entry_paragraphs) == len(
+        document_xml.xpath(
+            ".//w:p[w:pPr/w:pStyle["
+            "starts-with(@w:val, 'Heading') "
+            "or @w:val='TFAbstractZHTitle' "
+            "or @w:val='TFAbstractENTitle' "
+            "or @w:val='TFBibliographyTitle' "
+            "or @w:val='TFAcknowledgements'"
+            "]]",
+            namespaces=NS,
+        )
+    )
+    for entry_paragraph in toc_entry_paragraphs:
+        anchor = entry_paragraph.xpath("./w:hyperlink/@w:anchor", namespaces=NS)
+        assert len(anchor) == 1
+        pageref = entry_paragraph.xpath(
+            "./w:hyperlink/w:r/w:instrText[starts-with(., 'PAGEREF ')]/text()",
+            namespaces=NS,
+        )
+        assert pageref == [f"PAGEREF {anchor[0]} \\h"]
+        assert anchor[0] in set(
+            document_xml.xpath(".//w:bookmarkStart/@w:name", namespaces=NS)
+        )
     footer_fields = tuple(
         field
         for part in sorted(parts)

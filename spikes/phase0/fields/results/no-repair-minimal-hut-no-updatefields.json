@@ -1,0 +1,20 @@
+{
+  "file": "/Volumes/zwl/open_sources/thesis-forge/spikes/phase0/fields/samples/minimal-hut-no-updatefields.docx",
+  "ok": false,
+  "results": [
+    {
+      "app": "word",
+      "version": "16.107.2",
+      "result": "fail",
+      "duration_seconds": 151.28,
+      "notes": "文档未在 150s 内打开，疑似模态对话框（修复提示）；探测到 1 个 Word 对话框，疑似修复提示"
+    },
+    {
+      "app": "libreoffice",
+      "version": "26.2.3.2",
+      "result": "pass",
+      "duration_seconds": 6.67,
+      "notes": "成功导出 PDF（139451 字节）"
+    }
+  ]
+}

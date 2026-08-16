@@ -1,0 +1,170 @@
+{
+  "complete-thesis-example": {
+    "file": "/Volumes/zwl/open_sources/thesis-forge/spikes/phase0/fields/samples/complete-thesis-example.docx",
+    "ok": true,
+    "results": [
+      {
+        "app": "word",
+        "version": "16.107.2",
+        "result": "pass",
+        "duration_seconds": 11.14,
+        "notes": "打开成功并关闭（不保存）；未探测到对话框"
+      },
+      {
+        "app": "libreoffice",
+        "version": "26.2.3.2",
+        "result": "pass",
+        "duration_seconds": 4.69,
+        "notes": "成功导出 PDF（351940 字节）"
+      }
+    ],
+    "exit_code": 0
+  },
+  "minimal-hut": {
+    "file": "/Volumes/zwl/open_sources/thesis-forge/spikes/phase0/fields/samples/minimal-hut.docx",
+    "ok": false,
+    "results": [
+      {
+        "app": "word",
+        "version": "16.107.2",
+        "result": "fail",
+        "duration_seconds": 152.66,
+        "notes": "文档未在 150s 内打开，疑似模态对话框（修复提示）；未探测到对话框"
+      },
+      {
+        "app": "libreoffice",
+        "version": "26.2.3.2",
+        "result": "pass",
+        "duration_seconds": 4.38,
+        "notes": "成功导出 PDF（139451 字节）"
+      }
+    ],
+    "exit_code": 1
+  },
+  "complete-thesis-example-no-updatefields": {
+    "file": "/Volumes/zwl/open_sources/thesis-forge/spikes/phase0/fields/samples/complete-thesis-example-no-updatefields.docx",
+    "ok": false,
+    "results": [
+      {
+        "app": "word",
+        "version": "16.107.2",
+        "result": "fail",
+        "duration_seconds": 150.76,
+        "notes": "文档未在 150s 内打开，疑似模态对话框（修复提示）；探测到 1 个 Word 对话框，疑似修复提示"
+      },
+      {
+        "app": "libreoffice",
+        "version": "26.2.3.2",
+        "result": "pass",
+        "duration_seconds": 5.26,
+        "notes": "成功导出 PDF（351940 字节）"
+      }
+    ],
+    "exit_code": 1
+  },
+  "minimal-hut-no-updatefields": {
+    "file": "/Volumes/zwl/open_sources/thesis-forge/spikes/phase0/fields/samples/minimal-hut-no-updatefields.docx",
+    "ok": false,
+    "results": [
+      {
+        "app": "word",
+        "version": "16.107.2",
+        "result": "fail",
+        "duration_seconds": 151.28,
+        "notes": "文档未在 150s 内打开，疑似模态对话框（修复提示）；探测到 1 个 Word 对话框，疑似修复提示"
+      },
+      {
+        "app": "libreoffice",
+        "version": "26.2.3.2",
+        "result": "pass",
+        "duration_seconds": 6.67,
+        "notes": "成功导出 PDF（139451 字节）"
+      }
+    ],
+    "exit_code": 1
+  },
+  "complete-thesis-example-keep-updatefields-nodirty": {
+    "file": "/Volumes/zwl/open_sources/thesis-forge/spikes/phase0/fields/samples/complete-thesis-example-keep-updatefields-nodirty.docx",
+    "ok": false,
+    "results": [
+      {
+        "app": "word",
+        "version": "16.107.2",
+        "result": "fail",
+        "duration_seconds": 151.32,
+        "notes": "文档未在 150s 内打开，疑似模态对话框（修复提示）；探测到 1 个 Word 对话框，疑似修复提示"
+      },
+      {
+        "app": "libreoffice",
+        "version": "26.2.3.2",
+        "result": "pass",
+        "duration_seconds": 5.61,
+        "notes": "成功导出 PDF（351940 字节）"
+      }
+    ],
+    "exit_code": 1
+  },
+  "complete-thesis-example-no-updatefields-nodirty": {
+    "file": "/Volumes/zwl/open_sources/thesis-forge/spikes/phase0/fields/samples/complete-thesis-example-no-updatefields-nodirty.docx",
+    "ok": true,
+    "results": [
+      {
+        "app": "word",
+        "version": "16.107.2",
+        "result": "pass",
+        "duration_seconds": 3.41,
+        "notes": "打开成功并关闭（不保存）；未探测到对话框"
+      },
+      {
+        "app": "libreoffice",
+        "version": "26.2.3.2",
+        "result": "pass",
+        "duration_seconds": 5.66,
+        "notes": "成功导出 PDF（351940 字节）"
+      }
+    ],
+    "exit_code": 0
+  },
+  "minimal-hut-keep-updatefields-nodirty": {
+    "file": "/Volumes/zwl/open_sources/thesis-forge/spikes/phase0/fields/samples/minimal-hut-keep-updatefields-nodirty.docx",
+    "ok": false,
+    "results": [
+      {
+        "app": "word",
+        "version": "16.107.2",
+        "result": "fail",
+        "duration_seconds": 151.24,
+        "notes": "文档未在 150s 内打开，疑似模态对话框（修复提示）；探测到 1 个 Word 对话框，疑似修复提示"
+      },
+      {
+        "app": "libreoffice",
+        "version": "26.2.3.2",
+        "result": "pass",
+        "duration_seconds": 4.4,
+        "notes": "成功导出 PDF（139451 字节）"
+      }
+    ],
+    "exit_code": 1
+  },
+  "minimal-hut-no-updatefields-nodirty": {
+    "file": "/Volumes/zwl/open_sources/thesis-forge/spikes/phase0/fields/samples/minimal-hut-no-updatefields-nodirty.docx",
+    "ok": true,
+    "results": [
+      {
+        "app": "word",
+        "version": "16.107.2",
+        "result": "pass",
+        "duration_seconds": 3.78,
+        "notes": "打开成功并关闭（不保存）；未探测到对话框"
+      },
+      {
+        "app": "libreoffice",
+        "version": "26.2.3.2",
+        "result": "pass",
+        "duration_seconds": 5.35,
+        "notes": "成功导出 PDF（139451 字节）"
+      }
+    ],
+    "exit_code": 0
+  }
+}

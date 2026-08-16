@@ -1,0 +1,74 @@
+{
+  "complete-thesis-example": {
+    "file": "complete-thesis-example.docx",
+    "ok": true,
+    "checks": [
+      {
+        "name": "openxml_validate",
+        "status": "pass",
+        "detail": "全部通过"
+      },
+      {
+        "name": "toc_instruction",
+        "status": "pass",
+        "detail": "TOC 字段 1 个；cached result 长度 0"
+      },
+      {
+        "name": "seq_per_numbered_object",
+        "status": "pass",
+        "detail": "编号对象书签 ['tf_eq_pipeline', 'tf_fig_architecture', 'tf_tbl_capabilities']；SEQ 字段 3 个"
+      },
+      {
+        "name": "ref_targets_exist",
+        "status": "pass",
+        "detail": "REF 目标 ['tf_alg_build', 'tf_eq_pipeline', 'tf_fig_architecture', 'tf_lst_service', 'tf_tbl_capabilities']；缺失 无"
+      },
+      {
+        "name": "page_field_in_footer",
+        "status": "pass",
+        "detail": "footer 字段指令 ['NUMPAGES', 'PAGE']"
+      },
+      {
+        "name": "page_number_formats",
+        "status": "pass",
+        "detail": "实际 ['none?', 'lowerRoman', 'decimal']；期望 ['none?', 'lowerRoman', 'decimal']"
+      }
+    ]
+  },
+  "minimal-hut": {
+    "file": "minimal-hut.docx",
+    "ok": true,
+    "checks": [
+      {
+        "name": "openxml_validate",
+        "status": "pass",
+        "detail": "全部通过"
+      },
+      {
+        "name": "toc_instruction",
+        "status": "pass",
+        "detail": "TOC 字段 1 个；cached result 长度 0"
+      },
+      {
+        "name": "seq_per_numbered_object",
+        "status": "pass",
+        "detail": "编号对象书签 ['tf_fig_arch']；SEQ 字段 1 个"
+      },
+      {
+        "name": "ref_targets_exist",
+        "status": "pass",
+        "detail": "REF 目标 ['tf_fig_arch']；缺失 无"
+      },
+      {
+        "name": "page_field_in_footer",
+        "status": "pass",
+        "detail": "footer 字段指令 ['PAGE']"
+      },
+      {
+        "name": "page_number_formats",
+        "status": "pass",
+        "detail": "实际 ['none?', 'upperRoman', 'decimal']；期望 ['none?', 'upperRoman', 'decimal']"
+      }
+    ]
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "file": "/Volumes/zwl/open_sources/thesis-forge/spikes/phase0/fields/samples/complete-thesis-example.docx",
+  "ok": true,
+  "results": [
+    {
+      "app": "word",
+      "version": "16.107.2",
+      "result": "pass",
+      "duration_seconds": 11.14,
+      "notes": "打开成功并关闭（不保存）；未探测到对话框"
+    },
+    {
+      "app": "libreoffice",
+      "version": "26.2.3.2",
+      "result": "pass",
+      "duration_seconds": 4.69,
+      "notes": "成功导出 PDF（351940 字节）"
+    }
+  ]
+}

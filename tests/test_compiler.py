@@ -51,6 +51,7 @@ from thesis_forge.core.render_plan import (
     SequenceInstruction,
     TableInstruction,
     TextRun,
+    TocEntryInstruction,
     TocInstruction,
 )
 from thesis_forge.templates import LengthSpec, SectionsSpec, load_template
@@ -445,7 +446,22 @@ def test_compile_document_emits_toc_and_explicit_section_transitions():
         HeadingInstruction,
     ]
     assert plan.nodes[0] == SectionBreakInstruction(role="front_matter")
-    assert plan.nodes[3] == TocInstruction(min_level=1, max_level=3)
+    assert plan.nodes[3] == TocInstruction(
+        min_level=1,
+        max_level=3,
+        entries=(
+            TocEntryInstruction(
+                text="摘要",
+                level=1,
+                bookmark="tf_chap_abstract_zh",
+            ),
+            TocEntryInstruction(
+                text="绪论",
+                level=1,
+                bookmark="tf_chap_introduction",
+            ),
+        ),
+    )
     assert plan.nodes[4] == SectionBreakInstruction(role="main")
 
 

@@ -1,0 +1,20 @@
+{
+  "file": "/Volumes/zwl/open_sources/thesis-forge/spikes/phase0/fields/samples/minimal-hut-no-updatefields-nodirty.docx",
+  "ok": true,
+  "results": [
+    {
+      "app": "word",
+      "version": "16.107.2",
+      "result": "pass",
+      "duration_seconds": 3.78,
+      "notes": "打开成功并关闭（不保存）；未探测到对话框"
+    },
+    {
+      "app": "libreoffice",
+      "version": "26.2.3.2",
+      "result": "pass",
+      "duration_seconds": 5.35,
+      "notes": "成功导出 PDF（139451 字节）"
+    }
+  ]
+}
