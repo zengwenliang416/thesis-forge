@@ -1,0 +1,38 @@
+{
+  "touched_specs": [
+    "system-architecture",
+    "component-architecture"
+  ],
+  "ui_rules": [
+    "ui:no-change"
+  ],
+  "architecture_modules": [
+    "template-v2-package:add build-side mapping (v2 spec -> ThesisTemplate) and source classification; reuse load/lint/pack/editor",
+    "offline-cli-pipeline:template source resolution accepts v2 dir/.tftpl; finalization order unchanged (merge before finalize)"
+  ],
+  "api_contracts": [
+    "cli:--template accepts v2 package dir or .tftpl (auto-detect; .yaml stays v0.3)",
+    "frontmatter:template: field accepts v2 package dir or .tftpl (auto-detect)",
+    "services:template source classifier -> ThesisTemplate + optional shell/reference context"
+  ],
+  "database_entities": [],
+  "permissions": [
+    "local-filesystem:read template package dir/.tftpl and unpack to controlled temp dir; no network"
+  ],
+  "operational_constraints": [
+    "offline-determinism:inspect/validate/build must not depend on network or external executables; .tftpl unpack is local",
+    "build-reproducibility:same input+template -> semantically equivalent OOXML; no-shell builds byte-deterministic"
+  ],
+  "data_flows": [
+    "template-source -> classify (v0.3 yaml | v2 dir | .tftpl) -> unpack(.tftpl)+verify -> load_package -> map to ThesisTemplate -> compile -> render -> (merge into shell.docx when present) -> finalize -> atomic publish"
+  ],
+  "theme_modes": [
+    "theme-toggle:none"
+  ],
+  "locale_policy": [
+    "i18n:disabled",
+    "locales:none",
+    "default-locale:zh-CN"
+  ],
+  "unresolved_gaps": []
+}

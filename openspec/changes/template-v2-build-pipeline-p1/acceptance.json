@@ -1,0 +1,125 @@
+{
+  "schema_version": 1,
+  "change_id": "template-v2-build-pipeline-p1",
+  "assertions": [
+    {
+      "id": "U1",
+      "statement": "build --template <v2-dir> 成功产出 DOCX，无 shell 时与 v0.3 同模板产物语义一致",
+      "verify_via": "e2e",
+      "status": "failing",
+      "evidence_ref": null
+    },
+    {
+      "id": "U2",
+      "statement": "build --template <x.tftpl> 解包+manifest 对账+L1/L2 门禁；门禁失败结构化报错且不产出文件",
+      "verify_via": "e2e",
+      "status": "failing",
+      "evidence_ref": null
+    },
+    {
+      "id": "U3",
+      "statement": "validate/inspect 接受 v2 目录与 .tftpl 来源",
+      "verify_via": "e2e",
+      "status": "failing",
+      "evidence_ref": null
+    },
+    {
+      "id": "U4",
+      "statement": "front matter render.template_id 保持 v0.3-only；template_id 指向 v2 id 报结构化未找到错误",
+      "verify_via": "e2e",
+      "status": "failing",
+      "evidence_ref": null
+    },
+    {
+      "id": "U5",
+      "statement": "带 shell.docx 的包产物保留 shell 封面/声明/目录锚点结构，正文完整",
+      "verify_via": "e2e",
+      "status": "failing",
+      "evidence_ref": null
+    },
+    {
+      "id": "U6",
+      "statement": "缺 tf_body 锚点时报 missing-body-anchor 结构化错误并停止",
+      "verify_via": "e2e",
+      "status": "failing",
+      "evidence_ref": null
+    },
+    {
+      "id": "S1",
+      "statement": "v2→ThesisTemplate 映射为确定性纯函数，覆盖编译所需字段",
+      "verify_via": "unit",
+      "status": "failing",
+      "evidence_ref": null
+    },
+    {
+      "id": "S2",
+      "statement": "有 shell 合并产物通过 openxml_validate 全部检查",
+      "verify_via": "e2e",
+      "status": "failing",
+      "evidence_ref": null
+    },
+    {
+      "id": "S3",
+      "statement": "无 shell 构建双跑字节一致（确定性）",
+      "verify_via": "e2e",
+      "status": "failing",
+      "evidence_ref": null
+    },
+    {
+      "id": "S4",
+      "statement": "恶意 .tftpl（Zip Slip/解压炸弹）被拒并给出结构化诊断",
+      "verify_via": "redteam",
+      "status": "failing",
+      "evidence_ref": null
+    },
+    {
+      "id": "S5",
+      "statement": "L1/L2 门禁与 manifest 不符 → build 停止并输出诊断",
+      "verify_via": "unit",
+      "status": "failing",
+      "evidence_ref": null
+    },
+    {
+      "id": "S6",
+      "statement": "合并产物 finalization 顺序：LO 刷新→openxml_validate→原子替换",
+      "verify_via": "static",
+      "status": "failing",
+      "evidence_ref": null
+    },
+    {
+      "id": "S7",
+      "statement": "v0.3 路径零回归：现有测试全绿",
+      "verify_via": "unit",
+      "status": "failing",
+      "evidence_ref": null
+    },
+    {
+      "id": "D1",
+      "statement": "映射与门禁诊断为结构化输出，CLI --json 可机读",
+      "verify_via": "unit",
+      "status": "failing",
+      "evidence_ref": null
+    },
+    {
+      "id": "D2",
+      "statement": ".tftpl 解包临时目录构建后清理，不残留产物",
+      "verify_via": "unit",
+      "status": "failing",
+      "evidence_ref": null
+    },
+    {
+      "id": "C1",
+      "statement": "v2→ThesisTemplate 映射为 templates/v2 公共组件并被 build 服务复用",
+      "verify_via": "facticity",
+      "status": "failing",
+      "evidence_ref": null
+    },
+    {
+      "id": "C2",
+      "statement": "模板来源分类器为独立函数，CLI 与 services 共用",
+      "verify_via": "facticity",
+      "status": "failing",
+      "evidence_ref": null
+    }
+  ]
+}

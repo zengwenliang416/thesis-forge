@@ -1,0 +1,33 @@
+{
+  "new_components": [
+    "templates.v2.mapping: to_thesis_template(spec, resolved_data) -> ThesisTemplate; pure deterministic mapping, no docx/lxml dependency",
+    "application.template-source: classify_template_source(path) -> kind; resolve_template_source(path) -> ResolvedTemplateContext (shell/reference paths)"
+  ],
+  "reused_components": [
+    "templates.v2.load_package",
+    "templates.v2.lint_package",
+    "templates.v2.unpack_package/verify_package",
+    "templates.v2.merge_into_shell/PackageEditor",
+    "templates.resolver (v0.3 path unchanged)"
+  ],
+  "extraction_triggers": [],
+  "forbidden_dependencies": [
+    "templates.v2.mapping must not import docx/lxml/renderers",
+    "application.template-source must not import CLI/typer"
+  ],
+  "hooks": [],
+  "utilities": [
+    "templates.v2.mapping: to_thesis_template",
+    "application.template-source: classify_template_source"
+  ],
+  "services": [
+    "application build/validate/inspect services consume ResolvedTemplateContext via template-source"
+  ],
+  "required_component_tests": [
+    "test mapping determinism + full field coverage",
+    "test classifier boundaries and malformed inputs",
+    "test .tftpl gate (manifest/L1+L2) in build path",
+    "test shell merge e2e (HUT v2 package) + openxml_validate"
+  ],
+  "unresolved_gaps": []
+}
