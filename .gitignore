@@ -18,3 +18,6 @@ src-tauri/binaries/
 tmp/
 .env
 *.local.yaml
+
+# Kimi assistant session exports (large dev logs, not source)
+docs/sessions/
