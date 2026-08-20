@@ -16,8 +16,11 @@ from thesis_forge.renderers.docx.package import validate_docx_package
 
 from .contracts import (
     ApplicationStageError,
+    BuildReportStage,
     BuildResult,
     BuildStage,
+    BuildStageState,
+    BuildStageStatus,
     BuildValidationError,
     InspectionResult,
     PreviewResult,
@@ -43,10 +46,94 @@ Compiler = Callable[..., RenderPlan]
 PackageValidator = Callable[[str | Path], None]
 ProgressCallback = Callable[[BuildStage], None]
 CancellationPredicate = Callable[[], bool]
+REPORT_STAGES = tuple(BuildReportStage)
 
 
 class DocumentRenderer(Protocol):
     def render(self, plan: RenderPlan, output: str | Path) -> Path: ...
+
+
+@dataclass(slots=True)
+class BuildStageLifecycle:
+    """Deterministic application-stage state machine for BuildReport emission."""
+
+    _states: dict[BuildReportStage, BuildStageState] = field(
+        default_factory=lambda: {
+            stage: BuildStageState(
+                name=stage,
+                status=BuildStageStatus.PENDING,
+            )
+            for stage in REPORT_STAGES
+        }
+    )
+    _history: list[BuildStageState] = field(default_factory=list)
+
+    def state(self, stage: BuildStage | BuildReportStage) -> BuildStageState:
+        return self._states[self._report_stage(stage)]
+
+    def start(self, stage: BuildStage | BuildReportStage) -> BuildStageState:
+        report_stage = self._report_stage(stage)
+        self._require_status(report_stage, BuildStageStatus.PENDING)
+        self._set(report_stage, BuildStageStatus.RUNNING)
+        return self.state(report_stage)
+
+    def succeed(self, stage: BuildStage | BuildReportStage) -> BuildStageState:
+        report_stage = self._report_stage(stage)
+        self._require_status(report_stage, BuildStageStatus.RUNNING)
+        self._set(report_stage, BuildStageStatus.SUCCEEDED)
+        return self.state(report_stage)
+
+    def fail(self, stage: BuildStage | BuildReportStage) -> BuildStageState:
+        report_stage = self._report_stage(stage)
+        self._require_status(report_stage, BuildStageStatus.RUNNING)
+        self._set(report_stage, BuildStageStatus.FAILED)
+        return self.state(report_stage)
+
+    def skip_downstream(
+        self,
+        stage: BuildStage | BuildReportStage,
+    ) -> tuple[BuildStageState, ...]:
+        report_stage = self._report_stage(stage)
+        start = REPORT_STAGES.index(report_stage) + 1
+        skipped: list[BuildStageState] = []
+        for downstream in REPORT_STAGES[start:]:
+            if self.state(downstream).status in {
+                BuildStageStatus.PENDING,
+                BuildStageStatus.RUNNING,
+            }:
+                self._set(downstream, BuildStageStatus.SKIPPED)
+                skipped.append(self.state(downstream))
+        return tuple(skipped)
+
+    def snapshot(self) -> tuple[BuildStageState, ...]:
+        return tuple(self._states[stage] for stage in REPORT_STAGES)
+
+    def history(self) -> tuple[BuildStageState, ...]:
+        return tuple(self._history)
+
+    @staticmethod
+    def _report_stage(stage: BuildStage | BuildReportStage) -> BuildReportStage:
+        return (
+            stage
+            if isinstance(stage, BuildReportStage)
+            else BuildReportStage(stage.value)
+        )
+
+    def _require_status(
+        self,
+        stage: BuildReportStage,
+        expected: BuildStageStatus,
+    ) -> None:
+        actual = self.state(stage).status
+        if actual is not expected:
+            raise ValueError(
+                f"{stage.value} must be {expected.value}, got {actual.value}"
+            )
+
+    def _set(self, stage: BuildReportStage, status: BuildStageStatus) -> None:
+        updated = BuildStageState(name=stage, status=status)
+        self._states[stage] = updated
+        self._history.append(updated)
 
 
 def _create_validation_context(

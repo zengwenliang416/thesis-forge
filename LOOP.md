@@ -104,15 +104,25 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
   - Verification-surface change: authorized; adds focused Workbench completed-report regression cases.
   - Attempts: 0
 
-- [V2-105] Emit correct typed stage lifecycle transitions
-  - Files: `src/thesis_forge/application/services.py`, `tests/application/test_build_stage_lifecycle.py`
-  - Behavior: emit stage started before work, succeeded only after completion, failed on error and skipped for downstream stages.
-  - Verify: `.venv/bin/python -m pytest tests/application/test_build_stage_lifecycle.py`
-  - Acceptance: entering validate does not mark validate successful; a validate failure marks compile/render/finalize/postflight skipped.
-  - Verification-surface change: authorized; creates one focused lifecycle test.
+- [V2-105B] Wire stage lifecycle through build runtime and service regressions
+  - Parent: ordered child 2/2 of `V2-105`; the parent requirement remains unchanged: backend build events expose the typed lifecycle without breaking cancellation, atomic output, or error handling.
+  - Files: `src/thesis_forge/application/services.py`, `src/thesis_forge/adapters/runtime.py`, `tests/test_application_services.py`
+  - Behavior: build service and backend stream consume the typed lifecycle collector, while existing service progress/cancellation/error regressions assert the corrected transitions.
+  - Verify: `.venv/bin/python -m pytest tests/test_application_services.py tests/test_adapters.py::test_build_event_stream_emits_ordered_progress_and_one_success`
+  - Acceptance: no stage is marked succeeded before work completes; cancellation and failures leave downstream stages skipped and preserve existing output guarantees.
+  - Verification-surface change: authorized; updates existing service regression assertions for the lifecycle contract.
   - Attempts: 0
 
 ## Done
+
+- [V2-105A] Model application stage lifecycle transitions
+  - Parent: ordered child 1/2 of `V2-105`; the parent requirement remains unchanged: stage started is distinct from succeeded, failures are explicit, and downstream stages are skipped.
+  - Files: `src/thesis_forge/application/services.py`, `tests/application/test_build_stage_lifecycle.py`
+  - Behavior: application stage lifecycle collector records pending/running/succeeded/failed/skipped states without treating stage entry as completion.
+  - Verify: `.venv/bin/python -m pytest tests/application/test_build_stage_lifecycle.py`
+  - Acceptance: entering validate remains running until work completes; failed validate marks compile/render/finalize/postflight skipped; transition order is deterministic.
+  - Verification-surface change: authorized; creates one focused lifecycle test.
+  - Attempts: 0
 
 - [V2-104] Serialize application BuildReport to protocol JSON
   - Files: `src/thesis_forge/adapters/dto.py`, `src/thesis_forge/adapters/runtime.py`, `tests/adapters/test_build_report_dto.py`
@@ -185,5 +195,7 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 - 2026-08-20 - V2-104 Checker FAIL Attempt 1; exact Verify passed 5 tests and related adapter/HTTP/BuildReport regression passed 54 tests, but independent probes found absolute-path leakage across report fields and accepted nested non-finite diagnostic details; three named files restored, no commit or push.
 - 2026-08-20 - V2-104 Checker FAIL Attempt 2; exact Verify passed 8 tests and related adapter/HTTP/BuildReport regression passed 54 tests; target Ruff, diff-check, and LOOP-LINT passed, but a real validation stream with a line-numbered issue and no optional `source.fileName` raised during DTO serialization and emitted no terminal `completed.report`; three named files restored, no commit or push.
 - 2026-08-20 - V2-104 Checker PASS Attempt 3; exact Verify passed 9 tests, related adapter/HTTP/BuildReport regression passed 54 tests, target Ruff/diff-check, LOOP-LINT, strict DTO probes, and real validation-stream missing-fileName probe passed; no push.
+- 2026-08-20 - V2-105 split into ordered children V2-105A and V2-105B after existing progress callback consumers and service regressions showed the original two-file slice could not stay green; no product code edited in the split cycle.
+- 2026-08-20 - V2-105A Checker PASS; exact Verify passed 3 tests, service/adapter regression passed 77 tests, application BuildReport regression passed 25 tests, lifecycle probe covered all report stages and required transitions, target Ruff/diff-check and LOOP-LINT passed; no push.
 
 ## Sync log
