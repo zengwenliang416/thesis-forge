@@ -95,15 +95,35 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Open
 
-- [V2-103] Parse BuildReport v2 in the frontend transport
-  - Files: `frontend/src/transport/buildEvents.ts`, `frontend/src/transport/buildEvents.test.ts`
-  - Behavior: the frontend accepts the protocol examples for success and failure, rejects message-only terminal errors, and exposes typed stage and diagnostic data
-  - Verify: `pnpm --dir frontend test -- buildEvents.test.ts`
-  - Acceptance: runtime guards validate outcome, intent, stage lifecycle, diagnostics, primary error, logs, source ranges, and output/stale-preview fields without using `any`
-  - Verification-surface change: authorized; creates one focused transport test
+- [V2-103A2] Preserve live-preview BuildReport diagnostics and cancellation state
+  - Parent: ordered child 2/2 of `V2-103A`; the parent requirement remains unchanged: live-preview failures expose typed diagnostics and do not remain stuck in building state.
+  - Files: `frontend/src/components/WorkbenchApp.tsx`, `frontend/src/state/workspace.ts`, `frontend/src/components/WorkbenchBuildFlow.test.tsx`
+  - Behavior: live-preview `completed.report` diagnostics retain source line, target and details in workspace state; canceled reports end the active preview operation without stealing or leaving the preview in `building`.
+  - Verify: `pnpm --dir frontend test -- WorkbenchBuildFlow.test.tsx && pnpm --dir frontend typecheck`
+  - Acceptance: publish/live-preview completed-report regression tests cover failed, canceled and diagnostic-bearing reports; stale/previous preview state is not overwritten by a failed or canceled attempt.
+  - Verification-surface change: authorized; adds focused Workbench completed-report regression cases.
+  - Attempts: 0
+
+- [V2-105] Emit correct typed stage lifecycle transitions
+  - Files: `src/thesis_forge/application/services.py`, `tests/application/test_build_stage_lifecycle.py`
+  - Behavior: emit stage started before work, succeeded only after completion, failed on error and skipped for downstream stages.
+  - Verify: `.venv/bin/python -m pytest tests/application/test_build_stage_lifecycle.py`
+  - Acceptance: entering validate does not mark validate successful; a validate failure marks compile/render/finalize/postflight skipped.
+  - Verification-surface change: authorized; creates one focused lifecycle test.
   - Attempts: 0
 
 ## Done
+
+- [V2-104] Serialize application BuildReport to protocol JSON
+  - Files: `src/thesis_forge/adapters/dto.py`, `src/thesis_forge/adapters/runtime.py`, `tests/adapters/test_build_report_dto.py`
+  - Behavior: serialize application BuildReport to the JSON Schema shape without dropping nullable fields or diagnostic parameters.
+  - Verify: `.venv/bin/python -m pytest tests/adapters/test_build_report_dto.py`
+  - Acceptance: success, validation failure, render failure and cancellation round-trip against protocol examples.
+  - Verification-surface change: authorized; creates one focused DTO contract test and centralizes runtime serialization on the DTO helper.
+  - Attempts: 3
+  - Attempt 1 (2026-08-20): exact Verify `.venv/bin/python -m pytest tests/adapters/test_build_report_dto.py` passed 5 tests; related adapter/HTTP/BuildReport regression passed 54 tests; target Ruff, diff-check, and LOOP-LINT passed. Independent probes confirmed the DTO helper is the runtime canonical helper and all three golden examples match, but absolute paths in source/related locations, target, suggestion, diagnostic details, and output paths were serialized unchanged, and nested `NaN`/`Infinity` values inside diagnostic details were accepted. Checker FAIL: the three named files were restored; no Done move, commit, or push.
+  - Attempt 2 (2026-08-20): exact Verify `.venv/bin/python -m pytest tests/adapters/test_build_report_dto.py` passed 8 tests; related adapter/HTTP/BuildReport regression passed 54 tests; target Ruff, diff-check, and LOOP-LINT passed. Independent probes confirmed the DTO helper identity/alias, success/validation/render/cancellation golden round-trips, all named path fields, finite scalar details, nested/list/non-finite/non-string-key rejection, and strict JSON encoding. Checker FAIL: a real validation stream with a line-numbered issue and no optional `source.fileName` raised `ValueError: BuildReport source ranges require file and start_line` from `src/thesis_forge/adapters/dto.py:59`, emitted no terminal `completed.report`, and violated nullable source handling; the three named files were restored, no Done move, commit, or push.
+  - PASS (2026-08-20): independent Checker exact Verify passed 9 tests; related adapter/HTTP/BuildReport regression passed 54 tests; target Ruff, `git diff --check`, LOOP-LINT, helper identity, four golden round-trips, path/detail strictness, strict JSON, and real validation-stream missing-`source.fileName` probes passed; no push.
 
 - [V2-102B] Add focused backend failure-matrix evidence for typed BuildReports
   - Parent: ordered child 2/2 of `V2-102`; its evidence completes the unchanged parent acceptance that every terminal failure includes outcome, failedStage, complete diagnostics, primaryDiagnosticId, stage states, and sanitized logs, with validation issue code, severity, source line, target, details, and order retained.
@@ -136,6 +156,19 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Blocked
 
+- [V2-103A1] Enforce strict BuildReport transport guards and remove legacy event typing
+  - Parent: ordered child 1/2 of `V2-103A`; the parent requirement remains unchanged: frontend transport and consumers use typed BuildReport terminal events, not message-only errors.
+  - Files: `frontend/src/transport/buildEvents.ts`, `frontend/src/transport/buildEvents.test.ts`, `frontend/src/components/WorkbenchApp.tsx`
+  - Behavior: transport guards reject invalid date-time/code fields and message-only errors; publish and live-preview code compile against `completed.report` types.
+  - Verify: `pnpm --dir frontend test -- buildEvents.test.ts && pnpm --dir frontend typecheck`
+  - Acceptance: BuildReport fields, source spans, related locations, stage statuses, logs, output/stale-preview and diagnostic code/date-time constraints are guarded without `any`; no consumer reads `event.error`.
+  - Verification-surface change: authorized; extends the focused transport test and updates the direct event consumer.
+  - Attempts: 3
+  - Inherited Attempt 1 evidence (2026-08-20): the unsplit candidate passed its exact Verify but accepted invalid diagnostic code/date-time values; it was restored without commit.
+  - Attempt 1 (2026-08-20): exact Verify `pnpm --dir frontend test -- buildEvents.test.ts && pnpm --dir frontend typecheck` passed; frontend lint, target diff-check, Workbench/transport regression, and LOOP-LINT passed. Independent strict probes accepted all three protocol examples and rejected invalid source ranges, related locations, stage/output extra keys, 501 logs, 4001-character logs, and unknown primary diagnostic IDs, but incorrectly accepted `startedAt: "2026-02-30T10:05:00Z"`; expected strict RFC3339 date-time rejection, observed acceptance. Checker FAIL: the candidate was restored from the three named files; no Done move, commit, or push.
+  - Attempt 2 (2026-08-20): exact Verify `pnpm --dir frontend test -- buildEvents.test.ts && pnpm --dir frontend typecheck` passed 13 test files / 84 tests and typecheck; frontend lint, target diff-check, Workbench/transport regression, and LOOP-LINT passed. Independent strict probes rejected invalid calendar dates/timezones, diagnostic codes, source/related/stage/log/output bounds, and legacy `type: "error"`, but accepted `diagnostics[0].details.count = NaN`; expected strict JSON-number rejection, observed acceptance. Checker FAIL: the three named files were restored; no Done move, commit, or push.
+  - Attempt 3 (2026-08-20): exact Verify `pnpm --dir frontend test -- buildEvents.test.ts && pnpm --dir frontend typecheck` passed 13 test files / 84 tests and typecheck; frontend lint, target diff-check, Workbench regression, and LOOP-LINT passed. Strict probes rejected invalid dates, timezone bounds, NaN/Infinity, unknown fields, log bounds, unknown primary diagnostics, and legacy `type: "error"`, but accepted non-string array/object coercions for `intent`, `outcome`, stage/status, severity/category, diagnostic code/stage, log stage/level, progress stage, and success output kind; expected strict type rejection, observed acceptance. Checker FAIL: third failure; the three named files were restored and V2-103A1 moved to Blocked, with no commit or push.
+
 ## Cycle log
 
 - 2026-08-20 - V2-101 Checker PASS; exact Verify `.venv/bin/python -m pytest tests/application/test_build_report_contract.py` passed 6 tests; scope limited to the two named implementation/test files, no push.
@@ -144,5 +177,13 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 - 2026-08-20 - V2-102A Checker PASS; exact Verify passed 2 tests, related adapter tests passed 38 tests and BuildReport contract tests passed 6 tests; ruff check and git diff --check passed, no push.
 - 2026-08-20 - V2-102B Checker FAIL; exact Verify passed 8 tests and related adapter/HTTP/BuildReport regression passed 44 tests, but the focused evidence did not prove all required lifecycle, diagnostic-details, and path-sanitization assertions; candidate files restored, no commit or push.
 - 2026-08-20 - V2-102B Checker PASS; exact Verify passed 10 tests, related adapter/HTTP/BuildReport regression passed 44 tests, target Ruff/diff-check and LOOP-LINT passed, no push.
+- 2026-08-20 - V2-103 split into V2-103A because `WorkbenchApp.tsx` directly consumed the obsolete `event.error` branch; V2-104 and V2-105 refilled Open, with no product code edited in the split cycle.
+- 2026-08-20 - V2-103A Checker FAIL Attempt 1; exact Verify passed, but strict schema guard and live-preview completed-report cancellation/diagnostic handling failed acceptance; three candidate files restored, no commit or push.
+- 2026-08-20 - V2-103A split into ordered children V2-103A1 and V2-103A2 after Checker evidence required separate transport strictness and live-preview workspace/test files; no product code edited in the split cycle.
+- 2026-08-20 - V2-103A1 Checker FAIL Attempt 2; exact Verify passed, but strict JSON-number guard accepted `diagnostics[0].details.count = NaN`; three candidate files restored, no Done move, commit, or push.
+- 2026-08-20 - V2-103A1 Checker FAIL Attempt 3; exact Verify passed 13 test files / 84 tests and typecheck, frontend lint/diff-check, Workbench regression, and LOOP-LINT passed; strict probes accepted non-string array/object coercions for enum/code fields, so expected type-strict rejection was not met; three candidate files restored and V2-103A1 moved to Blocked, no commit or push.
+- 2026-08-20 - V2-104 Checker FAIL Attempt 1; exact Verify passed 5 tests and related adapter/HTTP/BuildReport regression passed 54 tests, but independent probes found absolute-path leakage across report fields and accepted nested non-finite diagnostic details; three named files restored, no commit or push.
+- 2026-08-20 - V2-104 Checker FAIL Attempt 2; exact Verify passed 8 tests and related adapter/HTTP/BuildReport regression passed 54 tests; target Ruff, diff-check, and LOOP-LINT passed, but a real validation stream with a line-numbered issue and no optional `source.fileName` raised during DTO serialization and emitted no terminal `completed.report`; three named files restored, no commit or push.
+- 2026-08-20 - V2-104 Checker PASS Attempt 3; exact Verify passed 9 tests, related adapter/HTTP/BuildReport regression passed 54 tests, target Ruff/diff-check, LOOP-LINT, strict DTO probes, and real validation-stream missing-fileName probe passed; no push.
 
 ## Sync log
