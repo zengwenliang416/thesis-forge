@@ -1,0 +1,201 @@
+id: project-proposal-2026
+name: 项目建设方案通用模板
+year: 2026
+
+page:
+  size: A4
+  orientation: portrait
+  margin:
+    top: 25mm
+    bottom: 25mm
+    left: 30mm
+    right: 25mm
+
+cover:
+  items:
+    - field: university.name
+      style:
+        font:
+          east_asia: 黑体
+          latin: Times New Roman
+        size: 18pt
+        bold: true
+        alignment: center
+        space_after: 30pt
+    - field: thesis.title
+      style:
+        font:
+          east_asia: 黑体
+          latin: Times New Roman
+        size: 24pt
+        bold: true
+        alignment: center
+        space_after: 42pt
+        line_spacing:
+          type: fixed
+          value: 32pt
+    - field: university.college
+      prefix: "编制部门："
+      style:
+        font:
+          east_asia: 宋体
+          latin: Times New Roman
+        size: 14pt
+        alignment: left
+        left_indent: 42mm
+        first_line_indent: 0pt
+        space_after: 8pt
+    - field: author.student_id
+      prefix: "文档版本："
+      style:
+        font:
+          east_asia: 宋体
+          latin: Times New Roman
+        size: 14pt
+        alignment: left
+        left_indent: 42mm
+        first_line_indent: 0pt
+        space_after: 8pt
+    - field: advisor.name
+      prefix: "项目负责人："
+      style:
+        font:
+          east_asia: 宋体
+          latin: Times New Roman
+        size: 14pt
+        alignment: left
+        left_indent: 42mm
+        first_line_indent: 0pt
+        space_after: 8pt
+    - field: dates.completed
+      prefix: "编制日期："
+      style:
+        font:
+          east_asia: 宋体
+          latin: Times New Roman
+        size: 14pt
+        alignment: left
+        left_indent: 42mm
+        first_line_indent: 0pt
+
+body:
+  font:
+    east_asia: 宋体
+    latin: Times New Roman
+  size: 12pt
+  alignment: justify
+  first_line_indent: 2em
+  line_spacing:
+    type: fixed
+    value: 20pt
+
+list:
+  ordered:
+    levels:
+      - alignment: left
+        left_indent: 21pt
+        hanging_indent: 9pt
+        format: decimal
+        prefix: ""
+        suffix: "."
+        style:
+          alignment: left
+  unordered:
+    levels:
+      - alignment: left
+        left_indent: 21pt
+        hanging_indent: 9pt
+        marker: "•"
+        style:
+          alignment: left
+
+heading:
+  level1:
+    font:
+      east_asia: 黑体
+      latin: Times New Roman
+    size: 16pt
+    color: "000000"
+    bold: true
+    alignment: center
+    left_indent: 0pt
+    first_line_indent: 0pt
+    page_break_before: true
+  level2:
+    font:
+      east_asia: 黑体
+      latin: Times New Roman
+    size: 14pt
+    color: "000000"
+    bold: true
+    left_indent: 0pt
+    first_line_indent: 0pt
+  level3:
+    font:
+      east_asia: 黑体
+      latin: Times New Roman
+    size: 12pt
+    color: "000000"
+    bold: true
+    left_indent: 0pt
+    first_line_indent: 0pt
+
+toc:
+  level1:
+    left_indent: 0em
+    first_line_indent: 0em
+    leader: dots
+  level2:
+    left_indent: 1em
+    first_line_indent: 0em
+    leader: dots
+  level3:
+    left_indent: 2em
+    first_line_indent: 0em
+    leader: dots
+
+figure:
+  numbering: chapter
+  caption:
+    position: bottom
+    prefix: 图
+
+table:
+  style: three_line
+  three_line:
+    top_width: 1.5pt
+    header_width: 0.75pt
+    bottom_width: 1.5pt
+  numbering: chapter
+  caption:
+    position: top
+    prefix: 表
+
+equation:
+  numbering: chapter
+
+sections:
+  cover:
+    start: new_page
+    page_number:
+      format: none
+  front_matter:
+    start: new_page
+    footer:
+      enabled: true
+    page_number:
+      format: roman-upper
+      restart: 1
+  main:
+    start: new_page
+    header:
+      default:
+        enabled: true
+        text: "接口成功率与响应时间预测平台建设方案"
+        style:
+          alignment: center
+    footer:
+      enabled: true
+    page_number:
+      format: decimal
+      restart: 1
