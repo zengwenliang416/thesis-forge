@@ -219,15 +219,21 @@ def _build_report_logs(
     elif isinstance(error, BuildCanceledError):
         message = "Build canceled."
     elif isinstance(error, PermissionError):
-        message = "Build failed because output permission was denied."
+        message = (
+            "Build failed because output permission was denied: "
+            f"{_sanitize_log_message(str(error))}"
+        )
     else:
-        message = f"Build failed during {stage.value}."
+        message = (
+            f"Build failed during {stage.value}: "
+            f"{_sanitize_log_message(str(error))}"
+        )
     return (
         BuildLogEntry(
             sequence=0,
             stage=stage,
             level=BuildLogLevel.ERROR,
-            message=message,
+            message=message[: BuildLogEntry.MAX_MESSAGE_LENGTH],
         ),
     )
 
