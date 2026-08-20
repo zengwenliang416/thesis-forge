@@ -1,0 +1,1 @@
+{"schema":"specnav.blockerClassification.v1","recorded_at":"2026-08-18T08:12:36.648Z","source":"post-tool-failure-hook","tool":"Bash","blocker_class":"insufficient-evidence","error_tail":"\"Exit code 143\\nCommand timed out after 2m 0s\""}
