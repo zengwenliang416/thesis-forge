@@ -332,6 +332,41 @@ describe("runtime transports", () => {
     ).toThrow("无效的 ThesisForge transport 响应");
   });
 
+  it("rejects coerced enum values and non-finite diagnostic details", () => {
+    const diagnostic = {
+      severity: "error",
+      code: "TF-VALIDATION",
+      message: "invalid",
+      line: 1,
+      target: null,
+      details: {},
+    };
+    const rejectedDiagnostics = [
+      { ...diagnostic, severity: ["error"] },
+      { ...diagnostic, severity: { value: "error" } },
+      { ...diagnostic, details: { count: Number.NaN } },
+      { ...diagnostic, details: { count: Number.POSITIVE_INFINITY } },
+    ];
+
+    for (const invalid of rejectedDiagnostics) {
+      expect(() =>
+        readSerializedDiagnostics({ diagnostics: [invalid] }, true),
+      ).toThrow("无效的 ThesisForge transport 响应");
+    }
+
+    expect(() =>
+      assertCommandResponse({
+        protocol: PROTOCOL_VERSION,
+        requestId: "request-1",
+        ok: false,
+        error: {
+          kind: ["transport"],
+          message: "invalid",
+        },
+      }),
+    ).toThrow("无效的 ThesisForge transport 响应");
+  });
+
   it("requires diagnostics for validation result consumers", () => {
     expect(() => readSerializedDiagnostics({}, true)).toThrow(
       "无效的 ThesisForge transport 响应",

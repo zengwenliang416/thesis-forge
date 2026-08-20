@@ -229,7 +229,9 @@ function isDetails(value: unknown): value is Record<string, string | number> {
     value !== null &&
     !Array.isArray(value) &&
     Object.values(value).every(
-      (item) => typeof item === "string" || typeof item === "number",
+      (item) =>
+        typeof item === "string" ||
+        (typeof item === "number" && Number.isFinite(item)),
     )
   );
 }
@@ -247,6 +249,13 @@ function hasOnlyKeys(
 
 function isNullableString(value: unknown): value is string | null {
   return value === null || typeof value === "string";
+}
+
+function isStringEnum<T extends string>(
+  value: unknown,
+  values: readonly T[],
+): value is T {
+  return typeof value === "string" && values.includes(value as T);
 }
 
 function isLine(value: unknown): value is number | null {
@@ -272,7 +281,7 @@ function isPreviewMarker(value: unknown): value is SerializedPreviewMarker {
   return (
     isObject(value) &&
     hasOnlyKeys(value, ["severity", "code"]) &&
-    ["info", "warning", "error"].includes(String(value.severity)) &&
+    isStringEnum(value.severity, ["info", "warning", "error"]) &&
     typeof value.code === "string" &&
     value.code.length > 0
   );
@@ -342,7 +351,7 @@ function isPreviewContent(value: unknown): value is SerializedPreviewContent {
   if (value.type === "section") {
     return (
       hasOnlyKeys(value, ["type", "role"]) &&
-      ["cover", "front_matter", "main"].includes(String(value.role))
+      isStringEnum(value.role, ["cover", "front_matter", "main"])
     );
   }
   if (value.type === "toc") {
@@ -414,7 +423,7 @@ function isPreviewContent(value: unknown): value is SerializedPreviewContent {
               hasOnlyKeys(cell, ["text", "alignment"]) &&
               typeof cell.text === "string" &&
               (cell.alignment === null ||
-                ["left", "center", "right"].includes(String(cell.alignment))),
+                isStringEnum(cell.alignment, ["left", "center", "right"])),
           ),
       )
     );
@@ -521,7 +530,7 @@ function isPreviewBlock(value: unknown): value is SerializedPreviewBlock {
     typeof value.kind === "string" &&
     value.kind.length > 0 &&
     isLine(value.line) &&
-    ["ready", "unsupported"].includes(String(value.state)) &&
+    isStringEnum(value.state, ["ready", "unsupported"]) &&
     Array.isArray(value.markers) &&
     value.markers.every(isPreviewMarker) &&
     isPreviewContent(value.content)
@@ -532,7 +541,7 @@ function isPreviewDocument(value: unknown): value is SerializedPreviewDocument {
   return (
     isObject(value) &&
     hasOnlyKeys(value, ["status", "message", "disclaimer", "blocks"]) &&
-    ["empty", "ready", "blocked"].includes(String(value.status)) &&
+    isStringEnum(value.status, ["empty", "ready", "blocked"]) &&
     isNullableString(value.message) &&
     typeof value.disclaimer === "string" &&
     value.disclaimer.length > 0 &&
@@ -569,7 +578,7 @@ function isSerializedDiagnostic(value: unknown): value is SerializedDiagnostic {
     value !== null &&
     !Array.isArray(value) &&
     "severity" in value &&
-    ["info", "warning", "error"].includes(String(value.severity)) &&
+    isStringEnum(value.severity, ["info", "warning", "error"]) &&
     "code" in value &&
     typeof value.code === "string" &&
     value.code.length > 0 &&
@@ -636,9 +645,13 @@ export function assertCommandResponse(value: unknown): CommandResponse {
     typeof value.error !== "object" ||
     value.error === null ||
     !("kind" in value.error) ||
-    !["protocol", "request", "permission", "domain", "transport"].includes(
-      String(value.error.kind),
-    ) ||
+    !isStringEnum(value.error.kind, [
+      "protocol",
+      "request",
+      "permission",
+      "domain",
+      "transport",
+    ]) ||
     !("message" in value.error) ||
     typeof value.error.message !== "string"
   ) {
