@@ -4,6 +4,7 @@ import re
 import tempfile
 from collections.abc import Callable, Iterator
 from dataclasses import asdict, dataclass
+from datetime import datetime
 from pathlib import Path
 from queue import Queue
 from threading import Lock, Thread
@@ -27,6 +28,18 @@ from thesis_forge.application import (
     preview_service,
     validation_service,
 )
+from thesis_forge.application.contracts import (
+    BuildDiagnostic,
+    BuildDiagnosticCategory,
+    BuildDiagnosticSeverity,
+    BuildIntent,
+    BuildLogEntry,
+    BuildLogLevel,
+    BuildOutcome,
+    BuildReport,
+    BuildReportStage,
+    BuildStage,
+)
 from thesis_forge.core.model import Heading
 from thesis_forge.presentation.preview import map_preview_result
 from thesis_forge.templates import default_template_search_roots, resolve_template
@@ -43,6 +56,7 @@ CancellationPredicate = Callable[[], bool]
 LIVE_PREVIEW_STEM_RE = re.compile(
     r"^\.?thesisforge-live-preview-[0-9a-f]{32}$"
 )
+ABSOLUTE_PATH_RE = re.compile(r"(?<![\w])(?:/[^\s:]+|[A-Za-z]:\\[^\s:]+)")
 
 
 def final_preview_build_service(
@@ -100,6 +114,210 @@ def _artifact_field(artifact: object, name: str) -> object:
     if isinstance(artifact, dict):
         return artifact.get(name)
     return getattr(artifact, name, None)
+
+
+def _sanitize_log_message(message: str) -> str:
+    return ABSOLUTE_PATH_RE.sub("<path>", message)
+
+
+def _timestamp(value: datetime | None) -> str | None:
+    return value.isoformat() if value is not None else None
+
+
+def _serialize_build_report(report: BuildReport) -> dict:
+    def source_range(source) -> dict | None:
+        if source is None:
+            return None
+        return {
+            "file": source.file or "<source>",
+            "startLine": source.start_line,
+            "startColumn": source.start_column,
+            "endLine": source.end_line,
+            "endColumn": source.end_column,
+        }
+
+    def diagnostic(diagnostic: BuildDiagnostic) -> dict:
+        return {
+            "id": diagnostic.id,
+            "severity": diagnostic.severity.value,
+            "category": diagnostic.category.value,
+            "code": diagnostic.code,
+            "stage": diagnostic.stage.value,
+            "message": _sanitize_log_message(diagnostic.message),
+            "source": source_range(diagnostic.source),
+            "target": diagnostic.target,
+            "suggestion": diagnostic.suggestion,
+            "relatedLocations": [
+                {
+                    "message": _sanitize_log_message(location.message),
+                    "source": source_range(location.source),
+                }
+                for location in diagnostic.related_locations
+            ],
+            "details": dict(diagnostic.details),
+        }
+
+    return {
+        "schemaVersion": report.schema_version,
+        "buildId": report.build_id,
+        "intent": report.intent.value,
+        "outcome": report.outcome.value,
+        "startedAt": _timestamp(report.started_at),
+        "completedAt": _timestamp(report.completed_at),
+        "stages": [
+            {
+                "name": stage.name.value,
+                "status": stage.status.value,
+                "startedAt": _timestamp(stage.started_at),
+                "completedAt": _timestamp(stage.completed_at),
+            }
+            for stage in report.stages
+        ],
+        "failedStage": report.failed_stage.value if report.failed_stage else None,
+        "primaryDiagnosticId": report.primary_diagnostic_id,
+        "diagnostics": [diagnostic(item) for item in report.diagnostics],
+        "logs": [
+            {
+                "sequence": log.sequence,
+                "stage": log.stage.value,
+                "level": log.level.value,
+                "message": _sanitize_log_message(log.message),
+            }
+            for log in report.logs
+        ],
+        "output": (
+            {
+                "docxPath": str(report.output.docx_path)
+                if report.output.docx_path is not None
+                else None,
+                "pdfPath": str(report.output.pdf_path)
+                if report.output.pdf_path is not None
+                else None,
+                "previewStale": report.output.preview_stale,
+                "successfulBuildId": report.output.successful_build_id,
+            }
+            if report.output is not None
+            else None
+        ),
+    }
+
+
+def _build_report_stage(error: Exception, progressed: list[BuildStage]) -> BuildReportStage:
+    if isinstance(error, ApplicationStageError):
+        return BuildReportStage(error.stage.value)
+    if progressed:
+        return BuildReportStage(progressed[-1].value)
+    return BuildReportStage.PARSE
+
+
+def _build_report_logs(
+    error: Exception,
+    stage: BuildReportStage,
+) -> tuple[BuildLogEntry, ...]:
+    if isinstance(error, BuildValidationError):
+        message = f"Validation failed with {len(error.issues)} issue(s)."
+    elif isinstance(error, BuildCanceledError):
+        message = "Build canceled."
+    elif isinstance(error, PermissionError):
+        message = "Build failed because output permission was denied."
+    else:
+        message = f"Build failed during {stage.value}."
+    return (
+        BuildLogEntry(
+            sequence=0,
+            stage=stage,
+            level=BuildLogLevel.ERROR,
+            message=message,
+        ),
+    )
+
+
+def _transport_build_report(
+    error: Exception,
+    *,
+    build_id: str,
+    intent: BuildIntent,
+    stage: BuildReportStage,
+    logs: tuple[BuildLogEntry, ...],
+) -> BuildReport:
+    item = BuildDiagnostic(
+        id="transport-error-1",
+        severity=BuildDiagnosticSeverity.ERROR,
+        category=BuildDiagnosticCategory.TRANSPORT,
+        code="TF-TRANSPORT-BUILD-FAILED",
+        stage=stage,
+        message=_sanitize_log_message(str(error)),
+        details={"exception": type(error).__name__},
+    )
+    return BuildReport(
+        schema_version=BuildReport.SCHEMA_VERSION,
+        build_id=build_id,
+        intent=intent,
+        outcome=BuildOutcome.FAILED,
+        stages=BuildReport.default_stages(
+            failed_stage=stage,
+            outcome=BuildOutcome.FAILED,
+        ),
+        failed_stage=stage,
+        primary_diagnostic_id=item.id,
+        diagnostics=(item,),
+        logs=logs,
+        output=None,
+    )
+
+
+def _failed_build_report(
+    error: Exception,
+    *,
+    build_id: str,
+    intent: BuildIntent,
+    progressed: list[BuildStage],
+    source_file: str | None,
+) -> BuildReport:
+    stage = _build_report_stage(error, progressed)
+    logs = _build_report_logs(error, stage)
+    outcome = (
+        BuildOutcome.CANCELED
+        if isinstance(error, BuildCanceledError)
+        else BuildOutcome.FAILED
+    )
+    stages = BuildReport.default_stages(
+        failed_stage=stage,
+        outcome=outcome,
+    )
+    if isinstance(error, BuildValidationError):
+        return BuildReport.from_validation_error(
+            error,
+            build_id=build_id,
+            intent=intent,
+            source_file=source_file,
+            stages=stages,
+            logs=logs,
+        )
+    if isinstance(error, ApplicationStageError):
+        return BuildReport.from_stage_error(
+            error,
+            build_id=build_id,
+            intent=intent,
+            stages=stages,
+            logs=logs,
+        )
+    if isinstance(error, PermissionError):
+        return BuildReport.from_permission_error(
+            error,
+            build_id=build_id,
+            intent=intent,
+            stage=stage,
+            stages=stages,
+            logs=logs,
+        )
+    return _transport_build_report(
+        error,
+        build_id=build_id,
+        intent=intent,
+        stage=stage,
+        logs=logs,
+    )
 
 
 def _final_preview_descriptor(
@@ -641,8 +859,13 @@ class WorkbenchCommandDispatcher:
         request_id = request.get("requestId")
         if not isinstance(request_id, str) or not request_id:
             request_id = "invalid-request"
+        build_id = f"build-{uuid4().hex}"
+        intent = BuildIntent.PUBLISH
+        source_file: str | None = None
+        progressed: list[BuildStage] = []
 
         def progress(stage) -> None:
+            progressed.append(stage)
             emit(
                 {
                     "protocol": PROTOCOL_VERSION,
@@ -660,6 +883,17 @@ class WorkbenchCommandDispatcher:
             payload = request.get("payload")
             if not isinstance(payload, dict):
                 raise TypeError("payload must be an object")
+            requested_intent = payload.get("intent", BuildIntent.PUBLISH.value)
+            if requested_intent in {
+                BuildIntent.PUBLISH.value,
+                BuildIntent.LIVE_PREVIEW.value,
+            }:
+                intent = BuildIntent(requested_intent)
+            source = payload.get("source")
+            if isinstance(source, dict):
+                file_name = source.get("fileName")
+                if isinstance(file_name, str) and file_name:
+                    source_file = file_name
             result = self._build_result(
                 payload,
                 on_progress=progress,
@@ -673,79 +907,22 @@ class WorkbenchCommandDispatcher:
                     "result": result,
                 }
             )
-        except BuildCanceledError as error:
-            self._emit_build_error(
-                emit,
-                request_id,
-                kind="canceled",
-                message=str(error),
-                stage=error.stage.value,
+        except Exception as error:  # noqa: BLE001 - terminal report boundary
+            report = _failed_build_report(
+                error,
+                build_id=build_id,
+                intent=intent,
+                progressed=progressed,
+                source_file=source_file,
             )
-        except BuildValidationError as error:
-            self._emit_build_error(
-                emit,
-                request_id,
-                kind="validation",
-                message=str(error),
-                stage=error.stage.value,
+            emit(
+                {
+                    "protocol": PROTOCOL_VERSION,
+                    "requestId": request_id,
+                    "type": "completed",
+                    "report": _serialize_build_report(report),
+                }
             )
-        except PermissionError as error:
-            self._emit_build_error(
-                emit,
-                request_id,
-                kind="permission",
-                message=str(error),
-            )
-        except ApplicationStageError as error:
-            kind = (
-                "finalize"
-                if error.stage.value == "finalize"
-                else "validation"
-                if error.stage.value in {"parse", "validate"}
-                else "render"
-            )
-            self._emit_build_error(
-                emit,
-                request_id,
-                kind=kind,
-                message=str(error),
-                stage=error.stage.value,
-            )
-        except (KeyError, TypeError, ValueError) as error:
-            self._emit_build_error(
-                emit,
-                request_id,
-                kind="transport",
-                message=str(error),
-            )
-        except Exception as error:  # noqa: BLE001 - transport terminal boundary
-            self._emit_build_error(
-                emit,
-                request_id,
-                kind="transport",
-                message=str(error),
-            )
-
-    @staticmethod
-    def _emit_build_error(
-        emit: BuildEventSink,
-        request_id: str,
-        *,
-        kind: str,
-        message: str,
-        stage: str | None = None,
-    ) -> None:
-        error = {"kind": kind, "message": message}
-        if stage is not None:
-            error["stage"] = stage
-        emit(
-            {
-                "protocol": PROTOCOL_VERSION,
-                "requestId": request_id,
-                "type": "error",
-                "error": error,
-            }
-        )
 
     def _source(self, payload: dict) -> tuple[dict, Path]:
         source = payload.get("source")

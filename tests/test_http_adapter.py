@@ -108,18 +108,18 @@ def test_http_build_stream_is_incremental_and_cancelable(tmp_path: Path):
     ) in headers[0]
     assert cancel_statuses == ["202 Accepted"]
     assert json.loads(cancel_body)["ok"] is True
-    assert remaining == [
-        {
-            "protocol": PROTOCOL_VERSION,
-            "requestId": "build-stream-1",
-            "type": "error",
-            "error": {
-                "kind": "canceled",
-                "message": "构建已取消",
-                "stage": "validate",
-            },
-        }
-    ]
+    assert len(remaining) == 1
+    assert remaining[0]["protocol"] == PROTOCOL_VERSION
+    assert remaining[0]["requestId"] == "build-stream-1"
+    assert remaining[0]["type"] == "completed"
+    assert "error" not in remaining[0]
+    report = remaining[0]["report"]
+    assert report["schemaVersion"] == "thesisforge.build-report.v2"
+    assert report["outcome"] == "canceled"
+    assert report["failedStage"] == "validate"
+    assert report["primaryDiagnosticId"] == "build-error-1"
+    assert report["diagnostics"][0]["code"] == "TF-BUILD-CANCELED"
+    assert all(event["type"] != "error" for event in remaining)
     assert not output.exists()
 
 

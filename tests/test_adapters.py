@@ -967,24 +967,25 @@ def test_build_event_stream_emits_one_typed_cancellation_error(tmp_path: Path):
 
     dispatcher.stream_build(request, events.append, should_cancel=lambda: True)
 
-    assert events == [
-        {
-            "protocol": PROTOCOL_VERSION,
-            "requestId": "build-1",
-            "type": "progress",
-            "stage": "parse",
-        },
-        {
-            "protocol": PROTOCOL_VERSION,
-            "requestId": "build-1",
-            "type": "error",
-            "error": {
-                "kind": "canceled",
-                "message": "构建已取消",
-                "stage": "validate",
-            },
-        },
-    ]
+    assert events[0] == {
+        "protocol": PROTOCOL_VERSION,
+        "requestId": "build-1",
+        "type": "progress",
+        "stage": "parse",
+    }
+    assert len(events) == 2
+    assert events[1]["type"] == "completed"
+    assert "error" not in events[1]
+    report = events[1]["report"]
+    assert report["schemaVersion"] == "thesisforge.build-report.v2"
+    assert report["buildId"]
+    assert report["intent"] == "publish"
+    assert report["outcome"] == "canceled"
+    assert report["failedStage"] == "validate"
+    assert report["primaryDiagnosticId"] == "build-error-1"
+    assert report["diagnostics"][0]["code"] == "TF-BUILD-CANCELED"
+    assert report["output"] is None
+    assert all(event["type"] != "error" for event in events)
 
 
 def test_save_rejects_missing_text_without_mutating_source(tmp_path: Path):

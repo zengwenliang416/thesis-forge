@@ -95,12 +95,13 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Open
 
-- [V2-102] Emit typed failed BuildReports from the backend build stream
+- [V2-102B] Add focused backend failure-matrix evidence for typed BuildReports
+  - Parent: ordered child 2/2 of `V2-102`; its evidence completes the unchanged parent acceptance that every terminal failure includes outcome, failedStage, complete diagnostics, primaryDiagnosticId, stage states, and sanitized logs, with validation issue code, severity, source line, target, details, and order retained.
   - Files: `src/thesis_forge/adapters/runtime.py`, `tests/adapters/test_build_report_events.py`
-  - Behavior: validation, compile, render, finalize, permission, cancellation, and transport failures emit a terminal typed report instead of one error string
+  - Behavior: the backend failure matrix covers validation, compile, render, finalize, permission, cancellation, and transport errors through the same typed terminal report path.
   - Verify: `.venv/bin/python -m pytest tests/adapters/test_build_report_events.py`
-  - Acceptance: every terminal failure includes outcome, failedStage, complete diagnostics, primaryDiagnosticId, stage states, and sanitized logs; validation issues retain code, severity, source line, target, details, and order
-  - Verification-surface change: authorized; creates one focused event-stream test
+  - Acceptance: the focused event-stream test proves one terminal `completed.report`, all required report fields, stage lifecycle values, diagnostic ordering/details, and sanitized bounded logs without any message-only error event.
+  - Verification-surface change: authorized; creates one focused event-stream test.
   - Attempts: 0
 
 - [V2-103] Parse BuildReport v2 in the frontend transport
@@ -112,6 +113,16 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
   - Attempts: 0
 
 ## Done
+
+- [V2-102A] Migrate backend build stream and existing public stream tests to typed terminal reports
+  - Parent: ordered child 1/2 of `V2-102`; the parent requirement remains unchanged: validation, compile, render, finalize, permission, cancellation, and transport failures emit a terminal typed report instead of one error string.
+  - Files: `src/thesis_forge/adapters/runtime.py`, `tests/test_adapters.py`, `tests/test_http_adapter.py`
+  - Behavior: direct and HTTP build streams terminate cancellation with one `type: completed` event carrying a typed BuildReport instead of a message-only `type: error` event.
+  - Verify: `.venv/bin/python -m pytest tests/test_adapters.py::test_build_event_stream_emits_one_typed_cancellation_error tests/test_http_adapter.py::test_http_build_stream_is_incremental_and_cancelable`
+  - Acceptance: both existing public stream paths assert the BuildReport terminal shape, preserve incremental progress and cancellation cleanup, and pass without a compatibility or dual-protocol branch.
+  - Verification-surface change: authorized; migrates two existing public stream assertions required by the parent contract.
+  - Attempts: 1
+  - Inherited attempt evidence (2026-08-20): the parent candidate's focused Verify passed 8 tests, but the two existing public stream tests failed on the obsolete `type: error` contract; the Checker restored the candidate files and rejected dual-protocol compatibility.
 
 - [V2-101] Introduce the typed application BuildReport contract
   - Files: `src/thesis_forge/application/contracts.py`, `tests/application/test_build_report_contract.py`
@@ -126,5 +137,8 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 ## Cycle log
 
 - 2026-08-20 - V2-101 Checker PASS; exact Verify `.venv/bin/python -m pytest tests/application/test_build_report_contract.py` passed 6 tests; scope limited to the two named implementation/test files, no push.
+- 2026-08-20 - V2-102 Checker FAIL; exact Verify passed 8 tests, but two existing build-stream tests failed on the obsolete `type: error` contract; selected files restored, no commit or push.
+- 2026-08-20 - V2-102 split into ordered children V2-102A and V2-102B after Checker evidence showed four repository files were required; no product code edited in the split cycle.
+- 2026-08-20 - V2-102A Checker PASS; exact Verify passed 2 tests, related adapter tests passed 38 tests and BuildReport contract tests passed 6 tests; ruff check and git diff --check passed, no push.
 
 ## Sync log
