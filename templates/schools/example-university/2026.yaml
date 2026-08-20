@@ -22,6 +22,26 @@ body:
     type: fixed
     value: 20pt
 
+list:
+  ordered:
+    levels:
+      - alignment: left
+        left_indent: 21pt
+        hanging_indent: 9pt
+        format: decimal
+        prefix: ""
+        suffix: "."
+        style:
+          alignment: left
+  unordered:
+    levels:
+      - alignment: left
+        left_indent: 21pt
+        hanging_indent: 9pt
+        marker: "•"
+        style:
+          alignment: left
+
 heading:
   level1:
     font:
@@ -31,6 +51,8 @@ heading:
     color: "000000"
     bold: true
     alignment: center
+    left_indent: 0pt
+    first_line_indent: 0pt
   level2:
     font:
       east_asia: 黑体
@@ -38,6 +60,8 @@ heading:
     size: 14pt
     color: "000000"
     bold: true
+    left_indent: 0pt
+    first_line_indent: 0pt
   level3:
     font:
       east_asia: 黑体
@@ -45,6 +69,22 @@ heading:
     size: 12pt
     color: "000000"
     bold: true
+    left_indent: 0pt
+    first_line_indent: 0pt
+
+toc:
+  level1:
+    left_indent: 0em
+    first_line_indent: 0em
+    leader: dots
+  level2:
+    left_indent: 1em
+    first_line_indent: 0em
+    leader: dots
+  level3:
+    left_indent: 2em
+    first_line_indent: 0em
+    leader: dots
 
 figure:
   numbering: chapter
@@ -76,13 +116,16 @@ sections:
     footer:
       enabled: true
     page_number:
-      format: roman-lower
+      format: roman-upper
       restart: 1
   main:
     start: new_page
     header:
-      enabled: true
-      text: "XX大学本科毕业论文"
+      default:
+        enabled: true
+        text: "XX大学本科毕业论文"
+        style:
+          alignment: center
     footer:
       enabled: true
     page_number:

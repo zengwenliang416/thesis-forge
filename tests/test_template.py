@@ -89,15 +89,11 @@ def test_hut_list_policy_is_explicit_while_legacy_template_uses_defaults():
     assert hut.list.ordered.for_level(8) is hut.list.ordered.levels[-1]
     assert hut.list.unordered.for_level(8) is hut.list.unordered.levels[-1]
 
-    assert len(example.list.ordered.levels) == 9
-    assert [level.format for level in example.list.ordered.levels] == [
-        "decimal"
-    ] * 9
-    assert [level.marker for level in example.list.unordered.levels[:3]] == [
-        "•",
-        "◦",
-        "▪",
-    ]
+    assert len(example.list.ordered.levels) == 1
+    assert str(example.list.ordered.levels[0].left_indent) == "21pt"
+    assert str(example.list.ordered.levels[0].hanging_indent) == "9pt"
+    assert [level.format for level in example.list.ordered.levels] == ["decimal"]
+    assert [level.marker for level in example.list.unordered.levels] == ["•"]
 
 
 def test_list_policy_accepts_semantic_formats_markers_and_paragraph_styles():
@@ -245,10 +241,11 @@ def test_load_example_template():
     assert template.sections.cover is not None
     assert template.sections.cover.page_number.format == "none"
     assert template.sections.front_matter is not None
-    assert template.sections.front_matter.page_number.format == "roman-lower"
+    assert template.sections.front_matter.page_number.format == "roman-upper"
     assert template.sections.front_matter.page_number.restart == 1
     assert template.sections.main is not None
-    assert template.sections.main.header.text == "XX大学本科毕业论文"
+    assert template.sections.main.header.default is not None
+    assert template.sections.main.header.default.text == "XX大学本科毕业论文"
     assert template.sections.main.footer.enabled is True
     assert template.sections.main.page_number.format == "decimal"
     assert template.sections.main.page_number.restart == 1

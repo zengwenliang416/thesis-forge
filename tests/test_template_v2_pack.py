@@ -402,7 +402,7 @@ def test_migrate_school_template_with_sections(tmp_path: Path) -> None:
     assert not report.lint_report.has_errors
     sections = report.lint_report and v2.load_package(out).resolved_data["sections"]
     assert sections["cover"]["page_number"] == {"display": False}  # format: none → display
-    assert sections["front_matter"]["page_number"]["format"] == "roman-lower"
+    assert sections["front_matter"]["page_number"]["format"] == "roman-upper"
     manual_fields = {e.field for e in report.entries if e.status == MANUAL_REQUIRED}
     assert any(f.startswith("sections.") and "footer" in f for f in manual_fields)
 

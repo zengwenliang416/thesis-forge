@@ -3,6 +3,7 @@ from __future__ import annotations
 from docx.document import Document as DocumentObject
 from docx.oxml import OxmlElement
 from docx.oxml.ns import qn
+from docx.shared import Pt
 from docx.table import Table
 
 from thesis_forge.core.render_plan import TableInstruction
@@ -127,8 +128,11 @@ def render_table(
             strict=True,
         ):
             cell.text = cell_instruction.text
-            if cell_instruction.alignment is not None:
-                cell.paragraphs[0].alignment = ALIGNMENTS[cell_instruction.alignment]
+            paragraph = cell.paragraphs[0]
+            paragraph.alignment = ALIGNMENTS[cell_instruction.alignment or "center"]
+            paragraph.paragraph_format.left_indent = Pt(0)
+            paragraph.paragraph_format.right_indent = Pt(0)
+            paragraph.paragraph_format.first_line_indent = Pt(0)
 
     _apply_border_policy(table, table_spec)
     if position == "bottom":
