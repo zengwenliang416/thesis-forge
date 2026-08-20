@@ -24,6 +24,16 @@ class Text(Inline):
 
 
 @dataclass(slots=True)
+class Strong(Inline):
+    value: str = ""
+
+
+@dataclass(slots=True)
+class CodeSpan(Inline):
+    value: str = ""
+
+
+@dataclass(slots=True)
 class CrossReference(Inline):
     target: str = ""
 

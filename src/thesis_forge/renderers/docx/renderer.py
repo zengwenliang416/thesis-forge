@@ -19,12 +19,14 @@ from thesis_forge.core.render_plan import (
     InlineRun,
     ListingInstruction,
     ListInstruction,
+    PageBreakInstruction,
     ParagraphInstruction,
     ParagraphRole,
     RenderNode,
     RenderPlan,
     SectionBreakInstruction,
     TableInstruction,
+    TextRun,
     TocInstruction,
 )
 from thesis_forge.templates.model import ListSpec, ThesisTemplate
@@ -68,7 +70,7 @@ def _add_runs(
     render_inline_runs(
         runs,
         InlineHandlers(
-            text=lambda item: paragraph.add_run(item.text),
+            text=lambda item: _add_text_run(paragraph, item),
             reference=lambda item: add_reference_field(paragraph, item),
             citation=lambda item: paragraph._p.append(
                 citation_run_element(
@@ -82,10 +84,31 @@ def _add_runs(
     )
 
 
+def _add_text_run(paragraph, item: TextRun) -> None:
+    run = paragraph.add_run(item.text)
+    if item.bold:
+        run.bold = True
+    if item.code:
+        properties = run._r.get_or_add_rPr()
+        fonts = properties.get_or_add_rFonts()
+        for theme_name in ("asciiTheme", "hAnsiTheme", "eastAsiaTheme", "cstheme"):
+            fonts.attrib.pop(qn(f"w:{theme_name}"), None)
+        fonts.set(qn("w:ascii"), "Courier New")
+        fonts.set(qn("w:hAnsi"), "Courier New")
+        fonts.set(qn("w:eastAsia"), "Courier New")
+        properties.append(OxmlElement("w:noProof"))
+
+
 def _add_preformatted_paragraph(document: DocumentObject, text: str):
     paragraph = document.add_paragraph(text)
     paragraph.alignment = WD_ALIGN_PARAGRAPH.LEFT
     paragraph.paragraph_format.line_spacing_rule = WD_LINE_SPACING.SINGLE
+    properties = paragraph._p.get_or_add_pPr()
+    indentation = properties.find(qn("w:ind"))
+    if indentation is None:
+        indentation = OxmlElement("w:ind")
+        properties.append(indentation)
+    indentation.set(qn("w:firstLine"), "0")
     return paragraph
 
 
@@ -218,6 +241,8 @@ def _render_typed(
         style = _semantic_word_style(document, template, "bibliography.entry")
         for entry in instruction.entries:
             document.add_paragraph(entry.text, style=style)
+    elif isinstance(instruction, PageBreakInstruction):
+        document.add_page_break()
     elif isinstance(instruction, TocInstruction):
         style = _semantic_word_style(
             document,

@@ -45,6 +45,7 @@ from thesis_forge.core.render_plan import (
     HeadingInstruction,
     ListingInstruction,
     ListInstruction,
+    PageBreakInstruction,
     ParagraphInstruction,
     ReferenceRun,
     SectionBreakInstruction,
@@ -441,12 +442,14 @@ def test_compile_document_emits_toc_and_explicit_section_transitions():
         SectionBreakInstruction,
         HeadingInstruction,
         ParagraphInstruction,
+        PageBreakInstruction,
         TocInstruction,
         SectionBreakInstruction,
         HeadingInstruction,
     ]
     assert plan.nodes[0] == SectionBreakInstruction(role="front_matter")
-    assert plan.nodes[3] == TocInstruction(
+    assert plan.nodes[3] == PageBreakInstruction()
+    assert plan.nodes[4] == TocInstruction(
         min_level=1,
         max_level=3,
         entries=(
@@ -462,7 +465,7 @@ def test_compile_document_emits_toc_and_explicit_section_transitions():
             ),
         ),
     )
-    assert plan.nodes[4] == SectionBreakInstruction(role="main")
+    assert plan.nodes[5] == SectionBreakInstruction(role="main")
 
 
 def test_compile_document_transitions_directly_from_cover_to_main():

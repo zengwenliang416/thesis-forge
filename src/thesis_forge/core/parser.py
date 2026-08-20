@@ -11,6 +11,7 @@ from .model import (
     BibliographyBlock,
     BibliographyConfig,
     Citation,
+    CodeSpan,
     CrossReference,
     Equation,
     Figure,
@@ -23,6 +24,7 @@ from .model import (
     ListItem,
     Paragraph,
     SourceLocation,
+    Strong,
     Table,
     Text,
     ThesisDocument,
@@ -38,7 +40,9 @@ KV_RE = re.compile(r'^([A-Za-z_][A-Za-z0-9_-]*):\s*"?(.+?)"?\s*$')
 LIST_ITEM_RE = re.compile(r"^(?P<indent>[ \t]*)(?P<marker>[-+*]|\d+[.)])\s+(?P<text>.+?)\s*$")
 FOOTNOTE_DEFINITION_RE = re.compile(r"^\[\^(?P<label>[A-Za-z0-9_.:-]+)\]:\s*(?P<text>.*)$")
 INLINE_TOKEN_RE = re.compile(
-    r"(?P<footnote>\[\^(?P<footnote_label>[A-Za-z0-9_.:-]+)\])"
+    r"(?P<code>`(?P<code_text>[^`\n]+)`)"
+    r"|(?P<strong>\*\*(?P<strong_text>[^*\n]+)\*\*)"
+    r"|(?P<footnote>\[\^(?P<footnote_label>[A-Za-z0-9_.:-]+)\])"
     r"|(?P<citation>\[(?P<citation_body>[^\]]*@[^\]]+)\])"
     r"|(?P<crossref>(?<!\[)@(?P<ref_prefix>fig|tbl|eq|alg|lst|sec|chap):"
     r"(?P<ref_name>[A-Za-z0-9_.:-]+))"
@@ -99,7 +103,11 @@ def _parse_inline_content(
             )
 
         location = _location_for_offset(text, match.start(), start_line, start_column)
-        if match.group("footnote"):
+        if match.group("code"):
+            inlines.append(CodeSpan(value=match.group("code_text"), location=location))
+        elif match.group("strong"):
+            inlines.append(Strong(value=match.group("strong_text"), location=location))
+        elif match.group("footnote"):
             inlines.append(FootnoteReference(label=match.group("footnote_label"), location=location))
         elif match.group("citation"):
             body = match.group("citation_body")

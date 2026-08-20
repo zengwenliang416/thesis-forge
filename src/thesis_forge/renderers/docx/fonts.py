@@ -49,6 +49,8 @@ def apply_font(
         return
     r_pr = font._element.get_or_add_rPr()
     r_fonts = r_pr.get_or_add_rFonts()
+    for theme_name in ("asciiTheme", "hAnsiTheme", "eastAsiaTheme", "cstheme"):
+        r_fonts.attrib.pop(qn(f"w:{theme_name}"), None)
     r_fonts.set(qn("w:ascii"), spec.latin)
     r_fonts.set(qn("w:hAnsi"), spec.latin)
     r_fonts.set(qn("w:eastAsia"), spec.east_asia)

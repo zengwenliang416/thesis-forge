@@ -49,6 +49,7 @@ from mdit_py_plugins.footnote import footnote_plugin
 
 from .model import (
     Citation,
+    CodeSpan,
     CrossReference,
     FootnoteDefinition,
     FootnoteReference,
@@ -58,6 +59,7 @@ from .model import (
     ListItem,
     Paragraph,
     SourceLocation,
+    Strong,
     Text,
     ThesisDocument,
 )
@@ -84,13 +86,24 @@ _HEADING_ID_RE = re.compile(r"^(.+?)(?:\s+\{#([^}]+)\})?\s*$")
 # 容器头 info 中的 {#id}（validate 已保证其位于行尾）
 _CONTAINER_ID_RE = re.compile(r"\{#([^}]+)\}")
 # 三条自研 inline rule 的匹配式，与 legacy INLINE_TOKEN_RE 各分支逐一对应
+_CODE_AT_RE = re.compile(r"`(?P<text>[^`\n]+)`")
+_STRONG_AT_RE = re.compile(r"\*\*(?P<text>[^*\n]+)\*\*")
 _CITATION_AT_RE = re.compile(r"\[[^\]]*@[^\]]+\]")
 _CROSSREF_AT_RE = re.compile(r"@(?P<prefix>fig|tbl|eq|alg|lst|sec|chap):(?P<name>[A-Za-z0-9_.:-]+)")
 _FOOTNOTE_REF_AT_RE = re.compile(r"\[\^(?P<label>[A-Za-z0-9_.:-]+)\]")
 
 # inline children 中允许出现的 token 类型；其余一律触发 legacy 重扫兜底
 _SUPPORTED_INLINE_TOKENS = frozenset(
-    {"text", "softbreak", "hardbreak", "citation", "crossref", "footnote_ref"}
+    {
+        "text",
+        "softbreak",
+        "hardbreak",
+        "code_span",
+        "strong",
+        "citation",
+        "crossref",
+        "footnote_ref",
+    }
 )
 
 # legacy 不支持的 CommonMark 块级结构：禁用后按段落原文降级（与 legacy 一致）
@@ -133,6 +146,38 @@ def _footnote_ref_rule(state: StateInline, silent: bool) -> bool:
             "label": match.group("label"),
             "offset": start,
             "length": match.end() - start,
+        }
+    state.pos = match.end()
+    return True
+
+
+def _strong_rule(state: StateInline, silent: bool) -> bool:
+    start = state.pos
+    match = _STRONG_AT_RE.match(state.src, start)
+    if match is None:
+        return False
+    if not silent:
+        token = state.push("strong", "", 0)
+        token.meta = {
+            "offset": start,
+            "length": match.end() - start,
+            "text": match.group("text"),
+        }
+    state.pos = match.end()
+    return True
+
+
+def _code_span_rule(state: StateInline, silent: bool) -> bool:
+    start = state.pos
+    match = _CODE_AT_RE.match(state.src, start)
+    if match is None:
+        return False
+    if not silent:
+        token = state.push("code_span", "", 0)
+        token.meta = {
+            "offset": start,
+            "length": match.end() - start,
+            "text": match.group("text"),
         }
     state.pos = match.end()
     return True
@@ -196,7 +241,9 @@ def _build_markdown_it() -> MarkdownIt:
     md.block.ruler.disable(list(_DISABLED_BLOCK_RULES))
     md.inline.ruler.disable(list(_DISABLED_INLINE_RULES))
     md.inline.ruler.at("footnote_ref", _footnote_ref_rule)
-    md.inline.ruler.after("footnote_ref", "citation", _citation_rule)
+    md.inline.ruler.after("footnote_ref", "code_span", _code_span_rule)
+    md.inline.ruler.after("code_span", "strong", _strong_rule)
+    md.inline.ruler.after("strong", "citation", _citation_rule)
     md.inline.ruler.after("citation", "crossref", _crossref_rule)
     return md
 
@@ -545,7 +592,13 @@ class MarkdownItParserBackend:
             offset = child.meta["offset"]
             emit_text(offset)
             location = _location_for_offset(text, offset, start_line, start_column)
-            if child.type == "citation":
+            if child.type == "code_span":
+                inlines.append(CodeSpan(value=child.meta["text"], location=location))
+                cursor = offset + child.meta["length"]
+            elif child.type == "strong":
+                inlines.append(Strong(value=child.meta["text"], location=location))
+                cursor = offset + child.meta["length"]
+            elif child.type == "citation":
                 raw = child.meta["raw"]
                 body = raw[1:-1]
                 keys = CITATION_KEY_RE.findall(body)

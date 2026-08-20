@@ -2243,7 +2243,7 @@ def test_docx_renderer_creates_real_math_fields_footnotes_and_page_structures(
         for node in _xml_part(output, part).xpath(".//w:instrText", namespaces=NS)
     ]
     assert "PAGE" in footer_field_codes
-    assert "NUMPAGES" in footer_field_codes
+    assert "SECTIONPAGES" in footer_field_codes
 
 
 def test_docx_renderer_omits_page_fields_when_page_number_format_is_none(
@@ -2527,7 +2527,7 @@ def test_docx_renderer_writes_page_geometry_and_all_header_footer_variants(
     )
     assert even_footer.xpath(".//w:instrText/text()", namespaces=NS) == [
         "PAGE",
-        "NUMPAGES",
+        "SECTIONPAGES",
     ]
     assert even_footer.xpath(".//w:pPr/w:jc/@w:val", namespaces=NS) == ["left"]
     assert "".join(even_footer.xpath(".//w:t/text()", namespaces=NS)) == "p1|n1"

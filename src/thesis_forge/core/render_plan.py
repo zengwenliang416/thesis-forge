@@ -37,6 +37,8 @@ class _Instruction:
 @dataclass(frozen=True, slots=True)
 class TextRun:
     text: str
+    bold: bool = False
+    code: bool = False
 
 
 @dataclass(frozen=True, slots=True)
@@ -453,6 +455,15 @@ class TocInstruction(_Instruction):
 
 
 @dataclass(frozen=True, slots=True)
+class PageBreakInstruction(_Instruction):
+    kind: ClassVar[str] = "page_break"
+
+    @property
+    def payload(self) -> dict[str, Any]:
+        return {}
+
+
+@dataclass(frozen=True, slots=True)
 class SectionBreakInstruction(_Instruction):
     kind: ClassVar[str] = "section_break"
     role: Literal["cover", "front_matter", "main"]
@@ -475,6 +486,7 @@ RenderInstruction: TypeAlias = (
     | BibliographyInstruction
     | CoverInstruction
     | TocInstruction
+    | PageBreakInstruction
     | SectionBreakInstruction
 )
 

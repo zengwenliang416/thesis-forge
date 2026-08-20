@@ -183,6 +183,20 @@ info string（如 ```` ```python ````）；两者都缺失时 `Listing.language`
 
 ## Citation
 
+## Inline Strong
+
+`**text**` is parsed as a strong inline span and rendered as a real bold run in
+DOCX output. The markers are not emitted into the generated document.
+
+Italic text, links, and inline images remain outside the current supported
+syntax and are preserved as literal paragraph text.
+
+## Inline Code
+
+Single-backtick spans such as `` `tenant_id` `` are parsed as inline code.
+DOCX output removes the backtick markers, uses a monospace font, and marks the
+run as `noProof` so Word/WPS does not apply spelling checks to identifiers.
+
 ```markdown
 已有研究提出该方法 [@smith2025]。
 多文献：[@smith2025; @wang2024]

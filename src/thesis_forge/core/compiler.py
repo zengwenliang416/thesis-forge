@@ -17,6 +17,7 @@ from .model import (
     BibliographyBlock,
     Block,
     Citation,
+    CodeSpan,
     CrossReference,
     Equation,
     Figure,
@@ -27,6 +28,7 @@ from .model import (
     ListBlock,
     Listing,
     Paragraph,
+    Strong,
     Table,
     Text,
     ThesisDocument,
@@ -47,6 +49,7 @@ from .render_plan import (
     ListingInstruction,
     ListInstruction,
     ListItemInstruction,
+    PageBreakInstruction,
     ParagraphInstruction,
     ParagraphRole,
     ReferenceRun,
@@ -407,6 +410,10 @@ def _compile_inlines(
     for inline in inlines:
         if isinstance(inline, Text):
             runs.append(TextRun(inline.value))
+        elif isinstance(inline, CodeSpan):
+            runs.append(TextRun(inline.value, code=True))
+        elif isinstance(inline, Strong):
+            runs.append(TextRun(inline.value, bold=True))
         elif isinstance(inline, CrossReference):
             target = resolved.get(inline.target)
             if target is None or target.bookmark is None:
@@ -546,7 +553,7 @@ class _SectionPlanner:
             return ()
 
         self.main_started = True
-        instructions: list[RenderInstruction] = [TocInstruction()]
+        instructions: list[RenderInstruction] = [PageBreakInstruction(), TocInstruction()]
         if self.sections.main is not None:
             instructions.append(SectionBreakInstruction(role="main"))
         return tuple(instructions)

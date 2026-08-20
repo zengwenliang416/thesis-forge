@@ -16,8 +16,20 @@ from .fields import reference_field_runs
 from .inlines import InlineHandlers, citation_run_element, render_inline_runs
 
 
-def _text_run(text: str):
+def _text_run(text: str, *, bold: bool = False, code: bool = False):
     run = OxmlElement("w:r")
+    if bold or code:
+        properties = OxmlElement("w:rPr")
+        if bold:
+            properties.append(OxmlElement("w:b"))
+        if code:
+            fonts = OxmlElement("w:rFonts")
+            fonts.set(qn("w:ascii"), "Courier New")
+            fonts.set(qn("w:hAnsi"), "Courier New")
+            fonts.set(qn("w:eastAsia"), "Courier New")
+            properties.append(fonts)
+            properties.append(OxmlElement("w:noProof"))
+        run.append(properties)
     value = OxmlElement("w:t")
     if text.startswith(" ") or text.endswith(" "):
         value.set("{http://www.w3.org/XML/1998/namespace}space", "preserve")
@@ -91,7 +103,9 @@ class FootnoteManager:
         render_inline_runs(
             definition.inlines,
             InlineHandlers(
-                text=lambda item: paragraph.append(_text_run(item.text)),
+                text=lambda item: paragraph.append(
+                    _text_run(item.text, bold=item.bold, code=item.code)
+                ),
                 reference=lambda item: paragraph.extend(reference_field_runs(item)),
                 citation=lambda item: paragraph.append(
                     citation_run_element(

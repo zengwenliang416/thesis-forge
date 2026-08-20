@@ -100,6 +100,8 @@ def _apply_paragraph_border(
 def _add_page_number(
     paragraph,
     display: PageNumberDisplaySpec,
+    *,
+    number_format: str,
 ) -> None:
     add_complex_field(
         paragraph,
@@ -110,9 +112,14 @@ def _add_page_number(
     )
     if display.include_total:
         paragraph.add_run(display.separator)
+        total_instruction = "SECTIONPAGES"
+        if number_format == "roman-upper":
+            total_instruction += r" \* ROMAN"
+        elif number_format == "roman-lower":
+            total_instruction += r" \* roman"
         add_complex_field(
             paragraph,
-            "NUMPAGES",
+            total_instruction,
             result="1",
             prefix=display.total_prefix,
             suffix=display.total_suffix,
@@ -198,7 +205,11 @@ def _configure_variant(
     if display is not None:
         if variant.text:
             paragraph.add_run(" ")
-        _add_page_number(paragraph, display)
+        _add_page_number(
+            paragraph,
+            display,
+            number_format=section_spec.page_number.format,
+        )
     if variant.style is not None:
         apply_paragraph_style(
             paragraph,

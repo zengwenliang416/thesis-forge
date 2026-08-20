@@ -13,6 +13,7 @@ from thesis_forge.core.model import (
     Algorithm,
     BibliographyBlock,
     Citation,
+    CodeSpan,
     CrossReference,
     Equation,
     Figure,
@@ -22,6 +23,7 @@ from thesis_forge.core.model import (
     ListBlock,
     Listing,
     Paragraph,
+    Strong,
     Table,
     Text,
 )
@@ -467,19 +469,31 @@ def test_contract_unknown_container_silently_degrades_to_paragraph():
 
 
 def test_contract_unsupported_constructs_degrade_to_paragraph():
-    """SPEC「Markdown 基础结构（V1 支持集）」：粗体/斜体/链接/行内图片
-    不支持，静默降级为段落文本，inline 序列仅含 Text。"""
+    """SPEC「Markdown 基础结构（V1 支持集）」：斜体/链接/行内图片不支持，
+    静默降级为段落文本；粗体保留语义并由渲染器输出真实粗体。"""
     doc = parse("这是 **粗体**、*斜体*、[链接](https://example.com) 与 ![图片](./a.png) 的段落。\n")
 
     assert [type(block) for block in doc.blocks] == [Paragraph]
     paragraph = doc.blocks[0]
     assert isinstance(paragraph, Paragraph)
-    assert "**粗体**" in paragraph.text
+    assert "粗体" in paragraph.text
     assert "[链接](https://example.com)" in paragraph.text
     assert "![图片](./a.png)" in paragraph.text
-    assert all(isinstance(inline, Text) for inline in paragraph.inlines)
+    assert any(isinstance(inline, Strong) and inline.value == "粗体" for inline in paragraph.inlines)
     assert doc.citations == []
     assert doc.cross_references == []
+
+
+def test_contract_inline_code_preserves_semantics_without_markers():
+    doc = parse("字段组合为 `tenant_id / env / app_id`。\n")
+
+    paragraph = doc.blocks[0]
+    assert isinstance(paragraph, Paragraph)
+    assert any(
+        isinstance(inline, CodeSpan)
+        and inline.value == "tenant_id / env / app_id"
+        for inline in paragraph.inlines
+    )
 
 
 def test_contract_top_level_fenced_code_degrades_to_paragraph():

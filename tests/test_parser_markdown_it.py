@@ -214,8 +214,8 @@ def test_front_matter_errors_match_legacy(text: str) -> None:
     [
         # 未知 ::: 容器静默降级为段落原文
         "::: unknown {#x}\n内容\n:::\n",
-        # 粗体/斜体/链接/行内图片降级为段落文本
-        "这是 **粗体**、*斜体*、[链接](https://example.com) 与 ![图片](./a.png) 的段落。\n",
+        # 斜体/链接/行内图片降级为段落文本
+        "这是 *斜体*、[链接](https://example.com) 与 ![图片](./a.png) 的段落。\n",
         # 顶层围栏代码块降级为段落
         "```python\ndef f():\n    return 1\n```\n",
         # 引用块降级为段落原文
