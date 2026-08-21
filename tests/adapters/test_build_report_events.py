@@ -318,3 +318,60 @@ def test_failure_logs_are_truncated_after_path_sanitization(tmp_path: Path) -> N
     _events, report = _completed_report(dispatcher, request)
 
     assert len(report["logs"][0]["message"]) == 4000
+
+
+def test_project_stream_failure_emits_one_canonical_completed_report(
+    tmp_path: Path,
+) -> None:
+    project_root = (tmp_path / "project").resolve()
+    project_root.mkdir()
+    source = project_root / "thesis.md"
+    source.write_text("# 绪论\n", encoding="utf-8")
+    manifest = project_root / "thesisforge.yaml"
+    manifest.write_text("schema: thesisforge.project.v2\n", encoding="utf-8")
+    output = project_root / "build" / "thesis.docx"
+
+    class ProjectService:
+        def build(self, request, *, on_progress=None, should_cancel=None):
+            on_progress(BuildStage.PARSE)
+            raise application.ApplicationStageError(
+                BuildStage.RENDER,
+                RuntimeError("project renderer exploded"),
+            )
+
+    dispatcher = WorkbenchCommandDispatcher(
+        runtime=DesktopRuntime(),
+        project_service=ProjectService(),
+    )
+    request = {
+        "protocol": PROTOCOL_VERSION,
+        "requestId": "project-failure-1",
+        "operation": "build",
+        "payload": {
+            "project": {
+                "id": "report-fixture",
+                "root": str(project_root),
+                "manifestPath": str(manifest),
+            },
+            "source": {
+                "kind": "desktop",
+                "path": str(source),
+                "fileName": source.name,
+            },
+            "text": "# 未保存\n",
+            "output": {
+                "kind": "desktop",
+                "path": str(output),
+                "fileName": output.name,
+            },
+        },
+    }
+
+    events: list[dict] = []
+    dispatcher.stream_build(request, events.append)
+
+    assert [event["type"] for event in events] == ["progress", "completed"]
+    report = events[-1]["report"]
+    assert report["outcome"] == "failed"
+    assert report["failedStage"] == "render"
+    assert all(event["type"] != "error" for event in events)

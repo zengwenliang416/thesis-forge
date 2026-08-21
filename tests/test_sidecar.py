@@ -12,8 +12,12 @@ from thesis_forge.adapters import (
     WorkbenchCommandDispatcher,
     stream_json_lines,
 )
-from thesis_forge.adapters.sidecar import _configure_standard_streams
+from thesis_forge.adapters.sidecar import (
+    _configure_standard_streams,
+    create_dispatcher,
+)
 from thesis_forge.application import BuildResult, BuildStage
+from thesis_forge.application.contracts import ProjectRequestIntent
 
 
 def test_sidecar_forces_utf8_standard_streams(monkeypatch):
@@ -257,3 +261,64 @@ def test_sidecar_build_event_exposes_only_the_strict_preview_descriptor(
         "fileName": "thesis.preview.pdf",
     }
     assert str(tmp_path) not in json.dumps(event)
+
+
+def test_sidecar_project_request_preserves_identity_and_cancellation(
+    tmp_path: Path,
+) -> None:
+    project_root = (tmp_path / "project").resolve()
+    project_root.mkdir()
+    source = project_root / "thesis.md"
+    source.write_text("# 绪论\n", encoding="utf-8")
+    manifest = project_root / "thesisforge.yaml"
+    manifest.write_text("schema: thesisforge.project.v2\n", encoding="utf-8")
+    output = project_root / "build" / "thesis.docx"
+    observed = []
+
+    class ProjectService:
+        def build(self, request, *, on_progress=None, should_cancel=None):
+            observed.append(request)
+            on_progress(BuildStage.PARSE)
+            assert should_cancel is not None and should_cancel()
+            raise application.BuildCanceledError(BuildStage.VALIDATE)
+
+    dispatcher = create_dispatcher()
+    dispatcher._project_service = ProjectService()
+    request = {
+        "protocol": PROTOCOL_VERSION,
+        "requestId": "sidecar-project-cancel-1",
+        "operation": "build",
+        "payload": {
+            "project": {
+                "id": "sidecar-fixture",
+                "root": str(project_root),
+                "manifestPath": str(manifest),
+            },
+            "source": {
+                "kind": "desktop",
+                "path": str(source),
+                "fileName": source.name,
+            },
+            "text": "# 未保存\n",
+            "output": {
+                "kind": "desktop",
+                "path": str(output),
+                "fileName": output.name,
+            },
+        },
+    }
+
+    events = list(
+        stream_json_lines(
+            dispatcher,
+            json.dumps(request),
+            should_cancel=lambda: True,
+        )
+    )
+    report = json.loads(events[-1])["report"]
+
+    assert observed[0].project.project_id == "sidecar-fixture"
+    assert observed[0].intent is ProjectRequestIntent.BUILD
+    assert observed[0].editor_snapshot == "# 未保存\n"
+    assert json.loads(events[-1])["type"] == "completed"
+    assert report["outcome"] == "canceled"

@@ -7,12 +7,22 @@ import sys
 from collections.abc import Callable
 from pathlib import Path
 
+from thesis_forge.application.services import ProjectApplicationService
+
 from .runtime import (
     DesktopRuntime,
     WorkbenchCommandDispatcher,
     desktop_final_preview_build_service,
     iter_build_events,
 )
+
+
+def create_dispatcher() -> WorkbenchCommandDispatcher:
+    return WorkbenchCommandDispatcher(
+        runtime=DesktopRuntime(),
+        build=desktop_final_preview_build_service,
+        project_service=ProjectApplicationService(),
+    )
 
 
 def _configure_standard_streams() -> None:
@@ -75,10 +85,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--once", action="store_true")
     parser.add_argument("--stream", action="store_true")
     args = parser.parse_args(argv)
-    dispatcher = WorkbenchCommandDispatcher(
-        runtime=DesktopRuntime(),
-        build=desktop_final_preview_build_service,
-    )
+    dispatcher = create_dispatcher()
     if args.stream:
         cancel_file = os.environ.get("THESISFORGE_CANCEL_FILE")
         should_cancel = (
