@@ -5,6 +5,7 @@ import sys
 from pathlib import Path
 from types import SimpleNamespace
 
+from thesis_forge import application
 from thesis_forge.adapters import (
     PROTOCOL_VERSION,
     DesktopRuntime,
@@ -100,9 +101,10 @@ def test_sidecar_build_stream_passes_per_request_cancellation(tmp_path: Path):
     output = tmp_path / "thesis.docx"
     observed: list[bool] = []
 
-    def build(_source, _output, *, should_cancel=None, **_kwargs):
+    def build(_source, _output, *, on_progress=None, should_cancel=None, **_kwargs):
+        on_progress(BuildStage.PARSE)
         observed.append(should_cancel())
-        raise RuntimeError("stop")
+        raise application.BuildCanceledError(BuildStage.VALIDATE)
 
     dispatcher = WorkbenchCommandDispatcher(
         runtime=DesktopRuntime(),
@@ -135,7 +137,74 @@ def test_sidecar_build_stream_passes_per_request_cancellation(tmp_path: Path):
     )
 
     assert observed == [True]
-    assert json.loads(events[-1])["type"] == "error"
+    report = json.loads(events[-1])["report"]
+    assert json.loads(events[-1])["type"] == "completed"
+    statuses = {stage["name"]: stage["status"] for stage in report["stages"]}
+    assert statuses == {
+        "parse": "succeeded",
+        "validate": "skipped",
+        "compile": "skipped",
+        "render": "skipped",
+        "finalize": "skipped",
+        "postflight": "skipped",
+        "preview": "skipped",
+    }
+
+
+def test_sidecar_renderer_failure_preserves_lifecycle_provenance(tmp_path: Path):
+    source = tmp_path / "thesis.md"
+    source.write_text("# 绪论\n", encoding="utf-8")
+    output = tmp_path / "thesis.docx"
+
+    def build(_source, _output, *, on_progress=None, **_kwargs):
+        for stage in (
+            BuildStage.PARSE,
+            BuildStage.VALIDATE,
+            BuildStage.COMPILE,
+            BuildStage.RENDER,
+        ):
+            on_progress(stage)
+        raise application.ApplicationStageError(
+            BuildStage.RENDER,
+            RuntimeError("renderer exploded"),
+        )
+
+    dispatcher = WorkbenchCommandDispatcher(
+        runtime=DesktopRuntime(),
+        build=build,
+    )
+    request = {
+        "protocol": PROTOCOL_VERSION,
+        "requestId": "sidecar-render-failure-1",
+        "operation": "build",
+        "payload": {
+            "source": {
+                "kind": "desktop",
+                "path": str(source),
+                "fileName": source.name,
+            },
+            "output": {
+                "kind": "desktop",
+                "path": str(output),
+                "fileName": output.name,
+            },
+        },
+    }
+
+    event = json.loads(
+        list(stream_json_lines(dispatcher, json.dumps(request)))[-1]
+    )
+    assert event["type"] == "completed"
+    statuses = {stage["name"]: stage["status"] for stage in event["report"]["stages"]}
+    assert statuses == {
+        "parse": "succeeded",
+        "validate": "succeeded",
+        "compile": "succeeded",
+        "render": "failed",
+        "finalize": "skipped",
+        "postflight": "skipped",
+        "preview": "skipped",
+    }
 
 
 def test_sidecar_build_event_exposes_only_the_strict_preview_descriptor(

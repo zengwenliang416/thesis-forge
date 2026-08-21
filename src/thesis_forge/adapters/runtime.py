@@ -38,7 +38,10 @@ from thesis_forge.application.contracts import (
     BuildReport,
     BuildReportStage,
     BuildStage,
+    BuildStageState,
+    BuildStageStatus,
 )
+from thesis_forge.application.services import BuildStageLifecycle
 from thesis_forge.core.model import Heading
 from thesis_forge.presentation.preview import map_preview_result
 from thesis_forge.templates import default_template_search_roots, resolve_template
@@ -163,6 +166,7 @@ def _transport_build_report(
     build_id: str,
     intent: BuildIntent,
     stage: BuildReportStage,
+    stages: tuple[BuildStageState, ...],
     logs: tuple[BuildLogEntry, ...],
 ) -> BuildReport:
     item = BuildDiagnostic(
@@ -179,10 +183,7 @@ def _transport_build_report(
         build_id=build_id,
         intent=intent,
         outcome=BuildOutcome.FAILED,
-        stages=BuildReport.default_stages(
-            failed_stage=stage,
-            outcome=BuildOutcome.FAILED,
-        ),
+        stages=stages,
         failed_stage=stage,
         primary_diagnostic_id=item.id,
         diagnostics=(item,),
@@ -197,6 +198,7 @@ def _failed_build_report(
     build_id: str,
     intent: BuildIntent,
     progressed: list[BuildStage],
+    lifecycle: BuildStageLifecycle,
     source_file: str | None,
 ) -> BuildReport:
     stage = _build_report_stage(error, progressed)
@@ -206,9 +208,16 @@ def _failed_build_report(
         if isinstance(error, BuildCanceledError)
         else BuildOutcome.FAILED
     )
-    stages = BuildReport.default_stages(
-        failed_stage=stage,
-        outcome=outcome,
+    report_stage = BuildReportStage(stage.value)
+    target_index = tuple(BuildReportStage).index(report_stage)
+    for upstream in tuple(BuildReportStage)[:target_index]:
+        if lifecycle.state(upstream).status is BuildStageStatus.RUNNING:
+            lifecycle.succeed(upstream)
+    if lifecycle.state(report_stage).status is BuildStageStatus.PENDING:
+        lifecycle.start(report_stage)
+    stages = lifecycle.terminalize(
+        report_stage,
+        canceled=outcome is BuildOutcome.CANCELED,
     )
     if isinstance(error, BuildValidationError):
         return BuildReport.from_validation_error(
@@ -241,6 +250,7 @@ def _failed_build_report(
         build_id=build_id,
         intent=intent,
         stage=stage,
+        stages=stages,
         logs=logs,
     )
 
@@ -788,8 +798,15 @@ class WorkbenchCommandDispatcher:
         intent = BuildIntent.PUBLISH
         source_file: str | None = None
         progressed: list[BuildStage] = []
+        lifecycle = BuildStageLifecycle()
+        active_stage: BuildStage | None = None
 
         def progress(stage) -> None:
+            nonlocal active_stage
+            if active_stage is not None:
+                lifecycle.succeed(active_stage)
+            lifecycle.start(stage)
+            active_stage = stage
             progressed.append(stage)
             emit(
                 {
@@ -838,6 +855,7 @@ class WorkbenchCommandDispatcher:
                 build_id=build_id,
                 intent=intent,
                 progressed=progressed,
+                lifecycle=lifecycle,
                 source_file=source_file,
             )
             emit(
