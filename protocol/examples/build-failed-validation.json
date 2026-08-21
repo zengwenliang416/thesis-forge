@@ -1,0 +1,49 @@
+{
+  "schemaVersion": "thesisforge.build-report.v2",
+  "buildId": "build-0002",
+  "intent": "publish",
+  "outcome": "failed",
+  "startedAt": "2026-08-20T10:05:00Z",
+  "completedAt": "2026-08-20T10:05:01Z",
+  "stages": [
+    {"name": "parse", "status": "succeeded", "startedAt": null, "completedAt": null},
+    {"name": "validate", "status": "failed", "startedAt": null, "completedAt": null},
+    {"name": "compile", "status": "skipped", "startedAt": null, "completedAt": null},
+    {"name": "render", "status": "skipped", "startedAt": null, "completedAt": null},
+    {"name": "finalize", "status": "skipped", "startedAt": null, "completedAt": null},
+    {"name": "postflight", "status": "skipped", "startedAt": null, "completedAt": null},
+    {"name": "preview", "status": "skipped", "startedAt": null, "completedAt": null}
+  ],
+  "failedStage": "validate",
+  "primaryDiagnosticId": "diag-asset-1",
+  "diagnostics": [
+    {
+      "id": "diag-asset-1",
+      "severity": "error",
+      "category": "resource",
+      "code": "TF-RESOURCE-IMAGE-001",
+      "stage": "validate",
+      "message": "Figure image does not exist.",
+      "source": {
+        "file": "thesis.md",
+        "startLine": 14,
+        "startColumn": 1,
+        "endLine": 14,
+        "endColumn": 52
+      },
+      "target": "assets/missing.png",
+      "suggestion": "Add the image below the project assets directory or correct the relative path.",
+      "relatedLocations": [],
+      "details": {"figureId": "fig:model"}
+    }
+  ],
+  "logs": [
+    {"sequence": 0, "stage": "validate", "level": "error", "message": "Validation failed with 1 error."}
+  ],
+  "output": {
+    "docxPath": "build/thesis.docx",
+    "pdfPath": "build/thesis.pdf",
+    "previewStale": true,
+    "successfulBuildId": "build-0001"
+  }
+}

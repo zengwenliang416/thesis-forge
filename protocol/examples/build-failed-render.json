@@ -1,0 +1,49 @@
+{
+  "schemaVersion": "thesisforge.build-report.v2",
+  "buildId": "build-0003",
+  "intent": "live-preview",
+  "outcome": "failed",
+  "startedAt": "2026-08-20T10:10:00Z",
+  "completedAt": "2026-08-20T10:10:02Z",
+  "stages": [
+    {"name": "parse", "status": "succeeded", "startedAt": null, "completedAt": null},
+    {"name": "validate", "status": "succeeded", "startedAt": null, "completedAt": null},
+    {"name": "compile", "status": "succeeded", "startedAt": null, "completedAt": null},
+    {"name": "render", "status": "failed", "startedAt": null, "completedAt": null},
+    {"name": "finalize", "status": "skipped", "startedAt": null, "completedAt": null},
+    {"name": "postflight", "status": "skipped", "startedAt": null, "completedAt": null},
+    {"name": "preview", "status": "skipped", "startedAt": null, "completedAt": null}
+  ],
+  "failedStage": "render",
+  "primaryDiagnosticId": "diag-render-1",
+  "diagnostics": [
+    {
+      "id": "diag-render-1",
+      "severity": "error",
+      "category": "docx",
+      "code": "TF-DOCX-RENDER-001",
+      "stage": "render",
+      "message": "The DOCX renderer failed while writing a figure.",
+      "source": {
+        "file": "thesis.md",
+        "startLine": 14,
+        "startColumn": 1,
+        "endLine": 14,
+        "endColumn": 52
+      },
+      "target": "fig:model",
+      "suggestion": "Open raw logs and report this internal rendering defect.",
+      "relatedLocations": [],
+      "details": {"instruction": "FigureInstruction"}
+    }
+  ],
+  "logs": [
+    {"sequence": 0, "stage": "render", "level": "error", "message": "Figure rendering failed; sensitive local paths were removed."}
+  ],
+  "output": {
+    "docxPath": "build/thesis.docx",
+    "pdfPath": "build/thesis.pdf",
+    "previewStale": true,
+    "successfulBuildId": "build-0001"
+  }
+}

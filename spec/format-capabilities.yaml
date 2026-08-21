@@ -1,0 +1,284 @@
+schema: thesisforge.format-capabilities.v1
+policy:
+  unknown: error
+  silent_degradation: forbidden
+  legacy_input: rejected
+  required_stages:
+    - source
+    - ir
+    - validation
+    - render_plan
+    - review
+    - docx
+    - evidence
+
+capabilities:
+  project.manifest:
+    source: thesisforge.yaml
+    ir: LoadedProject
+    validation: ProjectManifestV2 and path-boundary validation
+    render_plan: project context, not a visible instruction
+    review: project metadata is projected without configuration syntax
+    docx: metadata/template/resources drive compilation
+    evidence: tests/project/test_manifest_loader.py
+
+  project.legacy_rejection:
+    source: bare Markdown, YAML Front Matter, legacy thesis containers and legacy references
+    ir: no document is produced
+    validation: TF-SOURCE-LEGACY-* diagnostic
+    render_plan: not reached
+    review: explicit unsupported-source problem
+    docx: not produced
+    evidence: tests/core/test_legacy_source_rejection.py
+
+  metadata.cover:
+    source: thesisforge.yaml metadata
+    ir: typed project metadata
+    validation: template-required metadata rules
+    render_plan: CoverInstruction
+    review: readable cover information
+    docx: native cover layout and styles
+    evidence: tests/presentation/test_review_regions.py
+
+  block.heading:
+    source: ATX heading with optional stable ID
+    ir: Heading
+    validation: hierarchy, ID and semantic region validation
+    render_plan: HeadingInstruction
+    review: heading text only
+    docx: Word heading style/bookmark/numbering
+    evidence: tests/core/test_markdown_v2_blocks.py
+
+  block.paragraph:
+    source: Markdown paragraph
+    ir: Paragraph with typed inlines
+    validation: inline and source-span validation
+    render_plan: ParagraphInstruction
+    review: rich paragraph
+    docx: native paragraph/runs
+    evidence: tests/core/test_markdown_v2_blocks.py
+
+  inline.soft_break:
+    source: ordinary source newline within a paragraph
+    ir: SoftBreak
+    validation: valid inline
+    render_plan: SoftBreakRun
+    review: normalized readable spacing
+    docx: no manual w:br
+    evidence: tests/core/test_markdown_v2_inlines.py
+
+  inline.hard_break:
+    source: explicit Markdown hard break
+    ir: HardBreak
+    validation: valid inline
+    render_plan: HardBreakRun
+    review: visible line break
+    docx: native manual break
+    evidence: tests/core/test_markdown_v2_inlines.py
+
+  inline.strong:
+    source: "**text**"
+    ir: Strong(children)
+    validation: recursive inline validation
+    render_plan: styled inline runs
+    review: bold content
+    docx: w:b run property
+    evidence: tests/core/test_markdown_v2_inlines.py
+
+  inline.emphasis:
+    source: "*text*"
+    ir: Emphasis(children)
+    validation: recursive inline validation
+    render_plan: styled inline runs
+    review: emphasized content
+    docx: w:i run property
+    evidence: tests/core/test_markdown_v2_inlines.py
+
+  inline.code:
+    source: Markdown inline code
+    ir: InlineCode
+    validation: literal content
+    render_plan: InlineCodeRun
+    review: code styling; marker scanning exempt inside literal content
+    docx: configured code character style
+    evidence: tests/core/test_markdown_v2_inlines.py
+
+  inline.link:
+    source: standard Markdown link whose target is not a semantic ID
+    ir: Link
+    validation: safe link policy
+    render_plan: HyperlinkRun
+    review: clickable link
+    docx: hyperlink relationship
+    evidence: tests/core/test_markdown_v2_inlines.py
+
+  inline.math:
+    source: inline math syntax selected by the v2 grammar
+    ir: InlineMath
+    validation: math preflight
+    render_plan: MathRun
+    review: rendered KaTeX with readable fallback
+    docx: editable OMML
+    evidence: tests/core/test_math_preflight.py
+
+  semantic.citation:
+    source: "[@key; @key2, locator]"
+    ir: Citation
+    validation: bibliography key and locator validation
+    render_plan: CitationRun
+    review: formatted citation without raw key
+    docx: formatted native text/runs according to citation provider
+    evidence: tests/core/test_markdown_v2_semantic_inlines.py
+
+  semantic.cross_reference:
+    source: readable Markdown link to a semantic ID
+    ir: CrossReference
+    validation: target existence and target-type validation
+    render_plan: ReferenceRun
+    review: resolved label/number without raw target
+    docx: bookmark plus REF or PAGEREF field
+    evidence: tests/core/test_symbol_table.py
+
+  semantic.footnote:
+    source: Markdown footnote reference and definition
+    ir: FootnoteReference and FootnoteDefinition
+    validation: graph integrity and duplicate/missing rules
+    render_plan: FootnoteReferenceRun and FootnoteDefinitionInstruction
+    review: footnote number and readable definition
+    docx: native footnotes.xml and references
+    evidence: tests/core/test_footnote_integrity_v2.py
+
+  block.list:
+    source: ordered/unordered nested Markdown lists
+    ir: OrderedList, BulletList and ListItem
+    validation: recursive list structure
+    render_plan: ListInstruction
+    review: semantic HTML/list projection
+    docx: native numbering definitions and paragraphs
+    evidence: tests/core/test_markdown_v2_blocks.py
+
+  block.blockquote:
+    source: Markdown blockquote
+    ir: BlockQuote
+    validation: nested block validation
+    render_plan: BlockQuoteInstruction
+    review: quoted block
+    docx: configured quote paragraph style
+    evidence: tests/core/test_markdown_v2_blocks.py
+
+  block.code:
+    source: ordinary fenced code block
+    ir: CodeBlock
+    validation: literal content
+    render_plan: CodeBlockInstruction
+    review: preformatted literal code
+    docx: configured code paragraph style
+    evidence: tests/core/test_markdown_v2_blocks.py
+
+  object.figure:
+    source: standard Markdown image plus fig ID
+    ir: Figure with typed caption
+    validation: ID, asset, image probe and object override validation
+    render_plan: FigureInstruction
+    review: resolved label, image handle and rich caption without local path
+    docx: image relationship, native caption, SEQ and bookmark
+    evidence: tests/renderers/docx/test_figure_rich_caption.py
+
+  object.table:
+    source: GFM table plus caption and tbl ID
+    ir: StructuredTable with typed cells
+    validation: shape, alignment, ID and content validation
+    render_plan: TableInstruction
+    review: accessible structured table and resolved caption
+    docx: native Word table, caption, SEQ and bookmark
+    evidence: tests/renderers/docx/test_structured_table.py
+
+  object.equation:
+    source: display math plus optional eq ID
+    ir: Equation
+    validation: ID and math preflight
+    render_plan: EquationInstruction
+    review: rendered formula and resolved number
+    docx: editable OMML, sequence and bookmark
+    evidence: tests/renderers/docx/test_math_corpus_v2.py
+
+  object.listing:
+    source: listing fence with ID/title attributes
+    ir: Listing with typed caption and literal code
+    validation: ID/title/language validation
+    render_plan: ListingInstruction
+    review: caption and preformatted code
+    docx: configured style, sequence and bookmark
+    evidence: tests/renderers/docx/test_listing_algorithm.py
+
+  object.algorithm:
+    source: algorithm fence with ID/title attributes
+    ir: Algorithm with typed caption/content
+    validation: ID/title/body validation
+    render_plan: AlgorithmInstruction
+    review: readable algorithm block
+    docx: configured style, sequence and bookmark
+    evidence: tests/renderers/docx/test_listing_algorithm.py
+
+  region.toc:
+    source: one v2-selected placement mechanism from manifest or source grammar
+    ir: semantic TOC region
+    validation: duplicate and placement validation
+    render_plan: TocInstruction
+    review: readable resolved contents summary/list
+    docx: native TOC field and section policy
+    evidence: tests/core/test_region_resolver.py
+
+  region.bibliography:
+    source: bibliography semantic heading/region plus manifest bibliography
+    ir: bibliography region
+    validation: bibliography resource and citation closure
+    render_plan: BibliographyInstruction
+    review: formatted bibliography entries
+    docx: title, section and styled entries
+    evidence: tests/core/test_bibliography_region.py
+
+  region.sections:
+    source: semantic regions and template policy
+    ir: resolved regions
+    validation: legal region order and required regions
+    render_plan: SectionBreakInstruction and style tokens
+    review: reader-facing boundaries without technical section data
+    docx: sections, page numbers, headers and footers
+    evidence: tests/core/test_region_resolver.py
+
+  word.fields:
+    source: resolved numbering/reference/TOC semantics
+    ir: symbol and reference model
+    validation: target and bookmark preflight
+    render_plan: typed field intent
+    review: resolved cached reader text
+    docx: TOC, SEQ, REF, PAGEREF, PAGE and NUMPAGES fields
+    evidence: tests/renderers/docx/test_fields_v2.py
+
+  build.report:
+    source: every manual or live-preview build attempt
+    ir: BuildReport
+    validation: protocol and lifecycle invariants
+    render_plan: not applicable to document content
+    review: Build Output shows diagnostics and logs
+    docx: report references usable/stale artifacts
+    evidence: tests/application/test_build_report_contract.py
+
+  review.projection:
+    source: resolved typed document/render instructions
+    ir: ReviewDocument
+    validation: marker-leak and handler coverage contracts
+    render_plan: consumes typed instructions without reparsing Markdown
+    review: clean readable output with source navigation metadata
+    docx: independent of DOCX but semantically consistent
+    evidence: tests/contracts/test_review_marker_leaks.py
+
+  docx.postflight:
+    source: generated DOCX package
+    ir: postflight report/diagnostics
+    validation: OPC, relationships, fields, bookmarks, styles, numbering, OMML, footnotes and sections
+    render_plan: validates renderer result
+    review: Build Output shows structural failure
+    docx: invalid output never replaces prior successful artifact
+    evidence: tests/renderers/docx/test_package_semantics_v2.py
