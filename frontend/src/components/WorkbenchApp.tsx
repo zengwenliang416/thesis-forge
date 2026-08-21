@@ -440,6 +440,12 @@ export function WorkbenchApp({
           }
           terminal = true;
           const report = event.report;
+          dispatch({
+            type: "livePreviewDiagnosticsLoaded",
+            requestKey,
+            revision,
+            diagnostics: presentBuildReportDiagnostics(report.diagnostics),
+          });
           if (report.outcome === "succeeded") {
             const descriptor = report.output?.finalPreview ?? null;
             dispatch({
@@ -474,7 +480,15 @@ export function WorkbenchApp({
                         : "实时预览 PDF 读取失败。",
                   });
                 }
-              });
+            });
+            return;
+          }
+          if (report.outcome === "canceled") {
+            dispatch({
+              type: "livePreviewCanceled",
+              requestKey,
+              revision,
+            });
             return;
           }
           if (!controller.signal.aborted) {

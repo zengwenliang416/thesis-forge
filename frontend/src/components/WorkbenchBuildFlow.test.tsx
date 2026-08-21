@@ -1,6 +1,11 @@
 import { act, fireEvent, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { createInitialWorkspaceState } from "../state/workspace";
+import {
+  createInitialWorkspaceState,
+  reduceWorkspaceState,
+  type WorkspaceState,
+} from "../state/workspace";
+import { presentBuildReportDiagnostics } from "../state/diagnostics";
 import type { WorkbenchTransport } from "../transport/WorkbenchTransport";
 import { PROTOCOL_VERSION, type CommandEnvelope } from "../transport/dto";
 import type { BuildEvent, BuildReport } from "../transport/buildEvents";
@@ -57,6 +62,7 @@ function completedEvent(
   requestId: string,
   output: BuildReport["output"],
   intent: BuildReport["intent"] = "publish",
+  overrides: Partial<BuildReport> = {},
 ): BuildEvent {
   return {
     protocol: PROTOCOL_VERSION,
@@ -73,6 +79,7 @@ function completedEvent(
       diagnostics: [],
       logs: [],
       output,
+      ...overrides,
     },
   };
 }
@@ -258,6 +265,229 @@ describe("Workbench build flow", () => {
     expect(await screen.findByText(/选择新的 WPS PDF 失败/)).toBeVisible();
     expect(screen.getByTitle("最终版式 PDF")).toBeVisible();
     expect(screen.getByText("WPS 对照稿")).toBeVisible();
+  });
+
+  it("stores live-preview diagnostics and marks the previous PDF stale on failure", () => {
+    let state: WorkspaceState = {
+      ...initialState(),
+      finalPreview: {
+        status: "ready",
+        descriptor: {
+          engine: "libreoffice",
+          label: "LibreOffice PDF",
+          fileName: "previous.preview.pdf",
+        },
+        bytes: new Uint8Array([37, 80, 68, 70, 45]),
+        message: null,
+        revision: 0,
+        requestKey: null,
+      },
+    };
+    const requestKey = "live-preview:1:0";
+    const diagnostics = presentBuildReportDiagnostics([
+      {
+        id: "diag-live-1",
+        severity: "error",
+        category: "docx",
+        code: "TF-DOCX-RENDER-001",
+        stage: "render",
+        message: "Figure rendering failed.",
+        source: {
+          file: "thesis.md",
+          startLine: 12,
+          startColumn: 1,
+          endLine: 12,
+          endColumn: 20,
+        },
+        target: "fig:model",
+        suggestion: null,
+        relatedLocations: [],
+        details: { retryable: false, note: null, attempts: 2 },
+      },
+    ]);
+
+    state = reduceWorkspaceState(state, {
+      type: "livePreviewStarted",
+      requestKey,
+      revision: 0,
+    });
+    state = reduceWorkspaceState(state, {
+      type: "livePreviewDiagnosticsLoaded",
+      requestKey,
+      revision: 0,
+      diagnostics,
+    });
+    state = reduceWorkspaceState(state, {
+      type: "livePreviewFailed",
+      requestKey,
+      revision: 0,
+      message: "Figure rendering failed.",
+    });
+
+    expect(state.diagnostics[0]).toMatchObject({
+      code: "TF-DOCX-RENDER-001",
+      line: 12,
+      target: "fig:model",
+      details: { retryable: false, note: null, attempts: 2 },
+    });
+    expect(state.finalPreview.status).toBe("stale");
+    expect(state.finalPreview.bytes).not.toBeNull();
+    expect(state.finalPreview.requestKey).toBeNull();
+  });
+
+  it("ends a canceled live-preview without leaving it building", () => {
+    let state: WorkspaceState = {
+      ...initialState(),
+      finalPreview: {
+        status: "ready",
+        descriptor: {
+          engine: "libreoffice",
+          label: "LibreOffice PDF",
+          fileName: "previous.preview.pdf",
+        },
+        bytes: new Uint8Array([37, 80, 68, 70, 45]),
+        message: null,
+        revision: 0,
+        requestKey: null,
+      },
+    };
+    const requestKey = "live-preview:2:0";
+
+    state = reduceWorkspaceState(state, {
+      type: "livePreviewStarted",
+      requestKey,
+      revision: 0,
+    });
+    state = reduceWorkspaceState(state, {
+      type: "livePreviewCanceled",
+      requestKey,
+      revision: 0,
+    });
+
+    expect(state.finalPreview.status).toBe("stale");
+    expect(state.finalPreview.bytes).not.toBeNull();
+    expect(state.finalPreview.requestKey).toBeNull();
+  });
+
+  it("shows live-preview report diagnostics and keeps the prior PDF stale", async () => {
+    const user = userEvent.setup();
+    const emptyPreview = {
+      status: "unavailable" as const,
+      descriptor: null,
+      bytes: null,
+      message: null,
+      revision: 0,
+      requestKey: null,
+    };
+    render(
+      <WorkbenchApp
+        transport={transport(
+          async (request, onEvent) => {
+            onEvent(
+              completedEvent(
+                request.requestId,
+                {
+                  docxPath: null,
+                  pdfPath: null,
+                  previewStale: true,
+                  successfulBuildId: "previous-build",
+                },
+                "live-preview",
+                {
+                  outcome: "failed",
+                  failedStage: "render",
+                  primaryDiagnosticId: "diag-live-1",
+                  diagnostics: [
+                    {
+                      id: "diag-live-1",
+                      severity: "error",
+                      category: "docx",
+                      code: "TF-DOCX-RENDER-001",
+                      stage: "render",
+                      message: "Figure rendering failed.",
+                      source: {
+                        file: "thesis.md",
+                        startLine: 12,
+                        startColumn: 1,
+                        endLine: 12,
+                        endColumn: 20,
+                      },
+                      target: "fig:model",
+                      suggestion: null,
+                      relatedLocations: [],
+                      details: { retryable: false, note: null, attempts: 2 },
+                    },
+                  ],
+                },
+              ),
+            );
+          },
+          {
+            prepareLivePreviewOutput: async () => ({
+              kind: "desktop",
+              path: "/tmp/live-failure.docx",
+              fileName: "live-failure.docx",
+            }),
+            discardLivePreviewOutput: async () => undefined,
+          },
+        )}
+        initialState={{ ...initialState(), finalPreview: emptyPreview }}
+      />,
+    );
+
+    await user.click(
+      screen.getByRole("button", { name: "立即刷新预览" }),
+    );
+
+    expect(await screen.findByText("Figure rendering failed.")).toBeVisible();
+    expect(screen.getByText("最终预览加载失败")).toBeVisible();
+    expect(screen.getByRole("region", { name: "诊断结果" })).toHaveTextContent(
+      "fig:model",
+    );
+  });
+
+  it("ends a canceled live-preview report and keeps the prior PDF stale", async () => {
+    const user = userEvent.setup();
+    const emptyPreview = {
+      status: "unavailable" as const,
+      descriptor: null,
+      bytes: null,
+      message: null,
+      revision: 0,
+      requestKey: null,
+    };
+    render(
+      <WorkbenchApp
+        transport={transport(
+          async (request, onEvent) => {
+            onEvent(
+              completedEvent(
+                request.requestId,
+                null,
+                "live-preview",
+                { outcome: "canceled" },
+              ),
+            );
+          },
+          {
+            prepareLivePreviewOutput: async () => ({
+              kind: "desktop",
+              path: "/tmp/live-canceled.docx",
+              fileName: "live-canceled.docx",
+            }),
+            discardLivePreviewOutput: async () => undefined,
+          },
+        )}
+        initialState={{ ...initialState(), finalPreview: emptyPreview }}
+      />,
+    );
+
+    await user.click(
+      screen.getByRole("button", { name: "立即刷新预览" }),
+    );
+
+    expect(await screen.findByText("实时预览已取消。")).toBeVisible();
+    expect(screen.getByText("自动 PDF 不可用")).toBeVisible();
   });
 
   it("debounces editor snapshots into disposable live PDF builds", async () => {

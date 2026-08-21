@@ -157,10 +157,21 @@ export type WorkspaceEvent =
       revision: number;
     }
   | {
+      type: "livePreviewDiagnosticsLoaded";
+      requestKey: string;
+      revision: number;
+      diagnostics: DiagnosticPresentation[];
+    }
+  | {
       type: "livePreviewBuildSucceeded";
       requestKey: string;
       revision: number;
       descriptor: FinalPreviewDescriptor | null;
+    }
+  | {
+      type: "livePreviewCanceled";
+      requestKey: string;
+      revision: number;
     }
   | {
       type: "livePreviewFailed";
@@ -498,6 +509,18 @@ export function reduceWorkspaceState(
           requestKey: event.requestKey,
         },
       };
+    case "livePreviewDiagnosticsLoaded":
+      if (
+        state.finalPreview.requestKey !== event.requestKey ||
+        event.revision !== state.contentRevision
+      ) {
+        return state;
+      }
+      return {
+        ...state,
+        diagnostics: event.diagnostics,
+        activeDiagnosticId: null,
+      };
     case "livePreviewBuildSucceeded":
       if (
         state.finalPreview.requestKey !== event.requestKey ||
@@ -536,6 +559,29 @@ export function reduceWorkspaceState(
           revision: event.revision,
           requestKey: event.requestKey,
         },
+      };
+    case "livePreviewCanceled":
+      if (
+        state.finalPreview.requestKey !== event.requestKey ||
+        event.revision !== state.contentRevision
+      ) {
+        return state;
+      }
+      return {
+        ...state,
+        finalPreview: state.finalPreview.bytes
+          ? {
+              ...state.finalPreview,
+              status: "stale",
+              message: "实时预览已取消，仍显示上一版预览。",
+              requestKey: null,
+            }
+          : {
+              ...state.finalPreview,
+              status: "unavailable",
+              message: "实时预览已取消。",
+              requestKey: null,
+            },
       };
     case "livePreviewFailed":
       if (
