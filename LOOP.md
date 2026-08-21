@@ -95,15 +95,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Open
 
-- [V2-211B] Add the Tauri project transport implementation
-  - Parent: ordered child 2/2 of `V2-211`; depends on `V2-211A`.
-  - Files: `frontend/src/transport/tauri.ts`, `frontend/src/transport/WorkbenchTransport.project.test.ts`, `frontend/src/transport/transports.test.ts`
-  - Behavior: Tauri transport invokes `pick_project` and validates the same typed project identity/source snapshot response.
-  - Verify: `pnpm --dir frontend test -- WorkbenchTransport.project.test.ts transports.test.ts`
-  - Acceptance: Tauri and Web share the project contract and reject malformed project picker responses.
-  - Verification-surface change: authorized; extends shared frontend project transport regression tests.
-  - Attempts: 0
-
 - [V2-212] Track ProjectIdentity in workspace state
   - Files: `frontend/src/state/workspace.ts`, `frontend/src/state/workspace.project.test.ts`
   - Behavior: workspace state tracks project root, manifest, active source and display identity.
@@ -121,6 +112,16 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
   - Attempts: 0
 
 ## Done
+
+- [V2-211B] Add the Tauri project transport implementation
+  - Parent: ordered child 2/2 of `V2-211`; depends on `V2-211A`.
+  - Files: `frontend/src/transport/tauri.ts`, `frontend/src/transport/WorkbenchTransport.project.test.ts`, `frontend/src/transport/transports.test.ts`
+  - Behavior: Tauri transport invokes `pick_project` and validates the same typed project identity/source snapshot response.
+  - Verify: `pnpm --dir frontend test -- WorkbenchTransport.project.test.ts transports.test.ts`
+  - Acceptance: Tauri and Web share the project contract and reject malformed project picker responses.
+  - Verification-surface change: authorized; extends shared frontend project transport regression tests.
+  - Attempts: 1
+  - Attempt 1 (2026-08-21): exact Verify passed 61 focused tests (46 project + 15 transports) with the full suite green (14 files, 179 tests); typecheck, lint and git diff --check passed. Independent Checker probes (5 groups, 18 malformed cases) confirmed exactly one arg-less pick_project invoke, lossless identity/source/text preservation, null-on-cancel, strict rejection of non-object/missing/empty/extra-keyed/unknown-kind/coercible responses, Web/Tauri cross-transport contract equality, and unchanged pick_source openSource behavior.
 
 - [V2-211A] Add the typed project transport contract and Web implementation
   - Parent: ordered child 1/2 of `V2-211`; depends on `V2-210`.
@@ -563,5 +564,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 - 2026-08-21 - V2-209 Checker PASS; exact Verify passed 17 DTO/HTTP tests, strict project reader and HTTP smoke/Ruff passed, and no push.
 - 2026-08-21 - V2-210 Checker PASS; exact Verify passed 6 Tauri project tests, fmt/protocol regression passed, cross-platform path boundaries and command registration passed, and no push.
 - 2026-08-21 - V2-211A Checker PASS; exact Verify passed 33 project transport tests with full suite green (165 tests), typecheck/lint/diff-check passed, 12 independent probes confirmed identity preservation and strict rejection; no push.
+- 2026-08-21 - V2-211B Checker PASS; exact Verify passed 61 focused tests with full suite green (179 tests), typecheck/lint/diff-check passed, independent probes confirmed single pick_project invoke, lossless typed validation, cross-transport contract and unchanged openSource; no push.
 
 ## Sync log

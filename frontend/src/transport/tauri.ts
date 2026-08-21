@@ -6,7 +6,12 @@ import {
   type SourceRef,
 } from "./dto";
 import { assertBuildEvent, type BuildEvent } from "./buildEvents";
-import type { OpenedSource, WorkbenchTransport } from "./WorkbenchTransport";
+import {
+  readOpenedProject,
+  type OpenedProject,
+  type OpenedSource,
+  type WorkbenchTransport,
+} from "./WorkbenchTransport";
 import {
   readFinalPreviewDescriptor,
   readPdfBytes,
@@ -56,6 +61,18 @@ export class TauriWorkbenchTransport implements WorkbenchTransport {
       throw new Error("无效的 Tauri source picker 响应");
     }
     return result as OpenedSource;
+  }
+
+  async openProject(): Promise<OpenedProject | null> {
+    const result = await this.invoke("pick_project");
+    if (result === null) {
+      return null;
+    }
+    try {
+      return readOpenedProject(result);
+    } catch {
+      throw new Error("无效的 Tauri project picker 响应");
+    }
   }
 
   async dispatch(request: CommandEnvelope) {

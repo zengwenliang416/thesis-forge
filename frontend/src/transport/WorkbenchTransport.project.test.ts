@@ -5,6 +5,7 @@ import {
   type OpenProjectInput,
   type ProjectIdentityRef,
 } from "./WorkbenchTransport";
+import { TauriWorkbenchTransport } from "./tauri";
 import { WebWorkbenchTransport } from "./web";
 
 const project: ProjectIdentityRef = {
@@ -299,6 +300,185 @@ describe("WebWorkbenchTransport.openProject", () => {
     await expect(transport.openProject(input)).rejects.toThrow(
       "打开 Web 项目工作区失败",
     );
+  });
+});
+
+describe("TauriWorkbenchTransport.openProject", () => {
+  const desktopSource = {
+    kind: "desktop" as const,
+    path: "/workspace/thesis/thesis.md",
+    fileName: "thesis.md",
+  };
+
+  const pickerBody = {
+    project,
+    source: desktopSource,
+    text: sourceText,
+  };
+
+  it("invokes exactly the pick_project command and returns the typed project", async () => {
+    const calls: Array<{ command: string; args?: Record<string, unknown> }> = [];
+    const transport = new TauriWorkbenchTransport(async (command, args) => {
+      calls.push({ command, args });
+      return pickerBody;
+    });
+
+    const opened = await transport.openProject();
+
+    expect(calls).toEqual([{ command: "pick_project", args: undefined }]);
+    expect(opened).toEqual({
+      project: {
+        id: "project-1",
+        root: "/workspace/thesis",
+        manifestPath: "/workspace/thesis/thesisforge.yaml",
+      },
+      source: {
+        kind: "desktop",
+        path: "/workspace/thesis/thesis.md",
+        fileName: "thesis.md",
+      },
+      text: sourceText,
+    });
+  });
+
+  it("returns null when the picker resolves null", async () => {
+    const transport = new TauriWorkbenchTransport(async () => null);
+
+    await expect(transport.openProject()).resolves.toBeNull();
+  });
+
+  it("rejects a non-object picker response", async () => {
+    const transport = new TauriWorkbenchTransport(async () => "project-1");
+
+    await expect(transport.openProject()).rejects.toThrow(
+      "无效的 Tauri project picker 响应",
+    );
+  });
+
+  it("rejects a picker response without the project identity", async () => {
+    const transport = new TauriWorkbenchTransport(async () => ({
+      source: desktopSource,
+      text: sourceText,
+    }));
+
+    await expect(transport.openProject()).rejects.toThrow(
+      "无效的 Tauri project picker 响应",
+    );
+  });
+
+  it("rejects a picker response with an empty project id", async () => {
+    const transport = new TauriWorkbenchTransport(async () => ({
+      ...pickerBody,
+      project: { ...project, id: "" },
+    }));
+
+    await expect(transport.openProject()).rejects.toThrow(
+      "无效的 Tauri project picker 响应",
+    );
+  });
+
+  it("rejects a picker response with an empty project root", async () => {
+    const transport = new TauriWorkbenchTransport(async () => ({
+      ...pickerBody,
+      project: { ...project, root: "" },
+    }));
+
+    await expect(transport.openProject()).rejects.toThrow(
+      "无效的 Tauri project picker 响应",
+    );
+  });
+
+  it("rejects a picker response with an empty project manifestPath", async () => {
+    const transport = new TauriWorkbenchTransport(async () => ({
+      ...pickerBody,
+      project: { ...project, manifestPath: "" },
+    }));
+
+    await expect(transport.openProject()).rejects.toThrow(
+      "无效的 Tauri project picker 响应",
+    );
+  });
+
+  it("rejects a picker response with an extra project key", async () => {
+    const transport = new TauriWorkbenchTransport(async () => ({
+      ...pickerBody,
+      project: { ...project, school: "example-university" },
+    }));
+
+    await expect(transport.openProject()).rejects.toThrow(
+      "无效的 Tauri project picker 响应",
+    );
+  });
+
+  it("rejects a picker response without a source", async () => {
+    const transport = new TauriWorkbenchTransport(async () => ({
+      project,
+      text: sourceText,
+    }));
+
+    await expect(transport.openProject()).rejects.toThrow(
+      "无效的 Tauri project picker 响应",
+    );
+  });
+
+  it("rejects a picker response with an unknown source kind", async () => {
+    const transport = new TauriWorkbenchTransport(async () => ({
+      ...pickerBody,
+      source: { kind: "web-mirror", mirrorId: "mirror-1", fileName: "thesis.md" },
+    }));
+
+    await expect(transport.openProject()).rejects.toThrow(
+      "无效的 Tauri project picker 响应",
+    );
+  });
+
+  it("rejects a picker response without text", async () => {
+    const transport = new TauriWorkbenchTransport(async () => ({
+      project,
+      source: desktopSource,
+    }));
+
+    await expect(transport.openProject()).rejects.toThrow(
+      "无效的 Tauri project picker 响应",
+    );
+  });
+
+  it("rejects a picker response with a non-string text", async () => {
+    const transport = new TauriWorkbenchTransport(async () => ({
+      ...pickerBody,
+      text: null,
+    }));
+
+    await expect(transport.openProject()).rejects.toThrow(
+      "无效的 Tauri project picker 响应",
+    );
+  });
+
+  it("shares one project contract with the Web transport", async () => {
+    const sharedBody = {
+      project,
+      source: {
+        kind: "web-workspace" as const,
+        workspaceId: "a".repeat(32),
+        fileName: "thesis.md",
+      },
+      text: sourceText,
+    };
+    const tauri = new TauriWorkbenchTransport(async () => sharedBody);
+    const web = new WebWorkbenchTransport({
+      fetch: async () =>
+        jsonResponse({
+          protocol: PROTOCOL_VERSION,
+          ok: true,
+          ...sharedBody,
+        }),
+    });
+
+    const fromTauri = await tauri.openProject();
+    const fromWeb = await web.openProject(input);
+
+    expect(fromTauri).toEqual(sharedBody);
+    expect(fromWeb).toEqual(fromTauri);
   });
 });
 

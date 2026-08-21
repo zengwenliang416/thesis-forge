@@ -128,6 +128,41 @@ describe("runtime transports", () => {
     expect(calls).toEqual(["pick_source"]);
   });
 
+  it("returns the typed project identity and source snapshot through one Tauri command", async () => {
+    const calls: Array<{ command: string; args?: Record<string, unknown> }> = [];
+    const transport = new TauriWorkbenchTransport(async (command, args) => {
+      calls.push({ command, args });
+      return {
+        project: {
+          id: "project-1",
+          root: "/Users/test/thesis",
+          manifestPath: "/Users/test/thesis/thesisforge.yaml",
+        },
+        source: {
+          kind: "desktop",
+          path: "/Users/test/thesis/thesis.md",
+          fileName: "thesis.md",
+        },
+        text: "# 绪论\n",
+      };
+    });
+
+    await expect(transport.openProject()).resolves.toEqual({
+      project: {
+        id: "project-1",
+        root: "/Users/test/thesis",
+        manifestPath: "/Users/test/thesis/thesisforge.yaml",
+      },
+      source: {
+        kind: "desktop",
+        path: "/Users/test/thesis/thesis.md",
+        fileName: "thesis.md",
+      },
+      text: "# 绪论\n",
+    });
+    expect(calls).toEqual([{ command: "pick_project", args: undefined }]);
+  });
+
   it("resolves a Web preview from its opaque workspace descriptor", async () => {
     const calls: string[] = [];
     const transport = new WebWorkbenchTransport({
