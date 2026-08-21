@@ -13,6 +13,7 @@ from thesis_forge.application import (
     InspectionResult,
     ValidationResult,
 )
+from thesis_forge.application.contracts import ProjectRequestIntent
 from thesis_forge.core.model import ThesisDocument, ValidationIssue
 from thesis_forge.core.validator import ValidationContext
 
@@ -1034,3 +1035,74 @@ def test_validate_and_build_do_not_mutate_persisted_source(tmp_path: Path):
     controller.build(tmp_path / "thesis.docx")
     runner.complete()
     assert source.read_bytes() == before
+
+
+def test_open_project_uses_typed_identity_and_editor_snapshots(tmp_path: Path):
+    project_root = Path(__file__).resolve().parents[1] / "tests" / "fixtures" / "v2-project"
+    source = (project_root / "thesis.md").resolve()
+    filesystem = _MemoryFileSystem({source: source.read_text(encoding="utf-8")})
+    runner = _DeferredTaskRunner()
+
+    class ProjectService:
+        def __init__(self) -> None:
+            self.requests = []
+
+        def inspect(self, request):
+            self.requests.append(request)
+            return _inspection(source)
+
+        def validate(self, request):
+            self.requests.append(request)
+            return _validation(source)
+
+        def build(self, request, **_kwargs):
+            self.requests.append(request)
+            assert request.output is not None
+            return BuildResult(request.output.path, ())
+
+    project_service = ProjectService()
+    controller = ui.WorkspaceController(
+        filesystem=filesystem,
+        task_runner=runner,
+        project_service=project_service,
+    )
+
+    controller.open_source(project_root)
+    runner.complete()
+    assert controller.state.source_path == source
+    assert controller.state.status is ui.WorkspaceStatus.POPULATED
+
+    controller.build(tmp_path / "project.docx")
+    runner.complete()
+
+    assert [request.intent for request in project_service.requests] == [
+        ProjectRequestIntent.INSPECT,
+        ProjectRequestIntent.VALIDATE,
+        ProjectRequestIntent.BUILD,
+    ]
+    assert all(
+        request.project.manifest_path == (project_root / "thesisforge.yaml").resolve()
+        for request in project_service.requests
+    )
+    assert project_service.requests[1].editor_snapshot == source.read_text(
+        encoding="utf-8"
+    )
+    assert project_service.requests[2].editor_snapshot == source.read_text(
+        encoding="utf-8"
+    )
+    assert project_service.requests[2].output.path == (tmp_path / "project.docx").resolve()
+
+    controller.edit_text("# Unsaved project\n")
+    controller.save()
+    runner.complete()
+    runner.complete()
+
+    assert [request.intent for request in project_service.requests[-2:]] == [
+        ProjectRequestIntent.INSPECT,
+        ProjectRequestIntent.VALIDATE,
+    ]
+    assert all(
+        request.editor_snapshot == "# Unsaved project\n"
+        for request in project_service.requests[-2:]
+    )
+    assert controller.save_as(tmp_path / "other.md") is None

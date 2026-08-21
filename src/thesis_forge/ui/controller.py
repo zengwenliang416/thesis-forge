@@ -5,6 +5,15 @@ from dataclasses import dataclass, replace
 from pathlib import Path
 from typing import TYPE_CHECKING
 
+from thesis_forge.application import ProjectApplicationService
+from thesis_forge.application.contracts import (
+    ProjectIdentity,
+    ProjectOutput,
+    ProjectRequest,
+    ProjectRequestIntent,
+)
+from thesis_forge.project.loader import load_project
+
 from .filesystem import LocalWorkspaceFileSystem
 from .models import (
     DiagnosticViewModel,
@@ -54,6 +63,7 @@ class _OpenedWorkspace:
     template_path: Path | None
     saved_text: str
     analysis: _WorkspaceAnalysis
+    project_identity: ProjectIdentity | None = None
 
 
 def _default_inspect(*args, **kwargs):
@@ -84,6 +94,7 @@ class WorkspaceController:
         filesystem: WorkspaceFileSystem | None = None,
         web_persistence: WebWorkspacePersistence | None = None,
         task_runner: TaskRunner | None = None,
+        project_service: ProjectApplicationService | None = None,
     ) -> None:
         self._inspect = inspect
         self._validate = validate
@@ -95,10 +106,12 @@ class WorkspaceController:
         )
         self.web_persistence = web_persistence
         self._task_runner = task_runner or SynchronousTaskRunner()
+        self._project_service = project_service or ProjectApplicationService()
         self._state = WorkspaceViewModel()
         self._listeners: list[StateListener] = []
         self._generation = 0
         self._inspection: InspectionResult | None = None
+        self._project_identity: ProjectIdentity | None = None
         self._refresh_validation = False
 
     @property
@@ -127,8 +140,13 @@ class WorkspaceController:
         source = Path(source_path)
         template = Path(template_path) if template_path is not None else None
         token = self._begin_operation(OperationKind.OPEN)
+        open_operation = (
+            self._open_desktop_project
+            if source.is_dir() or source.name == "thesisforge.yaml"
+            else self._open_desktop_workspace
+        )
         self._task_runner.submit(
-            lambda: self._open_desktop_workspace(source, template),
+            lambda: open_operation(source, template),
             on_success=lambda result: self._complete_open(token, result),
             on_error=lambda error: self._fail_operation(token, error),
         )
@@ -245,6 +263,8 @@ class WorkspaceController:
     def save_as(self, target_path: str | Path) -> OperationToken | None:
         if not self._state.actions.can_save_as:
             return None
+        if self._project_identity is not None:
+            return None
 
         target = Path(target_path)
         text = self._state.editor_text
@@ -327,6 +347,18 @@ class WorkspaceController:
         source = self._require_source()
         template = self._state.template_path
         token = self._begin_operation(OperationKind.VALIDATE)
+        if self._project_identity is not None:
+            request = ProjectRequest(
+                project=self._project_identity,
+                intent=ProjectRequestIntent.VALIDATE,
+                editor_snapshot=self._state.editor_text,
+            )
+            self._task_runner.submit(
+                lambda: self._project_service.validate(request),
+                on_success=lambda result: self._complete_validation(token, result),
+                on_error=lambda error: self._fail_operation(token, error),
+            )
+            return token
         self._task_runner.submit(
             lambda: self._validate(
                 source,
@@ -344,6 +376,23 @@ class WorkspaceController:
         template = self._state.template_path
         output = Path(output_path)
         token = self._begin_operation(OperationKind.BUILD)
+        if self._project_identity is not None:
+            request = ProjectRequest(
+                project=self._project_identity,
+                intent=ProjectRequestIntent.BUILD,
+                output=ProjectOutput(output),
+                editor_snapshot=self._state.editor_text,
+            )
+            self._task_runner.submit(
+                lambda: self._project_service.build(
+                    request,
+                    on_progress=lambda stage: self._report_progress(token, stage),
+                    should_cancel=lambda: not self._is_current(token),
+                ),
+                on_success=lambda result: self._complete_build(token, result),
+                on_error=lambda error: self._fail_operation(token, error),
+            )
+            return token
         self._task_runner.submit(
             lambda: self._build(
                 source,
@@ -422,6 +471,7 @@ class WorkspaceController:
         if self._persistence_in_progress():
             return
         self._inspection = None
+        self._project_identity = None
         self._refresh_validation = False
         self._state = WorkspaceViewModel()
         self._publish()
@@ -440,6 +490,46 @@ class WorkspaceController:
             template_path=template,
             saved_text=saved_text,
             analysis=self._analyze_workspace(source, template),
+        )
+
+    def _open_desktop_project(
+        self,
+        project_path: Path,
+        _template: Path | None,
+    ) -> _OpenedWorkspace:
+        project = load_project(project_path)
+        source = project.source_path
+        saved_text = self.filesystem.read_text(source)
+        identity = ProjectIdentity(
+            project_id=project.manifest.project.id,
+            project_root=project.project_root,
+            manifest_path=project.manifest_path,
+        )
+        inspection = self._project_service.inspect(
+            ProjectRequest(
+                project=identity,
+                intent=ProjectRequestIntent.INSPECT,
+            )
+        )
+        validation = self._project_service.validate(
+            ProjectRequest(
+                project=identity,
+                intent=ProjectRequestIntent.VALIDATE,
+                editor_snapshot=saved_text,
+            )
+        )
+        return _OpenedWorkspace(
+            source_path=source,
+            source_kind=WorkspaceSourceKind.DESKTOP,
+            source_name=source.name,
+            web_source=None,
+            template_path=None,
+            saved_text=saved_text,
+            analysis=_WorkspaceAnalysis(
+                inspection=inspection,
+                validation=validation,
+            ),
+            project_identity=identity,
         )
 
     def _analyze_workspace(
@@ -463,6 +553,7 @@ class WorkspaceController:
         if not self._is_current(token):
             return
         self._inspection = result.analysis.inspection
+        self._project_identity = result.project_identity
         self._refresh_validation = True
         self._update_state(
             status=WorkspaceStatus.POPULATED,
@@ -539,6 +630,30 @@ class WorkspaceController:
         source = self._require_source()
         template = self._state.template_path
         token = self._begin_operation(OperationKind.REFRESH)
+        if self._project_identity is not None:
+            identity = self._project_identity
+            snapshot = self._state.editor_text
+            self._task_runner.submit(
+                lambda: _WorkspaceAnalysis(
+                    inspection=self._project_service.inspect(
+                        ProjectRequest(
+                            project=identity,
+                            intent=ProjectRequestIntent.INSPECT,
+                            editor_snapshot=snapshot,
+                        )
+                    ),
+                    validation=self._project_service.validate(
+                        ProjectRequest(
+                            project=identity,
+                            intent=ProjectRequestIntent.VALIDATE,
+                            editor_snapshot=snapshot,
+                        )
+                    ),
+                ),
+                on_success=lambda result: self._complete_refresh(token, result),
+                on_error=lambda error: self._fail_operation(token, error),
+            )
+            return token
         self._task_runner.submit(
             lambda: self._analyze_workspace(source, template),
             on_success=lambda result: self._complete_refresh(token, result),
@@ -766,7 +881,7 @@ class WorkspaceController:
             return WorkspaceActions(
                 can_open=True,
                 can_edit=True,
-                can_save_as=desktop,
+                can_save_as=desktop and self._project_identity is None,
                 can_download=web_available,
                 can_validate=True,
                 can_build=True,

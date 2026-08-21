@@ -19,6 +19,7 @@ from .pdf_preview import (
 )
 from .services import (
     ApplicationDependencies,
+    ProjectApplicationService,
     build_service,
     inspect_service,
     preview_service,
@@ -39,6 +40,7 @@ __all__ = [
     "PdfPreviewArtifact",
     "PdfPreviewExporter",
     "PreviewResult",
+    "ProjectApplicationService",
     "ValidationResult",
     "build_service",
     "derived_pdf_preview_path",
