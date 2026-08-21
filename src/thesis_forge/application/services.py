@@ -97,7 +97,6 @@ class BuildStageLifecycle:
     ) -> tuple[BuildStageState, ...]:
         """Close the active boundary and make the whole snapshot terminal."""
         report_stage = self._report_stage(stage)
-        self._require_upstream_terminal(report_stage)
         current = self.state(report_stage)
         if canceled:
             if current.status not in {
@@ -108,22 +107,34 @@ class BuildStageLifecycle:
                     f"{report_stage.value} must be pending or running, "
                     f"got {current.status.value}"
                 )
-            self._set(report_stage, BuildStageStatus.SKIPPED)
         else:
             self._require_status(report_stage, BuildStageStatus.RUNNING)
-            self._set(report_stage, BuildStageStatus.FAILED)
+        pending_upstream = self._require_upstream_terminal(report_stage)
+        for upstream in pending_upstream:
+            self._set(upstream, BuildStageStatus.SKIPPED)
+        self._set(
+            report_stage,
+            BuildStageStatus.SKIPPED if canceled else BuildStageStatus.FAILED,
+        )
         self.skip_downstream(report_stage)
         return self.snapshot()
 
-    def _require_upstream_terminal(self, stage: BuildReportStage) -> None:
+    def _require_upstream_terminal(
+        self,
+        stage: BuildReportStage,
+    ) -> tuple[BuildReportStage, ...]:
         stage_index = REPORT_STAGES.index(stage)
+        pending: list[BuildReportStage] = []
         for upstream in REPORT_STAGES[:stage_index]:
             status = self.state(upstream).status
-            if status in {BuildStageStatus.PENDING, BuildStageStatus.RUNNING}:
+            if status is BuildStageStatus.RUNNING:
                 raise ValueError(
                     f"{upstream.value} must be terminal before {stage.value}, "
                     f"got {status.value}"
                 )
+            if status is BuildStageStatus.PENDING:
+                pending.append(upstream)
+        return tuple(pending)
 
     def skip_downstream(
         self,

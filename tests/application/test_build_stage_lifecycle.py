@@ -123,6 +123,47 @@ def test_terminalize_rejects_an_unfinished_upstream_stage() -> None:
         lifecycle.terminalize(BuildStage.VALIDATE, canceled=True)
 
 
+def test_terminalize_closes_unstarted_upstream_as_skipped() -> None:
+    lifecycle = BuildStageLifecycle()
+
+    snapshot = lifecycle.terminalize(BuildStage.COMPILE, canceled=True)
+
+    assert [(state.name, state.status) for state in snapshot[:3]] == [
+        (BuildReportStage.PARSE, BuildStageStatus.SKIPPED),
+        (BuildReportStage.VALIDATE, BuildStageStatus.SKIPPED),
+        (BuildReportStage.COMPILE, BuildStageStatus.SKIPPED),
+    ]
+    assert all(
+        state.status
+        not in {BuildStageStatus.PENDING, BuildStageStatus.RUNNING}
+        for state in snapshot
+    )
+
+
+def test_terminalize_rejection_does_not_mutate_state_or_history() -> None:
+    lifecycle = BuildStageLifecycle()
+
+    with pytest.raises(ValueError, match="must be running"):
+        lifecycle.terminalize(BuildStage.COMPILE)
+    assert all(
+        state.status is BuildStageStatus.PENDING
+        for state in lifecycle.snapshot()
+    )
+    assert lifecycle.history() == ()
+
+    lifecycle.start(BuildStage.PARSE)
+    with pytest.raises(ValueError, match="must be terminal before compile"):
+        lifecycle.terminalize(BuildStage.COMPILE, canceled=True)
+    assert lifecycle.state(BuildStage.PARSE).status is BuildStageStatus.RUNNING
+    assert all(
+        state.status is BuildStageStatus.PENDING
+        for state in lifecycle.snapshot()[1:]
+    )
+    assert [(state.name, state.status) for state in lifecycle.history()] == [
+        (BuildReportStage.PARSE, BuildStageStatus.RUNNING),
+    ]
+
+
 def test_invalid_transition_is_rejected() -> None:
     lifecycle = BuildStageLifecycle()
 
