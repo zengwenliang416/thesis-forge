@@ -260,25 +260,40 @@ fn build_success_authorizes_only_the_derived_preview_and_injects_an_opaque_id() 
     let event = json!({
         "protocol": PROTOCOL_VERSION,
         "requestId": "build-1",
-        "type": "success",
-        "result": {
+        "type": "completed",
+        "report": {
+            "schemaVersion": "thesisforge.build-report.v2",
+            "buildId": "build-1",
+            "intent": "publish",
+            "outcome": "succeeded",
+            "stages": [
+                {
+                    "name": "parse",
+                    "status": "succeeded"
+                }
+            ],
+            "failedStage": null,
+            "primaryDiagnosticId": null,
+            "diagnostics": [],
+            "logs": [],
             "output": {
-                "kind": "desktop",
-                "name": "thesis.docx",
+                "docxPath": output,
+                "pdfPath": preview,
+                "previewStale": false,
+                "successfulBuildId": "build-1",
                 "finalPreview": {
                     "engine": "microsoft-word",
                     "label": "Microsoft Word PDF",
                     "fileName": "thesis.preview.pdf"
                 }
             },
-            "diagnostics": []
         }
     });
     let state = PreviewAuthorizationState::default();
 
     let authorized_event = authorize_build_preview(&state, &request, &event).unwrap();
     let descriptor =
-        validate_final_preview_descriptor(&authorized_event["result"]["output"]["finalPreview"])
+        validate_final_preview_descriptor(&authorized_event["report"]["output"]["finalPreview"])
             .unwrap();
 
     assert_eq!(descriptor.engine, "microsoft-word");
@@ -290,6 +305,97 @@ fn build_success_authorizes_only_the_derived_preview_and_injects_an_opaque_id() 
         read_pdf_preview_path(&state.resolve(&descriptor).unwrap()).unwrap(),
         b"%PDF-1.7\npreview"
     );
+}
+
+#[test]
+fn completed_report_without_preview_passes_through_and_request_drift_fails() {
+    let request = json!({
+        "protocol": PROTOCOL_VERSION,
+        "requestId": "build-1",
+        "operation": "build",
+        "payload": {}
+    });
+    let event = json!({
+        "protocol": PROTOCOL_VERSION,
+        "requestId": "build-1",
+        "type": "completed",
+        "report": {
+            "schemaVersion": "thesisforge.build-report.v2",
+            "buildId": "build-1",
+            "intent": "publish",
+            "outcome": "succeeded",
+            "stages": [{ "name": "parse", "status": "succeeded" }],
+            "failedStage": null,
+            "primaryDiagnosticId": null,
+            "diagnostics": [],
+            "logs": [],
+            "output": null
+        }
+    });
+    let state = PreviewAuthorizationState::default();
+    assert_eq!(
+        authorize_build_preview(&state, &request, &event).unwrap(),
+        event
+    );
+
+    let mut drifted = event.clone();
+    drifted["requestId"] = json!("build-2");
+    assert!(authorize_build_preview(&state, &request, &drifted).is_err());
+}
+
+#[test]
+fn completed_live_preview_authorization_marks_cleanup_after_read() {
+    let directory = tempfile::tempdir().unwrap();
+    let output = directory.path().join("thesis.docx");
+    let preview = directory.path().join("thesis.preview.pdf");
+    std::fs::write(&output, b"docx").unwrap();
+    std::fs::write(&preview, b"%PDF-1.7\npreview").unwrap();
+    let request = json!({
+        "protocol": PROTOCOL_VERSION,
+        "requestId": "live-1",
+        "operation": "build",
+        "payload": {
+            "intent": "live-preview",
+            "output": {
+                "kind": "desktop",
+                "path": output,
+                "fileName": "thesis.docx"
+            }
+        }
+    });
+    let event = json!({
+        "protocol": PROTOCOL_VERSION,
+        "requestId": "live-1",
+        "type": "completed",
+        "report": {
+            "schemaVersion": "thesisforge.build-report.v2",
+            "buildId": "build-live-1",
+            "intent": "live-preview",
+            "outcome": "succeeded",
+            "stages": [{ "name": "preview", "status": "succeeded" }],
+            "failedStage": null,
+            "primaryDiagnosticId": null,
+            "diagnostics": [],
+            "logs": [],
+            "output": {
+                "docxPath": "thesis.docx",
+                "pdfPath": "thesis.preview.pdf",
+                "previewStale": false,
+                "successfulBuildId": "build-live-1",
+                "finalPreview": {
+                    "engine": "libreoffice",
+                    "label": "LibreOffice PDF",
+                    "fileName": "thesis.preview.pdf"
+                }
+            }
+        }
+    });
+    let state = PreviewAuthorizationState::default();
+    let authorized = authorize_build_preview(&state, &request, &event).unwrap();
+    let descriptor =
+        validate_final_preview_descriptor(&authorized["report"]["output"]["finalPreview"]).unwrap();
+    let (_, cleanup_after_read) = state.resolve_with_cleanup(&descriptor).unwrap();
+    assert!(cleanup_after_read);
 }
 
 #[test]
@@ -322,8 +428,37 @@ fn a_new_failed_or_canceled_build_revokes_the_previous_derived_authorization() {
     prepare_build_preview_authorization(&state, &request).unwrap();
     assert!(state.resolve(&descriptor).is_err());
 
-    for event_type in ["error", "canceled"] {
-        let event = json!({ "type": event_type });
+    for outcome in ["failed", "canceled"] {
+        let event = json!({
+            "protocol": PROTOCOL_VERSION,
+            "requestId": "build-1",
+            "type": "completed",
+            "report": {
+                "schemaVersion": "thesisforge.build-report.v2",
+                "buildId": "build-2",
+                "intent": "live-preview",
+                "outcome": outcome,
+                "stages": [
+                    { "name": "parse", "status": "succeeded" },
+                    { "name": "render", "status": "failed" }
+                ],
+                "failedStage": "render",
+                "primaryDiagnosticId": null,
+                "diagnostics": [],
+                "logs": [],
+                "output": {
+                    "docxPath": null,
+                    "pdfPath": null,
+                    "previewStale": true,
+                    "successfulBuildId": null,
+                    "finalPreview": {
+                        "engine": "libreoffice",
+                        "label": "LibreOffice PDF",
+                        "fileName": "thesis.preview.pdf"
+                    }
+                }
+            }
+        });
         assert_eq!(
             authorize_build_preview(&state, &request, &event).unwrap(),
             event

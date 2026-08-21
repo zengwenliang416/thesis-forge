@@ -540,13 +540,25 @@ pub fn authorize_build_preview(
     request: &Value,
     event: &Value,
 ) -> Result<Value, String> {
-    if event.get("type").and_then(Value::as_str) != Some("success") {
+    if event.get("type").and_then(Value::as_str) != Some("completed") {
+        return Ok(event.clone());
+    }
+    if event.get("requestId") != request.get("requestId") {
+        return Err("preview event requestId does not match build request".to_string());
+    }
+    let Some(report) = event.get("report") else {
+        return Ok(event.clone());
+    };
+    if report.get("schemaVersion").and_then(Value::as_str) != Some("thesisforge.build-report.v2")
+        || report.get("outcome").and_then(Value::as_str) != Some("succeeded")
+    {
         return Ok(event.clone());
     }
     let Some(descriptor_value) = event
-        .get("result")
-        .and_then(|result| result.get("output"))
+        .get("report")
+        .and_then(|report| report.get("output"))
         .and_then(|output| output.get("finalPreview"))
+        .filter(|value| !value.is_null())
     else {
         return Ok(event.clone());
     };
@@ -567,7 +579,7 @@ pub fn authorize_build_preview(
     let authorized =
         state.authorize_with_cleanup(&descriptor, requested_path, cleanup_after_read)?;
     let mut authorized_event = event.clone();
-    authorized_event["result"]["output"]["finalPreview"] = serde_json::to_value(authorized)
+    authorized_event["report"]["output"]["finalPreview"] = serde_json::to_value(authorized)
         .map_err(|error| format!("failed to encode preview authorization: {error}"))?;
     Ok(authorized_event)
 }
