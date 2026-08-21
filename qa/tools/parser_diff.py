@@ -21,7 +21,7 @@ import argparse
 import json
 import re
 import sys
-from dataclasses import asdict, dataclass, is_dataclass
+from dataclasses import dataclass, fields, is_dataclass
 from pathlib import Path
 from typing import Any
 
@@ -44,9 +44,16 @@ def _jsonable(value: Any) -> Any:
 
     非原生类型（Path、日期等 YAML 值）统一 str()，避免 default=str
     掩盖后端间的类型差异之外的排序问题；dict 键统一 str。
+    dataclass 实例按字段递归，但跳过 ``compare=False`` 的字段：
+    这类字段承载逐实例身份（如即将引入的 ``node_id``），不含语义内容，
+    若纳入归一化会破坏同一输入两次解析之间的字节一致性。
     """
     if is_dataclass(value) and not isinstance(value, type):
-        return _jsonable(asdict(value))
+        return {
+            field.name: _jsonable(getattr(value, field.name))
+            for field in fields(value)
+            if field.compare
+        }
     if isinstance(value, dict):
         return {str(key): _jsonable(item) for key, item in value.items()}
     if isinstance(value, (list, tuple)):
@@ -59,14 +66,15 @@ def _jsonable(value: Any) -> Any:
 def normalize_document(document: ThesisDocument) -> dict[str, Any]:
     """把 ThesisDocument 归一化为确定性 JSON 结构。
 
-    每个节点带 ``kind``（类名）+ 全部 dataclass 字段（含 id、location
-    行列号、inlines 递归）；文档级带 metadata、bibliography 与
+    每个节点带 ``kind``（类名）+ dataclass 字段（含 id、location
+    行列号、inlines 递归；``compare=False`` 的逐实例身份字段除外）；文档级带
+    metadata、bibliography 与
     inline_content / cross_references / citations / footnote_references 序列。
     source_path 只保留文件名，使报告跨机器稳定。
     """
 
     def tagged(node: Any) -> dict[str, Any]:
-        return {"kind": type(node).__name__, **_jsonable(asdict(node))}
+        return {"kind": type(node).__name__, **_jsonable(node)}
 
     return {
         "source_path": Path(document.source_path).name,
