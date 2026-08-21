@@ -469,5 +469,16 @@ render:
 
     assert result.exit_code == 1
     assert "missing-citation" in result.stdout
+
+
+def test_validate_json_option_returns_structured_diagnostics(tmp_path: Path):
+    source = tmp_path / "json.md"
+    source.write_text("# 绪论\n", encoding="utf-8")
+
+    result = runner.invoke(app, ["validate", str(source), "--json"])
+
+    assert result.exit_code == 1
+    payload = json.loads(result.stdout)
+    assert payload["issues"][0]["code"] == "missing-template"
     assert "missing" in result.stdout
     assert "Traceback" not in result.stdout

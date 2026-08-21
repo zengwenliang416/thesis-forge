@@ -16,7 +16,16 @@ from thesis_forge.application import (
     inspect_service,
     validation_service,
 )
+from thesis_forge.application.contracts import (
+    ProjectIdentity,
+    ProjectOutput,
+    ProjectRequest,
+    ProjectRequestIntent,
+)
+from thesis_forge.application.services import ProjectApplicationService
 from thesis_forge.presentation import localized_issue_message
+from thesis_forge.project.loader import ProjectLoadError, load_project
+from thesis_forge.project.paths import ProjectPathError, resolve_project_paths
 from thesis_forge.templates import TemplateLoadError
 from thesis_forge.templates import v2 as template_v2
 
@@ -24,6 +33,35 @@ app = typer.Typer(help="ThesisForge — academic thesis compiler")
 template_app = typer.Typer(help="Template Package v2 工具（ADR-0002）")
 app.add_typer(template_app, name="template")
 console = Console(width=160)
+
+
+def _is_project_input(path: Path) -> bool:
+    return path.is_dir() or path.name == "thesisforge.yaml"
+
+
+def _project_request(
+    source: Path,
+    intent: ProjectRequestIntent,
+    *,
+    output: Path | None = None,
+    editor_snapshot: str | None = None,
+) -> ProjectRequest:
+    project = load_project(source)
+    return ProjectRequest(
+        project=ProjectIdentity(
+            project_id=project.manifest.project.id,
+            project_root=project.project_root,
+            manifest_path=project.manifest_path,
+        ),
+        intent=intent,
+        output=ProjectOutput(output) if output is not None else None,
+        editor_snapshot=editor_snapshot,
+    )
+
+
+def _report_project_error(error: ProjectLoadError | ProjectPathError) -> None:
+    console.print(f"[red]项目加载失败（{error.code}）：{error}[/red]")
+    raise typer.Exit(2) from None
 
 
 def _report_application_error(error: ApplicationStageError, *, source: Path) -> None:
@@ -42,7 +80,14 @@ def _report_application_error(error: ApplicationStageError, *, source: Path) -> 
 def inspect(source: Path) -> None:
     """解析 Markdown 并输出结构。"""
     try:
-        doc = inspect_service(source).document
+        if _is_project_input(source):
+            doc = ProjectApplicationService().inspect(
+                _project_request(source, ProjectRequestIntent.INSPECT)
+            ).document
+        else:
+            doc = inspect_service(source).document
+    except (ProjectLoadError, ProjectPathError) as error:
+        _report_project_error(error)
     except ApplicationStageError as error:
         _report_application_error(error, source=source)
     data = {
@@ -70,13 +115,36 @@ def validate(
         Path | None,
         typer.Option("--template", help="显式学校模板 YAML 路径"),
     ] = None,
+    json_output: Annotated[
+        bool,
+        typer.Option("--json", help="以 JSON 输出结构化诊断"),
+    ] = False,
 ) -> None:
     """检查结构和引用问题。"""
     try:
-        result = validation_service(source, template_path=template)
+        if _is_project_input(source):
+            result = ProjectApplicationService().validate(
+                _project_request(source, ProjectRequestIntent.VALIDATE)
+            )
+        else:
+            result = validation_service(source, template_path=template)
+    except (ProjectLoadError, ProjectPathError) as error:
+        _report_project_error(error)
     except ApplicationStageError as error:
         _report_application_error(error, source=source)
     issues = result.issues
+
+    if json_output:
+        console.print_json(
+            json.dumps(
+                {"issues": [asdict(issue) for issue in issues]},
+                ensure_ascii=False,
+                default=str,
+            )
+        )
+        if any(issue.severity == "error" for issue in issues):
+            raise typer.Exit(1)
+        raise typer.Exit(0)
 
     if not issues:
         console.print("[green]✓ 未发现结构性问题[/green]")
@@ -116,11 +184,33 @@ def build(
 ) -> None:
     """通过安全的本地编译流水线生成 DOCX。"""
     try:
-        result = build_service(
-            source,
-            output,
-            template_path=template,
-        )
+        if _is_project_input(source):
+            project = load_project(source)
+            paths = resolve_project_paths(project)
+            output_path = (
+                paths.docx
+                if output == Path("output/thesis.docx")
+                else (
+                    output
+                    if output.is_absolute()
+                    else (project.project_root / output).resolve()
+                )
+            )
+            result = ProjectApplicationService().build(
+                _project_request(
+                    source,
+                    ProjectRequestIntent.BUILD,
+                    output=output_path,
+                )
+            )
+        else:
+            result = build_service(
+                source,
+                output,
+                template_path=template,
+            )
+    except (ProjectLoadError, ProjectPathError) as error:
+        _report_project_error(error)
     except BuildValidationError as error:
         error_count = sum(issue.severity == "error" for issue in error.issues)
         console.print(
