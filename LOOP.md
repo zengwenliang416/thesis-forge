@@ -95,15 +95,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Open
 
-- [V2-301B] Add NodeId and complete SourceSpan to the typed model
-  - Parent: ordered child 2/2 of `V2-301`; depends on `V2-301A`.
-  - Files: `src/thesis_forge/core/model.py`, `tests/core/test_source_identity.py`
-  - Behavior: every semantic node has stable internal identity and start/end file/line/column span.
-  - Verify: `.venv/bin/python -m pytest tests/core/test_source_identity.py`
-  - Acceptance: multi-line nodes and generated origins are representable; existing parser/compiler baselines stay green.
-  - Verification-surface change: authorized; creates focused source-identity model tests.
-  - Attempts: 0
-
 - [V2-302] Replace the Inline model with recursive typed nodes
   - Files: `src/thesis_forge/core/model.py`, `tests/core/test_inline_model.py`
   - Behavior: introduce recursive Text, SoftBreak, HardBreak, Strong, Emphasis, InlineCode, Link, InlineMath, Citation, CrossReference and FootnoteReference.
@@ -121,6 +112,16 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
   - Attempts: 0
 
 ## Done
+
+- [V2-301B] Add NodeId and complete SourceSpan to the typed model
+  - Parent: ordered child 2/2 of `V2-301`; depends on `V2-301A`.
+  - Files: `src/thesis_forge/core/model.py`, `tests/core/test_source_identity.py`
+  - Behavior: every semantic node has stable internal identity and start/end file/line/column span.
+  - Verify: `.venv/bin/python -m pytest tests/core/test_source_identity.py`
+  - Acceptance: multi-line nodes and generated origins are representable; existing parser/compiler baselines stay green.
+  - Verification-surface change: authorized; creates focused source-identity model tests.
+  - Attempts: 1
+  - Attempt 1 (2026-08-22): Checker PASS; diff limited to the 2 named files (SourceLocation extended in place with end_line/end_column/source_file appended after line/column, NodeId = str alias plus itertools `_next_node_id()` "n1..", `node_id` with `compare=False` and `origin` appended to Inline/Block/ListItem only, frozen-slots GeneratedOrigin, all additive and defaulted; test file constructs model objects only), exact Verify 11/11 passed, baselines 102 passed / 0 failed, ruff and `git diff --check` clean, 22 independent probes confirmed identity uniqueness with equality ignoring node_id, asdict includes node_id while V2-301A `_jsonable` excludes it, positional span plus end-before-start representability with span fields compare=True, frozen GeneratedOrigin defaults and origin equality, 117 parsed nodes from complete-thesis all carrying unique node_id with origin None and legacy/legacy parser_diff OK exit 0, full-suite failure sets identical HEAD vs candidate (46 pre-existing / 950 passed → 46 / 961 passed, +11 exactly the new tests); no push.
 
 - [V2-301A] Exclude node identity from parse-parity normalization
   - Parent: ordered child 1/2 of `V2-301`; the parent behavior remains unchanged.
@@ -655,5 +656,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 - 2026-08-22 - V2-301 split into ordered children V2-301A and V2-301B after the Maker proved the auto-generated `node_id` dataclass field breaks `qa/tools/parser_diff.py` asdict-based parity normalization (30 test_parser_markdown_it parity tests plus 3 test_parser_backend parity tests newly fail; unavoidable while identity is a real per-instance field); V2-301A updates QA parity normalization first, V2-301B carries the model change; failed work restored, no product code kept in the split cycle; full-suite baseline re-measured at 47 failed / 949 passed (`test_parser_backend.py::test_parser_diff_cli_self_check` already fails pre-change).
 - 2026-08-22 - V2-215 Checker PASS; exact Verify 7/7 green, baselines (67 core/application/adapter tests) and ruff clean, full-suite failure sets identical HEAD vs candidate (46 pre-existing, zero new), 5 independent probes confirmed structured orphan/type-mismatch errors, figure-width pass, projectless silence, and sorted output; no push.
 - 2026-08-22 - V2-301A Checker PASS; diff scoped to qa/tools/parser_diff.py with generic field.compare exclusion, exact Verify 48/48 green, HEAD-vs-worktree byte-parity probe diff empty, compare=False exclusion and semantic-detection probes green, full suite 46 failed / 950 passed matching the fresh baseline; no push.
+- 2026-08-22 - V2-301B Checker PASS; exact Verify 11/11 green, baselines 102 passed / 0 failed, 22 independent probes confirmed identity/span/GeneratedOrigin semantics plus `_jsonable` node_id exclusion and parsed-node identity, full-suite failure sets identical HEAD vs candidate (46 → 46, +11 passed); no push.
 
 ## Sync log

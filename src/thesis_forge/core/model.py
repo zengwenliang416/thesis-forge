@@ -1,21 +1,41 @@
 from __future__ import annotations
 
+import itertools
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Literal
 
 Severity = Literal["info", "warning", "error"]
 
+NodeId = str
+
+_node_id_counter = itertools.count(1)
+
+
+def _next_node_id() -> NodeId:
+    return f"n{next(_node_id_counter)}"
+
 
 @dataclass(slots=True)
 class SourceLocation:
     line: int | None = None
     column: int | None = None
+    end_line: int | None = None
+    end_column: int | None = None
+    source_file: str | None = None
+
+
+@dataclass(frozen=True, slots=True)
+class GeneratedOrigin:
+    generator: str = ""
+    source_node_ids: tuple[NodeId, ...] = ()
 
 
 @dataclass(slots=True)
 class Inline:
     location: SourceLocation = field(default_factory=SourceLocation)
+    node_id: NodeId = field(default_factory=_next_node_id, compare=False)
+    origin: GeneratedOrigin | None = None
 
 
 @dataclass(slots=True)
@@ -54,6 +74,8 @@ class FootnoteReference(Inline):
 class Block:
     id: str | None = None
     location: SourceLocation = field(default_factory=SourceLocation)
+    node_id: NodeId = field(default_factory=_next_node_id, compare=False)
+    origin: GeneratedOrigin | None = None
 
 
 @dataclass(slots=True)
@@ -77,6 +99,8 @@ class ListItem:
     ordinal: int | None = None
     location: SourceLocation = field(default_factory=SourceLocation)
     inlines: list[Inline] = field(default_factory=list)
+    node_id: NodeId = field(default_factory=_next_node_id, compare=False)
+    origin: GeneratedOrigin | None = None
 
 
 @dataclass(slots=True)
