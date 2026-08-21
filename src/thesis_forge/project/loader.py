@@ -7,6 +7,7 @@ from pathlib import Path
 from typing import Any
 
 import yaml
+from pydantic import ValidationError
 
 from .model import ProjectManifestV2
 
@@ -114,16 +115,22 @@ def _read_manifest(path: Path) -> dict[str, Any]:
 
     try:
         raw = yaml.load(text, Loader=_UniqueKeyLoader)
-    except _DuplicateKeyError as error:
+    except _DuplicateKeyError:
         raise ProjectLoadError(
             "TF-PROJECT-DUPLICATE-KEY",
-            str(error),
+            "manifest contains duplicate YAML keys",
             path=path,
-        ) from error
-    except yaml.YAMLError as error:
+        )
+    except yaml.YAMLError:
         raise ProjectLoadError(
             "TF-PROJECT-YAML-INVALID",
-            str(error),
+            "manifest YAML is invalid",
+            path=path,
+        )
+    except TypeError as error:
+        raise ProjectLoadError(
+            "TF-PROJECT-YAML-INVALID",
+            "manifest contains an invalid YAML mapping key",
             path=path,
         ) from error
 
@@ -152,10 +159,20 @@ def load_project(input_path: str | Path) -> LoadedProject:
 
     try:
         manifest = ProjectManifestV2.model_validate(raw)
-    except Exception as error:
+    except ValidationError as error:
+        first_error = error.errors()[0] if error.errors() else {}
+        location = first_error.get("loc", ())
+        field = ".".join(str(part) for part in location) or None
         raise ProjectLoadError(
             "TF-PROJECT-MANIFEST-INVALID",
-            str(error),
+            "manifest contains invalid fields",
+            path=manifest_path,
+            field=field,
+        ) from error
+    except TypeError as error:
+        raise ProjectLoadError(
+            "TF-PROJECT-MANIFEST-INVALID",
+            "manifest contains invalid fields",
             path=manifest_path,
         ) from error
 

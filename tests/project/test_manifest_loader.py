@@ -86,6 +86,42 @@ render:
     assert captured.value.code == "TF-PROJECT-DUPLICATE-KEY"
 
 
+def test_loader_rejects_nested_duplicate_yaml_keys(tmp_path: Path) -> None:
+    (tmp_path / "thesis.md").write_text("# 绪论\n", encoding="utf-8")
+    (tmp_path / "thesisforge.yaml").write_text(
+        """
+schema: thesisforge.project.v2
+project:
+  id: loader-fixture
+  language: zh-CN
+document:
+  source: thesis.md
+metadata:
+  title:
+    zh: first
+    zh: second
+render:
+  template_id: example-university-2026
+""".lstrip(),
+        encoding="utf-8",
+    )
+
+    with pytest.raises(ProjectLoadError) as captured:
+        load_project(tmp_path)
+
+    assert captured.value.code == "TF-PROJECT-DUPLICATE-KEY"
+
+
+def test_loader_rejects_existing_non_manifest_file(tmp_path: Path) -> None:
+    notes = tmp_path / "notes.yaml"
+    notes.write_text("not: a project\n", encoding="utf-8")
+
+    with pytest.raises(ProjectLoadError) as captured:
+        load_project(notes)
+
+    assert captured.value.code == "TF-PROJECT-MANIFEST-REQUIRED"
+
+
 def test_loader_rejects_missing_source_declaration(tmp_path: Path) -> None:
     manifest = manifest_data()
     del manifest["document"]["source"]
@@ -121,3 +157,31 @@ def test_loader_wraps_invalid_manifest_with_stable_code(tmp_path: Path) -> None:
         load_project(tmp_path)
 
     assert captured.value.code == "TF-PROJECT-MANIFEST-INVALID"
+
+
+def test_loader_sanitizes_manifest_validation_details(tmp_path: Path) -> None:
+    manifest = manifest_data()
+    manifest["document"]["source"] = "/Users/secret/thesis.md"
+    write_project(tmp_path, manifest)
+
+    with pytest.raises(ProjectLoadError) as captured:
+        load_project(tmp_path)
+
+    assert captured.value.code == "TF-PROJECT-MANIFEST-INVALID"
+    assert "/Users/secret" not in str(captured.value)
+    assert "input_value" not in str(captured.value)
+
+
+def test_loader_wraps_unhashable_yaml_mapping_keys(tmp_path: Path) -> None:
+    (tmp_path / "thesisforge.yaml").write_text(
+        """
+? [unhashable]
+: value
+""".lstrip(),
+        encoding="utf-8",
+    )
+
+    with pytest.raises(ProjectLoadError) as captured:
+        load_project(tmp_path)
+
+    assert captured.value.code == "TF-PROJECT-YAML-INVALID"
