@@ -63,7 +63,9 @@ class WorkbenchHttpApp:
                 if not isinstance(request, dict):
                     raise TypeError("request body must be an object")
                 if path in {"/api/v1/dispatch", "/api/v1/build-stream"}:
-                    read_project_request_payload(request.get("payload"))
+                    request_payload = request.get("payload")
+                    if isinstance(request_payload, dict) and "project" in request_payload:
+                        read_project_request_payload(request_payload)
                 if path == "/api/v1/build-stream":
                     request_id = request.get("requestId")
                     if not isinstance(request_id, str) or not request_id:

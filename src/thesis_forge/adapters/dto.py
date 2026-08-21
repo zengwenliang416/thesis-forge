@@ -26,7 +26,7 @@ def read_project_request_payload(payload: object) -> ProjectRequestPayload | Non
     if not isinstance(payload, dict):
         raise TypeError("payload must be an object")
     if "project" not in payload:
-        return None
+        raise TypeError("project is required")
     project = payload["project"]
     if not isinstance(project, dict):
         raise TypeError("project must be an object")
