@@ -5,10 +5,14 @@ import {
   type SourceRef,
 } from "./dto";
 import { assertBuildEvent, type BuildEvent } from "./buildEvents";
-import type {
-  OpenSourceInput,
-  OpenedSource,
-  WorkbenchTransport,
+import {
+  readOpenedProject,
+  readProjectIdentity,
+  type OpenProjectInput,
+  type OpenedProject,
+  type OpenSourceInput,
+  type OpenedSource,
+  type WorkbenchTransport,
 } from "./WorkbenchTransport";
 import {
   readFinalPreviewDescriptor,
@@ -77,6 +81,55 @@ export class WebWorkbenchTransport implements WorkbenchTransport {
       source: body.source as OpenedSource["source"],
       text: body.text,
     };
+  }
+
+  async openProject(input?: OpenProjectInput): Promise<OpenedProject> {
+    if (!input) {
+      throw new Error("Web project input is required");
+    }
+    const project = readProjectIdentity(input.project);
+    if (
+      typeof input.fileName !== "string" ||
+      input.fileName.length === 0 ||
+      typeof input.text !== "string"
+    ) {
+      throw new Error("Web project input is required");
+    }
+    const response = await this.#fetch(`${this.#baseUrl}/api/v1/workspaces`, {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify({
+        project,
+        fileName: input.fileName,
+        text: input.text,
+      }),
+    });
+    const body: unknown = await response.json();
+    if (
+      !response.ok ||
+      typeof body !== "object" ||
+      body === null ||
+      !("protocol" in body) ||
+      body.protocol !== "thesisforge.workbench.v1" ||
+      !("ok" in body) ||
+      body.ok !== true ||
+      !("project" in body) ||
+      !("source" in body) ||
+      !("text" in body)
+    ) {
+      throw new Error("打开 Web 项目工作区失败");
+    }
+    try {
+      return readOpenedProject({
+        project: body.project,
+        source: body.source,
+        text: body.text,
+      });
+    } catch {
+      throw new Error("打开 Web 项目工作区失败");
+    }
   }
 
   async dispatch(request: CommandEnvelope, signal?: AbortSignal) {

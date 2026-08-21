@@ -1,0 +1,426 @@
+import { PROTOCOL_VERSION } from "./dto";
+import {
+  readOpenedProject,
+  readProjectIdentity,
+  type OpenProjectInput,
+  type ProjectIdentityRef,
+} from "./WorkbenchTransport";
+import { WebWorkbenchTransport } from "./web";
+
+const project: ProjectIdentityRef = {
+  id: "project-1",
+  root: "/workspace/thesis",
+  manifestPath: "/workspace/thesis/thesisforge.yaml",
+};
+
+const sourceText = "# 绪论\n\n公式 $a^2 + b^2 = c^2$，引用“文献”。\n";
+
+const input: OpenProjectInput = {
+  project,
+  fileName: "thesis.md",
+  text: sourceText,
+};
+
+const workspaceSource = {
+  kind: "web-workspace" as const,
+  workspaceId: "a".repeat(32),
+  fileName: "thesis.md",
+};
+
+const openedProjectBody = {
+  protocol: PROTOCOL_VERSION,
+  ok: true,
+  project,
+  source: workspaceSource,
+  text: sourceText,
+};
+
+function jsonResponse(body: unknown, status = 201): Response {
+  return new Response(JSON.stringify(body), {
+    status,
+    headers: { "content-type": "application/json" },
+  });
+}
+
+describe("WebWorkbenchTransport.openProject", () => {
+  it("posts exactly one typed request carrying the full project identity and snapshot", async () => {
+    const calls: Array<{ url: string; init?: RequestInit }> = [];
+    const transport = new WebWorkbenchTransport({
+      baseUrl: "http://127.0.0.1:8765",
+      fetch: async (url, init) => {
+        calls.push({ url: String(url), init });
+        return jsonResponse(openedProjectBody);
+      },
+    });
+
+    await transport.openProject(input);
+
+    expect(calls).toHaveLength(1);
+    expect(calls[0].url).toBe("http://127.0.0.1:8765/api/v1/workspaces");
+    expect(calls[0].init?.method).toBe("POST");
+    expect(JSON.parse(String(calls[0].init?.body))).toEqual({
+      project: {
+        id: "project-1",
+        root: "/workspace/thesis",
+        manifestPath: "/workspace/thesis/thesisforge.yaml",
+      },
+      fileName: "thesis.md",
+      text: sourceText,
+    });
+  });
+
+  it("returns the opened project preserving identity, source, and text snapshot", async () => {
+    const transport = new WebWorkbenchTransport({
+      baseUrl: "http://127.0.0.1:8765",
+      fetch: async () => jsonResponse(openedProjectBody),
+    });
+
+    const opened = await transport.openProject(input);
+
+    expect(opened).toEqual({
+      project: {
+        id: "project-1",
+        root: "/workspace/thesis",
+        manifestPath: "/workspace/thesis/thesisforge.yaml",
+      },
+      source: {
+        kind: "web-workspace",
+        workspaceId: "a".repeat(32),
+        fileName: "thesis.md",
+      },
+      text: sourceText,
+    });
+  });
+
+  it("round-trips the source snapshot text unchanged", async () => {
+    const transport = new WebWorkbenchTransport({
+      fetch: async () => jsonResponse(openedProjectBody),
+    });
+
+    const opened = await transport.openProject(input);
+
+    expect(opened.text).toBe(sourceText);
+  });
+
+  it("rejects when the project input is missing", async () => {
+    const transport = new WebWorkbenchTransport({
+      fetch: async () => jsonResponse(openedProjectBody),
+    });
+
+    await expect(transport.openProject()).rejects.toThrow(
+      "Web project input is required",
+    );
+  });
+
+  it("rejects a project identity with an empty id", async () => {
+    const transport = new WebWorkbenchTransport({
+      fetch: async () => jsonResponse(openedProjectBody),
+    });
+
+    await expect(
+      transport.openProject({ ...input, project: { ...project, id: "" } }),
+    ).rejects.toThrow("无效的 ThesisForge project 标识");
+  });
+
+  it("rejects a project identity with an empty root", async () => {
+    const transport = new WebWorkbenchTransport({
+      fetch: async () => jsonResponse(openedProjectBody),
+    });
+
+    await expect(
+      transport.openProject({ ...input, project: { ...project, root: "" } }),
+    ).rejects.toThrow("无效的 ThesisForge project 标识");
+  });
+
+  it("rejects a project identity with an empty manifestPath", async () => {
+    const transport = new WebWorkbenchTransport({
+      fetch: async () => jsonResponse(openedProjectBody),
+    });
+
+    await expect(
+      transport.openProject({
+        ...input,
+        project: { ...project, manifestPath: "" },
+      }),
+    ).rejects.toThrow("无效的 ThesisForge project 标识");
+  });
+
+  it("rejects a project identity with a non-string field", async () => {
+    const transport = new WebWorkbenchTransport({
+      fetch: async () => jsonResponse(openedProjectBody),
+    });
+    const invalid = {
+      ...input,
+      project: { ...project, root: 42 },
+    } as unknown as OpenProjectInput;
+
+    await expect(transport.openProject(invalid)).rejects.toThrow(
+      "无效的 ThesisForge project 标识",
+    );
+  });
+
+  it("rejects a project identity with an extra key", async () => {
+    const transport = new WebWorkbenchTransport({
+      fetch: async () => jsonResponse(openedProjectBody),
+    });
+
+    const invalid = {
+      ...input,
+      project: { ...project, school: "example-university" },
+    };
+
+    await expect(
+      transport.openProject(invalid),
+    ).rejects.toThrow("无效的 ThesisForge project 标识");
+  });
+
+  it("rejects when the input fileName is empty", async () => {
+    const transport = new WebWorkbenchTransport({
+      fetch: async () => jsonResponse(openedProjectBody),
+    });
+
+    await expect(
+      transport.openProject({ ...input, fileName: "" }),
+    ).rejects.toThrow("Web project input is required");
+  });
+
+  it("rejects a response with a wrong protocol version", async () => {
+    const transport = new WebWorkbenchTransport({
+      fetch: async () =>
+        jsonResponse({
+          ...openedProjectBody,
+          protocol: "thesisforge.workbench.v0",
+        }),
+    });
+
+    await expect(transport.openProject(input)).rejects.toThrow(
+      "打开 Web 项目工作区失败",
+    );
+  });
+
+  it("rejects a response with ok: false", async () => {
+    const transport = new WebWorkbenchTransport({
+      fetch: async () => jsonResponse({ ...openedProjectBody, ok: false }),
+    });
+
+    await expect(transport.openProject(input)).rejects.toThrow(
+      "打开 Web 项目工作区失败",
+    );
+  });
+
+  it("rejects a response without the echoed project identity", async () => {
+    const transport = new WebWorkbenchTransport({
+      fetch: async () =>
+        jsonResponse({
+          protocol: PROTOCOL_VERSION,
+          ok: true,
+          source: workspaceSource,
+          text: sourceText,
+        }),
+    });
+
+    await expect(transport.openProject(input)).rejects.toThrow(
+      "打开 Web 项目工作区失败",
+    );
+  });
+
+  it("rejects a response whose project identity is missing root", async () => {
+    const transport = new WebWorkbenchTransport({
+      fetch: async () =>
+        jsonResponse({
+          ...openedProjectBody,
+          project: {
+            id: "project-1",
+            manifestPath: "/workspace/thesis/thesisforge.yaml",
+          },
+        }),
+    });
+
+    await expect(transport.openProject(input)).rejects.toThrow(
+      "打开 Web 项目工作区失败",
+    );
+  });
+
+  it("rejects a response without a source", async () => {
+    const transport = new WebWorkbenchTransport({
+      fetch: async () =>
+        jsonResponse({
+          protocol: PROTOCOL_VERSION,
+          ok: true,
+          project,
+          text: sourceText,
+        }),
+    });
+
+    await expect(transport.openProject(input)).rejects.toThrow(
+      "打开 Web 项目工作区失败",
+    );
+  });
+
+  it("rejects a response with an unknown source kind", async () => {
+    const transport = new WebWorkbenchTransport({
+      fetch: async () =>
+        jsonResponse({
+          ...openedProjectBody,
+          source: {
+            kind: "web-mirror",
+            mirrorId: "mirror-1",
+            fileName: "thesis.md",
+          },
+        }),
+    });
+
+    await expect(transport.openProject(input)).rejects.toThrow(
+      "打开 Web 项目工作区失败",
+    );
+  });
+
+  it("rejects a response without text", async () => {
+    const transport = new WebWorkbenchTransport({
+      fetch: async () =>
+        jsonResponse({
+          protocol: PROTOCOL_VERSION,
+          ok: true,
+          project,
+          source: workspaceSource,
+        }),
+    });
+
+    await expect(transport.openProject(input)).rejects.toThrow(
+      "打开 Web 项目工作区失败",
+    );
+  });
+
+  it("rejects an HTTP error status", async () => {
+    const transport = new WebWorkbenchTransport({
+      fetch: async () => jsonResponse(openedProjectBody, 500),
+    });
+
+    await expect(transport.openProject(input)).rejects.toThrow(
+      "打开 Web 项目工作区失败",
+    );
+  });
+});
+
+describe("project transport readers", () => {
+  it("readProjectIdentity accepts a well-formed identity", () => {
+    expect(
+      readProjectIdentity({
+        id: "project-1",
+        root: "/workspace/thesis",
+        manifestPath: "/workspace/thesis/thesisforge.yaml",
+      }),
+    ).toEqual(project);
+  });
+
+  it("readProjectIdentity rejects null", () => {
+    expect(() => readProjectIdentity(null)).toThrow(
+      "无效的 ThesisForge project 标识",
+    );
+  });
+
+  it("readProjectIdentity rejects non-object values", () => {
+    expect(() => readProjectIdentity("project-1")).toThrow(
+      "无效的 ThesisForge project 标识",
+    );
+  });
+
+  it("readProjectIdentity rejects arrays", () => {
+    expect(() =>
+      readProjectIdentity(["project-1", "/workspace/thesis"]),
+    ).toThrow("无效的 ThesisForge project 标识");
+  });
+
+  it("readProjectIdentity rejects wrong field types", () => {
+    expect(() =>
+      readProjectIdentity({
+        id: "project-1",
+        root: "/workspace/thesis",
+        manifestPath: 7,
+      }),
+    ).toThrow("无效的 ThesisForge project 标识");
+  });
+
+  it("readProjectIdentity rejects empty strings", () => {
+    expect(() =>
+      readProjectIdentity({
+        id: "project-1",
+        root: "",
+        manifestPath: "/workspace/thesis/thesisforge.yaml",
+      }),
+    ).toThrow("无效的 ThesisForge project 标识");
+  });
+
+  it("readProjectIdentity rejects extra keys", () => {
+    expect(() =>
+      readProjectIdentity({ ...project, extra: true }),
+    ).toThrow("无效的 ThesisForge project 标识");
+  });
+
+  it("readOpenedProject accepts the shared typed contract", () => {
+    const desktopSource = {
+      kind: "desktop",
+      path: "/workspace/thesis/thesis.md",
+      fileName: "thesis.md",
+    };
+
+    expect(
+      readOpenedProject({ project, source: desktopSource, text: sourceText }),
+    ).toEqual({ project, source: desktopSource, text: sourceText });
+  });
+
+  it("readOpenedProject rejects null", () => {
+    expect(() => readOpenedProject(null)).toThrow(
+      "无效的 ThesisForge project 响应",
+    );
+  });
+
+  it("readOpenedProject rejects non-object values", () => {
+    expect(() => readOpenedProject(42)).toThrow(
+      "无效的 ThesisForge project 响应",
+    );
+  });
+
+  it("readOpenedProject rejects a missing source", () => {
+    expect(() =>
+      readOpenedProject({ project, text: sourceText }),
+    ).toThrow("无效的 ThesisForge project 响应");
+  });
+
+  it("readOpenedProject rejects an unknown source kind", () => {
+    expect(() =>
+      readOpenedProject({
+        project,
+        source: { kind: "web-mirror", mirrorId: "mirror-1", fileName: "thesis.md" },
+        text: sourceText,
+      }),
+    ).toThrow("无效的 ThesisForge project 响应");
+  });
+
+  it("readOpenedProject rejects a source with an extra key", () => {
+    expect(() =>
+      readOpenedProject({
+        project,
+        source: { ...workspaceSource, uploadId: "upload-1" },
+        text: sourceText,
+      }),
+    ).toThrow("无效的 ThesisForge project 响应");
+  });
+
+  it("readOpenedProject rejects a non-string text", () => {
+    expect(() =>
+      readOpenedProject({ project, source: workspaceSource, text: null }),
+    ).toThrow("无效的 ThesisForge project 响应");
+  });
+
+  it("readOpenedProject rejects extra top-level keys", () => {
+    expect(() =>
+      readOpenedProject({
+        project,
+        source: workspaceSource,
+        text: sourceText,
+        extra: true,
+      }),
+    ).toThrow("无效的 ThesisForge project 响应");
+  });
+});

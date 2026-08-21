@@ -95,15 +95,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Open
 
-- [V2-211A] Add the typed project transport contract and Web implementation
-  - Parent: ordered child 1/2 of `V2-211`; depends on `V2-210`.
-  - Files: `frontend/src/transport/WorkbenchTransport.ts`, `frontend/src/transport/web.ts`, `frontend/src/transport/WorkbenchTransport.project.test.ts`
-  - Behavior: Web transport opens project identity and source snapshot through one typed request/response contract.
-  - Verify: `pnpm --dir frontend test -- WorkbenchTransport.project.test.ts`
-  - Acceptance: project root/manifest/source identity is preserved and Web does not expose an uploaded-file-only project variant.
-  - Verification-surface change: authorized; creates focused Web project transport tests.
-  - Attempts: 0
-
 - [V2-211B] Add the Tauri project transport implementation
   - Parent: ordered child 2/2 of `V2-211`; depends on `V2-211A`.
   - Files: `frontend/src/transport/tauri.ts`, `frontend/src/transport/WorkbenchTransport.project.test.ts`, `frontend/src/transport/transports.test.ts`
@@ -130,6 +121,16 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
   - Attempts: 0
 
 ## Done
+
+- [V2-211A] Add the typed project transport contract and Web implementation
+  - Parent: ordered child 1/2 of `V2-211`; depends on `V2-210`.
+  - Files: `frontend/src/transport/WorkbenchTransport.ts`, `frontend/src/transport/web.ts`, `frontend/src/transport/WorkbenchTransport.project.test.ts`
+  - Behavior: Web transport opens project identity and source snapshot through one typed request/response contract.
+  - Verify: `pnpm --dir frontend test -- WorkbenchTransport.project.test.ts`
+  - Acceptance: project root/manifest/source identity is preserved and Web does not expose an uploaded-file-only project variant.
+  - Verification-surface change: authorized; creates focused Web project transport tests.
+  - Attempts: 1
+  - Attempt 1 (2026-08-21): exact Verify passed 33 focused project transport tests with the full suite green (14 files, 165 tests); typecheck, lint and git diff --check passed. Independent Checker probes (12) confirmed exact identity/source/text preservation, rejection of missing or uploaded-file-only input, strict malformed-response rejection and no coercion or any-casts.
 
 - [V2-210] Authorize Tauri project selection
   - Files: `src-tauri/src/lib.rs`, `src-tauri/src/project_tests.rs`
@@ -561,5 +562,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 - 2026-08-21 - V2-208 Checker PASS; exact Verify passed 3 JSON report tests, repeated success/failure outputs were deterministic, report completeness/sanitization and Ruff passed, and no push.
 - 2026-08-21 - V2-209 Checker PASS; exact Verify passed 17 DTO/HTTP tests, strict project reader and HTTP smoke/Ruff passed, and no push.
 - 2026-08-21 - V2-210 Checker PASS; exact Verify passed 6 Tauri project tests, fmt/protocol regression passed, cross-platform path boundaries and command registration passed, and no push.
+- 2026-08-21 - V2-211A Checker PASS; exact Verify passed 33 project transport tests with full suite green (165 tests), typecheck/lint/diff-check passed, 12 independent probes confirmed identity preservation and strict rejection; no push.
 
 ## Sync log
