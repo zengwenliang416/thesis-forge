@@ -12,12 +12,18 @@ import {
 } from "../state/workspace";
 import {
   diagnosticSummary,
+  presentBuildReportDiagnostics,
   presentDiagnostics,
 } from "../state/diagnostics";
 import { lineSelectionRange } from "../state/editorNavigation";
 import type { ContentSelection } from "../state/preview";
 import type { WorkbenchTransport } from "../transport/WorkbenchTransport";
-import type { BuildEvent } from "../transport/buildEvents";
+import type {
+  BuildErrorKind,
+  BuildEvent,
+  BuildOutput,
+  BuildReport,
+} from "../transport/buildEvents";
 import {
   PROTOCOL_VERSION,
   readSerializedPreviewResult,
@@ -46,6 +52,68 @@ const statusCopy = {
   permission: ["目标位置不可写", "请选择有权限的位置后重试。"],
   canceled: ["操作已取消", "过期结果不会覆盖当前工作区。"],
 } satisfies Record<WorkspaceState["status"], [string, string]>;
+
+function reportMessage(report: BuildReport): string {
+  if (report.outcome === "canceled") {
+    return "构建已取消";
+  }
+  const primary =
+    report.primaryDiagnosticId === null
+      ? null
+      : report.diagnostics.find(
+          (diagnostic) => diagnostic.id === report.primaryDiagnosticId,
+        );
+  return (
+    primary?.message ??
+    report.diagnostics[0]?.message ??
+    report.logs.at(-1)?.message ??
+    "构建失败"
+  );
+}
+
+function reportErrorKind(report: BuildReport): BuildErrorKind {
+  if (report.outcome === "canceled") {
+    return "canceled";
+  }
+  if (report.diagnostics.some((diagnostic) => diagnostic.category === "permission")) {
+    return "permission";
+  }
+  switch (report.failedStage) {
+    case "validate":
+      return "validation";
+    case "compile":
+      return "compile";
+    case "render":
+      return "render";
+    case "finalize":
+    case "postflight":
+    case "preview":
+      return "finalize";
+    default:
+      return "transport";
+  }
+}
+
+function reportOutput(
+  report: BuildReport,
+  source: NonNullable<WorkspaceState["source"]>["reference"],
+): BuildOutput | null {
+  if (report.outcome !== "succeeded" || !report.output || !source) {
+    return null;
+  }
+  const fallback = source.fileName.replace(/\.md$/i, ".docx");
+  const pathName = report.output.docxPath?.split(/[\\/]/).at(-1);
+  return {
+    kind: source.kind === "desktop" ? "desktop" : "web-download",
+    name:
+      pathName && pathName !== "." && pathName !== ".."
+        ? pathName
+        : fallback,
+    ...(report.output.finalPreview
+      ? { finalPreview: report.output.finalPreview }
+      : {}),
+  };
+}
 
 export function WorkbenchApp({
   transport,
@@ -218,59 +286,57 @@ export function WorkbenchApp({
               return;
             }
             terminal = true;
-            if (event.type === "success") {
-              const output = event.result.output;
-              dispatch({
-                type: "diagnosticsLoaded",
-                operation,
-                diagnostics: presentDiagnostics(event.result.diagnostics),
-              });
-              dispatch({
-                type: "buildSucceeded",
-                operation,
-                output,
-              });
-              if (output.finalPreview) {
-                const requestKey = `build:${operation.generation}`;
-                if (!transport.resolveFinalPreview) {
-                  dispatch({
-                    type: "finalPreviewResolutionFailed",
-                    requestKey,
-                    message: "当前运行时无法读取最终版式 PDF。",
-                  });
-                  return;
-                }
-                void transport
-                  .resolveFinalPreview(output.finalPreview)
-                  .then((bytes) =>
-                    dispatch({
-                      type: "finalPreviewResolved",
-                      requestKey,
-                      bytes,
-                    }),
-                  )
-                  .catch((error: unknown) =>
-                    dispatch({
-                      type: "finalPreviewResolutionFailed",
-                      requestKey,
-                      message:
-                        error instanceof Error
-                          ? error.message
-                          : "最终版式 PDF 读取失败。",
-                    }),
-                  );
-              }
+            const report = event.report;
+            dispatch({
+              type: "diagnosticsLoaded",
+              operation,
+              diagnostics: presentBuildReportDiagnostics(report.diagnostics),
+            });
+            if (report.outcome === "canceled") {
+              dispatch({ type: "operationCanceled", operation });
               return;
             }
-            if (event.error.kind === "canceled") {
-              dispatch({ type: "operationCanceled", operation });
+            if (report.outcome === "succeeded") {
+              const output = reportOutput(report, source);
+              if (output) {
+                dispatch({
+                  type: "buildSucceeded",
+                  operation,
+                  output,
+                });
+                if (output.finalPreview) {
+                  const requestKey = `build:${operation.generation}`;
+                  void transport
+                    .resolveFinalPreview(output.finalPreview)
+                    .then((bytes) =>
+                      dispatch({
+                        type: "finalPreviewResolved",
+                        requestKey,
+                        bytes,
+                        descriptor: output.finalPreview,
+                      }),
+                    )
+                    .catch((error: unknown) =>
+                      dispatch({
+                        type: "finalPreviewResolutionFailed",
+                        requestKey,
+                        message:
+                          error instanceof Error
+                            ? error.message
+                            : "最终版式 PDF 读取失败。",
+                      }),
+                    );
+                }
+              } else {
+                dispatch({ type: "operationSucceeded", operation });
+              }
               return;
             }
             dispatch({
               type: "buildFailed",
               operation,
-              kind: event.error.kind,
-              message: event.error.message,
+              kind: reportErrorKind(report),
+              message: reportMessage(report),
             });
           },
           controller.signal,
@@ -373,8 +439,9 @@ export function WorkbenchApp({
             return;
           }
           terminal = true;
-          if (event.type === "success") {
-            const descriptor = event.result.output.finalPreview ?? null;
+          const report = event.report;
+          if (report.outcome === "succeeded") {
+            const descriptor = report.output?.finalPreview ?? null;
             dispatch({
               type: "livePreviewBuildSucceeded",
               requestKey,
@@ -410,15 +477,12 @@ export function WorkbenchApp({
               });
             return;
           }
-          if (
-            event.error.kind !== "canceled" &&
-            !controller.signal.aborted
-          ) {
+          if (!controller.signal.aborted) {
             dispatch({
               type: "livePreviewFailed",
               requestKey,
               revision,
-              message: event.error.message,
+              message: reportMessage(report),
             });
           }
         },

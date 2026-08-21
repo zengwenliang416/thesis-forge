@@ -57,13 +57,15 @@ export interface CommandEnvelope {
   };
 }
 
+export type SerializedDiagnosticDetail = string | number | boolean | null;
+
 export interface SerializedDiagnostic {
   severity: "info" | "warning" | "error";
   code: string;
   message: string;
   line: number | null;
   target: string | null;
-  details: Record<string, string | number>;
+  details: Record<string, SerializedDiagnosticDetail>;
 }
 
 export interface SerializedPreviewMarker {
@@ -223,14 +225,18 @@ export interface CommandFailure {
 
 export type CommandResponse = CommandSuccess | CommandFailure;
 
-function isDetails(value: unknown): value is Record<string, string | number> {
+function isDetails(
+  value: unknown,
+): value is Record<string, SerializedDiagnosticDetail> {
   return (
     typeof value === "object" &&
     value !== null &&
     !Array.isArray(value) &&
     Object.values(value).every(
       (item) =>
+        item === null ||
         typeof item === "string" ||
+        typeof item === "boolean" ||
         (typeof item === "number" && Number.isFinite(item)),
     )
   );

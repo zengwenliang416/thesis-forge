@@ -1,4 +1,5 @@
 import type { SerializedDiagnostic } from "../transport/dto";
+import type { BuildReportDiagnostic } from "../transport/buildEvents";
 
 export type DiagnosticFilter = "all" | SerializedDiagnostic["severity"];
 
@@ -123,6 +124,21 @@ export function presentDiagnostics(
         compareText(left.target ?? "", right.target ?? "") ||
         compareText(left.message, right.message),
     );
+}
+
+export function presentBuildReportDiagnostics(
+  diagnostics: BuildReportDiagnostic[],
+): DiagnosticPresentation[] {
+  return presentDiagnostics(
+    diagnostics.map((diagnostic) => ({
+      severity: diagnostic.severity,
+      code: diagnostic.code,
+      message: diagnostic.message,
+      line: diagnostic.source?.startLine ?? null,
+      target: diagnostic.target,
+      details: diagnostic.details,
+    })),
+  );
 }
 
 export function diagnosticSummary(
