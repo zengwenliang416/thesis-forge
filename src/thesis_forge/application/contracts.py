@@ -1,10 +1,11 @@
 from __future__ import annotations
 
+from collections.abc import Mapping
 from dataclasses import dataclass, field
 from datetime import datetime
 from enum import StrEnum
 from pathlib import Path
-from typing import ClassVar, Mapping
+from typing import ClassVar
 
 from thesis_forge.core.model import ThesisDocument, ValidationIssue
 from thesis_forge.core.render_plan import RenderPlan
@@ -24,6 +25,63 @@ class BuildStage(StrEnum):
 class BuildIntent(StrEnum):
     PUBLISH = "publish"
     LIVE_PREVIEW = "live-preview"
+
+
+class ProjectRequestIntent(StrEnum):
+    INSPECT = "inspect"
+    VALIDATE = "validate"
+    REVIEW = "review"
+    BUILD = "build"
+
+
+@dataclass(frozen=True, slots=True)
+class ProjectIdentity:
+    project_id: str
+    project_root: Path
+    manifest_path: Path
+
+    @property
+    def root(self) -> Path:
+        return self.project_root
+
+    def __post_init__(self) -> None:
+        if not self.project_id.strip():
+            raise ValueError("project_id must not be blank")
+        for name in ("project_root", "manifest_path"):
+            value = getattr(self, name)
+            if not isinstance(value, Path):
+                raise TypeError(f"{name} must be a Path")
+            if not value.is_absolute():
+                raise ValueError(f"{name} must be absolute")
+
+
+@dataclass(frozen=True, slots=True)
+class ProjectOutput:
+    path: Path
+
+    def __post_init__(self) -> None:
+        if not isinstance(self.path, Path):
+            raise TypeError("project output path must be a Path")
+        if not self.path.is_absolute():
+            raise ValueError("project output path must be absolute")
+
+
+@dataclass(frozen=True, slots=True)
+class ProjectRequest:
+    project: ProjectIdentity
+    intent: ProjectRequestIntent
+    output: ProjectOutput | None = None
+    editor_snapshot: str | None = None
+
+    def __post_init__(self) -> None:
+        if not isinstance(self.project, ProjectIdentity):
+            raise TypeError("project must be a ProjectIdentity")
+        if not isinstance(self.intent, ProjectRequestIntent):
+            raise TypeError("intent must be a ProjectRequestIntent")
+        if self.output is not None and not isinstance(self.output, ProjectOutput):
+            raise TypeError("output must be a ProjectOutput or None")
+        if self.editor_snapshot is not None and not isinstance(self.editor_snapshot, str):
+            raise TypeError("editor_snapshot must be a string or None")
 
 
 class BuildOutcome(StrEnum):
