@@ -170,6 +170,132 @@ pub fn open_source_path(path: &Path) -> Result<Value, String> {
     }))
 }
 
+fn yaml_section_value(text: &str, section: &str, field: &str) -> Option<String> {
+    let section_header = format!("{section}:");
+    let field_prefix = format!("{field}:");
+    let mut active = false;
+    for line in text.lines() {
+        if !line.starts_with(' ') && !line.starts_with('\t') {
+            active = line.trim() == section_header;
+            continue;
+        }
+        if active {
+            let trimmed = line.trim();
+            if let Some(value) = trimmed.strip_prefix(&field_prefix) {
+                let value = value.trim();
+                if !value.is_empty() {
+                    return Some(value.trim_matches(['"', '\'']).to_string());
+                }
+            }
+        }
+    }
+    None
+}
+
+fn resolve_project_relative(root: &Path, raw: &str, field: &str) -> Result<PathBuf, String> {
+    let value = raw.trim().replace('\\', "/");
+    let path = Path::new(&value);
+    let windows_absolute = value.len() >= 3
+        && value.as_bytes()[1] == b':'
+        && matches!(value.as_bytes()[2], b'/' | b'\\');
+    let uri_scheme = value.find(':').is_some_and(|index| {
+        index > 0
+            && value[..index]
+                .chars()
+                .all(|character| character.is_ascii_alphabetic())
+    });
+    if value.is_empty()
+        || value.starts_with('/')
+        || value.starts_with("//")
+        || Path::new(raw).is_absolute()
+        || windows_absolute
+        || uri_scheme
+        || path
+            .components()
+            .any(|component| matches!(component, std::path::Component::ParentDir))
+    {
+        return Err(format!("{field} must remain inside the project root"));
+    }
+    let candidate = root.join(path);
+    let resolved = candidate
+        .canonicalize()
+        .map_err(|_| format!("{field} does not exist"))?;
+    if resolved != root && !resolved.starts_with(root) {
+        return Err(format!("{field} escapes the project root"));
+    }
+    Ok(resolved)
+}
+
+pub fn open_project_path(path: &Path) -> Result<Value, String> {
+    if is_markdown_source(path) {
+        return Err("project selection requires a directory or thesisforge.yaml".to_string());
+    }
+    let candidate = path.to_path_buf();
+    let (root, manifest) = if candidate.is_dir() {
+        let root = candidate
+            .canonicalize()
+            .map_err(|error| format!("failed to resolve project selection: {error}"))?;
+        let manifest = root.join("thesisforge.yaml");
+        if !manifest.is_file() {
+            return Err("project directory does not contain thesisforge.yaml".to_string());
+        }
+        (
+            root,
+            manifest.canonicalize().map_err(|_| {
+                "thesisforge.yaml cannot be resolved inside the project root".to_string()
+            })?,
+        )
+    } else if candidate.file_name() == Some(OsStr::new("thesisforge.yaml")) {
+        let raw_root = candidate
+            .parent()
+            .ok_or_else(|| "manifest project root is missing".to_string())?
+            .canonicalize()
+            .map_err(|error| format!("failed to resolve project root: {error}"))?;
+        let manifest = candidate
+            .canonicalize()
+            .map_err(|error| format!("failed to resolve manifest: {error}"))?;
+        if manifest.parent() != Some(raw_root.as_path()) {
+            return Err("thesisforge.yaml escapes the project root".to_string());
+        }
+        (raw_root, manifest)
+    } else {
+        return Err("project selection must be a directory or thesisforge.yaml".to_string());
+    };
+    if manifest.parent() != Some(root.as_path()) {
+        return Err("thesisforge.yaml escapes the project root".to_string());
+    }
+
+    let manifest_text = std::fs::read_to_string(&manifest)
+        .map_err(|error| format!("failed to read thesisforge.yaml: {error}"))?;
+    let project_id = yaml_section_value(&manifest_text, "project", "id")
+        .ok_or_else(|| "project.id is required".to_string())?;
+    let source_value = yaml_section_value(&manifest_text, "document", "source")
+        .ok_or_else(|| "document.source is required".to_string())?;
+    let source = resolve_project_relative(&root, &source_value, "document.source")?;
+    if !source.is_file() {
+        return Err("document.source must be a regular file".to_string());
+    }
+    let file_name = source
+        .file_name()
+        .and_then(OsStr::to_str)
+        .ok_or_else(|| "document.source file name is invalid".to_string())?;
+    let text = std::fs::read_to_string(&source)
+        .map_err(|error| format!("failed to read document.source: {error}"))?;
+    Ok(serde_json::json!({
+        "project": {
+            "id": project_id,
+            "root": root.to_string_lossy(),
+            "manifestPath": manifest.to_string_lossy()
+        },
+        "source": {
+            "kind": "desktop",
+            "path": source.to_string_lossy(),
+            "fileName": file_name
+        },
+        "text": text
+    }))
+}
+
 pub fn acceptance_source_override(raw_path: Option<&OsStr>) -> Result<Option<Value>, String> {
     let Some(raw_path) = raw_path.filter(|value| !value.is_empty()) else {
         return Ok(None);
@@ -919,6 +1045,17 @@ async fn pick_source() -> Result<Option<Value>, String> {
 }
 
 #[tauri::command]
+async fn pick_project() -> Result<Option<Value>, String> {
+    let handle = rfd::AsyncFileDialog::new()
+        .set_title("选择 ThesisForge 项目")
+        .pick_folder()
+        .await;
+    handle
+        .map(|file| open_project_path(file.path()))
+        .transpose()
+}
+
+#[tauri::command]
 async fn pick_pdf_preview(
     state: State<'_, PreviewAuthorizationState>,
 ) -> Result<Option<Value>, String> {
@@ -1013,9 +1150,13 @@ pub fn run() {
             prepare_live_preview_output,
             discard_live_preview_output,
             pick_source,
+            pick_project,
             pick_pdf_preview,
             read_pdf_preview
         ])
         .run(tauri::generate_context!())
         .expect("error while running ThesisForge desktop");
 }
+
+#[cfg(test)]
+mod project_tests;
