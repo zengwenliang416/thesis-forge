@@ -111,6 +111,14 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
   - Verification-surface change: authorized; creates focused inline-model tests.
   - Attempts: 0
 
+- [V2-303] Replace the basic Block model
+  - Files: `src/thesis_forge/core/model.py`, `tests/core/test_block_model.py`
+  - Behavior: Heading and Paragraph own inlines only; lists are recursive; BlockQuote and CodeBlock are typed.
+  - Verify: `.venv/bin/python -m pytest tests/core/test_block_model.py`
+  - Acceptance: no authoritative `text + inlines` duplication remains.
+  - Verification-surface change: authorized; creates focused block-model tests.
+  - Attempts: 0
+
 ## Done
 
 - [V2-215] Validate layout override targets and types
@@ -632,6 +640,7 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 - 2026-08-21 - V2-214A Checker PASS; exact Verify green with full suite 16 files/204 tests, typecheck/lint/diff-check clean, diff limited to the 2 named files with single-source ProjectIdentityRef import and optional `project?` payload field, 8 independent probes confirmed byte-identical serialization, Tauri pass-through, JSON round-trip, project-less positive control, and tsc rejection of invalid envelopes; no push.
 - 2026-08-22 - V2-214B Checker PASS; exact Verify green with full suite 17 files/214 tests, typecheck/lint/diff-check clean, diff limited to the 3 named files, 4 independent probes confirmed exact {id,root,manifestPath} identity on all five request kinds, A→B switch reset with no stale final-preview resolution, picker cancel/failure paths, and project-key-free web upload payloads; no push.
 - 2026-08-22 - Open refilled with V2-302 per the catalogue dependency order after V2-214B left two Open items; the recursive Inline replacement is expected to need re-slicing when its cycle arrives (parser and consumer construction sites exceed the two-file catalogue slice); no product code edited.
+- 2026-08-22 - Open refilled with V2-303 per the catalogue dependency order; the basic Block replacement may need re-slicing when its cycle arrives (consumer construction sites exceed the two-file catalogue slice); no product code edited.
 - 2026-08-22 - V2-215 Checker PASS; exact Verify 7/7 green, baselines (67 core/application/adapter tests) and ruff clean, full-suite failure sets identical HEAD vs candidate (46 pre-existing, zero new), 5 independent probes confirmed structured orphan/type-mismatch errors, figure-width pass, projectless silence, and sorted output; no push.
 
 ## Sync log
