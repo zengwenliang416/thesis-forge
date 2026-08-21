@@ -103,6 +103,22 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
   - Verification-surface change: authorized; creates focused workbench project-flow tests and migrates existing workbench regressions.
   - Attempts: 0
 
+- [V2-215] Validate layout override targets and types
+  - Files: `src/thesis_forge/core/validator.py`, `tests/core/test_object_overrides.py`
+  - Behavior: layout override target must exist and match the expected semantic object type.
+  - Verify: `.venv/bin/python -m pytest tests/core/test_object_overrides.py`
+  - Acceptance: missing figure ID and applying figure width to an equation are errors with stable structured diagnostics.
+  - Verification-surface change: authorized; creates focused object-override validation tests.
+  - Attempts: 0
+
+- [V2-301] Add NodeId and complete SourceSpan to the typed model
+  - Files: `src/thesis_forge/core/model.py`, `tests/core/test_source_identity.py`
+  - Behavior: every semantic node has stable internal identity and start/end file/line/column span.
+  - Verify: `.venv/bin/python -m pytest tests/core/test_source_identity.py`
+  - Acceptance: multi-line nodes and generated origins are representable; existing parser/compiler baselines stay green.
+  - Verification-surface change: authorized; creates focused source-identity model tests.
+  - Attempts: 0
+
 ## Done
 
 - [V2-213B] Migrate e2e specs to project selection
@@ -590,5 +606,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 - 2026-08-21 - V2-213 split into ordered children V2-213A and V2-213B after the project-opening label change was found to require ProductBar plus new focused tests, four existing WorkbenchApp vitest assertions, and three e2e specs — beyond the two-file slice; Open refilled with V2-214 per the catalogue; no product code edited in the split cycle.
 - 2026-08-21 - V2-213A Checker PASS; exact Verify passed with full suite green (16 files, 197 tests), typecheck/lint/diff-check passed, 4 independent probes confirmed project-selection label, yaml-only accept, project identity plus active source display and handler routing; no push.
 - 2026-08-21 - V2-213B Checker PASS; exact Verify exited 0, diff limited to the 3 named e2e files with 6 pure label replacements matching ProductBar aria-label "打开 ThesisForge 项目", git diff --check clean; no push.
+- 2026-08-21 - Open refilled with V2-215 and V2-301 per the catalogue dependency order after V2-213B left one Open item; validator.py already loads the project manifest and model.py nodes are additive-safe, so both slices fit the three-file bound; no product code edited.
 
 ## Sync log
