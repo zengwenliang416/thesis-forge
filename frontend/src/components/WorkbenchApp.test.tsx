@@ -42,7 +42,7 @@ describe("WorkbenchApp", () => {
     );
 
     expect(screen.getByText("ThesisForge")).toBeVisible();
-    expect(screen.getByRole("button", { name: "打开 Markdown 文稿" })).toBeEnabled();
+    expect(screen.getByRole("button", { name: "打开 ThesisForge 项目" })).toBeEnabled();
     expect(screen.getByRole("button", { name: "保存文稿" })).toBeDisabled();
     expect(screen.getByRole("button", { name: "验证论文" })).toBeDisabled();
     expect(screen.getByRole("button", { name: "构建 DOCX" })).toBeDisabled();
@@ -383,10 +383,10 @@ describe("WorkbenchApp", () => {
         initialState={createInitialWorkspaceState()}
       />,
     );
-    await user.click(screen.getByRole("button", { name: "打开 Markdown 文稿" }));
+    await user.click(screen.getByRole("button", { name: "打开 ThesisForge 项目" }));
 
     expect(screen.getByText("无法读取 Markdown 文稿")).toBeVisible();
-    expect(screen.getByRole("button", { name: "打开 Markdown 文稿" })).toBeEnabled();
+    expect(screen.getByRole("button", { name: "打开 ThesisForge 项目" })).toBeEnabled();
   });
 
   it("keeps Web build output inside the opaque workspace", async () => {
@@ -784,7 +784,7 @@ describe("WorkbenchApp", () => {
         initialState={initialState}
       />,
     );
-    await user.click(screen.getByRole("button", { name: "打开 Markdown 文稿" }));
+    await user.click(screen.getByRole("button", { name: "打开 ThesisForge 项目" }));
 
     expect(dispatchCommand).toHaveBeenNthCalledWith(
       1,

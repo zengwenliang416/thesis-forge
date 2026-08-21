@@ -95,15 +95,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Open
 
-- [V2-213A] Make the product bar present project selection
-  - Parent: ordered child 1/2 of `V2-213`; the parent behavior remains unchanged.
-  - Files: `frontend/src/components/ProductBar.tsx`, `frontend/src/components/ProductBar.project.test.tsx`, `frontend/src/components/WorkbenchApp.test.tsx`
-  - Behavior: product bar open action, manifest accept text and identity display describe project/manifest selection instead of standalone Markdown selection.
-  - Verify: `pnpm --dir frontend test -- ProductBar.project.test.tsx WorkbenchApp.test.tsx`
-  - Acceptance: open-button accessible name and file chooser accept text target `thesisforge.yaml`/project selection; a loaded project's display identity and active source are shown; existing workbench assertions migrate to the project-opening labels.
-  - Verification-surface change: authorized; creates focused project-opening UI tests and migrates existing workbench assertions.
-  - Attempts: 0
-
 - [V2-213B] Migrate e2e specs to project selection
   - Parent: ordered child 2/2 of `V2-213`; depends on `V2-213A`.
   - Files: `frontend/e2e/workbench.spec.ts`, `frontend/e2e/acceptance.spec.ts`, `frontend/e2e/tauri-windows.acceptance.ts`
@@ -122,6 +113,16 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
   - Attempts: 0
 
 ## Done
+
+- [V2-213A] Make the product bar present project selection
+  - Parent: ordered child 1/2 of `V2-213`; the parent behavior remains unchanged.
+  - Files: `frontend/src/components/ProductBar.tsx`, `frontend/src/components/ProductBar.project.test.tsx`, `frontend/src/components/WorkbenchApp.test.tsx`
+  - Behavior: product bar open action, manifest accept text and identity display describe project/manifest selection instead of standalone Markdown selection.
+  - Verify: `pnpm --dir frontend test -- ProductBar.project.test.tsx WorkbenchApp.test.tsx`
+  - Acceptance: open-button accessible name and file chooser accept text target `thesisforge.yaml`/project selection; a loaded project's display identity and active source are shown; existing workbench assertions migrate to the project-opening labels.
+  - Verification-surface change: authorized; creates focused project-opening UI tests and migrates existing workbench assertions.
+  - Attempts: 1
+  - Attempt 1 (2026-08-21): exact Verify passed with full suite green (16 files, 197 tests incl. 8 new ProductBar project tests and 17 WorkbenchApp tests); typecheck, lint and git diff --check passed. Independent Checker probes (4 tests, then deleted) confirmed all-false-actions render exposes the open control only as "打开 ThesisForge 项目" (old "打开 Markdown 文稿" absent) with accept=".yaml,.yml,text/yaml" and no markdown/.md; a loaded project (本科论文 + thesis.md) shows project name and 活动源 plus dirty 有未保存修改; source-only state shows source name with no project fallback leakage; manifest upload routes to onFileSelected and open click to onChooseSource. Grep of ProductBar.tsx found no remaining markdown advertising.
 
 - [V2-212] Track ProjectIdentity in workspace state
   - Files: `frontend/src/state/workspace.ts`, `frontend/src/state/workspace.project.test.ts`
@@ -586,5 +587,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 - 2026-08-21 - V2-211B Checker PASS; exact Verify passed 61 focused tests with full suite green (179 tests), typecheck/lint/diff-check passed, independent probes confirmed single pick_project invoke, lossless typed validation, cross-transport contract and unchanged openSource; no push.
 - 2026-08-21 - V2-212 Checker PASS; exact Verify passed with full suite green (15 files, 189 tests), typecheck/lint/diff-check passed, 6 independent probes confirmed project identity tracking, reset parity with sourceOpened, and project-derived dirty/save/build permissions; no push.
 - 2026-08-21 - V2-213 split into ordered children V2-213A and V2-213B after the project-opening label change was found to require ProductBar plus new focused tests, four existing WorkbenchApp vitest assertions, and three e2e specs — beyond the two-file slice; Open refilled with V2-214 per the catalogue; no product code edited in the split cycle.
+- 2026-08-21 - V2-213A Checker PASS; exact Verify passed with full suite green (16 files, 197 tests), typecheck/lint/diff-check passed, 4 independent probes confirmed project-selection label, yaml-only accept, project identity plus active source display and handler routing; no push.
 
 ## Sync log

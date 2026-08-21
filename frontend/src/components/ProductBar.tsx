@@ -42,8 +42,13 @@ export function ProductBar({
       <div className="document-identity">
         <FileText aria-hidden="true" />
         <div>
-          <strong>{state.source?.name ?? "尚未打开文稿"}</strong>
-          <span>{state.dirty ? "有未保存修改" : "保存快照已同步"}</span>
+          <strong>
+            {state.project?.name ?? state.source?.name ?? "尚未打开项目"}
+          </strong>
+          <span>
+            {state.project ? `活动源：${state.source?.name} · ` : ""}
+            {state.dirty ? "有未保存修改" : "保存快照已同步"}
+          </span>
         </div>
       </div>
       <div className="primary-actions" role="toolbar" aria-label="文稿操作">
@@ -51,7 +56,7 @@ export function ProductBar({
           ref={fileInputRef}
           className="visually-hidden"
           type="file"
-          accept=".md,text/markdown,text/plain"
+          accept=".yaml,.yml,text/yaml"
           tabIndex={-1}
           onChange={(event) => {
             const file = event.currentTarget.files?.[0];
@@ -66,7 +71,7 @@ export function ProductBar({
           className="button secondary open-action"
           disabled={!actions.canOpen}
           onClick={onChooseSource}
-          aria-label="打开 Markdown 文稿"
+          aria-label="打开 ThesisForge 项目"
         >
           <FolderOpen aria-hidden="true" />
           打开
