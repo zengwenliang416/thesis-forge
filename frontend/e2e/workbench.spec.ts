@@ -85,7 +85,7 @@ test("launches the shared workbench with keyboard-visible controls", async (
   await page.goto("/");
 
   await expect(page.getByText("ThesisForge")).toBeVisible();
-  await expect(page.getByRole("button", { name: "打开 Markdown 文稿" })).toBeVisible();
+  await expect(page.getByRole("button", { name: "打开 ThesisForge 项目" })).toBeVisible();
   await expect(page.getByRole("region", { name: "Markdown 编辑器" })).toBeVisible();
   if (testInfo.project.name !== "mobile-chromium") {
     await expect(
@@ -135,7 +135,7 @@ test("keeps the product identity and compact actions visible on mobile", async (
 
   await expect(page.getByText("ThesisForge")).toBeVisible();
   const controls = [
-    page.getByRole("button", { name: "打开 Markdown 文稿" }),
+    page.getByRole("button", { name: "打开 ThesisForge 项目" }),
     page.getByRole("button", { name: "构建 DOCX" }),
     page.getByRole("tab", { name: "诊断" }),
   ];
@@ -613,7 +613,7 @@ test("preserves keyboard focus order and panel resizing at desktop widths", asyn
 
   await page.keyboard.press("Tab");
   await expect(
-    page.getByRole("button", { name: "打开 Markdown 文稿" }),
+    page.getByRole("button", { name: "打开 ThesisForge 项目" }),
   ).toBeFocused();
   const separator = page.getByRole("separator", { name: "调整大纲宽度" });
   await separator.focus();

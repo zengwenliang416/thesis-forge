@@ -95,15 +95,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Open
 
-- [V2-213B] Migrate e2e specs to project selection
-  - Parent: ordered child 2/2 of `V2-213`; depends on `V2-213A`.
-  - Files: `frontend/e2e/workbench.spec.ts`, `frontend/e2e/acceptance.spec.ts`, `frontend/e2e/tauri-windows.acceptance.ts`
-  - Behavior: e2e specs drive the project-opening action instead of the retired standalone Markdown label.
-  - Verify: `pnpm --dir frontend exec playwright test --list >/dev/null && ! grep -rn "打开 Markdown 文稿" frontend/e2e/`
-  - Acceptance: all e2e specs parse and no e2e reference to the standalone Markdown open label remains.
-  - Verification-surface change: authorized; migrates existing e2e project-opening references.
-  - Attempts: 0
-
 - [V2-214] Wire the workbench project load flow
   - Files: `frontend/src/components/WorkbenchApp.tsx`, `frontend/src/components/WorkbenchApp.project.test.tsx`, `frontend/src/components/WorkbenchApp.test.tsx`
   - Behavior: open project, load the manifest source, save editor snapshot and pass project identity to all operations.
@@ -113,6 +104,16 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
   - Attempts: 0
 
 ## Done
+
+- [V2-213B] Migrate e2e specs to project selection
+  - Parent: ordered child 2/2 of `V2-213`; depends on `V2-213A`.
+  - Files: `frontend/e2e/workbench.spec.ts`, `frontend/e2e/acceptance.spec.ts`, `frontend/e2e/tauri-windows.acceptance.ts`
+  - Behavior: e2e specs drive the project-opening action instead of the retired standalone Markdown label.
+  - Verify: `pnpm --dir frontend exec playwright test --list >/dev/null && ! grep -rn "打开 Markdown 文稿" frontend/e2e/`
+  - Acceptance: all e2e specs parse and no e2e reference to the standalone Markdown open label remains.
+  - Verification-surface change: authorized; migrates existing e2e project-opening references.
+  - Attempts: 1
+  - Attempt 1 (2026-08-21): diff contained exactly the 3 named files with 6 pure line-level replacements of `打开 Markdown 文稿` → `打开 ThesisForge 项目`; exact Verify exited 0 (playwright test --list parsed all specs, no e2e reference to the old label remains); ProductBar.tsx:74 aria-label="打开 ThesisForge 项目" matches the replacement; remaining e2e "Markdown" references are only out-of-scope editor/empty-state strings; git diff --check clean.
 
 - [V2-213A] Make the product bar present project selection
   - Parent: ordered child 1/2 of `V2-213`; the parent behavior remains unchanged.
@@ -588,5 +589,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 - 2026-08-21 - V2-212 Checker PASS; exact Verify passed with full suite green (15 files, 189 tests), typecheck/lint/diff-check passed, 6 independent probes confirmed project identity tracking, reset parity with sourceOpened, and project-derived dirty/save/build permissions; no push.
 - 2026-08-21 - V2-213 split into ordered children V2-213A and V2-213B after the project-opening label change was found to require ProductBar plus new focused tests, four existing WorkbenchApp vitest assertions, and three e2e specs — beyond the two-file slice; Open refilled with V2-214 per the catalogue; no product code edited in the split cycle.
 - 2026-08-21 - V2-213A Checker PASS; exact Verify passed with full suite green (16 files, 197 tests), typecheck/lint/diff-check passed, 4 independent probes confirmed project-selection label, yaml-only accept, project identity plus active source display and handler routing; no push.
+- 2026-08-21 - V2-213B Checker PASS; exact Verify exited 0, diff limited to the 3 named e2e files with 6 pure label replacements matching ProductBar aria-label "打开 ThesisForge 项目", git diff --check clean; no push.
 
 ## Sync log

@@ -93,7 +93,7 @@ test("verifies empty, disabled, keyboard-focus, contrast, resize, and reduced mo
   await expect(page.getByLabel("学校模板")).toBeDisabled();
 
   await page.keyboard.press("Tab");
-  const open = page.getByRole("button", { name: "打开 Markdown 文稿" });
+  const open = page.getByRole("button", { name: "打开 ThesisForge 项目" });
   await expect(open).toBeFocused();
   const focusStyle = await open.evaluate((element) => {
     const style = getComputedStyle(element);
@@ -238,7 +238,7 @@ test("verifies loading and permission recovery without losing the opened source"
     buffer: Buffer.from("# 绪论\n"),
   });
   await expect(page.getByText("正在读取工作区")).toBeVisible();
-  await expect(page.getByRole("button", { name: "打开 Markdown 文稿" })).toBeDisabled();
+  await expect(page.getByRole("button", { name: "打开 ThesisForge 项目" })).toBeDisabled();
   releaseWorkspace?.();
   await upload;
 

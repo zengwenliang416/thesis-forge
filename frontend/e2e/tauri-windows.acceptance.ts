@@ -292,7 +292,7 @@ async function main(): Promise<void> {
     assert.equal(await shell.getAttribute("data-runtime"), "tauri");
     assert.match(await shell.innerText(), /本地桌面/);
 
-    await page.getByRole("button", { name: "打开 Markdown 文稿" }).click();
+    await page.getByRole("button", { name: "打开 ThesisForge 项目" }).click();
     const editor = page.getByLabel("Markdown 文稿内容");
     await editor.waitFor({ state: "visible" });
     await page.waitForFunction(
