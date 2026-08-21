@@ -14,6 +14,8 @@ from thesis_forge.bibliography import (
     normalize_citation_style,
     supported_citation_styles,
 )
+from thesis_forge.project.loader import ProjectLoadError, load_project
+from thesis_forge.project.paths import ProjectPathError, resolve_project_paths
 from thesis_forge.templates import (
     TemplateAmbiguousError,
     TemplateLoadError,
@@ -55,6 +57,10 @@ class ValidationContext:
     rules: Sequence[ValidationRule] | None = None
     bibliography_loader: BibliographyLoader = field(default_factory=LocalBibTeXLoader)
     bibliography_database: BibliographyDatabase | None = None
+    manifest_bibliography_path: Path | None = None
+    manifest_bibliography_reference: str | None = None
+    manifest_citation_style: str | None = None
+    project_error: ProjectLoadError | ProjectPathError | None = None
 
     @classmethod
     def from_document(
@@ -68,23 +74,59 @@ class ValidationContext:
         rules: Sequence[ValidationRule] | None = None,
         bibliography_loader: BibliographyLoader | None = None,
     ) -> ValidationContext:
+        project = None
+        manifest_paths = None
+        project_error = None
+        try:
+            project = _discover_project(document.source_path)
+            manifest_paths = (
+                resolve_project_paths(project)
+                if project is not None
+                else None
+            )
+        except (ProjectLoadError, ProjectPathError) as error:
+            project_error = error
         render = document.metadata.get("render")
         template_id = render.get("template_id") if isinstance(render, dict) else None
         if not isinstance(template_id, str):
             template_id = None
+        if project is not None:
+            template_id = project.manifest.render.template_id
 
         active_template_roots = (
             tuple(template_roots)
             if template_roots is not None
-            else default_template_search_roots(document.source_path)
+            else default_template_search_roots(
+                project.source_path if project is not None else document.source_path
+            )
         )
         active_resource_roots = tuple(
             Path(root).expanduser().resolve()
             for root in (
                 resource_roots
                 if resource_roots is not None
-                else (document.source_path.parent,)
+                else (
+                    (manifest_paths.project_root, manifest_paths.assets)
+                    if manifest_paths is not None
+                    else (document.source_path.parent,)
+                )
             )
+        )
+        manifest_bibliography_path = (
+            manifest_paths.bibliography
+            if manifest_paths is not None
+            else None
+        )
+        manifest_bibliography_reference = (
+            str(project.manifest.resources.bibliography)
+            if project is not None
+            and project.manifest.resources.bibliography is not None
+            else None
+        )
+        manifest_citation_style = (
+            project.manifest.render.citation_style
+            if project is not None
+            else None
         )
 
         try:
@@ -100,6 +142,10 @@ class ValidationContext:
                 required_metadata=tuple(required_metadata),
                 rules=rules,
                 bibliography_loader=bibliography_loader or LocalBibTeXLoader(),
+                manifest_bibliography_path=manifest_bibliography_path,
+                manifest_bibliography_reference=manifest_bibliography_reference,
+                manifest_citation_style=manifest_citation_style,
+                project_error=project_error,
             )
         return cls(
             template=resolved.template,
@@ -108,7 +154,20 @@ class ValidationContext:
             required_metadata=tuple(required_metadata),
             rules=rules,
             bibliography_loader=bibliography_loader or LocalBibTeXLoader(),
+            manifest_bibliography_path=manifest_bibliography_path,
+            manifest_bibliography_reference=manifest_bibliography_reference,
+            manifest_citation_style=manifest_citation_style,
+            project_error=project_error,
         )
+
+
+def _discover_project(source_path: Path):
+    source = Path(source_path).expanduser().resolve()
+    for ancestor in (source.parent, *source.parents):
+        manifest_path = ancestor / "thesisforge.yaml"
+        if manifest_path.is_file():
+            return load_project(manifest_path)
+    return None
 
 
 def _metadata_value(document: ThesisDocument, dotted_path: str) -> object | None:
@@ -118,6 +177,22 @@ def _metadata_value(document: ThesisDocument, dotted_path: str) -> object | None
             return None
         value = value[part]
     return value
+
+
+def _validate_project_error(
+    _document: ThesisDocument,
+    context: ValidationContext,
+) -> Iterable[ValidationIssue]:
+    if context.project_error is None:
+        return
+    error = context.project_error
+    yield ValidationIssue(
+        code="project-path-boundary",
+        severity="error",
+        message="Project resource path could not be resolved safely",
+        target=error.field,
+        details={"error_code": error.code},
+    )
 
 
 def _expected_id_prefixes(block: object) -> tuple[str, ...] | None:
@@ -251,9 +326,13 @@ def _active_resource_roots(
 def _resolve_local_resource(
     document: ThesisDocument,
     context: ValidationContext,
-    value: str,
+    value: str | Path,
 ) -> tuple[Path, bool]:
-    path = (document.source_path.parent / value).resolve()
+    path = (
+        value.resolve()
+        if isinstance(value, Path)
+        else (document.source_path.parent / value).resolve()
+    )
     escaped = not any(
         path.is_relative_to(root)
         for root in _active_resource_roots(document, context)
@@ -298,7 +377,20 @@ def _validate_bibliography(
     context: ValidationContext,
 ) -> Iterable[ValidationIssue]:
     context.bibliography_database = None
-    bibliography_path = document.bibliography.path if document.bibliography else None
+    bibliography_path = (
+        context.manifest_bibliography_path
+        if context.manifest_bibliography_path is not None
+        else document.bibliography.path
+        if document.bibliography
+        else None
+    )
+    bibliography_target = (
+        context.manifest_bibliography_reference
+        if context.manifest_bibliography_reference is not None
+        else str(bibliography_path)
+        if bibliography_path is not None
+        else None
+    )
     first_citation = document.citations[0] if document.citations else None
     if not bibliography_path:
         if first_citation is not None:
@@ -319,7 +411,9 @@ def _validate_bibliography(
 
     # D-07：citation_style / 模板 citation.style 必须真正可解析；不支持的
     # 样式给结构化诊断，而不是静默回落默认 GB/T 引擎。
-    style = document.bibliography.citation_style if document.bibliography else None
+    style = context.manifest_citation_style
+    if style is None and document.bibliography:
+        style = document.bibliography.citation_style
     if (
         style is None
         and context.template is not None
@@ -343,7 +437,7 @@ def _validate_bibliography(
             severity="error",
             message="Local resource path escapes the configured resource root",
             line=line,
-            target=bibliography_path,
+            target=bibliography_target,
             details={"resource_type": "bibliography"},
         )
         return
@@ -353,7 +447,7 @@ def _validate_bibliography(
             severity="error",
             message="Configured bibliography file does not exist",
             line=line,
-            target=bibliography_path,
+            target=bibliography_target,
         )
         return
 
@@ -362,7 +456,9 @@ def _validate_bibliography(
     except (BibliographyError, OSError) as error:
         details: dict[str, str | int] = {
             "error_type": type(error).__name__,
-            "problem": str(error),
+            "problem": str(
+                getattr(error, "detail", str(error))
+            ).replace(str(resolved_path), "<path>"),
         }
         if isinstance(error, BibliographyParseError):
             details["bibliography_line"] = error.line
@@ -371,7 +467,7 @@ def _validate_bibliography(
             severity="error",
             message="Configured bibliography data is invalid",
             line=line,
-            target=bibliography_path,
+            target=bibliography_target,
             details=details,
         )
         return
@@ -386,7 +482,7 @@ def _validate_bibliography(
                     message="Citation key does not exist in the local bibliography",
                     line=citation.location.line,
                     target=key,
-                    details={"bibliography": bibliography_path},
+                    details={"bibliography": bibliography_target or ""},
                 )
 
 
@@ -464,6 +560,7 @@ def _validate_template(
 
 
 DEFAULT_VALIDATION_RULES: tuple[ValidationRule, ...] = (
+    _validate_project_error,
     _validate_required_metadata,
     _validate_empty_document,
     _validate_ids,
