@@ -4,19 +4,19 @@ import json
 from dataclasses import asdict
 from pathlib import Path
 from typing import Annotated
+from uuid import uuid4
 
 import typer
 from rich.console import Console
 from rich.table import Table as RichTable
 
+from thesis_forge.adapters.dto import serialize_build_report
 from thesis_forge.application import (
     ApplicationStageError,
     BuildValidationError,
-    build_service,
-    inspect_service,
-    validation_service,
 )
 from thesis_forge.application.contracts import (
+    BuildIntent,
     ProjectIdentity,
     ProjectOutput,
     ProjectRequest,
@@ -59,9 +59,61 @@ def _project_request(
     )
 
 
+def _require_project_input(source: Path) -> None:
+    if not _is_project_input(source):
+        raise ProjectLoadError(
+            "TF-PROJECT-ENTRY-REQUIRED",
+            "a project directory or thesisforge.yaml is required",
+            path=source,
+        )
+
+
 def _report_project_error(error: ProjectLoadError | ProjectPathError) -> None:
     console.print(f"[red]项目加载失败（{error.code}）：{error}[/red]")
     raise typer.Exit(2) from None
+
+
+def _report_project_build_error(
+    error: BuildValidationError | ApplicationStageError,
+    *,
+    exit_code: int,
+) -> None:
+    build_id = f"cli-{uuid4().hex}"
+    report = (
+        error.to_report(
+            build_id=build_id,
+            intent=BuildIntent.PUBLISH,
+        )
+        if isinstance(error, BuildValidationError)
+        else error.to_report(
+            build_id=build_id,
+            intent=BuildIntent.PUBLISH,
+        )
+        if hasattr(error, "to_report")
+        else None
+    )
+    if report is None:
+        from thesis_forge.application.contracts import BuildReport
+
+        report = BuildReport.from_error(
+            error,
+            build_id=build_id,
+            intent=BuildIntent.PUBLISH,
+        )
+    message = (
+        f"编译停止（{error.stage}）：存在 {len(error.issues)} 个验证错误。"
+        "请先运行 validate。"
+        if isinstance(error, BuildValidationError)
+        else f"构建失败（{error.stage}）：{error}"
+    )
+    console.print_json(
+        json.dumps(
+            {"message": message, "report": serialize_build_report(report)},
+            ensure_ascii=False,
+            default=str,
+        )
+    )
+    raise typer.Exit(exit_code) from None
 
 
 def _report_application_error(error: ApplicationStageError, *, source: Path) -> None:
@@ -80,12 +132,10 @@ def _report_application_error(error: ApplicationStageError, *, source: Path) -> 
 def inspect(source: Path) -> None:
     """解析 Markdown 并输出结构。"""
     try:
-        if _is_project_input(source):
-            doc = ProjectApplicationService().inspect(
-                _project_request(source, ProjectRequestIntent.INSPECT)
-            ).document
-        else:
-            doc = inspect_service(source).document
+        _require_project_input(source)
+        doc = ProjectApplicationService().inspect(
+            _project_request(source, ProjectRequestIntent.INSPECT)
+        ).document
     except (ProjectLoadError, ProjectPathError) as error:
         _report_project_error(error)
     except ApplicationStageError as error:
@@ -122,12 +172,10 @@ def validate(
 ) -> None:
     """检查结构和引用问题。"""
     try:
-        if _is_project_input(source):
-            result = ProjectApplicationService().validate(
-                _project_request(source, ProjectRequestIntent.VALIDATE)
-            )
-        else:
-            result = validation_service(source, template_path=template)
+        _require_project_input(source)
+        result = ProjectApplicationService().validate(
+            _project_request(source, ProjectRequestIntent.VALIDATE)
+        )
     except (ProjectLoadError, ProjectPathError) as error:
         _report_project_error(error)
     except ApplicationStageError as error:
@@ -183,35 +231,32 @@ def build(
     ] = None,
 ) -> None:
     """通过安全的本地编译流水线生成 DOCX。"""
+    project_input = _is_project_input(source)
     try:
-        if _is_project_input(source):
-            project = load_project(source)
-            paths = resolve_project_paths(project)
-            output_path = (
-                paths.docx
-                if output == Path("output/thesis.docx")
-                else (
-                    output
-                    if output.is_absolute()
-                    else (project.project_root / output).resolve()
-                )
+        _require_project_input(source)
+        project = load_project(source)
+        paths = resolve_project_paths(project)
+        output_path = (
+            paths.docx
+            if output == Path("output/thesis.docx")
+            else (
+                output
+                if output.is_absolute()
+                else (project.project_root / output).resolve()
             )
-            result = ProjectApplicationService().build(
-                _project_request(
-                    source,
-                    ProjectRequestIntent.BUILD,
-                    output=output_path,
-                )
-            )
-        else:
-            result = build_service(
+        )
+        result = ProjectApplicationService().build(
+            _project_request(
                 source,
-                output,
-                template_path=template,
+                ProjectRequestIntent.BUILD,
+                output=output_path,
             )
+        )
     except (ProjectLoadError, ProjectPathError) as error:
         _report_project_error(error)
     except BuildValidationError as error:
+        if project_input:
+            _report_project_build_error(error, exit_code=1)
         error_count = sum(issue.severity == "error" for issue in error.issues)
         console.print(
             f"[red]编译停止（{error.stage}）：存在 {error_count} 个错误。"
@@ -219,6 +264,8 @@ def build(
         )
         raise typer.Exit(1)
     except ApplicationStageError as error:
+        if project_input:
+            _report_project_build_error(error, exit_code=2)
         console.print(f"[red]构建失败（{error.stage}）：{error}[/red]")
         raise typer.Exit(2) from None
 

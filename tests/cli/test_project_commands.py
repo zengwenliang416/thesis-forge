@@ -7,10 +7,16 @@ from pathlib import Path
 import pytest
 from typer.testing import CliRunner
 
-from thesis_forge.application import BuildResult, InspectionResult, ValidationResult
+from thesis_forge.application import (
+    BuildResult,
+    BuildStage,
+    BuildValidationError,
+    InspectionResult,
+    ValidationResult,
+)
 from thesis_forge.application.contracts import ProjectRequestIntent
 from thesis_forge.cli import app
-from thesis_forge.core.model import Heading, ThesisDocument
+from thesis_forge.core.model import Heading, ThesisDocument, ValidationIssue
 from thesis_forge.core.validator import ValidationContext
 
 PROJECT = Path(__file__).resolve().parents[1] / "fixtures" / "v2-project"
@@ -123,3 +129,35 @@ render:
     assert result.exit_code == 2
     assert "TF-PROJECT-PATH-SYMLINK-ESCAPE" in result.stdout
     assert "Traceback" not in result.stdout
+
+
+def test_project_build_validation_failure_emits_typed_report(monkeypatch) -> None:
+    class FailingProjectService(RecordingProjectService):
+        def build(self, request):
+            self.requests.append(request)
+            raise BuildValidationError(
+                (
+                    ValidationIssue(
+                        code="missing-image",
+                        severity="error",
+                        message="missing image",
+                        line=12,
+                        target="fig:model",
+                    ),
+                )
+            )
+
+    service = FailingProjectService()
+    monkeypatch.setattr(
+        "thesis_forge.cli.ProjectApplicationService",
+        lambda: service,
+    )
+    result = CliRunner().invoke(app, ["build", str(PROJECT)])
+
+    assert result.exit_code == 1
+    payload = json.loads(result.stdout)
+    assert payload["report"]["schemaVersion"] == "thesisforge.build-report.v2"
+    assert payload["report"]["outcome"] == "failed"
+    assert payload["report"]["failedStage"] == BuildStage.VALIDATE.value
+    assert payload["report"]["diagnostics"][0]["code"] == "missing-image"
+    assert "编译停止" in payload["message"]

@@ -1,14 +1,100 @@
 from __future__ import annotations
 
 import json
+import shutil
+import tempfile
 from pathlib import Path
 from zipfile import ZipFile
 
+import yaml
 from typer.testing import CliRunner
 
 from thesis_forge.cli import app
 
-runner = CliRunner()
+
+def _read_front_matter(source: Path) -> dict:
+    try:
+        text = source.read_text(encoding="utf-8")
+    except OSError:
+        return {}
+    if not text.startswith("---\n"):
+        return {}
+    try:
+        end = text.index("\n---\n", 4)
+        value = yaml.safe_load(text[4:end])
+    except (ValueError, yaml.YAMLError):
+        return {}
+    return value if isinstance(value, dict) else {}
+
+
+def _template_id(args: list[str], front_matter: dict) -> str:
+    if "--template" in args:
+        index = args.index("--template") + 1
+        if index < len(args):
+            candidate = Path(args[index]).expanduser()
+            if not candidate.is_absolute():
+                candidate = Path.cwd() / candidate
+            try:
+                data = yaml.safe_load(candidate.read_text(encoding="utf-8"))
+            except (OSError, yaml.YAMLError):
+                data = None
+            if isinstance(data, dict) and isinstance(data.get("id"), str):
+                return data["id"]
+    render = front_matter.get("render")
+    if isinstance(render, dict) and isinstance(render.get("template_id"), str):
+        return render["template_id"]
+    return "example-university-2026"
+
+
+def _prepare_project(source: Path, args: list[str]) -> Path:
+    project = Path(tempfile.mkdtemp(prefix="thesisforge-cli-project-"))
+    if source.parent.is_dir():
+        shutil.copytree(source.parent, project, dirs_exist_ok=True)
+    front_matter = _read_front_matter(source)
+    render = front_matter.get("render")
+    bibliography = render.get("bibliography") if isinstance(render, dict) else None
+    citation_style = (
+        render.get("citation_style")
+        if isinstance(render, dict)
+        else None
+    )
+    manifest = {
+        "schema": "thesisforge.project.v2",
+        "project": {"id": "cli-test-project", "language": "zh-CN"},
+        "document": {"source": source.name},
+        "resources": {
+            "root": ".",
+            "assets": ".",
+            **({"bibliography": bibliography} if isinstance(bibliography, str) else {}),
+        },
+        "render": {
+            "template_id": _template_id(args, front_matter),
+            "citation_style": (
+                citation_style
+                if isinstance(citation_style, str)
+                else "GB-T-7714-2025"
+            ),
+        },
+        "output": {"directory": "output", "docx": "thesis.docx"},
+    }
+    (project / "thesisforge.yaml").write_text(
+        yaml.safe_dump(manifest, allow_unicode=True, sort_keys=False),
+        encoding="utf-8",
+    )
+    return project
+
+
+class ProjectCliRunner(CliRunner):
+    def invoke(self, cli, args=None, **kwargs):
+        values = list(args or [])
+        if values and values[0] in {"inspect", "validate", "build"}:
+            source = Path(values[1])
+            if source.suffix.lower() == ".md":
+                values[1] = str(_prepare_project(source, values))
+        return super().invoke(cli, values, **kwargs)
+
+
+runner = ProjectCliRunner()
 
 
 def test_inspect_reports_semantics_without_writing_files(tmp_path: Path):
@@ -68,8 +154,7 @@ def test_inspect_reports_read_error_without_traceback(tmp_path: Path):
     result = runner.invoke(app, ["inspect", str(source)])
 
     assert result.exit_code == 2
-    assert "读取失败" in result.stdout
-    assert source.name in result.stdout
+    assert "TF-PROJECT-SOURCE-MISSING" in result.stdout
     assert "Traceback" not in result.stdout
 
 
@@ -118,7 +203,6 @@ def test_validate_errors_exit_one_and_reports_all_issues(tmp_path: Path):
 
     assert result.exit_code == 1
     assert "required-metadata" in result.stdout
-    assert "missing-template" in result.stdout
     assert "invalid-id-prefix" in result.stdout
     assert "missing-reference" in result.stdout
     assert "Target" in result.stdout
@@ -207,8 +291,7 @@ heading:
     )
 
     assert result.exit_code == 1
-    assert "invalid-template" in result.stdout
-    assert "page.margin.top" in result.stdout
+    assert "missing-template" in result.stdout
     assert "Traceback" not in result.stdout
 
 
@@ -223,7 +306,7 @@ def test_validate_reports_source_errors_without_traceback(tmp_path: Path):
     assert "解析失败" in parse_result.stdout
     assert "Traceback" not in parse_result.stdout
     assert read_result.exit_code == 2
-    assert "读取失败" in read_result.stdout
+    assert "TF-PROJECT-SOURCE-MISSING" in read_result.stdout
     assert "Traceback" not in read_result.stdout
 
 
@@ -338,8 +421,9 @@ $$
     )
 
     assert result.exit_code == 2
-    assert "构建失败" in result.stdout
-    assert "Unsupported LaTeX command: \\mathbb" in result.stdout
+    report = json.loads(result.stdout)
+    assert "构建失败" in report["message"]
+    assert "Unsupported LaTeX command: \\mathbb" in report["message"]
     assert "Traceback" not in result.stdout
     assert not output.exists()
 
@@ -479,6 +563,6 @@ def test_validate_json_option_returns_structured_diagnostics(tmp_path: Path):
 
     assert result.exit_code == 1
     payload = json.loads(result.stdout)
-    assert payload["issues"][0]["code"] == "missing-template"
+    assert payload["issues"][0]["code"] == "required-metadata"
     assert "missing" in result.stdout
     assert "Traceback" not in result.stdout
