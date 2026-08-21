@@ -1,0 +1,43 @@
+"""Project manifest and project-boundary contracts."""
+
+from .model import (
+    PROJECT_SCHEMA,
+    AdvisorSpec,
+    AuthorSpec,
+    DatesSpec,
+    DegreeSpec,
+    DocumentSpec,
+    InstitutionSpec,
+    LayoutSpec,
+    LocalizedText,
+    MetadataSpec,
+    ObjectLayoutOverride,
+    OutputSpec,
+    ProjectManifestV2,
+    ProjectRelativePath,
+    ProjectSpec,
+    RenderSpec,
+    ResourcesSpec,
+    ReviewSpec,
+)
+
+__all__ = [
+    "PROJECT_SCHEMA",
+    "AdvisorSpec",
+    "AuthorSpec",
+    "DatesSpec",
+    "DegreeSpec",
+    "DocumentSpec",
+    "InstitutionSpec",
+    "LayoutSpec",
+    "LocalizedText",
+    "MetadataSpec",
+    "ObjectLayoutOverride",
+    "OutputSpec",
+    "ProjectManifestV2",
+    "ProjectRelativePath",
+    "ProjectSpec",
+    "RenderSpec",
+    "ResourcesSpec",
+    "ReviewSpec",
+]
