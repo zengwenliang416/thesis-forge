@@ -95,15 +95,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Open
 
-- [V2-214B] Wire the desktop workbench project load flow
-  - Parent: ordered child 2/2 of `V2-214`; depends on `V2-214A`.
-  - Files: `frontend/src/components/WorkbenchApp.tsx`, `frontend/src/components/WorkbenchApp.project.test.tsx`, `frontend/src/components/WorkbenchApp.test.tsx`
-  - Behavior: desktop open flows through `openProject` into `projectOpened`; refresh, validate, build, save and live-preview requests carry the typed project identity and current editor snapshot.
-  - Verify: `pnpm --dir frontend test -- WorkbenchApp.project.test.tsx WorkbenchApp.test.tsx`
-  - Acceptance: switching projects clears unrelated diagnostics/report and no stale final-preview path authorization survives; project-less web upload sessions keep working unchanged.
-  - Verification-surface change: authorized; creates focused workbench project-flow tests and migrates existing workbench regressions.
-  - Attempts: 0
-
 - [V2-215] Validate layout override targets and types
   - Files: `src/thesis_forge/core/validator.py`, `tests/core/test_object_overrides.py`
   - Behavior: layout override target must exist and match the expected semantic object type.
@@ -121,6 +112,16 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
   - Attempts: 0
 
 ## Done
+
+- [V2-214B] Wire the desktop workbench project load flow
+  - Parent: ordered child 2/2 of `V2-214`; depends on `V2-214A`.
+  - Files: `frontend/src/components/WorkbenchApp.tsx`, `frontend/src/components/WorkbenchApp.project.test.tsx`, `frontend/src/components/WorkbenchApp.test.tsx`
+  - Behavior: desktop open flows through `openProject` into `projectOpened`; refresh, validate, build, save and live-preview requests carry the typed project identity and current editor snapshot.
+  - Verify: `pnpm --dir frontend test -- WorkbenchApp.project.test.tsx WorkbenchApp.test.tsx`
+  - Acceptance: switching projects clears unrelated diagnostics/report and no stale final-preview path authorization survives; project-less web upload sessions keep working unchanged.
+  - Verification-surface change: authorized; creates focused workbench project-flow tests and migrates existing workbench regressions.
+  - Attempts: 1
+  - Attempt 1 (2026-08-22): Checker PASS; diff limited to the 3 named files (WorkbenchApp.tsx routes tauri open through openProject with explicit throw/null-cancel/projectOpened, payloads carry projectRef-stripped {id,root,manifestPath} via conditional spread, refreshSource takes the fresh identity explicitly; new WorkbenchApp.project.test.tsx plus migrated WorkbenchApp.test.tsx), exact Verify green with full suite 17 files/214 tests, typecheck/lint/diff-check clean, 4 independent probes confirmed exact identity keys (no name) on preview/validate/build/save/live-preview, A→B switch clears diagnostics/output/finalPreview with no post-switch resolveFinalPreview of A's descriptor and late resolution dropped, picker null/throw paths, and project-key-free web upload payloads; no push.
 
 - [V2-214A] Carry typed project identity in the command envelope
   - Parent: ordered child 1/2 of `V2-214`; the parent behavior remains unchanged.
@@ -620,5 +621,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 - 2026-08-21 - Open refilled with V2-215 and V2-301 per the catalogue dependency order after V2-213B left one Open item; validator.py already loads the project manifest and model.py nodes are additive-safe, so both slices fit the three-file bound; no product code edited.
 - 2026-08-21 - V2-214 split into ordered children V2-214A and V2-214B after inspection found the typed envelope project field lives in dto.ts (a fourth file) and the web project-open flow lacks a backend project workspace path; the web upload path stays unchanged until a follow-up backend item is refilled; no product code edited in the split cycle.
 - 2026-08-21 - V2-214A Checker PASS; exact Verify green with full suite 16 files/204 tests, typecheck/lint/diff-check clean, diff limited to the 2 named files with single-source ProjectIdentityRef import and optional `project?` payload field, 8 independent probes confirmed byte-identical serialization, Tauri pass-through, JSON round-trip, project-less positive control, and tsc rejection of invalid envelopes; no push.
+- 2026-08-22 - V2-214B Checker PASS; exact Verify green with full suite 17 files/214 tests, typecheck/lint/diff-check clean, diff limited to the 3 named files, 4 independent probes confirmed exact {id,root,manifestPath} identity on all five request kinds, A→B switch reset with no stale final-preview resolution, picker cancel/failure paths, and project-key-free web upload payloads; no push.
 
 ## Sync log

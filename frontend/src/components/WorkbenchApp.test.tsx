@@ -2,7 +2,10 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { WorkbenchApp } from "./WorkbenchApp";
 import { createInitialWorkspaceState } from "../state/workspace";
-import type { WorkbenchTransport } from "../transport/WorkbenchTransport";
+import type {
+  OpenedProject,
+  WorkbenchTransport,
+} from "../transport/WorkbenchTransport";
 import { PROTOCOL_VERSION } from "../transport/dto";
 import previewFixture from "../../../tests/fixtures/preview-workbench-v1.json";
 
@@ -15,6 +18,20 @@ const finalPreviewMethods = {
   resolveFinalPreview: async () =>
     new Uint8Array([0x25, 0x50, 0x44, 0x46, 0x2d]),
   pickFinalPreview: async () => null,
+};
+
+const openedDesktopProject: OpenedProject = {
+  project: {
+    id: "desktop-thesis",
+    root: "/Users/test/desktop-thesis",
+    manifestPath: "/Users/test/desktop-thesis/thesisforge.yaml",
+  },
+  source: {
+    kind: "desktop",
+    path: "/Users/test/desktop-thesis/thesis.md",
+    fileName: "thesis.md",
+  },
+  text: "# 绪论\n",
 };
 
 const transport: WorkbenchTransport = {
@@ -142,6 +159,7 @@ describe("WorkbenchApp", () => {
         download: false,
       },
       openSource: async () => null,
+      openProject: async () => openedDesktopProject,
       dispatch,
     };
     const initialState = {
@@ -208,6 +226,7 @@ describe("WorkbenchApp", () => {
         download: false,
       },
       openSource: async () => null,
+      openProject: async () => openedDesktopProject,
       dispatch: dispatchCommand,
     };
     const initialState = {
@@ -275,6 +294,7 @@ describe("WorkbenchApp", () => {
         download: false,
       },
       openSource: async () => null,
+      openProject: async () => openedDesktopProject,
       dispatch: dispatchCommand,
     };
     const initialState = {
@@ -332,6 +352,7 @@ describe("WorkbenchApp", () => {
         download: false,
       },
       openSource: async () => null,
+      openProject: async () => openedDesktopProject,
       dispatch: dispatchCommand,
     };
     const initialState = {
@@ -372,7 +393,7 @@ describe("WorkbenchApp", () => {
     const failingTransport: WorkbenchTransport = {
       ...transport,
       runtime: "tauri",
-      openSource: async () => {
+      openProject: async () => {
         throw new Error("无法读取 Markdown 文稿");
       },
     };
@@ -472,6 +493,7 @@ describe("WorkbenchApp", () => {
         download: false,
       },
       openSource: async () => null,
+      openProject: async () => openedDesktopProject,
       dispatch: dispatchCommand,
     };
     const initialState = {
@@ -529,6 +551,7 @@ describe("WorkbenchApp", () => {
         download: false,
       },
       openSource: async () => null,
+      openProject: async () => openedDesktopProject,
       dispatch: dispatchCommand,
     };
     const initialState = {
@@ -731,7 +754,7 @@ describe("WorkbenchApp", () => {
     ).not.toHaveFocus();
   });
 
-  it("does not carry an old explicit template into a newly opened source", async () => {
+  it("does not carry an old explicit template into a newly opened project", async () => {
     const user = userEvent.setup();
     const dispatchCommand = vi
       .fn()
@@ -750,7 +773,13 @@ describe("WorkbenchApp", () => {
         saveAs: true,
         download: false,
       },
-      openSource: async () => ({
+      openSource: async () => null,
+      openProject: async () => ({
+        project: {
+          id: "new-thesis",
+          root: "/Users/test",
+          manifestPath: "/Users/test/thesisforge.yaml",
+        },
         source: {
           kind: "desktop",
           path: "/Users/test/new.md",
@@ -795,6 +824,11 @@ describe("WorkbenchApp", () => {
             kind: "desktop",
             path: "/Users/test/new.md",
             fileName: "new.md",
+          },
+          project: {
+            id: "new-thesis",
+            root: "/Users/test",
+            manifestPath: "/Users/test/thesisforge.yaml",
           },
           templateId: null,
         },

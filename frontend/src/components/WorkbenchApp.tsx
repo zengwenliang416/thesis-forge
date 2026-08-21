@@ -8,6 +8,7 @@ import {
 import {
   reduceWorkspaceState,
   selectWorkspaceActions,
+  type WorkspaceSource,
   type WorkspaceState,
 } from "../state/workspace";
 import {
@@ -17,7 +18,11 @@ import {
 } from "../state/diagnostics";
 import { lineSelectionRange } from "../state/editorNavigation";
 import type { ContentSelection } from "../state/preview";
-import type { WorkbenchTransport } from "../transport/WorkbenchTransport";
+import type {
+  OpenedProject,
+  ProjectIdentityRef,
+  WorkbenchTransport,
+} from "../transport/WorkbenchTransport";
 import type {
   BuildErrorKind,
   BuildEvent,
@@ -31,6 +36,7 @@ import {
   type CommandOperation,
   type CommandEnvelope,
   type OperationKind,
+  type SourceRef,
 } from "../transport/dto";
 import { WorkbenchShell } from "./WorkbenchShell";
 
@@ -115,6 +121,16 @@ function reportOutput(
   };
 }
 
+// The command payload carries exactly the {id, root, manifestPath} identity;
+// WorkspaceProject adds a display name that must never leak into payloads.
+function projectRef(project: ProjectIdentityRef): ProjectIdentityRef {
+  return {
+    id: project.id,
+    root: project.root,
+    manifestPath: project.manifestPath,
+  };
+}
+
 export function WorkbenchApp({
   transport,
   initialState,
@@ -190,6 +206,7 @@ export function WorkbenchApp({
   const refreshSource = async (
     source: NonNullable<WorkspaceState["source"]>["reference"],
     templateId = state.templateId,
+    project: ProjectIdentityRef | null = state.project,
   ) => {
     if (!source) {
       return;
@@ -201,6 +218,7 @@ export function WorkbenchApp({
         requestFor("preview", operation.generation, {
           source,
           templateId,
+          ...(project ? { project: projectRef(project) } : {}),
         }),
       );
       if (!response.ok) {
@@ -265,6 +283,7 @@ export function WorkbenchApp({
     const request = requestFor(command, operation.generation, {
       source,
       templateId,
+      ...(state.project ? { project: projectRef(state.project) } : {}),
       ...(kind === "build" ? { intent: "publish" as const } : {}),
       ...(output ? { output } : {}),
     });
@@ -427,6 +446,7 @@ export function WorkbenchApp({
         templateId,
         text,
         intent: "live-preview",
+        ...(state.project ? { project: projectRef(state.project) } : {}),
       });
       request.requestId = requestKey;
       let terminal = false;
@@ -624,6 +644,7 @@ export function WorkbenchApp({
         requestFor("save", operation.generation, {
           source,
           text: state.editorText,
+          ...(state.project ? { project: projectRef(state.project) } : {}),
         }),
       );
       if (!response.ok) {
@@ -670,6 +691,15 @@ export function WorkbenchApp({
     transport,
   ]);
 
+  const toWorkspaceSource = (source: SourceRef): WorkspaceSource => ({
+    kind: source.kind,
+    name: source.fileName,
+    writable:
+      source.kind === "desktop" ||
+      (source.kind === "web-workspace" && transport.capabilities.saveWorkspace),
+    reference: source,
+  });
+
   const applyOpenedSource = async (
     opened: Awaited<ReturnType<WorkbenchTransport["openSource"]>>,
   ) => {
@@ -678,18 +708,27 @@ export function WorkbenchApp({
     }
     dispatch({
       type: "sourceOpened",
-      source: {
-        kind: opened.source.kind,
-        name: opened.source.fileName,
-        writable:
-          opened.source.kind === "desktop" ||
-          (opened.source.kind === "web-workspace" &&
-            transport.capabilities.saveWorkspace),
-        reference: opened.source,
-      },
+      source: toWorkspaceSource(opened.source),
       text: opened.text,
     });
-    await refreshSource(opened.source, null);
+    await refreshSource(opened.source, null, null);
+  };
+
+  const applyOpenedProject = async (opened: OpenedProject) => {
+    dispatch({
+      type: "projectOpened",
+      project: {
+        id: opened.project.id,
+        root: opened.project.root,
+        manifestPath: opened.project.manifestPath,
+        name: opened.project.id,
+      },
+      source: toWorkspaceSource(opened.source),
+      text: opened.text,
+    });
+    // The projectOpened dispatch has not re-rendered yet, so hand the fresh
+    // identity to the refresh instead of reading stale closure state.
+    await refreshSource(opened.source, null, opened.project);
   };
 
   const openFile = async (file: File) => {
@@ -712,12 +751,15 @@ export function WorkbenchApp({
       const operation = nextOperation("open");
       dispatch({ type: "operationStarted", operation });
       try {
-        const opened = await transport.openSource();
+        if (!transport.openProject) {
+          throw new Error("当前运行时不支持打开 ThesisForge 项目。");
+        }
+        const opened = await transport.openProject();
         if (!opened) {
           dispatch({ type: "operationCanceled", operation });
           return;
         }
-        await applyOpenedSource(opened);
+        await applyOpenedProject(opened);
       } catch (error) {
         failOperation(operation, error);
       }
