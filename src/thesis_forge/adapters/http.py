@@ -5,7 +5,7 @@ from collections.abc import Callable, Iterable
 from threading import Event, Lock
 from typing import Protocol
 
-from .dto import PROTOCOL_VERSION
+from .dto import PROTOCOL_VERSION, read_project_request_payload
 
 
 class Dispatcher(Protocol):
@@ -62,6 +62,8 @@ class WorkbenchHttpApp:
                 request = json.loads(raw.decode("utf-8"))
                 if not isinstance(request, dict):
                     raise TypeError("request body must be an object")
+                if path in {"/api/v1/dispatch", "/api/v1/build-stream"}:
+                    read_project_request_payload(request.get("payload"))
                 if path == "/api/v1/build-stream":
                     request_id = request.get("requestId")
                     if not isinstance(request_id, str) or not request_id:

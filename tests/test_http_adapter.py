@@ -5,6 +5,8 @@ import json
 import threading
 from pathlib import Path
 
+import pytest
+
 from thesis_forge.adapters import (
     PROTOCOL_VERSION,
     DesktopRuntime,
@@ -121,6 +123,153 @@ def test_http_build_stream_is_incremental_and_cancelable(tmp_path: Path):
     assert report["diagnostics"][0]["code"] == "TF-BUILD-CANCELED"
     assert all(event["type"] != "error" for event in remaining)
     assert not output.exists()
+
+
+def test_http_dispatch_preserves_project_identity_snapshot_and_output(
+    tmp_path: Path,
+):
+    class EchoDispatcher:
+        def dispatch(self, request: dict) -> dict:
+            return {
+                "protocol": PROTOCOL_VERSION,
+                "requestId": request["requestId"],
+                "ok": True,
+                "result": request["payload"],
+            }
+
+    project_root = (tmp_path / "project").resolve()
+    project_root.mkdir()
+    manifest = project_root / "thesisforge.yaml"
+    payload = {
+        "project": {
+            "id": "http-fixture",
+            "root": str(project_root),
+            "manifestPath": str(manifest),
+        },
+        "text": "# 未保存\n",
+        "output": {
+            "kind": "web-download",
+            "workspaceId": "a" * 32,
+            "fileName": "thesis.docx",
+            "downloadId": "a" * 32,
+        },
+    }
+    app = WorkbenchHttpApp(EchoDispatcher())
+
+    body = b"".join(
+        app(
+            _environ(
+                "/api/v1/dispatch",
+                {
+                    "protocol": PROTOCOL_VERSION,
+                    "requestId": "http-project-1",
+                    "operation": "build",
+                    "payload": payload,
+                },
+            ),
+            lambda _status, _headers: None,
+        )
+    )
+
+    response = json.loads(body)
+    assert response["ok"] is True
+    assert response["result"]["project"] == payload["project"]
+    assert response["result"]["text"] == "# 未保存\n"
+    assert response["result"]["output"] == payload["output"]
+
+
+def test_http_rejects_malformed_project_payload(tmp_path: Path):
+    app = WorkbenchHttpApp(WorkbenchCommandDispatcher(runtime=DesktopRuntime()))
+
+    body = b"".join(
+        app(
+            _environ(
+                "/api/v1/dispatch",
+                {
+                    "protocol": PROTOCOL_VERSION,
+                    "requestId": "http-project-invalid",
+                    "operation": "inspect",
+                    "payload": {
+                        "project": {
+                            "id": "http-fixture",
+                            "root": 42,
+                            "manifestPath": str(tmp_path / "thesisforge.yaml"),
+                        }
+                    },
+                },
+            ),
+            lambda _status, _headers: None,
+        )
+    )
+
+    response = json.loads(body)
+    assert response["ok"] is False
+    assert response["error"]["kind"] == "request"
+
+
+@pytest.mark.parametrize(
+    "project",
+    [
+        {
+            "id": "   ",
+            "root": "/tmp/project",
+            "manifestPath": "/tmp/project/thesisforge.yaml",
+        },
+        {
+            "id": "http-fixture",
+            "root": "relative/project",
+            "manifestPath": "relative/project/thesisforge.yaml",
+        },
+    ],
+)
+@pytest.mark.parametrize("path", ["/api/v1/dispatch", "/api/v1/build-stream"])
+def test_http_rejects_semantically_invalid_project_identity_before_dispatch(
+    tmp_path: Path,
+    project: dict,
+    path: str,
+):
+    class RecordingDispatcher:
+        def __init__(self):
+            self.calls = 0
+
+        def dispatch(self, _request):
+            self.calls += 1
+            return {"protocol": PROTOCOL_VERSION, "ok": True}
+
+    dispatcher = RecordingDispatcher()
+    app = WorkbenchHttpApp(dispatcher)
+    request = {
+        "protocol": PROTOCOL_VERSION,
+        "requestId": "invalid-project-identity",
+        "operation": "build" if path.endswith("build-stream") else "inspect",
+        "payload": {
+            "project": project,
+            "text": "# 未保存\n",
+            "output": {
+                "kind": "desktop",
+                "path": str(tmp_path / "thesis.docx"),
+                "fileName": "thesis.docx",
+            },
+        },
+    }
+
+    if path.endswith("build-stream"):
+        response = b"".join(
+            app(
+                _environ(path, request),
+                lambda _status, _headers: None,
+            )
+        )
+        assert json.loads(response)["error"]["kind"] == "request"
+    else:
+        response = b"".join(
+            app(
+                _environ(path, request),
+                lambda _status, _headers: None,
+            )
+        )
+        assert json.loads(response)["error"]["kind"] == "request"
+    assert dispatcher.calls == 0
 
 
 def test_http_serves_only_workspace_bound_pdf_bytes_with_safe_headers(

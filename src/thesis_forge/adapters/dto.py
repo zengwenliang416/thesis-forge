@@ -2,13 +2,64 @@ from __future__ import annotations
 
 import math
 import re
+from dataclasses import dataclass
 from datetime import datetime, timedelta
+from pathlib import Path
 from typing import Final
 
-from thesis_forge.application.contracts import BuildReport
+from thesis_forge.application.contracts import BuildReport, ProjectIdentity
 
 PROTOCOL_VERSION: Final = "thesisforge.workbench.v1"
 ABSOLUTE_PATH_RE = re.compile(r"(?<![\w])(?:/[^\s:]+|[A-Za-z]:\\[^\s:]+)")
+
+
+@dataclass(frozen=True, slots=True)
+class ProjectRequestPayload:
+    project_id: str
+    project_root: str
+    manifest_path: str
+    editor_snapshot: str | None
+    output: dict[str, object] | None
+
+
+def read_project_request_payload(payload: object) -> ProjectRequestPayload | None:
+    if not isinstance(payload, dict):
+        raise TypeError("payload must be an object")
+    if "project" not in payload:
+        return None
+    project = payload["project"]
+    if not isinstance(project, dict):
+        raise TypeError("project must be an object")
+    project_id = project.get("id")
+    project_root = project.get("root")
+    manifest_path = project.get("manifestPath")
+    if not isinstance(project_id, str) or not project_id:
+        raise TypeError("project.id must be a non-empty string")
+    if not isinstance(project_root, str) or not project_root:
+        raise TypeError("project.root must be a non-empty string")
+    if not isinstance(manifest_path, str) or not manifest_path:
+        raise TypeError("project.manifestPath must be a non-empty string")
+    try:
+        ProjectIdentity(
+            project_id=project_id,
+            project_root=Path(project_root),
+            manifest_path=Path(manifest_path),
+        )
+    except (TypeError, ValueError) as error:
+        raise ValueError("project identity is invalid") from error
+    editor_snapshot = payload.get("text")
+    if editor_snapshot is not None and not isinstance(editor_snapshot, str):
+        raise TypeError("text must be a string")
+    output = payload.get("output")
+    if output is not None and not isinstance(output, dict):
+        raise TypeError("output must be an object")
+    return ProjectRequestPayload(
+        project_id=project_id,
+        project_root=project_root,
+        manifest_path=manifest_path,
+        editor_snapshot=editor_snapshot,
+        output=dict(output) if output is not None else None,
+    )
 
 
 def success_response(request_id: str, result: dict) -> dict:
