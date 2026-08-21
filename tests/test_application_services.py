@@ -21,6 +21,11 @@ from thesis_forge.application import (
     inspect_service,
     validation_service,
 )
+from thesis_forge.application.contracts import (
+    ProjectIdentity,
+    ProjectRequest,
+    ProjectRequestIntent,
+)
 from thesis_forge.application.office_refresh import (
     _CREATE_NEW_PROCESS_GROUP,
     _CREATE_NO_WINDOW,
@@ -38,6 +43,7 @@ from thesis_forge.application.office_refresh import (
     refresh_document_safely,
 )
 from thesis_forge.application.output import replace_output, temporary_output_path
+from thesis_forge.application.services import ProjectApplicationService
 from thesis_forge.renderers.docx.package import (
     DocxPackageValidationError,
     validate_docx_package,
@@ -1641,3 +1647,20 @@ def test_repeated_builds_have_equivalent_numbering_reference_and_field_semantics
     build_service(EXAMPLE_SOURCE, second)
 
     assert _semantic_snapshot(first) == _semantic_snapshot(second)
+
+
+def test_typed_project_application_service_loads_manifest_context() -> None:
+    project_root = PROJECT_ROOT / "tests" / "fixtures" / "v2-project"
+    request = ProjectRequest(
+        project=ProjectIdentity(
+            project_id="goal-fixture",
+            project_root=project_root.resolve(),
+            manifest_path=(project_root / "thesisforge.yaml").resolve(),
+        ),
+        intent=ProjectRequestIntent.INSPECT,
+    )
+
+    context = ProjectApplicationService().load(request)
+
+    assert context.project.manifest.project.id == "goal-fixture"
+    assert context.paths.source == (project_root / "thesis.md").resolve()

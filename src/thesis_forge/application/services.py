@@ -11,6 +11,8 @@ from thesis_forge.core.model import ThesisDocument, ValidationIssue
 from thesis_forge.core.parser_backend import LegacyParserBackend, ParserBackend
 from thesis_forge.core.render_plan import RenderPlan
 from thesis_forge.core.validator import ValidationContext, validate_document
+from thesis_forge.project.loader import LoadedProject, load_project
+from thesis_forge.project.paths import ProjectPaths, resolve_project_paths
 from thesis_forge.renderers.docx import DocxRenderer
 from thesis_forge.renderers.docx.package import validate_docx_package
 
@@ -24,6 +26,8 @@ from .contracts import (
     BuildValidationError,
     InspectionResult,
     PreviewResult,
+    ProjectRequest,
+    ProjectRequestIntent,
     ValidationResult,
 )
 from .office_refresh import (
@@ -207,6 +211,91 @@ class ApplicationDependencies:
     pdf_preview_exporter: PdfPreviewExporter | None = None
     package_validator: PackageValidator = validate_docx_package
     replace_file: ReplaceFile = os.replace
+
+
+@dataclass(frozen=True, slots=True)
+class ProjectServiceContext:
+    request: ProjectRequest
+    project: LoadedProject
+    paths: ProjectPaths
+
+
+@dataclass(frozen=True, slots=True)
+class ProjectApplicationService:
+    """Typed project entrypoints shared by CLI, adapters and headless UI."""
+
+    dependencies: ApplicationDependencies = field(
+        default_factory=ApplicationDependencies,
+    )
+
+    def load(self, request: ProjectRequest) -> ProjectServiceContext:
+        project = load_project(request.project.manifest_path)
+        if (
+            project.project_root != request.project.project_root
+            or project.manifest_path != request.project.manifest_path
+            or project.manifest.project.id != request.project.project_id
+        ):
+            raise ValueError("project request identity does not match manifest")
+        return ProjectServiceContext(
+            request=request,
+            project=project,
+            paths=resolve_project_paths(project),
+        )
+
+    def inspect(self, request: ProjectRequest) -> InspectionResult:
+        context = self._context(request, ProjectRequestIntent.INSPECT)
+        return inspect_service(
+            context.paths.source,
+            source_text=request.editor_snapshot,
+            dependencies=self.dependencies,
+        )
+
+    def validate(self, request: ProjectRequest) -> ValidationResult:
+        context = self._context(request, ProjectRequestIntent.VALIDATE)
+        return validation_service(
+            context.paths.source,
+            source_text=request.editor_snapshot,
+            dependencies=self.dependencies,
+        )
+
+    def preview(self, request: ProjectRequest) -> PreviewResult:
+        context = self._context(request, ProjectRequestIntent.REVIEW)
+        return preview_service(
+            context.paths.source,
+            source_text=request.editor_snapshot,
+            dependencies=self.dependencies,
+        )
+
+    def build(
+        self,
+        request: ProjectRequest,
+        *,
+        on_progress: ProgressCallback | None = None,
+        should_cancel: CancellationPredicate | None = None,
+    ) -> BuildResult:
+        context = self._context(request, ProjectRequestIntent.BUILD)
+        if request.output is None:
+            raise ValueError("build project request requires output")
+        return build_service(
+            context.paths.source,
+            request.output.path,
+            source_text=request.editor_snapshot,
+            on_progress=on_progress,
+            should_cancel=should_cancel,
+            dependencies=self.dependencies,
+        )
+
+    def _context(
+        self,
+        request: ProjectRequest,
+        intent: ProjectRequestIntent,
+    ) -> ProjectServiceContext:
+        if request.intent is not intent:
+            raise ValueError(
+                f"project request intent must be {intent.value}, "
+                f"got {request.intent.value}"
+            )
+        return self.load(request)
 
 
 def _dependencies(
