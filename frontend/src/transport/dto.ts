@@ -1,3 +1,5 @@
+import type { ProjectIdentityRef } from "./WorkbenchTransport";
+
 export const PROTOCOL_VERSION = "thesisforge.workbench.v1" as const;
 
 export type RuntimeKind = "web" | "tauri";
@@ -50,6 +52,7 @@ export interface CommandEnvelope {
   payload: {
     source?: SourceRef;
     output?: CommandOutputRef;
+    project?: ProjectIdentityRef;
     templateId?: string | null;
     templatePath?: string | null;
     text?: string;

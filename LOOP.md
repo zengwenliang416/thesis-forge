@@ -95,15 +95,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Open
 
-- [V2-214A] Carry typed project identity in the command envelope
-  - Parent: ordered child 1/2 of `V2-214`; the parent behavior remains unchanged.
-  - Files: `frontend/src/transport/dto.ts`, `frontend/src/transport/transports.test.ts`
-  - Behavior: dispatch, build, save and preview payloads carry the loaded project identity (id/root/manifestPath) through one typed envelope field.
-  - Verify: `pnpm --dir frontend test -- transports.test.ts`
-  - Acceptance: project identity survives JSON envelope round-trip for every operation kind; envelopes without project identity remain valid only for the not-yet-migrated web upload path.
-  - Verification-surface change: authorized; extends shared transport envelope regression tests.
-  - Attempts: 0
-
 - [V2-214B] Wire the desktop workbench project load flow
   - Parent: ordered child 2/2 of `V2-214`; depends on `V2-214A`.
   - Files: `frontend/src/components/WorkbenchApp.tsx`, `frontend/src/components/WorkbenchApp.project.test.tsx`, `frontend/src/components/WorkbenchApp.test.tsx`
@@ -130,6 +121,16 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
   - Attempts: 0
 
 ## Done
+
+- [V2-214A] Carry typed project identity in the command envelope
+  - Parent: ordered child 1/2 of `V2-214`; the parent behavior remains unchanged.
+  - Files: `frontend/src/transport/dto.ts`, `frontend/src/transport/transports.test.ts`
+  - Behavior: dispatch, build, save and preview payloads carry the loaded project identity (id/root/manifestPath) through one typed envelope field.
+  - Verify: `pnpm --dir frontend test -- transports.test.ts`
+  - Acceptance: project identity survives JSON envelope round-trip for every operation kind; envelopes without project identity remain valid only for the not-yet-migrated web upload path.
+  - Verification-surface change: authorized; extends shared transport envelope regression tests.
+  - Attempts: 1
+  - Attempt 1 (2026-08-21): Checker PASS; diff limited to the 2 named files (dto.ts +3: type-only ProjectIdentityRef import and optional `project?` payload field; transports.test.ts +163 pure additions), exact Verify green with full suite 16 files/204 tests, typecheck/lint/diff-check clean, 8 independent probes confirmed byte-identical Web bodies for inspect/validate/save/build, Tauri pass-through, exact JSON round-trip, project-less positive control, and tsc rejection of envelopes missing required fields; no push.
 
 - [V2-213B] Migrate e2e specs to project selection
   - Parent: ordered child 2/2 of `V2-213`; depends on `V2-213A`.
@@ -618,5 +619,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 - 2026-08-21 - V2-213B Checker PASS; exact Verify exited 0, diff limited to the 3 named e2e files with 6 pure label replacements matching ProductBar aria-label "打开 ThesisForge 项目", git diff --check clean; no push.
 - 2026-08-21 - Open refilled with V2-215 and V2-301 per the catalogue dependency order after V2-213B left one Open item; validator.py already loads the project manifest and model.py nodes are additive-safe, so both slices fit the three-file bound; no product code edited.
 - 2026-08-21 - V2-214 split into ordered children V2-214A and V2-214B after inspection found the typed envelope project field lives in dto.ts (a fourth file) and the web project-open flow lacks a backend project workspace path; the web upload path stays unchanged until a follow-up backend item is refilled; no product code edited in the split cycle.
+- 2026-08-21 - V2-214A Checker PASS; exact Verify green with full suite 16 files/204 tests, typecheck/lint/diff-check clean, diff limited to the 2 named files with single-source ProjectIdentityRef import and optional `project?` payload field, 8 independent probes confirmed byte-identical serialization, Tauri pass-through, JSON round-trip, project-less positive control, and tsc rejection of invalid envelopes; no push.
 
 ## Sync log

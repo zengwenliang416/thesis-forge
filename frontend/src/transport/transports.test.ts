@@ -7,6 +7,7 @@ import {
 } from "./dto";
 import { TauriWorkbenchTransport } from "./tauri";
 import { WebWorkbenchTransport } from "./web";
+import type { ProjectIdentityRef } from "./WorkbenchTransport";
 
 const request: CommandEnvelope = {
   protocol: PROTOCOL_VERSION,
@@ -407,5 +408,167 @@ describe("runtime transports", () => {
       "无效的 ThesisForge transport 响应",
     );
     expect(readSerializedDiagnostics({ diagnostics: [] }, true)).toEqual([]);
+  });
+});
+
+describe("project identity envelope", () => {
+  const project: ProjectIdentityRef = {
+    id: "thesis-2026",
+    root: "/home/user/thesis",
+    manifestPath: "/home/user/thesis/thesisforge.yaml",
+  };
+
+  function projectRequest(
+    operation: CommandEnvelope["operation"],
+    requestId: string,
+  ): CommandEnvelope {
+    return {
+      protocol: PROTOCOL_VERSION,
+      requestId,
+      operation,
+      payload: {
+        source: {
+          kind: "desktop",
+          path: "/home/user/thesis/thesis.md",
+          fileName: "thesis.md",
+        },
+        project,
+      },
+    };
+  }
+
+  function okResponse(requestId: string): CommandResponse {
+    return {
+      protocol: PROTOCOL_VERSION,
+      requestId,
+      ok: true,
+      result: {},
+    };
+  }
+
+  function captureWebTransport() {
+    const calls: Array<{ url: string; body: unknown }> = [];
+    const transport = new WebWorkbenchTransport({
+      baseUrl: "http://127.0.0.1:8765",
+      fetch: async (url, init) => {
+        calls.push({ url: String(url), body: JSON.parse(String(init?.body)) });
+        const envelope = JSON.parse(String(init?.body)) as CommandEnvelope;
+        return new Response(JSON.stringify(okResponse(envelope.requestId)), {
+          status: 200,
+          headers: { "content-type": "application/json" },
+        });
+      },
+    });
+    return { calls, transport };
+  }
+
+  it.each(["inspect", "validate", "save"] as const)(
+    "serializes payload.project intact for Web dispatch of %s",
+    async (operation) => {
+      const { calls, transport } = captureWebTransport();
+      const envelope = projectRequest(operation, `project-${operation}-1`);
+
+      await transport.dispatch(envelope);
+
+      expect(calls).toHaveLength(1);
+      expect(calls[0].url).toBe("http://127.0.0.1:8765/api/v1/dispatch");
+      expect(calls[0].body).toEqual(envelope);
+      expect(
+        (calls[0].body as CommandEnvelope).payload.project,
+      ).toEqual(project);
+    },
+  );
+
+  it("serializes payload.project intact through the Web build stream request", async () => {
+    const calls: Array<{ url: string; body: unknown }> = [];
+    const event = {
+      protocol: PROTOCOL_VERSION,
+      requestId: "project-build-1",
+      type: "progress",
+      stage: "parse",
+    };
+    const transport = new WebWorkbenchTransport({
+      baseUrl: "http://127.0.0.1:8765",
+      fetch: async (url, init) => {
+        calls.push({ url: String(url), body: JSON.parse(String(init?.body)) });
+        return new Response(`${JSON.stringify(event)}\n`, {
+          status: 200,
+          headers: { "content-type": "application/x-ndjson" },
+        });
+      },
+    });
+    const envelope = projectRequest("build", "project-build-1");
+    const events: unknown[] = [];
+
+    await transport.runBuild(
+      envelope,
+      (buildEvent) => events.push(buildEvent),
+      new AbortController().signal,
+    );
+
+    expect(calls).toHaveLength(1);
+    expect(calls[0].url).toBe("http://127.0.0.1:8765/api/v1/build-stream");
+    expect(calls[0].body).toEqual(envelope);
+    expect(events).toEqual([event]);
+  });
+
+  it("passes the project-bearing envelope through Tauri dispatch unchanged", async () => {
+    const calls: Array<{ command: string; args?: Record<string, unknown> }> =
+      [];
+    const transport = new TauriWorkbenchTransport(async (command, args) => {
+      calls.push({ command, args });
+      const envelope = (args as { request: CommandEnvelope }).request;
+      return okResponse(envelope.requestId);
+    });
+    const envelope = projectRequest("preview", "project-preview-1");
+
+    await transport.dispatch(envelope);
+
+    expect(calls).toEqual([
+      { command: "dispatch_workbench", args: { request: envelope } },
+    ]);
+  });
+
+  it("survives a JSON round-trip with the project payload", () => {
+    const envelope = projectRequest("build", "project-roundtrip-1");
+
+    expect(JSON.parse(JSON.stringify(envelope))).toEqual(envelope);
+  });
+
+  it("still dispatches envelopes without project on both transports", async () => {
+    const legacy: CommandEnvelope = {
+      protocol: PROTOCOL_VERSION,
+      requestId: "legacy-upload-1",
+      operation: "inspect",
+      payload: {
+        source: {
+          kind: "web-upload",
+          uploadId: "a".repeat(32),
+          fileName: "thesis.md",
+        },
+      },
+    };
+
+    const { calls, transport: web } = captureWebTransport();
+    await expect(web.dispatch(legacy)).resolves.toEqual(
+      okResponse("legacy-upload-1"),
+    );
+    expect(calls).toHaveLength(1);
+    expect(calls[0].body).toEqual(legacy);
+
+    const tauriCalls: Array<{
+      command: string;
+      args?: Record<string, unknown>;
+    }> = [];
+    const tauri = new TauriWorkbenchTransport(async (command, args) => {
+      tauriCalls.push({ command, args });
+      return okResponse("legacy-upload-1");
+    });
+    await expect(tauri.dispatch(legacy)).resolves.toEqual(
+      okResponse("legacy-upload-1"),
+    );
+    expect(tauriCalls).toEqual([
+      { command: "dispatch_workbench", args: { request: legacy } },
+    ]);
   });
 });
