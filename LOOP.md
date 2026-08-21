@@ -95,14 +95,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Open
 
-- [V2-215] Validate layout override targets and types
-  - Files: `src/thesis_forge/core/validator.py`, `tests/core/test_object_overrides.py`
-  - Behavior: layout override target must exist and match the expected semantic object type.
-  - Verify: `.venv/bin/python -m pytest tests/core/test_object_overrides.py`
-  - Acceptance: missing figure ID and applying figure width to an equation are errors with stable structured diagnostics.
-  - Verification-surface change: authorized; creates focused object-override validation tests.
-  - Attempts: 0
-
 - [V2-301] Add NodeId and complete SourceSpan to the typed model
   - Files: `src/thesis_forge/core/model.py`, `tests/core/test_source_identity.py`
   - Behavior: every semantic node has stable internal identity and start/end file/line/column span.
@@ -120,6 +112,15 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
   - Attempts: 0
 
 ## Done
+
+- [V2-215] Validate layout override targets and types
+  - Files: `src/thesis_forge/core/validator.py`, `tests/core/test_object_overrides.py`
+  - Behavior: layout override target must exist and match the expected semantic object type.
+  - Verify: `.venv/bin/python -m pytest tests/core/test_object_overrides.py`
+  - Acceptance: missing figure ID and applying figure width to an equation are errors with stable structured diagnostics.
+  - Verification-surface change: authorized; creates focused object-override validation tests.
+  - Attempts: 1
+  - Attempt 1 (2026-08-22): Checker PASS; diff limited to the 2 named files (manifest_layout_objects populated solely from the discovered project manifest, new _validate_layout_overrides rule with stable orphan-layout-override/layout-override-type-mismatch error codes, structured target/details, sorted deterministic ordering, registered in DEFAULT_VALIDATION_RULES), exact Verify 7/7 green, core+application+adapters baselines 67 passed, ruff clean, full-suite failure sets identical between HEAD and candidate (46 pre-existing, zero new), 5 independent probes confirmed orphan/type-mismatch structure, figure-width pass, projectless silence, and sorted validate_document output; no push.
 
 - [V2-214B] Wire the desktop workbench project load flow
   - Parent: ordered child 2/2 of `V2-214`; depends on `V2-214A`.
@@ -631,5 +632,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 - 2026-08-21 - V2-214A Checker PASS; exact Verify green with full suite 16 files/204 tests, typecheck/lint/diff-check clean, diff limited to the 2 named files with single-source ProjectIdentityRef import and optional `project?` payload field, 8 independent probes confirmed byte-identical serialization, Tauri pass-through, JSON round-trip, project-less positive control, and tsc rejection of invalid envelopes; no push.
 - 2026-08-22 - V2-214B Checker PASS; exact Verify green with full suite 17 files/214 tests, typecheck/lint/diff-check clean, diff limited to the 3 named files, 4 independent probes confirmed exact {id,root,manifestPath} identity on all five request kinds, A→B switch reset with no stale final-preview resolution, picker cancel/failure paths, and project-key-free web upload payloads; no push.
 - 2026-08-22 - Open refilled with V2-302 per the catalogue dependency order after V2-214B left two Open items; the recursive Inline replacement is expected to need re-slicing when its cycle arrives (parser and consumer construction sites exceed the two-file catalogue slice); no product code edited.
+- 2026-08-22 - V2-215 Checker PASS; exact Verify 7/7 green, baselines (67 core/application/adapter tests) and ruff clean, full-suite failure sets identical HEAD vs candidate (46 pre-existing, zero new), 5 independent probes confirmed structured orphan/type-mismatch errors, figure-width pass, projectless silence, and sorted output; no push.
 
 ## Sync log

@@ -15,6 +15,7 @@ from thesis_forge.bibliography import (
     supported_citation_styles,
 )
 from thesis_forge.project.loader import ProjectLoadError, load_project
+from thesis_forge.project.model import ObjectLayoutOverride
 from thesis_forge.project.paths import ProjectPathError, resolve_project_paths
 from thesis_forge.templates import (
     TemplateAmbiguousError,
@@ -60,6 +61,7 @@ class ValidationContext:
     manifest_bibliography_path: Path | None = None
     manifest_bibliography_reference: str | None = None
     manifest_citation_style: str | None = None
+    manifest_layout_objects: dict[str, ObjectLayoutOverride] = field(default_factory=dict)
     project_error: ProjectLoadError | ProjectPathError | None = None
 
     @classmethod
@@ -128,6 +130,11 @@ class ValidationContext:
             if project is not None
             else None
         )
+        manifest_layout_objects = (
+            dict(project.manifest.layout.objects)
+            if project is not None
+            else {}
+        )
 
         try:
             resolved = resolve_template(
@@ -145,6 +152,7 @@ class ValidationContext:
                 manifest_bibliography_path=manifest_bibliography_path,
                 manifest_bibliography_reference=manifest_bibliography_reference,
                 manifest_citation_style=manifest_citation_style,
+                manifest_layout_objects=manifest_layout_objects,
                 project_error=project_error,
             )
         return cls(
@@ -157,6 +165,7 @@ class ValidationContext:
             manifest_bibliography_path=manifest_bibliography_path,
             manifest_bibliography_reference=manifest_bibliography_reference,
             manifest_citation_style=manifest_citation_style,
+            manifest_layout_objects=manifest_layout_objects,
             project_error=project_error,
         )
 
@@ -559,6 +568,36 @@ def _validate_template(
         )
 
 
+def _validate_layout_overrides(
+    document: ThesisDocument,
+    context: ValidationContext,
+) -> Iterable[ValidationIssue]:
+    if not context.manifest_layout_objects:
+        return
+    index = document.index_by_id()
+    for object_id in sorted(context.manifest_layout_objects):
+        block = index.get(object_id)
+        if block is None:
+            yield ValidationIssue(
+                code="orphan-layout-override",
+                severity="error",
+                message="Layout override targets an object that does not exist",
+                target=object_id,
+                details={"field": "width"},
+            )
+            continue
+        if not isinstance(block, Figure):
+            prefixes = _expected_id_prefixes(block)
+            actual = prefixes[0] if prefixes else type(block).__name__.lower()
+            yield ValidationIssue(
+                code="layout-override-type-mismatch",
+                severity="error",
+                message="Layout override field does not apply to this object type",
+                target=object_id,
+                details={"field": "width", "expected": "fig", "actual": actual},
+            )
+
+
 DEFAULT_VALIDATION_RULES: tuple[ValidationRule, ...] = (
     _validate_project_error,
     _validate_required_metadata,
@@ -569,6 +608,7 @@ DEFAULT_VALIDATION_RULES: tuple[ValidationRule, ...] = (
     _validate_images,
     _validate_bibliography,
     _validate_template,
+    _validate_layout_overrides,
 )
 
 
