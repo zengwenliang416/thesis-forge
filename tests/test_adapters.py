@@ -18,7 +18,14 @@ from thesis_forge.adapters import (
     WorkbenchHttpApp,
     dispatch_json_line,
 )
-from thesis_forge.application import BuildStage, InspectionResult, ValidationResult
+from thesis_forge.application import (
+    BuildResult,
+    BuildStage,
+    InspectionResult,
+    PreviewResult,
+    ValidationResult,
+)
+from thesis_forge.application.contracts import ProjectRequestIntent
 from thesis_forge.core.model import Heading, ThesisDocument, ValidationIssue
 from thesis_forge.core.validator import ValidationContext
 
@@ -137,6 +144,116 @@ heading:
 {level2}""",
         encoding="utf-8",
     )
+
+
+class _RecordingProjectService:
+    def __init__(self) -> None:
+        self.requests = []
+
+    @staticmethod
+    def _document(request) -> ThesisDocument:
+        return ThesisDocument(
+            source_path=request.project.project_root / "thesis.md",
+            metadata={"project": request.project.project_id},
+            blocks=[Heading(level=1, text="项目论文")],
+        )
+
+    def inspect(self, request):
+        self.requests.append(request)
+        return InspectionResult(self._document(request))
+
+    def validate(self, request):
+        self.requests.append(request)
+        return ValidationResult(
+            document=self._document(request),
+            context=ValidationContext(),
+            issues=(),
+        )
+
+    def preview(self, request):
+        self.requests.append(request)
+        return PreviewResult(
+            document=self._document(request),
+            context=ValidationContext(),
+            issues=(),
+            plan=None,
+        )
+
+    def build(self, request, **_kwargs):
+        self.requests.append(request)
+        assert request.output is not None
+        return BuildResult(output_path=request.output.path, issues=())
+
+
+def _project_request_payload(tmp_path: Path, operation: str) -> dict:
+    root = (tmp_path / "project").resolve()
+    root.mkdir(parents=True)
+    source = root / "thesis.md"
+    source.write_text("# 项目论文\n", encoding="utf-8")
+    manifest = root / "thesisforge.yaml"
+    manifest.write_text("schema: thesisforge.project.v2\n", encoding="utf-8")
+    payload = {
+        "project": {
+            "id": "adapter-fixture",
+            "root": str(root),
+            "manifestPath": str(manifest),
+        },
+        "source": {
+            "kind": "desktop",
+            "path": str(source),
+            "fileName": source.name,
+        },
+        "text": "# 未保存项目论文\n",
+    }
+    if operation == "build":
+        payload["output"] = {
+            "kind": "desktop",
+            "path": str((root / "build" / "thesis.docx").resolve()),
+            "fileName": "thesis.docx",
+        }
+    return payload
+
+
+def test_dispatcher_project_payload_preserves_typed_identity_snapshot_and_output(
+    tmp_path: Path,
+) -> None:
+    service = _RecordingProjectService()
+    dispatcher = WorkbenchCommandDispatcher(
+        runtime=DesktopRuntime(),
+        project_service=service,
+    )
+
+    for operation in ("inspect", "validate", "preview"):
+        response = dispatcher.dispatch(
+            {
+                "protocol": PROTOCOL_VERSION,
+                "requestId": f"{operation}-project",
+                "operation": operation,
+                "payload": _project_request_payload(tmp_path / operation, operation),
+            }
+        )
+        assert response["ok"] is True
+
+    build_response = dispatcher.dispatch(
+        {
+            "protocol": PROTOCOL_VERSION,
+            "requestId": "build-project",
+            "operation": "build",
+            "payload": _project_request_payload(tmp_path / "build", "build"),
+        }
+    )
+
+    assert build_response["ok"] is True
+    assert [request.intent for request in service.requests] == [
+        ProjectRequestIntent.INSPECT,
+        ProjectRequestIntent.VALIDATE,
+        ProjectRequestIntent.REVIEW,
+        ProjectRequestIntent.BUILD,
+    ]
+    assert all(request.project.project_id == "adapter-fixture" for request in service.requests)
+    assert all(request.editor_snapshot == "# 未保存项目论文\n" for request in service.requests)
+    assert service.requests[-1].output is not None
+    assert service.requests[-1].output.path.name == "thesis.docx"
 
 
 def test_dispatcher_serializes_inspection_and_validation_without_python_objects(

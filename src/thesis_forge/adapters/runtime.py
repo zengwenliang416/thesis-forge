@@ -40,8 +40,15 @@ from thesis_forge.application.contracts import (
     BuildStage,
     BuildStageState,
     BuildStageStatus,
+    ProjectIdentity,
+    ProjectOutput,
+    ProjectRequest,
+    ProjectRequestIntent,
 )
-from thesis_forge.application.services import BuildStageLifecycle
+from thesis_forge.application.services import (
+    BuildStageLifecycle,
+    ProjectApplicationService,
+)
 from thesis_forge.core.model import Heading
 from thesis_forge.presentation.preview import map_preview_result
 from thesis_forge.templates import default_template_search_roots, resolve_template
@@ -701,12 +708,14 @@ class WorkbenchCommandDispatcher:
         validate: ValidationService = validation_service,
         preview: PreviewService = preview_service,
         build: BuildService = build_service,
+        project_service: ProjectApplicationService | None = None,
     ) -> None:
         self._runtime = runtime
         self._inspect = inspect
         self._validate = validate
         self._preview = preview
         self._build = build
+        self._project_service = project_service or ProjectApplicationService()
 
     def dispatch(self, request: dict) -> dict:
         request_id = request.get("requestId")
@@ -874,6 +883,45 @@ class WorkbenchCommandDispatcher:
         return source, self._runtime.source_path(source)
 
     @staticmethod
+    def _project_request(
+        payload: dict,
+        intent: ProjectRequestIntent,
+        *,
+        output_path: Path | None = None,
+    ) -> ProjectRequest:
+        project = payload.get("project")
+        if not isinstance(project, dict):
+            raise TypeError("project must be an object")
+        project_id = project.get("id")
+        project_root = project.get("root")
+        manifest_path = project.get("manifestPath")
+        if not isinstance(project_id, str):
+            raise TypeError("project.id must be a string")
+        if not isinstance(project_root, str):
+            raise TypeError("project.root must be a string")
+        if not isinstance(manifest_path, str):
+            raise TypeError("project.manifestPath must be a string")
+        text = payload.get("text")
+        if text is not None and not isinstance(text, str):
+            raise TypeError("text must be a string")
+        return ProjectRequest(
+            project=ProjectIdentity(
+                project_id=project_id,
+                project_root=Path(project_root),
+                manifest_path=Path(manifest_path),
+            ),
+            intent=intent,
+            output=ProjectOutput(output_path) if output_path is not None else None,
+            editor_snapshot=text,
+        )
+
+    def _project_source(self, payload: dict, path: Path) -> dict:
+        source = payload.get("source")
+        if not isinstance(source, dict):
+            source = {"kind": "desktop", "fileName": path.name}
+        return self._runtime.present_source(source, path)
+
+    @staticmethod
     def _template_path(payload: dict, source_path: Path) -> str | Path | None:
         template_id = payload.get("templateId")
         template_path = payload.get("templatePath")
@@ -892,6 +940,25 @@ class WorkbenchCommandDispatcher:
         return template_path
 
     def _inspect_result(self, payload: dict) -> dict:
+        if "project" in payload:
+            result = self._project_service.inspect(
+                self._project_request(payload, ProjectRequestIntent.INSPECT)
+            )
+            return {
+                "source": self._project_source(payload, result.document.source_path),
+                "metadata": result.document.metadata,
+                "outline": [
+                    {
+                        "id": block.id,
+                        "level": block.level,
+                        "text": block.text,
+                        "line": block.location.line,
+                    }
+                    for block in result.document.blocks
+                    if isinstance(block, Heading)
+                ],
+                "blockCount": len(result.document.blocks),
+            }
         source, source_path = self._source(payload)
         result = self._inspect(source_path)
         outline = [
@@ -912,6 +979,14 @@ class WorkbenchCommandDispatcher:
         }
 
     def _validation_result(self, payload: dict) -> dict:
+        if "project" in payload:
+            result = self._project_service.validate(
+                self._project_request(payload, ProjectRequestIntent.VALIDATE)
+            )
+            return {
+                "source": self._project_source(payload, result.document.source_path),
+                "diagnostics": [asdict(issue) for issue in result.issues],
+            }
         source, source_path = self._source(payload)
         result = self._validate(
             source_path,
@@ -923,6 +998,15 @@ class WorkbenchCommandDispatcher:
         }
 
     def _preview_result(self, payload: dict) -> dict:
+        if "project" in payload:
+            result = self._project_service.preview(
+                self._project_request(payload, ProjectRequestIntent.REVIEW)
+            )
+            return {
+                "source": self._project_source(payload, result.document.source_path),
+                "diagnostics": [asdict(issue) for issue in result.issues],
+                **map_preview_result(result),
+            }
         source, source_path = self._source(payload)
         source_text = payload.get("text")
         if source_text is not None and not isinstance(source_text, str):
@@ -962,6 +1046,12 @@ class WorkbenchCommandDispatcher:
         on_progress: Callable | None = None,
         should_cancel: CancellationPredicate | None = None,
     ) -> dict:
+        if "project" in payload:
+            return self._project_build_result(
+                payload,
+                on_progress=on_progress,
+                should_cancel=should_cancel,
+            )
         source, source_path = self._source(payload)
         source_text = payload.get("text")
         if source_text is not None and not isinstance(source_text, str):
@@ -1009,6 +1099,60 @@ class WorkbenchCommandDispatcher:
             }
         except Exception:
             if intent == "live-preview":
+                self._runtime.release_live_preview_output(output)
+            raise
+
+    def _project_build_result(
+        self,
+        payload: dict,
+        *,
+        on_progress: Callable | None = None,
+        should_cancel: CancellationPredicate | None = None,
+    ) -> dict:
+        source = payload.get("source")
+        if not isinstance(source, dict):
+            raise TypeError("source must be an object")
+        source_path = self._runtime.source_path(source)
+        source_text = payload.get("text")
+        if source_text is not None and not isinstance(source_text, str):
+            raise TypeError("text must be a string")
+        intent = payload.get("intent", BuildIntent.PUBLISH.value)
+        if intent not in {BuildIntent.PUBLISH.value, BuildIntent.LIVE_PREVIEW.value}:
+            raise ValueError("intent must be publish or live-preview")
+        if intent == BuildIntent.LIVE_PREVIEW.value and source_text is None:
+            raise ValueError("live-preview requires text")
+        output = payload.get("output")
+        if not isinstance(output, dict):
+            raise TypeError("output must be an object")
+        output_path = self._runtime.output_path(output)
+        if intent == BuildIntent.LIVE_PREVIEW.value:
+            self._runtime.validate_live_preview_output(output, output_path)
+        stages: list[str] = []
+        progress = on_progress or (lambda stage: stages.append(stage.value))
+        try:
+            result = self._project_service.build(
+                self._project_request(
+                    payload,
+                    ProjectRequestIntent.BUILD,
+                    output_path=output_path,
+                ),
+                on_progress=progress,
+                should_cancel=should_cancel,
+            )
+            final_preview = getattr(result, "final_preview", None)
+            presented_output = self._runtime.present_output(
+                output,
+                result.output_path,
+                final_preview,
+            )
+            return {
+                "source": self._project_source(payload, source_path),
+                "output": presented_output,
+                "diagnostics": [asdict(issue) for issue in result.issues],
+                "progress": stages,
+            }
+        except Exception:
+            if intent == BuildIntent.LIVE_PREVIEW.value:
                 self._runtime.release_live_preview_output(output)
             raise
 
