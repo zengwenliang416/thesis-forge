@@ -111,6 +111,14 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
   - Verification-surface change: authorized; creates focused source-identity model tests.
   - Attempts: 0
 
+- [V2-302] Replace the Inline model with recursive typed nodes
+  - Files: `src/thesis_forge/core/model.py`, `tests/core/test_inline_model.py`
+  - Behavior: introduce recursive Text, SoftBreak, HardBreak, Strong, Emphasis, InlineCode, Link, InlineMath, Citation, CrossReference and FootnoteReference.
+  - Verify: `.venv/bin/python -m pytest tests/core/test_inline_model.py`
+  - Acceptance: containers own child inline nodes; Strong is not a plain string.
+  - Verification-surface change: authorized; creates focused inline-model tests.
+  - Attempts: 0
+
 ## Done
 
 - [V2-214B] Wire the desktop workbench project load flow
@@ -622,5 +630,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 - 2026-08-21 - V2-214 split into ordered children V2-214A and V2-214B after inspection found the typed envelope project field lives in dto.ts (a fourth file) and the web project-open flow lacks a backend project workspace path; the web upload path stays unchanged until a follow-up backend item is refilled; no product code edited in the split cycle.
 - 2026-08-21 - V2-214A Checker PASS; exact Verify green with full suite 16 files/204 tests, typecheck/lint/diff-check clean, diff limited to the 2 named files with single-source ProjectIdentityRef import and optional `project?` payload field, 8 independent probes confirmed byte-identical serialization, Tauri pass-through, JSON round-trip, project-less positive control, and tsc rejection of invalid envelopes; no push.
 - 2026-08-22 - V2-214B Checker PASS; exact Verify green with full suite 17 files/214 tests, typecheck/lint/diff-check clean, diff limited to the 3 named files, 4 independent probes confirmed exact {id,root,manifestPath} identity on all five request kinds, A→B switch reset with no stale final-preview resolution, picker cancel/failure paths, and project-key-free web upload payloads; no push.
+- 2026-08-22 - Open refilled with V2-302 per the catalogue dependency order after V2-214B left two Open items; the recursive Inline replacement is expected to need re-slicing when its cycle arrives (parser and consumer construction sites exceed the two-file catalogue slice); no product code edited.
 
 ## Sync log
