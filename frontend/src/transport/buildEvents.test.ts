@@ -76,6 +76,13 @@ function reportWithDiagnostics(diagnostics: unknown[]): unknown {
   return value;
 }
 
+function reportWithPreview(preview: unknown): unknown {
+  const value = report() as unknown as Record<string, unknown>;
+  const output = value.output as Record<string, unknown>;
+  output.finalPreview = preview;
+  return value;
+}
+
 function expectInvalidReport(
   value: unknown,
   requestId: string,
@@ -121,6 +128,256 @@ describe("build event DTO", () => {
       schemaVersion: "thesisforge.build-report.v2",
       outcome: "succeeded",
     });
+  });
+
+  it("accepts an unlocated LibreOffice preview descriptor", () => {
+    const event = assertBuildEvent({
+      protocol: PROTOCOL_VERSION,
+      requestId: "preview-unlocated",
+      type: "completed",
+      report: reportWithPreview({
+        engine: "libreoffice",
+        label: "LibreOffice PDF",
+        fileName: "thesis.preview.pdf",
+      }),
+    });
+    if (event.type !== "completed") {
+      throw new Error("expected completed event");
+    }
+    expect(event.report.output?.finalPreview).toMatchObject({
+      engine: "libreoffice",
+      fileName: "thesis.preview.pdf",
+    });
+  });
+
+  it("accepts an unlocated Microsoft Word preview descriptor", () => {
+    expect(
+      assertBuildEvent({
+        protocol: PROTOCOL_VERSION,
+        requestId: "preview-word-unlocated",
+        type: "completed",
+        report: reportWithPreview({
+          engine: "microsoft-word",
+          label: "Microsoft Word PDF",
+          fileName: "thesis.preview.pdf",
+        }),
+      }),
+    ).toMatchObject({ type: "completed" });
+  });
+
+  it("accepts a Tauri-authorized preview descriptor", () => {
+    expect(
+      assertBuildEvent({
+        protocol: PROTOCOL_VERSION,
+        requestId: "preview-tauri-authorized",
+        type: "completed",
+        report: reportWithPreview({
+          engine: "libreoffice",
+          label: "LibreOffice PDF",
+          fileName: "thesis.preview.pdf",
+          authorizationId: "a".repeat(32),
+        }),
+      }),
+    ).toMatchObject({ type: "completed" });
+  });
+
+  it("accepts an authorized Microsoft Word preview descriptor", () => {
+    expect(
+      assertBuildEvent({
+        protocol: PROTOCOL_VERSION,
+        requestId: "preview-word-authorized",
+        type: "completed",
+        report: reportWithPreview({
+          engine: "microsoft-word",
+          label: "Microsoft Word PDF",
+          fileName: "thesis.preview.pdf",
+          authorizationId: "f".repeat(32),
+        }),
+      }),
+    ).toMatchObject({ type: "completed" });
+  });
+
+  it("accepts a Web download preview descriptor", () => {
+    expect(
+      assertBuildEvent({
+        protocol: PROTOCOL_VERSION,
+        requestId: "preview-web-download",
+        type: "completed",
+        report: reportWithPreview({
+          engine: "libreoffice",
+          label: "LibreOffice PDF",
+          fileName: "thesis.preview.pdf",
+          downloadId: "b".repeat(32),
+        }),
+      }),
+    ).toMatchObject({ type: "completed" });
+  });
+
+  it("accepts a Web live-preview descriptor", () => {
+    expect(
+      assertBuildEvent({
+        protocol: PROTOCOL_VERSION,
+        requestId: "preview-web-live",
+        type: "completed",
+        report: reportWithPreview({
+          engine: "libreoffice",
+          label: "LibreOffice PDF",
+          fileName: "thesis.preview.pdf",
+          downloadId: "c".repeat(32),
+          livePreviewId: "d".repeat(32),
+        }),
+      }),
+    ).toMatchObject({ type: "completed" });
+  });
+
+  it("preserves omitted and null preview values", () => {
+    const omitted = assertBuildEvent({
+      protocol: PROTOCOL_VERSION,
+      requestId: "preview-omitted",
+      type: "completed",
+      report: report(),
+    });
+    if (omitted.type !== "completed") {
+      throw new Error("expected completed event");
+    }
+    expect(omitted.report.output).not.toHaveProperty("finalPreview");
+
+    const nullPreview = assertBuildEvent({
+      protocol: PROTOCOL_VERSION,
+      requestId: "preview-null",
+      type: "completed",
+      report: reportWithPreview(null),
+    });
+    if (nullPreview.type !== "completed") {
+      throw new Error("expected completed event");
+    }
+    expect(nullPreview.report.output?.finalPreview).toBeNull();
+  });
+
+  it("rejects a path-bearing preview descriptor", () => {
+    expectInvalidReport(
+      reportWithPreview({
+        engine: "libreoffice",
+        label: "LibreOffice PDF",
+        fileName: "thesis.preview.pdf",
+        path: "/private/thesis.preview.pdf",
+      }),
+      "preview-path",
+    );
+  });
+
+  it("rejects an unsupported preview engine", () => {
+    expectInvalidReport(
+      reportWithPreview({
+        engine: "wps",
+        label: "WPS PDF",
+        fileName: "thesis.preview.pdf",
+      }),
+      "preview-engine",
+    );
+  });
+
+  it("rejects a wrong preview label", () => {
+    expectInvalidReport(
+      reportWithPreview({
+        engine: "libreoffice",
+        label: "Microsoft Word PDF",
+        fileName: "thesis.preview.pdf",
+      }),
+      "preview-label",
+    );
+  });
+
+  it("rejects invalid preview identifiers", () => {
+    expectInvalidReport(
+      reportWithPreview({
+        engine: "libreoffice",
+        label: "LibreOffice PDF",
+        fileName: "thesis.preview.pdf",
+        downloadId: "invalid",
+      }),
+      "preview-download-id",
+    );
+    expectInvalidReport(
+      reportWithPreview({
+        engine: "libreoffice",
+        label: "LibreOffice PDF",
+        fileName: "thesis.preview.pdf",
+        downloadId: "e".repeat(32),
+        livePreviewId: "invalid",
+      }),
+      "preview-live-id",
+    );
+  });
+
+  it("rejects an undefined downloadId property", () => {
+    expectInvalidReport(
+      reportWithPreview({
+        engine: "libreoffice",
+        label: "LibreOffice PDF",
+        fileName: "thesis.preview.pdf",
+        downloadId: undefined,
+      }),
+      "preview-undefined-download",
+    );
+  });
+
+  it("rejects an undefined authorizationId property", () => {
+    expectInvalidReport(
+      reportWithPreview({
+        engine: "libreoffice",
+        label: "LibreOffice PDF",
+        fileName: "thesis.preview.pdf",
+        authorizationId: undefined,
+      }),
+      "preview-undefined-authorization",
+    );
+  });
+
+  it("rejects an undefined livePreviewId property", () => {
+    expectInvalidReport(
+      reportWithPreview({
+        engine: "libreoffice",
+        label: "LibreOffice PDF",
+        fileName: "thesis.preview.pdf",
+        livePreviewId: undefined,
+      }),
+      "preview-undefined-live",
+    );
+  });
+
+  it("rejects preview authorization domain collisions", () => {
+    expectInvalidReport(
+      reportWithPreview({
+        engine: "libreoffice",
+        label: "LibreOffice PDF",
+        fileName: "thesis.preview.pdf",
+        downloadId: "e".repeat(32),
+        authorizationId: "f".repeat(32),
+      }),
+      "preview-mixed-ids",
+    );
+    expectInvalidReport(
+      reportWithPreview({
+        engine: "libreoffice",
+        label: "LibreOffice PDF",
+        fileName: "thesis.preview.pdf",
+        livePreviewId: "a".repeat(32),
+      }),
+      "preview-live-without-download",
+    );
+  });
+
+  it("rejects preview descriptor extra keys", () => {
+    expectInvalidReport(
+      reportWithPreview({
+        engine: "libreoffice",
+        label: "LibreOffice PDF",
+        fileName: "thesis.preview.pdf",
+        extra: true,
+      }),
+      "preview-extra-key",
+    );
   });
 
   it("accepts a schema-valid stage subset", () => {

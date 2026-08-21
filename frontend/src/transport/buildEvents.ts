@@ -96,7 +96,13 @@ export interface BuildReportOutput {
   pdfPath: string | null;
   previewStale: boolean;
   successfulBuildId: string | null;
+  finalPreview?: BuildReportPreviewDescriptor | null;
 }
+
+export type BuildReportPreviewDescriptor = Extract<
+  FinalPreviewDescriptor,
+  { engine: "microsoft-word" | "libreoffice" }
+>;
 
 export interface BuildReport {
   schemaVersion: "thesisforge.build-report.v2";
@@ -398,6 +404,74 @@ function isLog(value: unknown): value is BuildReportLog {
   );
 }
 
+function isPreviewToken(value: unknown): value is string {
+  return typeof value === "string" && /^[0-9a-f]{32}$/.test(value);
+}
+
+function isPlainPdfName(value: unknown): value is string {
+  return (
+    typeof value === "string" &&
+    value.length > 4 &&
+    !value.includes("/") &&
+    !value.includes("\\") &&
+    value.toLowerCase().endsWith(".pdf")
+  );
+}
+
+function readBuildReportPreview(
+  value: unknown,
+): BuildReportPreviewDescriptor {
+  if (
+    !isObject(value) ||
+    !hasOnlyKeys(value, [
+      "engine",
+      "label",
+      "fileName",
+      "downloadId",
+      "authorizationId",
+      "livePreviewId",
+    ]) ||
+    !hasRequiredKeys(value, ["engine", "label", "fileName"]) ||
+    !isPlainPdfName(value.fileName) ||
+    (Object.prototype.hasOwnProperty.call(value, "downloadId") &&
+      !isPreviewToken(value.downloadId)) ||
+    (Object.prototype.hasOwnProperty.call(value, "authorizationId") &&
+      !isPreviewToken(value.authorizationId)) ||
+    (Object.prototype.hasOwnProperty.call(value, "livePreviewId") &&
+      !isPreviewToken(value.livePreviewId))
+  ) {
+    throw new Error("无效的 BuildReport finalPreview");
+  }
+  if (
+    value.engine === "microsoft-word" &&
+    value.label === "Microsoft Word PDF" &&
+    value.downloadId === undefined &&
+    value.livePreviewId === undefined
+  ) {
+    return value as BuildReportPreviewDescriptor;
+  }
+  if (
+    value.engine === "libreoffice" &&
+    value.label === "LibreOffice PDF" &&
+    !(value.livePreviewId !== undefined && value.downloadId === undefined) &&
+    !(value.downloadId !== undefined && value.authorizationId !== undefined)
+  ) {
+    return value as BuildReportPreviewDescriptor;
+  }
+  throw new Error("无效的 BuildReport finalPreview");
+}
+
+function isBuildReportPreview(
+  value: unknown,
+): value is BuildReportPreviewDescriptor {
+  try {
+    readBuildReportPreview(value);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 function isOutput(value: unknown): value is BuildReportOutput {
   return (
     isObject(value) &&
@@ -406,6 +480,7 @@ function isOutput(value: unknown): value is BuildReportOutput {
       "pdfPath",
       "previewStale",
       "successfulBuildId",
+      "finalPreview",
     ]) &&
     hasRequiredKeys(value, [
       "docxPath",
@@ -416,7 +491,10 @@ function isOutput(value: unknown): value is BuildReportOutput {
     isNullableString(value.docxPath) &&
     isNullableString(value.pdfPath) &&
     typeof value.previewStale === "boolean" &&
-    isNullableString(value.successfulBuildId)
+    isNullableString(value.successfulBuildId) &&
+    (!Object.prototype.hasOwnProperty.call(value, "finalPreview") ||
+      value.finalPreview === null ||
+      isBuildReportPreview(value.finalPreview))
   );
 }
 
