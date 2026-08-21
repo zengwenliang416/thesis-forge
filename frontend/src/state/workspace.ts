@@ -38,6 +38,13 @@ export interface WorkspaceSource {
   reference?: SourceRef;
 }
 
+export interface WorkspaceProject {
+  id: string;
+  root: string;
+  manifestPath: string;
+  name: string;
+}
+
 export type PreviewMode = "structure" | "final-layout";
 
 export type FinalPreviewStatus =
@@ -60,6 +67,7 @@ export interface FinalPreviewState {
 export interface WorkspaceState {
   status: WorkspaceStatus;
   source: WorkspaceSource | null;
+  project: WorkspaceProject | null;
   savedText: string;
   editorText: string;
   dirty: boolean;
@@ -96,6 +104,12 @@ export interface WorkspaceActions {
 
 export type WorkspaceEvent =
   | { type: "sourceOpened"; source: WorkspaceSource; text: string }
+  | {
+      type: "projectOpened";
+      project: WorkspaceProject;
+      source: WorkspaceSource;
+      text: string;
+    }
   | { type: "textEdited"; text: string }
   | { type: "templateSelected"; templateId: string | null }
   | {
@@ -220,6 +234,7 @@ export function createInitialWorkspaceState(): WorkspaceState {
   return {
     status: "empty",
     source: null,
+    project: null,
     savedText: "",
     editorText: "",
     dirty: false,
@@ -282,10 +297,12 @@ export function reduceWorkspaceState(
 ): WorkspaceState {
   switch (event.type) {
     case "sourceOpened":
+    case "projectOpened":
       return {
         ...state,
         status: "populated",
         source: event.source,
+        project: event.type === "projectOpened" ? event.project : null,
         savedText: event.text,
         editorText: event.text,
         dirty: false,

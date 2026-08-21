@@ -95,14 +95,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Open
 
-- [V2-212] Track ProjectIdentity in workspace state
-  - Files: `frontend/src/state/workspace.ts`, `frontend/src/state/workspace.project.test.ts`
-  - Behavior: workspace state tracks project root, manifest, active source and display identity.
-  - Verify: `pnpm --dir frontend test -- workspace.project.test.ts`
-  - Acceptance: dirty/save/build permissions derive from loaded project state.
-  - Verification-surface change: authorized; creates focused workspace project identity tests.
-  - Attempts: 0
-
 - [V2-213] Make the product bar open projects
   - Files: `frontend/src/components/ProductBar.tsx`, `frontend/src/components/ProductBar.project.test.tsx`
   - Behavior: product bar opens a project/manifest instead of advertising standalone Markdown selection.
@@ -112,6 +104,15 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
   - Attempts: 0
 
 ## Done
+
+- [V2-212] Track ProjectIdentity in workspace state
+  - Files: `frontend/src/state/workspace.ts`, `frontend/src/state/workspace.project.test.ts`
+  - Behavior: workspace state tracks project root, manifest, active source and display identity.
+  - Verify: `pnpm --dir frontend test -- workspace.project.test.ts`
+  - Acceptance: dirty/save/build permissions derive from loaded project state.
+  - Verification-surface change: authorized; creates focused workspace project identity tests.
+  - Attempts: 1
+  - Attempt 1 (2026-08-21): exact Verify passed with full suite green (15 files, 189 tests incl. 10 new project tests); typecheck, lint and git diff --check passed. Independent Checker probes (6 tests) confirmed projectOpened populates id/root/manifestPath/name plus source/text with full session reset and contentRevision bump, dirty/save/build permissions derive from loaded project state (writable canSave, read-only blocked, fatal-vs-warning build gating, save flow retains identity), sourceOpened clears project with field-by-field parity otherwise, and source-only warning baseline keeps canBuild true.
 
 - [V2-211B] Add the Tauri project transport implementation
   - Parent: ordered child 2/2 of `V2-211`; depends on `V2-211A`.
@@ -565,5 +566,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 - 2026-08-21 - V2-210 Checker PASS; exact Verify passed 6 Tauri project tests, fmt/protocol regression passed, cross-platform path boundaries and command registration passed, and no push.
 - 2026-08-21 - V2-211A Checker PASS; exact Verify passed 33 project transport tests with full suite green (165 tests), typecheck/lint/diff-check passed, 12 independent probes confirmed identity preservation and strict rejection; no push.
 - 2026-08-21 - V2-211B Checker PASS; exact Verify passed 61 focused tests with full suite green (179 tests), typecheck/lint/diff-check passed, independent probes confirmed single pick_project invoke, lossless typed validation, cross-transport contract and unchanged openSource; no push.
+- 2026-08-21 - V2-212 Checker PASS; exact Verify passed with full suite green (15 files, 189 tests), typecheck/lint/diff-check passed, 6 independent probes confirmed project identity tracking, reset parity with sourceOpened, and project-derived dirty/save/build permissions; no push.
 
 ## Sync log
