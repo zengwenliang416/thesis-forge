@@ -89,6 +89,42 @@ class BuildStageLifecycle:
         self._set(report_stage, BuildStageStatus.FAILED)
         return self.state(report_stage)
 
+    def terminalize(
+        self,
+        stage: BuildStage | BuildReportStage,
+        *,
+        canceled: bool = False,
+    ) -> tuple[BuildStageState, ...]:
+        """Close the active boundary and make the whole snapshot terminal."""
+        report_stage = self._report_stage(stage)
+        self._require_upstream_terminal(report_stage)
+        current = self.state(report_stage)
+        if canceled:
+            if current.status not in {
+                BuildStageStatus.PENDING,
+                BuildStageStatus.RUNNING,
+            }:
+                raise ValueError(
+                    f"{report_stage.value} must be pending or running, "
+                    f"got {current.status.value}"
+                )
+            self._set(report_stage, BuildStageStatus.SKIPPED)
+        else:
+            self._require_status(report_stage, BuildStageStatus.RUNNING)
+            self._set(report_stage, BuildStageStatus.FAILED)
+        self.skip_downstream(report_stage)
+        return self.snapshot()
+
+    def _require_upstream_terminal(self, stage: BuildReportStage) -> None:
+        stage_index = REPORT_STAGES.index(stage)
+        for upstream in REPORT_STAGES[:stage_index]:
+            status = self.state(upstream).status
+            if status in {BuildStageStatus.PENDING, BuildStageStatus.RUNNING}:
+                raise ValueError(
+                    f"{upstream.value} must be terminal before {stage.value}, "
+                    f"got {status.value}"
+                )
+
     def skip_downstream(
         self,
         stage: BuildStage | BuildReportStage,
