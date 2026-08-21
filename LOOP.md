@@ -95,7 +95,17 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Open
 
-- [V2-301] Add NodeId and complete SourceSpan to the typed model
+- [V2-301A] Exclude node identity from parse-parity normalization
+  - Parent: ordered child 1/2 of `V2-301`; the parent behavior remains unchanged.
+  - Files: `qa/tools/parser_diff.py`
+  - Behavior: normalized parity JSON generically excludes `compare=False` dataclass fields so per-instance node identity never affects byte parity.
+  - Verify: `.venv/bin/python -m pytest tests/test_parser_markdown_it.py tests/test_parser_backend.py`
+  - Acceptance: exclusion is a no-op for today's node set; the only failure is the pre-existing `test_parser_backend.py::test_parser_diff_cli_self_check`.
+  - Verification-surface change: none; updates QA parity tooling only.
+  - Attempts: 0
+
+- [V2-301B] Add NodeId and complete SourceSpan to the typed model
+  - Parent: ordered child 2/2 of `V2-301`; depends on `V2-301A`.
   - Files: `src/thesis_forge/core/model.py`, `tests/core/test_source_identity.py`
   - Behavior: every semantic node has stable internal identity and start/end file/line/column span.
   - Verify: `.venv/bin/python -m pytest tests/core/test_source_identity.py`
@@ -641,6 +651,7 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 - 2026-08-22 - V2-214B Checker PASS; exact Verify green with full suite 17 files/214 tests, typecheck/lint/diff-check clean, diff limited to the 3 named files, 4 independent probes confirmed exact {id,root,manifestPath} identity on all five request kinds, A→B switch reset with no stale final-preview resolution, picker cancel/failure paths, and project-key-free web upload payloads; no push.
 - 2026-08-22 - Open refilled with V2-302 per the catalogue dependency order after V2-214B left two Open items; the recursive Inline replacement is expected to need re-slicing when its cycle arrives (parser and consumer construction sites exceed the two-file catalogue slice); no product code edited.
 - 2026-08-22 - Open refilled with V2-303 per the catalogue dependency order; the basic Block replacement may need re-slicing when its cycle arrives (consumer construction sites exceed the two-file catalogue slice); no product code edited.
+- 2026-08-22 - V2-301 split into ordered children V2-301A and V2-301B after the Maker proved the auto-generated `node_id` dataclass field breaks `qa/tools/parser_diff.py` asdict-based parity normalization (30 test_parser_markdown_it parity tests plus 3 test_parser_backend parity tests newly fail; unavoidable while identity is a real per-instance field); V2-301A updates QA parity normalization first, V2-301B carries the model change; failed work restored, no product code kept in the split cycle; full-suite baseline re-measured at 47 failed / 949 passed (`test_parser_backend.py::test_parser_diff_cli_self_check` already fails pre-change).
 - 2026-08-22 - V2-215 Checker PASS; exact Verify 7/7 green, baselines (67 core/application/adapter tests) and ruff clean, full-suite failure sets identical HEAD vs candidate (46 pre-existing, zero new), 5 independent probes confirmed structured orphan/type-mismatch errors, figure-width pass, projectless silence, and sorted output; no push.
 
 ## Sync log
