@@ -4,7 +4,6 @@ import json
 from dataclasses import asdict
 from pathlib import Path
 from typing import Annotated
-from uuid import uuid4
 
 import typer
 from rich.console import Console
@@ -16,7 +15,11 @@ from thesis_forge.application import (
     BuildValidationError,
 )
 from thesis_forge.application.contracts import (
+    BuildDiagnostic,
     BuildIntent,
+    BuildOutcome,
+    BuildOutput,
+    BuildReport,
     ProjectIdentity,
     ProjectOutput,
     ProjectRequest,
@@ -77,43 +80,85 @@ def _report_project_build_error(
     error: BuildValidationError | ApplicationStageError,
     *,
     exit_code: int,
+    build_id: str,
+    report_json: Path | None = None,
 ) -> None:
-    build_id = f"cli-{uuid4().hex}"
     report = (
         error.to_report(
             build_id=build_id,
             intent=BuildIntent.PUBLISH,
         )
         if isinstance(error, BuildValidationError)
-        else error.to_report(
-            build_id=build_id,
-            intent=BuildIntent.PUBLISH,
-        )
-        if hasattr(error, "to_report")
-        else None
-    )
-    if report is None:
-        from thesis_forge.application.contracts import BuildReport
-
-        report = BuildReport.from_error(
+        else BuildReport.from_error(
             error,
             build_id=build_id,
             intent=BuildIntent.PUBLISH,
         )
+    )
     message = (
         f"编译停止（{error.stage}）：存在 {len(error.issues)} 个验证错误。"
         "请先运行 validate。"
         if isinstance(error, BuildValidationError)
         else f"构建失败（{error.stage}）：{error}"
     )
-    console.print_json(
-        json.dumps(
-            {"message": message, "report": serialize_build_report(report)},
-            ensure_ascii=False,
-            default=str,
-        )
-    )
+    _emit_report({"message": message, "report": serialize_build_report(report)}, report_json)
     raise typer.Exit(exit_code) from None
+
+
+def _emit_report(payload: dict, report_json: Path | None) -> None:
+    serialized = json.dumps(
+        payload,
+        ensure_ascii=False,
+        default=str,
+        indent=2,
+        sort_keys=True,
+    )
+    if report_json is not None:
+        report_json = report_json.expanduser().resolve()
+        report_json.parent.mkdir(parents=True, exist_ok=True)
+        report_json.write_text(serialized + "\n", encoding="utf-8")
+    console.print(serialized)
+
+
+def _project_success_report(project, result) -> BuildReport:
+    build_id = f"cli-{project.manifest.project.id}-{result.output_path.name}"
+    diagnostics = tuple(
+        BuildDiagnostic.from_validation_issue(
+            issue,
+            sequence=sequence,
+            source_file=project.manifest.document.source.root,
+        )
+        for sequence, issue in enumerate(result.issues, start=1)
+    )
+    primary = next(
+        (
+            diagnostic.id
+            for diagnostic in diagnostics
+            if diagnostic.severity.value == "error"
+        ),
+        None,
+    )
+    final_preview = result.final_preview
+    return BuildReport(
+        schema_version=BuildReport.SCHEMA_VERSION,
+        build_id=build_id,
+        intent=BuildIntent.PUBLISH,
+        outcome=BuildOutcome.SUCCEEDED,
+        stages=BuildReport.default_stages(
+            failed_stage=None,
+            outcome=BuildOutcome.SUCCEEDED,
+        ),
+        failed_stage=None,
+        primary_diagnostic_id=primary,
+        diagnostics=diagnostics,
+        logs=(),
+        output=BuildOutput(
+            docx_path=result.output_path,
+            pdf_path=final_preview.path if final_preview is not None else None,
+            preview_stale=False,
+            successful_build_id=build_id,
+        ),
+    )
 
 
 def _report_application_error(error: ApplicationStageError, *, source: Path) -> None:
@@ -229,9 +274,14 @@ def build(
         Path | None,
         typer.Option("--template", help="显式学校模板 YAML 路径"),
     ] = None,
+    report_json: Annotated[
+        Path | None,
+        typer.Option("--report-json", help="写入完整 BuildReport JSON"),
+    ] = None,
 ) -> None:
     """通过安全的本地编译流水线生成 DOCX。"""
     project_input = _is_project_input(source)
+    report_build_id = "cli-failure"
     try:
         _require_project_input(source)
         project = load_project(source)
@@ -245,6 +295,7 @@ def build(
                 else (project.project_root / output).resolve()
             )
         )
+        report_build_id = f"cli-{project.manifest.project.id}-{output_path.name}"
         result = ProjectApplicationService().build(
             _project_request(
                 source,
@@ -256,7 +307,12 @@ def build(
         _report_project_error(error)
     except BuildValidationError as error:
         if project_input:
-            _report_project_build_error(error, exit_code=1)
+            _report_project_build_error(
+                error,
+                exit_code=1,
+                build_id=report_build_id,
+                report_json=report_json,
+            )
         error_count = sum(issue.severity == "error" for issue in error.issues)
         console.print(
             f"[red]编译停止（{error.stage}）：存在 {error_count} 个错误。"
@@ -265,11 +321,25 @@ def build(
         raise typer.Exit(1)
     except ApplicationStageError as error:
         if project_input:
-            _report_project_build_error(error, exit_code=2)
+            _report_project_build_error(
+                error,
+                exit_code=2,
+                build_id=report_build_id,
+                report_json=report_json,
+            )
         console.print(f"[red]构建失败（{error.stage}）：{error}[/red]")
         raise typer.Exit(2) from None
 
-    console.print(f"[green]✓ 已生成 DOCX：{result.output_path}[/green]")
+    if project_input and report_json is not None:
+        _emit_report(
+            {
+                "message": f"已生成 DOCX：{result.output_path}",
+                "report": serialize_build_report(_project_success_report(project, result)),
+            },
+            report_json,
+        )
+    else:
+        console.print(f"[green]✓ 已生成 DOCX：{result.output_path}[/green]")
 
 
 def _print_template_issues(issues) -> None:
