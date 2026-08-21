@@ -3,7 +3,7 @@ import userEvent from "@testing-library/user-event";
 import { createInitialWorkspaceState } from "../state/workspace";
 import type { WorkbenchTransport } from "../transport/WorkbenchTransport";
 import { PROTOCOL_VERSION, type CommandEnvelope } from "../transport/dto";
-import type { BuildEvent } from "../transport/buildEvents";
+import type { BuildEvent, BuildReport } from "../transport/buildEvents";
 import { WorkbenchApp } from "./WorkbenchApp";
 
 function initialState() {
@@ -53,6 +53,30 @@ function transport(
   };
 }
 
+function completedEvent(
+  requestId: string,
+  output: BuildReport["output"],
+  intent: BuildReport["intent"] = "publish",
+): BuildEvent {
+  return {
+    protocol: PROTOCOL_VERSION,
+    requestId,
+    type: "completed",
+    report: {
+      schemaVersion: "thesisforge.build-report.v2",
+      buildId: requestId,
+      intent,
+      outcome: "succeeded",
+      stages: [{ name: "parse", status: "succeeded" }],
+      failedStage: null,
+      primaryDiagnosticId: null,
+      diagnostics: [],
+      logs: [],
+      output,
+    },
+  };
+}
+
 describe("Workbench build flow", () => {
   beforeEach(() => {
     vi.stubGlobal(
@@ -81,15 +105,14 @@ describe("Workbench build flow", () => {
               stage,
             });
           }
-          onEvent({
-            protocol: PROTOCOL_VERSION,
-            requestId: request.requestId,
-            type: "success",
-            result: {
-              output: { kind: "desktop", name: "thesis.docx" },
-              diagnostics: [],
-            },
-          });
+          onEvent(
+            completedEvent(request.requestId, {
+              docxPath: "thesis.docx",
+              pdfPath: null,
+              previewStale: false,
+              successfulBuildId: request.requestId,
+            }),
+          );
         })}
         initialState={initialState()}
       />,
@@ -153,19 +176,15 @@ describe("Workbench build flow", () => {
       <WorkbenchApp
         transport={transport(
           async (request, onEvent) => {
-            onEvent({
-              protocol: PROTOCOL_VERSION,
-              requestId: request.requestId,
-              type: "success",
-              result: {
-                output: {
-                  kind: "desktop",
-                  name: "thesis.docx",
-                  finalPreview: descriptor,
-                },
-                diagnostics: [],
-              },
-            });
+            onEvent(
+              completedEvent(request.requestId, {
+                docxPath: "thesis.docx",
+                pdfPath: "thesis.preview.pdf",
+                previewStale: false,
+                successfulBuildId: request.requestId,
+                finalPreview: descriptor,
+              }),
+            );
           },
           { resolveFinalPreview },
         )}
@@ -256,19 +275,19 @@ describe("Workbench build flow", () => {
       async (request, onEvent, signal) => {
         requests.push(request);
         abortSignals.push(signal);
-        onEvent({
-          protocol: PROTOCOL_VERSION,
-          requestId: request.requestId,
-          type: "success",
-          result: {
-            output: {
-              kind: "desktop",
-              name: "live.docx",
+        onEvent(
+          completedEvent(
+            request.requestId,
+            {
+              docxPath: "live.docx",
+              pdfPath: "live.preview.pdf",
+              previewStale: false,
+              successfulBuildId: request.requestId,
               finalPreview: descriptor,
             },
-            diagnostics: [],
-          },
-        });
+            "live-preview",
+          ),
+        );
         if (requests.length === 1) {
           await new Promise<void>((resolve) => {
             signal.addEventListener("abort", () => resolve(), { once: true });

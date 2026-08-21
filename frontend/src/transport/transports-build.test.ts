@@ -1,5 +1,5 @@
 import { PROTOCOL_VERSION, type CommandEnvelope } from "./dto";
-import type { BuildEvent } from "./buildEvents";
+import type { BuildEvent, BuildReport } from "./buildEvents";
 import { TauriWorkbenchTransport } from "./tauri";
 import { WebWorkbenchTransport } from "./web";
 
@@ -31,10 +31,23 @@ const events: BuildEvent[] = [
   {
     protocol: PROTOCOL_VERSION,
     requestId: "build-1",
-    type: "success",
-    result: {
-      output: { kind: "desktop", name: "thesis.docx" },
+    type: "completed",
+    report: {
+      schemaVersion: "thesisforge.build-report.v2",
+      buildId: "build-1",
+      intent: "publish",
+      outcome: "succeeded",
+      stages: [{ name: "parse", status: "succeeded" }],
+      failedStage: null,
+      primaryDiagnosticId: null,
       diagnostics: [],
+      logs: [],
+      output: {
+        docxPath: "thesis.docx",
+        pdfPath: null,
+        previewStale: false,
+        successfulBuildId: "build-1",
+      } satisfies BuildReport["output"],
     },
   },
 ];
