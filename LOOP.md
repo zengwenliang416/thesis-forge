@@ -95,21 +95,146 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Open
 
-- [V2-202] Load a project directory or manifest path safely
-  - Files: `src/thesis_forge/project/loader.py`, `tests/project/test_manifest_loader.py`
-  - Behavior: load `thesisforge.yaml` from a project directory or explicit manifest path and reject bare Markdown, duplicate YAML keys and a missing document source.
-  - Verify: `.venv/bin/python -m pytest tests/project/test_manifest_loader.py`
-  - Acceptance: the loader returns normalized project root and manifest path; all loader failures carry stable project diagnostic codes.
-  - Verification-surface change: authorized; creates focused manifest loader contract tests.
+- [V2-211A] Add the typed project transport contract and Web implementation
+  - Parent: ordered child 1/2 of `V2-211`; depends on `V2-210`.
+  - Files: `frontend/src/transport/WorkbenchTransport.ts`, `frontend/src/transport/web.ts`, `frontend/src/transport/WorkbenchTransport.project.test.ts`
+  - Behavior: Web transport opens project identity and source snapshot through one typed request/response contract.
+  - Verify: `pnpm --dir frontend test -- WorkbenchTransport.project.test.ts`
+  - Acceptance: project root/manifest/source identity is preserved and Web does not expose an uploaded-file-only project variant.
+  - Verification-surface change: authorized; creates focused Web project transport tests.
   - Attempts: 0
 
-- [V2-203] Enforce project-relative path boundaries
-  - Files: `src/thesis_forge/project/paths.py`, `tests/project/test_project_paths.py`
-  - Behavior: resolve source, assets, bibliography and output paths without traversal, absolute-path, symlink-escape or remote-URL access.
-  - Verify: `.venv/bin/python -m pytest tests/project/test_project_paths.py`
-  - Acceptance: `..`, absolute paths, symlink escape and remote URLs fail with explicit stable diagnostics.
-  - Verification-surface change: authorized; creates focused project path-boundary contract tests.
+- [V2-211B] Add the Tauri project transport implementation
+  - Parent: ordered child 2/2 of `V2-211`; depends on `V2-211A`.
+  - Files: `frontend/src/transport/tauri.ts`, `frontend/src/transport/WorkbenchTransport.project.test.ts`, `frontend/src/transport/transports.test.ts`
+  - Behavior: Tauri transport invokes `pick_project` and validates the same typed project identity/source snapshot response.
+  - Verify: `pnpm --dir frontend test -- WorkbenchTransport.project.test.ts transports.test.ts`
+  - Acceptance: Tauri and Web share the project contract and reject malformed project picker responses.
+  - Verification-surface change: authorized; extends shared frontend project transport regression tests.
   - Attempts: 0
+
+- [V2-212] Track ProjectIdentity in workspace state
+  - Files: `frontend/src/state/workspace.ts`, `frontend/src/state/workspace.project.test.ts`
+  - Behavior: workspace state tracks project root, manifest, active source and display identity.
+  - Verify: `pnpm --dir frontend test -- workspace.project.test.ts`
+  - Acceptance: dirty/save/build permissions derive from loaded project state.
+  - Verification-surface change: authorized; creates focused workspace project identity tests.
+  - Attempts: 0
+
+- [V2-213] Make the product bar open projects
+  - Files: `frontend/src/components/ProductBar.tsx`, `frontend/src/components/ProductBar.project.test.tsx`
+  - Behavior: product bar opens a project/manifest instead of advertising standalone Markdown selection.
+  - Verify: `pnpm --dir frontend test -- ProductBar.project.test.tsx`
+  - Acceptance: file chooser labels, accepted input text and accessible actions describe project selection.
+  - Verification-surface change: authorized; creates focused project-opening UI tests.
+  - Attempts: 0
+
+## Done
+
+- [V2-210] Authorize Tauri project selection
+  - Files: `src-tauri/src/lib.rs`, `src-tauri/src/project_tests.rs`
+  - Behavior: desktop project selection accepts a project directory/manifest and returns authorized project source/manifest paths.
+  - Verify: `cargo test --manifest-path src-tauri/Cargo.toml project`
+  - Acceptance: standalone Markdown selection is rejected and path boundaries remain enforced.
+  - Verification-surface change: authorized; creates focused Tauri project selection tests.
+  - Attempts: 1
+  - Attempt 1 (2026-08-21): initial Cargo Verify passed 4 tests but independent Checker found explicit manifest symlink-root confusion and incomplete Windows/URI path rejection. Final Checker PASS confirmed 6 tests, fmt check, protocol contract regression (28 tests), command registration and corrected boundaries.
+
+- [V2-209] Define the backend workbench project DTO
+  - Files: `src/thesis_forge/adapters/dto.py`, `src/thesis_forge/adapters/http.py`, `tests/adapters/test_project_dto.py`
+  - Behavior: desktop requests identify project root/manifest and the current source snapshot through one typed transport DTO.
+  - Verify: `.venv/bin/python -m pytest tests/adapters/test_project_dto.py tests/test_http_adapter.py`
+  - Acceptance: no old bare-source DTO variant remains in the project DTO contract.
+  - Verification-surface change: authorized; creates focused backend project DTO tests.
+  - Attempts: 1
+  - Attempt 1 (2026-08-21): exact Verify passed 17 tests; strict reader, HTTP pre-dispatch validation, old HTTP smoke and Ruff passed. Independent Checker PASS confirmed identity/snapshot/output preservation and no bare-source variant in the project DTO.
+
+- [V2-208] Emit deterministic machine-readable CLI reports
+  - Files: `src/thesis_forge/cli.py`, `tests/cli/test_json_reports.py`
+  - Behavior: validate and build emit deterministic JSON diagnostics and typed BuildReport data for automation.
+  - Verify: `.venv/bin/python -m pytest tests/cli/test_json_reports.py`
+  - Acceptance: JSON stdout/stderr and exit codes remain deterministic and failure reports retain complete diagnostics.
+  - Verification-surface change: authorized; creates focused CLI JSON report tests.
+  - Attempts: 1
+  - Attempt 1 (2026-08-21): initial exact Verify exposed CLI report helper syntax and a sanitizer-aware path assertion; corrected within the two named files. Independent Checker PASS confirmed 3 tests, repeated success/failure JSON equality, typed report completeness, deterministic IDs, sanitized paths and Ruff.
+
+- [V2-207] Expose project-only CLI command contracts
+  - Files: `src/thesis_forge/cli.py`, `tests/test_cli.py`, `tests/cli/test_project_commands.py`
+  - Behavior: inspect, validate and build accept a project directory or manifest path and reject bare Markdown.
+  - Verify: `.venv/bin/python -m pytest tests/test_cli.py tests/cli/test_project_commands.py`
+  - Acceptance: project commands expose structured JSON/report output without a legacy source-path compatibility branch.
+  - Verification-surface change: authorized; creates focused project CLI contract tests.
+  - Attempts: 1
+  - Attempt 1 (2026-08-21): exact Verify initially exposed legacy fixture expectations after project-only cutover; migrated tests through temporary project fixtures. Independent Checker found project build validation was message-only; CLI now emits typed BuildReport, with final Checker PASS confirming 20 tests, bare-entry rejection, directory/manifest success, failure reports, symlink errors and Ruff.
+
+- [V2-206] Validate manifest resource paths through the project boundary
+  - Files: `src/thesis_forge/core/validator.py`, `tests/core/test_manifest_resource_validation.py`
+  - Behavior: validation resolves bibliography, template and asset paths from the loaded project rather than Markdown Front Matter.
+  - Verify: `.venv/bin/python -m pytest tests/core/test_manifest_resource_validation.py`
+  - Acceptance: manifest-derived resources are deterministic and path-boundary failures become structured diagnostics.
+  - Verification-surface change: authorized; creates focused manifest resource validation tests.
+  - Attempts: 1
+  - Attempt 1 (2026-08-21): exact Verify initially exposed invalid fixture citation style and then a non-empty assets fixture directory; corrected within the two named files. Independent Checker found bare ProjectPathError and absolute bibliography detail leakage; fixes added. Final Checker PASS confirmed 4 tests, validator/application smoke (91 tests), structured boundary issues, sanitized details, Ruff and scope.
+
+- [V2-205D] Migrate the headless UI project flow
+  - Parent: ordered child 4/4 of `V2-205`; depends on `V2-205A`.
+  - Files: `src/thesis_forge/ui/controller.py`, `src/thesis_forge/application/__init__.py`, `tests/test_ui_controller.py`
+  - Behavior: headless desktop workspace operations carry project identity and typed editor snapshots into application services.
+  - Verify: `.venv/bin/python -m pytest tests/test_ui_controller.py`
+  - Acceptance: open, validate and build use the project contract without a legacy source-path compatibility branch.
+  - Verification-surface change: authorized; migrates headless UI project-flow regressions.
+  - Attempts: 1
+  - Attempt 1 (2026-08-21): initial exact Verify exposed test task-runner reuse and project persistence refresh fallback; corrected within the three named files. Final Checker PASS confirmed 43 tests, frontend contract smoke (3 tests), typed project refresh, safe save-as rejection, Ruff and scope.
+
+- [V2-205C] Migrate CLI to project requests
+  - Parent: ordered child 3/4 of `V2-205`; depends on `V2-205A`.
+  - Files: `src/thesis_forge/cli.py`, `tests/test_cli.py`, `tests/cli/test_project_commands.py`
+  - Behavior: CLI inspect, validate, review and build construct the typed project request from a project directory or manifest path.
+  - Verify: `.venv/bin/python -m pytest tests/test_cli.py tests/cli/test_project_commands.py`
+  - Acceptance: CLI project commands no longer route a bare Markdown path into application services and preserve structured project errors.
+  - Verification-surface change: authorized; adds project-only CLI contract tests and migrates existing CLI regressions.
+  - Attempts: 1
+  - Attempt 1 (2026-08-21): exact Verify initially exposed an over-specific JSON diagnostic assertion and a project test import/format issue; corrected within the three named files. Independent Checker then found uncaught ProjectPathError on symlink escape; CLI capture and root-external symlink regression were added. Final Checker PASS confirmed 19 tests, structured exit 2/no traceback, Ruff and scope.
+
+- [V2-205B3] Migrate HTTP project request transport
+  - Parent: ordered child 3/3 of `V2-205B`; depends on `V2-205B1`.
+  - Files: `src/thesis_forge/adapters/dto.py`, `src/thesis_forge/adapters/http.py`, `tests/test_http_adapter.py`
+  - Behavior: HTTP request/response transport preserves typed project identity, output and editor snapshot fields.
+  - Verify: `.venv/bin/python -m pytest tests/test_http_adapter.py`
+  - Acceptance: HTTP project requests share the application contract without a second source-path protocol or message-only build error.
+  - Verification-surface change: authorized; migrates HTTP project-request and error-contract regressions.
+  - Attempts: 1
+  - Attempt 1 (2026-08-21): exact Verify initially hit a missing `pytest` import and DTO import ordering; fixed within the three named files. Final Checker PASS confirmed 12 tests, adapter smoke (33 tests), semantic identity validation before dispatcher, field preservation, Ruff and scope.
+
+- [V2-205B2] Migrate sidecar stream project requests
+  - Parent: ordered child 2/3 of `V2-205B`; depends on `V2-205B1`.
+  - Files: `src/thesis_forge/adapters/sidecar.py`, `tests/test_sidecar.py`, `tests/adapters/test_build_report_events.py`
+  - Behavior: sidecar dispatch and build streams carry the typed project request while retaining canonical terminal reports.
+  - Verify: `.venv/bin/python -m pytest tests/test_sidecar.py tests/adapters/test_build_report_events.py`
+  - Acceptance: sidecar project identity/editor snapshot and BuildReport lifecycle provenance remain typed and incremental.
+  - Verification-surface change: authorized; migrates sidecar and terminal-report project-request regressions.
+  - Attempts: 1
+  - Attempt 1 (2026-08-21): exact Verify passed 17 tests; target Ruff/diff check and HTTP smoke (6 tests) passed. Independent Checker confirmed explicit project service composition, cancellation preservation and progress + canonical completed report with no message-only build failure.
+
+- [V2-205B1] Migrate runtime dispatcher project requests
+  - Parent: ordered child 1/3 of `V2-205B`; depends on `V2-205A`.
+  - Files: `src/thesis_forge/adapters/runtime.py`, `tests/test_adapters.py`
+  - Behavior: desktop and web runtime dispatch constructs and passes the typed project request into application services.
+  - Verify: `.venv/bin/python -m pytest tests/test_adapters.py`
+  - Acceptance: runtime project identity, output policy and editor snapshot are preserved without a second source-path protocol.
+  - Verification-surface change: authorized; migrates runtime adapter project-request regressions.
+  - Attempts: 1
+  - Attempt 1 (2026-08-21): exact Verify passed 33 tests; target Ruff and diff check passed; independent Checker confirmed typed four-intent dispatch, source/output separation, HTTP/sidecar smoke (11 tests) and no new message-only build path.
+
+- [V2-205A] Migrate application services to the typed project request
+  - Parent: ordered child 1/4 of `V2-205`; the parent behavior remains unchanged.
+  - Files: `src/thesis_forge/application/services.py`, `tests/application/test_project_services.py`, `tests/test_application_services.py`
+  - Behavior: application inspect, validate, preview and build entrypoints load one typed project request before parsing and share one loaded project context.
+  - Verify: `.venv/bin/python -m pytest tests/application/test_project_services.py tests/test_application_services.py`
+  - Acceptance: manifest-derived project identity, source and resources reach every application service without a bare source-path compatibility union.
+  - Verification-surface change: authorized; creates project-service integration tests and migrates application service regressions.
+  - Attempts: 1
+  - Attempt 1 (2026-08-21): exact Verify initially hit a test import error for `ApplicationDependencies`; corrected within the three named files. Final Checker PASS confirmed 82 tests, existing BuildReport contract regression (6 tests), Ruff and shared typed context/identity coverage.
 
 - [V2-204] Represent application project requests as one typed contract
   - Files: `src/thesis_forge/application/contracts.py`, `tests/application/test_project_request_contract.py`
@@ -117,17 +242,26 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
   - Verify: `.venv/bin/python -m pytest tests/application/test_project_request_contract.py`
   - Acceptance: inspect, validate, review and build request data share the project contract and preserve optional live editor text.
   - Verification-surface change: authorized; creates focused application project-request contract tests.
-  - Attempts: 0
+  - Attempts: 1
+  - Attempt 1 (2026-08-21): exact Verify passed 11 tests; target Ruff initially required the existing `Mapping` import to move to `collections.abc`, then exact Verify, Ruff, diff check and existing BuildReport contract regression passed. Independent Checker PASS confirmed typed four-intent coverage and no compatibility union.
 
-- [V2-205] Load projects through application services
-  - Files: `src/thesis_forge/application/services.py`, `tests/application/test_project_services.py`
-  - Behavior: inspect, validate, review and build resolve the manifest before parsing and share one loaded project context.
-  - Verify: `.venv/bin/python -m pytest tests/application/test_project_services.py`
-  - Acceptance: project identity and manifest-derived source/resources are used consistently by every core service.
-  - Verification-surface change: authorized; creates focused project service integration tests.
-  - Attempts: 0
+- [V2-203] Enforce project-relative path boundaries
+  - Files: `src/thesis_forge/project/paths.py`, `tests/project/test_project_paths.py`
+  - Behavior: resolve source, assets, bibliography and output paths without traversal, absolute-path, symlink-escape or remote-URL access.
+  - Verify: `.venv/bin/python -m pytest tests/project/test_project_paths.py`
+  - Acceptance: `..`, absolute paths, symlink escape and remote URLs fail with explicit stable diagnostics.
+  - Verification-surface change: authorized; creates focused project path-boundary contract tests.
+  - Attempts: 1
+  - Attempt 1 (2026-08-21): initial exact Verify exposed a fixture symlink target that was still inside the project root; the fixture was corrected without product changes. Final Checker PASS confirmed 9 tests, root-external symlink probes for source/assets/bibliography/output/review, Ruff and scope.
 
-## Done
+- [V2-202] Load a project directory or manifest path safely
+  - Files: `src/thesis_forge/project/loader.py`, `tests/project/test_manifest_loader.py`
+  - Behavior: load `thesisforge.yaml` from a project directory or explicit manifest path and reject bare Markdown, duplicate YAML keys and a missing document source.
+  - Verify: `.venv/bin/python -m pytest tests/project/test_manifest_loader.py`
+  - Acceptance: the loader returns normalized project root and manifest path; all loader failures carry stable project diagnostic codes.
+  - Verification-surface change: authorized; creates focused manifest loader contract tests.
+  - Attempts: 1
+  - Attempt 1 (2026-08-21): exact Verify initially passed 7 tests, but independent Checker found raw Pydantic input/path leakage, a bare TypeError for unhashable YAML keys, and missing non-manifest/nested-duplicate coverage. Candidate retained; fixes added. Final Checker PASS confirmed 11 tests, strict-warning collection, sanitized stable errors, nested duplicate-key handling, Ruff and scope.
 
 - [V2-201] Define the strict ProjectManifestV2 model
   - Files: `src/thesis_forge/project/model.py`, `tests/project/test_manifest_model.py`, `src/thesis_forge/project/__init__.py`
@@ -411,5 +545,21 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 - 2026-08-21 - REG-001 Checker PASS; exact Verify passed 9 tests, atomicity matrix/Ruff/diff checks passed, and the V2-107A regression was committed locally without push.
 - 2026-08-21 - V2-108A Checker PASS; exact Verify passed 13 files/132 tests and typecheck, live-preview stale/cancel/revision guards passed, and no legacy production terminal paths remained.
 - 2026-08-21 - V2-201 Checker PASS; exact Verify and `PYTHONWARNINGS=error` passed 77 manifest model tests, strict path/schema/section coverage and Ruff passed, and no push.
+- 2026-08-21 - V2-202 Checker PASS; exact Verify and strict-warning Verify passed 11 loader tests, stable sanitized project errors and nested duplicate-key coverage passed, and no push.
+- 2026-08-21 - V2-203 Checker PASS; exact Verify passed 9 path-boundary tests, root-external symlink probes and Ruff passed, and no push.
+- 2026-08-21 - V2-204 Checker PASS; exact Verify passed 11 project request tests, existing BuildReport contract regression passed 6 tests, Ruff passed, and no push.
+- 2026-08-21 - V2-205 split into ordered children V2-205A through V2-205D after CodeGraph found application service callers across services, adapters, CLI, UI and existing regressions beyond the three-file bound; no product code edited.
+- 2026-08-21 - V2-205A Checker PASS; exact Verify passed 82 application service tests, existing BuildReport contract regression passed 6 tests, Ruff passed, and no push.
+- 2026-08-21 - V2-205B split into ordered children V2-205B1 through V2-205B3 after CodeGraph found runtime, sidecar, HTTP/DTO and regression-test boundaries beyond the three-file slice; no product code edited.
+- 2026-08-21 - V2-205B1 Checker PASS; exact Verify passed 33 adapter tests, HTTP/sidecar smoke passed 11 tests, Ruff passed, and no push.
+- 2026-08-21 - V2-205B2 Checker PASS; exact Verify passed 17 sidecar/BuildReport tests, HTTP smoke passed 6 tests, Ruff passed, and no push.
+- 2026-08-21 - V2-205B3 Checker PASS; exact Verify passed 12 HTTP tests, adapter smoke passed 33 tests, semantic identity validation and Ruff passed, and no push.
+- 2026-08-21 - V2-205C Checker PASS; exact Verify passed 19 CLI tests, root-external symlink CLI probes and Ruff passed, and no push.
+- 2026-08-21 - V2-205D Checker PASS; exact Verify passed 43 UI controller tests, frontend contract smoke passed 3 tests, typed project refresh/save-as boundaries and Ruff passed, and no push.
+- 2026-08-21 - V2-206 Checker PASS; exact Verify passed 4 manifest resource tests, validator/application smoke passed 91 tests, structured path errors and sanitized details passed, and no push.
+- 2026-08-21 - V2-207 Checker PASS; exact Verify passed 20 CLI tests, bare-entry/project/typed-failure probes and Ruff passed, and no push.
+- 2026-08-21 - V2-208 Checker PASS; exact Verify passed 3 JSON report tests, repeated success/failure outputs were deterministic, report completeness/sanitization and Ruff passed, and no push.
+- 2026-08-21 - V2-209 Checker PASS; exact Verify passed 17 DTO/HTTP tests, strict project reader and HTTP smoke/Ruff passed, and no push.
+- 2026-08-21 - V2-210 Checker PASS; exact Verify passed 6 Tauri project tests, fmt/protocol regression passed, cross-platform path boundaries and command registration passed, and no push.
 
 ## Sync log
