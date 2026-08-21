@@ -95,12 +95,30 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Open
 
-- [V2-213] Make the product bar open projects
-  - Files: `frontend/src/components/ProductBar.tsx`, `frontend/src/components/ProductBar.project.test.tsx`
-  - Behavior: product bar opens a project/manifest instead of advertising standalone Markdown selection.
-  - Verify: `pnpm --dir frontend test -- ProductBar.project.test.tsx`
-  - Acceptance: file chooser labels, accepted input text and accessible actions describe project selection.
-  - Verification-surface change: authorized; creates focused project-opening UI tests.
+- [V2-213A] Make the product bar present project selection
+  - Parent: ordered child 1/2 of `V2-213`; the parent behavior remains unchanged.
+  - Files: `frontend/src/components/ProductBar.tsx`, `frontend/src/components/ProductBar.project.test.tsx`, `frontend/src/components/WorkbenchApp.test.tsx`
+  - Behavior: product bar open action, manifest accept text and identity display describe project/manifest selection instead of standalone Markdown selection.
+  - Verify: `pnpm --dir frontend test -- ProductBar.project.test.tsx WorkbenchApp.test.tsx`
+  - Acceptance: open-button accessible name and file chooser accept text target `thesisforge.yaml`/project selection; a loaded project's display identity and active source are shown; existing workbench assertions migrate to the project-opening labels.
+  - Verification-surface change: authorized; creates focused project-opening UI tests and migrates existing workbench assertions.
+  - Attempts: 0
+
+- [V2-213B] Migrate e2e specs to project selection
+  - Parent: ordered child 2/2 of `V2-213`; depends on `V2-213A`.
+  - Files: `frontend/e2e/workbench.spec.ts`, `frontend/e2e/acceptance.spec.ts`, `frontend/e2e/tauri-windows.acceptance.ts`
+  - Behavior: e2e specs drive the project-opening action instead of the retired standalone Markdown label.
+  - Verify: `pnpm --dir frontend exec playwright test --list >/dev/null && ! grep -rn "打开 Markdown 文稿" frontend/e2e/`
+  - Acceptance: all e2e specs parse and no e2e reference to the standalone Markdown open label remains.
+  - Verification-surface change: authorized; migrates existing e2e project-opening references.
+  - Attempts: 0
+
+- [V2-214] Wire the workbench project load flow
+  - Files: `frontend/src/components/WorkbenchApp.tsx`, `frontend/src/components/WorkbenchApp.project.test.tsx`, `frontend/src/components/WorkbenchApp.test.tsx`
+  - Behavior: open project, load the manifest source, save editor snapshot and pass project identity to all operations.
+  - Verify: `pnpm --dir frontend test -- WorkbenchApp.project.test.tsx WorkbenchApp.test.tsx`
+  - Acceptance: switching project clears unrelated diagnostics/report while preserving no stale path authorization.
+  - Verification-surface change: authorized; creates focused workbench project-flow tests and migrates existing workbench regressions.
   - Attempts: 0
 
 ## Done
@@ -567,5 +585,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 - 2026-08-21 - V2-211A Checker PASS; exact Verify passed 33 project transport tests with full suite green (165 tests), typecheck/lint/diff-check passed, 12 independent probes confirmed identity preservation and strict rejection; no push.
 - 2026-08-21 - V2-211B Checker PASS; exact Verify passed 61 focused tests with full suite green (179 tests), typecheck/lint/diff-check passed, independent probes confirmed single pick_project invoke, lossless typed validation, cross-transport contract and unchanged openSource; no push.
 - 2026-08-21 - V2-212 Checker PASS; exact Verify passed with full suite green (15 files, 189 tests), typecheck/lint/diff-check passed, 6 independent probes confirmed project identity tracking, reset parity with sourceOpened, and project-derived dirty/save/build permissions; no push.
+- 2026-08-21 - V2-213 split into ordered children V2-213A and V2-213B after the project-opening label change was found to require ProductBar plus new focused tests, four existing WorkbenchApp vitest assertions, and three e2e specs — beyond the two-file slice; Open refilled with V2-214 per the catalogue; no product code edited in the split cycle.
 
 ## Sync log
