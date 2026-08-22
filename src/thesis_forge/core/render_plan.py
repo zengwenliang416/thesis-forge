@@ -63,7 +63,55 @@ class FootnoteReferenceRun:
     footnote_id: int
 
 
-InlineRun: TypeAlias = TextRun | ReferenceRun | CitationRun | FootnoteReferenceRun
+@dataclass(frozen=True, slots=True)
+class SoftBreakRun:
+    pass
+
+
+@dataclass(frozen=True, slots=True)
+class HardBreakRun:
+    pass
+
+
+@dataclass(frozen=True, slots=True)
+class HyperlinkRun:
+    text: str
+    destination: str
+
+
+@dataclass(frozen=True, slots=True)
+class MathRun:
+    latex: str
+
+
+InlineRun: TypeAlias = (
+    TextRun
+    | ReferenceRun
+    | CitationRun
+    | FootnoteReferenceRun
+    | SoftBreakRun
+    | HardBreakRun
+    | HyperlinkRun
+    | MathRun
+)
+
+
+def ensure_inline_run(value: object) -> InlineRun:
+    if isinstance(
+        value,
+        (
+            TextRun,
+            ReferenceRun,
+            CitationRun,
+            FootnoteReferenceRun,
+            SoftBreakRun,
+            HardBreakRun,
+            HyperlinkRun,
+            MathRun,
+        ),
+    ):
+        return value
+    raise TypeError(f"unsupported InlineRun: {type(value).__name__}")
 
 ParagraphRole: TypeAlias = Literal[
     "body",
