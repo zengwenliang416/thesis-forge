@@ -9,6 +9,7 @@ from thesis_forge.core.model import (
     Citation,
     Equation,
     Figure,
+    FootnoteDefinition,
     GeneratedOrigin,
     Listing,
     SourceLocation,
@@ -59,6 +60,17 @@ def test_equation_display_state_is_explicit_and_typed() -> None:
 
 
 def test_rich_object_fields_are_structurally_pinned() -> None:
+    figure_fields = {field.name for field in dataclasses.fields(Figure)}
+    listing_fields = {field.name for field in dataclasses.fields(Listing)}
+    algorithm_fields = {field.name for field in dataclasses.fields(Algorithm)}
+    footnote_fields = {
+        field.name for field in dataclasses.fields(FootnoteDefinition)
+    }
+
+    assert "caption" not in figure_fields
+    assert "caption" not in listing_fields
+    assert "caption" not in algorithm_fields
+    assert "text" not in footnote_fields
     assert "caption_inlines" in {
         field.name for field in dataclasses.fields(Figure)
     }

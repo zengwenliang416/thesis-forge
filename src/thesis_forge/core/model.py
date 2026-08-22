@@ -209,7 +209,6 @@ class BulletList(Block):
 @dataclass(slots=True)
 class Figure(Block):
     src: str = ""
-    caption: str = ""
     caption_inlines: tuple[Inline, ...] = ()
     width: str | None = None
 
@@ -228,7 +227,6 @@ class Equation(Block):
 
 @dataclass(slots=True)
 class Listing(Block):
-    caption: str = ""
     caption_inlines: tuple[Inline, ...] = ()
     language: str | None = None
     code: str = ""
@@ -236,7 +234,6 @@ class Listing(Block):
 
 @dataclass(slots=True)
 class Algorithm(Block):
-    caption: str = ""
     caption_inlines: tuple[Inline, ...] = ()
     body: str = ""
 
@@ -244,7 +241,6 @@ class Algorithm(Block):
 @dataclass(slots=True)
 class FootnoteDefinition(Block):
     label: str = ""
-    text: str = ""
     inlines: list[Inline] = field(default_factory=list)
 
 

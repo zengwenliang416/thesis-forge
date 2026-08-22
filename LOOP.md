@@ -95,6 +95,8 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Open
 
+## Done
+
 - [V2-305E2B] Remove raw thesis-object caption/text fields
   - Parent: ordered child 8/8 of `V2-305`; depends on `V2-305E2A`.
   - Files: `src/thesis_forge/core/model.py`, `src/thesis_forge/core/parser.py`, `tests/core/test_thesis_object_model.py`
@@ -102,9 +104,8 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
   - Verify: `.venv/bin/python -m pytest tests/core/test_thesis_object_model.py tests/test_parser.py tests/test_parser_contract.py tests/test_compiler.py tests/test_docx_renderer.py tests/test_preview_presentation.py`
   - Acceptance: no raw caption/text plus typed-inline duplication remains for the targeted objects; all structured object paths stay green.
   - Verification-surface change: authorized; finalizes the rich thesis-object model contract.
-  - Attempts: 0
-
-## Done
+  - Attempts: 1
+  - Attempt 1 (2026-08-22): Checker PASS; Figure/Listing/Algorithm raw caption fields and FootnoteDefinition text field were removed, parser constructors use typed fields, raw IR scan is clean outside template configuration, exact Verify 162/162, Ruff and `git diff --check` clean; no push.
 
 - [V2-305E2A] Migrate parser object caption assertions
   - Parent: ordered child 7/8 of `V2-305`; depends on `V2-305E1B`.
@@ -1020,5 +1021,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 - 2026-08-22 - V2-305E1B Checker PASS; manifest Figure fixture now uses caption inlines only, exact Verify 4/4, AST/Ruff/diff-check passed; no push.
 - 2026-08-22 - V2-305E2 split into ordered children V2-305E2A and V2-305E2B after parser contract inspection found raw Figure/Algorithm caption assertions; no product code edited in the split cycle, next queue V2-305E2A.
 - 2026-08-22 - V2-305E2A Checker PASS; parser Figure/Algorithm caption assertions now use caption_inlines, exact Verify 32/32, Ruff/diff-check clean; no push.
+- 2026-08-22 - V2-305E2B Checker PASS; rich object raw caption/text fields were removed, exact Verify 162/162, raw IR scan and Ruff/diff-check passed; no push.
 
 ## Sync log

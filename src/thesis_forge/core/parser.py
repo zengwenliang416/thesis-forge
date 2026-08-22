@@ -273,7 +273,6 @@ def _parse_container(kind: str, block_id: str | None, body: list[str], line: int
         return Figure(
             id=block_id,
             src=values.get("src", ""),
-            caption=values.get("caption", ""),
             caption_inlines=tuple(_parse_inline_content(caption, line)),
             width=values.get("width"),
             location=location,
@@ -299,7 +298,6 @@ def _parse_container(kind: str, block_id: str | None, body: list[str], line: int
         code, language = _strip_listing_fence(content, values.get("language"))
         return Listing(
             id=block_id,
-            caption=values.get("caption", ""),
             caption_inlines=tuple(_parse_inline_content(caption, line)),
             language=language,
             code=code,
@@ -308,7 +306,6 @@ def _parse_container(kind: str, block_id: str | None, body: list[str], line: int
     if kind == "algorithm":
         return Algorithm(
             id=block_id,
-            caption=values.get("caption", ""),
             caption_inlines=tuple(_parse_inline_content(caption, line)),
             body=content,
             location=location,
