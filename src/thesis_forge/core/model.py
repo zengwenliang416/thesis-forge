@@ -160,6 +160,24 @@ class ListItem:
 
 
 @dataclass(slots=True)
+class TableCell:
+    inlines: tuple[Inline, ...] = ()
+    alignment: Literal["left", "center", "right"] | None = None
+    location: SourceLocation = field(default_factory=SourceLocation)
+    node_id: NodeId = field(default_factory=_next_node_id, compare=False)
+    origin: GeneratedOrigin | None = None
+
+
+@dataclass(slots=True)
+class TableRow:
+    header: bool = False
+    cells: tuple[TableCell, ...] = ()
+    location: SourceLocation = field(default_factory=SourceLocation)
+    node_id: NodeId = field(default_factory=_next_node_id, compare=False)
+    origin: GeneratedOrigin | None = None
+
+
+@dataclass(slots=True)
 class ListBlock(Block):
     ordered: bool = False
     start: int | None = None

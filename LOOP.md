@@ -95,15 +95,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Open
 
-- [V2-304A] Add typed table cell and row primitives
-  - Parent: ordered child 1/5 of `V2-304`; parent behavior remains unchanged.
-  - Files: `src/thesis_forge/core/model.py`, `tests/core/test_table_model.py`
-  - Behavior: TableCell owns typed inline content/alignment and TableRow owns header state/cells with stable defaults; the existing Table parser/compiler path is not wired yet.
-  - Verify: `.venv/bin/python -m pytest tests/core/test_table_model.py`
-  - Acceptance: typed primitives construct, preserve tuple structure and source identity, and do not introduce a second rendered table path.
-  - Verification-surface change: authorized; creates focused table-model tests.
-  - Attempts: 0
-
 - [V2-304B] Populate structured table fields during parsing
   - Parent: ordered child 2/5 of `V2-304`; depends on `V2-304A`.
   - Files: `src/thesis_forge/core/model.py`, `src/thesis_forge/core/parser.py`, `tests/core/test_table_model.py`
@@ -149,6 +140,16 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
   - Attempts: 0
 
 ## Done
+
+- [V2-304A] Add typed table cell and row primitives
+  - Parent: ordered child 1/5 of `V2-304`; parent behavior remains unchanged.
+  - Files: `src/thesis_forge/core/model.py`, `tests/core/test_table_model.py`
+  - Behavior: TableCell owns typed inline content/alignment and TableRow owns header state/cells with stable defaults; the existing Table parser/compiler path is not wired yet.
+  - Verify: `.venv/bin/python -m pytest tests/core/test_table_model.py`
+  - Acceptance: typed primitives construct, preserve tuple structure and source identity, and do not introduce a second rendered table path.
+  - Verification-surface change: authorized; creates focused table-model tests.
+  - Attempts: 1
+  - Attempt 1 (2026-08-22): Checker PASS; TableCell/TableRow typed defaults, tuple content, alignment/header state, SourceLocation/GeneratedOrigin and compare=False node identity are covered, exact Verify 4/4, Ruff and `git diff --check` clean; no push.
 
 - [V2-303J] Remove the block text fields
   - Parent: ordered child 11/11 of `V2-303`; depends on `V2-303I`.
@@ -902,5 +903,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 - 2026-08-22 - V2-303I Checker PASS; CLI fixtures now rely solely on inlines, exact Verify 4/4, AST constructor audit and Ruff/diff-check passed; no push.
 - 2026-08-22 - V2-303J Checker PASS; Heading/Paragraph/ListItem text fields were removed, exact Verify 141/141 plus 123 affected regressions passed, full-suite known failure set remained stable apart from a non-reproducible LibreOffice QA failure; no push.
 - 2026-08-22 - V2-304 split into ordered children V2-304A…E after CodeGraph found structured Table migration spans model/parser/compiler/render-plan and DOCX/parser/compiler fixtures beyond the original two-file slice; no product code edited in the split cycle, next queue V2-304A.
+- 2026-08-22 - V2-304A Checker PASS; typed TableCell/TableRow primitives and focused model tests added, exact Verify 4/4, Ruff/diff-check clean; no push.
 
 ## Sync log
