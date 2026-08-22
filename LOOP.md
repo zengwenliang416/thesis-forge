@@ -97,6 +97,15 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Done
 
+- [V2-312] Academic inline conversion
+  - Files: `src/thesis_forge/core/parser_markdown_it.py`, `tests/core/test_markdown_v2_semantic_inlines.py`
+  - Behavior: parse citation clusters, semantic internal links and footnote references.
+  - Verify: `.venv/bin/python -m pytest tests/core/test_markdown_v2_semantic_inlines.py`
+  - Acceptance: normal links remain links; `#fig:*` targets become CrossReference with fallback label.
+  - Verification-surface change: authorized; creates focused academic-inline evidence.
+  - Attempts: 1
+  - Attempt 1 (2026-08-22): Checker PASS; exact Verify passed 4/4, related parser/backend/contract regression passed 80/80, target Ruff, `git diff --check`, and `./lint-loop.sh` passed. Independent Python probe confirmed all seven semantic targets (`fig`, `tbl`, `eq`, `sec`, `chap`, `lst`, `alg`) become `CrossReference` with target/fallback, ordinary URL and `#fragment` remain `Link`, citation cluster is `Citation`, footnote reference/definition are typed, and SourceLocation line/column mapping is correct under the block location contract. V2-312 diff was limited to the two named product files before this LOOP update; the pre-existing registry remained preserved; no push.
+
 - [V2-318] Explicit legacy syntax rejection
   - Files: `src/thesis_forge/core/parser_markdown_it.py`, `tests/core/test_legacy_source_rejection.py`, `tests/test_parser_markdown_it.py`
   - Scope note: the existing markdown-it backend test contains legacy parity fixtures; its legacy-input assertions are re-expressed as explicit rejection checks while standard-token coverage remains.
@@ -1340,5 +1349,7 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 - 2026-08-22 - V2-318 Checker PASS
 - 2026-08-22 - V2-404 Checker FAIL Attempt 1; exact Verify passed 4/4, `git diff --check` and registry/unknown/static-import probes passed, but target Ruff failed and normal Review TextRun content leaked stable IDs, raw citation keys, technical attributes, and local paths; selected files restored, `change-registry.json` preserved, no commit or push.
 - 2026-08-22 - V2-404 Checker PASS Attempt 2; exact Verify passed 4/4, target Ruff and `git diff --check` passed, registry/unknown-instruction coverage, visible-content marker, code/listing literal-exemption, and headless import-isolation probes passed; candidate scope was exactly the two named files, `change-registry.json` was preserved, one local commit and no push.
+
+- 2026-08-22 - V2-312 Checker PASS; exact Verify passed 4/4, related parser/backend/contract regression passed 80/80, target Ruff, `git diff --check`, and `./lint-loop.sh` passed; independent semantic-inline probe covered seven CrossReference targets/fallbacks, ordinary URL and fragment Link preservation, Citation, FootnoteReference, FootnoteDefinition, and SourceLocation mapping; V2-312 product scope was exactly the two named files, registry preserved, no push.
 
 ## Sync log

@@ -46,6 +46,7 @@ from mdit_py_plugins.footnote import footnote_plugin
 from .model import (
     BlockQuote,
     CodeBlock,
+    CrossReference,
     Emphasis,
     FootnoteDefinition,
     FootnoteReference,
@@ -90,6 +91,9 @@ _CONTAINER_ID_RE = re.compile(r"\{#([^}]+)\}")
 _LEGACY_REFERENCE_RE = re.compile(
     r"(?<![\w\[])@(?P<prefix>fig|tbl|eq|sec|chap|lst|alg):"
     r"(?P<name>[A-Za-z0-9_.:-]+)"
+)
+_SEMANTIC_LINK_RE = re.compile(
+    r"^#(?P<target>(?:fig|tbl|eq|sec|chap|lst|alg):[A-Za-z0-9_.:-]+)$"
 )
 _FENCE_START_RE = re.compile(r"^ {0,3}(?P<marker>`{3,}|~{3,})")
 
@@ -699,13 +703,24 @@ class _InlineTokenConverter:
                 else:
                     end = self._consume_link(start)
                 href = token.attrGet("href") or ""
-                result.append(
-                    Link(
-                        label=inline_plain_text(children),
-                        destination=href,
-                        location=self._span(start, end),
+                semantic_match = _SEMANTIC_LINK_RE.fullmatch(href)
+                if semantic_match is not None:
+                    fallback = inline_plain_text(children)
+                    result.append(
+                        CrossReference(
+                            target=semantic_match.group("target"),
+                            fallback=fallback or None,
+                            location=self._span(start, end),
+                        )
                     )
-                )
+                else:
+                    result.append(
+                        Link(
+                            label=inline_plain_text(children),
+                            destination=href,
+                            location=self._span(start, end),
+                        )
+                    )
                 index = close_index + 1
             elif token_type in {"strong_close", "em_close", "link_close"}:
                 if stop_type is None:
