@@ -95,6 +95,8 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Open
 
+## Done
+
 - [V2-319D] Delete the parser registry and legacy backend API
   - Parent: ordered child 4/4 of the re-sliced `V2-319`; depends on `V2-319C`; parent Behavior and Acceptance remain unchanged.
   - Files: `src/thesis_forge/core/parser_backend.py`, `tests/core/test_single_parser_backend.py`
@@ -102,9 +104,8 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
   - Verify: `.venv/bin/python -m pytest tests/core/test_single_parser_backend.py tests/test_parser_backend.py tests/test_parser_markdown_it.py`
   - Acceptance: no CLI/env/parser-name switching remains and static/runtime checks show one production parser path.
   - Verification-surface change: no.
-  - Attempts: 0
-
-## Done
+  - Attempts: 1
+  - Attempt 1 (2026-08-22): Checker PASS; exact Verify passed 45/45; `.venv/bin/ruff check src/thesis_forge/core/parser_backend.py tests/core/test_single_parser_backend.py`, `git diff --check`, and `./lint-loop.sh` passed (`LOOP-LINT: PASS — open=1 done=112 blocked=0` before this lifecycle update). Production static search found no `PARSER_BACKENDS`, `LegacyParserBackend`, `get_parser_backend`, or `parser_backend_names` definitions/calls, and no parser CLI/env/name selector or parser compatibility branch; runtime probes confirmed `create_parser_backend()` has no parameters, returns exact `MarkdownItParserBackend`, and the four old module APIs are absent. Candidate scope was exactly the two named files before this LOOP update; `openspec/.specnav/change-registry.json` was preserved and uncommitted; the total-goal verifier retained 11 unrelated historical/future contract gaps; one local commit and no push.
 
 - [V2-319C2B] Rebase template-v2 editor L5 fixtures on canonical source
   - Parent: ordered child 2/2 of the re-sliced `V2-319C2`; depends on `V2-319C2A`; the original `V2-319C2` Behavior and Acceptance remain unchanged.
@@ -1495,5 +1496,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 - 2026-08-22 - V2-319C2 split into ordered children V2-319C2A and V2-319C2B after fixture audit found `tests/test_template_v2_editor.py::test_lint_l5_fixture_validator_error_fails` writes YAML Front Matter that would fail the canonical parser; no product code edited in the split cycle, next queue is V2-319C2A.
 - 2026-08-22 - V2-319C2A Checker PASS; candidate failure set was a strict subset of isolated clean HEAD (`97 passed/5 pre-existing package-sample missing-DOCX failures` vs `96 passed/6 failed`), targeted Ruff, `git diff --check`, LOOP-LINT, canonical parser/L5/duplicate-ID probes passed, and only C2A plus `LOOP.md` changed; C2B and the pre-existing registry were preserved, no push.
 - 2026-08-22 - V2-319C2B Checker PASS; exact Verify passed 4/4, targeted Ruff, `git diff --check`, LOOP-LINT, and the canonical duplicate-ID fixture audit passed; candidate scope was only `tests/test_template_v2_editor.py`, with no production or compatibility diff, the pre-existing registry preserved and unstaged, and no push.
+- 2026-08-22 - V2-319D Checker PASS Attempt 1; exact Verify passed 45/45, targeted Ruff, `git diff --check`, LOOP-LINT, and the single-parser static/runtime audit passed; candidate scope was exactly the two named files, the pre-existing registry was preserved and uncommitted, the total-goal verifier retained 11 unrelated contract gaps, one local commit, no push.
 
 ## Sync log
