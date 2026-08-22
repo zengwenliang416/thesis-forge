@@ -34,6 +34,7 @@ from thesis_forge.core.model import (
     Text,
     ThesisDocument,
 )
+from thesis_forge.core.parser import parse_markdown_text
 from thesis_forge.core.render_plan import (
     AlgorithmInstruction,
     BibliographyInstruction,
@@ -172,12 +173,10 @@ def test_compile_document_resolves_typed_instructions_and_global_semantics():
     assert plan.section_policy == template.sections
 
 
-def test_compile_document_includes_registered_container_citations_in_global_order():
-    citation = Citation(keys=["container2026"], raw="[@container2026]")
-    document = ThesisDocument(
+def test_compile_document_includes_parsed_container_citations_in_global_order():
+    document = parse_markdown_text(
+        '::: figure {#fig:model}\nsrc: "./model.png"\ncaption: "模型 [@container2026]"\n:::\n',
         source_path=Path("/tmp/thesis.md"),
-        blocks=[Paragraph(inlines=[Text(value="正文")])],
-        citations=[citation],
     )
 
     plan = compile_document(document, template=load_template("templates/base/bachelor.yaml"))

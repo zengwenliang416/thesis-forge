@@ -95,15 +95,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Open
 
-- [V2-307A1] Compiler container-citation pin migrates to parsed content
-  - Parent: ordered child 1/9 of `V2-307` (was 1/8 before this split); depends on `V2-306`.
-  - Files: `tests/test_compiler.py`
-  - Behavior: `test_compile_document_includes_registered_container_citations_in_global_order` constructs its container citation through parsed figure-caption content instead of injecting it only into the `ThesisDocument.citations` cache.
-  - Verify: `.venv/bin/python -m pytest tests/test_compiler.py`
-  - Acceptance: the pin is green before and after the compiler stops reading the cache; no test constructs a citation that exists only in a cache field.
-  - Verification-surface change: authorized; migrates the compiler container-citation pin.
-  - Attempts: 0
-
 - [V2-307A2] DocumentIndex gains the full inline sequence; compiler derives semantics from it
   - Parent: ordered child 2/9 of `V2-307`; depends on `V2-307A1`.
   - Files: `src/thesis_forge/core/index.py`, `src/thesis_forge/core/compiler.py`, `tests/core/test_no_manual_caches.py`
@@ -185,6 +176,16 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
   - Attempts: 0
 
 ## Done
+
+- [V2-307A1] Compiler container-citation pin migrates to parsed content
+  - Parent: ordered child 1/9 of `V2-307` (was 1/8 before this split); depends on `V2-306`.
+  - Files: `tests/test_compiler.py`
+  - Behavior: `test_compile_document_includes_registered_container_citations_in_global_order` constructs its container citation through parsed figure-caption content instead of injecting it only into the `ThesisDocument.citations` cache.
+  - Verify: `.venv/bin/python -m pytest tests/test_compiler.py`
+  - Acceptance: the pin is green before and after the compiler stops reading the cache; no test constructs a citation that exists only in a cache field.
+  - Verification-surface change: authorized; migrates the compiler container-citation pin.
+  - Attempts: 1
+  - Attempt 1 (2026-08-22): Checker PASS; diff limited to the named file (renamed test parses a figure container whose caption carries the citation; parse_markdown_text import added), exact Verify 24/24 green on the cache-based compiler and 27/27 green with the parked V2-307A2 flip applied then restored, Ruff and `git diff --check` clean, survey of all five remaining `citations=[...]` constructions in the file confirmed every citation also lives in real inline content; no push.
 
 - [V2-306] DocumentIndex derives semantic indexes by traversal
   - Files: `src/thesis_forge/core/index.py`, `tests/core/test_document_index.py`
@@ -1133,6 +1134,7 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 - 2026-08-22 - Historical Blocked ledger closed: the six three-failure items (V2-114A, V2-112A, V2-111A, V2-103A1, V2-105B1, V2-105B2) moved verbatim into ## Blocked archive with per-item supersession notes; every superseding Done behavior re-verified green today (backend lifecycle/sidecar/report 27/27; frontend buildEvents 46 + transports 22; typecheck clean; zero production event.error reads); ## Blocked is now empty; no product code edited.
 - 2026-08-22 - V2-306 Checker PASS; DocumentIndex derives ID/citation/reference/footnote indexes by traversal with first-wins by_id plus per-conflict both-node records and TypeError on unknown nodes, exact Verify 12/12, Ruff/diff-check and baselines 107/107 clean, pure addition confirmed; no push.
 - 2026-08-22 - V2-307A split into ordered children V2-307A1 and V2-307A2 after the exact Verify exposed tests/test_compiler.py's synthetic container-citation pin injecting a citation that exists only in the ThesisDocument.citations cache (a fourth file); A1 re-pins that test onto parsed figure-caption content (green before and after the flip), A2 carries the parked compiler/index flip (/tmp/v2-307a2.diff); no product code remains edited in the split cycle.
+- 2026-08-22 - V2-307A1 Checker PASS; container-citation pin re-based on parsed figure-caption content, exact Verify 24/24 (27/27 with the parked A2 flip), cache-only-citation survey clean; no push.
 - 2026-08-22 - V2-307 split into eight ordered children V2-307A…G after grep mapping showed removing the four cache fields atomically spans model.py + both parsers (12 registration call sites) + compiler.py + validator.py + cli.py + qa/tools/parser_diff.py plus seven test files; children migrate readers first (compiler/CLI/parity-tool/test pins, with V2-308 landing between D2 and E), then stop registration per parser, then remove the fields; no product code edited in the split cycle.
 
 ## Sync log
