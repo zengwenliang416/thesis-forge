@@ -95,12 +95,49 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Open
 
-- [V2-304] Structured table model
+- [V2-304A] Add typed table cell and row primitives
+  - Parent: ordered child 1/5 of `V2-304`; parent behavior remains unchanged.
   - Files: `src/thesis_forge/core/model.py`, `tests/core/test_table_model.py`
-  - Behavior: Table owns caption inlines, columns, rows and cells with typed content/alignment.
+  - Behavior: TableCell owns typed inline content/alignment and TableRow owns header state/cells with stable defaults; the existing Table parser/compiler path is not wired yet.
   - Verify: `.venv/bin/python -m pytest tests/core/test_table_model.py`
-  - Acceptance: no authoritative pipe-delimited `markdown` field remains.
+  - Acceptance: typed primitives construct, preserve tuple structure and source identity, and do not introduce a second rendered table path.
   - Verification-surface change: authorized; creates focused table-model tests.
+  - Attempts: 0
+
+- [V2-304B] Populate structured table fields during parsing
+  - Parent: ordered child 2/5 of `V2-304`; depends on `V2-304A`.
+  - Files: `src/thesis_forge/core/model.py`, `src/thesis_forge/core/parser.py`, `tests/core/test_table_model.py`
+  - Behavior: table-container parsing populates typed caption inlines and structured rows/cells with alignment while the current compiler consumer remains green during the ordered migration.
+  - Verify: `.venv/bin/python -m pytest tests/core/test_table_model.py tests/test_parser.py tests/test_parser_contract.py`
+  - Acceptance: parser-produced table structure preserves header/body shape, alignment and inline cell content; malformed table input remains diagnosable.
+  - Verification-surface change: authorized; extends focused table/parser contract coverage.
+  - Attempts: 0
+
+- [V2-304C] Compile structured table rows and migrate compiler fixtures
+  - Parent: ordered child 3/5 of `V2-304`; depends on `V2-304B`.
+  - Files: `src/thesis_forge/core/compiler.py`, `tests/test_compiler.py`
+  - Behavior: compiler consumes structured caption/cell rows rather than splitting a Table markdown string; compiler fixtures construct the structured Table shape.
+  - Verify: `.venv/bin/python -m pytest tests/test_compiler.py`
+  - Acceptance: table row alignment, header flags and malformed-shape diagnostics remain green without compiler-side pipe parsing.
+  - Verification-surface change: authorized; migrates compiler table fixtures.
+  - Attempts: 0
+
+- [V2-304D] Migrate DOCX table fixtures to structured Tables
+  - Parent: ordered child 4/5 of `V2-304`; depends on `V2-304C`.
+  - Files: `tests/test_docx_renderer.py`
+  - Behavior: DOCX table tests construct typed rows/cells and no longer pass pipe-delimited Table markdown.
+  - Verify: `.venv/bin/python -m pytest tests/test_docx_renderer.py`
+  - Acceptance: all table XML, borders, alignment, empty-table and numbering assertions remain green.
+  - Verification-surface change: authorized; migrates DOCX table fixtures.
+  - Attempts: 0
+
+- [V2-304E] Remove raw Table caption/markdown fields
+  - Parent: ordered child 5/5 of `V2-304`; depends on `V2-304D`.
+  - Files: `src/thesis_forge/core/model.py`, `src/thesis_forge/core/parser.py`, `tests/core/test_table_model.py`
+  - Behavior: Table owns only typed caption inlines and rows/cells; parser no longer stores pipe-delimited markdown on the model.
+  - Verify: `.venv/bin/python -m pytest tests/core/test_table_model.py tests/test_parser.py tests/test_parser_contract.py tests/test_compiler.py tests/test_docx_renderer.py`
+  - Acceptance: no Table `markdown` or raw caption source field remains; structured table behavior stays green end to end.
+  - Verification-surface change: authorized; finalizes the structured Table contract.
   - Attempts: 0
 
 - [V2-305] Rich thesis object model
@@ -864,5 +901,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 - 2026-08-22 - V2-303H Checker PASS; core/adapter fixtures now rely solely on inlines, exact Verify 92/92, AST constructor audit and Ruff/diff-check passed; no push.
 - 2026-08-22 - V2-303I Checker PASS; CLI fixtures now rely solely on inlines, exact Verify 4/4, AST constructor audit and Ruff/diff-check passed; no push.
 - 2026-08-22 - V2-303J Checker PASS; Heading/Paragraph/ListItem text fields were removed, exact Verify 141/141 plus 123 affected regressions passed, full-suite known failure set remained stable apart from a non-reproducible LibreOffice QA failure; no push.
+- 2026-08-22 - V2-304 split into ordered children V2-304A…E after CodeGraph found structured Table migration spans model/parser/compiler/render-plan and DOCX/parser/compiler fixtures beyond the original two-file slice; no product code edited in the split cycle, next queue V2-304A.
 
 ## Sync log
