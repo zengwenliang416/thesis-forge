@@ -13,9 +13,19 @@ import sys
 from pathlib import Path
 
 import pytest
+from markdown_it import MarkdownIt
 
 from thesis_forge.core.index import DocumentIndex
-from thesis_forge.core.model import Algorithm, Citation, Paragraph, inline_plain_text
+from thesis_forge.core.model import (
+    Algorithm,
+    BlockQuote,
+    Citation,
+    CodeBlock,
+    Heading,
+    Paragraph,
+    Table,
+    inline_plain_text,
+)
 from thesis_forge.core.parser import ParseError
 from thesis_forge.core.parser_backend import (
     LegacyParserBackend,
@@ -48,6 +58,12 @@ parser_diff = _load_parser_diff()
 
 legacy = LegacyParserBackend()
 markdown_it = MarkdownItParserBackend()
+
+
+def _parse_with_default_preset(text: str):
+    backend = MarkdownItParserBackend()
+    backend._md = MarkdownIt("default")
+    return backend.parse_text(text, source_path="default-preset.md")
 
 
 def _normalized_pair(source: Path) -> tuple[dict, dict]:
@@ -136,8 +152,6 @@ def test_parity_with_legacy_on_fixtures(source: Path) -> None:
         "1. 甲\n\n2. 乙\n",
         # 列表项续行：legacy 截断列表、续行成段落
         "- 第一项\n  继续内容\n- 第二项\n",
-        # hr 行降级为段落
-        "段落\n\n---\n",
         # 脚注定义（含续行）inline 提取与位置
         "[^src]: 引用 [@fn-src]。\n    续行见 @fig:m。\n",
         # 容器 caption / 表单元格 / 算法正文中的 citation
@@ -164,7 +178,6 @@ def test_parity_with_legacy_on_fixtures(source: Path) -> None:
         "bullet-marker-change",
         "loose-list-splits",
         "list-item-continuation",
-        "hr-degrades-to-paragraph",
         "footnote-definition-inlines",
         "figure-caption-inline",
         "table-cell-inline",
@@ -217,28 +230,80 @@ def test_front_matter_errors_match_legacy(text: str) -> None:
         "::: unknown {#x}\n内容\n:::\n",
         # 斜体/链接/行内图片降级为段落文本
         "这是 *斜体*、[链接](https://example.com) 与 ![图片](./a.png) 的段落。\n",
-        # 顶层围栏代码块降级为段落
-        "```python\ndef f():\n    return 1\n```\n",
-        # 引用块降级为段落原文
-        "> 本节适用于需要问卷调查的论文。\n",
-        # setext 标题降级为段落
-        "标题\n===\n",
-        # 顶层管道表降级为段落
-        "| 甲 | 乙 |\n| --- | --- |\n| 1 | 2 |\n",
     ],
     ids=[
         "unknown-container",
         "unsupported-inline-constructs",
-        "top-level-fence",
-        "blockquote",
-        "setext-heading",
-        "top-level-pipe-table",
     ],
 )
 def test_degraded_constructs_match_legacy(text: str) -> None:
     _assert_text_parity(text)
     doc = markdown_it.parse_text(text, source_path="degrade.md")
     assert all(isinstance(block, Paragraph) for block in doc.blocks)
+
+
+@pytest.mark.parametrize(
+    ("text", "expected_type"),
+    [
+        ("> 引用内容\n", BlockQuote),
+        ("```python\nprint(1)\n```\n", CodeBlock),
+        ("| 甲 | 乙 |\n| --- | ---: |\n| 1 | 2 |\n", Table),
+        ("标题\n===\n", Heading),
+    ],
+    ids=["blockquote", "fence", "table", "setext-heading"],
+)
+def test_default_standard_blocks_reach_typed_consumers(
+    text: str, expected_type: type
+) -> None:
+    doc = _parse_with_default_preset(text)
+    assert len(doc.blocks) == 1
+    assert isinstance(doc.blocks[0], expected_type)
+
+
+def test_default_mixed_standard_blocks_are_consumed_in_order() -> None:
+    doc = _parse_with_default_preset(
+        "> 引用内容\n\n"
+        "```python\nprint(1)\n```\n\n"
+        "| 甲 | 乙 |\n| --- | ---: |\n| 1 | 2 |\n\n"
+        "标题\n===\n"
+    )
+    assert [type(block) for block in doc.blocks] == [
+        BlockQuote,
+        CodeBlock,
+        Table,
+        Heading,
+    ]
+
+
+def test_default_list_fence_fails_explicitly_instead_of_flattening() -> None:
+    with pytest.raises(ParseError, match="列表中未消费的 markdown-it 块 token: fence"):
+        _parse_with_default_preset(
+            "- item\n\n"
+            "    ```python\n"
+            "    print(1)\n"
+            "    ```\n"
+        )
+
+
+def test_default_list_setext_heading_fails_explicitly() -> None:
+    with pytest.raises(
+        ParseError,
+        match="列表中未消费的 markdown-it 块 token: heading_open",
+    ):
+        _parse_with_default_preset("- item\n\n    nested heading\n    --------------\n")
+
+
+@pytest.mark.parametrize(
+    "text",
+    [
+        "    code\n",
+        "内容\n\n---\n",
+    ],
+    ids=["indented-code", "thematic-break"],
+)
+def test_default_unsupported_blocks_raise_explicit_diagnostics(text: str) -> None:
+    with pytest.raises(ParseError, match="markdown-it 块 token"):
+        _parse_with_default_preset(text)
 
 
 def test_parse_text_preserves_logical_source_path(tmp_path: Path) -> None:

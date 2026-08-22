@@ -45,6 +45,8 @@ from mdit_py_plugins.container import container_plugin
 from mdit_py_plugins.footnote import footnote_plugin
 
 from .model import (
+    BlockQuote,
+    CodeBlock,
     FootnoteDefinition,
     Heading,
     Inline,
@@ -52,6 +54,9 @@ from .model import (
     ListItem,
     Paragraph,
     SourceLocation,
+    Table,
+    TableCell,
+    TableRow,
     ThesisDocument,
 )
 from .parser import (
@@ -83,6 +88,12 @@ _DISABLED_BLOCK_RULES = (
     "html_block",
     "lheading",
     "reference",
+)
+_UNSUPPORTED_BLOCK_TOKEN_TYPES = frozenset(
+    {"code_block", "hr", "html_block", "reference"}
+)
+_LIST_BLOCK_TOKEN_TYPES = frozenset(
+    {"blockquote_open", "fence", "heading_open", "table_open", *_UNSUPPORTED_BLOCK_TOKEN_TYPES}
 )
 
 
@@ -213,12 +224,20 @@ class MarkdownItParserBackend:
                 end = self._scan_list(doc, lines, start0, offset)
                 idx += 1
                 spill = end
-                while idx < total and (
-                    tokens[idx].map is None or tokens[idx].map[0] < end
-                ):
-                    skipped_map = tokens[idx].map
-                    if skipped_map is not None and skipped_map[1] > spill:
-                        spill = skipped_map[1]
+                while idx < total:
+                    skipped = tokens[idx]
+                    skipped_map = skipped.map
+                    if skipped_map is None:
+                        idx += 1
+                        continue
+                    if skipped_map[0] >= spill:
+                        break
+                    if skipped.type in _LIST_BLOCK_TOKEN_TYPES:
+                        raise ParseError(
+                            "列表中未消费的 markdown-it 块 token: "
+                            f"{skipped.type}"
+                        )
+                    spill = max(spill, skipped_map[1])
                     idx += 1
                 if spill > end:
                     # mdit 把列表项续行并进项内段落（map 跨界），legacy 则截断
@@ -228,8 +247,16 @@ class MarkdownItParserBackend:
                 idx = self._emit_container(doc, tokens, idx, lines, offset)
             elif token_type == "footnote_reference_open":
                 idx = self._emit_footnote_definition(doc, tokens, idx, lines, offset)
+            elif token_type == "blockquote_open":
+                idx = self._emit_blockquote(doc, tokens, idx, lines, offset)
+            elif token_type == "fence":
+                idx = self._emit_fence(doc, tokens, idx, offset)
+            elif token_type == "table_open":
+                idx = self._emit_table(doc, tokens, idx, offset)
+            elif token_type in _UNSUPPORTED_BLOCK_TOKEN_TYPES:
+                raise ParseError(f"不支持的 markdown-it 块 token: {token_type}")
             else:
-                idx += 1
+                raise ParseError(f"未消费的 markdown-it 块 token: {token_type}")
 
     def _emit_heading(
         self,
@@ -266,6 +293,142 @@ class MarkdownItParserBackend:
         doc.blocks.append(
             Paragraph(inlines=inlines, location=SourceLocation(line=line))
         )
+
+    def _emit_blockquote(
+        self,
+        doc: ThesisDocument,
+        tokens: list[Token],
+        idx: int,
+        lines: list[str],
+        offset: int,
+    ) -> int:
+        open_token = tokens[idx]
+        close_idx = _find_close(tokens, idx, "blockquote_open", "blockquote_close")
+        assert open_token.map is not None
+        child_doc = ThesisDocument(
+            source_path=doc.source_path,
+            metadata=doc.metadata,
+            bibliography=doc.bibliography,
+        )
+        self._walk(child_doc, tokens[idx + 1 : close_idx], lines, offset)
+        doc.blocks.append(
+            BlockQuote(
+                children=tuple(child_doc.blocks),
+                location=SourceLocation(line=open_token.map[0] + 1 + offset),
+            )
+        )
+        return close_idx + 1
+
+    def _emit_fence(
+        self,
+        doc: ThesisDocument,
+        tokens: list[Token],
+        idx: int,
+        offset: int,
+    ) -> int:
+        token = tokens[idx]
+        assert token.map is not None
+        info = token.info.strip()
+        language = info.split(None, 1)[0] if info else None
+        doc.blocks.append(
+            CodeBlock(
+                language=language,
+                code=token.content,
+                location=SourceLocation(line=token.map[0] + 1 + offset),
+            )
+        )
+        return idx + 1
+
+    def _emit_table(
+        self,
+        doc: ThesisDocument,
+        tokens: list[Token],
+        idx: int,
+        offset: int,
+    ) -> int:
+        open_token = tokens[idx]
+        close_idx = _find_close(tokens, idx, "table_open", "table_close")
+        assert open_token.map is not None
+        rows: list[TableRow] = []
+        row_idx = idx + 1
+        while row_idx < close_idx:
+            if tokens[row_idx].type != "tr_open":
+                row_idx += 1
+                continue
+
+            row_open = tokens[row_idx]
+            row_close = _find_close(tokens, row_idx, "tr_open", "tr_close")
+            cells: list[TableCell] = []
+            header = False
+            cell_idx = row_idx + 1
+            while cell_idx < row_close:
+                cell_open = tokens[cell_idx]
+                if cell_open.type not in {"th_open", "td_open"}:
+                    cell_idx += 1
+                    continue
+
+                header = header or cell_open.type == "th_open"
+                close_type = (
+                    "th_close" if cell_open.type == "th_open" else "td_close"
+                )
+                cell_close = _find_close(tokens, cell_idx, cell_open.type, close_type)
+                inline_token = (
+                    tokens[cell_idx + 1]
+                    if cell_idx + 1 < cell_close
+                    and tokens[cell_idx + 1].type == "inline"
+                    else None
+                )
+                if inline_token is None:
+                    cell_text = ""
+                    cell_line = (
+                        row_open.map[0] + 1 + offset
+                        if row_open.map is not None
+                        else open_token.map[0] + 1 + offset
+                    )
+                else:
+                    assert inline_token.map is not None
+                    cell_text = inline_token.content
+                    cell_line = inline_token.map[0] + 1 + offset
+
+                style = cell_open.attrGet("style")
+                alignment = (
+                    style.removeprefix("text-align:")
+                    if style is not None
+                    else None
+                )
+                if alignment not in {None, "left", "center", "right"}:
+                    alignment = None
+                cells.append(
+                    TableCell(
+                        inlines=tuple(parse_inline_content(cell_text, cell_line)),
+                        alignment=alignment,
+                        location=SourceLocation(line=cell_line),
+                    )
+                )
+                cell_idx = cell_close + 1
+
+            if cells:
+                row_line = (
+                    row_open.map[0] + 1 + offset
+                    if row_open.map is not None
+                    else open_token.map[0] + 1 + offset
+                )
+                rows.append(
+                    TableRow(
+                        header=header,
+                        cells=tuple(cells),
+                        location=SourceLocation(line=row_line),
+                    )
+                )
+            row_idx = row_close + 1
+
+        doc.blocks.append(
+            Table(
+                rows=tuple(rows),
+                location=SourceLocation(line=open_token.map[0] + 1 + offset),
+            )
+        )
+        return close_idx + 1
 
     def _emit_raw_paragraph(
         self,
