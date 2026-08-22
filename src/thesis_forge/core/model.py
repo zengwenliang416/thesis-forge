@@ -139,19 +139,16 @@ class Block:
 @dataclass(slots=True)
 class Heading(Block):
     level: int = 1
-    text: str = ""
     inlines: list[Inline] = field(default_factory=list)
 
 
 @dataclass(slots=True)
 class Paragraph(Block):
-    text: str = ""
     inlines: list[Inline] = field(default_factory=list)
 
 
 @dataclass(slots=True)
 class ListItem:
-    text: str = ""
     level: int = 0
     marker: str = ""
     ordinal: int | None = None

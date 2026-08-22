@@ -73,12 +73,11 @@ def test_preview_mapper_matches_versioned_golden_contract(tmp_path: Path):
             Heading(
                 id="chap:intro",
                 level=1,
-                text="旧标题",
                 inlines=_text_inlines("绪论"),
                 location=SourceLocation(line=8),
             ),
             Paragraph(
-                text="系统结构见图 1-1，相关工作见[1]。脚注1",
+                inlines=[Text(value="系统结构见图 1-1，相关工作见[1]。脚注1")],
                 location=SourceLocation(line=10),
             ),
             Figure(
@@ -308,7 +307,6 @@ def test_preview_mapper_preserves_outline_when_validation_blocks_compile(
                     Heading(
                         id="chap:intro",
                         level=1,
-                        text="绪论",
                         inlines=_text_inlines("绪论"),
                         location=SourceLocation(line=4),
                     )
@@ -346,7 +344,6 @@ def test_preview_outline_uses_inline_text_as_authority(tmp_path: Path):
                     Heading(
                         id="chap:intro",
                         level=1,
-                        text="旧标题",
                         inlines=_text_inlines("真实标题"),
                         location=SourceLocation(line=4),
                     )

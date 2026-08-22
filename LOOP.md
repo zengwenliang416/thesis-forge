@@ -95,15 +95,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Open
 
-- [V2-303J] Remove the block text fields
-  - Parent: ordered child 11/11 of `V2-303`; depends on `V2-303I`.
-  - Files: `src/thesis_forge/core/model.py`, `tests/core/test_block_model.py`
-  - Behavior: Heading, Paragraph and ListItem lose the `text` field; block-model tests pin that inlines are the single content source.
-  - Verify: `.venv/bin/python -m pytest tests/core/test_block_model.py tests/core/ tests/test_parser_contract.py tests/test_compiler.py`
-  - Acceptance: no authoritative `text + inlines` duplication remains; baselines stay green.
-  - Verification-surface change: authorized; finalizes the block-model shape tests.
-  - Attempts: 0
-
 - [V2-304] Structured table model
   - Files: `src/thesis_forge/core/model.py`, `tests/core/test_table_model.py`
   - Behavior: Table owns caption inlines, columns, rows and cells with typed content/alignment.
@@ -121,6 +112,16 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
   - Attempts: 0
 
 ## Done
+
+- [V2-303J] Remove the block text fields
+  - Parent: ordered child 11/11 of `V2-303`; depends on `V2-303I`.
+  - Files: `src/thesis_forge/core/model.py`, `tests/core/test_block_model.py`, `tests/test_preview_presentation.py`
+  - Behavior: Heading, Paragraph and ListItem lose the `text` field; block-model tests pin that inlines are the single content source.
+  - Verify: `.venv/bin/python -m pytest tests/core/test_block_model.py tests/test_preview_presentation.py tests/core/ tests/test_parser_contract.py tests/test_compiler.py`
+  - Acceptance: no authoritative `text + inlines` duplication remains; baselines stay green.
+  - Verification-surface change: authorized; finalizes the block-model shape tests.
+  - Attempts: 1
+  - Attempt 1 (2026-08-22): Checker PASS; Heading/Paragraph/ListItem fields removed, all repo AST model constructors use inlines, block-model/preview/core/parser/compiler Verify 141/141, affected DOCX/adapter/CLI regression 123/123, Ruff/diff-check clean, full suite 1000 passed with 46 known failures plus one non-reproducible LibreOffice QA failure (the same test passed on both baseline `0e473aa` and current isolated reruns); no push.
 
 - [V2-303I] Drop text kwargs from CLI fixtures
   - Parent: ordered child 10/11 of `V2-303`; depends on `V2-303H`.
@@ -862,5 +863,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 - 2026-08-22 - V2-303G Checker PASS; compiler fixtures now rely solely on inlines, exact Verify 23/23, AST constructor audit and Ruff/diff-check passed; no push.
 - 2026-08-22 - V2-303H Checker PASS; core/adapter fixtures now rely solely on inlines, exact Verify 92/92, AST constructor audit and Ruff/diff-check passed; no push.
 - 2026-08-22 - V2-303I Checker PASS; CLI fixtures now rely solely on inlines, exact Verify 4/4, AST constructor audit and Ruff/diff-check passed; no push.
+- 2026-08-22 - V2-303J Checker PASS; Heading/Paragraph/ListItem text fields were removed, exact Verify 141/141 plus 123 affected regressions passed, full-suite known failure set remained stable apart from a non-reproducible LibreOffice QA failure; no push.
 
 ## Sync log

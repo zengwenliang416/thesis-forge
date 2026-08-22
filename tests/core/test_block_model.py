@@ -47,7 +47,7 @@ def test_new_block_types_construct_with_defaults() -> None:
 def test_block_quote_children_default_to_empty_tuple() -> None:
     quote = BlockQuote()
     assert quote.children == ()
-    children = (Paragraph(text="quoted"),)
+    children = (Paragraph(inlines=[Text(value="quoted")]),)
     node = BlockQuote(children=children)
     assert isinstance(node.children, tuple)
     assert node.children == children
@@ -64,7 +64,10 @@ def test_code_block_round_trip_and_defaults() -> None:
 
 
 def test_ordered_list_round_trip_and_defaults() -> None:
-    items = (ListItem(text="first"), ListItem(text="second"))
+    items = (
+        ListItem(inlines=[Text(value="first")]),
+        ListItem(inlines=[Text(value="second")]),
+    )
     node = OrderedList(start=3, items=items)
     assert node.start == 3
     assert node.items == items
@@ -75,7 +78,7 @@ def test_ordered_list_round_trip_and_defaults() -> None:
 
 
 def test_bullet_list_round_trip_and_defaults() -> None:
-    items = (ListItem(text="one"),)
+    items = (ListItem(inlines=[Text(value="one")]),)
     node = BulletList(items=items)
     assert node.items == items
     default = BulletList()
@@ -93,32 +96,49 @@ def test_list_item_children_default_to_empty_tuple() -> None:
 def test_recursive_nested_list_is_representable() -> None:
     nested = OrderedList(
         start=1,
-        items=(ListItem(text="nested-a"), ListItem(text="nested-b")),
+        items=(
+            ListItem(inlines=[Text(value="nested-a")]),
+            ListItem(inlines=[Text(value="nested-b")]),
+        ),
     )
-    outer_item = ListItem(text="outer", children=(nested,))
-    root = BulletList(items=(outer_item, ListItem(text="sibling")))
+    outer_item = ListItem(inlines=[Text(value="outer")], children=(nested,))
+    root = BulletList(
+        items=(outer_item, ListItem(inlines=[Text(value="sibling")])),
+    )
     assert len(root.items) == 2
     first = root.items[0]
-    assert first.text == "outer"
+    assert inline_plain_text(first.inlines) == "outer"
     assert len(first.children) == 1
     inner = first.children[0]
     assert isinstance(inner, OrderedList)
     assert inner.start == 1
-    assert [item.text for item in inner.items] == ["nested-a", "nested-b"]
-    assert root.items[1].text == "sibling"
+    assert [inline_plain_text(item.inlines) for item in inner.items] == [
+        "nested-a",
+        "nested-b",
+    ]
+    assert inline_plain_text(root.items[1].inlines) == "sibling"
     assert root.items[1].children == ()
 
 
 def test_block_quote_with_heading_and_paragraph_children() -> None:
-    heading = Heading(level=2, text="quoted title")
-    paragraph = Paragraph(text="quoted body")
+    heading = Heading(level=2, inlines=[Text(value="quoted title")])
+    paragraph = Paragraph(inlines=[Text(value="quoted body")])
     quote = BlockQuote(children=(heading, paragraph))
     assert quote.children == (heading, paragraph)
     assert isinstance(quote.children[0], Heading)
     assert quote.children[0].level == 2
-    assert quote.children[0].text == "quoted title"
+    assert inline_plain_text(quote.children[0].inlines) == "quoted title"
     assert isinstance(quote.children[1], Paragraph)
-    assert quote.children[1].text == "quoted body"
+    assert inline_plain_text(quote.children[1].inlines) == "quoted body"
+
+
+def test_primary_blocks_use_inlines_as_the_single_content_source() -> None:
+    assert "text" not in {field.name for field in dataclasses.fields(Heading)}
+    assert "text" not in {field.name for field in dataclasses.fields(Paragraph)}
+    assert "text" not in {field.name for field in dataclasses.fields(ListItem)}
+    assert "inlines" in {field.name for field in dataclasses.fields(Heading)}
+    assert "inlines" in {field.name for field in dataclasses.fields(Paragraph)}
+    assert "inlines" in {field.name for field in dataclasses.fields(ListItem)}
 
 
 def test_new_block_types_get_distinct_node_ids() -> None:
@@ -130,10 +150,19 @@ def test_new_block_types_get_distinct_node_ids() -> None:
 
 def test_node_id_excluded_from_equality_for_new_block_types() -> None:
     pairs = [
-        (BlockQuote(children=(Paragraph(text="q"),)), BlockQuote(children=(Paragraph(text="q"),))),
+        (
+            BlockQuote(children=(Paragraph(inlines=[Text(value="q")]),)),
+            BlockQuote(children=(Paragraph(inlines=[Text(value="q")]),)),
+        ),
         (CodeBlock(language="python", code="x = 1"), CodeBlock(language="python", code="x = 1")),
-        (OrderedList(start=2, items=(ListItem(text="a"),)), OrderedList(start=2, items=(ListItem(text="a"),))),
-        (BulletList(items=(ListItem(text="a"),)), BulletList(items=(ListItem(text="a"),))),
+        (
+            OrderedList(start=2, items=(ListItem(inlines=[Text(value="a")]),)),
+            OrderedList(start=2, items=(ListItem(inlines=[Text(value="a")]),)),
+        ),
+        (
+            BulletList(items=(ListItem(inlines=[Text(value="a")]),)),
+            BulletList(items=(ListItem(inlines=[Text(value="a")]),)),
+        ),
     ]
     for first, second in pairs:
         assert first.node_id != second.node_id
