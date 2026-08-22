@@ -29,6 +29,8 @@ from thesis_forge.core.model import (
     ListItem,
     Paragraph,
     Table,
+    TableCell,
+    TableRow,
     Text,
     ThesisDocument,
 )
@@ -86,6 +88,31 @@ PNG_1X1 = base64.b64decode(
 
 def _text_inlines(value: str) -> list[Text]:
     return [Text(value=value)]
+
+
+def _structured_table(
+    table_id: str,
+    caption: str,
+    rows: list[tuple[bool, list[tuple[str, str | None]]]],
+) -> Table:
+    return Table(
+        id=table_id,
+        caption=caption,
+        caption_inlines=tuple(_text_inlines(caption)),
+        rows=tuple(
+            TableRow(
+                header=is_header,
+                cells=tuple(
+                    TableCell(
+                        inlines=tuple(_text_inlines(value)),
+                        alignment=alignment,
+                    )
+                    for value, alignment in cells
+                ),
+            )
+            for is_header, cells in rows
+        ),
+    )
 
 
 def _xml_part(path: Path, name: str):
@@ -1784,10 +1811,14 @@ def test_docx_renderer_creates_real_figures_captions_bookmarks_and_three_line_ta
                 src="./images/model.png",
                 caption="默认宽度",
             ),
-            Table(
-                id="tbl:results",
-                caption="实验结果",
-                markdown="| 模型 | AUROC |\n| --- | ---: |\n| A | 0.91 |\n| B | 0.94 |",
+            _structured_table(
+                "tbl:results",
+                "实验结果",
+                [
+                    (True, [("模型", None), ("AUROC", "right")]),
+                    (False, [("A", None), ("0.91", "right")]),
+                    (False, [("B", None), ("0.94", "right")]),
+                ],
             ),
         ],
     )
@@ -1897,10 +1928,13 @@ def test_docx_renderer_honors_configured_three_line_table_widths(tmp_path: Path)
     document = ThesisDocument(
         source_path=tmp_path / "thesis.md",
         blocks=[
-            Table(
-                id="tbl:results",
-                caption="实验结果",
-                markdown="| 模型 | AUROC |\n| --- | ---: |\n| A | 0.91 |",
+            _structured_table(
+                "tbl:results",
+                "实验结果",
+                [
+                    (True, [("模型", None), ("AUROC", "right")]),
+                    (False, [("A", None), ("0.91", "right")]),
+                ],
             )
         ],
     )
@@ -1938,10 +1972,13 @@ def test_docx_renderer_supports_word_border_width_limits(
     document = ThesisDocument(
         source_path=tmp_path / "thesis.md",
         blocks=[
-            Table(
-                id="tbl:limits",
-                caption="线宽边界",
-                markdown="| 项目 | 值 |\n| --- | --- |\n| A | 1 |",
+            _structured_table(
+                "tbl:limits",
+                "线宽边界",
+                [
+                    (True, [("项目", None), ("值", None)]),
+                    (False, [("A", None), ("1", None)]),
+                ],
             )
         ],
     )
@@ -1967,10 +2004,13 @@ def test_docx_renderer_honors_non_default_caption_positions(tmp_path: Path):
         source_path=tmp_path / "thesis.md",
         blocks=[
             Figure(id="fig:model", src="./images/model.png", caption="系统模型"),
-            Table(
-                id="tbl:results",
-                caption="实验结果",
-                markdown="| 模型 | AUROC |\n| --- | ---: |\n| A | 0.91 |",
+            _structured_table(
+                "tbl:results",
+                "实验结果",
+                [
+                    (True, [("模型", None), ("AUROC", "right")]),
+                    (False, [("A", None), ("0.91", "right")]),
+                ],
             ),
         ],
     )
@@ -2034,10 +2074,13 @@ def test_docx_renderer_applies_non_three_line_table_border_policies(
     document = ThesisDocument(
         source_path=tmp_path / "thesis.md",
         blocks=[
-            Table(
-                id="tbl:results",
-                caption="实验结果",
-                markdown="| 模型 | AUROC |\n| --- | ---: |\n| A | 0.91 |",
+            _structured_table(
+                "tbl:results",
+                "实验结果",
+                [
+                    (True, [("模型", None), ("AUROC", "right")]),
+                    (False, [("A", None), ("0.91", "right")]),
+                ],
             )
         ],
     )
@@ -2059,7 +2102,7 @@ def test_docx_renderer_does_not_create_fake_table_for_empty_rows(tmp_path: Path)
     template = load_template("templates/base/bachelor.yaml")
     document = ThesisDocument(
         source_path=tmp_path / "thesis.md",
-        blocks=[Table(id="tbl:empty", caption="空表", markdown="")],
+        blocks=[_structured_table("tbl:empty", "空表", [])],
     )
     output = tmp_path / "empty-table.docx"
 
@@ -2119,10 +2162,13 @@ def test_docx_renderer_creates_real_math_fields_footnotes_and_page_structures(
                 inlines=_text_inlines("绪论"),
             ),
             Figure(id="fig:model", src="./model.png", caption="系统模型"),
-            Table(
-                id="tbl:data",
-                caption="实验数据",
-                markdown="| 模型 | 值 |\n| --- | ---: |\n| A | 1 |",
+            _structured_table(
+                "tbl:data",
+                "实验数据",
+                [
+                    (True, [("模型", None), ("值", "right")]),
+                    (False, [("A", None), ("1", "right")]),
+                ],
             ),
             Equation(
                 id="eq:loss",

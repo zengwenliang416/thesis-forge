@@ -31,6 +31,7 @@ from .model import (
     Paragraph,
     Strong,
     Table,
+    TableRow,
     Text,
     ThesisDocument,
     inline_plain_text,
@@ -73,7 +74,6 @@ BOOKMARK_MAX_LENGTH = 40
 FIGURE_WIDTH_RE = re.compile(
     r"^(?P<value>\d+(?:\.\d+)?)(?P<unit>%|mm|cm|pt|em)$"
 )
-TABLE_SEPARATOR_RE = re.compile(r"^:?-{3,}:?$")
 ZH_KEYWORDS_RE = re.compile(r"^\s*(?:\*\*)?关键词\s*[：:](?:\*\*)?")
 EN_KEYWORDS_RE = re.compile(
     r"^\s*(?:\*\*)?keywords\s*:(?:\*\*)?",
@@ -251,63 +251,32 @@ def _resolve_figure_asset(source_path: Path, src: str) -> Path:
     return asset_path.resolve()
 
 
-def _split_table_row(line: str, source_id: str | None) -> tuple[str, ...]:
-    stripped = line.strip()
-    if not stripped.startswith("|") or not stripped.endswith("|"):
-        raise TableCompilationError(source_id, "rows must start and end with '|'")
-    return tuple(cell.strip() for cell in stripped[1:-1].split("|"))
-
-
-def _separator_alignment(cell: str, source_id: str | None) -> str | None:
-    if TABLE_SEPARATOR_RE.fullmatch(cell) is None:
-        raise TableCompilationError(source_id, f"invalid separator cell {cell!r}")
-    if cell.startswith(":") and cell.endswith(":"):
-        return "center"
-    if cell.endswith(":"):
-        return "right"
-    if cell.startswith(":"):
-        return "left"
-    return None
-
-
 def _compile_table_rows(
-    markdown: str,
+    rows: tuple[TableRow, ...],
     source_id: str | None,
 ) -> tuple[TableRowInstruction, ...]:
-    lines = [line for line in markdown.splitlines() if line.strip()]
-    if not lines:
+    if not rows:
         return ()
-    if len(lines) < 2:
-        raise TableCompilationError(source_id, "header separator row is required")
-
-    header = _split_table_row(lines[0], source_id)
-    separator = _split_table_row(lines[1], source_id)
-    if not header or len(header) != len(separator):
-        raise TableCompilationError(source_id, "header and separator column count differs")
-    alignments = tuple(_separator_alignment(cell, source_id) for cell in separator)
-    rows = [
-        TableRowInstruction(
-            header=True,
-            cells=tuple(
-                TableCellInstruction(text=text, alignment=alignment)
-                for text, alignment in zip(header, alignments, strict=True)
-            ),
-        )
-    ]
-    for line in lines[2:]:
-        values = _split_table_row(line, source_id)
-        if len(values) != len(header):
+    width = len(rows[0].cells)
+    if width == 0:
+        raise TableCompilationError(source_id, "table rows must contain cells")
+    instructions = []
+    for row in rows:
+        if len(row.cells) != width:
             raise TableCompilationError(source_id, "body row column count differs")
-        rows.append(
+        instructions.append(
             TableRowInstruction(
-                header=False,
+                header=row.header,
                 cells=tuple(
-                    TableCellInstruction(text=text, alignment=alignment)
-                    for text, alignment in zip(values, alignments, strict=True)
+                    TableCellInstruction(
+                        text=inline_plain_text(cell.inlines),
+                        alignment=cell.alignment,
+                    )
+                    for cell in row.cells
                 ),
             )
         )
-    return tuple(rows)
+    return tuple(instructions)
 
 
 def _resolve_blocks(
@@ -785,9 +754,9 @@ def _compile_block(
     if isinstance(block, Table):
         return TableInstruction(
             source_id=block.id,
-            caption=block.caption,
-            markdown=block.markdown,
-            rows=_compile_table_rows(block.markdown, block.id),
+            caption=inline_plain_text(block.caption_inlines),
+            markdown="",
+            rows=_compile_table_rows(block.rows, block.id),
             chapter=chapter,
             number=number,
             label=label,

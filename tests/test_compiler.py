@@ -29,6 +29,8 @@ from thesis_forge.core.model import (
     ListItem,
     Paragraph,
     Table,
+    TableCell,
+    TableRow,
     Text,
     ThesisDocument,
 )
@@ -62,6 +64,30 @@ def _text_inlines(value: str) -> list[Text]:
     return [Text(value=value)]
 
 
+def _structured_table(
+    table_id: str | None,
+    caption: str,
+    header: tuple[tuple[str, str | None], ...],
+    body: tuple[tuple[tuple[str, str | None], ...], ...] = (),
+) -> Table:
+    def row(values: tuple[tuple[str, str | None], ...], *, is_header: bool) -> TableRow:
+        return TableRow(
+            header=is_header,
+            cells=tuple(
+                TableCell(inlines=_text_inlines(value), alignment=alignment)
+                for value, alignment in values
+            ),
+        )
+
+    return Table(
+        id=table_id,
+        caption=caption,
+        caption_inlines=_text_inlines(caption),
+        rows=(row(header, is_header=True),)
+        + tuple(row(values, is_header=False) for values in body),
+    )
+
+
 def test_compile_document_resolves_typed_instructions_and_global_semantics():
     paragraph_inlines = [
         Text(value="参见"),
@@ -77,7 +103,7 @@ def test_compile_document_resolves_typed_instructions_and_global_semantics():
             Paragraph(inlines=paragraph_inlines),
             ListBlock(items=[ListItem(inlines=[Text(value="第一项")])]),
             Figure(id="fig:model", src="model.png", caption="系统模型"),
-            Table(id="tbl:data", caption="数据表", markdown="| A |\n|---|\n| 1 |"),
+            _structured_table("tbl:data", "数据表", (("A", None),), ((("1", None),),)),
             Equation(id="eq:loss", latex="E=mc^2"),
             Listing(id="lst:demo", caption="示例代码", language="python", code="print(1)"),
             Algorithm(id="alg:sort", caption="排序算法", body="1. 输入"),
@@ -292,14 +318,13 @@ def test_compile_document_resolves_figure_assets_widths_and_structured_table_row
                 src="./images/default.png",
                 caption="模板宽度",
             ),
-            Table(
-                id="tbl:results",
-                caption="实验结果",
-                markdown=(
-                    "| 模型 | AUROC | 说明 |\n"
-                    "| :--- | ---: | :---: |\n"
-                    "| A | 0.91 | 基线 |\n"
-                    "| B | 0.94 | 最优 |"
+            _structured_table(
+                "tbl:results",
+                "实验结果",
+                (("模型", "left"), ("AUROC", "right"), ("说明", "center")),
+                (
+                    (("A", "left"), ("0.91", "right"), ("基线", "center")),
+                    (("B", "left"), ("0.94", "right"), ("最优", "center")),
                 ),
             ),
         ],
@@ -335,7 +360,7 @@ def test_compile_document_resolves_figure_assets_widths_and_structured_table_row
         "right",
         "center",
     ]
-    assert table.markdown.startswith("| 模型 |")
+    assert table.markdown == ""
 
 
 def test_compile_document_rejects_malformed_markdown_table():
@@ -345,7 +370,20 @@ def test_compile_document_rejects_malformed_markdown_table():
             Table(
                 id="tbl:broken",
                 caption="坏表格",
-                markdown="| A | B |\n| --- |\n| 1 | 2 |",
+                caption_inlines=_text_inlines("坏表格"),
+                rows=(
+                    TableRow(
+                        header=True,
+                        cells=(TableCell(inlines=_text_inlines("A")),),
+                    ),
+                    TableRow(
+                        header=False,
+                        cells=(
+                            TableCell(inlines=_text_inlines("1")),
+                            TableCell(inlines=_text_inlines("2")),
+                        ),
+                    ),
+                ),
             )
         ],
     )
@@ -364,7 +402,7 @@ def test_compile_document_resolves_sequence_fields_and_footnote_ids():
                 inlines=_text_inlines("绪论"),
             ),
             Figure(id="fig:model", src="model.png", caption="模型"),
-            Table(id="tbl:data", caption="数据", markdown="| A |\n| --- |\n| 1 |"),
+            _structured_table("tbl:data", "数据", (("A", None),), ((("1", None),),)),
             Equation(id="eq:loss", latex=r"L=\frac{a}{b}"),
             Paragraph(
                 inlines=[
