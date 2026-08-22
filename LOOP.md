@@ -95,15 +95,53 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Open
 
-- [V2-319] Single parser backend API
+- [V2-319A2] Route application dependencies through the canonical parser
+  - Parent: ordered child 2/2 of the re-sliced `V2-319A`; depends on `V2-319A1`; parent Behavior and Acceptance remain unchanged.
+  - Files: `src/thesis_forge/application/services.py`, `tests/test_application_services.py`
+  - Behavior: make `ApplicationDependencies` use the canonical parser factory by default and align application-service coverage with the v2 source contract.
+  - Verify: `.venv/bin/python -m pytest tests/test_application_services.py`
+  - Acceptance: the default application path uses the canonical v2 parser seam and the full application-service regression remains green.
+  - Verification-surface change: no.
+  - Attempts: 0
+
+- [V2-319B] Remove parser-name switching from the QA diff tool
+  - Parent: ordered child 2/4 of the re-sliced `V2-319`; depends on `V2-319A2`; parent Behavior and Acceptance remain unchanged.
+  - Files: `qa/tools/parser_diff.py`, `tests/test_parser_backend.py`, `tests/test_parser_markdown_it.py`
+  - Behavior: replace the dual-backend CLI and registry/name assertions with canonical single-parser calls while retaining deterministic document normalization coverage.
+  - Verify: `.venv/bin/python -m pytest tests/test_parser_backend.py tests/test_parser_markdown_it.py`
+  - Acceptance: the QA tool has no backend-name CLI/env selector and its tests no longer depend on parser registry switching.
+  - Verification-surface change: no.
+  - Attempts: 0
+
+- [V2-319C] Migrate public core and template consumers
+  - Parent: ordered child 3/4 of the re-sliced `V2-319`; depends on `V2-319B`; parent Behavior and Acceptance remain unchanged.
+  - Files: `src/thesis_forge/core/__init__.py`, `src/thesis_forge/templates/v2/lint.py`
+  - Behavior: public core exports and template-v2 fixture lint instantiate the canonical parser factory/type; no `LegacyParserBackend` production import remains on these surfaces.
+  - Verify: `.venv/bin/python -m pytest tests/test_template_v2.py tests/test_parser_backend.py tests/test_parser_markdown_it.py`
+  - Acceptance: public and template tooling use the same single-parser API as the application path.
+  - Verification-surface change: no.
+  - Attempts: 0
+
+- [V2-319D] Delete the parser registry and legacy backend API
+  - Parent: ordered child 4/4 of the re-sliced `V2-319`; depends on `V2-319C`; parent Behavior and Acceptance remain unchanged.
   - Files: `src/thesis_forge/core/parser_backend.py`, `tests/core/test_single_parser_backend.py`
-  - Behavior: remove parser registry and expose one production parser factory/type.
-  - Verify: `.venv/bin/python -m pytest tests/core/test_single_parser_backend.py`
-  - Acceptance: no CLI/env/parser-name switching remains.
+  - Behavior: remove `PARSER_BACKENDS`, parser-name lookup, `parser_backend_names()`, and `LegacyParserBackend`; leave exactly one production parser factory/type.
+  - Verify: `.venv/bin/python -m pytest tests/core/test_single_parser_backend.py tests/test_parser_backend.py tests/test_parser_markdown_it.py`
+  - Acceptance: no CLI/env/parser-name switching remains and static/runtime checks show one production parser path.
   - Verification-surface change: no.
   - Attempts: 0
 
 ## Done
+
+- [V2-319A1] Establish the canonical parser factory/type
+  - Parent: ordered child 1/2 of the re-sliced `V2-319A`; parent Behavior and Acceptance remain unchanged.
+  - Files: `src/thesis_forge/core/parser_backend.py`, `tests/core/test_single_parser_backend.py`
+  - Behavior: expose the canonical single-parser factory/type without adding a parser selector.
+  - Verify: `.venv/bin/python -m pytest tests/core/test_single_parser_backend.py`
+  - Acceptance: the focused contract identifies the canonical v2 parser factory/type; application default migration remains the dependent child.
+  - Verification-surface change: no.
+  - Attempts: 1
+  - Attempt 1 (2026-08-22): Checker PASS; exact Verify `.venv/bin/python -m pytest tests/core/test_single_parser_backend.py` passed 3/3; related parser/backend/contract regression `.venv/bin/python -m pytest tests/test_parser_backend.py tests/test_parser_markdown_it.py tests/test_parser_contract.py` passed 76/76; target Ruff, `git diff --check`, and `./lint-loop.sh` passed. Static review confirmed the canonical factory is parameterless and always returns `MarkdownItParserBackend`, with no selector/fallback/compatibility branch; tests assert non-empty v2 parse output and a stable heading ID. Candidate scope was exactly the two named files; the registry was preserved and unstaged; one local commit and no push.
 
 - [V2-317] Listing and algorithm fences
   - Files: `src/thesis_forge/core/parser_markdown_it.py`, `tests/core/test_markdown_v2_fences.py`
@@ -1411,5 +1449,8 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 - 2026-08-22 - V2-315 Checker PASS Attempt 2; exact Verify 6/6, related regression 87/87, target Ruff, diff-check, LOOP-LINT, and independent GFM table/caption runtime probes passed; V2-315 moved to Done, scope limited to parser/test plus LOOP, registry preserved and unstaged, one local commit and no push.
 - 2026-08-22 - V2-316 Checker PASS; exact Verify passed 9/9, related regression 96/96, target Ruff, `git diff --check`, LOOP-LINT, and independent display-equation runtime probes passed; the known V2-314 inline baseline failure was unchanged and outside the candidate diff, V2-316 moved to Done, registry preserved and unstaged, one local commit and no push.
 - 2026-08-22 - V2-317 Checker PASS; exact Verify passed 9/9, related regression 105/105, target Ruff, `git diff --check`, LOOP-LINT, and independent listing/algorithm fence probes passed; V2-317 moved to Done, registry preserved and unstaged, one local commit and no push.
+- 2026-08-22 - V2-319 split into ordered children V2-319A through V2-319D after CodeGraph found the single-parser change spans the core factory, application default, QA dual-backend CLI/tests, public core exports, and template lint consumer; no product code edited in the split cycle, next queue is V2-319A.
+- 2026-08-22 - V2-319A split into ordered children V2-319A1 and V2-319A2 after a runtime probe showed switching `ApplicationDependencies` from legacy to markdown-it rejects the existing YAML Front Matter example and breaks the 77-test application-service baseline; no product code edited in the split cycle, next queue is V2-319A1.
+- 2026-08-22 - V2-319A1 Checker PASS Attempt 1; exact Verify 3/3, related parser/backend/contract regression 76/76, target Ruff, `git diff --check`, and LOOP-LINT passed; parameterless canonical factory/type and non-empty v2 parse coverage were confirmed, registry preserved and unstaged, one local commit and no push.
 
 ## Sync log

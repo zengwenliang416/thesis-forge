@@ -23,6 +23,7 @@ __all__ = [
     "MarkdownItParserBackend",
     "ParseError",
     "ParserBackend",
+    "create_parser_backend",
     "get_parser_backend",
     "parser_backend_names",
 ]
@@ -48,6 +49,11 @@ class ParserBackend(Protocol):
     def parse_text(self, text: str, *, source_path: str | Path) -> ThesisDocument:
         """解析内存中的 Markdown 文本；``source_path`` 仅用于定位与诊断。"""
         ...
+
+
+def create_parser_backend() -> ParserBackend:
+    """创建唯一的生产 v2 parser，不接受后端选择参数。"""
+    return MarkdownItParserBackend()
 
 
 class LegacyParserBackend:
