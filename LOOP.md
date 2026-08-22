@@ -95,15 +95,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Open
 
-- [V2-307E] Legacy parser stops registering inlines
-  - Parent: ordered child 11/13 of `V2-307`; depends on `V2-308` (all readers migrated first).
-  - Files: `src/thesis_forge/core/parser.py`
-  - Behavior: the legacy parser no longer calls `register_inlines`; its output documents carry blocks/inlines only.
-  - Verify: `.venv/bin/python -m pytest tests/test_parser.py tests/test_parser_contract.py tests/test_parser_backend.py`
-  - Acceptance: no `register_inlines` call remains in parser.py; suites stay green with empty cache lists.
-  - Verification-surface change: none.
-  - Attempts: 0
-
 - [V2-307F] Markdown-it parser stops registering inlines
   - Parent: ordered child 12/13 of `V2-307`; depends on `V2-307E`.
   - Files: `src/thesis_forge/core/parser_markdown_it.py`
@@ -123,6 +114,16 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
   - Attempts: 0
 
 ## Done
+
+- [V2-307E] Legacy parser stops registering inlines
+  - Parent: ordered child 11/13 of `V2-307`; depends on `V2-308` (all readers migrated first).
+  - Files: `src/thesis_forge/core/parser.py`
+  - Behavior: the legacy parser no longer calls `register_inlines`; its output documents carry blocks/inlines only.
+  - Verify: `.venv/bin/python -m pytest tests/test_parser.py tests/test_parser_contract.py tests/test_parser_backend.py`
+  - Acceptance: no `register_inlines` call remains in parser.py; suites stay green with empty cache lists.
+  - Verification-surface change: none.
+  - Attempts: 1
+  - Attempt 1 (2026-08-22): Checker PASS; diff is exactly the five deleted register_inlines call lines with `_parse_container_inlines` retained for the markdown-it backend, exact Verify 50/50, Ruff and `git diff --check` clean, empty-cache probe confirmed legacy parses leave all four caches empty while block inlines and the derived index keep full semantics, broader baselines 232/232 and parity OK, source-wide grep found no remaining cache readers in production; no push.
 
 - [V2-308B] Validator consumes DocumentIndex
   - Parent: second child of the re-sliced `V2-308`; depends on `V2-308A`.
@@ -1205,6 +1206,7 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 - 2026-08-22 - V2-307D2 Checker PASS; e2e and object-model cache pins now read DocumentIndex-derived sequences, exact Verify 9/9 with baselines green; no push.
 - 2026-08-22 - V2-308A Checker PASS; the three manifest-resource fixtures now carry their citations in Paragraph inlines with object-identical index derivation proven, exact Verify 4/4 and tests/core 87/87; no push.
 - 2026-08-22 - V2-308B Checker FAIL Attempt 1 (residual index_by_id read in _validate_layout_overrides), completed with the fifth in-scope swap; V2-308B Checker PASS Attempt 2 — all five validator rules now read the derived DocumentIndex with cache-independence, layout-override and negative-control probes green, exact Verify 3/3 and baselines 181/181; no push.
+- 2026-08-22 - V2-307E Checker PASS; legacy parser no longer registers inlines (five call sites removed), caches empty on parse with semantics preserved in blocks and the derived index, exact Verify 50/50 and baselines 232/232; no push.
 - 2026-08-22 - V2-308 split into ordered children V2-308A and V2-308B before any product edit after inspection found tests/core/test_manifest_resource_validation.py constructs three cache-only citations that would break the validator flip (a third file beyond the item's named two); A migrates the fixtures to real Paragraph inline citations (green both ways), B carries the validator flip; no product code edited in the split cycle.
 - 2026-08-22 - V2-307D1 Checker FAIL Attempt 1 then re-sliced into ordered children V2-307D1a…D1e after independent Checker grep found 20 cache-pin sites (18 in test_parser_contract.py) and completing them exposed typed-model defects the cache masked: caption inline locations carry the container start line in both backends, table-cell inline locations are misaligned by the metadata/blank rows, and algorithm-body citations exist only in the cache (Algorithm.body is verbatim-only); children fix caption/cell locations, add typed Algorithm body_lines to the model and both parsers, extend index traversal, then finish the pin migration; three test files restored, no product code edited in the split cycle.
 - 2026-08-22 - V2-307 split into eight ordered children V2-307A…G after grep mapping showed removing the four cache fields atomically spans model.py + both parsers (12 registration call sites) + compiler.py + validator.py + cli.py + qa/tools/parser_diff.py plus seven test files; children migrate readers first (compiler/CLI/parity-tool/test pins, with V2-308 landing between D2 and E), then stop registration per parser, then remove the fields; no product code edited in the split cycle.

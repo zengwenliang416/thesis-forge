@@ -357,7 +357,6 @@ def parse_markdown_text(
             doc.blocks.append(
                 Paragraph(inlines=inlines, location=SourceLocation(line=line))
             )
-            doc.register_inlines(inlines)
         paragraph_buffer = []
         paragraph_start = None
 
@@ -392,7 +391,6 @@ def parse_markdown_text(
                     location=SourceLocation(line=line_no),
                 )
             )
-            doc.register_inlines(inlines)
             continue
 
         container = CONTAINER_START_RE.match(stripped)
@@ -408,7 +406,6 @@ def parse_markdown_text(
                 raise ParseError(f"第 {line_no} 行的 {kind} 容器未闭合")
             block = _parse_container(kind, block_id, body, line_no)
             doc.blocks.append(block)
-            doc.register_inlines(_parse_container_inlines(kind, body, line_no + 1))
             i += 1
             continue
 
@@ -425,7 +422,6 @@ def parse_markdown_text(
                     location=SourceLocation(line=line_no),
                 )
             )
-            doc.register_inlines(inlines)
             i += 1
             continue
 
@@ -461,7 +457,6 @@ def parse_markdown_text(
                         inlines=item_inlines,
                     )
                 )
-                doc.register_inlines(item_inlines)
                 i += 1
 
             doc.blocks.append(
