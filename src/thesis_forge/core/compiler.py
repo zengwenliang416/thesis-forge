@@ -18,6 +18,7 @@ from .model import (
     Block,
     Citation,
     CrossReference,
+    Emphasis,
     Equation,
     Figure,
     FootnoteDefinition,
@@ -413,7 +414,18 @@ def _compile_inlines(
         elif isinstance(inline, InlineCode):
             runs.append(TextRun(inline.value, code=True))
         elif isinstance(inline, Strong):
-            runs.append(TextRun(inline.value, bold=True))
+            for run in _compile_inlines(
+                list(inline.children),
+                resolved,
+                citation_numbers,
+                footnote_ids,
+                bibliography_database,
+                citation_formatter,
+            ):
+                if isinstance(run, TextRun):
+                    runs.append(replace(run, bold=True))
+                else:
+                    runs.append(run)
         elif isinstance(inline, CrossReference):
             target = resolved.get(inline.target)
             if target is None or target.bookmark is None:
@@ -664,6 +676,8 @@ def _initial_citation_numbers(document: ThesisDocument) -> dict[str, int]:
                 if definition is not None and inline.label not in expanded_footnotes:
                     expanded_footnotes.add(inline.label)
                     yield from citations_from_inlines(definition.inlines)
+            elif isinstance(inline, (Strong, Emphasis)):
+                yield from citations_from_inlines(list(inline.children))
 
     def citations_from_block(block: Block):
         if isinstance(block, (Heading, Paragraph)):

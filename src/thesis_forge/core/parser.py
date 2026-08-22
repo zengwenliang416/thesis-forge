@@ -106,7 +106,14 @@ def _parse_inline_content(
         if match.group("code"):
             inlines.append(InlineCode(value=match.group("code_text"), location=location))
         elif match.group("strong"):
-            inlines.append(Strong(value=match.group("strong_text"), location=location))
+            inner_text = match.group("strong_text")
+            inner_location = _location_for_offset(
+                text, match.start("strong_text"), start_line, start_column
+            )
+            children = tuple(
+                _parse_inline_content(inner_text, inner_location.line, inner_location.column)
+            )
+            inlines.append(Strong(children=children, location=location))
         elif match.group("footnote"):
             inlines.append(FootnoteReference(label=match.group("footnote_label"), location=location))
         elif match.group("citation"):

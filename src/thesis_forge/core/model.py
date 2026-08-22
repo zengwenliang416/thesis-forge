@@ -45,7 +45,7 @@ class Text(Inline):
 
 @dataclass(slots=True)
 class Strong(Inline):
-    value: str = ""
+    children: tuple[Inline, ...] = ()
 
 
 @dataclass(slots=True)
@@ -207,14 +207,16 @@ class ThesisDocument:
         return {block.id: block for block in self.blocks if block.id}
 
     def register_inlines(self, inlines: list[Inline]) -> None:
-        self.inline_content.extend(inlines)
         for inline in inlines:
+            self.inline_content.append(inline)
             if isinstance(inline, CrossReference):
                 self.cross_references.append(inline)
             elif isinstance(inline, Citation):
                 self.citations.append(inline)
             elif isinstance(inline, FootnoteReference):
                 self.footnote_references.append(inline)
+            if isinstance(inline, (Strong, Emphasis)):
+                self.register_inlines(list(inline.children))
 
 
 @dataclass(slots=True)
