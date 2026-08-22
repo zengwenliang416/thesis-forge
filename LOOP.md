@@ -97,6 +97,15 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Done
 
+- [V2-512] Validate footnote graph integrity
+  - Files: `src/thesis_forge/core/validator.py`, `tests/core/test_footnote_integrity_v2.py`
+  - Behavior: validate footnote definitions and references as one graph, rejecting duplicate definitions, missing definitions and nested footnote references while allowing repeated references to one definition.
+  - Verify: `.venv/bin/python -m pytest tests/core/test_footnote_integrity_v2.py`
+  - Acceptance: duplicate definitions retain both source locations in structured issues; missing and nested references fail before compile/render; repeated references resolve without duplicate or overwritten footnote IDs.
+  - Verification-surface change: authorized; creates the capability evidence required by `spec/format-capabilities.yaml`.
+  - Attempts: 1
+  - Attempt 1 (2026-08-22): Checker PASS; exact Verify passed 4/4; related DocumentIndex/compiler/DOCX regression passed 123/123; targeted Ruff, `git diff --check`, and independent build-stop/compile-ID probes passed; missing and nested footnotes stopped at validation before compiler invocation, repeated references shared one definition ID, and duplicate issues retained both source locations; candidate scope was exactly the three named files, the pre-existing `openspec/.specnav/change-registry.json` was preserved and uncommitted, no push.
+
 - [V2-501] Centralize semantic symbols and resolved cross-reference targets
   - Files: `src/thesis_forge/core/symbols.py`, `src/thesis_forge/core/compiler.py`, `tests/core/test_symbol_table.py`
   - Behavior: the compiler builds one symbol table containing public IDs, target types, display labels, numbering inputs and deterministic bookmark names before producing any render instruction.
@@ -1552,5 +1561,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 - 2026-08-22 - V2-320C Checker PASS Attempt 1; exact Verify passed 18/18, targeted Ruff, `git diff --check`, and LOOP-LINT passed; candidate scope was exactly the three named test files with no production code, compatibility layer, or selector changes, the pre-existing `change-registry.json` was preserved and uncommitted, one local commit, no push.
 - 2026-08-22 - V2-510A Checker PASS Attempt 1; exact Verify passed 3/3; related regression was 199 passed/1 baseline failure at `tests/core/test_markdown_v2_parser_config.py::test_markdown_v2_uses_public_parser_primitives`, matching clean HEAD at 196 passed/1 same failure and recorded out-of-scope; targeted Ruff, `git diff --check`, and LOOP-LINT: PASS — open=0 done=117 blocked=0; static/runtime audit confirmed pure local math conversion, structured unsupported/malformed error issues with source navigation and no absolute path leakage, supported formulas clear, and no compatibility, fallback, silent-degradation, or dual-field path; candidate scope was exactly the three named files, the pre-existing `openspec/.specnav/change-registry.json` was preserved and uncommitted, one local commit, no push.
 - 2026-08-22 - V2-501 Checker PASS Attempt 1; exact Verify 5/5, compiler/DOCX regression 110/110, targeted Ruff, `git diff --check`, LOOP-LINT, and independent symbol/compile probes passed; V2-501 moved from Open to Done, the candidate scope was exactly the three named implementation/test files plus this lifecycle update, the pre-existing `openspec/.specnav/change-registry.json` was preserved and uncommitted, and no push.
+- 2026-08-22 - V2-512 Checker PASS Attempt 1; exact Verify 4/4, related DocumentIndex/compiler/DOCX regression 123/123, targeted Ruff, `git diff --check`, and independent build-stop/compile-ID probes passed; V2-512 moved from Open to Done, missing and nested references stopped before compiler invocation, duplicate issues retained both source locations, repeated references shared one definition ID, the candidate scope was exactly the three named files, the pre-existing `openspec/.specnav/change-registry.json` was preserved and uncommitted, and no push.
 
 ## Sync log

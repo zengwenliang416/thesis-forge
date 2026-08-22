@@ -32,11 +32,15 @@ from .index import DocumentIndex
 from .math import MathConversionError, UnsupportedMathError, preflight_latex
 from .model import (
     Algorithm,
+    Emphasis,
     Equation,
     Figure,
+    FootnoteDefinition,
+    FootnoteReference,
     Heading,
     InlineMath,
     Listing,
+    Strong,
     Table,
     ThesisDocument,
     ValidationIssue,
@@ -323,6 +327,71 @@ def _validate_cross_references(
                 line=reference.location.line,
                 target=reference.target,
             )
+
+
+def _nested_footnote_references(
+    inlines: Iterable[object],
+) -> Iterable[FootnoteReference]:
+    for inline in inlines:
+        if isinstance(inline, FootnoteReference):
+            yield inline
+        elif isinstance(inline, (Strong, Emphasis)):
+            yield from _nested_footnote_references(inline.children)
+
+
+def _validate_footnotes(
+    document: ThesisDocument,
+    _context: ValidationContext,
+) -> Iterable[ValidationIssue]:
+    definitions: dict[str, FootnoteDefinition] = {}
+    for block in document.blocks:
+        if not isinstance(block, FootnoteDefinition):
+            continue
+
+        first = definitions.get(block.label)
+        if first is not None:
+            details = {
+                "label": block.label,
+                "related_message": f"首次定义：{block.label}",
+            }
+            details.update(_location_details(block.location, "source"))
+            details.update(_location_details(first.location, "related"))
+            yield ValidationIssue(
+                code="duplicate-footnote",
+                severity="error",
+                message="Footnote definition label is duplicated",
+                line=block.location.line,
+                target=block.label,
+                details=details,
+            )
+        else:
+            definitions[block.label] = block
+
+        for reference in _nested_footnote_references(block.inlines):
+            details = {"definition_label": block.label}
+            details.update(_location_details(reference.location, "source"))
+            yield ValidationIssue(
+                code="nested-footnote",
+                severity="error",
+                message="Nested footnote references are not supported",
+                line=reference.location.line,
+                target=reference.label,
+                details=details,
+            )
+
+    for reference in DocumentIndex.from_document(document).footnote_references:
+        if reference.label in definitions:
+            continue
+        details = {"label": reference.label}
+        details.update(_location_details(reference.location, "source"))
+        yield ValidationIssue(
+            code="missing-footnote",
+            severity="error",
+            message="Footnote reference has no definition",
+            line=reference.location.line,
+            target=reference.label,
+            details=details,
+        )
 
 
 def _validate_math_preflight(
@@ -681,6 +750,7 @@ DEFAULT_VALIDATION_RULES: tuple[ValidationRule, ...] = (
     _validate_empty_document,
     _validate_ids,
     _validate_cross_references,
+    _validate_footnotes,
     _validate_math_preflight,
     _validate_heading_hierarchy,
     _validate_images,
