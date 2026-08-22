@@ -12,6 +12,7 @@ from thesis_forge.bibliography import (
 )
 from thesis_forge.templates.model import NumberingSpec, SectionsSpec, ThesisTemplate
 
+from .index import DocumentIndex
 from .model import (
     Algorithm,
     BibliographyBlock,
@@ -619,13 +620,14 @@ class _CompilationContext:
 
 
 def _initial_citation_numbers(document: ThesisDocument) -> dict[str, int]:
+    index = DocumentIndex.from_document(document)
     definitions = {
         block.label: block
         for block in document.blocks
         if isinstance(block, FootnoteDefinition)
     }
     referenced_labels = {
-        reference.label for reference in document.footnote_references
+        reference.label for reference in index.footnote_references
     }
     expanded_footnotes: set[str] = set()
     seen_citations: set[int] = set()
@@ -669,7 +671,7 @@ def _initial_citation_numbers(document: ThesisDocument) -> dict[str, int]:
         for key in citation.keys:
             if key not in numbers:
                 numbers[key] = len(numbers) + 1
-    for citation in document.citations:
+    for citation in index.citations:
         if id(citation) in seen_citations:
             continue
         for key in citation.keys:

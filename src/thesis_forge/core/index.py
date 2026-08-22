@@ -83,6 +83,7 @@ class DocumentIndex:
     cross_references: tuple[CrossReference, ...]
     footnote_references: tuple[FootnoteReference, ...]
     footnote_definitions: Mapping[str, FootnoteDefinition]
+    inlines: tuple[Inline, ...]
 
     @classmethod
     def from_document(cls, document: ThesisDocument) -> DocumentIndex:
@@ -92,9 +93,11 @@ class DocumentIndex:
         cross_references: list[CrossReference] = []
         footnote_references: list[FootnoteReference] = []
         footnote_definitions: dict[str, FootnoteDefinition] = {}
+        all_inlines: list[Inline] = []
 
         def visit_inlines(inlines: Iterable[Inline]) -> None:
             for inline in inlines:
+                all_inlines.append(inline)
                 if isinstance(inline, Citation):
                     citations.append(inline)
                 elif isinstance(inline, CrossReference):
@@ -151,4 +154,5 @@ class DocumentIndex:
             cross_references=tuple(cross_references),
             footnote_references=tuple(footnote_references),
             footnote_definitions=footnote_definitions,
+            inlines=tuple(all_inlines),
         )
