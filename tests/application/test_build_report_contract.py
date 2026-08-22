@@ -5,6 +5,8 @@ from pathlib import Path
 import pytest
 
 from thesis_forge.application.contracts import (
+    ApplicationStageError,
+    BuildDiagnostic,
     BuildDiagnosticCategory,
     BuildDiagnosticSeverity,
     BuildIntent,
@@ -12,13 +14,14 @@ from thesis_forge.application.contracts import (
     BuildLogLevel,
     BuildOutcome,
     BuildOutput,
+    BuildRelatedLocation,
     BuildReport,
     BuildReportStage,
+    BuildSourceRange,
     BuildStage,
     BuildStageState,
     BuildStageStatus,
     BuildValidationError,
-    ApplicationStageError,
 )
 from thesis_forge.core.model import ValidationIssue
 
@@ -119,6 +122,142 @@ def test_validation_report_preserves_every_issue_in_original_order() -> None:
     }
     assert report.primary_diagnostic_id == "validation-1"
     assert not hasattr(report, "message")
+
+
+@pytest.mark.parametrize(
+    ("field", "value"),
+    [
+        ("start_line", True),
+        ("start_column", 1.5),
+        ("end_line", "2"),
+        ("end_column", False),
+    ],
+)
+def test_source_ranges_require_integer_coordinates(field: str, value: object) -> None:
+    with pytest.raises(TypeError, match="integer"):
+        BuildSourceRange(**{field: value})  # type: ignore[arg-type]
+
+
+def test_source_ranges_require_string_files() -> None:
+    with pytest.raises(TypeError, match="file"):
+        BuildSourceRange(file=Path("thesis.md"))  # type: ignore[arg-type]
+
+
+@pytest.mark.parametrize("field", ["start_line", "start_column", "end_line", "end_column"])
+@pytest.mark.parametrize("value", [0, -1])
+def test_source_ranges_require_positive_coordinates(field: str, value: int) -> None:
+    with pytest.raises(ValueError, match="positive"):
+        BuildSourceRange(**{field: value})
+
+
+@pytest.mark.parametrize(
+    "kwargs",
+    [
+        {"start_column": 1},
+        {"end_line": 2},
+        {"end_column": 2},
+    ],
+)
+def test_source_ranges_reject_orphaned_coordinates(kwargs: dict[str, int]) -> None:
+    with pytest.raises(ValueError, match="requires"):
+        BuildSourceRange(**kwargs)
+
+
+def test_source_ranges_reject_reverse_line_and_column_order() -> None:
+    with pytest.raises(ValueError, match="end_line"):
+        BuildSourceRange(start_line=3, end_line=2)
+    with pytest.raises(ValueError, match="end_column"):
+        BuildSourceRange(
+            start_line=3,
+            start_column=4,
+            end_line=3,
+            end_column=2,
+        )
+
+
+def _diagnostic_kwargs() -> dict[str, object]:
+    return {
+        "id": "diag-typed",
+        "severity": BuildDiagnosticSeverity.ERROR,
+        "category": BuildDiagnosticCategory.SEMANTIC,
+        "code": "TF-SEMANTIC-DUPLICATE-ID",
+        "stage": BuildReportStage.VALIDATE,
+        "message": "duplicate",
+    }
+
+
+@pytest.mark.parametrize(
+    ("field", "value", "message"),
+    [
+        ("id", 1, "id"),
+        ("code", 1, "code"),
+        ("message", 1, "message"),
+        ("severity", "error", "severity"),
+        ("category", "semantic", "category"),
+        ("stage", "validate", "stage"),
+        ("source", object(), "source"),
+        ("target", 7, "target"),
+        ("suggestion", 7, "suggestion"),
+    ],
+)
+def test_diagnostics_reject_wrong_runtime_field_types(
+    field: str,
+    value: object,
+    message: str,
+) -> None:
+    with pytest.raises(TypeError, match=message):
+        BuildDiagnostic(
+            **_diagnostic_kwargs(),
+            **{field: value},
+        )  # type: ignore[arg-type]
+
+
+def test_related_locations_reject_wrong_message_and_source_types() -> None:
+    with pytest.raises(TypeError, match="message"):
+        BuildRelatedLocation(message=1, source=BuildSourceRange())  # type: ignore[arg-type]
+    with pytest.raises(ValueError, match="message"):
+        BuildRelatedLocation(message="", source=BuildSourceRange())
+    with pytest.raises(TypeError, match="source"):
+        BuildRelatedLocation(message="related", source=object())  # type: ignore[arg-type]
+    with pytest.raises(TypeError, match="related locations"):
+        BuildDiagnostic(
+            **_diagnostic_kwargs(),
+            related_locations=(object(),),  # type: ignore[arg-type]
+        )
+
+
+def test_diagnostics_reject_non_mapping_and_non_string_detail_keys() -> None:
+    with pytest.raises(TypeError, match="mapping"):
+        BuildDiagnostic(
+            **_diagnostic_kwargs(),
+            details=[("count", 1)],  # type: ignore[arg-type]
+        )
+    with pytest.raises(TypeError, match="keys"):
+        BuildDiagnostic(
+            **_diagnostic_kwargs(),
+            details={1: "bad"},  # type: ignore[arg-type]
+        )
+
+
+@pytest.mark.parametrize("value", [float("nan"), float("inf"), float("-inf")])
+def test_diagnostics_reject_non_finite_scalar_details(value: float) -> None:
+    with pytest.raises(ValueError, match="finite scalar"):
+        BuildDiagnostic(**_diagnostic_kwargs(), details={"value": value})
+
+
+def test_diagnostic_contract_preserves_valid_related_locations() -> None:
+    source = BuildSourceRange(start_line=2, end_line=2)
+    related = BuildRelatedLocation(message="first definition", source=source)
+    diagnostic = BuildDiagnostic(
+        **_diagnostic_kwargs(),
+        source=source,
+        related_locations=(related,),
+        details={"count": 2, "ratio": 0.5},
+    )
+
+    assert diagnostic.source is source
+    assert diagnostic.related_locations == (related,)
+    assert diagnostic.details == {"count": 2, "ratio": 0.5}
 
 
 @pytest.mark.parametrize(

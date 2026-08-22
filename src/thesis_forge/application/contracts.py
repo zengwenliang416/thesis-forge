@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import math
 from collections.abc import Mapping
 from dataclasses import dataclass, field
 from datetime import datetime
@@ -148,16 +149,36 @@ class BuildSourceRange:
     end_column: int | None = None
 
     def __post_init__(self) -> None:
+        if self.file is not None and not isinstance(self.file, str):
+            raise TypeError("source range file must be a string or None")
         for name in ("start_line", "start_column", "end_line", "end_column"):
             value = getattr(self, name)
+            if value is not None and (
+                isinstance(value, bool) or not isinstance(value, int)
+            ):
+                raise TypeError(f"{name} must be an integer or None")
             if value is not None and value < 1:
                 raise ValueError(f"{name} must be positive when provided")
+        if self.start_column is not None and self.start_line is None:
+            raise ValueError("start_column requires start_line")
+        if self.end_line is not None and self.start_line is None:
+            raise ValueError("end_line requires start_line")
+        if self.end_column is not None and self.end_line is None:
+            raise ValueError("end_column requires end_line")
         if (
             self.start_line is not None
             and self.end_line is not None
             and self.end_line < self.start_line
         ):
             raise ValueError("end_line must not precede start_line")
+        if (
+            self.start_line is not None
+            and self.end_line == self.start_line
+            and self.start_column is not None
+            and self.end_column is not None
+            and self.end_column < self.start_column
+        ):
+            raise ValueError("end_column must not precede start_column")
 
     @property
     def line(self) -> int | None:
@@ -168,6 +189,14 @@ class BuildSourceRange:
 class BuildRelatedLocation:
     message: str
     source: BuildSourceRange
+
+    def __post_init__(self) -> None:
+        if not isinstance(self.message, str):
+            raise TypeError("related location message must be a string")
+        if not self.message:
+            raise ValueError("related location message must not be empty")
+        if not isinstance(self.source, BuildSourceRange):
+            raise TypeError("related location source must be a BuildSourceRange")
 
 
 @dataclass(frozen=True, slots=True)
@@ -193,17 +222,50 @@ class BuildDiagnostic:
     details: Mapping[str, BuildDetailValue] = field(default_factory=dict)
 
     def __post_init__(self) -> None:
-        if not self.id:
-            raise ValueError("diagnostic id must not be empty")
-        if not self.code:
-            raise ValueError("diagnostic code must not be empty")
-        if not self.message:
-            raise ValueError("diagnostic message must not be empty")
-        object.__setattr__(self, "details", dict(self.details))
+        for name in ("id", "code", "message"):
+            value = getattr(self, name)
+            if not isinstance(value, str):
+                raise TypeError(f"diagnostic {name} must be a string")
+            if not value:
+                raise ValueError(f"diagnostic {name} must not be empty")
+        if not isinstance(self.severity, BuildDiagnosticSeverity):
+            raise TypeError("diagnostic severity must be a BuildDiagnosticSeverity")
+        if not isinstance(self.category, BuildDiagnosticCategory):
+            raise TypeError("diagnostic category must be a BuildDiagnosticCategory")
+        if not isinstance(self.stage, BuildReportStage):
+            raise TypeError("diagnostic stage must be a BuildReportStage")
+        if self.source is not None and not isinstance(self.source, BuildSourceRange):
+            raise TypeError("diagnostic source must be a BuildSourceRange or None")
+        for name in ("target", "suggestion"):
+            value = getattr(self, name)
+            if value is not None and not isinstance(value, str):
+                raise TypeError(f"diagnostic {name} must be a string or None")
+        related_locations = tuple(self.related_locations)
+        if not all(
+            isinstance(location, BuildRelatedLocation)
+            for location in related_locations
+        ):
+            raise TypeError(
+                "diagnostic related locations must be BuildRelatedLocation values"
+            )
+        if not isinstance(self.details, Mapping):
+            raise TypeError("diagnostic details must be a mapping")
+        details = dict(self.details)
+        for key, value in details.items():
+            if not isinstance(key, str):
+                raise TypeError("diagnostic detail keys must be strings")
+            if value is None or isinstance(value, (bool, int, str)):
+                continue
+            if isinstance(value, float) and math.isfinite(value):
+                continue
+            raise ValueError(
+                f"diagnostic detail {key!r} must be a finite scalar"
+            )
+        object.__setattr__(self, "details", details)
         object.__setattr__(
             self,
             "related_locations",
-            tuple(self.related_locations),
+            related_locations,
         )
 
     @property

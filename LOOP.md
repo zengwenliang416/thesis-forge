@@ -95,12 +95,20 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Open
 
-- [V2-309] Typed diagnostic codes and locations
-  - Files: `src/thesis_forge/core/model.py`, `src/thesis_forge/presentation/diagnostics.py`, `tests/core/test_diagnostics.py`
-  - Behavior: diagnostics use stable code/category/stage/parameters/SourceSpan/related locations; duplicate IDs report both conflicting locations via the derived index.
-  - Verify: `.venv/bin/python -m pytest tests/core/test_diagnostics.py`
-  - Acceptance: duplicate definitions report both locations including nested blocks; presentation localizes without string-code chains becoming business logic.
+- [V2-309B] Make diagnostic presentation headless-safe
+  - Files: `src/thesis_forge/presentation/diagnostics.py`, `tests/core/test_diagnostics.py`
+  - Behavior: presentation localizes ValidationIssue and the canonical BuildDiagnostic through a formatter registry; derived-index duplicate diagnostics carry both locations and unique IDs without eager core imports.
+  - Verify: `.venv/bin/python -m pytest tests/core/test_diagnostics.py tests/test_architecture.py`
+  - Acceptance: legacy ValidationIssue messages remain unchanged; typed diagnostics localize; nested and locationless duplicate definitions report both locations with unique IDs; importing headless UI does not load application/compiler/rendering modules.
   - Verification-surface change: authorized; creates focused diagnostics tests.
+  - Attempts: 0
+
+- [V2-309C] Emit canonical duplicate diagnostics from validation
+  - Files: `src/thesis_forge/core/validator.py`, `src/thesis_forge/application/contracts.py`, `tests/test_validator.py`
+  - Behavior: validate_document bridges duplicate-ID findings from the derived index into the canonical application diagnostic contract, preserving order, locations and structured details.
+  - Verify: `.venv/bin/python -m pytest tests/test_validator.py`
+  - Acceptance: duplicate IDs are no longer production-only unlocated ValidationIssue values; the BuildReport boundary receives stable code/category/stage/source/related fields without a parallel diagnostic model.
+  - Verification-surface change: authorized; extends validator diagnostic coverage.
   - Attempts: 0
 
 - [V2-310] New markdown-it configuration
@@ -120,6 +128,18 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
   - Attempts: 0
 
 ## Done
+
+- [V2-309A] Harden the canonical BuildDiagnostic contract
+  - Parent: ordered child 1/3 of the re-sliced `V2-309`.
+  - Files: `src/thesis_forge/application/contracts.py`, `tests/application/test_build_report_contract.py`, `tests/adapters/test_build_report_dto.py`
+  - Behavior: the existing BuildDiagnostic/BuildSourceRange contract is the sole typed diagnostic model; details and source ranges reject malformed runtime values while preserving related locations.
+  - Verify: `.venv/bin/python -m pytest tests/application/test_build_report_contract.py tests/adapters/test_build_report_dto.py`
+  - Acceptance: no second core diagnostic model is introduced; BuildReport and DTOs preserve stable code/category/stage/source/related/suggestion/details fields and reject invalid typed values.
+  - Verification-surface change: authorized; extends diagnostic contract coverage.
+  - Attempts: 3
+  - Attempt 1 (2026-08-22): Checker FAIL; exact Verify 16/16, target Ruff, `git diff --check`, and application/adapter regression 57/57 passed, but tests did not cover every malformed runtime boundary.
+  - Attempt 2 (2026-08-22): Checker FAIL; exact Verify 43/43, target Ruff, `git diff --check`, and application/adapter regression 84/84 passed, but same-line reverse columns, individual id/code/message type failures, and non-Mapping/detail-key failures lacked direct tests.
+  - Attempt 3 (2026-08-22): Checker PASS; exact Verify 47/47, application/adapter regression 88/88, target Ruff and `git diff --check` passed; implementation uses the existing BuildDiagnostic contract, all malformed boundaries have direct tests, DTO round-trip/path sanitization remain green, no push.
 
 - [V2-307G2] Remove the cache fields and register_inlines from ThesisDocument
   - Parent: ordered child 14/14 of `V2-307`; depends on `V2-307G1`.
@@ -1247,6 +1267,8 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 - 2026-08-22 - V2-307G1 Checker PASS; eleven redundant citations= mirror kwargs deleted from compiler/DOCX/manifest fixtures, both-ways proof green under a simulated field-less model, exact Verify 114/114; no push.
 - 2026-08-22 - V2-307G2 Checker PASS; ThesisDocument lost the four cache fields and register_inlines (deletion-only, index_by_id retained for its preview caller), absence pins and source scans green, exact Verify 166/166, broader regression 200/200, parity OK — V2-307 (all fourteen children) and V2-308 are complete; no push.
 - 2026-08-22 - Open refilled with V2-309, V2-310 and V2-311 per the catalogue dependency order after V2-307/V2-308 completed; V2-309 and V2-311 are expected to need re-slicing when their cycles arrive (ValidationIssue shape changes ripple through adapters/CLI/protocol, and inline conversion spans the shared scanner); no product code edited.
+- 2026-08-22 - V2-309 Checker FAIL Attempt 1; focused tests 3/3, target Ruff, diff-check, core regression 94/94 and LOOP-LINT passed, but the candidate eagerly imported the core stack into headless presentation, introduced a second unused Diagnostic beside BuildDiagnostic, accepted malformed runtime parameter/coordinate types, and generated colliding IDs for locationless duplicates; selected files restored and re-sliced into ordered V2-309A/V2-309B/V2-309C, no commit or push.
+- 2026-08-22 - V2-309A Checker FAIL Attempts 1/2 then PASS Attempt 3; the existing BuildDiagnostic contract was hardened with complete runtime boundary tests while preserving BuildReport/DTO round-trip and path sanitization, exact Verify 47/47 and application/adapter regression 88/88; no push.
 - 2026-08-22 - V2-307G split into ordered children V2-307G1 and V2-307G2 after a repo-wide survey found eleven redundant citations= mirror kwargs across test_compiler/test_docx_renderer/test_manifest_resource_validation fixtures (a fourth file beyond G's two); G1 drops the mirrors (green both ways), G2 removes the fields and rewrites the no-manual-caches pin; no product code edited in the split cycle.
 - 2026-08-22 - V2-308 split into ordered children V2-308A and V2-308B before any product edit after inspection found tests/core/test_manifest_resource_validation.py constructs three cache-only citations that would break the validator flip (a third file beyond the item's named two); A migrates the fixtures to real Paragraph inline citations (green both ways), B carries the validator flip; no product code edited in the split cycle.
 - 2026-08-22 - V2-307D1 Checker FAIL Attempt 1 then re-sliced into ordered children V2-307D1a…D1e after independent Checker grep found 20 cache-pin sites (18 in test_parser_contract.py) and completing them exposed typed-model defects the cache masked: caption inline locations carry the container start line in both backends, table-cell inline locations are misaligned by the metadata/blank rows, and algorithm-body citations exist only in the cache (Algorithm.body is verbatim-only); children fix caption/cell locations, add typed Algorithm body_lines to the model and both parsers, extend index traversal, then finish the pin migration; three test files restored, no product code edited in the split cycle.

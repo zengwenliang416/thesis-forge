@@ -225,10 +225,6 @@ def test_nested_or_non_finite_details_are_rejected(details: dict) -> None:
         (EXAMPLES / "build-failed-validation.json").read_text(encoding="utf-8")
     )
     report = _report(payload)
-    report = replace(
-        report,
-        diagnostics=(replace(report.diagnostics[0], details=details),),
-    )
 
     with pytest.raises(ValueError, match="finite scalar"):
-        serialize_build_report(report)
+        replace(report.diagnostics[0], details=details)
