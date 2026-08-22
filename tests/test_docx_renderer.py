@@ -97,7 +97,6 @@ def _structured_table(
 ) -> Table:
     return Table(
         id=table_id,
-        caption=caption,
         caption_inlines=tuple(_text_inlines(caption)),
         rows=tuple(
             TableRow(

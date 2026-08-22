@@ -95,15 +95,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Open
 
-- [V2-304E2A] Migrate structured Table fixture captions
-  - Parent: ordered child 6/7 of `V2-304`; depends on `V2-304E1`.
-  - Files: `tests/test_compiler.py`, `tests/test_docx_renderer.py`
-  - Behavior: structured Table fixtures carry caption inlines and no longer pass the raw Table caption field.
-  - Verify: `.venv/bin/python -m pytest tests/test_compiler.py tests/test_docx_renderer.py`
-  - Acceptance: compiler and DOCX table behavior remains green with caption inlines as the only fixture content source.
-  - Verification-surface change: authorized; migrates structured Table fixture captions.
-  - Attempts: 0
-
 - [V2-304E2B] Remove raw Table caption/markdown fields
   - Parent: ordered child 7/7 of `V2-304`; depends on `V2-304E2A`.
   - Files: `src/thesis_forge/core/model.py`, `src/thesis_forge/core/parser.py`, `tests/core/test_table_model.py`
@@ -122,6 +113,16 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
   - Attempts: 0
 
 ## Done
+
+- [V2-304E2A] Migrate structured Table fixture captions
+  - Parent: ordered child 6/7 of `V2-304`; depends on `V2-304E1`.
+  - Files: `tests/test_compiler.py`, `tests/test_docx_renderer.py`
+  - Behavior: structured Table fixtures carry caption inlines and no longer pass the raw Table caption field.
+  - Verify: `.venv/bin/python -m pytest tests/test_compiler.py tests/test_docx_renderer.py`
+  - Acceptance: compiler and DOCX table behavior remains green with caption inlines as the only fixture content source.
+  - Verification-surface change: authorized; migrates structured Table fixture captions.
+  - Attempts: 1
+  - Attempt 1 (2026-08-22): Checker PASS; AST found zero raw `caption`/`markdown` kwargs in Table constructors across compiler and DOCX fixtures, exact Verify 109/109, Ruff and `git diff --check` clean; no push.
 
 - [V2-304E1] Migrate parser table contract to structured fields
   - Parent: ordered child 5/6 of `V2-304`; depends on `V2-304D`.
@@ -934,5 +935,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 - 2026-08-22 - V2-304E split into ordered children V2-304E1 and V2-304E2 after parser contract inspection found a fourth raw Table-field test file; no product code edited in the split cycle, next queue V2-304E1.
 - 2026-08-22 - V2-304E1 Checker PASS; parser table contract assertions now use structured caption/rows/cells, exact Verify 32/32, Ruff/diff-check clean; no push.
 - 2026-08-22 - V2-304E2 split into ordered children V2-304E2A and V2-304E2B after structured Table fixture audit found raw caption kwargs in compiler and DOCX tests; no product code edited in the split cycle, next queue V2-304E2A.
+- 2026-08-22 - V2-304E2A Checker PASS; compiler/DOCX structured Table fixtures now use caption inlines only, exact Verify 109/109, AST/Ruff/diff-check passed; no push.
 
 ## Sync log

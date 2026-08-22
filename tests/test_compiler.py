@@ -81,7 +81,6 @@ def _structured_table(
 
     return Table(
         id=table_id,
-        caption=caption,
         caption_inlines=_text_inlines(caption),
         rows=(row(header, is_header=True),)
         + tuple(row(values, is_header=False) for values in body),
@@ -369,7 +368,6 @@ def test_compile_document_rejects_malformed_markdown_table():
         blocks=[
             Table(
                 id="tbl:broken",
-                caption="坏表格",
                 caption_inlines=_text_inlines("坏表格"),
                 rows=(
                     TableRow(
