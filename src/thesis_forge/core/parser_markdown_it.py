@@ -48,6 +48,7 @@ from .model import (
     CodeBlock,
     CrossReference,
     Emphasis,
+    Figure,
     FootnoteDefinition,
     FootnoteReference,
     HardBreak,
@@ -95,6 +96,7 @@ _LEGACY_REFERENCE_RE = re.compile(
 _SEMANTIC_LINK_RE = re.compile(
     r"^#(?P<target>(?:fig|tbl|eq|sec|chap|lst|alg):[A-Za-z0-9_.:-]+)$"
 )
+_FIGURE_ATTRIBUTE_RE = re.compile(r"^\{#(?P<id>fig:[A-Za-z0-9_.:-]+)\}$")
 _FENCE_START_RE = re.compile(r"^ {0,3}(?P<marker>`{3,}|~{3,})")
 
 _UNSUPPORTED_BLOCK_TOKEN_TYPES = frozenset(
@@ -880,6 +882,11 @@ class MarkdownItParserBackend:
         if not text:
             return
         assert inline_token.map is not None
+        if inline_token.children and any(
+            child.type == "image" for child in inline_token.children
+        ):
+            self._emit_standard_figure(doc, inline_token, offset)
+            return
         line = inline_token.map[0] + 1 + offset
         inlines = _parse_inline_token(
             inline_token,
@@ -1116,6 +1123,61 @@ class MarkdownItParserBackend:
             )
         )
         return close_idx + 1
+
+    def _emit_standard_figure(
+        self,
+        doc: ThesisDocument,
+        inline_token: Token,
+        offset: int,
+    ) -> None:
+        children = inline_token.children or []
+        if (
+            len(children) != 2
+            or children[0].type != "image"
+            or children[1].type != "text"
+        ):
+            raise ParseError(
+                "标准图片必须独占一个段落并带有效的 fig ID: "
+                "![caption](path){#fig:id}"
+            )
+
+        id_match = _FIGURE_ATTRIBUTE_RE.fullmatch(children[1].content.strip())
+        if id_match is None:
+            raise ParseError(
+                "标准图片必须带有效的 fig ID: ![caption](path){#fig:id}"
+            )
+
+        assert inline_token.map is not None
+        line = inline_token.map[0] + 1 + offset
+        image = children[0]
+        src = image.attrGet("src") or ""
+        if not src:
+            raise ParseError("标准图片缺少 src")
+
+        caption = image.content
+        caption_inlines: tuple[Inline, ...] = ()
+        if caption:
+            caption_tokens = self._md.parseInline(caption, {})
+            if len(caption_tokens) != 1 or caption_tokens[0].type != "inline":
+                raise ParseError("标准图片 caption 无法转换为 typed inline")
+            image_start = inline_token.content.find("![")
+            caption_column = image_start + 3 if image_start >= 0 else 3
+            caption_inlines = tuple(
+                _parse_inline_token(
+                    caption_tokens[0],
+                    start_line=line,
+                    start_column=caption_column,
+                )
+            )
+
+        doc.blocks.append(
+            Figure(
+                id=id_match.group("id"),
+                src=src,
+                caption_inlines=caption_inlines,
+                location=SourceLocation(line=line),
+            )
+        )
 
     def _scan_list(
         self,

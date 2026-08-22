@@ -97,6 +97,15 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Done
 
+- [V2-314] Standard image to Figure
+  - Files: `src/thesis_forge/core/parser_markdown_it.py`, `tests/core/test_markdown_v2_figures.py`
+  - Behavior: parse `![caption](path){#fig:id}` as Figure and reject figure without valid ID.
+  - Verify: `.venv/bin/python -m pytest tests/core/test_markdown_v2_figures.py`
+  - Acceptance: caption is typed inline content; width is not read from Markdown.
+  - Verification-surface change: authorized; creates focused standard-figure evidence.
+  - Attempts: 1
+  - Attempt 1 (2026-08-22): Checker PASS; exact Verify passed 5/5, related parser/backend/contract regression passed 85/85, target Ruff, `git diff --check`, and `./lint-loop.sh` passed. Independent Python probe confirmed Figure id/src/location, typed Strong and semantic caption inlines, explicit ParseError for missing/wrong/empty IDs, `Figure.width is None` with Markdown width not read, footnote-definition consumption to the following heading, citation/semantic-link indexing, and explicit rejection of images embedded in ordinary paragraphs. Scope was the two named product files plus LOOP update; registry remained unchanged and unstaged; no V2-315 changes and no push.
+
 - [V2-313] Basic block conversion
   - Files: `src/thesis_forge/core/parser_markdown_it.py`, `tests/core/test_markdown_v2_blocks.py`
   - Behavior: parse headings, paragraphs, nested lists, blockquotes and code blocks.
@@ -1361,5 +1370,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 - 2026-08-22 - V2-312 Checker PASS; exact Verify passed 4/4, related parser/backend/contract regression passed 80/80, target Ruff, `git diff --check`, and `./lint-loop.sh` passed; independent semantic-inline probe covered seven CrossReference targets/fallbacks, ordinary URL and fragment Link preservation, Citation, FootnoteReference, FootnoteDefinition, and SourceLocation mapping; V2-312 product scope was exactly the two named files, registry preserved, no push.
 - 2026-08-22 - V2-313 Checker PASS; exact Verify passed 4/4, related parser/backend/contract regression passed 80/80, target Ruff, `git diff --check`, and `./lint-loop.sh` passed; independent block probe covered heading/paragraph/list/blockquote/fence fields and SourceLocation values, scope guard found no parser or undeclared production diff, and the pre-existing registry remained unchanged and unstaged; no blockquote-nested-list extension, no push.
+- 2026-08-22 - V2-314 Checker PASS; exact Verify passed 5/5, related parser/backend/contract regression passed 85/85, target Ruff, `git diff --check`, and `./lint-loop.sh` passed; independent probe covered Figure id/src/location, typed Strong/semantic captions, explicit invalid-ID errors, width not read, footnote `_walk` advancement with citation/semantic-link indexing, and ordinary-paragraph image rejection; scope was the two named product files plus LOOP, registry preserved and unstaged, no V2-315, no push.
 
 ## Sync log
