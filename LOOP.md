@@ -95,15 +95,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Open
 
-- [V2-319B] Remove parser-name switching from the QA diff tool
-  - Parent: ordered child 2/4 of the re-sliced `V2-319`; depends on `V2-319A2B`; parent Behavior and Acceptance remain unchanged.
-  - Files: `qa/tools/parser_diff.py`, `tests/test_parser_backend.py`, `tests/test_parser_markdown_it.py`
-  - Behavior: replace the dual-backend CLI and registry/name assertions with canonical single-parser calls while retaining deterministic document normalization coverage.
-  - Verify: `.venv/bin/python -m pytest tests/test_parser_backend.py tests/test_parser_markdown_it.py`
-  - Acceptance: the QA tool has no backend-name CLI/env selector and its tests no longer depend on parser registry switching.
-  - Verification-surface change: no.
-  - Attempts: 0
-
 - [V2-319C] Migrate public core and template consumers
   - Parent: ordered child 3/4 of the re-sliced `V2-319`; depends on `V2-319B`; parent Behavior and Acceptance remain unchanged.
   - Files: `src/thesis_forge/core/__init__.py`, `src/thesis_forge/templates/v2/lint.py`
@@ -123,6 +114,16 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
   - Attempts: 0
 
 ## Done
+
+- [V2-319B] Remove parser-name switching from the QA diff tool
+  - Parent: ordered child 2/4 of the re-sliced `V2-319`; depends on `V2-319A2B`; parent Behavior and Acceptance remain unchanged.
+  - Files: `qa/tools/parser_diff.py`, `tests/test_parser_backend.py`, `tests/test_parser_markdown_it.py`
+  - Behavior: replace the dual-backend CLI and registry/name assertions with canonical single-parser calls while retaining deterministic document normalization coverage.
+  - Verify: `.venv/bin/python -m pytest tests/test_parser_backend.py tests/test_parser_markdown_it.py`
+  - Acceptance: the QA tool has no backend-name CLI/env selector and its tests no longer depend on parser registry switching.
+  - Verification-surface change: no.
+  - Attempts: 1
+  - Attempt 1 (2026-08-22): Checker PASS; exact Verify `.venv/bin/python -m pytest tests/test_parser_backend.py tests/test_parser_markdown_it.py` passed 41/41; related regression `.venv/bin/python -m pytest tests/test_parser_contract.py tests/test_adapters.py` passed 65/65; target Ruff, `git diff --check`, and CLI probe passed. The CLI probe confirmed canonical self-check exit 0, exact dump names `canonical-a.normalized.json` and `canonical-b.normalized.json`, illegal `--allow` exit 2, and rejection of the removed `--backend-a` selector. Candidate and clean-HEAD archive runs both passed the exact and related commands with empty failure node sets. Static scope review found no registry/name lookup, legacy fallback, parser-name selector, environment switch, or compatibility branch in the three candidate files; the candidate scope was exactly those three files before this LOOP update, and the pre-existing `openspec/.specnav/change-registry.json` remained uncommitted and unchanged by the Checker.
 
 - [V2-319A2B] Route application dependencies through the canonical parser
   - Parent: ordered child 2/2 of the re-sliced `V2-319A2`; depends on `V2-319A2A`; original `V2-319A2` Behavior and Acceptance remain unchanged.
@@ -1466,5 +1467,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 - 2026-08-22 - V2-319A2 split into ordered children V2-319A2A and V2-319A2B after the candidate passed its 78-test application-service Verify but introduced 7 new adapter failures and 1 new acceptance failure when compared with clean HEAD; candidate product/test changes were restored, and the prep child will rebase those fixtures before the canonical application default flips.
 - 2026-08-22 - V2-319A2A Checker PASS Attempt 1; exact Verify 12/12, full adapter/application regressions 33/33 and 115/115, target Ruff, diff-check, LOOP-LINT, canonical seam probes, and selected canonical-default simulation passed; candidate/clean-HEAD acceptance failure sets matched at the same six baseline nodes, registry preserved, one local commit and no push.
 - 2026-08-22 - V2-319A2B Checker PASS Attempt 1; exact Verify 77/77, related application/project/adapter regression 115/115, target Ruff, `git diff --check`, and LOOP-LINT passed; runtime confirmed the default `ApplicationDependencies` parser is `MarkdownItParserBackend` through `create_parser_backend`, candidate/clean-HEAD acceptance failure sets were identical at the same six old-fixture nodes, and the five candidate-only `lo_finalizer` errors were isolated to the known YAML Front Matter fixture; scope was the two named candidate files plus this LOOP lifecycle update, registry preserved and uncommitted, one local commit and no push.
+- 2026-08-22 - V2-319B Checker PASS Attempt 1; exact Verify 41/41, related parser/adapter regression 65/65, target Ruff, `git diff --check`, post-update LOOP-LINT, and canonical CLI self-check/dump/illegal-allow probes passed; candidate and clean-HEAD exact/related failure node sets were both empty, the three candidate files had no backend-name selector, registry lookup, legacy fallback, environment switch, or compatibility branch, and `openspec/.specnav/change-registry.json` remained preserved and uncommitted; one local commit, no push.
 
 ## Sync log

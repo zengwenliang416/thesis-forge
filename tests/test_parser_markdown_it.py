@@ -1,7 +1,8 @@
-"""markdown-it 后端测试（ADR-0001 Phase 2）。
+"""canonical markdown-it parser 测试（ADR-0001 Phase 2）。
 
-覆盖：协议满足、注册表、标准 inline typed 节点、v2 标准块消费、
-legacy 输入显式拒绝、行内位置，以及 parser_diff 显式豁免机制本身的行为。
+覆盖：协议满足、canonical factory、标准 inline typed 节点、v2 标准块消费、
+legacy 输入显式拒绝、行内位置、重复解析确定性，以及 parser_diff 显式
+豁免机制本身的行为。
 """
 
 from __future__ import annotations
@@ -26,10 +27,8 @@ from thesis_forge.core.model import (
 )
 from thesis_forge.core.parser import ParseError
 from thesis_forge.core.parser_backend import (
-    LegacyParserBackend,
     ParserBackend,
-    get_parser_backend,
-    parser_backend_names,
+    create_parser_backend,
 )
 from thesis_forge.core.parser_markdown_it import MarkdownItParserBackend
 
@@ -52,8 +51,7 @@ def _load_parser_diff():
 
 parser_diff = _load_parser_diff()
 
-legacy = LegacyParserBackend()
-markdown_it = MarkdownItParserBackend()
+canonical = create_parser_backend()
 
 
 def _parse_with_default_preset(text: str):
@@ -62,35 +60,16 @@ def _parse_with_default_preset(text: str):
     return backend.parse_text(text, source_path="default-preset.md")
 
 
-def _normalized_pair(source: Path) -> tuple[dict, dict]:
-    return (
-        parser_diff.normalize_document(legacy.parse_file(source)),
-        parser_diff.normalize_document(markdown_it.parse_file(source)),
-    )
-
-
-def _without_span_ends(value):
-    if isinstance(value, dict):
-        return {
-            key: _without_span_ends(item)
-            for key, item in value.items()
-            if key not in {"end_line", "end_column"}
-        }
-    if isinstance(value, list):
-        return [_without_span_ends(item) for item in value]
-    return value
-
-
-def _assert_text_parity(text: str) -> None:
-    """同一文本的 semantic 结果一致；标准 inline 额外记录 span 终点。"""
+def _assert_text_deterministic(text: str) -> None:
+    """同一 canonical parser 两次解析必须产生完全一致的 normalized JSON。"""
     normalized_a = parser_diff.normalize_document(
-        legacy.parse_text(text, source_path="parity.md")
+        create_parser_backend().parse_text(text, source_path="parity.md")
     )
     normalized_b = parser_diff.normalize_document(
-        markdown_it.parse_text(text, source_path="parity.md")
+        create_parser_backend().parse_text(text, source_path="parity.md")
     )
-    dump_a = parser_diff.dumps_normalized(_without_span_ends(normalized_a))
-    dump_b = parser_diff.dumps_normalized(_without_span_ends(normalized_b))
+    dump_a = parser_diff.dumps_normalized(normalized_a)
+    dump_b = parser_diff.dumps_normalized(normalized_b)
     assert dump_a == dump_b
 
 
@@ -99,15 +78,10 @@ def _assert_text_parity(text: str) -> None:
 # ---------------------------------------------------------------------------
 
 
-def test_markdown_it_backend_satisfies_protocol() -> None:
-    backend = MarkdownItParserBackend()
+def test_canonical_backend_satisfies_protocol() -> None:
+    backend = create_parser_backend()
     assert isinstance(backend, ParserBackend)
-    assert backend.name == "markdown-it"
-
-
-def test_backend_registry_includes_markdown_it() -> None:
-    assert "markdown-it" in parser_backend_names()
-    assert isinstance(get_parser_backend("markdown-it"), MarkdownItParserBackend)
+    assert isinstance(backend, MarkdownItParserBackend)
 
 
 # ---------------------------------------------------------------------------
@@ -120,13 +94,13 @@ def test_backend_registry_includes_markdown_it() -> None:
     [COMPLETE_THESIS, BACHELOR_THESIS],
     ids=["complete-thesis", "bachelor-thesis"],
 )
-def test_legacy_fixtures_are_rejected(source: Path) -> None:
+def test_legacy_fixtures_are_rejected_by_canonical_backend(source: Path) -> None:
     with pytest.raises(ParseError, match=r"TF-SOURCE-LEGACY-00[1-3]"):
-        markdown_it.parse_file(source)
+        canonical.parse_file(source)
 
 
 def test_full_syntax_standard_inline_nodes_are_typed() -> None:
-    document = markdown_it.parse_text(
+    document = canonical.parse_text(
         "a **bold** `code` $E = m c^2$.\n",
         source_path="standard-inline.md",
     )
@@ -214,8 +188,8 @@ def test_full_template_standard_blocks_are_typed() -> None:
         "undefined-footnote-ref",
     ],
 )
-def test_inline_and_block_parity_samples(text: str) -> None:
-    _assert_text_parity(text)
+def test_canonical_parser_is_deterministic_for_samples(text: str) -> None:
+    _assert_text_deterministic(text)
 
 
 # ---------------------------------------------------------------------------
@@ -226,7 +200,7 @@ def test_inline_and_block_parity_samples(text: str) -> None:
 def test_legacy_container_error_is_explicit() -> None:
     text = '# 标题\n\n::: figure {#fig:x}\nsrc: "./a.png"\n'
     with pytest.raises(ParseError, match="TF-SOURCE-LEGACY-002"):
-        markdown_it.parse_text(text, source_path="err.md")
+        canonical.parse_text(text, source_path="err.md")
 
 
 @pytest.mark.parametrize(
@@ -240,7 +214,7 @@ def test_legacy_container_error_is_explicit() -> None:
 )
 def test_front_matter_is_rejected_with_replacement(text: str) -> None:
     with pytest.raises(ParseError, match="TF-SOURCE-LEGACY-001") as captured:
-        markdown_it.parse_text(text, source_path="err.md")
+        canonical.parse_text(text, source_path="err.md")
     assert "thesisforge.yaml" in str(captured.value)
 
 
@@ -311,7 +285,7 @@ def test_default_unsupported_blocks_raise_explicit_diagnostics(text: str) -> Non
 def test_parse_text_preserves_logical_source_path(tmp_path: Path) -> None:
     source = tmp_path / "thesis.md"
     source.write_text("# 磁盘旧标题\n", encoding="utf-8")
-    doc = markdown_it.parse_text("# 编辑器新标题\n", source_path=source)
+    doc = canonical.parse_text("# 编辑器新标题\n", source_path=source)
     assert doc.source_path == source.resolve()
     assert inline_plain_text(doc.blocks[0].inlines) == "编辑器新标题"
 
@@ -328,13 +302,13 @@ def test_legacy_algorithm_container_is_rejected(tmp_path: Path) -> None:
         encoding="utf-8",
     )
     with pytest.raises(ParseError, match="TF-SOURCE-LEGACY-002"):
-        markdown_it.parse_file(source)
+        canonical.parse_file(source)
 
 
 def test_empty_document_is_inspectable(tmp_path: Path) -> None:
     source = tmp_path / "empty.md"
     source.write_text("", encoding="utf-8")
-    doc = markdown_it.parse_file(source)
+    doc = canonical.parse_file(source)
     assert doc.metadata == {}
     assert doc.blocks == []
     assert DocumentIndex.from_document(doc).inlines == ()

@@ -7,13 +7,11 @@ from pathlib import Path
 
 import pytest
 
-from thesis_forge.core.parser import parse_markdown, parse_markdown_text
 from thesis_forge.core.parser_backend import (
-    LegacyParserBackend,
     ParserBackend,
-    get_parser_backend,
-    parser_backend_names,
+    create_parser_backend,
 )
+from thesis_forge.core.parser_markdown_it import MarkdownItParserBackend
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 PARSER_DIFF_PATH = REPO_ROOT / "qa" / "tools" / "parser_diff.py"
@@ -31,38 +29,48 @@ def _load_parser_diff():
 
 parser_diff = _load_parser_diff()
 
-SAMPLE_MARKDOWN = """---
-title: 示例论文
-author: 张三
-render:
-  bibliography: refs.bib
----
+SAMPLE_MARKDOWN = """# 绪论 {#chap:introduction}
 
-# 引言 {#chap:intro}
+## 研究背景 {#sec:background}
 
-如图 @fig:model 所示，已有研究 [@doe2020; @smith2021, p. 12] 表明……[^note1]
+已有研究表明，**结构化编译**与*可验证反馈*能够提升论文工程的一致性 [@smith2025]。
+本项目使用 `thesisforge.yaml` 作为入口，普通源码换行不应在 Word 中产生手动换行。
+模型流程见[图](#fig:model)。
 
-[^note1]: 脚注正文，含 @tbl:stats 引用。
+![模型总体结构](assets/model.png){#fig:model}
 
-::: figure {#fig:model}
-src: assets/model.png
-caption: 模型结构
-width: 80%
-:::
+损失函数定义如下：
 
-## 方法 {#sec:method}
-
-1. 第一步
-2. 第二步 [@smith2021]
-
-::: equation {#eq:loss}
 $$
-L = \\sum_i y_i \\log p_i
+L=-\\sum_{i=1}^{N} y_i \\log \\hat y_i
 $$
-:::
+{#eq:loss}
 
-::: bibliography {#bib:refs}
-:::
+| 指标 | 实验组 | 对照组 |
+|---|---:|---:|
+| **准确率** | 96.2% | 91.8% |
+| 召回率 | 94.1% | 89.6% |
+
+: 模型实验结果 {#tbl:experiment}
+
+> 内容审阅应隐藏技术标记，但保留这一引用块。
+
+```python {#lst:training title="训练代码"}
+# 代码中的 {#literal}、[@literal] 与 @fig:literal 必须保持字面量
+for epoch in range(epochs):
+    train_one_epoch()
+```
+
+```algorithm {#alg:training title="训练流程"}
+输入：训练集 D
+输出：模型 M
+1. 初始化参数
+2. 迭代优化
+```
+
+这里包含一个说明性脚注[^scope]。
+
+[^scope]: Review 中显示脚注号和正文，DOCX 中生成原生脚注。
 """
 
 
@@ -73,42 +81,33 @@ def sample_file(tmp_path: Path) -> Path:
     return path
 
 
-def test_legacy_backend_satisfies_protocol() -> None:
-    backend = LegacyParserBackend()
+def test_canonical_backend_satisfies_protocol() -> None:
+    backend = create_parser_backend()
     assert isinstance(backend, ParserBackend)
-    assert backend.name == "legacy"
+    assert isinstance(backend, MarkdownItParserBackend)
 
 
-def test_backend_registry() -> None:
-    assert "legacy" in parser_backend_names()
-    assert "markdown-it" in parser_backend_names()
-    assert isinstance(get_parser_backend("legacy"), LegacyParserBackend)
-    with pytest.raises(ValueError, match="未知 parser 后端"):
-        get_parser_backend("no-such-backend")
-
-
-def test_legacy_backend_matches_direct_parse(sample_file: Path) -> None:
-    backend = LegacyParserBackend()
-    direct = parse_markdown(sample_file)
-    via_backend = backend.parse_file(sample_file)
+def test_canonical_factory_parse_file_is_deterministic(sample_file: Path) -> None:
+    first = create_parser_backend().parse_file(sample_file)
+    second = create_parser_backend().parse_file(sample_file)
     assert parser_diff.dumps_normalized(
-        parser_diff.normalize_document(via_backend)
-    ) == parser_diff.dumps_normalized(parser_diff.normalize_document(direct))
+        parser_diff.normalize_document(first)
+    ) == parser_diff.dumps_normalized(parser_diff.normalize_document(second))
 
 
-def test_legacy_backend_parse_text_matches_direct(tmp_path: Path) -> None:
-    backend = LegacyParserBackend()
-    source_path = tmp_path / "inline.md"
-    direct = parse_markdown_text(SAMPLE_MARKDOWN, source_path=source_path)
-    via_backend = backend.parse_text(SAMPLE_MARKDOWN, source_path=source_path)
+def test_canonical_factory_parse_text_matches_parse_file(sample_file: Path) -> None:
+    backend = create_parser_backend()
+    direct = backend.parse_file(sample_file)
+    via_backend = backend.parse_text(SAMPLE_MARKDOWN, source_path=sample_file)
     assert parser_diff.dumps_normalized(
         parser_diff.normalize_document(via_backend)
     ) == parser_diff.dumps_normalized(parser_diff.normalize_document(direct))
 
 
 def test_normalized_json_is_deterministic(sample_file: Path) -> None:
-    first = parse_markdown(sample_file)
-    second = parse_markdown(sample_file)
+    backend = create_parser_backend()
+    first = backend.parse_file(sample_file)
+    second = backend.parse_file(sample_file)
     dump_first = parser_diff.dumps_normalized(parser_diff.normalize_document(first))
     dump_second = parser_diff.dumps_normalized(parser_diff.normalize_document(second))
     assert dump_first == dump_second
@@ -117,22 +116,28 @@ def test_normalized_json_is_deterministic(sample_file: Path) -> None:
 
 
 def test_normalization_covers_structure(sample_file: Path) -> None:
-    normalized = parser_diff.normalize_document(parse_markdown(sample_file))
+    normalized = parser_diff.normalize_document(
+        create_parser_backend().parse_file(sample_file)
+    )
     kinds = [block["kind"] for block in normalized["blocks"]]
     assert kinds == [
         "Heading",
+        "Heading",
+        "Paragraph",
+        "Figure",
+        "Paragraph",
+        "Equation",
+        "Table",
+        "BlockQuote",
+        "Listing",
+        "Algorithm",
         "Paragraph",
         "FootnoteDefinition",
-        "Figure",
-        "Heading",
-        "ListBlock",
-        "Equation",
-        "BibliographyBlock",
     ]
-    assert normalized["metadata"]["title"] == "示例论文"
+    assert normalized["metadata"] == {}
     figure = normalized["blocks"][3]
     assert figure["id"] == "fig:model"
-    assert figure["location"]["line"] == 14
+    assert figure["location"]["line"] == 9
     assert {inline["kind"] for inline in normalized["inline_content"]} >= {
         "Text",
         "CrossReference",
@@ -147,10 +152,6 @@ def test_parser_diff_cli_self_check(sample_file: Path) -> None:
             sys.executable,
             str(PARSER_DIFF_PATH),
             str(sample_file),
-            "--backend-a",
-            "legacy",
-            "--backend-b",
-            "legacy",
         ],
         check=False,
         capture_output=True,
@@ -159,21 +160,3 @@ def test_parser_diff_cli_self_check(sample_file: Path) -> None:
     )
     assert result.returncode == 0, result.stderr
     assert result.stdout.startswith("OK:")
-
-
-def test_parser_diff_cli_unknown_backend(sample_file: Path) -> None:
-    result = subprocess.run(
-        [
-            sys.executable,
-            str(PARSER_DIFF_PATH),
-            str(sample_file),
-            "--backend-b",
-            "no-such-backend",
-        ],
-        check=False,
-        capture_output=True,
-        text=True,
-        cwd=REPO_ROOT,
-    )
-    assert result.returncode == 2
-    assert "未知 parser 后端" in result.stderr
