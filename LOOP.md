@@ -95,6 +95,8 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Open
 
+## Done
+
 - [V2-307G2] Remove the cache fields and register_inlines from ThesisDocument
   - Parent: ordered child 14/14 of `V2-307`; depends on `V2-307G1`.
   - Files: `src/thesis_forge/core/model.py`, `tests/core/test_no_manual_caches.py`
@@ -102,9 +104,8 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
   - Verify: `.venv/bin/python -m pytest tests/core/ tests/test_parser.py tests/test_parser_markdown_it.py tests/test_compiler.py`
   - Acceptance: no cache field or registration method remains in the model; baselines stay green.
   - Verification-surface change: authorized; finalizes the no-manual-caches test.
-  - Attempts: 0
-
-## Done
+  - Attempts: 1
+  - Attempt 1 (2026-08-22): Checker PASS; model.py diff is deletion-only (four cache fields plus the register_inlines method; index_by_id retained with its live preview caller), the no-manual-caches test rewritten to absence pins (hasattr on parsed documents, exact derived citation order, model and compiler source scans), exact Verify 166/166, Ruff and `git diff --check` clean, repo-wide greps found no functional cache references, attribute probes confirmed slots AttributeError and TypeError on cache kwargs, broader regression 200/200 and parity OK, DocumentIndex and validator-index suites 16/16; no push.
 
 - [V2-307G1] Fixtures drop redundant cache constructor kwargs
   - Parent: ordered child 13a/14 of `V2-307` (G re-sliced); depends on `V2-307F`.
@@ -1220,6 +1221,7 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 - 2026-08-22 - V2-307E Checker PASS; legacy parser no longer registers inlines (five call sites removed), caches empty on parse with semantics preserved in blocks and the derived index, exact Verify 50/50 and baselines 232/232; no push.
 - 2026-08-22 - V2-307F Checker PASS; markdown-it backend no longer registers inlines (seven sites plus unused import removed), caches empty on both backends with parity green on all three examples, exact Verify 81/81; no push.
 - 2026-08-22 - V2-307G1 Checker PASS; eleven redundant citations= mirror kwargs deleted from compiler/DOCX/manifest fixtures, both-ways proof green under a simulated field-less model, exact Verify 114/114; no push.
+- 2026-08-22 - V2-307G2 Checker PASS; ThesisDocument lost the four cache fields and register_inlines (deletion-only, index_by_id retained for its preview caller), absence pins and source scans green, exact Verify 166/166, broader regression 200/200, parity OK — V2-307 (all fourteen children) and V2-308 are complete; no push.
 - 2026-08-22 - V2-307G split into ordered children V2-307G1 and V2-307G2 after a repo-wide survey found eleven redundant citations= mirror kwargs across test_compiler/test_docx_renderer/test_manifest_resource_validation fixtures (a fourth file beyond G's two); G1 drops the mirrors (green both ways), G2 removes the fields and rewrites the no-manual-caches pin; no product code edited in the split cycle.
 - 2026-08-22 - V2-308 split into ordered children V2-308A and V2-308B before any product edit after inspection found tests/core/test_manifest_resource_validation.py constructs three cache-only citations that would break the validator flip (a third file beyond the item's named two); A migrates the fixtures to real Paragraph inline citations (green both ways), B carries the validator flip; no product code edited in the split cycle.
 - 2026-08-22 - V2-307D1 Checker FAIL Attempt 1 then re-sliced into ordered children V2-307D1a…D1e after independent Checker grep found 20 cache-pin sites (18 in test_parser_contract.py) and completing them exposed typed-model defects the cache masked: caption inline locations carry the container start line in both backends, table-cell inline locations are misaligned by the metadata/blank rows, and algorithm-body citations exist only in the cache (Algorithm.body is verbatim-only); children fix caption/cell locations, add typed Algorithm body_lines to the model and both parsers, extend index traversal, then finish the pin migration; three test files restored, no product code edited in the split cycle.

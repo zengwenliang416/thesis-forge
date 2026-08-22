@@ -5,7 +5,7 @@ from __future__ import annotations
 from pathlib import Path
 
 from thesis_forge.core import compiler as compiler_module
-from thesis_forge.core.compiler import compile_document
+from thesis_forge.core import model as model_module
 from thesis_forge.core.index import DocumentIndex
 from thesis_forge.core.model import (
     Citation,
@@ -25,6 +25,14 @@ CACHE_FIELDS = (
     "document.cross_references",
     "document.citations",
     "document.footnote_references",
+)
+
+REMOVED_MEMBERS = (
+    "inline_content",
+    "cross_references",
+    "citations",
+    "footnote_references",
+    "register_inlines",
 )
 
 SOURCE = """# 绪论 {#chap:intro}
@@ -61,18 +69,27 @@ def test_document_index_exposes_full_preorder_inline_sequence() -> None:
     assert index.citations == (nested_citation,)
 
 
-def test_compile_is_identical_after_clearing_document_caches() -> None:
+def test_thesis_document_has_no_manual_caches() -> None:
     document = parse_markdown_text(SOURCE, source_path=Path("thesis.md"))
-    plan_before = compile_document(document)
-    document.inline_content.clear()
-    document.cross_references.clear()
-    document.citations.clear()
-    document.footnote_references.clear()
-    plan_after = compile_document(document)
-    assert plan_after == plan_before
+    for member in REMOVED_MEMBERS:
+        assert not hasattr(document, member), f"ThesisDocument still exposes {member}"
+    index = DocumentIndex.from_document(document)
+    assert [citation.keys for citation in index.citations] == [
+        ["k1"],
+        ["k2"],
+        ["k4"],
+        ["k3"],
+    ]
 
 
 def test_compiler_source_contains_no_document_cache_reads() -> None:
     source = Path(compiler_module.__file__).read_text(encoding="utf-8")
     for field in CACHE_FIELDS:
         assert field not in source, f"compiler still reads the cache field {field}"
+
+
+def test_model_source_defines_no_manual_caches() -> None:
+    source = Path(model_module.__file__).read_text(encoding="utf-8")
+    assert "register_inlines" not in source
+    for member in REMOVED_MEMBERS[:4]:
+        assert f"{member}: list[" not in source, f"model still defines {member}"

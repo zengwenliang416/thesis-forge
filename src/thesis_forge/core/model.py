@@ -262,25 +262,9 @@ class ThesisDocument:
     metadata: dict[str, Any] = field(default_factory=dict)
     blocks: list[Block] = field(default_factory=list)
     bibliography: BibliographyConfig | None = None
-    inline_content: list[Inline] = field(default_factory=list)
-    cross_references: list[CrossReference] = field(default_factory=list)
-    citations: list[Citation] = field(default_factory=list)
-    footnote_references: list[FootnoteReference] = field(default_factory=list)
 
     def index_by_id(self) -> dict[str, Block]:
         return {block.id: block for block in self.blocks if block.id}
-
-    def register_inlines(self, inlines: list[Inline]) -> None:
-        for inline in inlines:
-            self.inline_content.append(inline)
-            if isinstance(inline, CrossReference):
-                self.cross_references.append(inline)
-            elif isinstance(inline, Citation):
-                self.citations.append(inline)
-            elif isinstance(inline, FootnoteReference):
-                self.footnote_references.append(inline)
-            if isinstance(inline, (Strong, Emphasis)):
-                self.register_inlines(list(inline.children))
 
 
 @dataclass(slots=True)
