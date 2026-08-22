@@ -95,6 +95,30 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Open
 
+- [V2-309] Typed diagnostic codes and locations
+  - Files: `src/thesis_forge/core/model.py`, `src/thesis_forge/presentation/diagnostics.py`, `tests/core/test_diagnostics.py`
+  - Behavior: diagnostics use stable code/category/stage/parameters/SourceSpan/related locations; duplicate IDs report both conflicting locations via the derived index.
+  - Verify: `.venv/bin/python -m pytest tests/core/test_diagnostics.py`
+  - Acceptance: duplicate definitions report both locations including nested blocks; presentation localizes without string-code chains becoming business logic.
+  - Verification-surface change: authorized; creates focused diagnostics tests.
+  - Attempts: 0
+
+- [V2-310] New markdown-it configuration
+  - Files: `src/thesis_forge/core/parser_markdown_it.py`, `tests/core/test_markdown_v2_parser_config.py`
+  - Behavior: enable required CommonMark/GFM rules and remove legacy semantic equivalence configuration.
+  - Verify: `.venv/bin/python -m pytest tests/core/test_markdown_v2_parser_config.py`
+  - Acceptance: emphasis, links, images, backticks, blockquote and fence are enabled; old private parser helpers are not imported.
+  - Verification-surface change: authorized; creates the v2 parser configuration tests.
+  - Attempts: 0
+
+- [V2-311] Standard inline conversion
+  - Files: `src/thesis_forge/core/parser_markdown_it.py`, `tests/core/test_markdown_v2_inlines.py`
+  - Behavior: convert text, breaks, strong, emphasis, code, links and inline math to typed Inline nodes with SourceSpan.
+  - Verify: `.venv/bin/python -m pytest tests/core/test_markdown_v2_inlines.py`
+  - Acceptance: ordinary newline becomes SoftBreak; explicit hard break is distinct.
+  - Verification-surface change: authorized; creates the v2 inline conversion tests.
+  - Attempts: 0
+
 ## Done
 
 - [V2-307G2] Remove the cache fields and register_inlines from ThesisDocument
@@ -1222,6 +1246,7 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 - 2026-08-22 - V2-307F Checker PASS; markdown-it backend no longer registers inlines (seven sites plus unused import removed), caches empty on both backends with parity green on all three examples, exact Verify 81/81; no push.
 - 2026-08-22 - V2-307G1 Checker PASS; eleven redundant citations= mirror kwargs deleted from compiler/DOCX/manifest fixtures, both-ways proof green under a simulated field-less model, exact Verify 114/114; no push.
 - 2026-08-22 - V2-307G2 Checker PASS; ThesisDocument lost the four cache fields and register_inlines (deletion-only, index_by_id retained for its preview caller), absence pins and source scans green, exact Verify 166/166, broader regression 200/200, parity OK — V2-307 (all fourteen children) and V2-308 are complete; no push.
+- 2026-08-22 - Open refilled with V2-309, V2-310 and V2-311 per the catalogue dependency order after V2-307/V2-308 completed; V2-309 and V2-311 are expected to need re-slicing when their cycles arrive (ValidationIssue shape changes ripple through adapters/CLI/protocol, and inline conversion spans the shared scanner); no product code edited.
 - 2026-08-22 - V2-307G split into ordered children V2-307G1 and V2-307G2 after a repo-wide survey found eleven redundant citations= mirror kwargs across test_compiler/test_docx_renderer/test_manifest_resource_validation fixtures (a fourth file beyond G's two); G1 drops the mirrors (green both ways), G2 removes the fields and rewrites the no-manual-caches pin; no product code edited in the split cycle.
 - 2026-08-22 - V2-308 split into ordered children V2-308A and V2-308B before any product edit after inspection found tests/core/test_manifest_resource_validation.py constructs three cache-only citations that would break the validator flip (a third file beyond the item's named two); A migrates the fixtures to real Paragraph inline citations (green both ways), B carries the validator flip; no product code edited in the split cycle.
 - 2026-08-22 - V2-307D1 Checker FAIL Attempt 1 then re-sliced into ordered children V2-307D1a…D1e after independent Checker grep found 20 cache-pin sites (18 in test_parser_contract.py) and completing them exposed typed-model defects the cache masked: caption inline locations carry the container start line in both backends, table-cell inline locations are misaligned by the metadata/blank rows, and algorithm-body citations exist only in the cache (Algorithm.body is verbatim-only); children fix caption/cell locations, add typed Algorithm body_lines to the model and both parsers, extend index traversal, then finish the pin migration; three test files restored, no product code edited in the split cycle.
