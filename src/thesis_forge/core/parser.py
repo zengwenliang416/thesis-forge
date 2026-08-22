@@ -269,7 +269,7 @@ def parse_markdown_text(
             line = paragraph_start or 1
             inlines = _parse_inline_content(text, line)
             doc.blocks.append(
-                Paragraph(text=text, inlines=inlines, location=SourceLocation(line=line))
+                Paragraph(inlines=inlines, location=SourceLocation(line=line))
             )
             doc.register_inlines(inlines)
         paragraph_buffer = []
@@ -302,7 +302,6 @@ def parse_markdown_text(
             doc.blocks.append(
                 FootnoteDefinition(
                     label=label,
-                    text=text,
                     inlines=inlines,
                     location=SourceLocation(line=line_no),
                 )
@@ -336,7 +335,6 @@ def parse_markdown_text(
                 Heading(
                     id=block_id,
                     level=len(marks),
-                    text=text.strip(),
                     inlines=inlines,
                     location=SourceLocation(line=line_no),
                 )
@@ -370,7 +368,6 @@ def parse_markdown_text(
                 )
                 items.append(
                     ListItem(
-                        text=item_text,
                         level=indent // 2,
                         marker=item_marker,
                         ordinal=int(item_marker.rstrip(".)")) if ordered else None,

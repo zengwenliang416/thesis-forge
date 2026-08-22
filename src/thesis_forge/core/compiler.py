@@ -478,10 +478,6 @@ def _compile_inlines(
     return tuple(runs)
 
 
-def _fallback_text_runs(text: str, runs: tuple[InlineRun, ...]) -> tuple[InlineRun, ...]:
-    return runs or ((TextRun(text),) if text else ())
-
-
 def _initial_section_role(template: ThesisTemplate | None) -> str | None:
     sections = template.sections if template is not None else None
     if sections is None:
@@ -735,10 +731,7 @@ def _compile_list(block: ListBlock, context: _CompilationContext) -> ListInstruc
                 text=inline_plain_text(item.inlines),
                 level=item.level,
                 ordinal=item.ordinal,
-                inlines=_fallback_text_runs(
-                    inline_plain_text(item.inlines),
-                    context.inlines(item.inlines),
-                ),
+                inlines=context.inlines(item.inlines),
             )
             for item in block.items
         ),
@@ -762,7 +755,7 @@ def _compile_block(
             source_id=block.id,
             level=block.level,
             text=text,
-            inlines=_fallback_text_runs(text, context.inlines(block.inlines)),
+            inlines=context.inlines(block.inlines),
             bookmark=bookmark,
             role=context.semantic.role_for(block),
         )
@@ -770,7 +763,7 @@ def _compile_block(
         text = inline_plain_text(block.inlines)
         return ParagraphInstruction(
             text=text,
-            inlines=_fallback_text_runs(text, context.inlines(block.inlines)),
+            inlines=context.inlines(block.inlines),
             role=context.semantic.role_for(block) or "body",
         )
     if isinstance(block, ListBlock):
@@ -838,7 +831,7 @@ def _compile_block(
             label=block.label,
             footnote_id=context.footnote_ids[block.label],
             text=text,
-            inlines=_fallback_text_runs(text, context.inlines(block.inlines)),
+            inlines=context.inlines(block.inlines),
         )
     if isinstance(block, BibliographyBlock):
         if context.bibliography_emitted:

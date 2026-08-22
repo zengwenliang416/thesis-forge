@@ -251,7 +251,6 @@ class MarkdownItParserBackend:
             Heading(
                 id=block_id,
                 level=level,
-                text=text,
                 inlines=inlines,
                 location=SourceLocation(line=line),
             )
@@ -267,7 +266,7 @@ class MarkdownItParserBackend:
         line = inline_token.map[0] + 1 + offset
         inlines = _parse_inline_content(text, line)
         doc.blocks.append(
-            Paragraph(text=text, inlines=inlines, location=SourceLocation(line=line))
+            Paragraph(inlines=inlines, location=SourceLocation(line=line))
         )
         doc.register_inlines(inlines)
 
@@ -286,7 +285,7 @@ class MarkdownItParserBackend:
         line = start0 + 1 + offset
         inlines = _parse_inline_content(text, line)
         doc.blocks.append(
-            Paragraph(text=text, inlines=inlines, location=SourceLocation(line=line))
+            Paragraph(inlines=inlines, location=SourceLocation(line=line))
         )
         doc.register_inlines(inlines)
 
@@ -335,7 +334,7 @@ class MarkdownItParserBackend:
             if text:
                 inlines = _parse_inline_content(text, line)
                 doc.blocks.append(
-                    Paragraph(text=text, inlines=inlines, location=SourceLocation(line=line))
+                    Paragraph(inlines=inlines, location=SourceLocation(line=line))
                 )
                 doc.register_inlines(inlines)
             return close_idx + 1
@@ -355,7 +354,6 @@ class MarkdownItParserBackend:
         doc.blocks.append(
             FootnoteDefinition(
                 label=label,
-                text=text,
                 inlines=inlines,
                 location=SourceLocation(line=line),
             )
@@ -396,7 +394,6 @@ class MarkdownItParserBackend:
             )
             items.append(
                 ListItem(
-                    text=item_text,
                     level=indent // 2,
                     marker=item_marker,
                     ordinal=int(item_marker.rstrip(".)")) if ordered else None,

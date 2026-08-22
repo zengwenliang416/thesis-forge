@@ -95,15 +95,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Open
 
-- [V2-303E] Parsers stop populating block text
-  - Parent: ordered child 6/11 of `V2-303`; depends on `V2-303D2`.
-  - Files: `src/thesis_forge/core/parser.py`, `src/thesis_forge/core/parser_markdown_it.py`, `src/thesis_forge/core/compiler.py`
-  - Behavior: Heading/Paragraph/ListItem construction stops passing `text=`; the now-dead `_fallback_text_runs` path is removed from the compiler.
-  - Verify: `.venv/bin/python -m pytest tests/test_parser.py tests/test_parser_markdown_it.py tests/test_parser_backend.py tests/test_parser_contract.py tests/test_compiler.py tests/core/`
-  - Acceptance: no parser sets the block `text` field; baselines stay green.
-  - Verification-surface change: none.
-  - Attempts: 0
-
 - [V2-303F] Drop text kwargs from docx-renderer fixtures
   - Parent: ordered child 7/11 of `V2-303`; depends on `V2-303E`.
   - Files: `tests/test_docx_renderer.py`
@@ -166,6 +157,16 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
   - Attempts: 0
 
 ## Done
+
+- [V2-303E] Parsers stop populating block text
+  - Parent: ordered child 6/11 of `V2-303`; depends on `V2-303D2`.
+  - Files: `src/thesis_forge/core/parser.py`, `src/thesis_forge/core/parser_markdown_it.py`, `src/thesis_forge/core/compiler.py`
+  - Behavior: Heading/Paragraph/ListItem construction stops passing `text=`; the now-dead `_fallback_text_runs` path is removed from the compiler.
+  - Verify: `.venv/bin/python -m pytest tests/test_parser.py tests/test_parser_markdown_it.py tests/test_parser_backend.py tests/test_parser_contract.py tests/test_compiler.py tests/core/`
+  - Acceptance: no parser sets the block `text` field; baselines stay green.
+  - Verification-surface change: none.
+  - Attempts: 1
+  - Attempt 1 (2026-08-22): Checker PASS; parser block constructors no longer pass `text=` for Heading/Paragraph/ListItem/FootnoteDefinition, compiler `_fallback_text_runs` was deleted and all four callers use typed inline runs, exact Verify 172/172, Ruff and `git diff --check` clean, dual-backend probe confirmed text fields remain default-empty while inline_plain_text preserves heading/paragraph/list/footnote content; no push.
 
 - [V2-303D2] Runtime outline derives heading text from inlines
   - Parent: ordered child 5/11 of `V2-303`; depends on `V2-303D1`.
@@ -852,5 +853,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 - 2026-08-22 - V2-303D split into ordered children V2-303D1 and V2-303D2 after CodeGraph/test inspection found preview.py + preview tests and runtime.py + adapter tests are four files; no product code edited in the split cycle, next queue V2-303D1.
 - 2026-08-22 - V2-303D1 Checker PASS; preview outline now derives heading text from inline_plain_text, exact Verify 5/5, Ruff/diff-check clean, stale-text regression and parser-shaped fixture coverage passed; no push.
 - 2026-08-22 - V2-303D2 Checker PASS; both runtime inspect outline branches now derive heading text from inline_plain_text, exact Verify 33/33, Ruff/diff-check clean, stale-text adapter fixtures passed; no push.
+- 2026-08-22 - V2-303E Checker PASS; parsers stopped populating block text and compiler fallback runs were removed, exact Verify 172/172, dual-backend text-authority probe and Ruff/diff-check passed; no push.
 
 ## Sync log
