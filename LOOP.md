@@ -95,15 +95,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Open
 
-- [V2-505A1P3] Render canonical inline runs in the Preview panels
-  - Parent: ordered preparation child 3/3 of the re-sliced `V2-505A1P`; depends on `V2-505A1P2`.
-  - Files: `frontend/src/components/PreviewPanels.tsx`, `frontend/src/components/PreviewPanels.test.tsx`
-  - Behavior: Preview panels render hyperlink destinations, readable math fallback text, and visibly distinct soft/hard breaks without exposing technical markers.
-  - Verify: `pnpm --dir frontend exec vitest run src/components/PreviewPanels.test.tsx`
-  - Acceptance: the focused panel test covers all four new run variants; hyperlinks retain destination semantics, math remains readable, soft breaks normalize spacing, hard breaks remain visible, and existing reference/citation/footnote rendering is unchanged.
-  - Verification-surface change: no
-  - Attempts: 0
-
 - [V2-505A1R] Project every canonical inline run in Review
   - Parent: ordered preparation child 4/7 of the re-sliced `V2-505A1`; depends on `V2-505A1P3`.
   - Files: `src/thesis_forge/presentation/review.py`, `tests/presentation/test_review_regions.py`
@@ -173,6 +164,16 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
   - Verification-surface change: no
   - Attempts: 1
   - Attempt 1 (2026-08-22): Checker PASS; exact Verify passed 9/9, combined Preview transport regression passed 31/31, `pnpm --dir frontend typecheck`, `pnpm --dir frontend lint`, `git diff --check`, and `./lint-loop.sh` passed; independent DTO audit confirmed the exact eight-member TypeScript union, strict runtime field whitelists for all new runs, nested text/list/footnote validation, and rejection of unknown run types, extra keys, and malformed shapes; candidate scope was exactly the two named files before this lifecycle update, all unrelated dirty paths were preserved, one local commit and no push.
+
+- [V2-505A1P3] Render canonical inline runs in the Preview panels
+  - Parent: ordered preparation child 3/3 of the re-sliced `V2-505A1P`; depends on `V2-505A1P2`.
+  - Files: `frontend/src/components/PreviewPanels.tsx`, `frontend/src/components/PreviewPanels.test.tsx`
+  - Behavior: Preview panels render hyperlink destinations, readable math fallback text, and visibly distinct soft/hard breaks without exposing technical markers.
+  - Verify: `pnpm --dir frontend exec vitest run src/components/PreviewPanels.test.tsx`
+  - Acceptance: the focused panel test covers all four new run variants; hyperlinks retain destination semantics, math remains readable, soft breaks normalize spacing, hard breaks remain visible, and existing reference/citation/footnote rendering is unchanged.
+  - Verification-surface change: no
+  - Attempts: 1
+  - Attempt 1 (2026-08-22): Checker PASS; exact Verify passed 6/6; `pnpm --dir frontend typecheck`, `pnpm --dir frontend lint`, `git diff --check`, and `./lint-loop.sh` passed; independent audit confirmed all eight canonical inline runs, real hyperlink destination semantics without visible technical markers, readable math fallback, soft-break space normalization, hard-break `<br>` semantics, and unchanged reference/citation/footnote rendering; candidate scope was exactly the two named frontend files before this lifecycle update, all unrelated dirty paths were preserved, and no push.
 
 - [V2-505A1M] Establish canonical typed inline RenderPlan runs
   - Parent: ordered preparation child 1/7 of the re-sliced `V2-505A1`; the original V2-505A1 Behavior and Acceptance remain unchanged across A1M, A1P1, A1P2, A1P3, A1R, A1D1 and A1D2.
@@ -1662,5 +1663,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 - 2026-08-22 - V2-505A1P split into ordered children V2-505A1P1, V2-505A1P2 and V2-505A1P3 after the independent Checker found that raw citation cleanup belongs in the Python mapper while the new Preview run shapes also require the frontend transport DTO, validator tests, panel renderer and panel tests; no product code edited in the split cycle, all unrelated dirty paths were preserved, and the next queue is V2-505A1P1.
 - 2026-08-22 - V2-505A1P1 Checker PASS Attempt 1; exact Verify passed 1/1, target Ruff, `git diff --check`, and LOOP-LINT passed; complete preview tests were 5 passed/1 known clean-HEAD baseline failure at `test_complete_example_preview_preserves_compiler_order_and_numbering` with `TF-SOURCE-LEGACY-001`, clean HEAD was 4 passed/1 with the identical failure, and independent AST/runtime probes passed for all eight ordered variants, raw citation suppression, formatted citation preservation, and explicit unknown-run rejection; V2-505A1P1 moved to Done, candidate scope was exactly the two named files plus this lifecycle update, unrelated dirty paths were preserved, one local commit, no push.
 - 2026-08-22 - V2-505A1P2 Checker PASS Attempt 1; exact Verify passed 9/9, combined Preview transport regression passed 31/31, frontend typecheck/lint, `git diff --check`, and LOOP-LINT passed; independent DTO audit confirmed all eight canonical runs, strict new-run field shapes, and rejection of unknown types, extra keys, and malformed shapes; V2-505A1P2 moved from Open to Done, candidate scope was exactly the two named frontend files plus this lifecycle update, all unrelated dirty paths were preserved, one local commit, no push.
+- 2026-08-22 - V2-505A1P3 Checker PASS Attempt 1; exact Verify passed 6/6, `pnpm --dir frontend typecheck`, `pnpm --dir frontend lint`, `git diff --check`, and `./lint-loop.sh` passed; independent audit confirmed all eight canonical inline runs, real hyperlink destination semantics without visible technical markers, readable math fallback, soft-break space normalization, hard-break `<br>` semantics, and unchanged reference/citation/footnote rendering; candidate scope was exactly the two named frontend files before this lifecycle update, all unrelated dirty paths were preserved, one local commit, no push.
 
 ## Sync log

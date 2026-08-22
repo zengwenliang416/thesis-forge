@@ -137,6 +137,30 @@ function Runs({ runs }: { runs: SerializedPreviewRun[] }) {
             </sup>
           );
         }
+        if (run.type === "hyperlink") {
+          return (
+            <a key={key} href={run.destination}>
+              {run.text}
+            </a>
+          );
+        }
+        if (run.type === "math") {
+          return (
+            <span key={key} className="preview-math">
+              {run.text}
+            </span>
+          );
+        }
+        if (run.type === "soft-break") {
+          return (
+            <span key={key} className="preview-soft-break">
+              {" "}
+            </span>
+          );
+        }
+        if (run.type === "hard-break") {
+          return <br key={key} className="preview-hard-break" />;
+        }
         return <span key={key}>{run.text}</span>;
       })}
     </>
