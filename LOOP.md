@@ -95,12 +95,49 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Open
 
-- [V2-307] Remove manual document caches
-  - Files: `src/thesis_forge/core/model.py`, `src/thesis_forge/core/compiler.py`, `tests/core/test_no_manual_caches.py`
-  - Behavior: `inline_content`, `cross_references`, `citations`, `footnote_references` and `register_inlines` stop being authoritative state; the compiler derives semantic collections from DocumentIndex traversal.
-  - Verify: `.venv/bin/python -m pytest tests/core/test_no_manual_caches.py`
-  - Acceptance: no manually synchronized duplicate caches remain in ThesisDocument; compiler baselines stay green.
-  - Verification-surface change: authorized; creates the no-manual-caches architecture test.
+- [V2-307A] DocumentIndex gains the full inline sequence; compiler derives semantics from it
+  - Parent: ordered child 1/8 of `V2-307`; the parent behavior remains unchanged.
+  - Files: `src/thesis_forge/core/index.py`, `src/thesis_forge/core/compiler.py`, `tests/core/test_no_manual_caches.py`
+  - Behavior: DocumentIndex exposes the traversal-ordered full inline sequence; the compiler's footnote-label and citation collection read the derived index instead of `ThesisDocument` cache fields.
+  - Verify: `.venv/bin/python -m pytest tests/core/test_no_manual_caches.py tests/core/test_document_index.py tests/test_compiler.py`
+  - Acceptance: compiling a parser-shaped document after clearing the four cache lists produces an identical RenderPlan; no compiler read of `document.citations`/`document.footnote_references` remains.
+  - Verification-surface change: authorized; creates the no-manual-caches focused test.
+  - Attempts: 0
+
+- [V2-307B] CLI inspect JSON derives semantic collections from the index
+  - Parent: ordered child 2/8 of `V2-307`; depends on `V2-307A`.
+  - Files: `src/thesis_forge/cli.py`, `tests/test_cli.py`
+  - Behavior: inspect's `inline_content`/`cross_references`/`citations`/`footnote_references` JSON entries are computed from DocumentIndex traversal.
+  - Verify: `.venv/bin/python -m pytest tests/test_cli.py tests/cli/`
+  - Acceptance: inspect JSON payloads stay shape- and value-identical on parser-shaped projects; no CLI read of the cache fields remains.
+  - Verification-surface change: authorized; migrates the inspect JSON pin.
+  - Attempts: 0
+
+- [V2-307C] QA parity tool derives normalized sequences from the index
+  - Parent: ordered child 3/8 of `V2-307`; depends on `V2-307B`.
+  - Files: `qa/tools/parser_diff.py`, `tests/test_parser_backend.py`
+  - Behavior: parser_diff's normalized inline/citation/reference sequences come from DocumentIndex; parity semantics and normalized keys are unchanged.
+  - Verify: `.venv/bin/python -m pytest tests/test_parser_backend.py tests/test_parser_markdown_it.py`
+  - Acceptance: legacy-vs-markdown-it parity stays OK on shipped examples; no parser_diff read of the cache fields remains.
+  - Verification-surface change: authorized; migrates the parity-tool regression.
+  - Attempts: 0
+
+- [V2-307D1] Parser test cache pins migrate to index reads
+  - Parent: ordered child 4/8 of `V2-307`; depends on `V2-307C`.
+  - Files: `tests/test_parser.py`, `tests/test_parser_contract.py`, `tests/test_parser_markdown_it.py`
+  - Behavior: assertions on `doc.inline_content`/`doc.citations`/`doc.cross_references`/`doc.footnote_references` re-express against DocumentIndex-derived sequences.
+  - Verify: `.venv/bin/python -m pytest tests/test_parser.py tests/test_parser_contract.py tests/test_parser_markdown_it.py`
+  - Acceptance: no cache-field assertion remains in the three files; suites stay green.
+  - Verification-surface change: authorized; migrates parser test assertions.
+  - Attempts: 0
+
+- [V2-307D2] E2E and object-model test cache pins migrate to index reads
+  - Parent: ordered child 5/8 of `V2-307`; depends on `V2-307D1`.
+  - Files: `tests/test_qa_e2e.py`, `tests/core/test_thesis_object_model.py`
+  - Behavior: assertions on cache fields re-express against DocumentIndex-derived sequences.
+  - Verify: `.venv/bin/python -m pytest tests/test_qa_e2e.py tests/core/test_thesis_object_model.py`
+  - Acceptance: no cache-field assertion remains in the two files; suites stay green.
+  - Verification-surface change: authorized; migrates e2e and object-model assertions.
   - Attempts: 0
 
 - [V2-308] Validator consumes DocumentIndex
@@ -109,6 +146,33 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
   - Verify: `.venv/bin/python -m pytest tests/core/test_validator_document_index.py`
   - Acceptance: nested caption/cell semantics are validated through the derived index.
   - Verification-surface change: authorized; creates focused validator index tests.
+  - Attempts: 0
+
+- [V2-307E] Legacy parser stops registering inlines
+  - Parent: ordered child 6/8 of `V2-307`; depends on `V2-308` (all readers migrated first).
+  - Files: `src/thesis_forge/core/parser.py`
+  - Behavior: the legacy parser no longer calls `register_inlines`; its output documents carry blocks/inlines only.
+  - Verify: `.venv/bin/python -m pytest tests/test_parser.py tests/test_parser_contract.py tests/test_parser_backend.py`
+  - Acceptance: no `register_inlines` call remains in parser.py; suites stay green with empty cache lists.
+  - Verification-surface change: none.
+  - Attempts: 0
+
+- [V2-307F] Markdown-it parser stops registering inlines
+  - Parent: ordered child 7/8 of `V2-307`; depends on `V2-307E`.
+  - Files: `src/thesis_forge/core/parser_markdown_it.py`
+  - Behavior: the markdown-it backend no longer calls `register_inlines`.
+  - Verify: `.venv/bin/python -m pytest tests/test_parser_markdown_it.py tests/test_parser_backend.py tests/test_parser_contract.py`
+  - Acceptance: no `register_inlines` call remains in parser_markdown_it.py; parity stays OK.
+  - Verification-surface change: none.
+  - Attempts: 0
+
+- [V2-307G] Remove the cache fields and register_inlines from ThesisDocument
+  - Parent: ordered child 8/8 of `V2-307`; depends on `V2-307F`.
+  - Files: `src/thesis_forge/core/model.py`, `tests/core/test_no_manual_caches.py`
+  - Behavior: `inline_content`, `cross_references`, `citations`, `footnote_references` and `register_inlines` are removed from ThesisDocument.
+  - Verify: `.venv/bin/python -m pytest tests/core/ tests/test_parser.py tests/test_parser_markdown_it.py tests/test_compiler.py`
+  - Acceptance: no cache field or registration method remains in the model; baselines stay green.
+  - Verification-surface change: authorized; finalizes the no-manual-caches test.
   - Attempts: 0
 
 ## Done
@@ -1059,5 +1123,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 - 2026-08-22 - Open refilled with V2-306, V2-307 and V2-308 per the catalogue dependency order after V2-305E2B left Open empty; V2-307 is expected to need re-slicing when its cycle arrives (cache consumers span validator/preview/runtime beyond the three-file slice); no product code edited.
 - 2026-08-22 - Historical Blocked ledger closed: the six three-failure items (V2-114A, V2-112A, V2-111A, V2-103A1, V2-105B1, V2-105B2) moved verbatim into ## Blocked archive with per-item supersession notes; every superseding Done behavior re-verified green today (backend lifecycle/sidecar/report 27/27; frontend buildEvents 46 + transports 22; typecheck clean; zero production event.error reads); ## Blocked is now empty; no product code edited.
 - 2026-08-22 - V2-306 Checker PASS; DocumentIndex derives ID/citation/reference/footnote indexes by traversal with first-wins by_id plus per-conflict both-node records and TypeError on unknown nodes, exact Verify 12/12, Ruff/diff-check and baselines 107/107 clean, pure addition confirmed; no push.
+- 2026-08-22 - V2-307 split into eight ordered children V2-307A…G after grep mapping showed removing the four cache fields atomically spans model.py + both parsers (12 registration call sites) + compiler.py + validator.py + cli.py + qa/tools/parser_diff.py plus seven test files; children migrate readers first (compiler/CLI/parity-tool/test pins, with V2-308 landing between D2 and E), then stop registration per parser, then remove the fields; no product code edited in the split cycle.
 
 ## Sync log
