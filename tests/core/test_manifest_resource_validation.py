@@ -58,16 +58,17 @@ def test_project_manifest_controls_template_and_resource_roots(
     tmp_path: Path,
 ) -> None:
     project_root = write_project(tmp_path)
+    citation = Citation(keys=["smith2025"])
     document = ThesisDocument(
         source_path=(project_root / "thesis.md").resolve(),
         blocks=[
-            Paragraph(inlines=[]),
+            Paragraph(inlines=[citation]),
             Figure(
                 src="assets/model.png",
                 caption_inlines=(Text(value="模型"),),
             ),
         ],
-        citations=[Citation(keys=["smith2025"])],
+        citations=[citation],
     )
 
     context = ValidationContext.from_document(document)
@@ -90,14 +91,15 @@ def test_manifest_bibliography_overrides_document_front_matter_path(
     tmp_path: Path,
 ) -> None:
     project_root = write_project(tmp_path)
+    citation = Citation(keys=["smith2025"])
     document = ThesisDocument(
         source_path=(project_root / "thesis.md").resolve(),
         bibliography=BibliographyConfig(
             path="does-not-exist.bib",
             citation_style="unsupported-style",
         ),
-        blocks=[Paragraph(inlines=[])],
-        citations=[Citation(keys=["smith2025"])],
+        blocks=[Paragraph(inlines=[citation])],
+        citations=[citation],
     )
 
     context = ValidationContext.from_document(document)
@@ -143,9 +145,11 @@ def test_invalid_manifest_bibliography_details_do_not_leak_absolute_path(
         tmp_path,
         bibliography="@article{broken,\n  title={missing brace}\n",
     )
+    citation = Citation(keys=["broken"])
     document = ThesisDocument(
         source_path=(project_root / "thesis.md").resolve(),
-        citations=[Citation(keys=["broken"])],
+        blocks=[Paragraph(inlines=[citation])],
+        citations=[citation],
     )
 
     context = ValidationContext.from_document(document)
