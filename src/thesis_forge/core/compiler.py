@@ -10,7 +10,7 @@ from thesis_forge.bibliography import (
     CitationFormatter,
     resolve_citation_provider,
 )
-from thesis_forge.templates.model import NumberingSpec, SectionsSpec, ThesisTemplate
+from thesis_forge.templates.model import SectionsSpec, ThesisTemplate
 
 from .index import DocumentIndex
 from .model import (
@@ -69,9 +69,14 @@ from .render_plan import (
     TocEntryInstruction,
     TocInstruction,
 )
+from .symbols import (
+    BookmarkCollisionError,  # noqa: F401
+    NumberingInputs,
+    SymbolEntry,
+    SymbolTable,
+    is_front_matter_heading,
+)
 
-BOOKMARK_INVALID_RE = re.compile(r"[^A-Za-z0-9_]")
-BOOKMARK_MAX_LENGTH = 40
 FIGURE_WIDTH_RE = re.compile(
     r"^(?P<value>\d+(?:\.\d+)?)(?P<unit>%|mm|cm|pt|em)$"
 )
@@ -108,15 +113,6 @@ class CompilerError(ValueError):
     pass
 
 
-class BookmarkCollisionError(CompilerError):
-    def __init__(self, bookmark: str, source_ids: tuple[str, str]):
-        self.bookmark = bookmark
-        self.source_ids = source_ids
-        super().__init__(
-            f"Bookmark name collision: {bookmark}: {source_ids[0]}, {source_ids[1]}"
-        )
-
-
 class UnresolvedReferenceError(CompilerError):
     def __init__(self, target_id: str):
         self.target_id = target_id
@@ -150,58 +146,28 @@ class TableCompilationError(CompilerError):
         super().__init__(f"Invalid Markdown table {source_id or '<anonymous>'}: {detail}")
 
 
-@dataclass(frozen=True, slots=True)
-class _ResolvedBlock:
-    chapter: int
-    number: str | None
-    label: str
-    bookmark: str | None
-    sequence: SequenceInstruction | None
-
-
-def _bookmark_name(source_id: str) -> str:
-    normalized = BOOKMARK_INVALID_RE.sub("_", source_id)
-    return f"tf_{normalized}"[:BOOKMARK_MAX_LENGTH]
-
-
-def _numbering_spec(template: ThesisTemplate | None, kind: str) -> NumberingSpec | None:
-    style = getattr(template, kind, None) if template is not None else None
-    return getattr(style, "numbering", None)
-
-
-def _caption_prefix(template: ThesisTemplate | None, kind: str) -> str:
-    style = getattr(template, kind, None) if template is not None else None
-    caption = getattr(style, "caption", None)
-    return getattr(caption, "prefix", "")
-
-
 def _sequence_instruction(
     *,
-    kind: str,
-    numbering: NumberingSpec,
-    chapter: int,
-    value: int,
+    inputs: NumberingInputs,
     label: str,
-    template: ThesisTemplate | None,
 ) -> SequenceInstruction:
-    name = f"TF_{kind.title()}"
+    name = f"TF_{inputs.kind.title()}"
     suffix = ""
-    if numbering.mode == "chapter":
-        name = f"{name}_{chapter}"
-        separator = numbering.separator
-        if kind == "equation":
-            prefix = f"({chapter}{separator}"
+    if inputs.mode == "chapter":
+        name = f"{name}_{inputs.chapter}"
+        if inputs.kind == "equation":
+            prefix = f"({inputs.chapter}{inputs.separator}"
             suffix = ")"
         else:
-            prefix = f"{_caption_prefix(template, kind)}{chapter}{separator}"
-    elif kind == "equation":
+            prefix = f"{inputs.caption_prefix}{inputs.chapter}{inputs.separator}"
+    elif inputs.kind == "equation":
         prefix = "("
         suffix = ")"
     else:
-        prefix = _caption_prefix(template, kind)
+        prefix = inputs.caption_prefix
     return SequenceInstruction(
         name=name,
-        value=value,
+        value=inputs.sequence_value or 0,
         prefix=prefix,
         suffix=suffix,
         result=label,
@@ -280,100 +246,9 @@ def _compile_table_rows(
     return tuple(instructions)
 
 
-def _resolve_blocks(
-    document: ThesisDocument,
-    template: ThesisTemplate | None,
-) -> tuple[dict[str, _ResolvedBlock], dict[str, str]]:
-    resolved: dict[str, _ResolvedBlock] = {}
-    bookmarks: dict[str, str] = {}
-    bookmark_sources: dict[str, str] = {}
-    chapter = 0
-    chapter_counters: dict[tuple[str, int], int] = {}
-    continuous_counters: dict[str, int] = {}
-    has_front_matter = (
-        template is not None and template.sections.front_matter is not None
-    )
-
-    for block in document.blocks:
-        if (
-            isinstance(block, Heading)
-            and block.level == 1
-            and (not has_front_matter or not _is_front_matter_heading(block))
-        ):
-            chapter += 1
-
-        bookmark = None
-        if block.id:
-            bookmark = _bookmark_name(block.id)
-            previous = bookmark_sources.get(bookmark)
-            if previous is not None and previous != block.id:
-                raise BookmarkCollisionError(bookmark, (previous, block.id))
-            bookmark_sources[bookmark] = block.id
-            bookmarks[block.id] = bookmark
-
-        number = None
-        label = ""
-        sequence = None
-        kind = None
-        if isinstance(block, Figure):
-            kind = "figure"
-        elif isinstance(block, Table):
-            kind = "table"
-        elif isinstance(block, Equation):
-            kind = "equation"
-
-        if kind is not None:
-            numbering = _numbering_spec(template, kind)
-            if numbering is not None and numbering.mode != "none":
-                active_chapter = chapter or 1
-                if numbering.mode == "chapter":
-                    key = (kind, active_chapter)
-                    chapter_counters[key] = chapter_counters.get(key, 0) + 1
-                    sequence_value = chapter_counters[key]
-                    number = (
-                        f"{active_chapter}{numbering.separator}{sequence_value}"
-                    )
-                else:
-                    continuous_counters[kind] = continuous_counters.get(kind, 0) + 1
-                    sequence_value = continuous_counters[kind]
-                    number = str(sequence_value)
-            if isinstance(block, Equation):
-                label = f"({number})" if number else block.id or ""
-            else:
-                prefix = _caption_prefix(template, kind)
-                caption = inline_plain_text(block.caption_inlines)
-                label = f"{prefix}{number}" if number else caption
-            if numbering is not None and number is not None:
-                sequence = _sequence_instruction(
-                    kind=kind,
-                    numbering=numbering,
-                    chapter=chapter or 1,
-                    value=sequence_value,
-                    label=label,
-                    template=template,
-                )
-        elif isinstance(block, Heading):
-            label = inline_plain_text(block.inlines)
-        elif isinstance(block, (Listing, Algorithm)):
-            label = inline_plain_text(block.caption_inlines)
-        elif block.id:
-            label = block.id
-
-        if block.id:
-            resolved[block.id] = _ResolvedBlock(
-                chapter=chapter or 1,
-                number=number,
-                label=label,
-                bookmark=bookmark,
-                sequence=sequence,
-            )
-
-    return resolved, bookmarks
-
-
 def _compile_inlines(
     inlines: list[Inline],
-    resolved: dict[str, _ResolvedBlock],
+    resolved: dict[str, SymbolEntry],
     citation_numbers: dict[str, int],
     footnote_ids: dict[str, int],
     bibliography_database: BibliographyDatabase | None,
@@ -406,7 +281,7 @@ def _compile_inlines(
                 ReferenceRun(
                     target_id=inline.target,
                     bookmark=target.bookmark,
-                    display_text=target.label or inline.target,
+                    display_text=target.display_label or inline.target,
                 )
             )
         elif isinstance(inline, Citation):
@@ -488,14 +363,6 @@ def _compile_cover(document: ThesisDocument) -> CoverInstruction | None:
     return instruction if any(instruction.payload.values()) else None
 
 
-def _is_front_matter_heading(block: Heading) -> bool:
-    source_id = block.id or ""
-    normalized_text = inline_plain_text(block.inlines).strip().lower()
-    return source_id.startswith(("chap:abstract", "chap:toc", "chap:contents")) or (
-        normalized_text in {"摘要", "abstract", "目录", "contents"}
-    )
-
-
 @dataclass(slots=True)
 class _SectionPlanner:
     initial_role: str | None
@@ -526,7 +393,7 @@ class _SectionPlanner:
             self.main_started
             or not isinstance(block, Heading)
             or block.level != 1
-            or _is_front_matter_heading(block)
+            or is_front_matter_heading(block)
             or self.sections is None
             or self.sections.front_matter is None
         ):
@@ -569,7 +436,7 @@ class _SemanticContext:
 class _CompilationContext:
     document: ThesisDocument
     template: ThesisTemplate | None
-    resolved: dict[str, _ResolvedBlock]
+    symbols: SymbolTable
     citation_numbers: dict[str, int]
     footnote_ids: dict[str, int]
     bibliography_database: BibliographyDatabase | None
@@ -580,7 +447,7 @@ class _CompilationContext:
     def inlines(self, values: list[Inline]) -> tuple[InlineRun, ...]:
         return _compile_inlines(
             values,
-            self.resolved,
+            self.symbols.entries,
             self.citation_numbers,
             self.footnote_ids,
             self.bibliography_database,
@@ -714,12 +581,17 @@ def _compile_block(
     block: Block,
     context: _CompilationContext,
 ) -> RenderInstruction | None:
-    block_resolution = context.resolved.get(block.id) if block.id else None
-    bookmark = block_resolution.bookmark if block_resolution else None
-    chapter = block_resolution.chapter if block_resolution else 1
-    number = block_resolution.number if block_resolution else None
-    label = block_resolution.label if block_resolution else ""
-    sequence = block_resolution.sequence if block_resolution else None
+    symbol = context.symbols.entries.get(block.id) if block.id else None
+    numbering_inputs = symbol.numbering_inputs if symbol else None
+    bookmark = symbol.bookmark if symbol else None
+    chapter = numbering_inputs.chapter if numbering_inputs else 1
+    number = numbering_inputs.number if numbering_inputs else None
+    label = symbol.display_label if symbol else ""
+    sequence = (
+        _sequence_instruction(inputs=numbering_inputs, label=label)
+        if numbering_inputs is not None and numbering_inputs.number is not None
+        else None
+    )
 
     if isinstance(block, Heading):
         text = inline_plain_text(block.inlines)
@@ -814,16 +686,15 @@ def _compile_block(
 
 
 def _resolved_references(
-    resolved: dict[str, _ResolvedBlock],
+    symbols: SymbolTable,
 ) -> dict[str, ResolvedReference]:
     return {
         source_id: ResolvedReference(
             target_id=source_id,
             bookmark=value.bookmark,
-            display_text=value.label or source_id,
+            display_text=value.display_label or source_id,
         )
-        for source_id, value in resolved.items()
-        if value.bookmark is not None
+        for source_id, value in symbols.entries.items()
     }
 
 
@@ -889,11 +760,11 @@ def compile_document(
     citation_formatter: CitationFormatter | None = None,
 ) -> RenderPlan:
     """Resolve document-wide semantics into renderer-neutral instructions."""
-    resolved, bookmarks = _resolve_blocks(document, template)
+    symbols = SymbolTable.from_document(document, template)
     context = _CompilationContext(
         document=document,
         template=template,
-        resolved=resolved,
+        symbols=symbols,
         citation_numbers=_initial_citation_numbers(document),
         footnote_ids=_footnote_ids(document),
         bibliography_database=bibliography_database,
@@ -935,8 +806,8 @@ def compile_document(
         nodes=instructions,
         template=template,
         template_path=Path(template_path) if template_path is not None else None,
-        bookmarks=bookmarks,
-        references=_resolved_references(resolved),
+        bookmarks=symbols.bookmarks,
+        references=_resolved_references(symbols),
         citation_order=_citation_order(context.citation_numbers),
         section_policy=template.sections if template is not None else None,
         initial_section_role=section_planner.initial_role,
