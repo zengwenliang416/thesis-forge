@@ -7,7 +7,6 @@ from thesis_forge.core.model import (
     BibliographyBlock,
     Block,
     Citation,
-    CodeSpan,
     CrossReference,
     Equation,
     Figure,
@@ -26,7 +25,7 @@ from thesis_forge.core.model import (
     Text,
 )
 
-INLINE_CLASSES = [Text, Strong, CodeSpan, CrossReference, Citation, FootnoteReference]
+INLINE_CLASSES = [Text, Strong, CrossReference, Citation, FootnoteReference]
 BLOCK_CLASSES = [
     Heading,
     Paragraph,

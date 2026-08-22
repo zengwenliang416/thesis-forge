@@ -95,15 +95,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Open
 
-- [V2-302E2] Retire the CodeSpan type
-  - Parent: ordered child 7/7 of `V2-302`; depends on `V2-302E1`.
-  - Files: `src/thesis_forge/core/model.py`, `tests/core/test_source_identity.py`
-  - Behavior: remove the unemitted and undispatched CodeSpan class and drop it from the source-identity class enumeration.
-  - Verify: `.venv/bin/python -m pytest tests/core/ tests/test_parser_contract.py tests/test_parser.py tests/test_compiler.py`
-  - Acceptance: no CodeSpan reference remains in src or tests; baselines stay green.
-  - Verification-surface change: none.
-  - Attempts: 0
-
 - [V2-303] Replace the basic Block model
   - Files: `src/thesis_forge/core/model.py`, `tests/core/test_block_model.py`
   - Behavior: Heading and Paragraph own inlines only; lists are recursive; BlockQuote and CodeBlock are typed.
@@ -113,6 +104,16 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
   - Attempts: 0
 
 ## Done
+
+- [V2-302E2] Retire the CodeSpan type
+  - Parent: ordered child 7/7 of `V2-302`; depends on `V2-302E1`.
+  - Files: `src/thesis_forge/core/model.py`, `tests/core/test_source_identity.py`
+  - Behavior: remove the unemitted and undispatched CodeSpan class and drop it from the source-identity class enumeration.
+  - Verify: `.venv/bin/python -m pytest tests/core/ tests/test_parser_contract.py tests/test_parser.py tests/test_compiler.py`
+  - Acceptance: no CodeSpan reference remains in src or tests; baselines stay green.
+  - Verification-surface change: none.
+  - Attempts: 1
+  - Attempt 1 (2026-08-22): Checker PASS; diff is deletion-only across exactly the 2 named files (CodeSpan dataclass removed from model.py, CodeSpan dropped from the import block and INLINE_CLASSES in test_source_identity.py, the single "insertion" being the INLINE_CLASSES rewrite with zero new semantics), exact Verify 103/103 green, ruff and `git diff --check` clean, independent probes confirm `from thesis_forge.core.model import CodeSpan` raises ImportError while `import thesis_forge.core` and InlineCode/Strong/Emphasis imports work, repo-wide grep finds CodeSpan only in LOOP.md bookkeeping, both parser backends emit InlineCode('code_x') compiling to TextRun(code=True), parser_diff legacy-vs-markdown-it parity OK exit 0 (45 blocks / 81 inlines), and the full suite holds at 46 failed / 978 passed confined to the 7 known pre-existing files; no push.
 
 - [V2-302E1] Re-pin the Strong contract on recursive children
   - Parent: ordered child 6/7 of `V2-302`; depends on `V2-302D2`.
@@ -728,5 +729,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 - 2026-08-22 - V2-302D1 Checker PASS; diff exactly +1/−2 confined to tests/core/test_inline_model.py (child swap to InlineCode + Strong import removal, zero Strong matches), Verify 12/12, tests/core/ 34/34, edited file 12/12 against both current model and /tmp flipped Strong(children) copy (import verified), full suite 46/973 confined to the 7 known files; no push.
 - 2026-08-22 - V2-302D2 Checker PASS; Maker-parked diff re-applied verbatim audited contract-exact (+27/−4 across model.py/parser.py/compiler.py, no scope creep), Verify 146/146, docx_renderer 86/86, ruff/diff-check clean, independent probes confirmed both-backend nesting with locations/registration/pre-order, compile lowering (CitationRun/bold TextRun/code+bold/FootnoteReferenceRun), and byte-identical HEAD-vs-candidate example parity, full suite 46/973 confined to the 7 known files; no push.
 - 2026-08-22 - V2-302E1 Checker PASS; 2-file diff contract-exact (stricter Strong children-content re-pin + 5 non-vacuous Strong inline-model tests), exact Verify 49/49, baselines 205/205, load-bearing/mutation/two-backend probes green, full suite 46 failed / 978 passed confined to the 7 known files; no push.
+- 2026-08-22 - V2-302E2 Checker PASS; deletion-only 2-file diff removes the CodeSpan dataclass and its source-identity enumeration, exact Verify 103/103, ImportError/import/behavior/parity probes green, repo-wide CodeSpan grep empty outside LOOP.md, full suite 46 failed / 978 passed confined to the 7 known files; no push.
 
 ## Sync log

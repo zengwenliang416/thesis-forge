@@ -49,11 +49,6 @@ class Strong(Inline):
 
 
 @dataclass(slots=True)
-class CodeSpan(Inline):
-    value: str = ""
-
-
-@dataclass(slots=True)
 class SoftBreak(Inline):
     pass
 
