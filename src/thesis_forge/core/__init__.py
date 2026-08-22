@@ -42,11 +42,9 @@ from .model import (
 )
 from .parser import ParseError, parse_markdown, parse_markdown_text
 from .parser_backend import (
-    LegacyParserBackend,
     MarkdownItParserBackend,
     ParserBackend,
-    get_parser_backend,
-    parser_backend_names,
+    create_parser_backend,
 )
 from .render_plan import (
     BibliographyEntryInstruction,
@@ -76,7 +74,6 @@ __all__ = [
     "Heading",
     "Inline",
     "LatexMathConverter",
-    "LegacyParserBackend",
     "ListBlock",
     "ListItem",
     "Listing",
@@ -103,11 +100,10 @@ __all__ = [
     "ValidationIssue",
     "ValidationRule",
     "compile_document",
-    "get_parser_backend",
+    "create_parser_backend",
     "is_valid_stable_id",
     "parse_markdown",
     "parse_markdown_text",
-    "parser_backend_names",
     "split_stable_id",
     "validate_document",
 ]
