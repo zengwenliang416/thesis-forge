@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import re
 from collections import defaultdict, deque
 from dataclasses import dataclass
 from typing import Any
@@ -29,21 +30,29 @@ from thesis_forge.core.render_plan import (
     FigureInstruction,
     FootnoteDefinitionInstruction,
     FootnoteReferenceRun,
+    HardBreakRun,
     HeadingInstruction,
+    HyperlinkRun,
     InlineRun,
     ListingInstruction,
     ListInstruction,
+    MathRun,
     ParagraphInstruction,
     ReferenceRun,
     RenderNode,
     SectionBreakInstruction,
+    SoftBreakRun,
     TableInstruction,
     TextRun,
     TocInstruction,
+    ensure_inline_run,
 )
 
 PREVIEW_SCHEMA_VERSION = 1
 PREVIEW_DISCLAIMER = "结构预览不代表 Word 最终分页。"
+_TECHNICAL_MARKER_RE = re.compile(
+    r"\[@[^\]]+\]|(?:fig|tbl|eq|sec|chap|lst|alg):[A-Za-z0-9_.:-]+"
+)
 
 
 def _marker(issue: ValidationIssue) -> dict[str, str]:
@@ -83,9 +92,18 @@ def _selection_id(
     return f"{kind}:plan:{plan_index}"
 
 
+def _citation_text(run: CitationRun) -> str:
+    if run.text and not _TECHNICAL_MARKER_RE.search(run.text):
+        return run.text
+    if run.ordinals:
+        return "[" + ", ".join(str(ordinal) for ordinal in run.ordinals) + "]"
+    return "引用"
+
+
 def _inline_runs(runs: tuple[InlineRun, ...]) -> list[dict[str, Any]]:
     serialized: list[dict[str, Any]] = []
-    for run in runs:
+    for value in runs:
+        run = ensure_inline_run(value)
         if isinstance(run, TextRun):
             serialized.append({"type": "text", "text": run.text})
         elif isinstance(run, ReferenceRun):
@@ -103,7 +121,7 @@ def _inline_runs(runs: tuple[InlineRun, ...]) -> list[dict[str, Any]]:
                     "keys": list(run.keys),
                     "ordinals": list(run.ordinals),
                     "locator": run.locator,
-                    "text": run.text or run.raw,
+                    "text": _citation_text(run),
                 }
             )
         elif isinstance(run, FootnoteReferenceRun):
@@ -113,6 +131,26 @@ def _inline_runs(runs: tuple[InlineRun, ...]) -> list[dict[str, Any]]:
                     "label": run.label,
                     "footnoteId": run.footnote_id,
                     "text": f"脚注{run.footnote_id}",
+                }
+            )
+        elif isinstance(run, SoftBreakRun):
+            serialized.append({"type": "soft-break", "text": " "})
+        elif isinstance(run, HardBreakRun):
+            serialized.append({"type": "hard-break", "text": "\n"})
+        elif isinstance(run, HyperlinkRun):
+            serialized.append(
+                {
+                    "type": "hyperlink",
+                    "text": run.text,
+                    "destination": run.destination,
+                }
+            )
+        elif isinstance(run, MathRun):
+            serialized.append(
+                {
+                    "type": "math",
+                    "latex": run.latex,
+                    "text": run.latex,
                 }
             )
     return serialized

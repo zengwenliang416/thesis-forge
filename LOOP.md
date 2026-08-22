@@ -95,10 +95,86 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Open
 
+- [V2-505A1P2] Accept canonical inline runs in the Preview transport contract
+  - Parent: ordered preparation child 2/3 of the re-sliced `V2-505A1P`; depends on `V2-505A1P1`.
+  - Files: `frontend/src/transport/dto.ts`, `frontend/src/transport/previewDto.test.ts`
+  - Behavior: the strict Preview transport DTO accepts the four new serialized inline run variants without accepting unknown types, extra keys, or compatibility payloads.
+  - Verify: `pnpm --dir frontend exec vitest run src/transport/previewDto.test.ts`
+  - Acceptance: the TypeScript union and runtime validator accept hyperlink text/destination, math latex/text, soft-break text and hard-break text alongside the existing four variants; malformed shapes and unknown run types remain rejected.
+  - Verification-surface change: no
+  - Attempts: 0
+
+- [V2-505A1P3] Render canonical inline runs in the Preview panels
+  - Parent: ordered preparation child 3/3 of the re-sliced `V2-505A1P`; depends on `V2-505A1P2`.
+  - Files: `frontend/src/components/PreviewPanels.tsx`, `frontend/src/components/PreviewPanels.test.tsx`
+  - Behavior: Preview panels render hyperlink destinations, readable math fallback text, and visibly distinct soft/hard breaks without exposing technical markers.
+  - Verify: `pnpm --dir frontend exec vitest run src/components/PreviewPanels.test.tsx`
+  - Acceptance: the focused panel test covers all four new run variants; hyperlinks retain destination semantics, math remains readable, soft breaks normalize spacing, hard breaks remain visible, and existing reference/citation/footnote rendering is unchanged.
+  - Verification-surface change: no
+  - Attempts: 0
+
+- [V2-505A1R] Project every canonical inline run in Review
+  - Parent: ordered preparation child 4/7 of the re-sliced `V2-505A1`; depends on `V2-505A1P3`.
+  - Files: `src/thesis_forge/presentation/review.py`, `tests/presentation/test_review_regions.py`
+  - Behavior: Review projects every canonical InlineRun into readable marker-free content while retaining math and visible break semantics.
+  - Verify: `.venv/bin/python -m pytest tests/presentation/test_review_regions.py -k test_review_projects_all_inline_run_variants`
+  - Acceptance: link destinations and citation keys remain out of visible normal Review text; math has readable fallback content; soft/hard breaks remain distinguishable; unknown runs raise explicitly.
+  - Verification-surface change: no
+  - Attempts: 0
+
+- [V2-505A1D1] Consume canonical inline runs in DOCX body rendering
+  - Parent: ordered preparation child 5/7 of the re-sliced `V2-505A1`; depends on `V2-505A1R`.
+  - Files: `src/thesis_forge/renderers/docx/inlines.py`, `src/thesis_forge/renderers/docx/renderer.py`, `tests/test_docx_renderer.py`
+  - Behavior: the shared DOCX inline dispatch and typed renderer consume hyperlink, math, soft-break and hard-break runs without rejection or silent loss.
+  - Verify: `.venv/bin/python -m pytest tests/test_docx_renderer.py -k test_docx_renderer_consumes_all_inline_run_variants`
+  - Acceptance: body/heading/list inline rendering covers every canonical run; soft breaks do not create `w:br`, hard breaks do; hyperlink and math paths produce their configured native structures; unknown runs fail with `DocxRenderError`.
+  - Verification-surface change: no
+  - Attempts: 0
+
+- [V2-505A1D2] Consume canonical inline runs in DOCX footnote rendering
+  - Parent: ordered preparation child 6/7 of the re-sliced `V2-505A1`; depends on `V2-505A1D1`.
+  - Files: `src/thesis_forge/renderers/docx/footnotes.py`, `tests/test_docx_renderer.py`
+  - Behavior: footnote definitions and references use the same canonical inline consumer seam as body content.
+  - Verify: `.venv/bin/python -m pytest tests/test_docx_renderer.py -k test_docx_footnote_consumes_all_inline_run_variants`
+  - Acceptance: footnote inline content preserves hyperlink, math and break semantics, shares no duplicate dispatch logic, and rejects unknown runs explicitly.
+  - Verification-surface change: no
+  - Attempts: 0
+
+- [V2-505A2] Compile rich figure captions and complete the DOCX inline consumer seam
+  - Parent: ordered preparation child after all seven preparation children of the re-sliced `V2-505A`; depends on `V2-505A1M`, `V2-505A1P3`, `V2-505A1R`, `V2-505A1D1` and `V2-505A1D2`; the original V2-505A Behavior and Acceptance remain unchanged.
+  - Files: `src/thesis_forge/core/compiler.py`, `src/thesis_forge/renderers/docx/inlines.py`, `tests/core/test_figure_caption_runs.py`
+  - Behavior: compile every figure caption Inline into lossless typed runs with document-order citation numbering and make the DOCX inline renderer consume every declared run without rejection or silent loss.
+  - Verify: `.venv/bin/python -m pytest tests/core/test_figure_caption_runs.py`
+  - Acceptance: compiled figure instructions retain readable typed caption runs alongside label, sequence and bookmark data; figure-before-body citations receive earlier ordinals; DOCX accepts ordinary body and figure-caption link/math/break runs; no raw citation/reference marker is introduced and unknown runs fail explicitly.
+  - Verification-surface change: no
+  - Attempts: 0
+  - Inherited Attempt 1 (2026-08-22): Checker FAIL; exact Verify `.venv/bin/python -m pytest tests/core/test_figure_caption_runs.py` passed 1/1; related compiler/RenderPlan/SymbolTable regression passed 35/35; target Ruff and `git diff --check` passed. Expected: typed caption runs preserve Inline semantics, the plan has one authoritative resolved caption representation without raw citation/reference markers, and figure-caption citations retain document order. Observed: `_compile_inlines` silently dropped `Emphasis`, `Link`, `InlineMath`, and `SoftBreak`; `FigureInstruction.caption` and its payload retained `[@smith2025]` and `fig:appendix` while the payload omitted `caption_inlines`; a figure-before-paragraph citation received ordinal 2 while the later paragraph citation received ordinal 1. Cross-reference resolution and label/sequence/bookmark probes passed. Candidate files were restored; no commit or push.
+  - Inherited Attempt 2 (2026-08-22): Checker FAIL; exact Verify passed 1/1; related regression passed 43/44 with the known clean-baseline `tests/test_preview_presentation.py::test_complete_example_preview_preserves_compiler_order_and_numbering` YAML Front Matter failure; DOCX regression passed 86/86; target Ruff, `git diff --check`, and `./lint-loop.sh` passed. Independent probes confirmed lossless figure InlineRun coverage, resolved caption and payload without raw citation/reference text, figure-before-body citation order, and old positional `FigureInstruction` construction. However, shared `_compile_inlines` emits `LinkRun`/`MathRun`/`BreakRun` for ordinary body inlines while Preview silently drops them and Review/DOCX reject them (`TypeError`/`DocxRenderError`), creating a real global regression and partial public seam. Candidate files were restored; no commit or push.
+
+- [V2-505B] Render rich figure captions in DOCX
+  - Parent: ordered preparation child after the re-sliced `V2-505A`; depends on `V2-505A2` and all seven `V2-505A1*` preparation children; the parent Behavior and Acceptance remain unchanged.
+  - Files: `src/thesis_forge/renderers/docx/captions.py`, `src/thesis_forge/renderers/docx/figures.py`, `tests/renderers/docx/test_figure_rich_caption.py`
+  - Behavior: render typed figure caption runs, fields, citations, references and configured styles in DOCX.
+  - Verify: `.venv/bin/python -m pytest tests/renderers/docx/test_figure_rich_caption.py`
+  - Acceptance: figure caption XML contains resolved readable content and valid field/bookmark structure, with no raw citation or cross-reference marker.
+  - Verification-surface change: authorized; creates the capability evidence required by `spec/format-capabilities.yaml`.
+  - Attempts: 0
+
 ## Done
 
+- [V2-505A1P1] Project canonical inline runs in the Python Preview mapper
+  - Parent: ordered preparation child 1/3 of the re-sliced `V2-505A1P`; the original A1P Behavior and Acceptance remain unchanged across A1P1, A1P2 and A1P3; depends on `V2-505A1M`.
+  - Files: `src/thesis_forge/presentation/preview.py`, `tests/test_preview_presentation.py`
+  - Behavior: the Python Preview mapper projects all eight canonical InlineRun variants, preserves hyperlink text/destination and math fallback text, distinguishes soft/hard breaks, rejects unknown values, and never emits raw citation/reference markers.
+  - Verify: `.venv/bin/python -m pytest tests/test_preview_presentation.py -k test_preview_serializes_all_inline_run_variants`
+  - Acceptance: the focused projection test covers text, semantic reference, hyperlink, math, soft break, hard break, citation and footnote runs; empty citation text never falls back to raw citation syntax; unknown runs fail explicitly; the mapper output is the source for the ordered transport child.
+  - Verification-surface change: no
+  - Attempts: 1
+  - Inherited Attempt 1 (2026-08-22): the superseded A1P candidate projected all eight runs and passed the focused test, but leaked `CitationRun.raw` when text was empty; the independent Checker also found the new run shapes require the ordered frontend transport and panel children; candidate files were restored with no commit or push.
+  - Attempt 1 (2026-08-22): Checker PASS; exact Verify passed 1/1; target Ruff, `git diff --check`, and `./lint-loop.sh` passed; complete preview tests were 5 passed/1 known clean-HEAD baseline failure at `test_complete_example_preview_preserves_compiler_order_and_numbering` with `TF-SOURCE-LEGACY-001`, while clean HEAD was 4 passed/1 with the identical failure and no candidate-only failure; independent AST/runtime probes confirmed all eight ordered projections, hyperlink destination, math readable fallback, distinct soft/hard break text, raw citation suppression, formatted citation preservation, and explicit unknown-run `TypeError`; candidate scope was exactly the two named product/test files plus this lifecycle update, frontend P2/P3 and A1R were not audited or modified, all unrelated dirty paths were preserved, one local commit and no push.
+
 - [V2-505A1M] Establish canonical typed inline RenderPlan runs
-  - Parent: ordered preparation child 1/5 of the re-sliced `V2-505A1`; the original V2-505A1 Behavior and Acceptance remain unchanged across A1M, A1P, A1R, A1D1 and A1D2.
+  - Parent: ordered preparation child 1/7 of the re-sliced `V2-505A1`; the original V2-505A1 Behavior and Acceptance remain unchanged across A1M, A1P1, A1P2, A1P3, A1R, A1D1 and A1D2.
   - Files: `src/thesis_forge/core/render_plan.py`, `tests/core/test_typed_inline_render_plan.py`
   - Behavior: define the capability-registered `SoftBreakRun`, `HardBreakRun`, `HyperlinkRun` and `MathRun` types in one `InlineRun` union with explicit unknown-run failure.
   - Verify: `.venv/bin/python -m pytest tests/core/test_typed_inline_render_plan.py`
@@ -1573,6 +1649,16 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 - 2026-08-22 - V2-510A Checker PASS Attempt 1; exact Verify passed 3/3; related regression was 199 passed/1 baseline failure at `tests/core/test_markdown_v2_parser_config.py::test_markdown_v2_uses_public_parser_primitives`, matching clean HEAD at 196 passed/1 same failure and recorded out-of-scope; targeted Ruff, `git diff --check`, and LOOP-LINT: PASS — open=0 done=117 blocked=0; static/runtime audit confirmed pure local math conversion, structured unsupported/malformed error issues with source navigation and no absolute path leakage, supported formulas clear, and no compatibility, fallback, silent-degradation, or dual-field path; candidate scope was exactly the three named files, the pre-existing `openspec/.specnav/change-registry.json` was preserved and uncommitted, one local commit, no push.
 - 2026-08-22 - V2-501 Checker PASS Attempt 1; exact Verify 5/5, compiler/DOCX regression 110/110, targeted Ruff, `git diff --check`, LOOP-LINT, and independent symbol/compile probes passed; V2-501 moved from Open to Done, the candidate scope was exactly the three named implementation/test files plus this lifecycle update, the pre-existing `openspec/.specnav/change-registry.json` was preserved and uncommitted, and no push.
 - 2026-08-22 - V2-512 Checker PASS Attempt 1; exact Verify 4/4, related DocumentIndex/compiler/DOCX regression 123/123, targeted Ruff, `git diff --check`, and independent build-stop/compile-ID probes passed; V2-512 moved from Open to Done, missing and nested references stopped before compiler invocation, duplicate issues retained both source locations, repeated references shared one definition ID, the candidate scope was exactly the three named files, the pre-existing `openspec/.specnav/change-registry.json` was preserved and uncommitted, and no push.
+- 2026-08-22 - V2-505 split into ordered children V2-505A and V2-505B after CodeGraph showed rich figure captions cross the typed RenderPlan/compiler seam and the DOCX caption/figure seam, exceeding the three-file implementation bound; no product code edited in the split cycle, next queue is V2-505A.
+- 2026-08-22 - V2-505A Checker FAIL Attempt 1; exact Verify passed 1/1 and related compiler/RenderPlan/SymbolTable regression passed 35/35, but independent typed-caption probes found silent Inline loss, raw marker dual representation/payload omission, and figure-before-paragraph citation ordinal inversion; candidate files were restored, V2-505A and V2-505B remain Open, the registry was preserved, and no commit or push.
+
+- 2026-08-22 - V2-505A Checker FAIL Attempt 2; typed-caption seam probes passed, but shared compiler InlineRun expansion caused Preview loss and Review/DOCX rejection for ordinary rich body inlines; candidate files and test were restored, V2-505A and V2-505B remain Open, registry preserved, no commit or push.
+- 2026-08-22 - V2-505A split into ordered children V2-505A1 and V2-505A2 after CodeGraph confirmed the missing `LinkRun`/`MathRun`/`BreakRun` definitions belong to the shared RenderPlan seam and cannot be consumed independently within the three-file bound; no product code edited in the split cycle, next queue is V2-505A1, and V2-505B remains dependent on the completed re-sliced A.
+- 2026-08-22 - V2-505A1 Checker FAIL Attempt 1; exact Verify and 137-test related regression matched clean HEAD at the same YAML Front Matter baseline failure, but capability names disagreed with `spec/format-capabilities.yaml`, `FigureInstruction` kept a raw `caption` alongside typed `caption_inlines`, figure caption runs were not consumed by Preview/Review, and Preview lost hyperlink destination semantics; the three candidate files were restored, the A1 three-file boundary was rejected for re-slicing, the registry was preserved, and no commit or push.
+- 2026-08-22 - V2-505A1 split into ordered children V2-505A1M, V2-505A1P, V2-505A1R, V2-505A1D1 and V2-505A1D2 after the Checker found canonical run-name, figure-caption source-of-truth, Preview/Review projection and DOCX footnote fan-out beyond the three-file bound; no product code edited in the split cycle, next queue is V2-505A1M.
 - 2026-08-22 - V2-505A1M Checker PASS Attempt 1; exact Verify `.venv/bin/python -m pytest tests/core/test_typed_inline_render_plan.py` passed 5/5; targeted Ruff `.venv/bin/ruff check src/thesis_forge/core/render_plan.py tests/core/test_typed_inline_render_plan.py`, `git diff --check`, and `./lint-loop.sh` passed; independent audit confirmed exact canonical run names/fields, the eight-member union, distinct soft/hard nominal types, explicit unknown-run `TypeError`, renderer-neutral dependency boundary, and no forbidden consumer or caption-source changes; scope was exactly `src/thesis_forge/core/render_plan.py` and `tests/core/test_typed_inline_render_plan.py`, all unrelated dirty paths including `LOOP.md` history, registry, `template-v2-build-pipeline-p1/**`, and `v2-rich-inline-renderplan-p1/codegraph/**` were preserved, and no push.
+- 2026-08-22 - V2-505A1P Checker FAIL Attempt 1; exact Verify passed 1/1, target Ruff, `git diff --check`, and LOOP-LINT passed; complete preview presentation tests were 5 passed/1 known clean-HEAD YAML Front Matter baseline failure, but raw citation fallback leaked `[@ref-1]` and the new four Python run types were not accepted by the actual frontend transport DTO/validator or rendered by the Preview component; the two candidate files were restored, A1P remains Open pending split/third-file protocol work, all unrelated dirty paths were preserved, and no commit or push.
+- 2026-08-22 - V2-505A1P split into ordered children V2-505A1P1, V2-505A1P2 and V2-505A1P3 after the independent Checker found that raw citation cleanup belongs in the Python mapper while the new Preview run shapes also require the frontend transport DTO, validator tests, panel renderer and panel tests; no product code edited in the split cycle, all unrelated dirty paths were preserved, and the next queue is V2-505A1P1.
+- 2026-08-22 - V2-505A1P1 Checker PASS Attempt 1; exact Verify passed 1/1, target Ruff, `git diff --check`, and LOOP-LINT passed; complete preview tests were 5 passed/1 known clean-HEAD baseline failure at `test_complete_example_preview_preserves_compiler_order_and_numbering` with `TF-SOURCE-LEGACY-001`, clean HEAD was 4 passed/1 with the identical failure, and independent AST/runtime probes passed for all eight ordered variants, raw citation suppression, formatted citation preservation, and explicit unknown-run rejection; V2-505A1P1 moved to Done, candidate scope was exactly the two named files plus this lifecycle update, unrelated dirty paths were preserved, one local commit, no push.
 
 ## Sync log

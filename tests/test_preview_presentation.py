@@ -3,6 +3,8 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+import pytest
+
 from thesis_forge import application, presentation
 from thesis_forge.core.model import (
     Algorithm,
@@ -30,15 +32,19 @@ from thesis_forge.core.render_plan import (
     FigureInstruction,
     FootnoteDefinitionInstruction,
     FootnoteReferenceRun,
+    HardBreakRun,
     HeadingInstruction,
+    HyperlinkRun,
     ListingInstruction,
     ListInstruction,
     ListItemInstruction,
+    MathRun,
     ParagraphInstruction,
     ReferenceRun,
     RenderNode,
     RenderPlan,
     SectionBreakInstruction,
+    SoftBreakRun,
     TableCellInstruction,
     TableInstruction,
     TableRowInstruction,
@@ -186,6 +192,75 @@ def test_complete_example_preview_preserves_compiler_order_and_numbering():
     assert semantic_blocks["fig:architecture"][1]["label"] == "图1-1"
     assert semantic_blocks["eq:pipeline"][1]["label"] == "(2-1)"
     assert semantic_blocks["tbl:capabilities"][1]["label"] == "表2-1"
+
+
+def test_preview_serializes_all_inline_run_variants(tmp_path: Path):
+    PreviewResult, map_preview_result = _preview_api()
+    runs = (
+        TextRun("前"),
+        ReferenceRun("fig:arch", "fig_arch", "图 1-1"),
+        HyperlinkRun("项目主页", "https://example.test"),
+        MathRun(r"x^2 + y^2"),
+        SoftBreakRun(),
+        HardBreakRun(),
+        CitationRun(("ref-1",), (1,), raw="[@ref-1]"),
+        FootnoteReferenceRun("note", 1),
+        TextRun("后"),
+    )
+
+    result = map_preview_result(
+        PreviewResult(
+            document=ThesisDocument(source_path=tmp_path / "thesis.md", blocks=[]),
+            context=ValidationContext(),
+            issues=(),
+            plan=RenderPlan(nodes=(ParagraphInstruction("正文", runs),)),
+        )
+    )
+
+    assert result["preview"]["blocks"][0]["content"]["runs"] == [
+        {"type": "text", "text": "前"},
+        {"type": "reference", "targetId": "fig:arch", "text": "图 1-1"},
+        {
+            "type": "hyperlink",
+            "text": "项目主页",
+            "destination": "https://example.test",
+        },
+        {"type": "math", "latex": r"x^2 + y^2", "text": r"x^2 + y^2"},
+        {"type": "soft-break", "text": " "},
+        {"type": "hard-break", "text": "\n"},
+        {
+            "type": "citation",
+            "keys": ["ref-1"],
+            "ordinals": [1],
+            "locator": None,
+            "text": "[1]",
+        },
+        {
+            "type": "footnote-reference",
+            "label": "note",
+            "footnoteId": 1,
+            "text": "脚注1",
+        },
+        {"type": "text", "text": "后"},
+    ]
+
+    class ForeignInline:
+        pass
+
+    with pytest.raises(TypeError, match=r"unsupported InlineRun: ForeignInline"):
+        map_preview_result(
+            PreviewResult(
+                document=ThesisDocument(
+                    source_path=tmp_path / "unknown.md",
+                    blocks=[],
+                ),
+                context=ValidationContext(),
+                issues=(),
+                plan=RenderPlan(
+                    nodes=(ParagraphInstruction("正文", (ForeignInline(),)),),
+                ),
+            )
+        )
 
 
 def test_preview_mapper_covers_every_typed_instruction_and_unknown_fallback(
