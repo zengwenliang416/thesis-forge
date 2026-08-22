@@ -61,7 +61,6 @@ from .parser import (
     ParseError,
     _bibliography_config,
     _parse_container,
-    _parse_container_inlines,
     _parse_front_matter,
     _parse_inline_content,
 )
@@ -255,7 +254,6 @@ class MarkdownItParserBackend:
                 location=SourceLocation(line=line),
             )
         )
-        doc.register_inlines(inlines)
 
     def _emit_paragraph(self, doc: ThesisDocument, inline_token: Token, offset: int) -> None:
         # mdit 段落 content = 原始行拼接后整体 strip，与 legacy 段落缓冲语义一致
@@ -268,7 +266,6 @@ class MarkdownItParserBackend:
         doc.blocks.append(
             Paragraph(inlines=inlines, location=SourceLocation(line=line))
         )
-        doc.register_inlines(inlines)
 
     def _emit_raw_paragraph(
         self,
@@ -287,7 +284,6 @@ class MarkdownItParserBackend:
         doc.blocks.append(
             Paragraph(inlines=inlines, location=SourceLocation(line=line))
         )
-        doc.register_inlines(inlines)
 
     def _emit_container(
         self,
@@ -309,7 +305,6 @@ class MarkdownItParserBackend:
         line = start0 + 1 + offset
         # 容器体语义（kv 元数据、caption inline、围栏剥离）整体复用 legacy 实现
         doc.blocks.append(_parse_container(kind, block_id, body, line))
-        doc.register_inlines(_parse_container_inlines(kind, body, line + 1))
         return close_idx + 1
 
     def _emit_footnote_definition(
@@ -336,7 +331,6 @@ class MarkdownItParserBackend:
                 doc.blocks.append(
                     Paragraph(inlines=inlines, location=SourceLocation(line=line))
                 )
-                doc.register_inlines(inlines)
             return close_idx + 1
 
         label = match.group("label")
@@ -358,7 +352,6 @@ class MarkdownItParserBackend:
                 location=SourceLocation(line=line),
             )
         )
-        doc.register_inlines(inlines)
         return close_idx + 1
 
     def _scan_list(
@@ -401,7 +394,6 @@ class MarkdownItParserBackend:
                     inlines=item_inlines,
                 )
             )
-            doc.register_inlines(item_inlines)
             i += 1
 
         doc.blocks.append(
