@@ -10,7 +10,13 @@ from zipfile import ZipFile
 import yaml
 from lxml import etree
 
-from thesis_forge.application import preview_service, validation_service
+from thesis_forge.application import (
+    ApplicationDependencies,
+    preview_service,
+    validation_service,
+)
+from thesis_forge.core.parser_backend import create_parser_backend
+from thesis_forge.core.validator import ValidationContext
 from thesis_forge.renderers.docx.package import validate_docx_package
 from thesis_forge.templates import load_template
 
@@ -41,6 +47,24 @@ NS = {
 
 def _digest(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def _canonical_context(
+    document,
+    template_path: str | Path | None,
+) -> ValidationContext:
+    return ValidationContext.from_document(
+        document,
+        template_path=template_path,
+        required_metadata=(),
+    )
+
+
+def _canonical_dependencies() -> ApplicationDependencies:
+    return ApplicationDependencies(
+        parser_backend=create_parser_backend(),
+        context_factory=_canonical_context,
+    )
 
 
 def _offline_environment(tmp_path: Path) -> dict[str, str]:
@@ -174,18 +198,34 @@ def _write_alternate_style_template(tmp_path: Path) -> Path:
 
 def _write_minimal_source(path: Path, *, template_id: str) -> None:
     path.write_text(
-        f"""---
-thesis:
-  title: Template validation fixture
-author:
-  name: ThesisForge
-render:
-  template_id: {template_id}
----
+        """# 绪论 {#chap:introduction}
 
-# 绪论 {{#chap:introduction}}
+## 背景 {#sec:background}
+
+### 研究范围 {#sec:scope}
 
 正文。
+""",
+        encoding="utf-8",
+    )
+    (path.parent / "thesisforge.yaml").write_text(
+        f"""schema: thesisforge.project.v2
+
+project:
+  id: acceptance-fixture
+  language: zh-CN
+
+document:
+  source: {path.name}
+
+metadata:
+  title:
+    zh: Template validation fixture
+  author:
+    name: ThesisForge
+
+render:
+  template_id: {template_id}
 """,
         encoding="utf-8",
     )
@@ -662,7 +702,10 @@ def test_complete_example_repeated_builds_have_identical_plan_and_word_ooxml(
 def test_template_failures_return_structured_validation_issues(tmp_path: Path):
     missing_source = tmp_path / "missing.md"
     _write_minimal_source(missing_source, template_id="missing-template-id")
-    missing = validation_service(missing_source)
+    missing = validation_service(
+        missing_source,
+        dependencies=_canonical_dependencies(),
+    )
     assert {(issue.code, issue.target) for issue in missing.errors} == {
         ("missing-template", "missing-template-id")
     }
@@ -685,7 +728,10 @@ def test_template_failures_return_structured_validation_issues(tmp_path: Path):
         ambiguous_source,
         template_id="duplicate-template",
     )
-    ambiguous = validation_service(ambiguous_source)
+    ambiguous = validation_service(
+        ambiguous_source,
+        dependencies=_canonical_dependencies(),
+    )
     assert {(issue.code, issue.target) for issue in ambiguous.errors} == {
         ("ambiguous-template", "duplicate-template")
     }
@@ -700,6 +746,7 @@ def test_template_failures_return_structured_validation_issues(tmp_path: Path):
     invalid = validation_service(
         ambiguous_source,
         template_path=invalid_template,
+        dependencies=_canonical_dependencies(),
     )
     assert {(issue.code, issue.target) for issue in invalid.errors} == {
         ("invalid-template", "body.unknown_policy")
@@ -717,8 +764,9 @@ def test_template_failures_return_structured_validation_issues(tmp_path: Path):
         encoding="utf-8",
     )
     missing_style = validation_service(
-        SOURCE,
+        ambiguous_source,
         template_path=missing_style_template,
+        dependencies=_canonical_dependencies(),
     )
     assert {(issue.code, issue.target) for issue in missing_style.errors} == {
         ("missing-template-style", "heading.level3")

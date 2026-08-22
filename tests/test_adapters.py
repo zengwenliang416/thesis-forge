@@ -19,6 +19,7 @@ from thesis_forge.adapters import (
     dispatch_json_line,
 )
 from thesis_forge.application import (
+    ApplicationDependencies,
     BuildResult,
     BuildStage,
     InspectionResult,
@@ -27,11 +28,54 @@ from thesis_forge.application import (
 )
 from thesis_forge.application.contracts import ProjectRequestIntent
 from thesis_forge.core.model import Heading, Text, ThesisDocument, ValidationIssue
+from thesis_forge.core.parser_backend import create_parser_backend
 from thesis_forge.core.validator import ValidationContext
 
 
 def _text_inlines(value: str) -> list[Text]:
     return [Text(value=value)]
+
+
+def _canonical_context(
+    document: ThesisDocument,
+    template_path: str | Path | None,
+) -> ValidationContext:
+    return ValidationContext.from_document(
+        document,
+        template_path=template_path,
+        required_metadata=(),
+    )
+
+
+def _canonical_dependencies() -> ApplicationDependencies:
+    return ApplicationDependencies(
+        parser_backend=create_parser_backend(),
+        context_factory=_canonical_context,
+    )
+
+
+def _canonical_validation_service(source: str | Path, **kwargs):
+    return application.validation_service(
+        source,
+        dependencies=_canonical_dependencies(),
+        **kwargs,
+    )
+
+
+def _canonical_preview_service(source: str | Path, **kwargs):
+    return application.preview_service(
+        source,
+        dependencies=_canonical_dependencies(),
+        **kwargs,
+    )
+
+
+def _v2_dispatcher() -> WorkbenchCommandDispatcher:
+    return WorkbenchCommandDispatcher(
+        runtime=DesktopRuntime(),
+        validate=_canonical_validation_service,
+        preview=_canonical_preview_service,
+    )
 
 
 def _dispatcher(tmp_path: Path):
@@ -101,16 +145,9 @@ def _request(operation: str, source: Path) -> dict:
 
 def _write_source(path: Path) -> None:
     path.write_text(
-        """---
-thesis:
-  title: Template diagnostics
-author:
-  name: ThesisForge
----
+        """# 绪论 {#chap:introduction}
 
-# 绪论
-
-## 背景
+## 背景 {#sec:background}
 """,
         encoding="utf-8",
     )
@@ -315,22 +352,11 @@ def test_dispatcher_serializes_renderer_neutral_preview_from_application_service
     tmp_path: Path,
 ):
     source = tmp_path / "thesis.md"
-    source.write_text(
-        """---
-thesis:
-  title: "结构预览"
-author:
-  name: "测试作者"
----
-
-# 绪论 {#chap:intro}
-""",
-        encoding="utf-8",
-    )
+    source.write_text("# 绪论 {#chap:intro}\n", encoding="utf-8")
     request = _request("preview", source)
     request["payload"]["templateId"] = "bachelor-base"
 
-    response = WorkbenchCommandDispatcher(runtime=DesktopRuntime()).dispatch(request)
+    response = _v2_dispatcher().dispatch(request)
     encoded = json.dumps(response, ensure_ascii=False)
 
     assert response["ok"] is True
@@ -339,7 +365,7 @@ author:
         "semanticId": "chap:intro",
         "level": 1,
         "text": "绪论",
-        "line": 8,
+        "line": 1,
         "markers": [],
     }
     assert response["result"]["preview"]["status"] == "ready"
@@ -365,7 +391,7 @@ def test_dispatcher_rejects_conflicting_template_selectors_for_analysis(
     request["payload"]["templateId"] = "bachelor-base"
     request["payload"]["templatePath"] = str(template)
 
-    response = WorkbenchCommandDispatcher(runtime=DesktopRuntime()).dispatch(request)
+    response = _v2_dispatcher().dispatch(request)
 
     assert response["ok"] is False
     assert response["error"] == {
@@ -382,7 +408,7 @@ def test_dispatcher_validates_with_a_selected_template_path(tmp_path: Path):
     request = _request("validate", source)
     request["payload"]["templatePath"] = str(template)
 
-    response = WorkbenchCommandDispatcher(runtime=DesktopRuntime()).dispatch(request)
+    response = _v2_dispatcher().dispatch(request)
 
     assert response["ok"] is True
     template_codes = {
@@ -403,7 +429,7 @@ def test_dispatcher_resolves_a_stable_template_id_without_using_process_cwd(
     request = _request("validate", source)
     request["payload"]["templateId"] = "bachelor-base"
 
-    response = WorkbenchCommandDispatcher(runtime=DesktopRuntime()).dispatch(request)
+    response = _v2_dispatcher().dispatch(request)
 
     assert response["ok"] is True
     assert all(
@@ -422,7 +448,7 @@ def test_dispatcher_rejects_conflicting_template_selectors(tmp_path: Path):
     request["payload"]["templateId"] = "bachelor-base"
     request["payload"]["templatePath"] = str(template)
 
-    response = WorkbenchCommandDispatcher(runtime=DesktopRuntime()).dispatch(request)
+    response = _v2_dispatcher().dispatch(request)
 
     assert response["ok"] is False
     assert response["error"] == {
@@ -454,7 +480,7 @@ def test_dispatcher_surfaces_structured_selected_template_failures(
 
     request = _request("validate", source)
     request["payload"]["templatePath"] = str(template)
-    response = WorkbenchCommandDispatcher(runtime=DesktopRuntime()).dispatch(request)
+    response = _v2_dispatcher().dispatch(request)
 
     assert response["ok"] is True
     diagnostic = next(

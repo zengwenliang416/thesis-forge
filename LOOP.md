@@ -95,8 +95,8 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Open
 
-- [V2-319A2] Route application dependencies through the canonical parser
-  - Parent: ordered child 2/2 of the re-sliced `V2-319A`; depends on `V2-319A1`; parent Behavior and Acceptance remain unchanged.
+- [V2-319A2B] Route application dependencies through the canonical parser
+  - Parent: ordered child 2/2 of the re-sliced `V2-319A2`; depends on `V2-319A2A`; original `V2-319A2` Behavior and Acceptance remain unchanged.
   - Files: `src/thesis_forge/application/services.py`, `tests/test_application_services.py`
   - Behavior: make `ApplicationDependencies` use the canonical parser factory by default and align application-service coverage with the v2 source contract.
   - Verify: `.venv/bin/python -m pytest tests/test_application_services.py`
@@ -105,7 +105,7 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
   - Attempts: 0
 
 - [V2-319B] Remove parser-name switching from the QA diff tool
-  - Parent: ordered child 2/4 of the re-sliced `V2-319`; depends on `V2-319A2`; parent Behavior and Acceptance remain unchanged.
+  - Parent: ordered child 2/4 of the re-sliced `V2-319`; depends on `V2-319A2B`; parent Behavior and Acceptance remain unchanged.
   - Files: `qa/tools/parser_diff.py`, `tests/test_parser_backend.py`, `tests/test_parser_markdown_it.py`
   - Behavior: replace the dual-backend CLI and registry/name assertions with canonical single-parser calls while retaining deterministic document normalization coverage.
   - Verify: `.venv/bin/python -m pytest tests/test_parser_backend.py tests/test_parser_markdown_it.py`
@@ -132,6 +132,16 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
   - Attempts: 0
 
 ## Done
+
+- [V2-319A2A] Rebase adapter and acceptance fixtures on the canonical parser seam
+  - Parent: ordered preparation child 1/2 of the re-sliced `V2-319A2`; preserves the original `V2-319A2` Behavior and Acceptance for the dependent child.
+  - Files: `tests/test_adapters.py`, `tests/test_acceptance.py`
+  - Behavior: application-adapter and template-error regression fixtures that exercise application services use canonical v2 source/dependency seams instead of YAML Front Matter assumptions.
+  - Verify: `.venv/bin/python -m pytest tests/test_adapters.py tests/test_acceptance.py -k 'dispatcher or template_failures'`
+  - Acceptance: the selected adapter/template-error coverage is green before the production default flips and introduces no new failure when the canonical default is enabled.
+  - Verification-surface change: no.
+  - Attempts: 1
+  - Attempt 1 (2026-08-22): Checker PASS; exact Verify 12/12, full adapter regression 33/33, application regression 115/115, target Ruff, `git diff --check`, and LOOP-LINT passed; candidate and clean-HEAD acceptance runs were both 2 passed/6 failed with the identical six baseline failure nodes, while the selected canonical-default simulation remained green at 12/12 and adapters 33/33; runtime probes confirmed `MarkdownItParserBackend` through the real dependency/context seams. Candidate scope was exactly the two named test files, the registry was preserved and unstaged, one local commit and no push.
 
 - [V2-319A1] Establish the canonical parser factory/type
   - Parent: ordered child 1/2 of the re-sliced `V2-319A`; parent Behavior and Acceptance remain unchanged.
@@ -1452,5 +1462,7 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 - 2026-08-22 - V2-319 split into ordered children V2-319A through V2-319D after CodeGraph found the single-parser change spans the core factory, application default, QA dual-backend CLI/tests, public core exports, and template lint consumer; no product code edited in the split cycle, next queue is V2-319A.
 - 2026-08-22 - V2-319A split into ordered children V2-319A1 and V2-319A2 after a runtime probe showed switching `ApplicationDependencies` from legacy to markdown-it rejects the existing YAML Front Matter example and breaks the 77-test application-service baseline; no product code edited in the split cycle, next queue is V2-319A1.
 - 2026-08-22 - V2-319A1 Checker PASS Attempt 1; exact Verify 3/3, related parser/backend/contract regression 76/76, target Ruff, `git diff --check`, and LOOP-LINT passed; parameterless canonical factory/type and non-empty v2 parse coverage were confirmed, registry preserved and unstaged, one local commit and no push.
+- 2026-08-22 - V2-319A2 split into ordered children V2-319A2A and V2-319A2B after the candidate passed its 78-test application-service Verify but introduced 7 new adapter failures and 1 new acceptance failure when compared with clean HEAD; candidate product/test changes were restored, and the prep child will rebase those fixtures before the canonical application default flips.
+- 2026-08-22 - V2-319A2A Checker PASS Attempt 1; exact Verify 12/12, full adapter/application regressions 33/33 and 115/115, target Ruff, diff-check, LOOP-LINT, canonical seam probes, and selected canonical-default simulation passed; candidate/clean-HEAD acceptance failure sets matched at the same six baseline nodes, registry preserved, one local commit and no push.
 
 ## Sync log
