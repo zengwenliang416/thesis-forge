@@ -95,7 +95,17 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Open
 
-- [V2-308] Validator consumes DocumentIndex
+- [V2-308A] Manifest-resource validation fixtures carry real content citations
+  - Parent: first child of the re-sliced `V2-308`; depends on `V2-307D2`.
+  - Files: `tests/core/test_manifest_resource_validation.py`
+  - Behavior: the three ThesisDocument fixtures place their Citation inside Paragraph inlines instead of injecting it only into the `citations` cache field.
+  - Verify: `.venv/bin/python -m pytest tests/core/test_manifest_resource_validation.py`
+  - Acceptance: the fixtures are green before and after the validator stops reading the cache; no fixture constructs a citation that exists only in a cache field.
+  - Verification-surface change: authorized; migrates validation fixtures.
+  - Attempts: 0
+
+- [V2-308B] Validator consumes DocumentIndex
+  - Parent: second child of the re-sliced `V2-308`; depends on `V2-308A`.
   - Files: `src/thesis_forge/core/validator.py`, `tests/core/test_validator_document_index.py`
   - Behavior: ID, reference, citation and footnote validation reads one derived DocumentIndex instead of parser-maintained caches.
   - Verify: `.venv/bin/python -m pytest tests/core/test_validator_document_index.py`
@@ -1190,6 +1200,7 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 - 2026-08-22 - V2-307D1d Checker PASS; DocumentIndex now traverses Algorithm body_lines so body citations join the derived collections with accurate locations and document order, exact Verify 16/16 and baselines 153/153; no push.
 - 2026-08-22 - V2-307D1e Checker PASS on Attempt 2 after the re-slice prerequisites; all parser-test cache pins now read DocumentIndex-derived sequences with zero cache-field assertions remaining, exact Verify 83/83 and value-equivalence probes green; no push.
 - 2026-08-22 - V2-307D2 Checker PASS; e2e and object-model cache pins now read DocumentIndex-derived sequences, exact Verify 9/9 with baselines green; no push.
+- 2026-08-22 - V2-308 split into ordered children V2-308A and V2-308B before any product edit after inspection found tests/core/test_manifest_resource_validation.py constructs three cache-only citations that would break the validator flip (a third file beyond the item's named two); A migrates the fixtures to real Paragraph inline citations (green both ways), B carries the validator flip; no product code edited in the split cycle.
 - 2026-08-22 - V2-307D1 Checker FAIL Attempt 1 then re-sliced into ordered children V2-307D1a…D1e after independent Checker grep found 20 cache-pin sites (18 in test_parser_contract.py) and completing them exposed typed-model defects the cache masked: caption inline locations carry the container start line in both backends, table-cell inline locations are misaligned by the metadata/blank rows, and algorithm-body citations exist only in the cache (Algorithm.body is verbatim-only); children fix caption/cell locations, add typed Algorithm body_lines to the model and both parsers, extend index traversal, then finish the pin migration; three test files restored, no product code edited in the split cycle.
 - 2026-08-22 - V2-307 split into eight ordered children V2-307A…G after grep mapping showed removing the four cache fields atomically spans model.py + both parsers (12 registration call sites) + compiler.py + validator.py + cli.py + qa/tools/parser_diff.py plus seven test files; children migrate readers first (compiler/CLI/parity-tool/test pins, with V2-308 landing between D2 and E), then stop registration per parser, then remove the fields; no product code edited in the split cycle.
 
