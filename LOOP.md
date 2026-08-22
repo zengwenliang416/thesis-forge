@@ -95,8 +95,17 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Open
 
-- [V2-305E2] Remove raw thesis-object caption/text fields
-  - Parent: ordered child 7/7 of `V2-305`; depends on `V2-305E1B`.
+- [V2-305E2A] Migrate parser object caption assertions
+  - Parent: ordered child 7/8 of `V2-305`; depends on `V2-305E1B`.
+  - Files: `tests/test_parser_contract.py`
+  - Behavior: parser Figure/Algorithm caption assertions read caption inlines instead of raw caption fields.
+  - Verify: `.venv/bin/python -m pytest tests/test_parser_contract.py`
+  - Acceptance: parser object contract remains green without raw caption assertions.
+  - Verification-surface change: authorized; migrates parser object contract assertions.
+  - Attempts: 0
+
+- [V2-305E2B] Remove raw thesis-object caption/text fields
+  - Parent: ordered child 8/8 of `V2-305`; depends on `V2-305E2A`.
   - Files: `src/thesis_forge/core/model.py`, `src/thesis_forge/core/parser.py`, `tests/core/test_thesis_object_model.py`
   - Behavior: Figure/Listing/Algorithm no longer store raw caption strings and FootnoteDefinition no longer stores duplicate text; typed inlines/content are authoritative.
   - Verify: `.venv/bin/python -m pytest tests/core/test_thesis_object_model.py tests/test_parser.py tests/test_parser_contract.py tests/test_compiler.py tests/test_docx_renderer.py tests/test_preview_presentation.py`
@@ -1008,5 +1017,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 - 2026-08-22 - V2-305E split into ordered children V2-305E1A, V2-305E1B and V2-305E2 after AST found raw object captions across five fixture/parser surfaces; no product code edited in the split cycle, next queue V2-305E1A.
 - 2026-08-22 - V2-305E1A Checker PASS; compiler/DOCX/preview object fixtures now use caption inlines only, exact Verify 115/115, AST/Ruff/diff-check passed; no push.
 - 2026-08-22 - V2-305E1B Checker PASS; manifest Figure fixture now uses caption inlines only, exact Verify 4/4, AST/Ruff/diff-check passed; no push.
+- 2026-08-22 - V2-305E2 split into ordered children V2-305E2A and V2-305E2B after parser contract inspection found raw Figure/Algorithm caption assertions; no product code edited in the split cycle, next queue V2-305E2A.
 
 ## Sync log
