@@ -95,12 +95,94 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Open
 
-- [V2-303] Replace the basic Block model
+- [V2-303A] Add typed block structures and the canonical plain-text derivation
+  - Parent: ordered child 1/10 of `V2-303`; the parent behavior remains unchanged.
   - Files: `src/thesis_forge/core/model.py`, `tests/core/test_block_model.py`
-  - Behavior: Heading and Paragraph own inlines only; lists are recursive; BlockQuote and CodeBlock are typed.
+  - Behavior: add typed BlockQuote(children), CodeBlock(language, code), OrderedList/BulletList(items) with recursive ListItem children, plus the canonical `inline_plain_text` derivation over inlines; pure addition, nothing emits or consumes the new types yet.
   - Verify: `.venv/bin/python -m pytest tests/core/test_block_model.py`
-  - Acceptance: no authoritative `text + inlines` duplication remains.
+  - Acceptance: recursive lists and typed BlockQuote/CodeBlock are representable; baselines stay green.
   - Verification-surface change: authorized; creates focused block-model tests.
+  - Attempts: 0
+
+- [V2-303B] Migrate parser-test block-text pins to derived text
+  - Parent: ordered child 2/10 of `V2-303`; depends on `V2-303A`.
+  - Files: `tests/test_parser.py`, `tests/test_parser_markdown_it.py`, `tests/test_parser_contract.py`
+  - Behavior: assertions on parsed-block `.text` (heading text, list-item text, degraded raw content) re-express against `inline_plain_text(block.inlines)`; green both before and after parsers stop populating the field.
+  - Verify: `.venv/bin/python -m pytest tests/test_parser.py tests/test_parser_markdown_it.py tests/test_parser_contract.py`
+  - Acceptance: no parser test asserts on the block `text` field; baselines stay green.
+  - Verification-surface change: authorized; migrates parser test assertions ahead of the parser change.
+  - Attempts: 0
+
+- [V2-303C] Compiler derives block text from inlines
+  - Parent: ordered child 3/10 of `V2-303`; depends on `V2-303B`.
+  - Files: `src/thesis_forge/core/compiler.py`, `tests/test_compiler.py`
+  - Behavior: bookmark labels, abstract/keywords detection and text fallbacks read `inline_plain_text(block.inlines)` instead of `block.text`; test fixtures that construct text-only blocks gain parser-shaped inlines.
+  - Verify: `.venv/bin/python -m pytest tests/test_compiler.py tests/test_docx_renderer.py tests/core/`
+  - Acceptance: compiler output is unchanged on the suite; no compiler read of the block `text` field remains.
+  - Verification-surface change: authorized; migrates compiler fixtures to parser-shaped inlines.
+  - Attempts: 0
+
+- [V2-303D] Projections derive heading text from inlines
+  - Parent: ordered child 4/10 of `V2-303`; depends on `V2-303C`.
+  - Files: `src/thesis_forge/presentation/preview.py`, `src/thesis_forge/adapters/runtime.py`
+  - Behavior: the structure/outline projections read heading text via `inline_plain_text` instead of the block `text` field.
+  - Verify: `.venv/bin/python -m pytest tests/test_preview_presentation.py tests/test_adapters.py`
+  - Acceptance: projection output unchanged on the suite; no projection read of the block `text` field remains.
+  - Verification-surface change: none.
+  - Attempts: 0
+
+- [V2-303E] Parsers stop populating block text
+  - Parent: ordered child 5/10 of `V2-303`; depends on `V2-303D`.
+  - Files: `src/thesis_forge/core/parser.py`, `src/thesis_forge/core/parser_markdown_it.py`, `src/thesis_forge/core/compiler.py`
+  - Behavior: Heading/Paragraph/ListItem construction stops passing `text=`; the now-dead `_fallback_text_runs` path is removed from the compiler.
+  - Verify: `.venv/bin/python -m pytest tests/test_parser.py tests/test_parser_markdown_it.py tests/test_parser_backend.py tests/test_parser_contract.py tests/test_compiler.py tests/core/`
+  - Acceptance: no parser sets the block `text` field; baselines stay green.
+  - Verification-surface change: none.
+  - Attempts: 0
+
+- [V2-303F] Drop text kwargs from docx-renderer fixtures
+  - Parent: ordered child 6/10 of `V2-303`; depends on `V2-303E`.
+  - Files: `tests/test_docx_renderer.py`
+  - Behavior: block constructions drop the redundant `text=` kwarg; inlines stay the single content source.
+  - Verify: `.venv/bin/python -m pytest tests/test_docx_renderer.py`
+  - Acceptance: no block `text=` construction remains in the file; suite stays green.
+  - Verification-surface change: authorized; removes redundant fixture kwargs.
+  - Attempts: 0
+
+- [V2-303G] Drop text kwargs from compiler fixtures
+  - Parent: ordered child 7/10 of `V2-303`; depends on `V2-303F`.
+  - Files: `tests/test_compiler.py`
+  - Behavior: block constructions drop the redundant `text=` kwarg.
+  - Verify: `.venv/bin/python -m pytest tests/test_compiler.py`
+  - Acceptance: no block `text=` construction remains in the file; suite stays green.
+  - Verification-surface change: authorized; removes redundant fixture kwargs.
+  - Attempts: 0
+
+- [V2-303H] Drop text kwargs from remaining core/adapter fixtures
+  - Parent: ordered child 8/10 of `V2-303`; depends on `V2-303G`.
+  - Files: `tests/core/test_source_identity.py`, `tests/test_adapters.py`, `tests/core/test_manifest_resource_validation.py`
+  - Behavior: block constructions drop the redundant `text=` kwarg.
+  - Verify: `.venv/bin/python -m pytest tests/core/ tests/test_adapters.py`
+  - Acceptance: no block `text=` construction remains in the three files; suites stay green.
+  - Verification-surface change: authorized; removes redundant fixture kwargs.
+  - Attempts: 0
+
+- [V2-303I] Drop text kwargs from CLI fixtures
+  - Parent: ordered child 9/10 of `V2-303`; depends on `V2-303H`.
+  - Files: `tests/cli/test_project_commands.py`
+  - Behavior: the remaining block `text=` construction drops the kwarg.
+  - Verify: `.venv/bin/python -m pytest tests/cli/test_project_commands.py`
+  - Acceptance: no block `text=` construction remains in the file; suite stays green.
+  - Verification-surface change: authorized; removes redundant fixture kwargs.
+  - Attempts: 0
+
+- [V2-303J] Remove the block text fields
+  - Parent: ordered child 10/10 of `V2-303`; depends on `V2-303I`.
+  - Files: `src/thesis_forge/core/model.py`, `tests/core/test_block_model.py`
+  - Behavior: Heading, Paragraph and ListItem lose the `text` field; block-model tests pin that inlines are the single content source.
+  - Verify: `.venv/bin/python -m pytest tests/core/test_block_model.py tests/core/ tests/test_parser_contract.py tests/test_compiler.py`
+  - Acceptance: no authoritative `text + inlines` duplication remains; baselines stay green.
+  - Verification-surface change: authorized; finalizes the block-model shape tests.
   - Attempts: 0
 
 - [V2-304] Structured table model
@@ -747,5 +829,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 - 2026-08-22 - V2-302E1 Checker PASS; 2-file diff contract-exact (stricter Strong children-content re-pin + 5 non-vacuous Strong inline-model tests), exact Verify 49/49, baselines 205/205, load-bearing/mutation/two-backend probes green, full suite 46 failed / 978 passed confined to the 7 known files; no push.
 - 2026-08-22 - V2-302E2 Checker PASS; deletion-only 2-file diff removes the CodeSpan dataclass and its source-identity enumeration, exact Verify 103/103, ImportError/import/behavior/parity probes green, repo-wide CodeSpan grep empty outside LOOP.md, full suite 46 failed / 978 passed confined to the 7 known files; no push.
 - 2026-08-22 - Open refilled with V2-304 and V2-305 per the catalogue dependency order after V2-302E2 left one Open item; both model-replacement slices are expected to need re-slicing when their cycles arrive (consumer construction and test-construction sites exceed the two-file catalogue slices); no product code edited.
+- 2026-08-22 - V2-303 split into ten ordered children V2-303A…J after investigation showed removing the duplicated block text fields atomically spans model.py + both parsers + compiler + preview/runtime projections + six test files; the ordered path migrates test pins to derived text first (green both ways), enriches compiler fixtures with parser-shaped inlines before the compiler derivation flip, drops text= kwargs before the field removal, and removes the dead _fallback_text_runs in V2-303E; no product code edited in the split cycle.
 
 ## Sync log
