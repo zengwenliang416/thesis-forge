@@ -95,15 +95,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Open
 
-- [V2-304D] Migrate DOCX table fixtures to structured Tables
-  - Parent: ordered child 4/5 of `V2-304`; depends on `V2-304C`.
-  - Files: `tests/test_docx_renderer.py`
-  - Behavior: DOCX table tests construct typed rows/cells and no longer pass pipe-delimited Table markdown.
-  - Verify: `.venv/bin/python -m pytest tests/test_docx_renderer.py`
-  - Acceptance: all table XML, borders, alignment, empty-table and numbering assertions remain green.
-  - Verification-surface change: authorized; migrates DOCX table fixtures.
-  - Attempts: 0
-
 - [V2-304E] Remove raw Table caption/markdown fields
   - Parent: ordered child 5/5 of `V2-304`; depends on `V2-304D`.
   - Files: `src/thesis_forge/core/model.py`, `src/thesis_forge/core/parser.py`, `tests/core/test_table_model.py`
@@ -122,6 +113,16 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
   - Attempts: 0
 
 ## Done
+
+- [V2-304D] Migrate DOCX table fixtures to structured Tables
+  - Parent: ordered child 4/5 of `V2-304`; depends on `V2-304C`.
+  - Files: `tests/test_docx_renderer.py`
+  - Behavior: DOCX table tests construct typed rows/cells and no longer pass pipe-delimited Table markdown.
+  - Verify: `.venv/bin/python -m pytest tests/test_docx_renderer.py`
+  - Acceptance: all table XML, borders, alignment, empty-table and numbering assertions remain green.
+  - Verification-surface change: authorized; migrates DOCX table fixtures.
+  - Attempts: 1
+  - Attempt 1 (2026-08-22): Checker PASS; migration landed in the V2-304C three-file slice to keep compiler/DOCX regression green, independent D Verify 86/86 and AST found zero Table markdown fixtures; no additional product diff; no push.
 
 - [V2-304C] Compile structured table rows and migrate compiler/DOCX fixtures
   - Parent: ordered child 3/5 of `V2-304`; depends on `V2-304B`.
@@ -909,5 +910,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 - 2026-08-22 - V2-304A Checker PASS; typed TableCell/TableRow primitives and focused model tests added, exact Verify 4/4, Ruff/diff-check clean; no push.
 - 2026-08-22 - V2-304B Checker PASS; parser now populates structured table caption/rows/cells while retaining the raw consumer transition, exact Verify 87/87, Ruff/diff-check clean; no push.
 - 2026-08-22 - V2-304C Checker PASS; compiler now consumes structured table rows without pipe parsing, exact Verify 109/109, parse-to-compile probe and Ruff/diff-check passed; no push.
+- 2026-08-22 - V2-304D Checker PASS; DOCX table fixtures are structured, exact Verify 86/86 and AST audit passed, with no additional product diff because migration landed in C; no push.
 
 ## Sync log
