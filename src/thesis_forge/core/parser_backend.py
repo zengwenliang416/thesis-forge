@@ -14,8 +14,8 @@ from pathlib import Path
 from typing import Protocol, runtime_checkable
 
 from .model import ThesisDocument
-from .parser import ParseError
 from .parser_markdown_it import MarkdownItParserBackend
+from .parser_support import ParseError
 
 __all__ = [
     "MarkdownItParserBackend",
@@ -30,7 +30,7 @@ class ParserBackend(Protocol):
     """Markdown → ThesisDocument 的解析后端协议（ADR-0001）。
 
     实现必须产出与 ``core.model`` 一致的 ``ThesisDocument``；
-    解析错误沿用 ``core.parser.ParseError``（带行号语义由后端无关预检承担）。
+    解析错误沿用 ``core.parser_support.ParseError``（带行号语义由后端无关预检承担）。
     """
 
     @property
