@@ -112,8 +112,8 @@ def test_docx_renderer_applies_template_page_body_and_heading_xml(tmp_path: Path
     document = ThesisDocument(
         source_path=tmp_path / "thesis.md",
         blocks=[
-            Heading(id="chap:intro", level=1, text="绪论", inlines=[Text(value="绪论")]),
-            Paragraph(text="正文段落", inlines=[Text(value="正文段落")]),
+            Heading(id="chap:intro", level=1, inlines=[Text(value="绪论")]),
+            Paragraph(inlines=[Text(value="正文段落")]),
         ],
     )
     template = load_template("templates/schools/example-university/2026.yaml")
@@ -222,10 +222,9 @@ def test_docx_renderer_translates_complete_body_and_heading_policy_xml(
             Heading(
                 id="chap:intro",
                 level=1,
-                text="绪论",
                 inlines=_text_inlines("绪论"),
             ),
-            Paragraph(text="正文", inlines=[Text(value="正文")]),
+            Paragraph(inlines=[Text(value="正文")]),
         ],
     )
     output = tmp_path / "complete-policy.docx"
@@ -325,7 +324,6 @@ def test_heading_em_size_and_indent_resolve_from_body_font_size(tmp_path: Path):
             Heading(
                 id="chap:intro",
                 level=1,
-                text="绪论",
                 inlines=_text_inlines("绪论"),
             )
         ],
@@ -348,7 +346,7 @@ def test_single_line_spacing_writes_quantized_word_xml(tmp_path: Path):
     template.body.line_spacing = LineSpacingSpec(type="single")
     document = ThesisDocument(
         source_path=tmp_path / "thesis.md",
-        blocks=[Paragraph(text="正文", inlines=[Text(value="正文")])],
+        blocks=[Paragraph(inlines=[Text(value="正文")])],
     )
     output = tmp_path / "single-spacing.docx"
 
@@ -755,31 +753,26 @@ def _toc_document(tmp_path: Path) -> ThesisDocument:
             Heading(
                 id="chap:abstract-zh",
                 level=1,
-                text="摘要",
                 inlines=_text_inlines("摘要"),
             ),
             Heading(
                 id="chap:intro",
                 level=1,
-                text="绪论",
                 inlines=_text_inlines("绪论"),
             ),
             Heading(
                 id="sec:background",
                 level=2,
-                text="研究背景",
                 inlines=_text_inlines("研究背景"),
             ),
             Heading(
                 id="sec:limitations",
                 level=3,
-                text="现有流程的局限",
                 inlines=_text_inlines("现有流程的局限"),
             ),
             Heading(
                 id=None,
                 level=2,
-                text="无书签小节",
                 inlines=_text_inlines("无书签小节"),
             ),
         ],
@@ -959,7 +952,6 @@ def test_partial_semantic_title_inherits_heading_style_and_overrides_false(
             Heading(
                 id="chap:abstract-zh",
                 level=1,
-                text="摘要",
                 inlines=_text_inlines("摘要"),
             )
         ],
@@ -1015,10 +1007,9 @@ def test_partial_semantic_body_uses_inherited_size_for_em_lengths(
             Heading(
                 id="chap:abstract-zh",
                 level=1,
-                text="摘要",
                 inlines=_text_inlines("摘要"),
             ),
-            Paragraph(text="摘要正文", inlines=_text_inlines("摘要正文")),
+            Paragraph(inlines=_text_inlines("摘要正文")),
         ],
     )
     output = tmp_path / "partial-semantic-body.docx"
@@ -1155,19 +1146,16 @@ def test_heading_levels_one_through_three_use_shared_translator(tmp_path: Path):
             Heading(
                 id="chap:one",
                 level=1,
-                text="一级标题",
                 inlines=_text_inlines("一级标题"),
             ),
             Heading(
                 id="sec:two",
                 level=2,
-                text="二级标题",
                 inlines=_text_inlines("二级标题"),
             ),
             Heading(
                 id="sec:three",
                 level=3,
-                text="三级标题",
                 inlines=_text_inlines("三级标题"),
             ),
         ],
@@ -1202,10 +1190,9 @@ def test_two_templates_change_styles_without_changing_document_semantics(
             Heading(
                 id="chap:intro",
                 level=1,
-                text="绪论",
                 inlines=_text_inlines("绪论"),
             ),
-            Paragraph(text="相同正文", inlines=[Text(value="相同正文")]),
+            Paragraph(inlines=[Text(value="相同正文")]),
         ],
     )
     first_template = load_template("templates/base/bachelor.yaml")
@@ -1254,7 +1241,7 @@ def test_docx_renderer_applies_landscape_orientation(tmp_path: Path):
     template.page.orientation = "landscape"
     document = ThesisDocument(
         source_path=tmp_path / "thesis.md",
-        blocks=[Paragraph(text="正文", inlines=[Text(value="正文")])],
+        blocks=[Paragraph(inlines=[Text(value="正文")])],
     )
     output = tmp_path / "landscape.docx"
 
@@ -1288,13 +1275,11 @@ def test_docx_renderer_writes_metadata_cover_before_front_matter(tmp_path: Path)
             Heading(
                 id="chap:abstract-zh",
                 level=1,
-                text="摘要",
                 inlines=_text_inlines("摘要"),
             ),
             Heading(
                 id="chap:introduction",
                 level=1,
-                text="绪论",
                 inlines=_text_inlines("绪论"),
             ),
         ],
@@ -1390,7 +1375,6 @@ def test_docx_renderer_uses_template_cover_order_content_and_style(tmp_path: Pat
             Heading(
                 id="chap:introduction",
                 level=1,
-                text="绪论",
                 inlines=_text_inlines("绪论"),
             )
         ],
@@ -1494,9 +1478,9 @@ def test_docx_renderer_preserves_list_start_and_nesting_xml(tmp_path: Path):
                 ordered=True,
                 start=3,
                 items=[
-                    ListItem(text="第三项", level=0, ordinal=3, inlines=[Text(value="第三项")]),
-                    ListItem(text="子项", level=1, ordinal=1, inlines=[Text(value="子项")]),
-                    ListItem(text="第四项", level=0, ordinal=4, inlines=[Text(value="第四项")]),
+                    ListItem(level=0, ordinal=3, inlines=[Text(value="第三项")]),
+                    ListItem(level=1, ordinal=1, inlines=[Text(value="子项")]),
+                    ListItem(level=0, ordinal=4, inlines=[Text(value="第四项")]),
                 ],
             )
         ],
@@ -1622,13 +1606,11 @@ def test_docx_renderer_applies_independent_template_list_policies_and_styles(
                 start=3,
                 items=[
                     ListItem(
-                        text="第三项",
                         level=0,
                         ordinal=3,
                         inlines=[Text(value="第三项")],
                     ),
                     ListItem(
-                        text="深层项",
                         level=12,
                         ordinal=1,
                         inlines=[Text(value="深层项")],
@@ -1639,7 +1621,6 @@ def test_docx_renderer_applies_independent_template_list_policies_and_styles(
                 ordered=False,
                 items=[
                     ListItem(
-                        text="项目符号",
                         level=0,
                         inlines=[Text(value="项目符号")],
                     ),
@@ -1791,7 +1772,7 @@ def test_docx_renderer_creates_real_figures_captions_bookmarks_and_three_line_ta
     document = ThesisDocument(
         source_path=tmp_path / "thesis.md",
         blocks=[
-            Heading(id="chap:intro", level=1, text="绪论", inlines=[Text(value="绪论")]),
+            Heading(id="chap:intro", level=1, inlines=[Text(value="绪论")]),
             Figure(
                 id="fig:model",
                 src="./images/model.png",
@@ -2129,14 +2110,12 @@ def test_docx_renderer_creates_real_math_fields_footnotes_and_page_structures(
             Heading(
                 id="chap:abstract-zh",
                 level=1,
-                text="摘要",
                 inlines=_text_inlines("摘要"),
             ),
-            Paragraph(text="摘要正文", inlines=[Text(value="摘要正文")]),
+            Paragraph(inlines=[Text(value="摘要正文")]),
             Heading(
                 id="chap:introduction",
                 level=1,
-                text="绪论",
                 inlines=_text_inlines("绪论"),
             ),
             Figure(id="fig:model", src="./model.png", caption="系统模型"),
@@ -2150,7 +2129,6 @@ def test_docx_renderer_creates_real_math_fields_footnotes_and_page_structures(
                 latex=r"L=-\sum_{i=1}^n y_i \log \hat{y}_i+x_i^2",
             ),
             Paragraph(
-                text="参见图和公式并带脚注",
                 inlines=[
                     Text(value="参见"),
                     CrossReference(target="fig:model"),
@@ -2161,7 +2139,6 @@ def test_docx_renderer_creates_real_math_fields_footnotes_and_page_structures(
             ),
             FootnoteDefinition(
                 label="note",
-                text="真实脚注正文，参见图",
                 inlines=[
                     Text(value="真实脚注正文，参见"),
                     CrossReference(target="fig:model"),
@@ -2364,7 +2341,6 @@ def test_docx_renderer_omits_page_fields_when_page_number_format_is_none(
             Heading(
                 id="chap:intro",
                 level=1,
-                text="绪论",
                 inlines=_text_inlines("绪论"),
             )
         ],
@@ -2408,13 +2384,11 @@ def test_docx_renderer_prevents_disabled_section_header_footer_inheritance(
             Heading(
                 id="chap:abstract-zh",
                 level=1,
-                text="摘要",
                 inlines=_text_inlines("摘要"),
             ),
             Heading(
                 id="chap:intro",
                 level=1,
-                text="绪论",
                 inlines=_text_inlines("绪论"),
             ),
         ],
@@ -2529,7 +2503,6 @@ def test_docx_renderer_writes_page_geometry_and_all_header_footer_variants(
             Heading(
                 id="chap:intro",
                 level=1,
-                text="绪论",
                 inlines=_text_inlines("绪论"),
             )
         ],
@@ -2699,13 +2672,11 @@ def test_docx_renderer_clears_disabled_variants_in_added_section(
             Heading(
                 id="chap:abstract-zh",
                 level=1,
-                text="摘要",
                 inlines=_text_inlines("摘要"),
             ),
             Heading(
                 id="chap:intro",
                 level=1,
-                text="绪论",
                 inlines=_text_inlines("绪论"),
             ),
         ],
@@ -2784,13 +2755,11 @@ def test_docx_renderer_uses_current_default_when_even_variant_is_omitted(
             Heading(
                 id="chap:abstract-zh",
                 level=1,
-                text="摘要",
                 inlines=_text_inlines("摘要"),
             ),
             Heading(
                 id="chap:intro",
                 level=1,
-                text="绪论",
                 inlines=_text_inlines("绪论"),
             ),
         ],
@@ -2854,13 +2823,11 @@ def test_docx_renderer_uses_current_default_when_first_variant_is_omitted(
             Heading(
                 id="chap:abstract-zh",
                 level=1,
-                text="摘要",
                 inlines=_text_inlines("摘要"),
             ),
             Heading(
                 id="chap:intro",
                 level=1,
-                text="绪论",
                 inlines=_text_inlines("绪论"),
             ),
         ],
@@ -2977,7 +2944,6 @@ def test_docx_renderer_materializes_initial_first_fallback_with_default_policy(
             Heading(
                 id="chap:intro",
                 level=1,
-                text="绪论",
                 inlines=_text_inlines("绪论"),
             )
         ],
@@ -3068,13 +3034,11 @@ def test_docx_renderer_materializes_disabled_default_as_blank_first_fallback(
             Heading(
                 id="chap:abstract-zh",
                 level=1,
-                text="摘要",
                 inlines=_text_inlines("摘要"),
             ),
             Heading(
                 id="chap:intro",
                 level=1,
-                text="绪论",
                 inlines=_text_inlines("绪论"),
             ),
         ],
@@ -3167,7 +3131,6 @@ def test_docx_renderer_writes_resolved_body_footnote_and_bibliography_text(
         source_path=tmp_path / "thesis.md",
         blocks=[
             Paragraph(
-                text="正文引用",
                 inlines=[
                     Text(value="正文引用"),
                     body_citation,
@@ -3176,7 +3139,6 @@ def test_docx_renderer_writes_resolved_body_footnote_and_bibliography_text(
             ),
             FootnoteDefinition(
                 label="note",
-                text="脚注引用",
                 inlines=[Text(value="脚注引用"), footnote_citation],
             ),
             BibliographyBlock(),
@@ -3298,7 +3260,6 @@ def test_docx_renderer_applies_superscript_to_body_and_footnote_citations(
         source_path=tmp_path / "thesis.md",
         blocks=[
             Paragraph(
-                text="正文引用",
                 inlines=[
                     Text(value="正文引用"),
                     body_citation,
@@ -3307,7 +3268,6 @@ def test_docx_renderer_applies_superscript_to_body_and_footnote_citations(
             ),
             FootnoteDefinition(
                 label="note",
-                text="脚注引用",
                 inlines=[Text(value="脚注引用"), footnote_citation],
             ),
         ],
@@ -3354,11 +3314,10 @@ def test_docx_renderer_applies_bibliography_title_and_entry_policy_xml(
     document = ThesisDocument(
         source_path=tmp_path / "thesis.md",
         blocks=[
-            Paragraph(text="引用", inlines=[Text(value="引用"), citation]),
+            Paragraph(inlines=[Text(value="引用"), citation]),
             Heading(
                 id="references",
                 level=1,
-                text="参考文献",
                 inlines=_text_inlines("参考文献"),
             ),
             BibliographyBlock(),
@@ -3492,7 +3451,6 @@ def _render_equation_document_xml(tmp_path: Path, equation_id: str, latex: str):
             Heading(
                 id="chap:math",
                 level=1,
-                text="公式",
                 inlines=_text_inlines("公式"),
             ),
             Equation(id=equation_id, latex=latex),

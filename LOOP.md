@@ -95,15 +95,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Open
 
-- [V2-303F] Drop text kwargs from docx-renderer fixtures
-  - Parent: ordered child 7/11 of `V2-303`; depends on `V2-303E`.
-  - Files: `tests/test_docx_renderer.py`
-  - Behavior: block constructions drop the redundant `text=` kwarg; inlines stay the single content source.
-  - Verify: `.venv/bin/python -m pytest tests/test_docx_renderer.py`
-  - Acceptance: no block `text=` construction remains in the file; suite stays green.
-  - Verification-surface change: authorized; removes redundant fixture kwargs.
-  - Attempts: 0
-
 - [V2-303G] Drop text kwargs from compiler fixtures
   - Parent: ordered child 8/11 of `V2-303`; depends on `V2-303F`.
   - Files: `tests/test_compiler.py`
@@ -157,6 +148,16 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
   - Attempts: 0
 
 ## Done
+
+- [V2-303F] Drop text kwargs from docx-renderer fixtures
+  - Parent: ordered child 7/11 of `V2-303`; depends on `V2-303E`.
+  - Files: `tests/test_docx_renderer.py`
+  - Behavior: block constructions drop the redundant `text=` kwarg; inlines stay the single content source.
+  - Verify: `.venv/bin/python -m pytest tests/test_docx_renderer.py`
+  - Acceptance: no block `text=` construction remains in the file; suite stays green.
+  - Verification-surface change: authorized; removes redundant fixture kwargs.
+  - Attempts: 1
+  - Attempt 1 (2026-08-22): Checker PASS; AST found zero `text=` kwargs in Heading/Paragraph/ListItem/FootnoteDefinition model constructors while RenderPlan instruction text remained intact, exact Verify 86/86, Ruff and `git diff --check` clean; no push.
 
 - [V2-303E] Parsers stop populating block text
   - Parent: ordered child 6/11 of `V2-303`; depends on `V2-303D2`.
@@ -854,5 +855,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 - 2026-08-22 - V2-303D1 Checker PASS; preview outline now derives heading text from inline_plain_text, exact Verify 5/5, Ruff/diff-check clean, stale-text regression and parser-shaped fixture coverage passed; no push.
 - 2026-08-22 - V2-303D2 Checker PASS; both runtime inspect outline branches now derive heading text from inline_plain_text, exact Verify 33/33, Ruff/diff-check clean, stale-text adapter fixtures passed; no push.
 - 2026-08-22 - V2-303E Checker PASS; parsers stopped populating block text and compiler fallback runs were removed, exact Verify 172/172, dual-backend text-authority probe and Ruff/diff-check passed; no push.
+- 2026-08-22 - V2-303F Checker PASS; DOCX renderer fixtures now rely solely on inlines, exact Verify 86/86, AST constructor audit and Ruff/diff-check passed; no push.
 
 ## Sync log
