@@ -340,7 +340,8 @@ def _resolve_blocks(
                 label = f"({number})" if number else block.id or ""
             else:
                 prefix = _caption_prefix(template, kind)
-                label = f"{prefix}{number}" if number else block.caption
+                caption = inline_plain_text(block.caption_inlines)
+                label = f"{prefix}{number}" if number else caption
             if numbering is not None and number is not None:
                 sequence = _sequence_instruction(
                     kind=kind,
@@ -353,7 +354,7 @@ def _resolve_blocks(
         elif isinstance(block, Heading):
             label = inline_plain_text(block.inlines)
         elif isinstance(block, (Listing, Algorithm)):
-            label = block.caption
+            label = inline_plain_text(block.caption_inlines)
         elif block.id:
             label = block.id
 
@@ -742,7 +743,7 @@ def _compile_block(
             source_id=block.id,
             src=block.src,
             asset_path=_resolve_figure_asset(context.document.source_path, block.src),
-            caption=block.caption,
+            caption=inline_plain_text(block.caption_inlines),
             width=block.width,
             resolved_width=_resolved_figure_width(block.width, context.template),
             chapter=chapter,
@@ -778,11 +779,12 @@ def _compile_block(
             label=label,
             bookmark=bookmark,
             sequence=sequence,
+            display=block.display,
         )
     if isinstance(block, Listing):
         return ListingInstruction(
             source_id=block.id,
-            caption=block.caption,
+            caption=inline_plain_text(block.caption_inlines),
             language=block.language,
             code=block.code,
             bookmark=bookmark,
@@ -790,7 +792,7 @@ def _compile_block(
     if isinstance(block, Algorithm):
         return AlgorithmInstruction(
             source_id=block.id,
-            caption=block.caption,
+            caption=inline_plain_text(block.caption_inlines),
             body=block.body,
             bookmark=bookmark,
         )

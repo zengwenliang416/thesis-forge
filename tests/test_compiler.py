@@ -101,18 +101,39 @@ def test_compile_document_resolves_typed_instructions_and_global_semantics():
             Heading(id="chap:intro", level=1, inlines=[Text(value="绪论")]),
             Paragraph(inlines=paragraph_inlines),
             ListBlock(items=[ListItem(inlines=[Text(value="第一项")])]),
-            Figure(id="fig:model", src="model.png", caption="系统模型"),
+            Figure(
+                id="fig:model",
+                src="model.png",
+                caption="系统模型",
+                caption_inlines=_text_inlines("系统模型"),
+            ),
             _structured_table("tbl:data", "数据表", (("A", None),), ((("1", None),),)),
             Equation(id="eq:loss", latex="E=mc^2"),
-            Listing(id="lst:demo", caption="示例代码", language="python", code="print(1)"),
-            Algorithm(id="alg:sort", caption="排序算法", body="1. 输入"),
+            Listing(
+                id="lst:demo",
+                caption="示例代码",
+                caption_inlines=_text_inlines("示例代码"),
+                language="python",
+                code="print(1)",
+            ),
+            Algorithm(
+                id="alg:sort",
+                caption="排序算法",
+                caption_inlines=_text_inlines("排序算法"),
+                body="1. 输入",
+            ),
             FootnoteDefinition(label="note", inlines=[Text(value="脚注正文")]),
             Heading(
                 id="chap:method",
                 level=1,
                 inlines=_text_inlines("方法"),
             ),
-            Figure(id="fig:flow", src="flow.png", caption="流程"),
+            Figure(
+                id="fig:flow",
+                src="flow.png",
+                caption="流程",
+                caption_inlines=_text_inlines("流程"),
+            ),
         ],
     )
     template = load_template("templates/base/bachelor.yaml")
@@ -285,8 +306,18 @@ def test_compile_document_reports_bookmark_name_collisions():
     document = ThesisDocument(
         source_path=Path("/tmp/thesis.md"),
         blocks=[
-            Figure(id="fig:a-b", src="a.png", caption="A"),
-            Figure(id="fig:a_b", src="b.png", caption="B"),
+            Figure(
+                id="fig:a-b",
+                src="a.png",
+                caption="A",
+                caption_inlines=_text_inlines("A"),
+            ),
+            Figure(
+                id="fig:a_b",
+                src="b.png",
+                caption="B",
+                caption_inlines=_text_inlines("B"),
+            ),
         ],
     )
 
@@ -310,12 +341,14 @@ def test_compile_document_resolves_figure_assets_widths_and_structured_table_row
                 id="fig:explicit",
                 src="./images/model.png",
                 caption="显式宽度",
+                caption_inlines=_text_inlines("显式宽度"),
                 width="80%",
             ),
             Figure(
                 id="fig:default",
                 src="./images/default.png",
                 caption="模板宽度",
+                caption_inlines=_text_inlines("模板宽度"),
             ),
             _structured_table(
                 "tbl:results",
@@ -390,6 +423,18 @@ def test_compile_document_rejects_malformed_markdown_table():
         compile_document(document, template=load_template("templates/base/bachelor.yaml"))
 
 
+def test_compile_document_preserves_equation_display_state():
+    document = ThesisDocument(
+        source_path=Path("/tmp/thesis.md"),
+        blocks=[Equation(id="eq:inline", latex="x", display=False)],
+    )
+
+    plan = compile_document(document)
+    equation = next(node for node in plan.nodes if isinstance(node, EquationInstruction))
+
+    assert equation.display is False
+
+
 def test_compile_document_resolves_sequence_fields_and_footnote_ids():
     document = ThesisDocument(
         source_path=Path("/tmp/thesis.md"),
@@ -399,7 +444,12 @@ def test_compile_document_resolves_sequence_fields_and_footnote_ids():
                 level=1,
                 inlines=_text_inlines("绪论"),
             ),
-            Figure(id="fig:model", src="model.png", caption="模型"),
+            Figure(
+                id="fig:model",
+                src="model.png",
+                caption="模型",
+                caption_inlines=_text_inlines("模型"),
+            ),
             _structured_table("tbl:data", "数据", (("A", None),), ((("1", None),),)),
             Equation(id="eq:loss", latex=r"L=\frac{a}{b}"),
             Paragraph(

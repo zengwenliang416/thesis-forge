@@ -272,6 +272,7 @@ class EquationInstruction(_Instruction):
     label: str
     bookmark: str | None
     sequence: SequenceInstruction | None = None
+    display: bool = True
 
     @property
     def payload(self) -> dict[str, Any]:

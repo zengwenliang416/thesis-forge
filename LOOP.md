@@ -95,15 +95,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Open
 
-- [V2-305C] Compile typed object captions and content
-  - Parent: ordered child 3/5 of `V2-305`; depends on `V2-305B`.
-  - Files: `src/thesis_forge/core/compiler.py`, `tests/test_compiler.py`
-  - Behavior: compiler consumes typed captions/content and derives renderer-neutral instruction text/runs without reading raw caption duplicates.
-  - Verify: `.venv/bin/python -m pytest tests/test_compiler.py`
-  - Acceptance: caption citations/cross-references/strong text and equation display semantics remain represented in the RenderPlan.
-  - Verification-surface change: authorized; migrates compiler object fixtures.
-  - Attempts: 0
-
 - [V2-305D] Migrate DOCX/preview object fixtures
   - Parent: ordered child 4/5 of `V2-305`; depends on `V2-305C`.
   - Files: `tests/test_docx_renderer.py`, `tests/test_preview_presentation.py`, `tests/core/test_manifest_resource_validation.py`
@@ -123,6 +114,17 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
   - Attempts: 0
 
 ## Done
+
+- [V2-305C] Compile typed object captions/content and equation display
+  - Parent: ordered child 3/5 of `V2-305`; depends on `V2-305B`.
+  - Files: `src/thesis_forge/core/compiler.py`, `src/thesis_forge/core/render_plan.py`, `tests/test_compiler.py`
+  - Behavior: compiler consumes typed captions/content and equation display state, deriving renderer-neutral instruction text/runs without reading raw caption duplicates.
+  - Verify: `.venv/bin/python -m pytest tests/test_compiler.py`
+  - Acceptance: caption citations/cross-references/strong text and equation display semantics remain represented in the RenderPlan.
+  - Verification-surface change: authorized; migrates compiler object fixtures.
+  - Attempts: 2
+  - Attempt 1 (2026-08-22): exact Verify exposed a misplaced `display=block.display` keyword on TableInstruction and the EquationInstruction display regression; candidate corrected without scope expansion.
+  - Attempt 2 (2026-08-22): Checker PASS; typed Figure/Listing/Algorithm captions and Equation display flow into RenderPlan, exact Verify 24/24, render-plan/preview regression 11/11, Ruff and `git diff --check` clean; no push.
 
 - [V2-305B] Populate typed object fields during parsing
   - Parent: ordered child 2/5 of `V2-305`; depends on `V2-305A`.
@@ -980,5 +982,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 - 2026-08-22 - V2-305 split into ordered children V2-305A…E after AST/CodeGraph found typed caption/content and source-identity migration spans model/parser/compiler plus DOCX/preview/validation fixtures; no product code edited in the split cycle, next queue V2-305A.
 - 2026-08-22 - V2-305A Checker PASS; typed object caption/display primitives and focused tests added, exact Verify 4/4, Ruff/diff-check clean; no push.
 - 2026-08-22 - V2-305B Checker PASS; parser populates typed object captions and explicit equation display state, exact Verify 87/87, Ruff/diff-check clean; no push.
+- 2026-08-22 - V2-305C Checker PASS; compiler typed caption/display flow is represented in RenderPlan, exact Verify 24/24 plus 11 render-plan/preview regressions, Ruff/diff-check clean; no push.
 
 ## Sync log
