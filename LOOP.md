@@ -97,6 +97,15 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Done
 
+- [V2-313] Basic block conversion
+  - Files: `src/thesis_forge/core/parser_markdown_it.py`, `tests/core/test_markdown_v2_blocks.py`
+  - Behavior: parse headings, paragraphs, nested lists, blockquotes and code blocks.
+  - Verify: `.venv/bin/python -m pytest tests/core/test_markdown_v2_blocks.py`
+  - Acceptance: source spans and heading IDs are accurate.
+  - Verification-surface change: authorized; creates focused basic-block evidence.
+  - Attempts: 1
+  - Attempt 1 (2026-08-22): Checker PASS; exact Verify passed 4/4, related parser/backend/contract regression passed 80/80, target Ruff, `git diff --check`, and `./lint-loop.sh` passed. Independent Python probe confirmed heading level/ID/title inline SourceLocation, paragraph block line/SoftBreak/text SourceLocation, ordered and nested unordered list start/ordinal/level/item line and text column, BlockQuote line with typed Paragraph child, and fenced CodeBlock language/literal/line. Candidate scope was the named test plus LOOP update with no parser diff; `change-registry.json` was unchanged and unstaged; no undeclared production change or blockquote-nested-list extension was added; no push.
+
 - [V2-312] Academic inline conversion
   - Files: `src/thesis_forge/core/parser_markdown_it.py`, `tests/core/test_markdown_v2_semantic_inlines.py`
   - Behavior: parse citation clusters, semantic internal links and footnote references.
@@ -1351,5 +1360,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 - 2026-08-22 - V2-404 Checker PASS Attempt 2; exact Verify passed 4/4, target Ruff and `git diff --check` passed, registry/unknown-instruction coverage, visible-content marker, code/listing literal-exemption, and headless import-isolation probes passed; candidate scope was exactly the two named files, `change-registry.json` was preserved, one local commit and no push.
 
 - 2026-08-22 - V2-312 Checker PASS; exact Verify passed 4/4, related parser/backend/contract regression passed 80/80, target Ruff, `git diff --check`, and `./lint-loop.sh` passed; independent semantic-inline probe covered seven CrossReference targets/fallbacks, ordinary URL and fragment Link preservation, Citation, FootnoteReference, FootnoteDefinition, and SourceLocation mapping; V2-312 product scope was exactly the two named files, registry preserved, no push.
+- 2026-08-22 - V2-313 Checker PASS; exact Verify passed 4/4, related parser/backend/contract regression passed 80/80, target Ruff, `git diff --check`, and `./lint-loop.sh` passed; independent block probe covered heading/paragraph/list/blockquote/fence fields and SourceLocation values, scope guard found no parser or undeclared production diff, and the pre-existing registry remained unchanged and unstaged; no blockquote-nested-list extension, no push.
 
 ## Sync log
