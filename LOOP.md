@@ -95,7 +95,32 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Open
 
+- [V2-317] Listing and algorithm fences
+  - Files: `src/thesis_forge/core/parser_markdown_it.py`, `tests/core/test_markdown_v2_fences.py`
+  - Behavior: parse fenced listing/algorithm attributes into typed nodes.
+  - Verify: `.venv/bin/python -m pytest tests/core/test_markdown_v2_fences.py`
+  - Acceptance: literal code markers remain literal; required IDs/titles follow the spec.
+  - Verification-surface change: authorized; creates focused listing/algorithm evidence.
+  - Attempts: 0
+
+- [V2-319] Single parser backend API
+  - Files: `src/thesis_forge/core/parser_backend.py`, `tests/core/test_single_parser_backend.py`
+  - Behavior: remove parser registry and expose one production parser factory/type.
+  - Verify: `.venv/bin/python -m pytest tests/core/test_single_parser_backend.py`
+  - Acceptance: no CLI/env/parser-name switching remains.
+  - Verification-surface change: no.
+  - Attempts: 0
+
 ## Done
+
+- [V2-316] Display math and equation ID
+  - Files: `src/thesis_forge/core/parser_markdown_it.py`, `tests/core/test_markdown_v2_equations.py`
+  - Behavior: parse display math plus following `{#eq:id}` as Equation and support unnumbered display math explicitly.
+  - Verify: `.venv/bin/python -m pytest tests/core/test_markdown_v2_equations.py`
+  - Acceptance: duplicate or detached equation ID is diagnosed.
+  - Verification-surface change: authorized; creates focused display-equation evidence.
+  - Attempts: 1
+  - Attempt 1 (2026-08-22): Checker PASS; exact Verify passed 9/9; related parser/backend/contract regression passed 96/96; target Ruff, `git diff --check`, `./lint-loop.sh`, and an independent runtime probe covering multi-line/single-line display math, unnumbered equations, adjacent IDs, duplicate/detached/invalid IDs, unclosed delimiters, and empty formulas passed. The known V2-314 inline baseline failure remained unchanged and outside the candidate diff; scope was the two named product files plus LOOP, `change-registry.json` was preserved and unstaged, one local commit and no push.
 
 - [V2-315] GFM table and caption
   - Files: `src/thesis_forge/core/parser_markdown_it.py`, `tests/core/test_markdown_v2_tables.py`
@@ -1383,5 +1408,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 - 2026-08-22 - V2-314 Checker PASS; exact Verify passed 5/5, related parser/backend/contract regression passed 85/85, target Ruff, `git diff --check`, and `./lint-loop.sh` passed; independent probe covered Figure id/src/location, typed Strong/semantic captions, explicit invalid-ID errors, width not read, footnote `_walk` advancement with citation/semantic-link indexing, and ordinary-paragraph image rejection; scope was the two named product files plus LOOP, registry preserved and unstaged, no V2-315, no push.
 - 2026-08-22 - V2-315 Checker FAIL Attempt 1; exact Verify passed 6/6, related parser/backend/contract regression passed 76/76, target Ruff, `git diff --check`, and `./lint-loop.sh` passed, but an independent GFM probe found valid tables without outer pipes were rejected; candidate files were restored, registry preserved and unstaged, no commit or push.
 - 2026-08-22 - V2-315 Checker PASS Attempt 2; exact Verify 6/6, related regression 87/87, target Ruff, diff-check, LOOP-LINT, and independent GFM table/caption runtime probes passed; V2-315 moved to Done, scope limited to parser/test plus LOOP, registry preserved and unstaged, one local commit and no push.
+- 2026-08-22 - V2-316 Checker PASS; exact Verify passed 9/9, related regression 96/96, target Ruff, `git diff --check`, LOOP-LINT, and independent display-equation runtime probes passed; the known V2-314 inline baseline failure was unchanged and outside the candidate diff, V2-316 moved to Done, registry preserved and unstaged, one local commit and no push.
 
 ## Sync log

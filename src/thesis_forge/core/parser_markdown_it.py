@@ -48,6 +48,7 @@ from .model import (
     CodeBlock,
     CrossReference,
     Emphasis,
+    Equation,
     Figure,
     FootnoteDefinition,
     FootnoteReference,
@@ -97,6 +98,7 @@ _SEMANTIC_LINK_RE = re.compile(
     r"^#(?P<target>(?:fig|tbl|eq|sec|chap|lst|alg):[A-Za-z0-9_.:-]+)$"
 )
 _FIGURE_ATTRIBUTE_RE = re.compile(r"^\{#(?P<id>fig:[A-Za-z0-9_.:-]+)\}$")
+_EQUATION_ATTRIBUTE_RE = re.compile(r"^\{#(?P<id>eq:[A-Za-z0-9_.:-]+)\}$")
 _TABLE_CAPTION_RE = re.compile(
     r"^:\s+(?P<caption>.+?)\s+\{#(?P<id>tbl:[A-Za-z0-9_.:-]+)\}\s*$"
 )
@@ -349,6 +351,42 @@ def _find_inline_math(text: str, start: int = 0) -> tuple[int, int, str] | None:
             closing += 1
         opening += 1
     return None
+
+
+def _parse_display_math_lines(
+    lines: list[str],
+    start: int,
+) -> tuple[int, str, str | None] | None:
+    first = lines[start].strip()
+    if not first.startswith("$$"):
+        return None
+
+    if first == "$$":
+        closing = next(
+            (index for index in range(start + 1, len(lines)) if lines[index].strip() == "$$"),
+            None,
+        )
+        if closing is None:
+            raise ParseError("display math 缺少结束的 $$")
+        latex = "\n".join(lines[start + 1 : closing]).strip()
+        consumed = closing + 1
+    elif first.endswith("$$") and len(first) > 4:
+        latex = first[2:-2].strip()
+        consumed = start + 1
+    else:
+        raise ParseError("display math 必须使用成对的 $$ 定界符")
+
+    if not latex:
+        raise ParseError("display math 公式内容不能为空")
+
+    equation_id: str | None = None
+    if consumed < len(lines) and lines[consumed].strip().startswith("{#"):
+        id_match = _EQUATION_ATTRIBUTE_RE.fullmatch(lines[consumed].strip())
+        if id_match is None:
+            raise ParseError("display math 后的 ID 必须使用 {#eq:id} 格式")
+        equation_id = id_match.group("id")
+        consumed += 1
+    return consumed, latex, equation_id
 
 
 def _is_escaped(text: str, index: int) -> bool:
@@ -875,6 +913,30 @@ class MarkdownItParserBackend:
                 idx += 3
             elif token_type == "paragraph_open":
                 inline_token = tokens[idx + 1]
+                if inline_token.map is not None:
+                    display_math = _parse_display_math_lines(lines, inline_token.map[0])
+                    if display_math is not None:
+                        end_line, latex, equation_id = display_math
+                        if end_line != inline_token.map[1]:
+                            raise ParseError(
+                                "display math 必须独占一个块，且公式 ID 必须紧随结束定界符"
+                            )
+                        if equation_id is not None and any(
+                            block.id == equation_id for block in doc.blocks
+                        ):
+                            raise ParseError(f"重复的 equation ID: {equation_id}")
+                        doc.blocks.append(
+                            Equation(
+                                id=equation_id,
+                                latex=latex,
+                                display=True,
+                                location=SourceLocation(
+                                    line=inline_token.map[0] + 1 + offset
+                                ),
+                            )
+                        )
+                        idx += 3
+                        continue
                 self._emit_paragraph(doc, inline_token, offset)
                 idx += 3
             elif token_type in ("bullet_list_open", "ordered_list_open", "list_item_open"):
@@ -954,6 +1016,8 @@ class MarkdownItParserBackend:
         text = inline_token.content
         if not text:
             return
+        if text.strip().startswith("{#eq:"):
+            raise ParseError("公式 ID 必须紧随 display math 结束定界符")
         assert inline_token.map is not None
         if inline_token.children and any(
             child.type == "image" for child in inline_token.children
