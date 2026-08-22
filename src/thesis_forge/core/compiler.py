@@ -33,6 +33,7 @@ from .model import (
     Table,
     Text,
     ThesisDocument,
+    inline_plain_text,
 )
 from .render_plan import (
     AlgorithmInstruction,
@@ -381,7 +382,7 @@ def _resolve_blocks(
                     template=template,
                 )
         elif isinstance(block, Heading):
-            label = block.text
+            label = inline_plain_text(block.inlines)
         elif isinstance(block, (Listing, Algorithm)):
             label = block.caption
         elif block.id:
@@ -522,7 +523,7 @@ def _compile_cover(document: ThesisDocument) -> CoverInstruction | None:
 
 def _is_front_matter_heading(block: Heading) -> bool:
     source_id = block.id or ""
-    normalized_text = block.text.strip().lower()
+    normalized_text = inline_plain_text(block.inlines).strip().lower()
     return source_id.startswith(("chap:abstract", "chap:toc", "chap:contents")) or (
         normalized_text in {"摘要", "abstract", "目录", "contents"}
     )
@@ -585,14 +586,13 @@ class _SemanticContext:
             self.active_paragraph_role = SEMANTIC_BODY_ROLES.get(block.id, "body")
             return SEMANTIC_HEADING_ROLES.get(block.id)
 
-        if (
-            self.active_paragraph_role == "abstract.zh.body"
-            and ZH_KEYWORDS_RE.match(block.text)
+        text = inline_plain_text(block.inlines)
+        if self.active_paragraph_role == "abstract.zh.body" and ZH_KEYWORDS_RE.match(
+            text
         ):
             return "keywords.zh"
-        if (
-            self.active_paragraph_role == "abstract.en.body"
-            and EN_KEYWORDS_RE.match(block.text)
+        if self.active_paragraph_role == "abstract.en.body" and EN_KEYWORDS_RE.match(
+            text
         ):
             return "keywords.en"
         return self.active_paragraph_role
@@ -732,10 +732,13 @@ def _compile_list(block: ListBlock, context: _CompilationContext) -> ListInstruc
         start=block.start,
         items=tuple(
             ListItemInstruction(
-                text=item.text,
+                text=inline_plain_text(item.inlines),
                 level=item.level,
                 ordinal=item.ordinal,
-                inlines=_fallback_text_runs(item.text, context.inlines(item.inlines)),
+                inlines=_fallback_text_runs(
+                    inline_plain_text(item.inlines),
+                    context.inlines(item.inlines),
+                ),
             )
             for item in block.items
         ),
@@ -754,18 +757,20 @@ def _compile_block(
     sequence = block_resolution.sequence if block_resolution else None
 
     if isinstance(block, Heading):
+        text = inline_plain_text(block.inlines)
         return HeadingInstruction(
             source_id=block.id,
             level=block.level,
-            text=block.text,
-            inlines=_fallback_text_runs(block.text, context.inlines(block.inlines)),
+            text=text,
+            inlines=_fallback_text_runs(text, context.inlines(block.inlines)),
             bookmark=bookmark,
             role=context.semantic.role_for(block),
         )
     if isinstance(block, Paragraph):
+        text = inline_plain_text(block.inlines)
         return ParagraphInstruction(
-            text=block.text,
-            inlines=_fallback_text_runs(block.text, context.inlines(block.inlines)),
+            text=text,
+            inlines=_fallback_text_runs(text, context.inlines(block.inlines)),
             role=context.semantic.role_for(block) or "body",
         )
     if isinstance(block, ListBlock):
@@ -828,11 +833,12 @@ def _compile_block(
             bookmark=bookmark,
         )
     if isinstance(block, FootnoteDefinition):
+        text = inline_plain_text(block.inlines)
         return FootnoteDefinitionInstruction(
             label=block.label,
             footnote_id=context.footnote_ids[block.label],
-            text=block.text,
-            inlines=_fallback_text_runs(block.text, context.inlines(block.inlines)),
+            text=text,
+            inlines=_fallback_text_runs(text, context.inlines(block.inlines)),
         )
     if isinstance(block, BibliographyBlock):
         if context.bibliography_emitted:

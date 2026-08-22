@@ -84,6 +84,10 @@ PNG_1X1 = base64.b64decode(
 )
 
 
+def _text_inlines(value: str) -> list[Text]:
+    return [Text(value=value)]
+
+
 def _xml_part(path: Path, name: str):
     return etree.fromstring(read_package_part(path, name))
 
@@ -215,7 +219,12 @@ def test_docx_renderer_translates_complete_body_and_heading_policy_xml(
     document = ThesisDocument(
         source_path=tmp_path / "thesis.md",
         blocks=[
-            Heading(id="chap:intro", level=1, text="绪论"),
+            Heading(
+                id="chap:intro",
+                level=1,
+                text="绪论",
+                inlines=_text_inlines("绪论"),
+            ),
             Paragraph(text="正文", inlines=[Text(value="正文")]),
         ],
     )
@@ -312,7 +321,14 @@ def test_heading_em_size_and_indent_resolve_from_body_font_size(tmp_path: Path):
     template.heading.level1.left_indent = LengthSpec.model_validate("1em")
     document = ThesisDocument(
         source_path=tmp_path / "thesis.md",
-        blocks=[Heading(id="chap:intro", level=1, text="绪论")],
+        blocks=[
+            Heading(
+                id="chap:intro",
+                level=1,
+                text="绪论",
+                inlines=_text_inlines("绪论"),
+            )
+        ],
     )
     output = tmp_path / "heading-em.docx"
 
@@ -736,11 +752,36 @@ def _toc_document(tmp_path: Path) -> ThesisDocument:
     return ThesisDocument(
         source_path=tmp_path / "thesis.md",
         blocks=[
-            Heading(id="chap:abstract-zh", level=1, text="摘要"),
-            Heading(id="chap:intro", level=1, text="绪论"),
-            Heading(id="sec:background", level=2, text="研究背景"),
-            Heading(id="sec:limitations", level=3, text="现有流程的局限"),
-            Heading(id=None, level=2, text="无书签小节"),
+            Heading(
+                id="chap:abstract-zh",
+                level=1,
+                text="摘要",
+                inlines=_text_inlines("摘要"),
+            ),
+            Heading(
+                id="chap:intro",
+                level=1,
+                text="绪论",
+                inlines=_text_inlines("绪论"),
+            ),
+            Heading(
+                id="sec:background",
+                level=2,
+                text="研究背景",
+                inlines=_text_inlines("研究背景"),
+            ),
+            Heading(
+                id="sec:limitations",
+                level=3,
+                text="现有流程的局限",
+                inlines=_text_inlines("现有流程的局限"),
+            ),
+            Heading(
+                id=None,
+                level=2,
+                text="无书签小节",
+                inlines=_text_inlines("无书签小节"),
+            ),
         ],
     )
 
@@ -914,7 +955,14 @@ def test_partial_semantic_title_inherits_heading_style_and_overrides_false(
     )
     document = ThesisDocument(
         source_path=tmp_path / "thesis.md",
-        blocks=[Heading(id="chap:abstract-zh", level=1, text="摘要")],
+        blocks=[
+            Heading(
+                id="chap:abstract-zh",
+                level=1,
+                text="摘要",
+                inlines=_text_inlines("摘要"),
+            )
+        ],
     )
     output = tmp_path / "partial-semantic-title.docx"
 
@@ -964,8 +1012,13 @@ def test_partial_semantic_body_uses_inherited_size_for_em_lengths(
     document = ThesisDocument(
         source_path=tmp_path / "thesis.md",
         blocks=[
-            Heading(id="chap:abstract-zh", level=1, text="摘要"),
-            Paragraph(text="摘要正文"),
+            Heading(
+                id="chap:abstract-zh",
+                level=1,
+                text="摘要",
+                inlines=_text_inlines("摘要"),
+            ),
+            Paragraph(text="摘要正文", inlines=_text_inlines("摘要正文")),
         ],
     )
     output = tmp_path / "partial-semantic-body.docx"
@@ -1099,9 +1152,24 @@ def test_heading_levels_one_through_three_use_shared_translator(tmp_path: Path):
     document = ThesisDocument(
         source_path=tmp_path / "thesis.md",
         blocks=[
-            Heading(id="chap:one", level=1, text="一级标题"),
-            Heading(id="sec:two", level=2, text="二级标题"),
-            Heading(id="sec:three", level=3, text="三级标题"),
+            Heading(
+                id="chap:one",
+                level=1,
+                text="一级标题",
+                inlines=_text_inlines("一级标题"),
+            ),
+            Heading(
+                id="sec:two",
+                level=2,
+                text="二级标题",
+                inlines=_text_inlines("二级标题"),
+            ),
+            Heading(
+                id="sec:three",
+                level=3,
+                text="三级标题",
+                inlines=_text_inlines("三级标题"),
+            ),
         ],
     )
     output = tmp_path / "heading-levels.docx"
@@ -1131,7 +1199,12 @@ def test_two_templates_change_styles_without_changing_document_semantics(
     document = ThesisDocument(
         source_path=tmp_path / "thesis.md",
         blocks=[
-            Heading(id="chap:intro", level=1, text="绪论"),
+            Heading(
+                id="chap:intro",
+                level=1,
+                text="绪论",
+                inlines=_text_inlines("绪论"),
+            ),
             Paragraph(text="相同正文", inlines=[Text(value="相同正文")]),
         ],
     )
@@ -1212,8 +1285,18 @@ def test_docx_renderer_writes_metadata_cover_before_front_matter(tmp_path: Path)
             "dates": {"completed": "2026-06"},
         },
         blocks=[
-            Heading(id="chap:abstract-zh", level=1, text="摘要"),
-            Heading(id="chap:introduction", level=1, text="绪论"),
+            Heading(
+                id="chap:abstract-zh",
+                level=1,
+                text="摘要",
+                inlines=_text_inlines("摘要"),
+            ),
+            Heading(
+                id="chap:introduction",
+                level=1,
+                text="绪论",
+                inlines=_text_inlines("绪论"),
+            ),
         ],
     )
     output = tmp_path / "cover.docx"
@@ -1303,7 +1386,14 @@ def test_docx_renderer_uses_template_cover_order_content_and_style(tmp_path: Pat
         metadata={
             "thesis": {"title": "参数化封面"},
         },
-        blocks=[Heading(id="chap:introduction", level=1, text="绪论")],
+        blocks=[
+            Heading(
+                id="chap:introduction",
+                level=1,
+                text="绪论",
+                inlines=_text_inlines("绪论"),
+            )
+        ],
     )
     output = tmp_path / "parameterized-cover.docx"
 
@@ -2036,9 +2126,19 @@ def test_docx_renderer_creates_real_math_fields_footnotes_and_page_structures(
     document = ThesisDocument(
         source_path=tmp_path / "thesis.md",
         blocks=[
-            Heading(id="chap:abstract-zh", level=1, text="摘要"),
+            Heading(
+                id="chap:abstract-zh",
+                level=1,
+                text="摘要",
+                inlines=_text_inlines("摘要"),
+            ),
             Paragraph(text="摘要正文", inlines=[Text(value="摘要正文")]),
-            Heading(id="chap:introduction", level=1, text="绪论"),
+            Heading(
+                id="chap:introduction",
+                level=1,
+                text="绪论",
+                inlines=_text_inlines("绪论"),
+            ),
             Figure(id="fig:model", src="./model.png", caption="系统模型"),
             Table(
                 id="tbl:data",
@@ -2260,7 +2360,14 @@ def test_docx_renderer_omits_page_fields_when_page_number_format_is_none(
     )
     document = ThesisDocument(
         source_path=tmp_path / "thesis.md",
-        blocks=[Heading(id="chap:intro", level=1, text="绪论")],
+        blocks=[
+            Heading(
+                id="chap:intro",
+                level=1,
+                text="绪论",
+                inlines=_text_inlines("绪论"),
+            )
+        ],
     )
     output = tmp_path / "no-page-number.docx"
 
@@ -2298,8 +2405,18 @@ def test_docx_renderer_prevents_disabled_section_header_footer_inheritance(
     document = ThesisDocument(
         source_path=tmp_path / "thesis.md",
         blocks=[
-            Heading(id="chap:abstract-zh", level=1, text="摘要"),
-            Heading(id="chap:intro", level=1, text="绪论"),
+            Heading(
+                id="chap:abstract-zh",
+                level=1,
+                text="摘要",
+                inlines=_text_inlines("摘要"),
+            ),
+            Heading(
+                id="chap:intro",
+                level=1,
+                text="绪论",
+                inlines=_text_inlines("绪论"),
+            ),
         ],
     )
     output = tmp_path / "disabled-header-footer.docx"
@@ -2408,7 +2525,14 @@ def test_docx_renderer_writes_page_geometry_and_all_header_footer_variants(
     )
     document = ThesisDocument(
         source_path=tmp_path / "thesis.md",
-        blocks=[Heading(id="chap:intro", level=1, text="绪论")],
+        blocks=[
+            Heading(
+                id="chap:intro",
+                level=1,
+                text="绪论",
+                inlines=_text_inlines("绪论"),
+            )
+        ],
     )
     output = tmp_path / "header-footer-variants.docx"
 
@@ -2572,8 +2696,18 @@ def test_docx_renderer_clears_disabled_variants_in_added_section(
     document = ThesisDocument(
         source_path=tmp_path / "thesis.md",
         blocks=[
-            Heading(id="chap:abstract-zh", level=1, text="摘要"),
-            Heading(id="chap:intro", level=1, text="绪论"),
+            Heading(
+                id="chap:abstract-zh",
+                level=1,
+                text="摘要",
+                inlines=_text_inlines("摘要"),
+            ),
+            Heading(
+                id="chap:intro",
+                level=1,
+                text="绪论",
+                inlines=_text_inlines("绪论"),
+            ),
         ],
     )
     output = tmp_path / "cleared-variants.docx"
@@ -2647,8 +2781,18 @@ def test_docx_renderer_uses_current_default_when_even_variant_is_omitted(
     document = ThesisDocument(
         source_path=tmp_path / "thesis.md",
         blocks=[
-            Heading(id="chap:abstract-zh", level=1, text="摘要"),
-            Heading(id="chap:intro", level=1, text="绪论"),
+            Heading(
+                id="chap:abstract-zh",
+                level=1,
+                text="摘要",
+                inlines=_text_inlines("摘要"),
+            ),
+            Heading(
+                id="chap:intro",
+                level=1,
+                text="绪论",
+                inlines=_text_inlines("绪论"),
+            ),
         ],
     )
     output = tmp_path / "even-default-fallback.docx"
@@ -2707,8 +2851,18 @@ def test_docx_renderer_uses_current_default_when_first_variant_is_omitted(
     document = ThesisDocument(
         source_path=tmp_path / "thesis.md",
         blocks=[
-            Heading(id="chap:abstract-zh", level=1, text="摘要"),
-            Heading(id="chap:intro", level=1, text="绪论"),
+            Heading(
+                id="chap:abstract-zh",
+                level=1,
+                text="摘要",
+                inlines=_text_inlines("摘要"),
+            ),
+            Heading(
+                id="chap:intro",
+                level=1,
+                text="绪论",
+                inlines=_text_inlines("绪论"),
+            ),
         ],
     )
     output = tmp_path / "first-default-fallback.docx"
@@ -2819,7 +2973,14 @@ def test_docx_renderer_materializes_initial_first_fallback_with_default_policy(
     )
     document = ThesisDocument(
         source_path=tmp_path / "thesis.md",
-        blocks=[Heading(id="chap:intro", level=1, text="绪论")],
+        blocks=[
+            Heading(
+                id="chap:intro",
+                level=1,
+                text="绪论",
+                inlines=_text_inlines("绪论"),
+            )
+        ],
     )
     output = tmp_path / "initial-first-default-policy.docx"
 
@@ -2904,8 +3065,18 @@ def test_docx_renderer_materializes_disabled_default_as_blank_first_fallback(
     document = ThesisDocument(
         source_path=tmp_path / "thesis.md",
         blocks=[
-            Heading(id="chap:abstract-zh", level=1, text="摘要"),
-            Heading(id="chap:intro", level=1, text="绪论"),
+            Heading(
+                id="chap:abstract-zh",
+                level=1,
+                text="摘要",
+                inlines=_text_inlines("摘要"),
+            ),
+            Heading(
+                id="chap:intro",
+                level=1,
+                text="绪论",
+                inlines=_text_inlines("绪论"),
+            ),
         ],
     )
     output = tmp_path / "disabled-first-default-fallback.docx"
@@ -3184,7 +3355,12 @@ def test_docx_renderer_applies_bibliography_title_and_entry_policy_xml(
         source_path=tmp_path / "thesis.md",
         blocks=[
             Paragraph(text="引用", inlines=[Text(value="引用"), citation]),
-            Heading(id="references", level=1, text="参考文献"),
+            Heading(
+                id="references",
+                level=1,
+                text="参考文献",
+                inlines=_text_inlines("参考文献"),
+            ),
             BibliographyBlock(),
         ],
         citations=[citation],
@@ -3313,7 +3489,12 @@ def _render_equation_document_xml(tmp_path: Path, equation_id: str, latex: str):
     document = ThesisDocument(
         source_path=tmp_path / "thesis.md",
         blocks=[
-            Heading(id="chap:math", level=1, text="公式"),
+            Heading(
+                id="chap:math",
+                level=1,
+                text="公式",
+                inlines=_text_inlines("公式"),
+            ),
             Equation(id=equation_id, latex=latex),
         ],
     )

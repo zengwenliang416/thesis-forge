@@ -95,15 +95,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Open
 
-- [V2-303C] Compiler derives block text from inlines
-  - Parent: ordered child 3/10 of `V2-303`; depends on `V2-303B`.
-  - Files: `src/thesis_forge/core/compiler.py`, `tests/test_compiler.py`
-  - Behavior: bookmark labels, abstract/keywords detection and text fallbacks read `inline_plain_text(block.inlines)` instead of `block.text`; test fixtures that construct text-only blocks gain parser-shaped inlines.
-  - Verify: `.venv/bin/python -m pytest tests/test_compiler.py tests/test_docx_renderer.py tests/core/`
-  - Acceptance: compiler output is unchanged on the suite; no compiler read of the block `text` field remains.
-  - Verification-surface change: authorized; migrates compiler fixtures to parser-shaped inlines.
-  - Attempts: 0
-
 - [V2-303D] Projections derive heading text from inlines
   - Parent: ordered child 4/10 of `V2-303`; depends on `V2-303C`.
   - Files: `src/thesis_forge/presentation/preview.py`, `src/thesis_forge/adapters/runtime.py`
@@ -184,6 +175,17 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
   - Attempts: 0
 
 ## Done
+
+- [V2-303C] Compiler derives block text from inlines
+  - Parent: ordered child 3/10 of `V2-303`; depends on `V2-303B`.
+  - Files: `src/thesis_forge/core/compiler.py`, `tests/test_compiler.py`, `tests/test_docx_renderer.py`
+  - Behavior: bookmark labels, abstract/keywords detection and text fallbacks read `inline_plain_text(block.inlines)` instead of `block.text`; test fixtures that construct text-only blocks gain parser-shaped inlines.
+  - Verify: `.venv/bin/python -m pytest tests/test_compiler.py tests/test_docx_renderer.py tests/core/`
+  - Acceptance: compiler output is unchanged on the suite; no compiler read of the block `text` field remains.
+  - Verification-surface change: authorized; migrates compiler and DOCX renderer fixtures to parser-shaped inlines.
+  - Attempts: 2
+  - Attempt 1 (2026-08-22): exact Verify exposed 4 DOCX regressions (TOC cached entries, cover content, bibliography title) because text-only fixtures in `tests/test_docx_renderer.py` lacked parser-shaped inlines; compiler and `tests/test_compiler.py` changes were retained, the third file was added within the three-file bound, and no unrelated production path was changed.
+  - Attempt 2 (2026-08-22): Checker PASS; compiler uses `inline_plain_text` for heading labels/front-matter detection/keyword roles/list items/heading-paragraph-footnote render text, model block `.text` reads are absent, the new stale-text regression covers labels/roles/list/footnote/reference display, exact Verify 168/168, Ruff and `git diff --check` clean, full suite 46 failed / 999 passed with failures confined to the known acceptance/architecture/distribution/template-v2 clusters; no push.
 
 - [V2-303B] Migrate parser-test block-text pins to derived text
   - Parent: ordered child 2/10 of `V2-303`; depends on `V2-303A`.
@@ -834,5 +836,7 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 - 2026-08-22 - V2-303 split into ten ordered children V2-303A…J after investigation showed removing the duplicated block text fields atomically spans model.py + both parsers + compiler + preview/runtime projections + six test files; the ordered path migrates test pins to derived text first (green both ways), enriches compiler fixtures with parser-shaped inlines before the compiler derivation flip, drops text= kwargs before the field removal, and removes the dead _fallback_text_runs in V2-303E; no product code edited in the split cycle.
 - 2026-08-22 - V2-303A Checker PASS; scope exactly 2 files (model.py +53/−0 pure addition, new tests/core/test_block_model.py), exact Verify 20/20, baselines 163/163, ruff/diff-check clean, independent probes green (defaults/slots, recursive BulletList→ListItem.children→OrderedList read-back, every inline_plain_text clause incl. TypeError on unknown Inline, non-mutation), full-suite HEAD-vs-candidate failure sets identical at 46 failed / 998 passed confined to the 7 known files; no push.
 - 2026-08-22 - V2-303B Checker PASS; diff exactly the 3 named test files (+21/−17, 16/16 HEAD `.text` pins migrated to inline_plain_text, zero residual `.text`), both disclosed re-pins verbatim with comments, exact Verify 82/82, ruff/diff-check clean, baselines 81/81, both-backend probes green incl. no-`text`-kwarg forward simulation, full-suite failure sets identical HEAD vs candidate at 46/998 confined to the 7 known files; no push.
+
+- 2026-08-22 - V2-303C Checker PASS; compiler text authority migrated to inline_plain_text, DOCX/compiler fixtures are parser-shaped, exact Verify 168/168, Ruff/diff-check and full-suite baseline audit passed with 46 known failures / 999 passes; no push.
 
 ## Sync log
