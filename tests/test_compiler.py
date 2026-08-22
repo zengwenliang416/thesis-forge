@@ -73,19 +73,18 @@ def test_compile_document_resolves_typed_instructions_and_global_semantics():
     document = ThesisDocument(
         source_path=Path("/tmp/thesis.md"),
         blocks=[
-            Heading(id="chap:intro", level=1, text="绪论", inlines=[Text(value="绪论")]),
-            Paragraph(text="引用段落", inlines=paragraph_inlines),
-            ListBlock(items=[ListItem(text="第一项", inlines=[Text(value="第一项")])]),
+            Heading(id="chap:intro", level=1, inlines=[Text(value="绪论")]),
+            Paragraph(inlines=paragraph_inlines),
+            ListBlock(items=[ListItem(inlines=[Text(value="第一项")])]),
             Figure(id="fig:model", src="model.png", caption="系统模型"),
             Table(id="tbl:data", caption="数据表", markdown="| A |\n|---|\n| 1 |"),
             Equation(id="eq:loss", latex="E=mc^2"),
             Listing(id="lst:demo", caption="示例代码", language="python", code="print(1)"),
             Algorithm(id="alg:sort", caption="排序算法", body="1. 输入"),
-            FootnoteDefinition(label="note", text="脚注正文", inlines=[Text(value="脚注正文")]),
+            FootnoteDefinition(label="note", inlines=[Text(value="脚注正文")]),
             Heading(
                 id="chap:method",
                 level=1,
-                text="方法",
                 inlines=_text_inlines("方法"),
             ),
             Figure(id="fig:flow", src="flow.png", caption="流程"),
@@ -135,7 +134,7 @@ def test_compile_document_includes_registered_container_citations_in_global_orde
     citation = Citation(keys=["container2026"], raw="[@container2026]")
     document = ThesisDocument(
         source_path=Path("/tmp/thesis.md"),
-        blocks=[Paragraph(text="正文", inlines=[Text(value="正文")])],
+        blocks=[Paragraph(inlines=[Text(value="正文")])],
         citations=[citation],
     )
 
@@ -157,11 +156,10 @@ def test_compile_document_formats_citations_and_marker_bibliography_from_databas
         source_path=Path("/tmp/thesis.md"),
         blocks=[
             Paragraph(
-                text="引用",
                 inlines=[Text(value="引用"), grouped, Text(value="。")],
             ),
             BibliographyBlock(),
-            Paragraph(text="再次引用", inlines=[repeated]),
+            Paragraph(inlines=[repeated]),
         ],
         citations=[grouped, repeated],
     )
@@ -198,7 +196,7 @@ def test_compile_document_appends_bibliography_when_marker_is_absent():
     citation = Citation(keys=["smith2025"], raw="[@smith2025]")
     document = ThesisDocument(
         source_path=Path("/tmp/thesis.md"),
-        blocks=[Paragraph(text="引用", inlines=[citation])],
+        blocks=[Paragraph(inlines=[citation])],
         citations=[citation],
     )
 
@@ -221,7 +219,6 @@ def test_compile_document_orders_footnote_citation_at_reference_position():
         source_path=Path("/tmp/thesis.md"),
         blocks=[
             Paragraph(
-                text="先见脚注，后见正文引用",
                 inlines=[
                     Text(value="先见脚注"),
                     FootnoteReference(label="note"),
@@ -231,7 +228,6 @@ def test_compile_document_orders_footnote_citation_at_reference_position():
             ),
             FootnoteDefinition(
                 label="note",
-                text="脚注引用",
                 inlines=[Text(value="脚注引用"), footnote_citation],
             ),
         ],
@@ -365,14 +361,12 @@ def test_compile_document_resolves_sequence_fields_and_footnote_ids():
             Heading(
                 id="chap:intro",
                 level=1,
-                text="绪论",
                 inlines=_text_inlines("绪论"),
             ),
             Figure(id="fig:model", src="model.png", caption="模型"),
             Table(id="tbl:data", caption="数据", markdown="| A |\n| --- |\n| 1 |"),
             Equation(id="eq:loss", latex=r"L=\frac{a}{b}"),
             Paragraph(
-                text="说明",
                 inlines=[
                     CrossReference(target="fig:model"),
                     FootnoteReference(label="note"),
@@ -380,7 +374,6 @@ def test_compile_document_resolves_sequence_fields_and_footnote_ids():
             ),
             FootnoteDefinition(
                 label="note",
-                text="脚注正文",
                 inlines=_text_inlines("脚注正文"),
             ),
         ],
@@ -450,14 +443,12 @@ def test_compile_document_emits_toc_and_explicit_section_transitions():
             Heading(
                 id="chap:abstract-zh",
                 level=1,
-                text="摘要",
                 inlines=_text_inlines("摘要"),
             ),
-            Paragraph(text="摘要正文", inlines=_text_inlines("摘要正文")),
+            Paragraph(inlines=_text_inlines("摘要正文")),
             Heading(
                 id="chap:introduction",
                 level=1,
-                text="绪论",
                 inlines=_text_inlines("绪论"),
             ),
         ],
@@ -516,7 +507,6 @@ def test_compile_document_transitions_directly_from_cover_to_main():
             Heading(
                 id="chap:intro",
                 level=1,
-                text="绪论",
                 inlines=_text_inlines("绪论"),
             )
         ],
@@ -550,7 +540,6 @@ def test_compile_document_emits_renderer_neutral_cover_from_front_matter():
             Heading(
                 id="chap:abstract-zh",
                 level=1,
-                text="摘要",
                 inlines=_text_inlines("摘要"),
             )
         ],
@@ -582,64 +571,52 @@ def test_compile_document_resolves_semantic_heading_and_paragraph_roles():
             Heading(
                 id="chap:abstract-zh",
                 level=1,
-                text="摘要",
                 inlines=_text_inlines("摘要"),
             ),
-            Paragraph(text="中文摘要正文", inlines=_text_inlines("中文摘要正文")),
+            Paragraph(inlines=_text_inlines("中文摘要正文")),
             Paragraph(
-                text="关键词：编译；模板",
                 inlines=_text_inlines("关键词：编译；模板"),
             ),
             Paragraph(
-                text="本文讨论关键词：不会误判",
                 inlines=_text_inlines("本文讨论关键词：不会误判"),
             ),
             Heading(
                 id="chap:abstract-en",
                 level=1,
-                text="Abstract",
                 inlines=_text_inlines("Abstract"),
             ),
             Paragraph(
-                text="English abstract body.",
                 inlines=_text_inlines("English abstract body."),
             ),
             Paragraph(
-                text="**Keywords:** compiler; template",
                 inlines=_text_inlines("**Keywords:** compiler; template"),
             ),
             Heading(
                 id="references",
                 level=1,
-                text="参考文献",
                 inlines=_text_inlines("参考文献"),
             ),
             Paragraph(
-                text="[1] Reference entry.",
                 inlines=_text_inlines("[1] Reference entry."),
             ),
             Heading(
                 id="acknowledgements",
                 level=1,
-                text="致谢",
                 inlines=_text_inlines("致谢"),
             ),
-            Paragraph(text="感谢所有帮助。", inlines=_text_inlines("感谢所有帮助。")),
+            Paragraph(inlines=_text_inlines("感谢所有帮助。")),
             Heading(
                 id="achievements",
                 level=1,
-                text="攻读学位期间的成果",
                 inlines=_text_inlines("攻读学位期间的成果"),
             ),
-            Paragraph(text="成果说明。", inlines=_text_inlines("成果说明。")),
+            Paragraph(inlines=_text_inlines("成果说明。")),
             Heading(
                 id="chap:introduction",
                 level=1,
-                text="摘要",
                 inlines=_text_inlines("摘要"),
             ),
             Paragraph(
-                text="关键词：普通正文",
                 inlines=_text_inlines("关键词：普通正文"),
             ),
         ],
@@ -688,32 +665,26 @@ def test_compile_document_uses_inlines_as_the_authoritative_block_text():
             Heading(
                 id="chap:abstract-zh",
                 level=1,
-                text="旧标题",
                 inlines=_text_inlines("摘要"),
             ),
             Paragraph(
-                text="旧正文",
                 inlines=_text_inlines("中文摘要正文"),
             ),
             Paragraph(
-                text="旧关键词",
                 inlines=_text_inlines("关键词：编译；模板"),
             ),
             ListBlock(
                 items=[
                     ListItem(
-                        text="旧列表项",
                         inlines=_text_inlines("真实列表项"),
                     )
                 ]
             ),
             Paragraph(
-                text="旧引用",
                 inlines=[CrossReference(target="chap:abstract-zh")],
             ),
             FootnoteDefinition(
                 label="note",
-                text="旧脚注",
                 inlines=_text_inlines("真实脚注"),
             ),
         ],
@@ -756,51 +727,41 @@ def test_compile_document_preserves_abstract_context_across_nested_headings():
             Heading(
                 id="chap:abstract-zh",
                 level=1,
-                text="摘要",
                 inlines=_text_inlines("摘要"),
             ),
             Heading(
                 id="sec:zh-method",
                 level=2,
-                text="方法",
                 inlines=_text_inlines("方法"),
             ),
             Paragraph(
-                text="中文摘要的分节正文",
                 inlines=_text_inlines("中文摘要的分节正文"),
             ),
             Paragraph(
-                text="关键词：编译；模板",
                 inlines=_text_inlines("关键词：编译；模板"),
             ),
             Heading(
                 id="chap:abstract-en",
                 level=1,
-                text="Abstract",
                 inlines=_text_inlines("Abstract"),
             ),
             Heading(
                 id="sec:en-method",
                 level=3,
-                text="Method",
                 inlines=_text_inlines("Method"),
             ),
             Paragraph(
-                text="English abstract subsection body.",
                 inlines=_text_inlines("English abstract subsection body."),
             ),
             Paragraph(
-                text="Keywords: compiler; template",
                 inlines=_text_inlines("Keywords: compiler; template"),
             ),
             Heading(
                 id="chap:introduction",
                 level=1,
-                text="绪论",
                 inlines=_text_inlines("绪论"),
             ),
             Paragraph(
-                text="关键词：普通正文",
                 inlines=_text_inlines("关键词：普通正文"),
             ),
         ],
@@ -848,10 +809,9 @@ def test_compile_document_avoids_keyword_false_positives(
             Heading(
                 id=heading_id,
                 level=1,
-                text="摘要",
                 inlines=_text_inlines("摘要"),
             ),
-            Paragraph(text=paragraph_text, inlines=_text_inlines(paragraph_text)),
+            Paragraph(inlines=_text_inlines(paragraph_text)),
         ],
     )
 
@@ -872,7 +832,7 @@ def test_compile_document_selects_provider_from_citation_style():
     citation = Citation(keys=["smith2025"], raw="[@smith2025]")
     document = ThesisDocument(
         source_path=Path("/tmp/thesis.md"),
-        blocks=[Paragraph(text="引用", inlines=[citation])],
+        blocks=[Paragraph(inlines=[citation])],
         citations=[citation],
         bibliography=BibliographyConfig(
             path="references.bib",
@@ -895,7 +855,7 @@ def test_compile_document_rejects_unsupported_citation_style():
     citation = Citation(keys=["smith2025"], raw="[@smith2025]")
     document = ThesisDocument(
         source_path=Path("/tmp/thesis.md"),
-        blocks=[Paragraph(text="引用", inlines=[citation])],
+        blocks=[Paragraph(inlines=[citation])],
         citations=[citation],
         bibliography=BibliographyConfig(
             path="references.bib",
