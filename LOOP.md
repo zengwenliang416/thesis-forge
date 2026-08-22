@@ -95,15 +95,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Open
 
-- [V2-505A1P2] Accept canonical inline runs in the Preview transport contract
-  - Parent: ordered preparation child 2/3 of the re-sliced `V2-505A1P`; depends on `V2-505A1P1`.
-  - Files: `frontend/src/transport/dto.ts`, `frontend/src/transport/previewDto.test.ts`
-  - Behavior: the strict Preview transport DTO accepts the four new serialized inline run variants without accepting unknown types, extra keys, or compatibility payloads.
-  - Verify: `pnpm --dir frontend exec vitest run src/transport/previewDto.test.ts`
-  - Acceptance: the TypeScript union and runtime validator accept hyperlink text/destination, math latex/text, soft-break text and hard-break text alongside the existing four variants; malformed shapes and unknown run types remain rejected.
-  - Verification-surface change: no
-  - Attempts: 0
-
 - [V2-505A1P3] Render canonical inline runs in the Preview panels
   - Parent: ordered preparation child 3/3 of the re-sliced `V2-505A1P`; depends on `V2-505A1P2`.
   - Files: `frontend/src/components/PreviewPanels.tsx`, `frontend/src/components/PreviewPanels.test.tsx`
@@ -172,6 +163,16 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
   - Attempts: 1
   - Inherited Attempt 1 (2026-08-22): the superseded A1P candidate projected all eight runs and passed the focused test, but leaked `CitationRun.raw` when text was empty; the independent Checker also found the new run shapes require the ordered frontend transport and panel children; candidate files were restored with no commit or push.
   - Attempt 1 (2026-08-22): Checker PASS; exact Verify passed 1/1; target Ruff, `git diff --check`, and `./lint-loop.sh` passed; complete preview tests were 5 passed/1 known clean-HEAD baseline failure at `test_complete_example_preview_preserves_compiler_order_and_numbering` with `TF-SOURCE-LEGACY-001`, while clean HEAD was 4 passed/1 with the identical failure and no candidate-only failure; independent AST/runtime probes confirmed all eight ordered projections, hyperlink destination, math readable fallback, distinct soft/hard break text, raw citation suppression, formatted citation preservation, and explicit unknown-run `TypeError`; candidate scope was exactly the two named product/test files plus this lifecycle update, frontend P2/P3 and A1R were not audited or modified, all unrelated dirty paths were preserved, one local commit and no push.
+
+- [V2-505A1P2] Accept canonical inline runs in the Preview transport contract
+  - Parent: ordered preparation child 2/3 of the re-sliced `V2-505A1P`; depends on `V2-505A1P1`.
+  - Files: `frontend/src/transport/dto.ts`, `frontend/src/transport/previewDto.test.ts`
+  - Behavior: the strict Preview transport DTO accepts the four new serialized inline run variants without accepting unknown types, extra keys, or compatibility payloads.
+  - Verify: `pnpm --dir frontend exec vitest run src/transport/previewDto.test.ts`
+  - Acceptance: the TypeScript union and runtime validator accept hyperlink text/destination, math latex/text, soft-break text and hard-break text alongside the existing four variants; malformed shapes and unknown run types remain rejected.
+  - Verification-surface change: no
+  - Attempts: 1
+  - Attempt 1 (2026-08-22): Checker PASS; exact Verify passed 9/9, combined Preview transport regression passed 31/31, `pnpm --dir frontend typecheck`, `pnpm --dir frontend lint`, `git diff --check`, and `./lint-loop.sh` passed; independent DTO audit confirmed the exact eight-member TypeScript union, strict runtime field whitelists for all new runs, nested text/list/footnote validation, and rejection of unknown run types, extra keys, and malformed shapes; candidate scope was exactly the two named files before this lifecycle update, all unrelated dirty paths were preserved, one local commit and no push.
 
 - [V2-505A1M] Establish canonical typed inline RenderPlan runs
   - Parent: ordered preparation child 1/7 of the re-sliced `V2-505A1`; the original V2-505A1 Behavior and Acceptance remain unchanged across A1M, A1P1, A1P2, A1P3, A1R, A1D1 and A1D2.
@@ -1660,5 +1661,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 - 2026-08-22 - V2-505A1P Checker FAIL Attempt 1; exact Verify passed 1/1, target Ruff, `git diff --check`, and LOOP-LINT passed; complete preview presentation tests were 5 passed/1 known clean-HEAD YAML Front Matter baseline failure, but raw citation fallback leaked `[@ref-1]` and the new four Python run types were not accepted by the actual frontend transport DTO/validator or rendered by the Preview component; the two candidate files were restored, A1P remains Open pending split/third-file protocol work, all unrelated dirty paths were preserved, and no commit or push.
 - 2026-08-22 - V2-505A1P split into ordered children V2-505A1P1, V2-505A1P2 and V2-505A1P3 after the independent Checker found that raw citation cleanup belongs in the Python mapper while the new Preview run shapes also require the frontend transport DTO, validator tests, panel renderer and panel tests; no product code edited in the split cycle, all unrelated dirty paths were preserved, and the next queue is V2-505A1P1.
 - 2026-08-22 - V2-505A1P1 Checker PASS Attempt 1; exact Verify passed 1/1, target Ruff, `git diff --check`, and LOOP-LINT passed; complete preview tests were 5 passed/1 known clean-HEAD baseline failure at `test_complete_example_preview_preserves_compiler_order_and_numbering` with `TF-SOURCE-LEGACY-001`, clean HEAD was 4 passed/1 with the identical failure, and independent AST/runtime probes passed for all eight ordered variants, raw citation suppression, formatted citation preservation, and explicit unknown-run rejection; V2-505A1P1 moved to Done, candidate scope was exactly the two named files plus this lifecycle update, unrelated dirty paths were preserved, one local commit, no push.
+- 2026-08-22 - V2-505A1P2 Checker PASS Attempt 1; exact Verify passed 9/9, combined Preview transport regression passed 31/31, frontend typecheck/lint, `git diff --check`, and LOOP-LINT passed; independent DTO audit confirmed all eight canonical runs, strict new-run field shapes, and rejection of unknown types, extra keys, and malformed shapes; V2-505A1P2 moved from Open to Done, candidate scope was exactly the two named frontend files plus this lifecycle update, all unrelated dirty paths were preserved, one local commit, no push.
 
 ## Sync log

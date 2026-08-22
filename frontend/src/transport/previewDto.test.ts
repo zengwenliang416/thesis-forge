@@ -2,10 +2,18 @@ import fixture from "../../../tests/fixtures/preview-workbench-v1.json";
 import {
   readSerializedPreviewResult,
   type SerializedPreviewResult,
+  type SerializedPreviewRun,
 } from "./dto";
 
 describe("preview transport DTO", () => {
   const typedFixture = fixture as unknown as SerializedPreviewResult;
+  const paragraphBlock = fixture.preview.blocks[1];
+  if (paragraphBlock.content.type !== "text") {
+    throw new Error("preview fixture paragraph block is not text content");
+  }
+  const paragraphRuns = (
+    paragraphBlock.content as unknown as { runs: SerializedPreviewRun[] }
+  ).runs;
 
   it("accepts the versioned renderer-neutral golden contract", () => {
     expect(
@@ -14,6 +22,55 @@ describe("preview transport DTO", () => {
         true,
       ),
     ).toEqual(typedFixture);
+  });
+
+  it("accepts all canonical rich inline run variants", () => {
+    const richRuns = [
+      { type: "text", text: "前" },
+      { type: "reference", targetId: "fig:arch", text: "图 1-1" },
+      {
+        type: "hyperlink",
+        text: "项目主页",
+        destination: "https://example.test",
+      },
+      { type: "math", latex: "x^2 + y^2", text: "x^2 + y^2" },
+      { type: "soft-break", text: " " },
+      { type: "hard-break", text: "\n" },
+      {
+        type: "citation",
+        keys: ["ref-1"],
+        ordinals: [1],
+        locator: null,
+        text: "[1]",
+      },
+      {
+        type: "footnote-reference",
+        label: "note",
+        footnoteId: 1,
+        text: "脚注1",
+      },
+    ];
+    const value = {
+      ...fixture,
+      preview: {
+        ...fixture.preview,
+        blocks: [
+          ...fixture.preview.blocks.slice(0, 1),
+          {
+            ...paragraphBlock,
+            content: {
+              ...paragraphBlock.content,
+              runs: richRuns,
+            },
+          },
+          ...fixture.preview.blocks.slice(2),
+        ],
+      },
+    };
+
+    expect(
+      readSerializedPreviewResult(value as unknown as Record<string, unknown>, true),
+    ).toEqual(value);
   });
 
   it.each([
@@ -57,6 +114,56 @@ describe("preview transport DTO", () => {
                 assetPath: "/private/tmp/arch.png",
               },
             },
+          ],
+        },
+      },
+    },
+    {
+      name: "unknown inline run",
+      value: {
+        ...fixture,
+        preview: {
+          ...fixture.preview,
+          blocks: [
+            ...fixture.preview.blocks.slice(0, 1),
+            {
+              ...paragraphBlock,
+              content: {
+                ...paragraphBlock.content,
+                runs: [
+                  ...paragraphRuns,
+                  { type: "inline-future", text: "不支持" },
+                ],
+              },
+            },
+            ...fixture.preview.blocks.slice(2),
+          ],
+        },
+      },
+    },
+    {
+      name: "hyperlink extra key",
+      value: {
+        ...fixture,
+        preview: {
+          ...fixture.preview,
+          blocks: [
+            ...fixture.preview.blocks.slice(0, 1),
+            {
+              ...fixture.preview.blocks[1],
+              content: {
+                ...fixture.preview.blocks[1].content,
+                runs: [
+                  {
+                    type: "hyperlink",
+                    text: "项目主页",
+                    destination: "https://example.test",
+                    payload: {},
+                  },
+                ],
+              },
+            },
+            ...fixture.preview.blocks.slice(2),
           ],
         },
       },

@@ -100,7 +100,11 @@ export type SerializedPreviewRun =
       label: string;
       footnoteId: number;
       text: string;
-    };
+    }
+  | { type: "hyperlink"; text: string; destination: string }
+  | { type: "math"; latex: string; text: string }
+  | { type: "soft-break"; text: string }
+  | { type: "hard-break"; text: string };
 
 export type SerializedPreviewContent =
   | {
@@ -334,6 +338,26 @@ function isPreviewRun(value: unknown): value is SerializedPreviewRun {
       hasOnlyKeys(value, ["type", "label", "footnoteId", "text"]) &&
       typeof value.label === "string" &&
       isPositiveInteger(value.footnoteId) &&
+      typeof value.text === "string"
+    );
+  }
+  if (value.type === "hyperlink") {
+    return (
+      hasOnlyKeys(value, ["type", "text", "destination"]) &&
+      typeof value.text === "string" &&
+      typeof value.destination === "string"
+    );
+  }
+  if (value.type === "math") {
+    return (
+      hasOnlyKeys(value, ["type", "latex", "text"]) &&
+      typeof value.latex === "string" &&
+      typeof value.text === "string"
+    );
+  }
+  if (value.type === "soft-break" || value.type === "hard-break") {
+    return (
+      hasOnlyKeys(value, ["type", "text"]) &&
       typeof value.text === "string"
     );
   }
