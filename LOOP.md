@@ -97,6 +97,16 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Done
 
+- [V2-510A] Preflight inline and display math during validation
+  - Parent: first executable child of catalogue item `V2-510`; re-sliced because the validation contract requires both the pure math seam and validator integration.
+  - Files: `src/thesis_forge/core/math.py`, `src/thesis_forge/core/validator.py`, `tests/core/test_math_preflight.py`
+  - Behavior: validate every parsed inline/display formula with the deterministic math converter before compile/render and return structured source-linked diagnostics for unsupported or malformed syntax.
+  - Verify: `.venv/bin/python -m pytest tests/core/test_math_preflight.py`
+  - Acceptance: supported inline and display formulas produce no math-preflight error; unsupported/malformed formulas produce stable structured issues with target, line and error details; no external provider or DOCX render is needed.
+  - Verification-surface change: no
+  - Attempts: 1
+  - Attempt 1 (2026-08-22): Checker PASS; exact Verify passed 3/3; related regression was 199 passed/1 baseline failure at `tests/core/test_markdown_v2_parser_config.py::test_markdown_v2_uses_public_parser_primitives`, matching clean HEAD at 196 passed/1 same failure and recorded out-of-scope; targeted Ruff, `git diff --check`, and LOOP-LINT passed; static/runtime audit confirmed pure local math conversion, structured unsupported/malformed error issues with source navigation and no absolute path leakage, supported formulas clear, and no compatibility, fallback, silent-degradation, or dual-field path; candidate scope was exactly the three named files, the pre-existing `openspec/.specnav/change-registry.json` was preserved and uncommitted, one local commit, no push.
+
 - [V2-320C] Migrate the first canonical V2 test cluster off core.parser
   - Parent: ordered preparation child 3/3 of the re-sliced `V2-320`; depends on `V2-320A`; the original V2-320 Behavior and Acceptance remain unchanged across the children.
   - Files: `tests/core/test_legacy_source_rejection.py`, `tests/core/test_markdown_v2_inlines.py`, `tests/core/test_markdown_v2_figures.py`
@@ -1531,5 +1541,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 - 2026-08-22 - V2-320A Checker PASS Attempt 1; exact Verify passed 73/73, targeted Ruff, `git diff --check`, final LOOP-LINT, and independent seam/parity/runtime probes passed; V2-320B and V2-320C remain Open, the pre-existing `change-registry.json` was preserved and uncommitted, and no push.
 - 2026-08-22 - V2-320B Checker PASS Attempt 1; exact Verify passed 2/2, related parser/backend regression 77/77, targeted Ruff, `git diff --check`, LOOP-LINT, independent AST/runtime boundary probes, and the 11-gap total-goal audit passed; V2-320C remains Open, the pre-existing `change-registry.json` was preserved and uncommitted, one local commit, no push.
 - 2026-08-22 - V2-320C Checker PASS Attempt 1; exact Verify passed 18/18, targeted Ruff, `git diff --check`, and LOOP-LINT passed; candidate scope was exactly the three named test files with no production code, compatibility layer, or selector changes, the pre-existing `change-registry.json` was preserved and uncommitted, one local commit, no push.
+- 2026-08-22 - V2-510A Checker PASS Attempt 1; exact Verify passed 3/3; related regression was 199 passed/1 baseline failure at `tests/core/test_markdown_v2_parser_config.py::test_markdown_v2_uses_public_parser_primitives`, matching clean HEAD at 196 passed/1 same failure and recorded out-of-scope; targeted Ruff, `git diff --check`, and LOOP-LINT: PASS — open=0 done=117 blocked=0; static/runtime audit confirmed pure local math conversion, structured unsupported/malformed error issues with source navigation and no absolute path leakage, supported formulas clear, and no compatibility, fallback, silent-degradation, or dual-field path; candidate scope was exactly the three named files, the pre-existing `openspec/.specnav/change-registry.json` was preserved and uncommitted, one local commit, no push.
 
 ## Sync log

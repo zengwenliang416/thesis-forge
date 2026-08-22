@@ -329,6 +329,12 @@ class LatexMathConverter:
         return MathExpression(root=root)
 
 
+def preflight_latex(latex: str) -> MathExpression:
+    """Parse a formula before compilation so render-time failures become validation issues."""
+
+    return LatexMathConverter().convert(latex)
+
+
 class _LatexParser:
     def __init__(self, source: str):
         self.source = source

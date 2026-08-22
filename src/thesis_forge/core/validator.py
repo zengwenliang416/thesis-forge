@@ -29,11 +29,13 @@ from thesis_forge.templates import (
 
 from .ids import is_valid_stable_id
 from .index import DocumentIndex
+from .math import MathConversionError, UnsupportedMathError, preflight_latex
 from .model import (
     Algorithm,
     Equation,
     Figure,
     Heading,
+    InlineMath,
     Listing,
     Table,
     ThesisDocument,
@@ -320,6 +322,56 @@ def _validate_cross_references(
                 message="Cross-reference target does not exist",
                 line=reference.location.line,
                 target=reference.target,
+            )
+
+
+def _validate_math_preflight(
+    document: ThesisDocument,
+    _context: ValidationContext,
+) -> Iterable[ValidationIssue]:
+    index = DocumentIndex.from_document(document)
+    formulas = [
+        (
+            f"inline:{inline.node_id}",
+            inline.latex,
+            inline.location,
+        )
+        for inline in index.inlines
+        if isinstance(inline, InlineMath)
+    ]
+    formulas.extend(
+        (
+            f"equation:{block.id or block.node_id}",
+            block.latex,
+            block.location,
+        )
+        for block in document.blocks
+        if isinstance(block, Equation)
+    )
+
+    for target, latex, location in formulas:
+        try:
+            preflight_latex(latex)
+        except MathConversionError as error:
+            details: dict[str, str | int] = {
+                "formula": latex,
+                "error_type": type(error).__name__,
+            }
+            if isinstance(error, UnsupportedMathError):
+                code = "unsupported-math"
+                message = "Formula uses an unsupported LaTeX command"
+                details["command"] = error.command
+            else:
+                code = "invalid-math"
+                message = "Formula syntax is invalid"
+            details.update(_location_details(location, "source"))
+            yield ValidationIssue(
+                code=code,
+                severity="error",
+                message=message,
+                line=location.line,
+                target=target,
+                details=details,
             )
 
 
@@ -629,6 +681,7 @@ DEFAULT_VALIDATION_RULES: tuple[ValidationRule, ...] = (
     _validate_empty_document,
     _validate_ids,
     _validate_cross_references,
+    _validate_math_preflight,
     _validate_heading_hierarchy,
     _validate_images,
     _validate_bibliography,
