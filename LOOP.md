@@ -103,6 +103,22 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
   - Verification-surface change: authorized; creates focused block-model tests.
   - Attempts: 0
 
+- [V2-304] Structured table model
+  - Files: `src/thesis_forge/core/model.py`, `tests/core/test_table_model.py`
+  - Behavior: Table owns caption inlines, columns, rows and cells with typed content/alignment.
+  - Verify: `.venv/bin/python -m pytest tests/core/test_table_model.py`
+  - Acceptance: no authoritative pipe-delimited `markdown` field remains.
+  - Verification-surface change: authorized; creates focused table-model tests.
+  - Attempts: 0
+
+- [V2-305] Rich thesis object model
+  - Files: `src/thesis_forge/core/model.py`, `tests/core/test_thesis_object_model.py`
+  - Behavior: Figure, Listing and Algorithm own typed captions/content; Equation and Footnote have complete source identity.
+  - Verify: `.venv/bin/python -m pytest tests/core/test_thesis_object_model.py`
+  - Acceptance: caption citations/cross-references/strong text are representable.
+  - Verification-surface change: authorized; creates focused thesis-object-model tests.
+  - Attempts: 0
+
 ## Done
 
 - [V2-302E2] Retire the CodeSpan type
@@ -730,5 +746,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 - 2026-08-22 - V2-302D2 Checker PASS; Maker-parked diff re-applied verbatim audited contract-exact (+27/−4 across model.py/parser.py/compiler.py, no scope creep), Verify 146/146, docx_renderer 86/86, ruff/diff-check clean, independent probes confirmed both-backend nesting with locations/registration/pre-order, compile lowering (CitationRun/bold TextRun/code+bold/FootnoteReferenceRun), and byte-identical HEAD-vs-candidate example parity, full suite 46/973 confined to the 7 known files; no push.
 - 2026-08-22 - V2-302E1 Checker PASS; 2-file diff contract-exact (stricter Strong children-content re-pin + 5 non-vacuous Strong inline-model tests), exact Verify 49/49, baselines 205/205, load-bearing/mutation/two-backend probes green, full suite 46 failed / 978 passed confined to the 7 known files; no push.
 - 2026-08-22 - V2-302E2 Checker PASS; deletion-only 2-file diff removes the CodeSpan dataclass and its source-identity enumeration, exact Verify 103/103, ImportError/import/behavior/parity probes green, repo-wide CodeSpan grep empty outside LOOP.md, full suite 46 failed / 978 passed confined to the 7 known files; no push.
+- 2026-08-22 - Open refilled with V2-304 and V2-305 per the catalogue dependency order after V2-302E2 left one Open item; both model-replacement slices are expected to need re-slicing when their cycles arrive (consumer construction and test-construction sites exceed the two-file catalogue slices); no product code edited.
 
 ## Sync log
