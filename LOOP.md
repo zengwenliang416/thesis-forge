@@ -95,8 +95,26 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Open
 
-- [V2-305E] Remove raw thesis-object caption/text fields
-  - Parent: ordered child 5/5 of `V2-305`; depends on `V2-305D`.
+- [V2-305E1A] Migrate compiler/DOCX/preview object captions
+  - Parent: ordered child 5/7 of `V2-305`; depends on `V2-305D`.
+  - Files: `tests/test_compiler.py`, `tests/test_docx_renderer.py`, `tests/test_preview_presentation.py`
+  - Behavior: Figure/Listing/Algorithm fixtures rely on caption inlines rather than raw caption strings.
+  - Verify: `.venv/bin/python -m pytest tests/test_compiler.py tests/test_docx_renderer.py tests/test_preview_presentation.py`
+  - Acceptance: object compiler, DOCX and preview regressions remain green with typed caption fixtures.
+  - Verification-surface change: authorized; migrates object caption fixtures.
+  - Attempts: 0
+
+- [V2-305E1B] Migrate manifest validation object captions
+  - Parent: ordered child 6/7 of `V2-305`; depends on `V2-305E1A`.
+  - Files: `tests/core/test_manifest_resource_validation.py`
+  - Behavior: Figure fixtures rely on caption inlines rather than raw caption strings.
+  - Verify: `.venv/bin/python -m pytest tests/core/test_manifest_resource_validation.py`
+  - Acceptance: manifest/resource validation regression remains green with typed figure caption fixtures.
+  - Verification-surface change: authorized; migrates validation object fixtures.
+  - Attempts: 0
+
+- [V2-305E2] Remove raw thesis-object caption/text fields
+  - Parent: ordered child 7/7 of `V2-305`; depends on `V2-305E1B`.
   - Files: `src/thesis_forge/core/model.py`, `src/thesis_forge/core/parser.py`, `tests/core/test_thesis_object_model.py`
   - Behavior: Figure/Listing/Algorithm no longer store raw caption strings and FootnoteDefinition no longer stores duplicate text; typed inlines/content are authoritative.
   - Verify: `.venv/bin/python -m pytest tests/core/test_thesis_object_model.py tests/test_parser.py tests/test_parser_contract.py tests/test_compiler.py tests/test_docx_renderer.py tests/test_preview_presentation.py`
@@ -985,5 +1003,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 - 2026-08-22 - V2-305B Checker PASS; parser populates typed object captions and explicit equation display state, exact Verify 87/87, Ruff/diff-check clean; no push.
 - 2026-08-22 - V2-305C Checker PASS; compiler typed caption/display flow is represented in RenderPlan, exact Verify 24/24 plus 11 render-plan/preview regressions, Ruff/diff-check clean; no push.
 - 2026-08-22 - V2-305D Checker PASS; DOCX/preview/validation fixtures use typed captions and equation display, exact Verify 95/95, AST/Ruff/diff-check clean; no push.
+- 2026-08-22 - V2-305E split into ordered children V2-305E1A, V2-305E1B and V2-305E2 after AST found raw object captions across five fixture/parser surfaces; no product code edited in the split cycle, next queue V2-305E1A.
 
 ## Sync log
