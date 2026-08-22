@@ -3203,7 +3203,6 @@ def test_docx_renderer_writes_resolved_body_footnote_and_bibliography_text(
             ),
             BibliographyBlock(),
         ],
-        citations=[body_citation, footnote_citation],
     )
     output = tmp_path / "bibliography.docx"
 
@@ -3331,7 +3330,6 @@ def test_docx_renderer_applies_superscript_to_body_and_footnote_citations(
                 inlines=[Text(value="脚注引用"), footnote_citation],
             ),
         ],
-        citations=[body_citation, footnote_citation],
     )
     template = load_template("templates/base/bachelor.yaml")
     assert template.citation is not None
@@ -3382,7 +3380,6 @@ def test_docx_renderer_applies_bibliography_title_and_entry_policy_xml(
             ),
             BibliographyBlock(),
         ],
-        citations=[citation],
     )
     template = load_template("templates/base/bachelor.yaml")
     template.bibliography = BibliographySpec(

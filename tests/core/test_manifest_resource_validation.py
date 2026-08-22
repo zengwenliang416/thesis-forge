@@ -68,7 +68,6 @@ def test_project_manifest_controls_template_and_resource_roots(
                 caption_inlines=(Text(value="模型"),),
             ),
         ],
-        citations=[citation],
     )
 
     context = ValidationContext.from_document(document)
@@ -99,7 +98,6 @@ def test_manifest_bibliography_overrides_document_front_matter_path(
             citation_style="unsupported-style",
         ),
         blocks=[Paragraph(inlines=[citation])],
-        citations=[citation],
     )
 
     context = ValidationContext.from_document(document)
@@ -149,7 +147,6 @@ def test_invalid_manifest_bibliography_details_do_not_leak_absolute_path(
     document = ThesisDocument(
         source_path=(project_root / "thesis.md").resolve(),
         blocks=[Paragraph(inlines=[citation])],
-        citations=[citation],
     )
 
     context = ValidationContext.from_document(document)

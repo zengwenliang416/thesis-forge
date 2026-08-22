@@ -202,7 +202,6 @@ def test_compile_document_formats_citations_and_marker_bibliography_from_databas
             BibliographyBlock(),
             Paragraph(inlines=[repeated]),
         ],
-        citations=[grouped, repeated],
     )
 
     plan = compile_document(
@@ -238,7 +237,6 @@ def test_compile_document_appends_bibliography_when_marker_is_absent():
     document = ThesisDocument(
         source_path=Path("/tmp/thesis.md"),
         blocks=[Paragraph(inlines=[citation])],
-        citations=[citation],
     )
 
     plan = compile_document(
@@ -273,7 +271,6 @@ def test_compile_document_orders_footnote_citation_at_reference_position():
             ),
         ],
         # Parser registers the body citation before the later footnote definition.
-        citations=[body_citation, footnote_citation],
     )
 
     plan = compile_document(
@@ -909,7 +906,6 @@ def test_compile_document_selects_provider_from_citation_style():
     document = ThesisDocument(
         source_path=Path("/tmp/thesis.md"),
         blocks=[Paragraph(inlines=[citation])],
-        citations=[citation],
         bibliography=BibliographyConfig(
             path="references.bib",
             citation_style="gbt7714-2025-numeric",
@@ -932,7 +928,6 @@ def test_compile_document_rejects_unsupported_citation_style():
     document = ThesisDocument(
         source_path=Path("/tmp/thesis.md"),
         blocks=[Paragraph(inlines=[citation])],
-        citations=[citation],
         bibliography=BibliographyConfig(
             path="references.bib",
             citation_style="not-a-style",
