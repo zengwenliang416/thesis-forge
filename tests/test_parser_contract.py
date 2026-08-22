@@ -290,7 +290,7 @@ width: "85%"
     assert isinstance(figure, Figure)
     assert figure.id == "fig:model"
     assert figure.src == "./images/model.png"
-    assert figure.caption == "模型总体结构 [@cap-src]"
+    assert inline_plain_text(figure.caption_inlines) == "模型总体结构 [@cap-src]"
     assert figure.width == "85%"
     assert [citation.keys for citation in doc.citations] == [["cap-src"]]
     assert doc.citations[0].location.line == 3
@@ -359,7 +359,7 @@ caption: "训练流程"
     algorithm = doc.blocks[0]
     assert isinstance(algorithm, Algorithm)
     assert algorithm.id == "alg:train"
-    assert algorithm.caption == "训练流程"
+    assert inline_plain_text(algorithm.caption_inlines) == "训练流程"
     assert "1. 初始化参数；" in algorithm.body
     assert "2. 读取数据 [@alg-src]。" in algorithm.body
     assert [citation.keys for citation in doc.citations] == [["alg-src"]]
