@@ -9,6 +9,7 @@ import pytest
 
 from thesis_forge.core.index import DocumentIndex, DuplicateIdConflict
 from thesis_forge.core.model import (
+    Algorithm,
     Block,
     BlockQuote,
     BulletList,
@@ -148,6 +149,23 @@ def test_footnote_definitions_are_indexed_by_label() -> None:
     )
     index = DocumentIndex.from_document(_document(definition))
     assert index.footnote_definitions == {"scope": definition}
+
+
+def test_algorithm_body_lines_are_indexed_with_locations() -> None:
+    body_citation = Citation(
+        keys=["alg-src"], raw="[@alg-src]", location=SourceLocation(line=5, column=9)
+    )
+    algorithm = Algorithm(
+        id="alg:train",
+        caption_inlines=(Text(value="训练流程"),),
+        body_lines=(
+            (Text(value="1. 初始化参数；", location=SourceLocation(line=4)),),
+            (Text(value="2. 读取数据 "), body_citation),
+        ),
+    )
+    index = DocumentIndex.from_document(_document(algorithm))
+    assert index.citations == (body_citation,)
+    assert index.inlines[-1] is body_citation
 
 
 def test_code_blocks_and_equations_are_traversed_without_inline_content() -> None:

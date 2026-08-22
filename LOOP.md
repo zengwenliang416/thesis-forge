@@ -95,15 +95,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Open
 
-- [V2-307D1d] DocumentIndex traverses Algorithm body lines
-  - Parent: ordered child 8/13 of `V2-307`; depends on `V2-307D1c`.
-  - Files: `src/thesis_forge/core/index.py`, `tests/core/test_document_index.py`
-  - Behavior: the index traversal walks Algorithm body_lines so body citations/references join the derived collections.
-  - Verify: `.venv/bin/python -m pytest tests/core/test_document_index.py tests/core/test_no_manual_caches.py`
-  - Acceptance: algorithm-body citations appear in index.citations with accurate locations.
-  - Verification-surface change: authorized; extends index traversal tests.
-  - Attempts: 0
-
 - [V2-307D1e] Parser test cache pins migrate to index reads
   - Parent: ordered child 9/13 of `V2-307`; depends on `V2-307D1d`.
   - Files: `tests/test_parser.py`, `tests/test_parser_contract.py`, `tests/test_parser_markdown_it.py`
@@ -159,6 +150,16 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
   - Attempts: 0
 
 ## Done
+
+- [V2-307D1d] DocumentIndex traverses Algorithm body lines
+  - Parent: ordered child 8/13 of `V2-307`; depends on `V2-307D1c`.
+  - Files: `src/thesis_forge/core/index.py`, `tests/core/test_document_index.py`
+  - Behavior: the index traversal walks Algorithm body_lines so body citations/references join the derived collections.
+  - Verify: `.venv/bin/python -m pytest tests/core/test_document_index.py tests/core/test_no_manual_caches.py`
+  - Acceptance: algorithm-body citations appear in index.citations with accurate locations.
+  - Verification-surface change: authorized; extends index traversal tests.
+  - Attempts: 1
+  - Attempt 1 (2026-08-22): Checker PASS; index.py diff is exactly the Algorithm body_lines walk inside the captioned-blocks branch, one new index test pins the (5, 9) body citation, exact Verify 16/16, broader baselines 153/153, end-to-end probe confirmed index.citations equals the cache-registered citation with document order preserved and the unknown-subclass TypeError contract intact; no push.
 
 - [V2-307D1c] Markdown-it populates typed Algorithm body lines
   - Parent: ordered child 7/13 of `V2-307`; depends on `V2-307D1b`.
@@ -1184,6 +1185,7 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 - 2026-08-22 - V2-307D1a Checker PASS; caption inlines now carry the caption line/column and table-cell inlines their own row line in both backends (markdown-it inherits the shared _parse_container fix), exact Verify 50/50 with typed-vs-cache location pins, baselines and parity green; no push.
 - 2026-08-22 - V2-307D1b Checker PASS; Algorithm owns typed body_lines populated from located content lines with cache-equal locations, exact Verify 118/118 and baselines 148/148; no push.
 - 2026-08-22 - V2-307D1c Checker PASS; markdown-it typed body_lines pinned identical to legacy through the shared container path with zero production changes, exact Verify 49/49; no push.
+- 2026-08-22 - V2-307D1d Checker PASS; DocumentIndex now traverses Algorithm body_lines so body citations join the derived collections with accurate locations and document order, exact Verify 16/16 and baselines 153/153; no push.
 - 2026-08-22 - V2-307D1 Checker FAIL Attempt 1 then re-sliced into ordered children V2-307D1a…D1e after independent Checker grep found 20 cache-pin sites (18 in test_parser_contract.py) and completing them exposed typed-model defects the cache masked: caption inline locations carry the container start line in both backends, table-cell inline locations are misaligned by the metadata/blank rows, and algorithm-body citations exist only in the cache (Algorithm.body is verbatim-only); children fix caption/cell locations, add typed Algorithm body_lines to the model and both parsers, extend index traversal, then finish the pin migration; three test files restored, no product code edited in the split cycle.
 - 2026-08-22 - V2-307 split into eight ordered children V2-307A…G after grep mapping showed removing the four cache fields atomically spans model.py + both parsers (12 registration call sites) + compiler.py + validator.py + cli.py + qa/tools/parser_diff.py plus seven test files; children migrate readers first (compiler/CLI/parity-tool/test pins, with V2-308 landing between D2 and E), then stop registration per parser, then remove the fields; no product code edited in the split cycle.
 

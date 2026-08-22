@@ -135,6 +135,9 @@ class DocumentIndex:
                     visit_block(child)
             elif isinstance(block, _CAPTIONED_BLOCKS):
                 visit_inlines(block.caption_inlines)
+                if isinstance(block, Algorithm):
+                    for body_line in block.body_lines:
+                        visit_inlines(body_line)
                 if isinstance(block, Table):
                     for row in block.rows:
                         for cell in row.cells:
