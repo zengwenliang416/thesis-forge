@@ -44,6 +44,7 @@ from mdit_py_plugins.container import container_plugin
 from mdit_py_plugins.footnote import footnote_plugin
 
 from .model import (
+    Algorithm,
     BlockQuote,
     CodeBlock,
     CrossReference,
@@ -59,6 +60,7 @@ from .model import (
     InlineMath,
     Link,
     ListBlock,
+    Listing,
     ListItem,
     Paragraph,
     SoftBreak,
@@ -104,6 +106,10 @@ _TABLE_CAPTION_RE = re.compile(
 )
 _TABLE_SEPARATOR_RE = re.compile(r"^:?-{3,}:?$")
 _FENCE_START_RE = re.compile(r"^ {0,3}(?P<marker>`{3,}|~{3,})")
+_FENCE_ID_ATTRIBUTE_RE = re.compile(
+    r"#(?P<id>(?:lst|alg):[A-Za-z0-9_.:-]+)"
+)
+_FENCE_TITLE_ATTRIBUTE_RE = re.compile(r'title="(?P<title>[^"]+)"')
 
 _UNSUPPORTED_BLOCK_TOKEN_TYPES = frozenset(
     {"code_block", "hr", "html_block", "reference"}
@@ -221,6 +227,70 @@ def _build_markdown_it() -> MarkdownIt:
     for kind in CONTAINER_KINDS:
         md.use(container_plugin, kind, validate=_make_container_validate(kind))
     return md
+
+
+def _parse_fence_info(info: str) -> tuple[str, str, str, str] | None:
+    parts = info.split(maxsplit=1)
+    if not parts:
+        return None
+
+    language = parts[0]
+    attributes = parts[1] if len(parts) == 2 else ""
+    is_semantic_fence = (
+        language == "algorithm"
+        or "{" in attributes
+        or "#" in attributes
+        or "title=" in attributes
+    )
+    if not is_semantic_fence:
+        return None
+    if not attributes.startswith("{") or not attributes.endswith("}"):
+        raise ParseError(
+            "listing/algorithm 围栏必须使用 {#id title=\"标题\"} 属性"
+        )
+
+    raw_attributes = attributes[1:-1].strip()
+    block_id: str | None = None
+    title: str | None = None
+    cursor = 0
+    while cursor < len(raw_attributes):
+        if raw_attributes[cursor].isspace():
+            cursor += 1
+            continue
+
+        id_match = _FENCE_ID_ATTRIBUTE_RE.match(raw_attributes, cursor)
+        if id_match is not None:
+            if block_id is not None:
+                raise ParseError("listing/algorithm 围栏不能重复声明 ID")
+            block_id = id_match.group("id")
+            cursor = id_match.end()
+            continue
+
+        title_match = _FENCE_TITLE_ATTRIBUTE_RE.match(raw_attributes, cursor)
+        if title_match is not None:
+            if title is not None:
+                raise ParseError("listing/algorithm 围栏不能重复声明 title")
+            title = title_match.group("title")
+            cursor = title_match.end()
+            continue
+
+        raise ParseError(
+            "listing/algorithm 围栏属性必须是 {#id title=\"标题\"}"
+        )
+
+    if block_id is None:
+        raise ParseError("listing/algorithm 围栏必须声明稳定 ID")
+    if title is None:
+        raise ParseError("listing/algorithm 围栏必须声明非空 title")
+
+    if language == "algorithm":
+        if not block_id.startswith("alg:"):
+            raise ParseError("algorithm 围栏的 ID 必须使用 alg: 前缀")
+        return "algorithm", language, block_id, title
+
+    if not block_id.startswith("lst:"):
+        raise ParseError("listing 围栏的 ID 必须使用 lst: 前缀")
+    return "listing", language, block_id, title
 
 
 def _check_containers_closed(lines: list[str], start: int) -> None:
@@ -974,7 +1044,7 @@ class MarkdownItParserBackend:
             elif token_type == "blockquote_open":
                 idx = self._emit_blockquote(doc, tokens, idx, lines, offset)
             elif token_type == "fence":
-                idx = self._emit_fence(doc, tokens, idx, offset)
+                idx = self._emit_fence(doc, tokens, idx, lines, offset)
             elif token_type == "table_open":
                 idx = self._emit_table(doc, tokens, idx, lines, offset)
             elif token_type in _UNSUPPORTED_BLOCK_TOKEN_TYPES:
@@ -1063,17 +1133,69 @@ class MarkdownItParserBackend:
         doc: ThesisDocument,
         tokens: list[Token],
         idx: int,
+        lines: list[str],
         offset: int,
     ) -> int:
         token = tokens[idx]
         assert token.map is not None
         info = token.info.strip()
-        language = info.split(None, 1)[0] if info else None
+        parsed = _parse_fence_info(info)
+        line = token.map[0] + 1 + offset
+        if parsed is None:
+            language = info.split(None, 1)[0] if info else None
+            doc.blocks.append(
+                CodeBlock(
+                    language=language,
+                    code=token.content,
+                    location=SourceLocation(line=line),
+                )
+            )
+            return idx + 1
+
+        kind, language, block_id, title = parsed
+        title_column = lines[token.map[0]].find(title) + 1
+        if title_column <= 0:
+            title_column = 1
+        title_tokens = self._md.parseInline(title, {})
+        if len(title_tokens) != 1 or title_tokens[0].type != "inline":
+            raise ParseError("listing/algorithm 围栏 title 无法转换为 typed inline")
+        caption_inlines = tuple(
+            _parse_inline_token(
+                title_tokens[0],
+                start_line=line,
+                start_column=title_column,
+            )
+        )
+        content = token.content.rstrip("\n")
+        if kind == "listing":
+            doc.blocks.append(
+                Listing(
+                    id=block_id,
+                    caption_inlines=caption_inlines,
+                    language=language,
+                    code=content,
+                    location=SourceLocation(line=line),
+                )
+            )
+            return idx + 1
+
+        body_lines = tuple(
+            tuple(
+                parse_inline_content(
+                    raw,
+                    line + 1 + line_offset,
+                )
+            )
+            for line_offset, raw in enumerate(token.content.splitlines())
+            if raw.strip()
+        )
         doc.blocks.append(
-            CodeBlock(
-                language=language,
-                code=token.content,
-                location=SourceLocation(line=token.map[0] + 1 + offset),
+            Algorithm(
+                id=block_id,
+                caption_inlines=caption_inlines,
+                body=content,
+                body_lines=body_lines,
+                location=SourceLocation(line=line),
             )
         )
         return idx + 1
