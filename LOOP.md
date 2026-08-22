@@ -95,15 +95,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Open
 
-- [V2-303A] Add typed block structures and the canonical plain-text derivation
-  - Parent: ordered child 1/10 of `V2-303`; the parent behavior remains unchanged.
-  - Files: `src/thesis_forge/core/model.py`, `tests/core/test_block_model.py`
-  - Behavior: add typed BlockQuote(children), CodeBlock(language, code), OrderedList/BulletList(items) with recursive ListItem children, plus the canonical `inline_plain_text` derivation over inlines; pure addition, nothing emits or consumes the new types yet.
-  - Verify: `.venv/bin/python -m pytest tests/core/test_block_model.py`
-  - Acceptance: recursive lists and typed BlockQuote/CodeBlock are representable; baselines stay green.
-  - Verification-surface change: authorized; creates focused block-model tests.
-  - Attempts: 0
-
 - [V2-303B] Migrate parser-test block-text pins to derived text
   - Parent: ordered child 2/10 of `V2-303`; depends on `V2-303A`.
   - Files: `tests/test_parser.py`, `tests/test_parser_markdown_it.py`, `tests/test_parser_contract.py`
@@ -202,6 +193,16 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
   - Attempts: 0
 
 ## Done
+
+- [V2-303A] Add typed block structures and the canonical plain-text derivation
+  - Parent: ordered child 1/10 of `V2-303`; the parent behavior remains unchanged.
+  - Files: `src/thesis_forge/core/model.py`, `tests/core/test_block_model.py`
+  - Behavior: add typed BlockQuote(children), CodeBlock(language, code), OrderedList/BulletList(items) with recursive ListItem children, plus the canonical `inline_plain_text` derivation over inlines; pure addition, nothing emits or consumes the new types yet.
+  - Verify: `.venv/bin/python -m pytest tests/core/test_block_model.py`
+  - Acceptance: recursive lists and typed BlockQuote/CodeBlock are representable; baselines stay green.
+  - Verification-surface change: authorized; creates focused block-model tests.
+  - Attempts: 1
+  - Attempt 1 (2026-08-22): Checker PASS; scope exactly the 2 named files (model.py pure addition +53/−0: ListItem final `children` field, four `@dataclass(slots=True)` Block subclasses with contracted defaults, exhaustive `inline_plain_text` with TypeError naming unknown Inline subclasses and no input mutation; new test file pins every clause non-vacuously), no existing class/field touched, no `__init__.py` export change, src-wide grep shows only pre-existing unrelated `OrderedListSpec` template names and CodeSpan absent outside LOOP.md, exact Verify 20/20, ruff and `git diff --check` clean, baselines 163/163 (tests/core + parser + parser_markdown_it + parser_contract + compiler), independent probes green (subclass/slots/defaults, BulletList→ListItem.children→OrderedList read-back, every inline_plain_text clause incl. CrossReference fallback=None→target and unknown-subclass TypeError, non-mutation), full suite candidate-vs-HEAD failure sets byte-identical at 46 failed / 998 passed confined to the 7 known pre-existing files; no push.
 
 - [V2-302E2] Retire the CodeSpan type
   - Parent: ordered child 7/7 of `V2-302`; depends on `V2-302E1`.
@@ -830,5 +831,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 - 2026-08-22 - V2-302E2 Checker PASS; deletion-only 2-file diff removes the CodeSpan dataclass and its source-identity enumeration, exact Verify 103/103, ImportError/import/behavior/parity probes green, repo-wide CodeSpan grep empty outside LOOP.md, full suite 46 failed / 978 passed confined to the 7 known files; no push.
 - 2026-08-22 - Open refilled with V2-304 and V2-305 per the catalogue dependency order after V2-302E2 left one Open item; both model-replacement slices are expected to need re-slicing when their cycles arrive (consumer construction and test-construction sites exceed the two-file catalogue slices); no product code edited.
 - 2026-08-22 - V2-303 split into ten ordered children V2-303A…J after investigation showed removing the duplicated block text fields atomically spans model.py + both parsers + compiler + preview/runtime projections + six test files; the ordered path migrates test pins to derived text first (green both ways), enriches compiler fixtures with parser-shaped inlines before the compiler derivation flip, drops text= kwargs before the field removal, and removes the dead _fallback_text_runs in V2-303E; no product code edited in the split cycle.
+- 2026-08-22 - V2-303A Checker PASS; scope exactly 2 files (model.py +53/−0 pure addition, new tests/core/test_block_model.py), exact Verify 20/20, baselines 163/163, ruff/diff-check clean, independent probes green (defaults/slots, recursive BulletList→ListItem.children→OrderedList read-back, every inline_plain_text clause incl. TypeError on unknown Inline, non-mutation), full-suite HEAD-vs-candidate failure sets identical at 46 failed / 998 passed confined to the 7 known files; no push.
 
 ## Sync log

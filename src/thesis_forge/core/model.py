@@ -98,6 +98,36 @@ class FootnoteReference(Inline):
     label: str = ""
 
 
+def inline_plain_text(inlines: list[Inline] | tuple[Inline, ...]) -> str:
+    """Derive the canonical plain-text form of an inline sequence.
+
+    Pure derivation: the input is never mutated, and every known Inline
+    subclass maps to a deterministic text fragment. Unknown subclasses raise
+    TypeError instead of being silently skipped.
+    """
+    parts: list[str] = []
+    for inline in inlines:
+        if isinstance(inline, (Text, InlineCode)):
+            parts.append(inline.value)
+        elif isinstance(inline, (Strong, Emphasis)):
+            parts.append(inline_plain_text(list(inline.children)))
+        elif isinstance(inline, Link):
+            parts.append(inline.label)
+        elif isinstance(inline, InlineMath):
+            parts.append(inline.latex)
+        elif isinstance(inline, (SoftBreak, HardBreak)):
+            parts.append("\n")
+        elif isinstance(inline, Citation):
+            parts.append(inline.raw)
+        elif isinstance(inline, CrossReference):
+            parts.append(inline.fallback if inline.fallback is not None else inline.target)
+        elif isinstance(inline, FootnoteReference):
+            parts.append("")
+        else:
+            raise TypeError(f"unknown Inline subclass: {type(inline).__name__}")
+    return "".join(parts)
+
+
 @dataclass(slots=True)
 class Block:
     id: str | None = None
@@ -129,6 +159,7 @@ class ListItem:
     inlines: list[Inline] = field(default_factory=list)
     node_id: NodeId = field(default_factory=_next_node_id, compare=False)
     origin: GeneratedOrigin | None = None
+    children: tuple[Block, ...] = ()
 
 
 @dataclass(slots=True)
@@ -136,6 +167,28 @@ class ListBlock(Block):
     ordered: bool = False
     start: int | None = None
     items: list[ListItem] = field(default_factory=list)
+
+
+@dataclass(slots=True)
+class BlockQuote(Block):
+    children: tuple[Block, ...] = ()
+
+
+@dataclass(slots=True)
+class CodeBlock(Block):
+    language: str | None = None
+    code: str = ""
+
+
+@dataclass(slots=True)
+class OrderedList(Block):
+    start: int | None = None
+    items: tuple[ListItem, ...] = ()
+
+
+@dataclass(slots=True)
+class BulletList(Block):
+    items: tuple[ListItem, ...] = ()
 
 
 @dataclass(slots=True)
