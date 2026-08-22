@@ -56,7 +56,7 @@ class ParseError(ValueError):
     pass
 
 
-def _parse_front_matter(lines: list[str]) -> tuple[dict[str, Any], int]:
+def parse_front_matter(lines: list[str]) -> tuple[dict[str, Any], int]:
     if not lines or lines[0].strip() != "---":
         return {}, 0
     for i in range(1, len(lines)):
@@ -89,7 +89,7 @@ def _location_for_offset(
     return SourceLocation(line=start_line + newline_count, column=column)
 
 
-def _parse_inline_content(
+def parse_inline_content(
     text: str,
     start_line: int,
     start_column: int = 1,
@@ -114,7 +114,7 @@ def _parse_inline_content(
                 text, match.start("strong_text"), start_line, start_column
             )
             children = tuple(
-                _parse_inline_content(inner_text, inner_location.line, inner_location.column)
+                parse_inline_content(inner_text, inner_location.line, inner_location.column)
             )
             inlines.append(Strong(children=children, location=location))
         elif match.group("footnote"):
@@ -150,7 +150,7 @@ def _parse_inline_content(
     return inlines
 
 
-def _bibliography_config(metadata: dict[str, Any]) -> BibliographyConfig | None:
+def bibliography_config(metadata: dict[str, Any]) -> BibliographyConfig | None:
     render = metadata.get("render")
     if not isinstance(render, dict):
         return None
@@ -183,14 +183,14 @@ def _parse_container_inlines(kind: str, body: list[str], start_line: int) -> lis
             if match.group(1) == "caption":
                 value = match.group(2).strip('"')
                 column = raw.find(value) + 1
-                inlines.extend(_parse_inline_content(value, start_line + offset, column))
+                inlines.extend(parse_inline_content(value, start_line + offset, column))
             continue
 
         if stripped:
             metadata_phase = False
         if not stripped or kind not in {"table", "algorithm"}:
             continue
-        inlines.extend(_parse_inline_content(raw, start_line + offset))
+        inlines.extend(parse_inline_content(raw, start_line + offset))
 
     return inlines
 
@@ -233,7 +233,7 @@ def _parse_table_rows(rows: list[tuple[int, str]]) -> tuple[TableRow, ...]:
             header=is_header,
             cells=tuple(
                 TableCell(
-                    inlines=tuple(_parse_inline_content(value, line)),
+                    inlines=tuple(parse_inline_content(value, line)),
                     alignment=alignment,
                     location=SourceLocation(line=line),
                 )
@@ -251,7 +251,7 @@ def _parse_table_rows(rows: list[tuple[int, str]]) -> tuple[TableRow, ...]:
     return tuple(rows)
 
 
-def _parse_container(kind: str, block_id: str | None, body: list[str], line: int):
+def parse_container(kind: str, block_id: str | None, body: list[str], line: int):
     values: dict[str, str] = {}
     content_lines: list[str] = []
     located_lines: list[tuple[int, str]] = []
@@ -276,7 +276,7 @@ def _parse_container(kind: str, block_id: str | None, body: list[str], line: int
     content = "\n".join(content_lines).strip()
     location = SourceLocation(line=line)
     caption = values.get("caption", "")
-    caption_inlines = tuple(_parse_inline_content(caption, caption_line, caption_column))
+    caption_inlines = tuple(parse_inline_content(caption, caption_line, caption_column))
     table_rows = _parse_table_rows(located_lines) if kind == "table" else ()
 
     if kind == "figure":
@@ -315,7 +315,7 @@ def _parse_container(kind: str, block_id: str | None, body: list[str], line: int
         )
     if kind == "algorithm":
         body_lines = tuple(
-            tuple(_parse_inline_content(raw, body_line))
+            tuple(parse_inline_content(raw, body_line))
             for body_line, raw in located_lines
             if raw.strip()
         )
@@ -338,11 +338,11 @@ def parse_markdown_text(
 ) -> ThesisDocument:
     resolved_source_path = Path(source_path).resolve()
     lines = text.splitlines()
-    metadata, start = _parse_front_matter(lines)
+    metadata, start = parse_front_matter(lines)
     doc = ThesisDocument(
         source_path=resolved_source_path,
         metadata=metadata,
-        bibliography=_bibliography_config(metadata),
+        bibliography=bibliography_config(metadata),
     )
 
     paragraph_buffer: list[str] = []
@@ -353,7 +353,7 @@ def parse_markdown_text(
         text = "\n".join(paragraph_buffer).strip()
         if text:
             line = paragraph_start or 1
-            inlines = _parse_inline_content(text, line)
+            inlines = parse_inline_content(text, line)
             doc.blocks.append(
                 Paragraph(inlines=inlines, location=SourceLocation(line=line))
             )
@@ -382,7 +382,7 @@ def parse_markdown_text(
             inlines = []
             for segment_text, segment_line, segment_column in body_segments:
                 inlines.extend(
-                    _parse_inline_content(segment_text, segment_line, segment_column)
+                    parse_inline_content(segment_text, segment_line, segment_column)
                 )
             doc.blocks.append(
                 FootnoteDefinition(
@@ -404,7 +404,7 @@ def parse_markdown_text(
                 i += 1
             if i >= len(lines):
                 raise ParseError(f"第 {line_no} 行的 {kind} 容器未闭合")
-            block = _parse_container(kind, block_id, body, line_no)
+            block = parse_container(kind, block_id, body, line_no)
             doc.blocks.append(block)
             i += 1
             continue
@@ -413,7 +413,7 @@ def parse_markdown_text(
         if heading:
             flush_paragraph()
             marks, text, block_id = heading.groups()
-            inlines = _parse_inline_content(text.strip(), line_no, len(marks) + 2)
+            inlines = parse_inline_content(text.strip(), line_no, len(marks) + 2)
             doc.blocks.append(
                 Heading(
                     id=block_id,
@@ -443,7 +443,7 @@ def parse_markdown_text(
                 item_text = item_match.group("text")
                 indent = len(item_match.group("indent").expandtabs(4))
                 item_line = i + 1
-                item_inlines = _parse_inline_content(
+                item_inlines = parse_inline_content(
                     item_text,
                     item_line,
                     item_match.start("text") + 1,

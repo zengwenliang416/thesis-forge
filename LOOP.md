@@ -95,12 +95,13 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Open
 
-- [V2-310] New markdown-it configuration
+- [V2-310B] Enable the markdown-it CommonMark/GFM configuration
+  - Parent: ordered child 2/2 of the re-sliced `V2-310`; depends on `V2-310A`.
   - Files: `src/thesis_forge/core/parser_markdown_it.py`, `tests/core/test_markdown_v2_parser_config.py`
-  - Behavior: enable required CommonMark/GFM rules and remove legacy semantic equivalence configuration.
+  - Behavior: enable required CommonMark/GFM rules and remove legacy semantic-equivalence configuration.
   - Verify: `.venv/bin/python -m pytest tests/core/test_markdown_v2_parser_config.py`
-  - Acceptance: emphasis, links, images, backticks, blockquote and fence are enabled; old private parser helpers are not imported.
-  - Verification-surface change: authorized; creates the v2 parser configuration tests.
+  - Acceptance: emphasis, links, images, backticks, blockquote and fence are enabled; the backend does not disable those rules; standard block conversion remains for its later V2 item.
+  - Verification-surface change: authorized; extends the v2 parser configuration tests.
   - Attempts: 0
 
 - [V2-311] Standard inline conversion
@@ -112,6 +113,16 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
   - Attempts: 0
 
 ## Done
+
+- [V2-310A] Remove private parser-helper imports through a shared public seam
+  - Parent: ordered child 1/2 of the re-sliced `V2-310`; the parent Behavior and Acceptance remain unchanged.
+  - Files: `src/thesis_forge/core/parser.py`, `src/thesis_forge/core/parser_markdown_it.py`, `tests/core/test_markdown_v2_parser_config.py`
+  - Behavior: the markdown-it backend consumes the existing parser primitives through public names without copying legacy parsing logic or importing private helpers.
+  - Verify: `.venv/bin/python -m pytest tests/core/test_markdown_v2_parser_config.py tests/test_parser_markdown_it.py tests/test_parser_backend.py`
+  - Acceptance: the focused AST pin finds no private parser-helper import; parser/backend parity and existing parser behavior remain green; no CommonMark block is flattened as part of this seam change.
+  - Verification-surface change: authorized; creates the focused v2 parser configuration test.
+  - Attempts: 1
+  - Attempt 1 (2026-08-22): Checker PASS; exact Verify 50/50, parser/core regression 141/141, target Ruff, `git diff --check`, LOOP-LINT, unchanged full-repo failure set of 45, and 8 cross-worktree parser/backend digests passed; public seam only, no V2-310B/V2-311 scope, and the pre-existing `change-registry.json` was preserved.
 
 - [V2-309C] Emit canonical duplicate diagnostics from validation
   - Files: `src/thesis_forge/core/validator.py`, `src/thesis_forge/application/contracts.py`, `tests/test_validator.py`
@@ -1273,6 +1284,9 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 - 2026-08-22 - V2-309 Checker FAIL Attempt 1; focused tests 3/3, target Ruff, diff-check, core regression 94/94 and LOOP-LINT passed, but the candidate eagerly imported the core stack into headless presentation, introduced a second unused Diagnostic beside BuildDiagnostic, accepted malformed runtime parameter/coordinate types, and generated colliding IDs for locationless duplicates; selected files restored and re-sliced into ordered V2-309A/V2-309B/V2-309C, no commit or push.
 - 2026-08-22 - V2-309A Checker FAIL Attempts 1/2 then PASS Attempt 3; the existing BuildDiagnostic contract was hardened with complete runtime boundary tests while preserving BuildReport/DTO round-trip and path sanitization, exact Verify 47/47 and application/adapter regression 88/88; no push.
 - 2026-08-22 - V2-309B Checker PASS Attempt 2; exact Verify 16/16, related regression 169/169, target Ruff/diff-check, headless architecture probe, and nested/locationless duplicate probe passed; legacy formatter behavior remained unchanged, no push.
+- 2026-08-22 - V2-310 Checker FAIL Attempt 1; exact Verify 2/2, parser/core regressions 181/181, target Ruff, diff-check and LOOP-LINT passed, but standard block tokens were flattened to Paragraph by `_emit_raw_token_range` and the candidate added a legacy compatibility layer beyond V2-310; both candidate files were restored, candidate/baseline full pytest failure sets matched at 45, `change-registry.json` was preserved, no commit or push.
+- 2026-08-22 - V2-310 split into ordered children V2-310A and V2-310B after Checker evidence showed the candidate crossed the block/inline conversion boundary and flattened enabled standard Markdown tokens; A isolates the private-helper seam, B carries the configuration flip, and no product code was edited in the split cycle.
+- 2026-08-22 - V2-310A Checker PASS; exact Verify 50/50, parser/core regression 141/141, target Ruff, diff-check, LOOP-LINT, unchanged full-repo failure set of 45, and 8 cross-worktree parser/backend digests passed; public seam only, no V2-310B/V2-311 scope, no push.
 - 2026-08-22 - V2-307G split into ordered children V2-307G1 and V2-307G2 after a repo-wide survey found eleven redundant citations= mirror kwargs across test_compiler/test_docx_renderer/test_manifest_resource_validation fixtures (a fourth file beyond G's two); G1 drops the mirrors (green both ways), G2 removes the fields and rewrites the no-manual-caches pin; no product code edited in the split cycle.
 - 2026-08-22 - V2-308 split into ordered children V2-308A and V2-308B before any product edit after inspection found tests/core/test_manifest_resource_validation.py constructs three cache-only citations that would break the validator flip (a third file beyond the item's named two); A migrates the fixtures to real Paragraph inline citations (green both ways), B carries the validator flip; no product code edited in the split cycle.
 - 2026-08-22 - V2-307D1 Checker FAIL Attempt 1 then re-sliced into ordered children V2-307D1a…D1e after independent Checker grep found 20 cache-pin sites (18 in test_parser_contract.py) and completing them exposed typed-model defects the cache masked: caption inline locations carry the container start line in both backends, table-cell inline locations are misaligned by the metadata/blank rows, and algorithm-body citations exist only in the cache (Algorithm.body is verbatim-only); children fix caption/cell locations, add typed Algorithm body_lines to the model and both parsers, extend index traversal, then finish the pin migration; three test files restored, no product code edited in the split cycle.

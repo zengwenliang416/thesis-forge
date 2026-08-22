@@ -6,14 +6,14 @@
 - 六种 ``:::`` 容器：mdit-py-plugins ``container`` 按名注册 ×6，
   ``validate`` 收紧为与 legacy ``CONTAINER_START_RE`` 等价的写法
   （恰好 3 个冒号 + 可选 ``{#id}`` + 行尾无杂物）；容器体不读 mdit
-  子树，直接按行切片复用 legacy 的 ``_parse_container`` /
+  子树，直接按行切片复用 parser 的 ``parse_container`` /
   ``_parse_container_inlines``（kv 元数据、caption inline、listing
   围栏剥离、`$$` 剥离等行为因此逐字节一致）。
 - ``[^label]`` 脚注：``footnote`` 插件仅取块级定义（``move_to_end=False``
   使定义保持源码位置；``inline=False`` 关闭 legacy 不支持的 ``^[...]``）；
   定义正文按 legacy 算法（首行 + 四空格/Tab 续行）从源码行重建。
 - 行内内容（段落、标题、列表项、容器 caption、脚注定义正文）统一交给
-  共享的 legacy 扫描器 ``_parse_inline_content``：code span / strong /
+  共享的 parser 扫描器 ``parse_inline_content``：code span / strong /
   citation ``[@key; @key2, locator]`` / crossref ``@fig:x`` /
   footnote_ref 的匹配语义逐行对齐 legacy 的 ``INLINE_TOKEN_RE``
   （含 crossref 的 ``(?<!\\[)`` 前视），未知语法静默保留原文，
@@ -22,15 +22,15 @@
   blockquote/html_block/hr/lheading/reference/code 禁用（禁用后这些
   行按段落原文处理，与 legacy 降级行为一致）。
 - 未闭合容器、front matter 强校验由后端无关预检承担，直接复用
-  ``parser.py`` 的 ``_parse_front_matter`` 与同构行扫描，ParseError
+  ``parser.py`` 的 ``parse_front_matter`` 与同构行扫描，ParseError
   消息与行号逐字节一致。
 
 SourceLocation 策略：块级行号 = ``token.map[0] + 1 + front matter 偏移``，
 column 恒为 None（与 legacy 现状一致）；行内行列由共享扫描器
-``_parse_inline_content`` 经 legacy ``_location_for_offset`` 换算，
+``parse_inline_content`` 经 parser ``_location_for_offset`` 换算，
 与 legacy 完全一致。
 
-本模块有意复用 ``parser.py`` 的私有函数（冻结维护的对照基准），
+本模块通过 ``parser.py`` 的公开共享原语复用现有解析语义；
 凡语义问题一律以 legacy 为准（ADR-0001 §5.2 已知差异见文末清单）。
 """
 
@@ -59,10 +59,10 @@ from .parser import (
     FOOTNOTE_DEFINITION_RE,
     LIST_ITEM_RE,
     ParseError,
-    _bibliography_config,
-    _parse_container,
-    _parse_front_matter,
-    _parse_inline_content,
+    bibliography_config,
+    parse_container,
+    parse_front_matter,
+    parse_inline_content,
 )
 
 __all__ = ["MarkdownItParserBackend"]
@@ -167,11 +167,11 @@ class MarkdownItParserBackend:
 
     def parse_text(self, text: str, *, source_path: str | Path) -> ThesisDocument:
         lines = text.splitlines()
-        metadata, start = _parse_front_matter(lines)
+        metadata, start = parse_front_matter(lines)
         doc = ThesisDocument(
             source_path=Path(source_path).resolve(),
             metadata=metadata,
-            bibliography=_bibliography_config(metadata),
+            bibliography=bibliography_config(metadata),
         )
         _check_containers_closed(lines, start)
         body_lines = lines[start:]
@@ -245,7 +245,7 @@ class MarkdownItParserBackend:
         assert open_token.map is not None
         line = open_token.map[0] + 1 + offset
         # legacy 以 len(marks) + 2 为行内列基准（假设 # 后恰好一个空格）
-        inlines = _parse_inline_content(text, line, level + 2)
+        inlines = parse_inline_content(text, line, level + 2)
         doc.blocks.append(
             Heading(
                 id=block_id,
@@ -262,7 +262,7 @@ class MarkdownItParserBackend:
             return
         assert inline_token.map is not None
         line = inline_token.map[0] + 1 + offset
-        inlines = _parse_inline_content(text, line)
+        inlines = parse_inline_content(text, line)
         doc.blocks.append(
             Paragraph(inlines=inlines, location=SourceLocation(line=line))
         )
@@ -280,7 +280,7 @@ class MarkdownItParserBackend:
         if not text:
             return
         line = start0 + 1 + offset
-        inlines = _parse_inline_content(text, line)
+        inlines = parse_inline_content(text, line)
         doc.blocks.append(
             Paragraph(inlines=inlines, location=SourceLocation(line=line))
         )
@@ -304,7 +304,7 @@ class MarkdownItParserBackend:
         block_id = id_match.group(1) if id_match else None
         line = start0 + 1 + offset
         # 容器体语义（kv 元数据、caption inline、围栏剥离）整体复用 legacy 实现
-        doc.blocks.append(_parse_container(kind, block_id, body, line))
+        doc.blocks.append(parse_container(kind, block_id, body, line))
         return close_idx + 1
 
     def _emit_footnote_definition(
@@ -327,7 +327,7 @@ class MarkdownItParserBackend:
             # label 超出 legacy 字符集：legacy 不视为定义，按段落原文降级
             text = "\n".join(lines[start0:end0]).strip()
             if text:
-                inlines = _parse_inline_content(text, line)
+                inlines = parse_inline_content(text, line)
                 doc.blocks.append(
                     Paragraph(inlines=inlines, location=SourceLocation(line=line))
                 )
@@ -344,7 +344,7 @@ class MarkdownItParserBackend:
         text = "\n".join(segment[0] for segment in segments).strip()
         inlines: list[Inline] = []
         for segment_text, segment_line, segment_column in segments:
-            inlines.extend(_parse_inline_content(segment_text, segment_line, segment_column))
+            inlines.extend(parse_inline_content(segment_text, segment_line, segment_column))
         doc.blocks.append(
             FootnoteDefinition(
                 label=label,
@@ -380,7 +380,7 @@ class MarkdownItParserBackend:
             item_text = item_match.group("text")
             indent = len(item_match.group("indent").expandtabs(4))
             item_line = i + 1 + offset
-            item_inlines = _parse_inline_content(
+            item_inlines = parse_inline_content(
                 item_text,
                 item_line,
                 item_match.start("text") + 1,
