@@ -1,4 +1,5 @@
-from .controller import WorkspaceController
+from typing import TYPE_CHECKING
+
 from .filesystem import LocalWorkspaceFileSystem
 from .models import (
     DiagnosticViewModel,
@@ -18,6 +19,17 @@ from .tasks import (
     WebWorkspacePersistence,
     WorkspaceFileSystem,
 )
+
+if TYPE_CHECKING:
+    from .controller import WorkspaceController
+
+
+def __getattr__(name: str):
+    if name == "WorkspaceController":
+        from .controller import WorkspaceController
+
+        return WorkspaceController
+    raise AttributeError(name)
 
 __all__ = [
     "DiagnosticViewModel",

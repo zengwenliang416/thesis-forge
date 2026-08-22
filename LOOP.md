@@ -95,14 +95,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Open
 
-- [V2-309B] Make diagnostic presentation headless-safe
-  - Files: `src/thesis_forge/presentation/diagnostics.py`, `tests/core/test_diagnostics.py`
-  - Behavior: presentation localizes ValidationIssue and the canonical BuildDiagnostic through a formatter registry; derived-index duplicate diagnostics carry both locations and unique IDs without eager core imports.
-  - Verify: `.venv/bin/python -m pytest tests/core/test_diagnostics.py tests/test_architecture.py`
-  - Acceptance: legacy ValidationIssue messages remain unchanged; typed diagnostics localize; nested and locationless duplicate definitions report both locations with unique IDs; importing headless UI does not load application/compiler/rendering modules.
-  - Verification-surface change: authorized; creates focused diagnostics tests.
-  - Attempts: 0
-
 - [V2-309C] Emit canonical duplicate diagnostics from validation
   - Files: `src/thesis_forge/core/validator.py`, `src/thesis_forge/application/contracts.py`, `tests/test_validator.py`
   - Behavior: validate_document bridges duplicate-ID findings from the derived index into the canonical application diagnostic contract, preserving order, locations and structured details.
@@ -128,6 +120,16 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
   - Attempts: 0
 
 ## Done
+
+- [V2-309B] Make diagnostic presentation headless-safe
+  - Files: `src/thesis_forge/presentation/diagnostics.py`, `src/thesis_forge/ui/__init__.py`, `tests/core/test_diagnostics.py`
+  - Behavior: presentation localizes ValidationIssue and the canonical BuildDiagnostic through a formatter registry; derived-index duplicate diagnostics carry both locations and unique IDs without eager core imports.
+  - Verify: `.venv/bin/python -m pytest tests/core/test_diagnostics.py tests/test_architecture.py`
+  - Acceptance: legacy ValidationIssue messages remain unchanged; typed diagnostics localize; nested and locationless duplicate definitions report both locations with unique IDs; importing headless UI does not load application/compiler/rendering modules.
+  - Verification-surface change: authorized; creates focused diagnostics tests.
+  - Attempts: 2
+  - Attempt 1 (2026-08-22): Checker FAIL; the legacy `duplicate-id` formatter read the new canonical `details.object_id` fallback, changing `ValidationIssue(target=None, details={"object_id": ...})` from the historical `重复 ID：` to `重复 ID：<id>`; exact Verify 15/15, Ruff, diff-check, headless import and duplicate-location probes otherwise passed. 修正为 legacy/canonical 分离 formatter 并补充回归 pin。
+  - Attempt 2 (2026-08-22): Checker PASS; exact Verify 16/16, related regression 169/169, target Ruff, diff-check, headless architecture probe, and nested/locationless duplicate probe passed; legacy `duplicate-id` target=None behavior remains pinned, and canonical `TF-SEMANTIC-DUPLICATE-ID` uses a separate formatter.
 
 - [V2-309A] Harden the canonical BuildDiagnostic contract
   - Parent: ordered child 1/3 of the re-sliced `V2-309`.
@@ -1269,6 +1271,7 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 - 2026-08-22 - Open refilled with V2-309, V2-310 and V2-311 per the catalogue dependency order after V2-307/V2-308 completed; V2-309 and V2-311 are expected to need re-slicing when their cycles arrive (ValidationIssue shape changes ripple through adapters/CLI/protocol, and inline conversion spans the shared scanner); no product code edited.
 - 2026-08-22 - V2-309 Checker FAIL Attempt 1; focused tests 3/3, target Ruff, diff-check, core regression 94/94 and LOOP-LINT passed, but the candidate eagerly imported the core stack into headless presentation, introduced a second unused Diagnostic beside BuildDiagnostic, accepted malformed runtime parameter/coordinate types, and generated colliding IDs for locationless duplicates; selected files restored and re-sliced into ordered V2-309A/V2-309B/V2-309C, no commit or push.
 - 2026-08-22 - V2-309A Checker FAIL Attempts 1/2 then PASS Attempt 3; the existing BuildDiagnostic contract was hardened with complete runtime boundary tests while preserving BuildReport/DTO round-trip and path sanitization, exact Verify 47/47 and application/adapter regression 88/88; no push.
+- 2026-08-22 - V2-309B Checker PASS Attempt 2; exact Verify 16/16, related regression 169/169, target Ruff/diff-check, headless architecture probe, and nested/locationless duplicate probe passed; legacy formatter behavior remained unchanged, no push.
 - 2026-08-22 - V2-307G split into ordered children V2-307G1 and V2-307G2 after a repo-wide survey found eleven redundant citations= mirror kwargs across test_compiler/test_docx_renderer/test_manifest_resource_validation fixtures (a fourth file beyond G's two); G1 drops the mirrors (green both ways), G2 removes the fields and rewrites the no-manual-caches pin; no product code edited in the split cycle.
 - 2026-08-22 - V2-308 split into ordered children V2-308A and V2-308B before any product edit after inspection found tests/core/test_manifest_resource_validation.py constructs three cache-only citations that would break the validator flip (a third file beyond the item's named two); A migrates the fixtures to real Paragraph inline citations (green both ways), B carries the validator flip; no product code edited in the split cycle.
 - 2026-08-22 - V2-307D1 Checker FAIL Attempt 1 then re-sliced into ordered children V2-307D1a…D1e after independent Checker grep found 20 cache-pin sites (18 in test_parser_contract.py) and completing them exposed typed-model defects the cache masked: caption inline locations carry the container start line in both backends, table-cell inline locations are misaligned by the metadata/blank rows, and algorithm-body citations exist only in the cache (Algorithm.body is verbatim-only); children fix caption/cell locations, add typed Algorithm body_lines to the model and both parsers, extend index traversal, then finish the pin migration; three test files restored, no product code edited in the split cycle.
