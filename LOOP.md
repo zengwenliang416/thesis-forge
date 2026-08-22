@@ -95,15 +95,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Open
 
-- [V2-305D] Migrate DOCX/preview object fixtures
-  - Parent: ordered child 4/5 of `V2-305`; depends on `V2-305C`.
-  - Files: `tests/test_docx_renderer.py`, `tests/test_preview_presentation.py`, `tests/core/test_manifest_resource_validation.py`
-  - Behavior: object fixtures construct typed captions/content and preserve DOCX/preview/validation assertions.
-  - Verify: `.venv/bin/python -m pytest tests/test_docx_renderer.py tests/test_preview_presentation.py tests/core/test_manifest_resource_validation.py`
-  - Acceptance: object XML/preview/resource checks remain green without raw caption fixture fields.
-  - Verification-surface change: authorized; migrates object fixtures.
-  - Attempts: 0
-
 - [V2-305E] Remove raw thesis-object caption/text fields
   - Parent: ordered child 5/5 of `V2-305`; depends on `V2-305D`.
   - Files: `src/thesis_forge/core/model.py`, `src/thesis_forge/core/parser.py`, `tests/core/test_thesis_object_model.py`
@@ -114,6 +105,16 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
   - Attempts: 0
 
 ## Done
+
+- [V2-305D] Migrate DOCX/preview object fixtures
+  - Parent: ordered child 4/5 of `V2-305`; depends on `V2-305C`.
+  - Files: `tests/test_docx_renderer.py`, `tests/test_preview_presentation.py`, `tests/core/test_manifest_resource_validation.py`
+  - Behavior: object fixtures construct typed captions/content and preserve DOCX/preview/validation assertions.
+  - Verify: `.venv/bin/python -m pytest tests/test_docx_renderer.py tests/test_preview_presentation.py tests/core/test_manifest_resource_validation.py`
+  - Acceptance: object XML/preview/resource checks remain green without raw caption fixture fields.
+  - Verification-surface change: authorized; migrates object fixtures.
+  - Attempts: 1
+  - Attempt 1 (2026-08-22): Checker PASS; Figure/Listing/Algorithm fixtures carry caption_inlines and Equation fixtures carry display state, exact Verify 95/95, AST/Ruff/diff-check clean; no push.
 
 - [V2-305C] Compile typed object captions/content and equation display
   - Parent: ordered child 3/5 of `V2-305`; depends on `V2-305B`.
@@ -983,5 +984,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 - 2026-08-22 - V2-305A Checker PASS; typed object caption/display primitives and focused tests added, exact Verify 4/4, Ruff/diff-check clean; no push.
 - 2026-08-22 - V2-305B Checker PASS; parser populates typed object captions and explicit equation display state, exact Verify 87/87, Ruff/diff-check clean; no push.
 - 2026-08-22 - V2-305C Checker PASS; compiler typed caption/display flow is represented in RenderPlan, exact Verify 24/24 plus 11 render-plan/preview regressions, Ruff/diff-check clean; no push.
+- 2026-08-22 - V2-305D Checker PASS; DOCX/preview/validation fixtures use typed captions and equation display, exact Verify 95/95, AST/Ruff/diff-check clean; no push.
 
 ## Sync log

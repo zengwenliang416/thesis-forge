@@ -10,6 +10,7 @@ from thesis_forge.core.model import (
     Citation,
     Figure,
     Paragraph,
+    Text,
     ThesisDocument,
 )
 from thesis_forge.core.validator import ValidationContext, validate_document
@@ -61,7 +62,11 @@ def test_project_manifest_controls_template_and_resource_roots(
         source_path=(project_root / "thesis.md").resolve(),
         blocks=[
             Paragraph(inlines=[]),
-            Figure(src="assets/model.png", caption="模型"),
+            Figure(
+                src="assets/model.png",
+                caption="模型",
+                caption_inlines=(Text(value="模型"),),
+            ),
         ],
         citations=[Citation(keys=["smith2025"])],
     )

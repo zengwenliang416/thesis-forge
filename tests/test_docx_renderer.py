@@ -1442,12 +1442,14 @@ def test_docx_renderer_bookmarks_listing_and_algorithm_objects(tmp_path: Path):
             Listing(
                 id="lst:service",
                 caption="构建服务",
+                caption_inlines=_text_inlines("构建服务"),
                 language="python",
                 code="build_service(source, output)",
             ),
             Algorithm(
                 id="alg:build",
                 caption="安全构建",
+                caption_inlines=_text_inlines("安全构建"),
                 body="1. validate\n2. render\n3. replace",
             ),
         ],
@@ -1803,12 +1805,14 @@ def test_docx_renderer_creates_real_figures_captions_bookmarks_and_three_line_ta
                 id="fig:model",
                 src="./images/model.png",
                 caption="系统模型",
+                caption_inlines=_text_inlines("系统模型"),
                 width="50%",
             ),
             Figure(
                 id="fig:default",
                 src="./images/model.png",
                 caption="默认宽度",
+                caption_inlines=_text_inlines("默认宽度"),
             ),
             _structured_table(
                 "tbl:results",
@@ -2002,7 +2006,12 @@ def test_docx_renderer_honors_non_default_caption_positions(tmp_path: Path):
     document = ThesisDocument(
         source_path=tmp_path / "thesis.md",
         blocks=[
-            Figure(id="fig:model", src="./images/model.png", caption="系统模型"),
+            Figure(
+                id="fig:model",
+                src="./images/model.png",
+                caption="系统模型",
+                caption_inlines=_text_inlines("系统模型"),
+            ),
             _structured_table(
                 "tbl:results",
                 "实验结果",
@@ -2046,7 +2055,14 @@ def test_docx_renderer_preserves_intrinsic_image_size_without_width_policy(
     template.figure.default_width = None
     document = ThesisDocument(
         source_path=tmp_path / "thesis.md",
-        blocks=[Figure(id="fig:model", src="./model.png", caption="系统模型")],
+        blocks=[
+            Figure(
+                id="fig:model",
+                src="./model.png",
+                caption="系统模型",
+                caption_inlines=_text_inlines("系统模型"),
+            )
+        ],
     )
     output = tmp_path / "intrinsic-width.docx"
 
@@ -2160,7 +2176,12 @@ def test_docx_renderer_creates_real_math_fields_footnotes_and_page_structures(
                 level=1,
                 inlines=_text_inlines("绪论"),
             ),
-            Figure(id="fig:model", src="./model.png", caption="系统模型"),
+            Figure(
+                id="fig:model",
+                src="./model.png",
+                caption="系统模型",
+                caption_inlines=_text_inlines("系统模型"),
+            ),
             _structured_table(
                 "tbl:data",
                 "实验数据",
@@ -2172,6 +2193,7 @@ def test_docx_renderer_creates_real_math_fields_footnotes_and_page_structures(
             Equation(
                 id="eq:loss",
                 latex=r"L=-\sum_{i=1}^n y_i \log \hat{y}_i+x_i^2",
+                display=True,
             ),
             Paragraph(
                 inlines=[
@@ -3469,7 +3491,7 @@ def test_docx_renderer_wraps_private_api_failures_with_capability_context(
 ):
     document = ThesisDocument(
         source_path=tmp_path / "thesis.md",
-        blocks=[Equation(id="eq:broken", latex="x")],
+        blocks=[Equation(id="eq:broken", latex="x", display=True)],
     )
     plan = compile_document(
         document,
@@ -3498,7 +3520,7 @@ def _render_equation_document_xml(tmp_path: Path, equation_id: str, latex: str):
                 level=1,
                 inlines=_text_inlines("公式"),
             ),
-            Equation(id=equation_id, latex=latex),
+            Equation(id=equation_id, latex=latex, display=True),
         ],
     )
     output = tmp_path / f"{equation_id.replace(':', '_')}.docx"
