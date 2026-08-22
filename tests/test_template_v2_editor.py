@@ -759,7 +759,6 @@ def test_lint_l5_fixture_without_markdown_fails(package_copy: Path) -> None:
 
 def test_lint_l5_fixture_validator_error_fails(package_copy: Path) -> None:
     (package_copy / "fixtures" / "minimal" / "dup.md").write_text(
-        "---\nthesis:\n  title: 示例\nauthor:\n  name: 张三\n---\n\n"
         "# 绪论 {#chap:dup}\n\n# 重复 {#chap:dup}\n",
         encoding="utf-8",
     )

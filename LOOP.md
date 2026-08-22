@@ -95,15 +95,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Open
 
-- [V2-319C2B] Rebase template-v2 editor L5 fixtures on canonical source
-  - Parent: ordered child 2/2 of the re-sliced `V2-319C2`; depends on `V2-319C2A`; the original `V2-319C2` Behavior and Acceptance remain unchanged.
-  - Files: `tests/test_template_v2_editor.py`
-  - Behavior: the template-v2 editor L5 validator-error fixture uses canonical v2 Markdown and still proves duplicate IDs are reported after the parser seam changes.
-  - Verify: `.venv/bin/python -m pytest tests/test_template_v2_editor.py -k 'lint_l5'`
-  - Acceptance: all template-v2 L5 fixture coverage uses canonical source syntax without YAML Front Matter or a compatibility branch.
-  - Verification-surface change: no.
-  - Attempts: 0
-
 - [V2-319D] Delete the parser registry and legacy backend API
   - Parent: ordered child 4/4 of the re-sliced `V2-319`; depends on `V2-319C`; parent Behavior and Acceptance remain unchanged.
   - Files: `src/thesis_forge/core/parser_backend.py`, `tests/core/test_single_parser_backend.py`
@@ -114,6 +105,16 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
   - Attempts: 0
 
 ## Done
+
+- [V2-319C2B] Rebase template-v2 editor L5 fixtures on canonical source
+  - Parent: ordered child 2/2 of the re-sliced `V2-319C2`; depends on `V2-319C2A`; the original `V2-319C2` Behavior and Acceptance remain unchanged.
+  - Files: `tests/test_template_v2_editor.py`
+  - Behavior: the template-v2 editor L5 validator-error fixture uses canonical v2 Markdown and still proves duplicate IDs are reported after the parser seam changes.
+  - Verify: `.venv/bin/python -m pytest tests/test_template_v2_editor.py -k 'lint_l5'`
+  - Acceptance: all template-v2 L5 fixture coverage uses canonical source syntax without YAML Front Matter or a compatibility branch.
+  - Verification-surface change: no.
+  - Attempts: 1
+  - Attempt 1 (2026-08-22): Checker PASS; exact Verify passed 4/4; `.venv/bin/ruff check tests/test_template_v2_editor.py`, `git diff --check`, and `./lint-loop.sh` passed (`LOOP-LINT: PASS — open=2 done=111 blocked=0` before this lifecycle update); the candidate diff was limited to removal of the YAML Front Matter from the canonical duplicate-ID fixture, with no production code, compatibility branch, or old YAML fixture residue; the duplicate-ID validator assertion remained green; `openspec/.specnav/change-registry.json` was preserved and uncommitted; no push.
 
 - [V2-319C2A] Migrate template-v2 L5 lint and canonical fixtures
   - Parent: ordered child 1/2 of the re-sliced `V2-319C2`; depends on `V2-319C1`; the original `V2-319C2` Behavior and Acceptance remain unchanged across C2A and C2B.
@@ -1493,5 +1494,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 - 2026-08-22 - V2-319C1 Checker PASS Attempt 1; exact Verify 44/44, targeted Ruff, `git diff --check`, LOOP-LINT, and the canonical public-surface probe passed; only `src/thesis_forge/core/__init__.py` plus this lifecycle update changed, `change-registry.json` was preserved and uncommitted, and no push.
 - 2026-08-22 - V2-319C2 split into ordered children V2-319C2A and V2-319C2B after fixture audit found `tests/test_template_v2_editor.py::test_lint_l5_fixture_validator_error_fails` writes YAML Front Matter that would fail the canonical parser; no product code edited in the split cycle, next queue is V2-319C2A.
 - 2026-08-22 - V2-319C2A Checker PASS; candidate failure set was a strict subset of isolated clean HEAD (`97 passed/5 pre-existing package-sample missing-DOCX failures` vs `96 passed/6 failed`), targeted Ruff, `git diff --check`, LOOP-LINT, canonical parser/L5/duplicate-ID probes passed, and only C2A plus `LOOP.md` changed; C2B and the pre-existing registry were preserved, no push.
+- 2026-08-22 - V2-319C2B Checker PASS; exact Verify passed 4/4, targeted Ruff, `git diff --check`, LOOP-LINT, and the canonical duplicate-ID fixture audit passed; candidate scope was only `tests/test_template_v2_editor.py`, with no production or compatibility diff, the pre-existing registry preserved and unstaged, and no push.
 
 ## Sync log
