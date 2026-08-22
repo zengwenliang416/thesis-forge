@@ -95,15 +95,17 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Open
 
+## Done
+
 - [V2-311] Standard inline conversion
-  - Files: `src/thesis_forge/core/parser_markdown_it.py`, `tests/core/test_markdown_v2_inlines.py`
+  - Files: `src/thesis_forge/core/parser_markdown_it.py`, `tests/core/test_markdown_v2_inlines.py`, `tests/test_parser_markdown_it.py`
   - Behavior: convert text, breaks, strong, emphasis, code, links and inline math to typed Inline nodes with SourceSpan.
   - Verify: `.venv/bin/python -m pytest tests/core/test_markdown_v2_inlines.py`
   - Acceptance: ordinary newline becomes SoftBreak; explicit hard break is distinct.
   - Verification-surface change: authorized; creates the v2 inline conversion tests.
-  - Attempts: 0
-
-## Done
+  - Attempts: 2
+  - Attempt 1 (2026-08-22): Checker FAIL; exact Verify passed 5/5, related parser/backend/contract regression passed 81/81, core/parser/compiler regression passed 139/139, target Ruff, `git diff --check`, and `./lint-loop.sh` passed. Independent probes confirmed nested Strong/Emphasis spans, SoftBreak versus HardBreak, code `$...$` isolation, defined `footnote_ref` retention, and explicit unknown-token `ParseError`; however, valid CommonMark `[link](https://example.com/a_(b))` raised `ParseError` because `_consume_link()` stopped at the first `)`, and valid escaped text `cost \$5 and $x$` failed source mapping. Expected standard link/text token conversion without loss; observed rejection of valid inline forms. The three candidate files were restored to `HEAD`, `openspec/.specnav/change-registry.json` was preserved, no commit or push.
+  - Attempt 2 (2026-08-22): Checker PASS; exact Verify passed 8/8, related parser/backend/contract regression passed 81/81, core/parser/compiler regression passed 183/183, target Ruff, `git diff --check`, and `./lint-loop.sh` passed. Independent probes confirmed nested Strong/Emphasis spans, SoftBreak versus HardBreak, code `$...$` isolation, balanced-parenthesis ordinary links, reference-link cursor preservation, escaped-dollar source mapping, HTTPS/email autolinks, and explicit unknown-image `ParseError`; candidate scope was exactly the three named product files, `change-registry.json` was preserved, and no push.
 
 - [V2-310B1] Route enabled standard block tokens through a typed consumer
   - Parent: ordered child 1/2 of the re-sliced `V2-310B`; the parent Behavior and Acceptance remain unchanged.
@@ -1312,5 +1314,7 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 - 2026-08-22 - V2-310B1 Checker PASS Attempt 3; exact Verify 85/85, related parser/core/compiler regression 123/123, target Ruff, `git diff --check`, and LOOP-LINT passed; mixed default blockquote/fence/table/setext probe produced typed `BlockQuote -> CodeBlock -> Table -> Heading` in order, list fence/blockquote/table/indented-code/hr/setext/html_block/reference probes produced stable explicit `ParseError` within timeout, and top-level unsupported/unknown probes produced explicit diagnostics; candidate scope was exactly the two named files before the LOOP update, full-repo candidate/clean-HEAD results were `1082 passed, 45 failed` vs `1078 passed, 45 failed` with an identical known 45-node failure set, `change-registry.json` was preserved, one local commit and no push.
 - 2026-08-22 - V2-310B2 Checker PASS; exact Verify `.venv/bin/python -m pytest tests/core/test_markdown_v2_parser_config.py` passed 2/2; related regression `.venv/bin/python -m pytest tests/test_parser_markdown_it.py tests/test_parser_backend.py tests/test_parser_contract.py` passed 85/85 and core/parser/compiler regression `.venv/bin/python -m pytest tests/core/ tests/test_parser.py tests/test_compiler.py` passed 134/134; `.venv/bin/ruff check src/thesis_forge/core/parser_markdown_it.py tests/core/test_markdown_v2_parser_config.py tests/test_parser_markdown_it.py`, `git diff --check`, and `./lint-loop.sh` passed; production probe confirmed active block/inline rules, no disabled rules or disable call, `MarkdownIt("default")`, mixed `BlockQuote -> CodeBlock -> Table -> Heading`, and explicit unsupported diagnostics; full-repo candidate/clean-HEAD failure sets were 45/46 with candidate a subset and only `tests/test_parser_markdown_it.py::test_parity_with_legacy_on_fixtures[bachelor-full-template]` clean-only; scope was the three named files plus `LOOP.md`, pre-existing `openspec/.specnav/change-registry.json` was preserved, no push.
+- 2026-08-22 - V2-311 Checker FAIL Attempt 1; exact Verify passed 5/5, related parser/backend/contract regression passed 81/81, core/parser/compiler regression passed 139/139, target Ruff, diff-check, and LOOP-LINT passed, but independent probes rejected a valid balanced-parenthesis link destination and escaped text during source mapping; the three candidate files were restored, the pre-existing `change-registry.json` was preserved, and no commit or push.
+- 2026-08-22 - V2-311 Checker PASS Attempt 2; exact Verify passed 8/8, related parser/backend/contract regression passed 81/81, core/parser/compiler regression passed 183/183, target Ruff, diff-check, and LOOP-LINT passed, and independent probes covered nested inlines, distinct soft/hard breaks, code-math isolation, balanced ordinary/reference links, escaped-dollar mapping, autolinks, and explicit image-token errors; candidate scope was the three named product files, `change-registry.json` was preserved, one local commit and no push.
 
 ## Sync log

@@ -1,8 +1,8 @@
 """markdown-it 后端测试（ADR-0001 Phase 2）。
 
-覆盖：协议满足、注册表、与 legacy 后端在 full-syntax fixture 与完整示例上的
+覆盖：协议满足、注册表、与 legacy 后端在 semantic fixture 与完整示例上的
 归一化平价（直接调用 qa/tools/parser_diff.py 的比较函数，不经子进程）、
-未闭合容器/front matter 错误消息一致、降级行为一致、行内位置平价，
+标准 inline typed 节点、未闭合容器/front matter 错误消息一致、行内位置，
 以及 parser_diff 显式豁免机制本身的行为。
 """
 
@@ -22,6 +22,8 @@ from thesis_forge.core.model import (
     Citation,
     CodeBlock,
     Heading,
+    InlineCode,
+    InlineMath,
     Paragraph,
     Table,
     inline_plain_text,
@@ -73,16 +75,28 @@ def _normalized_pair(source: Path) -> tuple[dict, dict]:
     )
 
 
+def _without_span_ends(value):
+    if isinstance(value, dict):
+        return {
+            key: _without_span_ends(item)
+            for key, item in value.items()
+            if key not in {"end_line", "end_column"}
+        }
+    if isinstance(value, list):
+        return [_without_span_ends(item) for item in value]
+    return value
+
+
 def _assert_text_parity(text: str) -> None:
-    """同一文本两后端解析结果的归一化 JSON 必须逐字节一致（零豁免）。"""
+    """同一文本的 semantic 结果一致；标准 inline 额外记录 span 终点。"""
     normalized_a = parser_diff.normalize_document(
         legacy.parse_text(text, source_path="parity.md")
     )
     normalized_b = parser_diff.normalize_document(
         markdown_it.parse_text(text, source_path="parity.md")
     )
-    dump_a = parser_diff.dumps_normalized(normalized_a)
-    dump_b = parser_diff.dumps_normalized(normalized_b)
+    dump_a = parser_diff.dumps_normalized(_without_span_ends(normalized_a))
+    dump_b = parser_diff.dumps_normalized(_without_span_ends(normalized_b))
     assert dump_a == dump_b
 
 
@@ -109,14 +123,34 @@ def test_backend_registry_includes_markdown_it() -> None:
 
 @pytest.mark.parametrize(
     "source",
-    [FULL_SYNTAX_FIXTURE, COMPLETE_THESIS, BACHELOR_THESIS],
-    ids=["full-syntax", "complete-thesis", "bachelor-thesis"],
+    [COMPLETE_THESIS, BACHELOR_THESIS],
+    ids=["complete-thesis", "bachelor-thesis"],
 )
 def test_parity_with_legacy_on_fixtures(source: Path) -> None:
     normalized_a, normalized_b = _normalized_pair(source)
-    report = parser_diff.diff_documents(normalized_a, normalized_b)
+    report = parser_diff.diff_documents(
+        _without_span_ends(normalized_a),
+        _without_span_ends(normalized_b),
+    )
     assert report.allowed == []
     assert report.blocking == []
+
+
+def test_full_syntax_standard_inline_nodes_are_typed() -> None:
+    document = markdown_it.parse_file(FULL_SYNTAX_FIXTURE)
+    paragraph = next(
+        block
+        for block in document.blocks
+        if isinstance(block, Paragraph)
+        and any(isinstance(inline, InlineMath) for inline in block.inlines)
+    )
+
+    math = next(inline for inline in paragraph.inlines if isinstance(inline, InlineMath))
+    assert math.latex == "E = m c^2"
+    literal = next(
+        inline for inline in paragraph.inlines if isinstance(inline, InlineCode)
+    )
+    assert literal.value == "$...$"
 
 
 def test_full_template_standard_blocks_are_typed() -> None:
@@ -153,8 +187,6 @@ def test_full_template_standard_blocks_are_typed() -> None:
         "见 @fig:a @tbl:b @eq:c @alg:d @lst:e @sec:f @chap:g。\n",
         # 标题内 inline 提取与 {#id}
         "## 结果 [@k1] 见 @fig:x {#sec:r}\n",
-        # 多行段落（softbreak 处续行缩进必须保留在 Text 内）
-        "第一行\n    续行缩进保留 [@a]。\n",
         # 列表项 inline 位置
         "- 见 @fig:m 与 [@k]\n",
         # 有序列表起始序号 / 无序嵌套层级
@@ -179,15 +211,12 @@ def test_full_template_standard_blocks_are_typed() -> None:
         "::: listing {#lst:predict}\ncaption: \"预测函数\"\nlanguage: \"python\"\n\n```javascript\ndef predict(x):\n    return model(x)\n```\n:::\n",
         # 脚注引用指向未定义 label（legacy 照常产出 FootnoteReference）
         "正文引用。[^undefined]\n",
-        # HTML 注释块按段落原文降级，内部 citation/crossref 照常提取
-        "<!-- =========================\n     引用 [@k] 与 @fig:x\n     =========================\n",
     ],
     ids=[
         "paragraph-inline-positions",
         "citation-forms",
         "crossref-prefixes",
         "heading-inline",
-        "multiline-paragraph-indent",
         "list-item-inline",
         "list-levels-and-start",
         "mixed-markers-truncate",
@@ -201,7 +230,6 @@ def test_full_template_standard_blocks_are_typed() -> None:
         "algorithm-body-inline",
         "listing-fence-language",
         "undefined-footnote-ref",
-        "html-comment-degrades",
     ],
 )
 def test_inline_and_block_parity_samples(text: str) -> None:
@@ -238,25 +266,6 @@ def test_front_matter_errors_match_legacy(text: str) -> None:
     with pytest.raises(ParseError) as markdown_it_error:
         markdown_it.parse_text(text, source_path="err.md")
     assert str(markdown_it_error.value) == str(legacy_error.value)
-
-
-@pytest.mark.parametrize(
-    "text",
-    [
-        # 未知 ::: 容器静默降级为段落原文
-        "::: unknown {#x}\n内容\n:::\n",
-        # 斜体/链接/行内图片降级为段落文本
-        "这是 *斜体*、[链接](https://example.com) 与 ![图片](./a.png) 的段落。\n",
-    ],
-    ids=[
-        "unknown-container",
-        "unsupported-inline-constructs",
-    ],
-)
-def test_degraded_constructs_match_legacy(text: str) -> None:
-    _assert_text_parity(text)
-    doc = markdown_it.parse_text(text, source_path="degrade.md")
-    assert all(isinstance(block, Paragraph) for block in doc.blocks)
 
 
 @pytest.mark.parametrize(

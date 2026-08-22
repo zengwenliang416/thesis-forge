@@ -12,12 +12,11 @@
 - ``[^label]`` 脚注：``footnote`` 插件仅取块级定义（``move_to_end=False``
   使定义保持源码位置；``inline=False`` 关闭 legacy 不支持的 ``^[...]``）；
   定义正文按 legacy 算法（首行 + 四空格/Tab 续行）从源码行重建。
-- 行内内容（段落、标题、列表项、容器 caption、脚注定义正文）统一交给
-  共享的 parser 扫描器 ``parse_inline_content``：code span / strong /
-  citation ``[@key; @key2, locator]`` / crossref ``@fig:x`` /
-  footnote_ref 的匹配语义逐行对齐 legacy 的 ``INLINE_TOKEN_RE``
-  （含 crossref 的 ``(?<!\\[)`` 前视），未知语法静默保留原文，
-  与 legacy 逐字节一致；本模块不再注册任何自研 inline rule。
+- 标准 inline token（text / break / strong / emphasis / code / link）由本模块
+  递归转换为 typed Inline；inline math ``$...$`` 在 text token 中显式识别。
+  语义标记 ``[@key; @key2, locator]`` / crossref ``@fig:x`` /
+  footnote_ref 仍通过公开的 ``parse_inline_content`` 原语处理，直到后续
+  semantic-inline 切片完成；未知 token 统一走显式 ParseError。
 - 块级规则使用 ``markdown-it-py`` 的 default preset；table/fence/
   blockquote/setext heading 等标准 token 由 typed consumer 消费，
   未支持的 token 统一走显式 ParseError，不再静默降级或丢弃。
@@ -26,9 +25,8 @@
   消息与行号逐字节一致。
 
 SourceLocation 策略：块级行号 = ``token.map[0] + 1 + front matter 偏移``，
-column 恒为 None（与 legacy 现状一致）；行内行列由共享扫描器
-``parse_inline_content`` 经 parser ``_location_for_offset`` 换算，
-与 legacy 完全一致。
+column 恒为 None（与 legacy 现状一致）；标准 inline 节点记录起止行列，
+语义节点继续沿用 ``parse_inline_content`` 的起始行列。
 
 本模块通过 ``parser.py`` 的公开共享原语复用现有解析语义；
 凡语义问题一律以 legacy 为准（ADR-0001 §5.2 已知差异见文末清单）。
@@ -37,7 +35,9 @@ column 恒为 None（与 legacy 现状一致）；行内行列由共享扫描器
 from __future__ import annotations
 
 import re
+from html import unescape
 from pathlib import Path
+from typing import ClassVar
 
 from markdown_it import MarkdownIt
 from markdown_it.token import Token
@@ -47,17 +47,27 @@ from mdit_py_plugins.footnote import footnote_plugin
 from .model import (
     BlockQuote,
     CodeBlock,
+    Emphasis,
     FootnoteDefinition,
+    FootnoteReference,
+    HardBreak,
     Heading,
     Inline,
+    InlineCode,
+    InlineMath,
+    Link,
     ListBlock,
     ListItem,
     Paragraph,
+    SoftBreak,
     SourceLocation,
+    Strong,
     Table,
     TableCell,
     TableRow,
+    Text,
     ThesisDocument,
+    inline_plain_text,
 )
 from .parser import (
     CONTAINER_START_RE,
@@ -151,6 +161,460 @@ def _find_close(tokens: list[Token], idx: int, open_type: str, close_type: str) 
             if depth == 0:
                 return j
     return len(tokens) - 1
+
+
+def _location_at(
+    text: str,
+    offset: int,
+    start_line: int,
+    start_column: int,
+) -> SourceLocation:
+    prefix = text[:offset]
+    newline_count = prefix.count("\n")
+    if newline_count:
+        column = len(prefix.rsplit("\n", 1)[-1]) + 1
+    else:
+        column = start_column + len(prefix)
+    return SourceLocation(line=start_line + newline_count, column=column)
+
+
+def _span(
+    text: str,
+    start: int,
+    end: int,
+    start_line: int,
+    start_column: int,
+) -> SourceLocation:
+    location = _location_at(text, start, start_line, start_column)
+    end_location = _location_at(text, end, start_line, start_column)
+    location.end_line = end_location.line
+    location.end_column = end_location.column
+    return location
+
+
+def _find_inline_math(text: str, start: int = 0) -> tuple[int, int, str] | None:
+    """Return the next single-dollar inline math span in ``text``."""
+    opening = start
+    while opening < len(text):
+        if text[opening] != "$":
+            opening += 1
+            continue
+        if opening > 0 and text[opening - 1] == "\\":
+            opening += 1
+            continue
+        if (opening > 0 and text[opening - 1] == "$") or (
+            opening + 1 < len(text) and text[opening + 1] == "$"
+        ):
+            opening += 1
+            continue
+
+        closing = opening + 1
+        while closing < len(text):
+            if text[closing] == "$" and text[closing - 1] != "\\":
+                if closing + 1 < len(text) and text[closing + 1] == "$":
+                    closing += 1
+                    continue
+                latex = text[opening + 1 : closing]
+                if latex:
+                    return opening, closing + 1, latex
+                break
+            closing += 1
+        opening += 1
+    return None
+
+
+class _InlineTokenConverter:
+    """Convert one markdown-it ``inline`` token tree into typed Inline nodes."""
+
+    _CLOSE_FOR_OPEN: ClassVar[dict[str, str]] = {
+        "strong_open": "strong_close",
+        "em_open": "em_close",
+        "link_open": "link_close",
+    }
+
+    def __init__(
+        self,
+        content: str,
+        tokens: list[Token],
+        *,
+        start_line: int,
+        start_column: int,
+    ) -> None:
+        self.content = content
+        self.tokens = tokens
+        self.start_line = start_line
+        self.start_column = start_column
+        self.cursor = 0
+
+    def convert(self) -> list[Inline]:
+        inlines, next_index = self._convert_until(0)
+        if next_index != len(self.tokens):
+            raise ParseError(
+                f"未消费的 markdown-it 行内 token: {self.tokens[next_index].type}"
+            )
+        if self.cursor != len(self.content):
+            location = self._location(self.cursor)
+            raise ParseError(
+                "未消费的 markdown-it 行内源码: "
+                f"第 {location.line} 行第 {location.column} 列"
+            )
+        return inlines
+
+    def _location(self, offset: int) -> SourceLocation:
+        return _location_at(self.content, offset, self.start_line, self.start_column)
+
+    def _span(self, start: int, end: int) -> SourceLocation:
+        return _span(
+            self.content,
+            start,
+            end,
+            self.start_line,
+            self.start_column,
+        )
+
+    def _decode_one(self, offset: int) -> tuple[str, int]:
+        current = self.content[offset]
+        if (
+            current == "\\"
+            and offset + 1 < len(self.content)
+            and self.content[offset + 1] in r"""!"#$%&'()*+,-./:;<=>?@[\]^_`{|}~"""
+        ):
+            return self.content[offset + 1], offset + 2
+
+        if current == "&":
+            semicolon = self.content.find(";", offset + 1)
+            if semicolon >= 0:
+                entity = self.content[offset : semicolon + 1]
+                decoded = unescape(entity)
+                if decoded != entity:
+                    return decoded, semicolon + 1
+
+        return current, offset + 1
+
+    def _decode_fragment(self, value: str) -> str:
+        decoded: list[str] = []
+        offset = 0
+        while offset < len(value):
+            current = value[offset]
+            if (
+                current == "\\"
+                and offset + 1 < len(value)
+                and value[offset + 1] in r"""!"#$%&'()*+,-./:;<=>?@[\]^_`{|}~"""
+            ):
+                decoded.append(value[offset + 1])
+                offset += 2
+                continue
+            if current == "&":
+                semicolon = value.find(";", offset + 1)
+                if semicolon >= 0:
+                    entity = value[offset : semicolon + 1]
+                    replacement = unescape(entity)
+                    if replacement != entity:
+                        decoded.append(replacement)
+                        offset = semicolon + 1
+                        continue
+            decoded.append(current)
+            offset += 1
+        return "".join(decoded)
+
+    def _match_decoded(
+        self,
+        start: int,
+        target: str,
+        *,
+        allow_prefix: bool,
+    ) -> tuple[int, str] | None:
+        offset = start
+        decoded: list[str] = []
+        while offset < len(self.content) and len("".join(decoded)) < len(target):
+            value, next_offset = self._decode_one(offset)
+            candidate = "".join(decoded) + value
+            if not target.startswith(candidate):
+                return None
+            decoded.append(value)
+            offset = next_offset
+        value = "".join(decoded)
+        if value == target or (allow_prefix and offset == len(self.content)):
+            return offset, value
+        return None
+
+    def _consume_markup(self, markup: str) -> tuple[int, int]:
+        if not markup:
+            raise ParseError("markdown-it 行内标记缺少 markup")
+        start = self.cursor
+        if not self.content.startswith(markup, start):
+            start = self.content.find(markup, self.cursor)
+            if start < 0:
+                raise ParseError(f"未消费的 markdown-it 行内标记: {markup}")
+        self.cursor = start + len(markup)
+        return start, self.cursor
+
+    def _consume_text(
+        self,
+        token_content: str,
+    ) -> tuple[str, str, int, int, str]:
+        if not token_content:
+            return "", "", self.cursor, self.cursor, ""
+
+        search_start = self.cursor
+        match = self._match_decoded(
+            search_start,
+            token_content,
+            allow_prefix=True,
+        )
+        start = search_start
+        if match is None:
+            for candidate in range(search_start + 1, len(self.content)):
+                match = self._match_decoded(candidate, token_content, allow_prefix=True)
+                if match is not None:
+                    start = candidate
+                    break
+        if match is None:
+            raise ParseError(
+                "markdown-it text token 无法映射到源码: "
+                f"{token_content!r}"
+            )
+
+        end, decoded = match
+        gap = self.content[search_start:start]
+        self.cursor = end
+        return self.content[start:end], decoded, start, end, gap
+
+    def _convert_text(self, token: Token) -> list[Inline]:
+        raw, _, start, _, gap = self._consume_text(token.content)
+        result: list[Inline] = []
+        if gap:
+            if gap.strip(" \t") != "":
+                raise ParseError(
+                    "markdown-it text token 前存在未消费的行内源码: "
+                    f"{gap!r}"
+                )
+            result.append(Text(value=gap, location=self._span(start - len(gap), start)))
+
+        if not raw:
+            return result
+
+        cursor = 0
+        while cursor < len(raw):
+            math_span = _find_inline_math(raw, cursor)
+            if math_span is None:
+                value = self._decode_fragment(raw[cursor:])
+                result.extend(
+                    self._convert_semantic_text(
+                        value,
+                        start + cursor,
+                        len(raw) - cursor,
+                    )
+                )
+                break
+
+            math_start, math_end, latex = math_span
+            if math_start > cursor:
+                value = self._decode_fragment(raw[cursor:math_start])
+                result.extend(
+                    self._convert_semantic_text(
+                        value,
+                        start + cursor,
+                        math_start - cursor,
+                    )
+                )
+            result.append(
+                InlineMath(
+                    latex=self._decode_fragment(latex),
+                    location=self._span(start + math_start, start + math_end),
+                )
+            )
+            cursor = math_end
+        return result
+
+    def _convert_semantic_text(
+        self,
+        value: str,
+        offset: int,
+        raw_length: int,
+    ) -> list[Inline]:
+        if not value:
+            return []
+        location = self._location(offset)
+        parsed = parse_inline_content(value, location.line or 1, location.column or 1)
+        if len(parsed) == 1 and isinstance(parsed[0], Text) and parsed[0].value == value:
+            return [Text(value=value, location=self._span(offset, offset + raw_length))]
+        return parsed
+
+    def _consume_break(self) -> tuple[int, int]:
+        start = self.cursor
+        newline = self.content.find("\n", start)
+        if newline < 0:
+            raise ParseError("markdown-it break token 无法映射到源码换行")
+        self.cursor = newline + 1
+        return start, self.cursor
+
+    def _consume_code(self, token: Token) -> tuple[int, int]:
+        markup = token.markup or "`"
+        start = self.cursor
+        if not self.content.startswith(markup, start):
+            found = self.content.find(markup, start)
+            if found < 0:
+                raise ParseError("markdown-it code token 无法映射到源码")
+            start = found
+        content_start = start + len(markup)
+        closing = self.content.find(markup, content_start)
+        if closing < 0:
+            raise ParseError("markdown-it code token 缺少结束标记")
+        self.cursor = closing + len(markup)
+        return start, self.cursor
+
+    def _find_balanced_close(self, open_index: int, opening: str, closing: str) -> int:
+        depth = 0
+        escaped = False
+        for offset in range(open_index, len(self.content)):
+            current = self.content[offset]
+            if escaped:
+                escaped = False
+                continue
+            if current == "\\":
+                escaped = True
+                continue
+            if current == opening:
+                depth += 1
+            elif current == closing:
+                depth -= 1
+                if depth == 0:
+                    return offset
+        return -1
+
+    def _consume_link(self, link_start: int) -> int:
+        label_open = link_start
+        label_close = self._find_balanced_close(label_open, "[", "]")
+        if label_close < 0:
+            raise ParseError("markdown-it link token 缺少结束标签")
+
+        after_label = label_close + 1
+        if self.content.startswith("(", after_label):
+            destination_close = self._find_balanced_close(
+                after_label,
+                "(",
+                ")",
+            )
+            if destination_close < 0:
+                raise ParseError("markdown-it link token 缺少结束地址")
+            self.cursor = destination_close + 1
+        elif self.content.startswith("[", after_label):
+            reference_close = self._find_balanced_close(
+                after_label,
+                "[",
+                "]",
+            )
+            if reference_close < 0:
+                raise ParseError("markdown-it reference link token 缺少结束标签")
+            self.cursor = reference_close + 1
+        else:
+            self.cursor = after_label
+        return self.cursor
+
+    def _convert_until(
+        self,
+        index: int,
+        stop_type: str | None = None,
+    ) -> tuple[list[Inline], int]:
+        result: list[Inline] = []
+        while index < len(self.tokens):
+            token = self.tokens[index]
+            if stop_type is not None and token.type == stop_type:
+                return result, index
+
+            token_type = token.type
+            if token_type == "text":
+                result.extend(self._convert_text(token))
+                index += 1
+            elif token_type in {"softbreak", "hardbreak"}:
+                start, end = self._consume_break()
+                node_type = SoftBreak if token_type == "softbreak" else HardBreak
+                result.append(node_type(location=self._span(start, end)))
+                index += 1
+            elif token_type in {"strong_open", "em_open"}:
+                close_type = self._CLOSE_FOR_OPEN[token_type]
+                start, _ = self._consume_markup(token.markup)
+                children, close_index = self._convert_until(index + 1, close_type)
+                if close_index >= len(self.tokens):
+                    raise ParseError(f"未闭合的 markdown-it 行内 token: {token_type}")
+                close = self.tokens[close_index]
+                _, end = self._consume_markup(close.markup or token.markup)
+                node_type = Strong if token_type == "strong_open" else Emphasis
+                result.append(
+                    node_type(children=tuple(children), location=self._span(start, end))
+                )
+                index = close_index + 1
+            elif token_type == "code_inline":
+                start, end = self._consume_code(token)
+                result.append(
+                    InlineCode(value=token.content, location=self._span(start, end))
+                )
+                index += 1
+            elif token_type == "footnote_ref":
+                label = str((token.meta or {}).get("label", ""))
+                if not label:
+                    raise ParseError("markdown-it footnote_ref 缺少 label")
+                raw = f"[^{label}]"
+                start = self.cursor
+                if not self.content.startswith(raw, start):
+                    found = self.content.find(raw, start)
+                    if found < 0:
+                        raise ParseError("markdown-it footnote_ref 无法映射到源码")
+                    start = found
+                self.cursor = start + len(raw)
+                result.append(
+                    FootnoteReference(
+                        label=label,
+                        location=self._span(start, self.cursor),
+                    )
+                )
+                index += 1
+            elif token_type == "link_open":
+                is_autolink = token.markup == "autolink"
+                start, _ = self._consume_markup("<" if is_autolink else "[")
+                children, close_index = self._convert_until(index + 1, "link_close")
+                if close_index >= len(self.tokens):
+                    raise ParseError("未闭合的 markdown-it 行内 token: link_open")
+                if is_autolink:
+                    _, end = self._consume_markup(">")
+                else:
+                    end = self._consume_link(start)
+                href = token.attrGet("href") or ""
+                result.append(
+                    Link(
+                        label=inline_plain_text(children),
+                        destination=href,
+                        location=self._span(start, end),
+                    )
+                )
+                index = close_index + 1
+            elif token_type in {"strong_close", "em_close", "link_close"}:
+                if stop_type is None:
+                    raise ParseError(f"未配对的 markdown-it 行内 token: {token_type}")
+                return result, index
+            else:
+                raise ParseError(f"不支持的 markdown-it 行内 token: {token_type}")
+        if stop_type is not None:
+            raise ParseError(f"未闭合的 markdown-it 行内 token: {stop_type}")
+        return result, index
+
+
+def _parse_inline_token(
+    token: Token,
+    *,
+    content: str | None = None,
+    start_line: int,
+    start_column: int = 1,
+) -> list[Inline]:
+    if token.children is None:
+        raise ParseError("markdown-it inline token 缺少 children")
+    return _InlineTokenConverter(
+        token.content if content is None else content,
+        token.children,
+        start_line=start_line,
+        start_column=start_column,
+    ).convert()
 
 
 class MarkdownItParserBackend:
@@ -261,7 +725,12 @@ class MarkdownItParserBackend:
         assert open_token.map is not None
         line = open_token.map[0] + 1 + offset
         # legacy 以 len(marks) + 2 为行内列基准（假设 # 后恰好一个空格）
-        inlines = parse_inline_content(text, line, level + 2)
+        inlines = _parse_inline_token(
+            inline_token,
+            content=text,
+            start_line=line,
+            start_column=level + 2,
+        )
         doc.blocks.append(
             Heading(
                 id=block_id,
@@ -278,7 +747,10 @@ class MarkdownItParserBackend:
             return
         assert inline_token.map is not None
         line = inline_token.map[0] + 1 + offset
-        inlines = parse_inline_content(text, line)
+        inlines = _parse_inline_token(
+            inline_token,
+            start_line=line,
+        )
         doc.blocks.append(
             Paragraph(inlines=inlines, location=SourceLocation(line=line))
         )
@@ -368,7 +840,6 @@ class MarkdownItParserBackend:
                     else None
                 )
                 if inline_token is None:
-                    cell_text = ""
                     cell_line = (
                         row_open.map[0] + 1 + offset
                         if row_open.map is not None
@@ -376,7 +847,6 @@ class MarkdownItParserBackend:
                     )
                 else:
                     assert inline_token.map is not None
-                    cell_text = inline_token.content
                     cell_line = inline_token.map[0] + 1 + offset
 
                 style = cell_open.attrGet("style")
@@ -389,7 +859,14 @@ class MarkdownItParserBackend:
                     alignment = None
                 cells.append(
                     TableCell(
-                        inlines=tuple(parse_inline_content(cell_text, cell_line)),
+                        inlines=tuple(
+                            _parse_inline_token(
+                                inline_token,
+                                start_line=cell_line,
+                            )
+                            if inline_token is not None
+                            else ()
+                        ),
                         alignment=alignment,
                         location=SourceLocation(line=cell_line),
                     )
