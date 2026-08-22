@@ -19,6 +19,7 @@ from zipfile import ZipFile
 from lxml import etree
 
 from thesis_forge.core.compiler import compile_document
+from thesis_forge.core.index import DocumentIndex
 from thesis_forge.core.parser import parse_markdown
 from thesis_forge.core.validator import ValidationContext, validate_document
 from thesis_forge.renderers.docx import DocxRenderer
@@ -188,11 +189,19 @@ def test_full_syntax_parser_fixture_parses_all_block_kinds():
         "lst:predict",
         "sec:background",
         "chap:introduction",
-    } <= {reference.target for reference in document.cross_references}
-    assert {"smith2025", "wang2024"} <= {
-        key for citation in document.citations for key in citation.keys
+    } <= {
+        reference.target
+        for reference in DocumentIndex.from_document(document).cross_references
     }
-    assert {reference.label for reference in document.footnote_references} == {
+    assert {"smith2025", "wang2024"} <= {
+        key
+        for citation in DocumentIndex.from_document(document).citations
+        for key in citation.keys
+    }
+    assert {
+        reference.label
+        for reference in DocumentIndex.from_document(document).footnote_references
+    } == {
         "note",
         "long",
     }

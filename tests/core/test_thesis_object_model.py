@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import dataclasses
 
+from thesis_forge.core.index import DocumentIndex
 from thesis_forge.core.model import (
     Algorithm,
     Citation,
@@ -119,7 +120,10 @@ E = mc^2
     assert inline_plain_text(listing.caption_inlines) == "示例代码 [@listing-source]"
     assert inline_plain_text(algorithm.caption_inlines) == "构建流程 [@algorithm-source]"
     assert equation.display is True
-    assert [citation.keys for citation in document.citations] == [
+    assert [
+        citation.keys
+        for citation in DocumentIndex.from_document(document).citations
+    ] == [
         ["figure-source"],
         ["listing-source"],
         ["algorithm-source"],

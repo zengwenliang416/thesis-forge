@@ -95,15 +95,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Open
 
-- [V2-307D2] E2E and object-model test cache pins migrate to index reads
-  - Parent: ordered child 10/13 of `V2-307`; depends on `V2-307D1`.
-  - Files: `tests/test_qa_e2e.py`, `tests/core/test_thesis_object_model.py`
-  - Behavior: assertions on cache fields re-express against DocumentIndex-derived sequences.
-  - Verify: `.venv/bin/python -m pytest tests/test_qa_e2e.py tests/core/test_thesis_object_model.py`
-  - Acceptance: no cache-field assertion remains in the two files; suites stay green.
-  - Verification-surface change: authorized; migrates e2e and object-model assertions.
-  - Attempts: 0
-
 - [V2-308] Validator consumes DocumentIndex
   - Files: `src/thesis_forge/core/validator.py`, `tests/core/test_validator_document_index.py`
   - Behavior: ID, reference, citation and footnote validation reads one derived DocumentIndex instead of parser-maintained caches.
@@ -140,6 +131,16 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
   - Attempts: 0
 
 ## Done
+
+- [V2-307D2] E2E and object-model test cache pins migrate to index reads
+  - Parent: ordered child 10/13 of `V2-307`; depends on `V2-307D1`.
+  - Files: `tests/test_qa_e2e.py`, `tests/core/test_thesis_object_model.py`
+  - Behavior: assertions on cache fields re-express against DocumentIndex-derived sequences.
+  - Verify: `.venv/bin/python -m pytest tests/test_qa_e2e.py tests/core/test_thesis_object_model.py`
+  - Acceptance: no cache-field assertion remains in the two files; suites stay green.
+  - Verification-surface change: authorized; migrates e2e and object-model assertions.
+  - Attempts: 1
+  - Attempt 1 (2026-08-22): Checker PASS; both files show only assertion-source swaps plus one sorted DocumentIndex import, exact Verify 9/9, Ruff and `git diff --check` clean, zero cache-field assertions remain, broader baselines 123/123 and CLI 23/23, expected values unchanged; no push.
 
 - [V2-307D1e] Parser test cache pins migrate to index reads
   - Parent: ordered child 9/13 of `V2-307`; depends on `V2-307D1d`.
@@ -1188,6 +1189,7 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 - 2026-08-22 - V2-307D1c Checker PASS; markdown-it typed body_lines pinned identical to legacy through the shared container path with zero production changes, exact Verify 49/49; no push.
 - 2026-08-22 - V2-307D1d Checker PASS; DocumentIndex now traverses Algorithm body_lines so body citations join the derived collections with accurate locations and document order, exact Verify 16/16 and baselines 153/153; no push.
 - 2026-08-22 - V2-307D1e Checker PASS on Attempt 2 after the re-slice prerequisites; all parser-test cache pins now read DocumentIndex-derived sequences with zero cache-field assertions remaining, exact Verify 83/83 and value-equivalence probes green; no push.
+- 2026-08-22 - V2-307D2 Checker PASS; e2e and object-model cache pins now read DocumentIndex-derived sequences, exact Verify 9/9 with baselines green; no push.
 - 2026-08-22 - V2-307D1 Checker FAIL Attempt 1 then re-sliced into ordered children V2-307D1a…D1e after independent Checker grep found 20 cache-pin sites (18 in test_parser_contract.py) and completing them exposed typed-model defects the cache masked: caption inline locations carry the container start line in both backends, table-cell inline locations are misaligned by the metadata/blank rows, and algorithm-body citations exist only in the cache (Algorithm.body is verbatim-only); children fix caption/cell locations, add typed Algorithm body_lines to the model and both parsers, extend index traversal, then finish the pin migration; three test files restored, no product code edited in the split cycle.
 - 2026-08-22 - V2-307 split into eight ordered children V2-307A…G after grep mapping showed removing the four cache fields atomically spans model.py + both parsers (12 registration call sites) + compiler.py + validator.py + cli.py + qa/tools/parser_diff.py plus seven test files; children migrate readers first (compiler/CLI/parity-tool/test pins, with V2-308 landing between D2 and E), then stop registration per parser, then remove the fields; no product code edited in the split cycle.
 
