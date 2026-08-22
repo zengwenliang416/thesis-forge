@@ -95,6 +95,30 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Open
 
+- [V2-306] DocumentIndex derives semantic indexes by traversal
+  - Files: `src/thesis_forge/core/index.py`, `tests/core/test_document_index.py`
+  - Behavior: one DocumentIndex builder derives the ID, citation, cross-reference and footnote indexes by traversing the immutable document; duplicate public IDs surface every conflicting location instead of overwriting.
+  - Verify: `.venv/bin/python -m pytest tests/core/test_document_index.py`
+  - Acceptance: nested caption inlines, table cells, list-item children, footnote definitions and nested Strong/Emphasis children are indexed; duplicate IDs report both locations and never overwrite by dictionary construction.
+  - Verification-surface change: authorized; creates focused DocumentIndex tests.
+  - Attempts: 0
+
+- [V2-307] Remove manual document caches
+  - Files: `src/thesis_forge/core/model.py`, `src/thesis_forge/core/compiler.py`, `tests/core/test_no_manual_caches.py`
+  - Behavior: `inline_content`, `cross_references`, `citations`, `footnote_references` and `register_inlines` stop being authoritative state; the compiler derives semantic collections from DocumentIndex traversal.
+  - Verify: `.venv/bin/python -m pytest tests/core/test_no_manual_caches.py`
+  - Acceptance: no manually synchronized duplicate caches remain in ThesisDocument; compiler baselines stay green.
+  - Verification-surface change: authorized; creates the no-manual-caches architecture test.
+  - Attempts: 0
+
+- [V2-308] Validator consumes DocumentIndex
+  - Files: `src/thesis_forge/core/validator.py`, `tests/core/test_validator_document_index.py`
+  - Behavior: ID, reference, citation and footnote validation reads one derived DocumentIndex instead of parser-maintained caches.
+  - Verify: `.venv/bin/python -m pytest tests/core/test_validator_document_index.py`
+  - Acceptance: nested caption/cell semantics are validated through the derived index.
+  - Verification-surface change: authorized; creates focused validator index tests.
+  - Attempts: 0
+
 ## Done
 
 - [V2-305E2B] Remove raw thesis-object caption/text fields
@@ -1022,5 +1046,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 - 2026-08-22 - V2-305E2 split into ordered children V2-305E2A and V2-305E2B after parser contract inspection found raw Figure/Algorithm caption assertions; no product code edited in the split cycle, next queue V2-305E2A.
 - 2026-08-22 - V2-305E2A Checker PASS; parser Figure/Algorithm caption assertions now use caption_inlines, exact Verify 32/32, Ruff/diff-check clean; no push.
 - 2026-08-22 - V2-305E2B Checker PASS; rich object raw caption/text fields were removed, exact Verify 162/162, raw IR scan and Ruff/diff-check passed; no push.
+- 2026-08-22 - Open refilled with V2-306, V2-307 and V2-308 per the catalogue dependency order after V2-305E2B left Open empty; V2-307 is expected to need re-slicing when its cycle arrives (cache consumers span validator/preview/runtime beyond the three-file slice); no product code edited.
 
 ## Sync log
