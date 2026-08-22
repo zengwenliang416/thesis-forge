@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "promotion_policy": "reimplement_under_development_gate",
+  "allowed_to_copy": [
+    "Canonical run names, semantic field names, and dependency decisions from the approved handoff"
+  ],
+  "must_reimplement": [
+    "Immutable typed run classes and the explicit unknown-run error boundary in the named production files"
+  ],
+  "blocked_direct_copies": [
+    "Prototype-only Markdown structure, fake runtime code, generic payload serializers, and compatibility aliases"
+  ]
+}

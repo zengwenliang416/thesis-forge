@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "owners": [
+    {
+      "path": "src/thesis_forge/core/render_plan.py",
+      "owner": "thesisforge-core"
+    },
+    {
+      "path": "tests/core/test_typed_inline_render_plan.py",
+      "owner": "thesisforge-core"
+    }
+  ]
+}

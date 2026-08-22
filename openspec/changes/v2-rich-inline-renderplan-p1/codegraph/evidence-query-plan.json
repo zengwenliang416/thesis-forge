@@ -1,0 +1,22 @@
+{
+  "schema": "specnav.codegraph.evidence_query_plan.v1",
+  "generated_at": "2026-08-22T22:55:21.909Z",
+  "active_change": "v2-rich-inline-renderplan-p1",
+  "queries": [
+    {
+      "id": "development:task-001-typed-inline-renderplan:evidence",
+      "claim_id": "development:task-001-typed-inline-renderplan",
+      "stage": "development",
+      "task_id": "001-typed-inline-renderplan",
+      "status": "planned",
+      "query": "Find the files, symbols, components, routes, services, data flow, and tests that implement \"Implement and verify the renderer-neutral inline run seam only. The slice ends\" in change \"v2-rich-inline-renderplan-p1\". Return concrete file paths, symbols, relationships, and any missing implementation evidence.",
+      "expected_evidence": [
+        "file paths",
+        "symbols",
+        "call relationships",
+        "tests or verification commands"
+      ],
+      "command": "node \"$SPECNAV_CODEGRAPH_ROOT/scripts/codegraph-context.js\" --stage development --claim development:task-001-typed-inline-renderplan --query \"<query>\" --write --json"
+    }
+  ]
+}

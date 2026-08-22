@@ -1,0 +1,11 @@
+{
+  "schema": "specnav.codegraph.evidence_index.v1",
+  "generated_at": "2026-08-22T22:54:30.289Z",
+  "active_change": "v2-rich-inline-renderplan-p1",
+  "source_raw": "openspec/changes/v2-rich-inline-renderplan-p1/codegraph/evidence.jsonl",
+  "by_claim": {},
+  "by_stage": {},
+  "blockers": [],
+  "raw_exists": false,
+  "record_count": 0
+}

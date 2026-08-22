@@ -1,0 +1,8 @@
+{
+  "schema_version": 1,
+  "component_rules": [
+    "No extraction is required: A1M extends the existing core InlineRun seam only.",
+    "Do not introduce a generic payload utility or duplicate consumer dispatch.",
+    "Keep Preview, Review, compiler, and DOCX consumers in their ordered child files."
+  ]
+}

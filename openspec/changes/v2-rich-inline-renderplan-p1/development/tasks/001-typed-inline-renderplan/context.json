@@ -1,0 +1,48 @@
+{
+  "task_id": "001-typed-inline-renderplan",
+  "goal": "Compiler and renderer implementers can consume one canonical typed inline RenderPlan vocabulary for every v2 inline capability.",
+  "stop_condition": "Stop if implementation would edit outside the two scope-bound files, add a second caption source, or introduce a compatibility/fallback path.",
+  "task_items": [
+    "1.1",
+    "1.2",
+    "1.3",
+    "2.1",
+    "2.2"
+  ],
+  "must_read": [
+    "openspec/specs/ui-design/design.md",
+    "openspec/specs/system-architecture/design.md",
+    "openspec/specs/frontend-backend-data-flow/design.md",
+    "openspec/specs/component-architecture/design.md",
+    "openspec/changes/v2-rich-inline-renderplan-p1/development/tasks/001-typed-inline-renderplan/brief.md",
+    "openspec/changes/v2-rich-inline-renderplan-p1/requirements.md",
+    "openspec/changes/v2-rich-inline-renderplan-p1/acceptance.md",
+    "openspec/changes/v2-rich-inline-renderplan-p1/spec-map.json",
+    "openspec/changes/v2-rich-inline-renderplan-p1/component-impact-map.json",
+    "openspec/changes/v2-rich-inline-renderplan-p1/tasks.md",
+    "openspec/changes/v2-rich-inline-renderplan-p1/acceptance.json",
+    "openspec/changes/v2-rich-inline-renderplan-p1/prototype/handoff.md",
+    "openspec/changes/v2-rich-inline-renderplan-p1/prototype/decision.json",
+    "openspec/changes/v2-rich-inline-renderplan-p1/prototype/component/component-map.md",
+    "spec/format-capabilities.yaml"
+  ],
+  "allowed_files": [
+    "src/thesis_forge/core/render_plan.py",
+    "tests/core/test_typed_inline_render_plan.py"
+  ],
+  "test_paths": ["tests/core/test_typed_inline_render_plan.py"],
+  "non_goals": [
+    "Do not expand scope beyond A1M.",
+    "Do not modify figure captions or downstream consumers.",
+    "Do not add compatibility, generic payload, or fallback behavior."
+  ],
+  "expected_evidence": [
+    "Focused pytest output",
+    "Ruff output",
+    "git diff --check output",
+    "Checker task report and reviews"
+  ],
+  "unsafe_assumptions": [
+    "A static type alias alone is not runtime unknown-value validation."
+  ]
+}

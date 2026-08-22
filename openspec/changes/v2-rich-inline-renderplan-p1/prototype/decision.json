@@ -1,0 +1,8 @@
+{
+  "status": "approved",
+  "prototype_code": "required_present",
+  "prototype_type": "component-seam",
+  "approved_variant": "a1m-renderplan-typed-inline-seam-v1",
+  "promotion": "requires_development_gate",
+  "blocked_reasons": []
+}

@@ -1,0 +1,33 @@
+{
+  "schema": "specnav.codegraph.claims.v1",
+  "generated_at": "2026-08-22T22:55:21.909Z",
+  "active_change": "v2-rich-inline-renderplan-p1",
+  "claims": [
+    {
+      "id": "development:task-001-typed-inline-renderplan",
+      "kind": "development-task",
+      "stage": "development",
+      "task_id": "001-typed-inline-renderplan",
+      "text": "Implement and verify the renderer-neutral inline run seam only. The slice ends",
+      "required": true,
+      "source": "specnav-codegraph-plan",
+      "source_paths": [
+        "openspec/changes/v2-rich-inline-renderplan-p1/development/tasks/001-typed-inline-renderplan/brief.md",
+        "openspec/changes/v2-rich-inline-renderplan-p1/development/tasks/001-typed-inline-renderplan/context.json"
+      ],
+      "expected_evidence": [
+        "Focused pytest output",
+        "Ruff output",
+        "git diff --check output",
+        "Checker task report and reviews"
+      ],
+      "allowed_files": [
+        "src/thesis_forge/core/render_plan.py",
+        "tests/core/test_typed_inline_render_plan.py"
+      ],
+      "query_ids": [
+        "development:task-001-typed-inline-renderplan:evidence"
+      ]
+    }
+  ]
+}

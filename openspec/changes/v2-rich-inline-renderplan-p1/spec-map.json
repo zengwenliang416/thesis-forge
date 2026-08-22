@@ -1,0 +1,38 @@
+{
+  "touched_specs": [
+    "system-architecture",
+    "component-architecture"
+  ],
+  "ui_rules": [
+    "ui:no-change"
+  ],
+  "architecture_modules": [
+    "core.render_plan: extend the renderer-neutral InlineRun union with the four capability-registered typed runs",
+    "core.render_plan: reject unknown inline values at the explicit typed seam"
+  ],
+  "api_contracts": [
+    "InlineRun includes SoftBreakRun, HardBreakRun, HyperlinkRun, and MathRun",
+    "HyperlinkRun exposes text and destination; MathRun exposes latex",
+    "SoftBreakRun and HardBreakRun are distinct nominal types"
+  ],
+  "database_entities": [],
+  "permissions": [
+    "local-only: no network, credentials, or external service"
+  ],
+  "operational_constraints": [
+    "renderer-neutral: no docx/lxml imports in core RenderPlan",
+    "single-source: no raw-plus-typed caption or generic inline payload"
+  ],
+  "data_flows": [
+    "typed Inline model -> compiler-owned InlineRun union -> later Preview/Review/DOCX consumers"
+  ],
+  "theme_modes": [
+    "theme-toggle:none"
+  ],
+  "locale_policy": [
+    "i18n:disabled",
+    "locales:none",
+    "default-locale:zh-CN"
+  ],
+  "unresolved_gaps": []
+}

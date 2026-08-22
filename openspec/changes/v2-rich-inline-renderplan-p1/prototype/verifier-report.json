@@ -1,0 +1,20 @@
+{
+  "schema": "specnav.prototype.verifier.v1",
+  "status": "green",
+  "checked_entry": "component/component-map.md",
+  "checks": [
+    "The component map names exactly SoftBreakRun, HardBreakRun, HyperlinkRun, and MathRun from spec/format-capabilities.yaml.",
+    "The component tree keeps one InlineRun union and separates nominal soft and hard break semantics without a compatibility boolean.",
+    "HyperlinkRun retains text and destination, while MathRun retains latex, with no renderer-specific object in the seam.",
+    "Allowed and forbidden dependency directions keep core.render_plan renderer-neutral and defer downstream consumers to ordered child changes.",
+    "The prototype is read-only and contains no production source, test, caption, Preview, Review, or DOCX edits."
+  ],
+  "evidence": [
+    "component/component-map.md",
+    "component-tree.md",
+    "openspec/changes/v2-rich-inline-renderplan-p1/specs/render-plan-docx/spec.md",
+    "spec/format-capabilities.yaml",
+    "CodeGraph exploration of src/thesis_forge/core/render_plan.py"
+  ],
+  "blockers": []
+}

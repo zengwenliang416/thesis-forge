@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "active_change": "v2-rich-inline-renderplan-p1",
+  "status": "pass",
+  "ok": true,
+  "checked_at": "2026-08-22T22:56:00.000Z",
+  "blockers": [],
+  "evidence": [
+    "requirements-contract:ok",
+    "prototype-contract:ok",
+    "openspec-validate:ok",
+    "scope.json binds exactly the A1M source and focused test"
+  ]
+}

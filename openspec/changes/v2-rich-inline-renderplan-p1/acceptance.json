@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "change_id": "v2-rich-inline-renderplan-p1",
+  "assertions": [
+    {
+      "id": "A1M-U1",
+      "statement": "SoftBreakRun, HardBreakRun, HyperlinkRun, and MathRun exist with the exact registered names.",
+      "verify_via": "unit",
+      "status": "failing",
+      "evidence_ref": null
+    },
+    {
+      "id": "A1M-U2",
+      "statement": "InlineRun contains all canonical rich variants and retains hyperlink and math semantic fields.",
+      "verify_via": "unit",
+      "status": "failing",
+      "evidence_ref": null
+    },
+    {
+      "id": "A1M-S1",
+      "statement": "Unknown inline values fail explicitly and no generic payload or None fallback is used.",
+      "verify_via": "redteam",
+      "status": "failing",
+      "evidence_ref": null
+    },
+    {
+      "id": "A1M-S2",
+      "statement": "The RenderPlan module remains renderer-neutral and the A1M slice does not add a second caption source.",
+      "verify_via": "static",
+      "status": "failing",
+      "evidence_ref": null
+    }
+  ]
+}

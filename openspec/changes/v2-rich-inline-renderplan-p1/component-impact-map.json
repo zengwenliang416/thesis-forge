@@ -1,0 +1,34 @@
+{
+  "new_components": [
+    "core.render_plan.SoftBreakRun",
+    "core.render_plan.HardBreakRun",
+    "core.render_plan.HyperlinkRun",
+    "core.render_plan.MathRun"
+  ],
+  "reused_components": [
+    "core.render_plan.InlineRun",
+    "core.render_plan.TextRun",
+    "core.render_plan.ReferenceRun",
+    "core.render_plan.CitationRun",
+    "core.render_plan.FootnoteReferenceRun"
+  ],
+  "extraction_triggers": [],
+  "forbidden_dependencies": [
+    "core.render_plan must not import docx or lxml",
+    "core.render_plan must not import parser, Preview, Review, or frontend modules",
+    "A1M must not add a generic inline payload serializer or compatibility aliases"
+  ],
+  "hooks": [],
+  "utilities": [
+    "explicit inline-run type boundary for unknown values"
+  ],
+  "services": [],
+  "required_component_tests": [
+    "exact canonical run names and semantic fields",
+    "single InlineRun union membership",
+    "soft versus hard break nominal distinction",
+    "unknown inline value explicit failure",
+    "renderer-neutral import boundary"
+  ],
+  "unresolved_gaps": []
+}

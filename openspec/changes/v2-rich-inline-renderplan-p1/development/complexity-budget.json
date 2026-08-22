@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "budgets": [
+    {
+      "area": "typed seam cohesion",
+      "limit": "one renderer-neutral InlineRun union owns the canonical inline run vocabulary"
+    },
+    {
+      "area": "coupling",
+      "limit": "render_plan.py imports no parser, frontend, Preview, Review, docx, or lxml implementation"
+    },
+    {
+      "area": "scope",
+      "limit": "at most the two files bound by scope.json for A1M"
+    }
+  ]
+}
