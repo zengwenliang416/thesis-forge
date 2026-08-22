@@ -95,15 +95,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Open
 
-- [V2-310B2] Enable the markdown-it CommonMark/GFM configuration
-  - Parent: ordered child 2/2 of the re-sliced `V2-310B`; depends on `V2-310B1`.
-  - Files: `src/thesis_forge/core/parser_markdown_it.py`, `tests/core/test_markdown_v2_parser_config.py`
-  - Behavior: enable required CommonMark/GFM rules and remove legacy semantic-equivalence configuration.
-  - Verify: `.venv/bin/python -m pytest tests/core/test_markdown_v2_parser_config.py`
-  - Acceptance: emphasis, links, images, backticks, blockquote and fence are enabled; the backend does not disable those rules; the parser/backend baseline stays green after the production preset changes.
-  - Verification-surface change: authorized; extends the v2 parser configuration tests.
-  - Attempts: 0
-
 - [V2-311] Standard inline conversion
   - Files: `src/thesis_forge/core/parser_markdown_it.py`, `tests/core/test_markdown_v2_inlines.py`
   - Behavior: convert text, breaks, strong, emphasis, code, links and inline math to typed Inline nodes with SourceSpan.
@@ -125,6 +116,17 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
   - Attempt 1 (2026-08-22): Checker FAIL; exact Verify passed 82/82, related parser/core/compiler regression passed 173/173, target Ruff, `git diff --check`, LOOP-LINT, and top-level default-token probes passed; however, a mixed default document failed because `_emit_fence()` returned a fixed `1` while the caller assigned it to the absolute token index, leaving `blockquote_close` unconsumed, and a list containing an indented fence hung in `_scan_list`; expected every enabled block token to be consumed or explicitly diagnosed, observed token-index loss and a non-terminating compatibility path. Candidate and HEAD full pytest failure sets matched the known 45 failures (`1079 passed, 45 failed` vs `1078 passed, 45 failed`), the two candidate files were restored, `change-registry.json` was preserved, no commit or push.
   - Attempt 2 (2026-08-22): Checker FAIL; exact Verify passed 84/84, target Ruff, `git diff --check`, and LOOP-LINT passed. The mixed default probe consumed `BlockQuote -> CodeBlock -> Table -> Heading` in order; list fence/blockquote/table/code_block/hr probes terminated within the timeout with stable `ParseError`, and the injected unknown token produced an explicit diagnostic. However, a list containing an indented setext heading (`heading_open`) returned `ListBlock` plus a flattened `Paragraph` instead of a stable `ParseError`, violating the immutable no-token-loss/no-Paragraph-flattening behavior for other standard blocks. Candidate full pytest was `1081 passed, 45 failed`; clean HEAD was `1078 passed, 45 failed`, with the same 45 failure nodes. The two candidate files were restored, `change-registry.json` and prior LOOP history were preserved, no commit or push.
   - Attempt 3 (2026-08-22): Checker PASS; exact Verify passed 85/85, related parser/core/compiler regression passed 123/123, target Ruff, `git diff --check`, and LOOP-LINT passed. The independent mixed default probe consumed `BlockQuote -> CodeBlock -> Table -> Heading` in order; list fence/blockquote/table/indented-code/hr/setext plus html_block/reference token paths terminated within the timeout with stable explicit `ParseError`; top-level code_block/hr/html_block/reference/unknown paths produced explicit diagnostics. Candidate full pytest was `1082 passed, 45 failed`; clean HEAD was `1078 passed, 45 failed`, with an identical known 45-node failure set. The candidate diff was limited to the two named files, `change-registry.json` remained preserved, and no push.
+
+- [V2-310B2] Enable the markdown-it CommonMark/GFM configuration
+  - Parent: ordered child 2/2 of the re-sliced `V2-310B`; depends on `V2-310B1`.
+  - Files: `src/thesis_forge/core/parser_markdown_it.py`, `tests/core/test_markdown_v2_parser_config.py`, `tests/test_parser_markdown_it.py`
+  - Scope note: enabling the default preset changes the intended type of the standard top-level tables and blockquote in `bachelor-full-template`; the existing legacy-parity fixture pin must be re-expressed as a typed-block assertion in the named parser test.
+  - Behavior: enable required CommonMark/GFM rules and remove legacy semantic-equivalence configuration.
+  - Verify: `.venv/bin/python -m pytest tests/core/test_markdown_v2_parser_config.py`
+  - Acceptance: emphasis, links, images, backticks, blockquote and fence are enabled; the backend does not disable those rules; the parser/backend baseline stays green after the production preset changes.
+  - Verification-surface change: authorized; extends the v2 parser configuration tests.
+  - Attempts: 1
+  - Attempt 1 (2026-08-22): Checker PASS; exact Verify 2/2, related parser/backend/contract regression 85/85, core/parser/compiler regression 134/134, target Ruff, `git diff --check`, LOOP-LINT, production active-rule/mixed-block probe, and full-repo failure-set comparison passed; candidate had 45 failures versus clean HEAD 46, with no candidate-only failure and only the removed `bachelor-full-template` parity pin clean-only; scope was the three named files, registry preserved, no push.
 
 - [V2-310A] Remove private parser-helper imports through a shared public seam
   - Parent: ordered child 1/2 of the re-sliced `V2-310`; the parent Behavior and Acceptance remain unchanged.
@@ -1309,5 +1311,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 - 2026-08-22 - V2-310B1 Checker FAIL Attempt 2; exact Verify 84/84, target Ruff, `git diff --check`, and LOOP-LINT passed; mixed default block order and list fence/blockquote/table/code_block/hr timeout/diagnostic probes passed, but an indented setext heading inside a list still flattened to `ListBlock + Paragraph` instead of explicit `ParseError`; candidate and HEAD full pytest failure sets remained identical at 45 nodes (`1081 passed, 45 failed` vs `1078 passed, 45 failed`), the two candidate files were restored, `change-registry.json` was preserved, no commit or push.
 
 - 2026-08-22 - V2-310B1 Checker PASS Attempt 3; exact Verify 85/85, related parser/core/compiler regression 123/123, target Ruff, `git diff --check`, and LOOP-LINT passed; mixed default blockquote/fence/table/setext probe produced typed `BlockQuote -> CodeBlock -> Table -> Heading` in order, list fence/blockquote/table/indented-code/hr/setext/html_block/reference probes produced stable explicit `ParseError` within timeout, and top-level unsupported/unknown probes produced explicit diagnostics; candidate scope was exactly the two named files before the LOOP update, full-repo candidate/clean-HEAD results were `1082 passed, 45 failed` vs `1078 passed, 45 failed` with an identical known 45-node failure set, `change-registry.json` was preserved, one local commit and no push.
+- 2026-08-22 - V2-310B2 Checker PASS; exact Verify `.venv/bin/python -m pytest tests/core/test_markdown_v2_parser_config.py` passed 2/2; related regression `.venv/bin/python -m pytest tests/test_parser_markdown_it.py tests/test_parser_backend.py tests/test_parser_contract.py` passed 85/85 and core/parser/compiler regression `.venv/bin/python -m pytest tests/core/ tests/test_parser.py tests/test_compiler.py` passed 134/134; `.venv/bin/ruff check src/thesis_forge/core/parser_markdown_it.py tests/core/test_markdown_v2_parser_config.py tests/test_parser_markdown_it.py`, `git diff --check`, and `./lint-loop.sh` passed; production probe confirmed active block/inline rules, no disabled rules or disable call, `MarkdownIt("default")`, mixed `BlockQuote -> CodeBlock -> Table -> Heading`, and explicit unsupported diagnostics; full-repo candidate/clean-HEAD failure sets were 45/46 with candidate a subset and only `tests/test_parser_markdown_it.py::test_parity_with_legacy_on_fixtures[bachelor-full-template]` clean-only; scope was the three named files plus `LOOP.md`, pre-existing `openspec/.specnav/change-registry.json` was preserved, no push.
 
 ## Sync log

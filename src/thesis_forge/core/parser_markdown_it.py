@@ -18,9 +18,9 @@
   footnote_ref 的匹配语义逐行对齐 legacy 的 ``INLINE_TOKEN_RE``
   （含 crossref 的 ``(?<!\\[)`` 前视），未知语法静默保留原文，
   与 legacy 逐字节一致；本模块不再注册任何自研 inline rule。
-- 块级规则仅保留 heading/list/paragraph + 上述插件；table/fence/
-  blockquote/html_block/hr/lheading/reference/code 禁用（禁用后这些
-  行按段落原文处理，与 legacy 降级行为一致）。
+- 块级规则使用 ``markdown-it-py`` 的 default preset；table/fence/
+  blockquote/setext heading 等标准 token 由 typed consumer 消费，
+  未支持的 token 统一走显式 ParseError，不再静默降级或丢弃。
 - 未闭合容器、front matter 强校验由后端无关预检承担，直接复用
   ``parser.py`` 的 ``parse_front_matter`` 与同构行扫描，ParseError
   消息与行号逐字节一致。
@@ -79,16 +79,6 @@ _HEADING_ID_RE = re.compile(r"^(.+?)(?:\s+\{#([^}]+)\})?\s*$")
 # 容器头 info 中的 {#id}（validate 已保证其位于行尾）
 _CONTAINER_ID_RE = re.compile(r"\{#([^}]+)\}")
 
-# legacy 不支持的 CommonMark 块级结构：禁用后按段落原文降级（与 legacy 一致）
-_DISABLED_BLOCK_RULES = (
-    "blockquote",
-    "code",
-    "fence",
-    "hr",
-    "html_block",
-    "lheading",
-    "reference",
-)
 _UNSUPPORTED_BLOCK_TOKEN_TYPES = frozenset(
     {"code_block", "hr", "html_block", "reference"}
 )
@@ -112,11 +102,10 @@ def _make_container_validate(kind: str):
 
 
 def _build_markdown_it() -> MarkdownIt:
-    md = MarkdownIt("commonmark")
+    md = MarkdownIt("default")
     md.use(footnote_plugin, inline=False, move_to_end=False)
     for kind in CONTAINER_KINDS:
         md.use(container_plugin, kind, validate=_make_container_validate(kind))
-    md.block.ruler.disable(list(_DISABLED_BLOCK_RULES))
     return md
 
 

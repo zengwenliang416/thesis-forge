@@ -3,6 +3,8 @@ from __future__ import annotations
 import ast
 from pathlib import Path
 
+from thesis_forge.core.parser_markdown_it import _build_markdown_it
+
 PARSER_PATH = (
     Path(__file__).resolve().parents[2]
     / "src"
@@ -48,3 +50,44 @@ def test_markdown_v2_uses_public_parser_primitives() -> None:
         "parse_front_matter",
         "parse_inline_content",
     } <= definitions
+
+
+def test_markdown_v2_enables_default_commonmark_gfm_rules() -> None:
+    markdown_it_tree = ast.parse(MARKDOWN_IT_PARSER_PATH.read_text(encoding="utf-8"))
+    build = next(
+        node
+        for node in markdown_it_tree.body
+        if isinstance(node, ast.FunctionDef) and node.name == "_build_markdown_it"
+    )
+    constructors = [
+        node
+        for node in ast.walk(build)
+        if isinstance(node, ast.Call)
+        and isinstance(node.func, ast.Name)
+        and node.func.id == "MarkdownIt"
+    ]
+    assert len(constructors) == 1
+    assert constructors[0].args[0].value == "default"
+    assert not any(
+        isinstance(node, ast.Call)
+        and isinstance(node.func, ast.Attribute)
+        and node.func.attr == "disable"
+        for node in ast.walk(build)
+    )
+
+    md = _build_markdown_it()
+    assert {
+        "table",
+        "code",
+        "fence",
+        "blockquote",
+        "hr",
+        "lheading",
+        "reference",
+    } <= set(md.block.ruler.get_active_rules())
+    assert {
+        "backticks",
+        "emphasis",
+        "link",
+        "image",
+    } <= set(md.inline.ruler.get_active_rules())

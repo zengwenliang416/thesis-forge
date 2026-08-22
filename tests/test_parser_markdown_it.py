@@ -103,21 +103,38 @@ def test_backend_registry_includes_markdown_it() -> None:
 
 
 # ---------------------------------------------------------------------------
-# fixture 平价（块类型序列、ID、inline 序列、citation keys、crossref target、
-# 脚注、列表层级/起始序号、metadata、位置——全部逐字段一致，零豁免）
+# 仍与 legacy 共享语义的 fixture 平价（标准块 typed 行为另行 pin）
 # ---------------------------------------------------------------------------
 
 
 @pytest.mark.parametrize(
     "source",
-    [FULL_SYNTAX_FIXTURE, COMPLETE_THESIS, BACHELOR_THESIS, BACHELOR_FULL_TEMPLATE],
-    ids=["full-syntax", "complete-thesis", "bachelor-thesis", "bachelor-full-template"],
+    [FULL_SYNTAX_FIXTURE, COMPLETE_THESIS, BACHELOR_THESIS],
+    ids=["full-syntax", "complete-thesis", "bachelor-thesis"],
 )
 def test_parity_with_legacy_on_fixtures(source: Path) -> None:
     normalized_a, normalized_b = _normalized_pair(source)
     report = parser_diff.diff_documents(normalized_a, normalized_b)
     assert report.allowed == []
     assert report.blocking == []
+
+
+def test_full_template_standard_blocks_are_typed() -> None:
+    doc = markdown_it.parse_file(BACHELOR_FULL_TEMPLATE)
+    standard_tables = [
+        block for block in doc.blocks if isinstance(block, Table) and block.id is None
+    ]
+    assert [(table.location.line, len(table.rows)) for table in standard_tables] == [
+        (121, 3),
+        (128, 3),
+    ]
+
+    standard_quote = next(
+        block for block in doc.blocks if isinstance(block, BlockQuote) and block.id is None
+    )
+    assert standard_quote.location.line == 525
+    assert len(standard_quote.children) == 1
+    assert isinstance(standard_quote.children[0], Paragraph)
 
 
 # ---------------------------------------------------------------------------
