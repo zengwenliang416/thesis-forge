@@ -14,7 +14,7 @@ from pathlib import Path
 
 import pytest
 
-from thesis_forge.core.model import Paragraph
+from thesis_forge.core.model import Paragraph, inline_plain_text
 from thesis_forge.core.parser import ParseError
 from thesis_forge.core.parser_backend import (
     LegacyParserBackend,
@@ -245,7 +245,7 @@ def test_parse_text_preserves_logical_source_path(tmp_path: Path) -> None:
     source.write_text("# 磁盘旧标题\n", encoding="utf-8")
     doc = markdown_it.parse_text("# 编辑器新标题\n", source_path=source)
     assert doc.source_path == source.resolve()
-    assert doc.blocks[0].text == "编辑器新标题"
+    assert inline_plain_text(doc.blocks[0].inlines) == "编辑器新标题"
 
 
 def test_empty_document_is_inspectable(tmp_path: Path) -> None:

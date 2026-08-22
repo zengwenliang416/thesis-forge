@@ -95,15 +95,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Open
 
-- [V2-303B] Migrate parser-test block-text pins to derived text
-  - Parent: ordered child 2/10 of `V2-303`; depends on `V2-303A`.
-  - Files: `tests/test_parser.py`, `tests/test_parser_markdown_it.py`, `tests/test_parser_contract.py`
-  - Behavior: assertions on parsed-block `.text` (heading text, list-item text, degraded raw content) re-express against `inline_plain_text(block.inlines)`; green both before and after parsers stop populating the field.
-  - Verify: `.venv/bin/python -m pytest tests/test_parser.py tests/test_parser_markdown_it.py tests/test_parser_contract.py`
-  - Acceptance: no parser test asserts on the block `text` field; baselines stay green.
-  - Verification-surface change: authorized; migrates parser test assertions ahead of the parser change.
-  - Attempts: 0
-
 - [V2-303C] Compiler derives block text from inlines
   - Parent: ordered child 3/10 of `V2-303`; depends on `V2-303B`.
   - Files: `src/thesis_forge/core/compiler.py`, `tests/test_compiler.py`
@@ -193,6 +184,16 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
   - Attempts: 0
 
 ## Done
+
+- [V2-303B] Migrate parser-test block-text pins to derived text
+  - Parent: ordered child 2/10 of `V2-303`; depends on `V2-303A`.
+  - Files: `tests/test_parser.py`, `tests/test_parser_markdown_it.py`, `tests/test_parser_contract.py`
+  - Behavior: assertions on parsed-block `.text` (heading text, list-item text, degraded raw content) re-express against `inline_plain_text(block.inlines)`; green both before and after parsers stop populating the field.
+  - Verify: `.venv/bin/python -m pytest tests/test_parser.py tests/test_parser_markdown_it.py tests/test_parser_contract.py`
+  - Acceptance: no parser test asserts on the block `text` field; baselines stay green.
+  - Verification-surface change: authorized; migrates parser test assertions ahead of the parser change.
+  - Attempts: 1
+  - Attempt 1 (2026-08-22): Checker PASS; scope exactly the 3 named test files (+21/−17, all 16 HEAD `.text` block-field reads migrated, zero residual `.text` in the files), both disclosed re-pins verbatim with comments (heading `"结果 [@k1] 见 fig:x"` via CrossReference fallback None→target; footnote `"第一行。第二行续行。"` with no SoftBreak), no fixture string/test name/docstring touched, substring and list-equality pins otherwise preserved non-vacuously, exact Verify 82/82, ruff and `git diff --check` clean, baselines 81/81 (tests/core + test_compiler), independent probes green on both backends (heading/footnote/degraded-substring derivations plus no-`text`-kwarg forward simulation on Heading/Paragraph/ListBlock/FootnoteDefinition), full-suite HEAD-vs-candidate failure sets identical at 46 failed / 998 passed confined to the 7 known files; no push.
 
 - [V2-303A] Add typed block structures and the canonical plain-text derivation
   - Parent: ordered child 1/10 of `V2-303`; the parent behavior remains unchanged.
@@ -832,5 +833,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 - 2026-08-22 - Open refilled with V2-304 and V2-305 per the catalogue dependency order after V2-302E2 left one Open item; both model-replacement slices are expected to need re-slicing when their cycles arrive (consumer construction and test-construction sites exceed the two-file catalogue slices); no product code edited.
 - 2026-08-22 - V2-303 split into ten ordered children V2-303A…J after investigation showed removing the duplicated block text fields atomically spans model.py + both parsers + compiler + preview/runtime projections + six test files; the ordered path migrates test pins to derived text first (green both ways), enriches compiler fixtures with parser-shaped inlines before the compiler derivation flip, drops text= kwargs before the field removal, and removes the dead _fallback_text_runs in V2-303E; no product code edited in the split cycle.
 - 2026-08-22 - V2-303A Checker PASS; scope exactly 2 files (model.py +53/−0 pure addition, new tests/core/test_block_model.py), exact Verify 20/20, baselines 163/163, ruff/diff-check clean, independent probes green (defaults/slots, recursive BulletList→ListItem.children→OrderedList read-back, every inline_plain_text clause incl. TypeError on unknown Inline, non-mutation), full-suite HEAD-vs-candidate failure sets identical at 46 failed / 998 passed confined to the 7 known files; no push.
+- 2026-08-22 - V2-303B Checker PASS; diff exactly the 3 named test files (+21/−17, 16/16 HEAD `.text` pins migrated to inline_plain_text, zero residual `.text`), both disclosed re-pins verbatim with comments, exact Verify 82/82, ruff/diff-check clean, baselines 81/81, both-backend probes green incl. no-`text`-kwarg forward simulation, full-suite failure sets identical HEAD vs candidate at 46/998 confined to the 7 known files; no push.
 
 ## Sync log

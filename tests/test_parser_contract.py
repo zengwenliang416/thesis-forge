@@ -26,6 +26,7 @@ from thesis_forge.core.model import (
     Strong,
     Table,
     Text,
+    inline_plain_text,
 )
 from thesis_forge.core.parser import ParseError, parse_markdown_text
 
@@ -119,7 +120,8 @@ def test_contract_heading_inline_extraction():
 
     heading = doc.blocks[0]
     assert isinstance(heading, Heading)
-    assert heading.text == "结果 [@k1] 见 @fig:x"
+    # derived text: CrossReference fallback is None → target
+    assert inline_plain_text(heading.inlines) == "结果 [@k1] 见 fig:x"
     assert [type(item) for item in heading.inlines] == [
         Text,
         Citation,
@@ -215,7 +217,7 @@ def test_contract_unordered_list_levels_and_markers():
     assert isinstance(block, ListBlock)
     assert block.ordered is False
     assert block.start is None
-    assert [(item.level, item.marker, item.ordinal, item.text) for item in block.items] == [
+    assert [(item.level, item.marker, item.ordinal, inline_plain_text(item.inlines)) for item in block.items] == [
         (0, "-", None, "第一项"),
         (1, "-", None, "第二级项目"),
     ]
@@ -230,7 +232,7 @@ def test_contract_ordered_list_start_number():
     assert block.ordered is True
     assert block.start == 3
     assert [item.ordinal for item in block.items] == [3, 4]
-    assert [item.text for item in block.items] == ["从 3 开始", "下一项"]
+    assert [inline_plain_text(item.inlines) for item in block.items] == ["从 3 开始", "下一项"]
 
 
 def test_contract_list_item_inline_extraction():
@@ -263,9 +265,9 @@ def test_contract_mixed_markers_truncate_list_block():
     assert isinstance(ordered, ListBlock) and isinstance(unordered, ListBlock)
     assert ordered.ordered is True
     assert ordered.start == 1
-    assert [item.text for item in ordered.items] == ["有序一", "有序二"]
+    assert [inline_plain_text(item.inlines) for item in ordered.items] == ["有序一", "有序二"]
     assert unordered.ordered is False
-    assert [item.text for item in unordered.items] == ["无序一"]
+    assert [inline_plain_text(item.inlines) for item in unordered.items] == ["无序一"]
 
 
 # ---------------------------------------------------------------------------
@@ -428,7 +430,8 @@ def test_contract_footnote_definition_and_continuation():
     definition = doc.blocks[1]
     assert isinstance(definition, FootnoteDefinition)
     assert definition.label == "note"
-    assert definition.text == "第一行。\n第二行续行。"
+    # derived text: continuation lines carry no SoftBreak yet
+    assert inline_plain_text(definition.inlines) == "第一行。第二行续行。"
     assert definition.location.line == 3
 
 
@@ -463,8 +466,8 @@ def test_contract_unknown_container_silently_degrades_to_paragraph():
     assert [type(block) for block in doc.blocks] == [Paragraph]
     paragraph = doc.blocks[0]
     assert isinstance(paragraph, Paragraph)
-    assert "::: unknown {#x}" in paragraph.text
-    assert "内容" in paragraph.text
+    assert "::: unknown {#x}" in inline_plain_text(paragraph.inlines)
+    assert "内容" in inline_plain_text(paragraph.inlines)
     assert all(isinstance(inline, Text) for inline in paragraph.inlines)
 
 
@@ -476,9 +479,9 @@ def test_contract_unsupported_constructs_degrade_to_paragraph():
     assert [type(block) for block in doc.blocks] == [Paragraph]
     paragraph = doc.blocks[0]
     assert isinstance(paragraph, Paragraph)
-    assert "粗体" in paragraph.text
-    assert "[链接](https://example.com)" in paragraph.text
-    assert "![图片](./a.png)" in paragraph.text
+    assert "粗体" in inline_plain_text(paragraph.inlines)
+    assert "[链接](https://example.com)" in inline_plain_text(paragraph.inlines)
+    assert "![图片](./a.png)" in inline_plain_text(paragraph.inlines)
     assert any(
         isinstance(inline, Strong)
         and [type(child) for child in inline.children] == [Text]
@@ -509,8 +512,8 @@ def test_contract_top_level_fenced_code_degrades_to_paragraph():
     assert [type(block) for block in doc.blocks] == [Paragraph]
     paragraph = doc.blocks[0]
     assert isinstance(paragraph, Paragraph)
-    assert paragraph.text.startswith("```python")
-    assert "def f():" in paragraph.text
+    assert inline_plain_text(paragraph.inlines).startswith("```python")
+    assert "def f():" in inline_plain_text(paragraph.inlines)
     assert all(isinstance(inline, Text) for inline in paragraph.inlines)
 
 

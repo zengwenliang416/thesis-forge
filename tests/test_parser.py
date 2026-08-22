@@ -18,6 +18,7 @@ from thesis_forge.core.model import (
     Paragraph,
     Table,
     Text,
+    inline_plain_text,
 )
 from thesis_forge.core.parser import ParseError, parse_markdown, parse_markdown_text
 
@@ -66,7 +67,7 @@ def test_parse_markdown_text_preserves_the_logical_source_path(tmp_path: Path):
 
     assert doc.source_path == source.resolve()
     assert any(
-        isinstance(block, Heading) and block.text == "编辑器新标题"
+        isinstance(block, Heading) and inline_plain_text(block.inlines) == "编辑器新标题"
         for block in doc.blocks
     )
 
@@ -171,7 +172,7 @@ def predict(x):
     unordered = doc.blocks[2]
     assert isinstance(unordered, ListBlock)
     assert unordered.ordered is False
-    assert [(item.level, item.text) for item in unordered.items] == [
+    assert [(item.level, inline_plain_text(item.inlines)) for item in unordered.items] == [
         (0, "无序一"),
         (1, "无序二"),
     ]
