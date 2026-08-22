@@ -8,7 +8,7 @@ from typing import Protocol
 
 from thesis_forge.core.compiler import compile_document
 from thesis_forge.core.model import ThesisDocument, ValidationIssue
-from thesis_forge.core.parser_backend import LegacyParserBackend, ParserBackend
+from thesis_forge.core.parser_backend import ParserBackend, create_parser_backend
 from thesis_forge.core.render_plan import RenderPlan
 from thesis_forge.core.validator import ValidationContext, validate_document
 from thesis_forge.project.loader import LoadedProject, load_project
@@ -196,9 +196,9 @@ def _create_validation_context(
 
 @dataclass(frozen=True, slots=True)
 class ApplicationDependencies:
-    # 解析默认经 ParserBackend（ADR-0001，默认 legacy）；parser/snapshot_parser
-    # 保留为细粒度覆盖通道，为 None 时回落到 parser_backend 的对应方法。
-    parser_backend: ParserBackend = field(default_factory=LegacyParserBackend)
+    # 解析默认经 canonical v2 ParserBackend；parser/snapshot_parser 保留为
+    # 细粒度覆盖通道，为 None 时回落到 parser_backend 的对应方法。
+    parser_backend: ParserBackend = field(default_factory=create_parser_backend)
     parser: Parser | None = None
     snapshot_parser: SnapshotParser | None = None
     context_factory: ContextFactory = _create_validation_context

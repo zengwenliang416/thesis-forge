@@ -3,6 +3,7 @@ from __future__ import annotations
 import os
 import struct
 import subprocess
+import tempfile
 from dataclasses import replace
 from pathlib import Path
 from zipfile import ZIP_DEFLATED, ZIP_STORED, ZipFile
@@ -44,13 +45,37 @@ from thesis_forge.application.office_refresh import (
 )
 from thesis_forge.application.output import replace_output, temporary_output_path
 from thesis_forge.application.services import ProjectApplicationService
+from thesis_forge.core.parser_backend import create_parser_backend
+from thesis_forge.core.validator import ValidationContext
 from thesis_forge.renderers.docx.package import (
     DocxPackageValidationError,
     validate_docx_package,
 )
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
-EXAMPLE_SOURCE = PROJECT_ROOT / "examples" / "bachelor-thesis" / "thesis.md"
+_CANONICAL_TEMPLATE = PROJECT_ROOT / "templates" / "base" / "bachelor.yaml"
+_EXAMPLE_SOURCE_ROOT = tempfile.TemporaryDirectory(prefix="thesisforge-v2-")
+EXAMPLE_SOURCE = Path(_EXAMPLE_SOURCE_ROOT.name) / "thesis.md"
+EXAMPLE_SOURCE.write_text(
+    "# 绪论 {#chap:introduction}\n\n正文。\n",
+    encoding="utf-8",
+)
+
+
+def _canonical_context(document, template_path):
+    return ValidationContext.from_document(
+        document,
+        template_path=template_path or _CANONICAL_TEMPLATE,
+        required_metadata=(),
+    )
+
+
+def _canonical_dependencies(**overrides):
+    return ApplicationDependencies(
+        parser_backend=create_parser_backend(),
+        context_factory=_canonical_context,
+        **overrides,
+    )
 
 
 @pytest.fixture(autouse=True)
@@ -954,7 +979,7 @@ def test_build_service_refreshes_before_validation_and_atomic_replace(
     result = build_service(
         EXAMPLE_SOURCE,
         output,
-        dependencies=ApplicationDependencies(
+        dependencies=_canonical_dependencies(
             renderer=MinimalRenderer(),
             document_refresher=RecordingRefresher(),
             package_validator=recording_validator,
@@ -991,7 +1016,7 @@ def test_build_service_pdf_preview_failure_does_not_fail_published_docx(
     result = build_service(
         EXAMPLE_SOURCE,
         output,
-        dependencies=ApplicationDependencies(
+        dependencies=_canonical_dependencies(
             pdf_preview_exporter=PreviewMissExporter(),
         ),
     )
@@ -1007,7 +1032,7 @@ def test_build_service_allows_pdf_preview_export_to_be_disabled(tmp_path: Path):
     result = build_service(
         EXAMPLE_SOURCE,
         output,
-        dependencies=ApplicationDependencies(pdf_preview_exporter=None),
+        dependencies=_canonical_dependencies(pdf_preview_exporter=None),
     )
 
     assert result.final_preview is None
@@ -1045,7 +1070,7 @@ def test_build_service_restores_rendered_package_after_optional_refresh_failure(
     build_service(
         EXAMPLE_SOURCE,
         output,
-        dependencies=ApplicationDependencies(
+        dependencies=_canonical_dependencies(
             renderer=MinimalRenderer(),
             document_refresher=FailingRefresher(),
             package_validator=recording_validator,
@@ -1078,7 +1103,7 @@ def test_successful_refresh_with_corrupt_package_preserves_previous_output(
         build_service(
             EXAMPLE_SOURCE,
             output,
-            dependencies=ApplicationDependencies(
+            dependencies=_canonical_dependencies(
                 renderer=MinimalRenderer(),
                 document_refresher=CorruptingRefresher(),
             ),
@@ -1177,24 +1202,14 @@ def _semantic_snapshot(path: Path) -> tuple[object, ...]:
 
 def test_shared_services_reuse_one_application_boundary_without_output(tmp_path: Path):
     source = tmp_path / "thesis.md"
-    source.write_text(
-        """---
-thesis:
-  title: "共享服务"
-author:
-  name: "测试作者"
----
-
-# 绪论 {#chap:intro}
-""",
-        encoding="utf-8",
-    )
+    source.write_text("# 绪论 {#chap:intro}\n", encoding="utf-8")
     before = set(tmp_path.iterdir())
 
-    inspection = inspect_service(source)
+    inspection = inspect_service(source, dependencies=_canonical_dependencies())
     validation = validation_service(
         source,
         template_path=PROJECT_ROOT / "templates" / "base" / "bachelor.yaml",
+        dependencies=_canonical_dependencies(),
     )
 
     assert inspection.document.source_path == source.resolve()
@@ -1207,18 +1222,7 @@ author:
 def test_preview_service_compiles_without_renderer_or_output(tmp_path: Path):
     assert hasattr(application, "preview_service")
     source = tmp_path / "thesis.md"
-    source.write_text(
-        """---
-thesis:
-  title: "结构预览"
-author:
-  name: "测试作者"
----
-
-# 绪论 {#chap:intro}
-""",
-        encoding="utf-8",
-    )
+    source.write_text("# 绪论 {#chap:intro}\n", encoding="utf-8")
     calls: list[str] = []
 
     class UnexpectedRenderer:
@@ -1230,7 +1234,7 @@ author:
     result = application.preview_service(
         source,
         template_path=PROJECT_ROOT / "templates" / "base" / "bachelor.yaml",
-        dependencies=ApplicationDependencies(renderer=UnexpectedRenderer()),
+        dependencies=_canonical_dependencies(renderer=UnexpectedRenderer()),
     )
 
     assert result.document.source_path == source.resolve()
@@ -1253,7 +1257,7 @@ def test_preview_service_stops_before_compile_on_fatal_validation(tmp_path: Path
 
     result = application.preview_service(
         source,
-        dependencies=ApplicationDependencies(compiler=unexpected_compiler),
+        dependencies=_canonical_dependencies(compiler=unexpected_compiler),
     )
 
     assert result.errors
@@ -1264,18 +1268,7 @@ def test_preview_service_stops_before_compile_on_fatal_validation(tmp_path: Path
 def test_preview_service_normalizes_compile_failure(tmp_path: Path):
     assert hasattr(application, "preview_service")
     source = tmp_path / "thesis.md"
-    source.write_text(
-        """---
-thesis:
-  title: "结构预览"
-author:
-  name: "测试作者"
----
-
-# 绪论 {#chap:intro}
-""",
-        encoding="utf-8",
-    )
+    source.write_text("# 绪论 {#chap:intro}\n", encoding="utf-8")
 
     def failing_compiler(*_args, **_kwargs):
         raise RuntimeError("preview compile exploded")
@@ -1284,7 +1277,7 @@ author:
         application.preview_service(
             source,
             template_path=PROJECT_ROOT / "templates" / "base" / "bachelor.yaml",
-            dependencies=ApplicationDependencies(compiler=failing_compiler),
+            dependencies=_canonical_dependencies(compiler=failing_compiler),
         )
 
     assert captured.value.stage is BuildStage.COMPILE
@@ -1295,7 +1288,12 @@ def test_build_service_reports_progress_and_atomically_replaces_target(tmp_path:
     output = tmp_path / "nested" / "thesis.docx"
     stages: list[BuildStage] = []
 
-    result = build_service(EXAMPLE_SOURCE, output, on_progress=stages.append)
+    result = build_service(
+        EXAMPLE_SOURCE,
+        output,
+        on_progress=stages.append,
+        dependencies=_canonical_dependencies(),
+    )
 
     assert result.output_path == output
     assert output.is_file()
@@ -1350,7 +1348,7 @@ def test_build_cancellation_at_every_boundary_preserves_previous_output(
             EXAMPLE_SOURCE,
             output,
             should_cancel=should_cancel,
-            dependencies=ApplicationDependencies(
+            dependencies=_canonical_dependencies(
                 renderer=MinimalRenderer(),
                 replace_file=replace_file,
             ),
@@ -1372,7 +1370,12 @@ def test_progress_callback_failure_preserves_previous_output(tmp_path: Path):
             raise RuntimeError("progress consumer failed")
 
     with pytest.raises(ApplicationStageError) as captured:
-        build_service(EXAMPLE_SOURCE, output, on_progress=failing_callback)
+        build_service(
+            EXAMPLE_SOURCE,
+            output,
+            on_progress=failing_callback,
+            dependencies=_canonical_dependencies(),
+        )
 
     assert captured.value.stage is BuildStage.RENDER
     assert str(captured.value) == "progress consumer failed"
@@ -1396,7 +1399,7 @@ def test_fatal_validation_stops_before_compile_render_or_output(tmp_path: Path):
             calls.append("render")
             raise AssertionError("renderer must not run")
 
-    dependencies = ApplicationDependencies(
+    dependencies = _canonical_dependencies(
         compiler=unexpected_compiler,
         renderer=UnexpectedRenderer(),
     )
@@ -1478,7 +1481,7 @@ def test_failed_rebuild_preserves_old_output_and_cleans_temporary_files(
     output = tmp_path / "thesis.docx"
     old_bytes = b"previous-valid-output"
     output.write_bytes(old_bytes)
-    dependencies = dependencies_factory(ApplicationDependencies())
+    dependencies = dependencies_factory(_canonical_dependencies())
 
     with pytest.raises(ApplicationStageError) as captured:
         build_service(EXAMPLE_SOURCE, output, dependencies=dependencies)
@@ -1499,7 +1502,7 @@ def test_renderer_receives_unique_temporary_path_in_target_directory(tmp_path: P
             _write_minimal_package(temporary)
             return temporary
 
-    dependencies = ApplicationDependencies(renderer=RecordingRenderer())
+    dependencies = _canonical_dependencies(renderer=RecordingRenderer())
 
     build_service(EXAMPLE_SOURCE, output, dependencies=dependencies)
 
@@ -1643,8 +1646,9 @@ def test_repeated_builds_have_equivalent_numbering_reference_and_field_semantics
     first = tmp_path / "first.docx"
     second = tmp_path / "second.docx"
 
-    build_service(EXAMPLE_SOURCE, first)
-    build_service(EXAMPLE_SOURCE, second)
+    dependencies = _canonical_dependencies()
+    build_service(EXAMPLE_SOURCE, first, dependencies=dependencies)
+    build_service(EXAMPLE_SOURCE, second, dependencies=dependencies)
 
     assert _semantic_snapshot(first) == _semantic_snapshot(second)
 

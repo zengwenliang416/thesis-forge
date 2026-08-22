@@ -95,15 +95,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Open
 
-- [V2-319A2B] Route application dependencies through the canonical parser
-  - Parent: ordered child 2/2 of the re-sliced `V2-319A2`; depends on `V2-319A2A`; original `V2-319A2` Behavior and Acceptance remain unchanged.
-  - Files: `src/thesis_forge/application/services.py`, `tests/test_application_services.py`
-  - Behavior: make `ApplicationDependencies` use the canonical parser factory by default and align application-service coverage with the v2 source contract.
-  - Verify: `.venv/bin/python -m pytest tests/test_application_services.py`
-  - Acceptance: the default application path uses the canonical v2 parser seam and the full application-service regression remains green.
-  - Verification-surface change: no.
-  - Attempts: 0
-
 - [V2-319B] Remove parser-name switching from the QA diff tool
   - Parent: ordered child 2/4 of the re-sliced `V2-319`; depends on `V2-319A2B`; parent Behavior and Acceptance remain unchanged.
   - Files: `qa/tools/parser_diff.py`, `tests/test_parser_backend.py`, `tests/test_parser_markdown_it.py`
@@ -132,6 +123,16 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
   - Attempts: 0
 
 ## Done
+
+- [V2-319A2B] Route application dependencies through the canonical parser
+  - Parent: ordered child 2/2 of the re-sliced `V2-319A2`; depends on `V2-319A2A`; original `V2-319A2` Behavior and Acceptance remain unchanged.
+  - Files: `src/thesis_forge/application/services.py`, `tests/test_application_services.py`
+  - Behavior: make `ApplicationDependencies` use the canonical parser factory by default and align application-service coverage with the v2 source contract.
+  - Verify: `.venv/bin/python -m pytest tests/test_application_services.py`
+  - Acceptance: the default application path uses the canonical v2 parser seam and the full application-service regression remains green.
+  - Verification-surface change: no.
+  - Attempts: 1
+  - Attempt 1 (2026-08-22): Checker PASS; exact Verify passed 77/77; related regression `.venv/bin/python -m pytest tests/application/test_project_services.py tests/test_application_services.py tests/test_adapters.py` passed 115/115; `.venv/bin/ruff check src/thesis_forge/application/services.py tests/test_application_services.py`, `git diff --check`, and `./lint-loop.sh` passed (`LOOP-LINT: PASS — open=4 done=107 blocked=0`). Runtime probe confirmed `ApplicationDependencies().parser_backend` is `MarkdownItParserBackend` from `thesis_forge.core.parser_markdown_it`, and its dataclass default factory is `create_parser_backend`; static scope review found no `LegacyParserBackend` import, fallback, selector, or compatibility branch in the candidate files. Candidate and clean-HEAD `tests/test_acceptance.py` runs both produced 2 passed/6 failed with the identical six failure nodes: `test_complete_example_inventory_and_offline_inspect_are_read_only`, `test_complete_example_validates_and_builds_offline_without_mutating_inputs`, `test_complete_example_docx_contains_required_visible_content_and_word_objects`, `test_complete_example_repeated_builds_have_identical_plan_and_word_ooxml`, `test_complete_example_two_templates_change_style_not_semantics`, and `test_same_list_markdown_uses_hut_and_default_template_policies_offline`; these are old YAML/project-entry fixtures outside this item. Candidate `tests/test_lo_finalizer.py` was 8 passed/5 errors versus clean HEAD 13 passed; all five candidate-only errors are the same old `examples/complete-thesis/thesis.md` YAML Front Matter fixture and remain out of scope. Candidate scope was exactly the two named files before the LOOP update; `openspec/.specnav/change-registry.json` was preserved and uncommitted; no push.
 
 - [V2-319A2A] Rebase adapter and acceptance fixtures on the canonical parser seam
   - Parent: ordered preparation child 1/2 of the re-sliced `V2-319A2`; preserves the original `V2-319A2` Behavior and Acceptance for the dependent child.
@@ -1464,5 +1465,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 - 2026-08-22 - V2-319A1 Checker PASS Attempt 1; exact Verify 3/3, related parser/backend/contract regression 76/76, target Ruff, `git diff --check`, and LOOP-LINT passed; parameterless canonical factory/type and non-empty v2 parse coverage were confirmed, registry preserved and unstaged, one local commit and no push.
 - 2026-08-22 - V2-319A2 split into ordered children V2-319A2A and V2-319A2B after the candidate passed its 78-test application-service Verify but introduced 7 new adapter failures and 1 new acceptance failure when compared with clean HEAD; candidate product/test changes were restored, and the prep child will rebase those fixtures before the canonical application default flips.
 - 2026-08-22 - V2-319A2A Checker PASS Attempt 1; exact Verify 12/12, full adapter/application regressions 33/33 and 115/115, target Ruff, diff-check, LOOP-LINT, canonical seam probes, and selected canonical-default simulation passed; candidate/clean-HEAD acceptance failure sets matched at the same six baseline nodes, registry preserved, one local commit and no push.
+- 2026-08-22 - V2-319A2B Checker PASS Attempt 1; exact Verify 77/77, related application/project/adapter regression 115/115, target Ruff, `git diff --check`, and LOOP-LINT passed; runtime confirmed the default `ApplicationDependencies` parser is `MarkdownItParserBackend` through `create_parser_backend`, candidate/clean-HEAD acceptance failure sets were identical at the same six old-fixture nodes, and the five candidate-only `lo_finalizer` errors were isolated to the known YAML Front Matter fixture; scope was the two named candidate files plus this LOOP lifecycle update, registry preserved and uncommitted, one local commit and no push.
 
 ## Sync log
