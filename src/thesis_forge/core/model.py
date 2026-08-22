@@ -54,8 +54,41 @@ class CodeSpan(Inline):
 
 
 @dataclass(slots=True)
+class SoftBreak(Inline):
+    pass
+
+
+@dataclass(slots=True)
+class HardBreak(Inline):
+    pass
+
+
+@dataclass(slots=True)
+class Emphasis(Inline):
+    children: tuple[Inline, ...] = ()
+
+
+@dataclass(slots=True)
+class Link(Inline):
+    label: str = ""
+    destination: str = ""
+
+
+@dataclass(slots=True)
+class InlineMath(Inline):
+    latex: str = ""
+
+
+@dataclass(slots=True)
+class InlineCode(Inline):
+    value: str = ""
+
+
+@dataclass(slots=True)
 class CrossReference(Inline):
     target: str = ""
+    fallback: str | None = None
+    display_mode: str | None = None
 
 
 @dataclass(slots=True)

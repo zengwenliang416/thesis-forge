@@ -95,15 +95,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Open
 
-- [V2-302A] Introduce the recursive inline type set
-  - Parent: ordered child 1/5 of `V2-302`; the parent behavior remains unchanged.
-  - Files: `src/thesis_forge/core/model.py`, `tests/core/test_inline_model.py`
-  - Behavior: add SoftBreak, HardBreak, Emphasis(children), Link(label, destination), InlineMath, InlineCode leaf and CrossReference fallback/display_mode optional fields; containers own `tuple[Inline, ...]` children with no duplicate plain-text field.
-  - Verify: `.venv/bin/python -m pytest tests/core/test_inline_model.py`
-  - Acceptance: every new type constructs with defaults and inherits node_id/origin; pure addition keeps existing parser/compiler baselines green.
-  - Verification-surface change: authorized; creates focused inline-model tests.
-  - Attempts: 0
-
 - [V2-302B] Unify markdown-it inline construction onto the shared scanner
   - Parent: ordered child 2/5 of `V2-302`; depends on `V2-302A`.
   - Files: `src/thesis_forge/core/parser_markdown_it.py`
@@ -149,6 +140,16 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
   - Attempts: 0
 
 ## Done
+
+- [V2-302A] Introduce the recursive inline type set
+  - Parent: ordered child 1/5 of `V2-302`; the parent behavior remains unchanged.
+  - Files: `src/thesis_forge/core/model.py`, `tests/core/test_inline_model.py`
+  - Behavior: add SoftBreak, HardBreak, Emphasis(children), Link(label, destination), InlineMath, InlineCode leaf and CrossReference fallback/display_mode optional fields; containers own `tuple[Inline, ...]` children with no duplicate plain-text field.
+  - Verify: `.venv/bin/python -m pytest tests/core/test_inline_model.py`
+  - Acceptance: every new type constructs with defaults and inherits node_id/origin; pure addition keeps existing parser/compiler baselines green.
+  - Verification-surface change: authorized; creates focused inline-model tests.
+  - Attempts: 1
+  - Attempt 1 (2026-08-22): Checker PASS; scope exactly the 2 named files with a purely additive 33-insertion diff (six new slotted dataclasses between CodeSpan and CrossReference, Emphasis `tuple[Inline, ...]` children with no plain-text field, fallback/display_mode appended after target, no exports or wiring), exact Verify 12/12 passed, baselines 146 passed / 0 failed, ruff and `git diff --check` clean, independent probes confirmed defaults/unique node_id/origin None/equality-excludes-node_id for all six types, nested Emphasis tuple structure with asdict recursion and `_jsonable` node_id exclusion, and HEAD-vs-candidate CrossReference positional binding identical ("fig:a" binds to inherited location on both) with keyword fallback/display_mode round-trip, full suite 46 failed / 973 passed with failures confined to the 7 known pre-existing files; no push.
 
 - [V2-301B] Add NodeId and complete SourceSpan to the typed model
   - Parent: ordered child 2/2 of `V2-301`; depends on `V2-301A`.
@@ -695,5 +696,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 - 2026-08-22 - V2-301A Checker PASS; diff scoped to qa/tools/parser_diff.py with generic field.compare exclusion, exact Verify 48/48 green, HEAD-vs-worktree byte-parity probe diff empty, compare=False exclusion and semantic-detection probes green, full suite 46 failed / 950 passed matching the fresh baseline; no push.
 - 2026-08-22 - V2-301B Checker PASS; exact Verify 11/11 green, baselines 102 passed / 0 failed, 22 independent probes confirmed identity/span/GeneratedOrigin semantics plus `_jsonable` node_id exclusion and parsed-node identity, full-suite failure sets identical HEAD vs candidate (46 → 46, +11 passed); no push.
 - 2026-08-22 - V2-302 split into five ordered children V2-302A…E after investigation showed the Strong(children) shape change and CodeSpan→InlineCode rename atomically span model.py + both parser backends + compiler.py + test_parser_contract.py (5 files); V2-302A adds the new recursive types additively, V2-302B unifies markdown-it inline construction onto the shared byte-equivalent `_parse_inline_content` scanner so each flip fits three files, V2-302C/V2-302D flip InlineCode emission and Strong recursion, V2-302E retires CodeSpan and re-pins the Strong contract (the Strong contract assertion goes shape-neutral in V2-302C as disclosed ordered preparation); no product code edited in the split cycle.
+- 2026-08-22 - V2-302A Checker PASS; purely additive model.py diff (6 new inline types + CrossReference fallback/display_mode), Verify 12/12, baselines 146/146, probes confirmed identity semantics + HEAD-identical positional binding, full suite 46/973 confined to the 7 known files; no push.
 
 ## Sync log
