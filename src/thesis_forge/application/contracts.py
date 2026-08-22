@@ -138,6 +138,7 @@ class BuildLogLevel(StrEnum):
 
 
 BuildDetailValue = str | int | float | bool | None
+_DUPLICATE_ID_CODE = "TF-SEMANTIC-DUPLICATE-ID"
 
 
 @dataclass(frozen=True, slots=True)
@@ -183,6 +184,64 @@ class BuildSourceRange:
     @property
     def line(self) -> int | None:
         return self.start_line
+
+
+def _source_range_from_issue_details(
+    details: Mapping[str, BuildDetailValue],
+    *,
+    prefix: str,
+    fallback_file: str | None,
+    fallback_line: int | None,
+    force: bool = False,
+) -> BuildSourceRange | None:
+    location_keys = (
+        f"{prefix}_file",
+        f"{prefix}_line",
+        f"{prefix}_column",
+        f"{prefix}_end_line",
+        f"{prefix}_end_column",
+    )
+    has_location = any(details.get(key) is not None for key in location_keys)
+    if not force and not has_location and fallback_file is None and fallback_line is None:
+        return None
+
+    file_name = details.get(f"{prefix}_file")
+    start_line = details.get(f"{prefix}_line")
+    start_column = details.get(f"{prefix}_column")
+    end_line = details.get(f"{prefix}_end_line")
+    end_column = details.get(f"{prefix}_end_column")
+
+    if file_name is None:
+        file_name = fallback_file
+    if start_line is None:
+        start_line = fallback_line
+
+    # BuildSourceRange intentionally rejects orphaned coordinates. Location
+    # details originate in a permissive core model, so drop unusable suffixes.
+    if start_line is None:
+        start_column = None
+        end_line = None
+        end_column = None
+    elif end_line is None:
+        end_line = start_line
+    elif end_line < start_line:
+        end_line = None
+        end_column = None
+    elif (
+        end_line == start_line
+        and start_column is not None
+        and end_column is not None
+        and end_column < start_column
+    ):
+        end_column = None
+
+    return BuildSourceRange(
+        file=file_name,
+        start_line=start_line,
+        start_column=start_column,
+        end_line=end_line,
+        end_column=end_column,
+    )
 
 
 @dataclass(frozen=True, slots=True)
@@ -282,25 +341,56 @@ class BuildDiagnostic:
     ) -> BuildDiagnostic:
         if sequence < 1:
             raise ValueError("diagnostic sequence must be positive")
-        source = (
-            BuildSourceRange(
-                file=source_file,
-                start_line=issue.line,
-                end_line=issue.line,
+        is_duplicate = issue.code == "duplicate-id"
+        details = dict(issue.details)
+        if is_duplicate:
+            source = _source_range_from_issue_details(
+                details,
+                prefix="source",
+                fallback_file=source_file,
+                fallback_line=issue.line,
+                force=True,
             )
-            if issue.line is not None
-            else None
-        )
+            related_source = _source_range_from_issue_details(
+                details,
+                prefix="related",
+                fallback_file=source_file,
+                fallback_line=None,
+                force=True,
+            )
+            related_locations = (
+                BuildRelatedLocation(
+                    message=str(
+                        details.get(
+                            "related_message",
+                            f"首次定义：{issue.target or ''}",
+                        )
+                    ),
+                    source=related_source,
+                ),
+            )
+        else:
+            source = (
+                BuildSourceRange(
+                    file=source_file,
+                    start_line=issue.line,
+                    end_line=issue.line,
+                )
+                if issue.line is not None
+                else None
+            )
+            related_locations = ()
         return cls(
             id=f"validation-{sequence}",
             severity=BuildDiagnosticSeverity(issue.severity),
             category=BuildDiagnosticCategory.SEMANTIC,
-            code=issue.code,
+            code=_DUPLICATE_ID_CODE if is_duplicate else issue.code,
             stage=BuildReportStage.VALIDATE,
             message=issue.message,
             source=source,
             target=issue.target,
-            details=dict(issue.details),
+            related_locations=related_locations,
+            details=details,
         )
 
 

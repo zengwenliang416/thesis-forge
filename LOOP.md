@@ -95,14 +95,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Open
 
-- [V2-309C] Emit canonical duplicate diagnostics from validation
-  - Files: `src/thesis_forge/core/validator.py`, `src/thesis_forge/application/contracts.py`, `tests/test_validator.py`
-  - Behavior: validate_document bridges duplicate-ID findings from the derived index into the canonical application diagnostic contract, preserving order, locations and structured details.
-  - Verify: `.venv/bin/python -m pytest tests/test_validator.py`
-  - Acceptance: duplicate IDs are no longer production-only unlocated ValidationIssue values; the BuildReport boundary receives stable code/category/stage/source/related fields without a parallel diagnostic model.
-  - Verification-surface change: authorized; extends validator diagnostic coverage.
-  - Attempts: 0
-
 - [V2-310] New markdown-it configuration
   - Files: `src/thesis_forge/core/parser_markdown_it.py`, `tests/core/test_markdown_v2_parser_config.py`
   - Behavior: enable required CommonMark/GFM rules and remove legacy semantic equivalence configuration.
@@ -120,6 +112,15 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
   - Attempts: 0
 
 ## Done
+
+- [V2-309C] Emit canonical duplicate diagnostics from validation
+  - Files: `src/thesis_forge/core/validator.py`, `src/thesis_forge/application/contracts.py`, `tests/test_validator.py`
+  - Behavior: validate_document bridges duplicate-ID findings from the derived index into the canonical application diagnostic contract, preserving order, locations and structured details.
+  - Verify: `.venv/bin/python -m pytest tests/test_validator.py`
+  - Acceptance: duplicate IDs are no longer production-only unlocated ValidationIssue values; the BuildReport boundary receives stable code/category/stage/source/related fields without a parallel diagnostic model.
+  - Verification-surface change: authorized; extends validator diagnostic coverage.
+  - Attempts: 1
+  - Attempt 1 (2026-08-22): Checker PASS; exact Verify 17/17, target Ruff, `git diff --check`, core/application/adapter regression 54/54, application/CLI/E2E regression 84/84, and independent coordinate/order/legacy probes passed; DocumentIndex nested conflicts bridge to duplicate-id issues with source/related details, canonical `TF-SEMANTIC-DUPLICATE-ID`/semantic/validate fields, unique validation IDs, and source-file-only ranges; diff limited to the three named files, while the pre-existing `change-registry.json` timestamp change was preserved; no push.
 
 - [V2-309B] Make diagnostic presentation headless-safe
   - Files: `src/thesis_forge/presentation/diagnostics.py`, `src/thesis_forge/ui/__init__.py`, `tests/core/test_diagnostics.py`
@@ -1276,5 +1277,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 - 2026-08-22 - V2-308 split into ordered children V2-308A and V2-308B before any product edit after inspection found tests/core/test_manifest_resource_validation.py constructs three cache-only citations that would break the validator flip (a third file beyond the item's named two); A migrates the fixtures to real Paragraph inline citations (green both ways), B carries the validator flip; no product code edited in the split cycle.
 - 2026-08-22 - V2-307D1 Checker FAIL Attempt 1 then re-sliced into ordered children V2-307D1a…D1e after independent Checker grep found 20 cache-pin sites (18 in test_parser_contract.py) and completing them exposed typed-model defects the cache masked: caption inline locations carry the container start line in both backends, table-cell inline locations are misaligned by the metadata/blank rows, and algorithm-body citations exist only in the cache (Algorithm.body is verbatim-only); children fix caption/cell locations, add typed Algorithm body_lines to the model and both parsers, extend index traversal, then finish the pin migration; three test files restored, no product code edited in the split cycle.
 - 2026-08-22 - V2-307 split into eight ordered children V2-307A…G after grep mapping showed removing the four cache fields atomically spans model.py + both parsers (12 registration call sites) + compiler.py + validator.py + cli.py + qa/tools/parser_diff.py plus seven test files; children migrate readers first (compiler/CLI/parity-tool/test pins, with V2-308 landing between D2 and E), then stop registration per parser, then remove the fields; no product code edited in the split cycle.
+- 2026-08-22 - V2-309C Checker PASS; exact Verify 17/17, target Ruff, `git diff --check`, core/application/adapter regression 54/54, application/CLI/E2E regression 84/84, and independent coordinate/order/legacy probes passed; LOOP.md pre-check found V2-309C, V2-310 and V2-311 Open, so only V2-309C moved to Done; the pre-existing `change-registry.json` change was preserved; no push.
 
 ## Sync log

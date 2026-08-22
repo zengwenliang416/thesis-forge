@@ -1,6 +1,20 @@
 from pathlib import Path
 
-from thesis_forge.core.model import ValidationIssue
+from thesis_forge.application.contracts import (
+    BuildDiagnosticCategory,
+    BuildIntent,
+    BuildReportStage,
+    BuildSourceRange,
+    BuildValidationError,
+)
+from thesis_forge.core.model import (
+    BlockQuote,
+    Heading,
+    SourceLocation,
+    Text,
+    ThesisDocument,
+    ValidationIssue,
+)
 from thesis_forge.core.parser import parse_markdown
 from thesis_forge.core.validator import ValidationContext, validate_document
 from thesis_forge.templates import load_template
@@ -18,6 +32,137 @@ def test_duplicate_id(tmp_path: Path):
     source.write_text("# 第一章 {#chap:x}\n\n# 第二章 {#chap:x}\n", encoding="utf-8")
     issues = validate_document(parse_markdown(source))
     assert any(x.code == "duplicate-id" for x in issues)
+
+
+def test_duplicate_id_validation_uses_nested_document_index(tmp_path: Path):
+    first = Heading(
+        id="sec:duplicate",
+        level=1,
+        inlines=[Text(value="第一处")],
+        location=SourceLocation(
+            line=3,
+            column=1,
+            end_line=3,
+            end_column=5,
+            source_file="thesis.md",
+        ),
+    )
+    nested_duplicate = Heading(
+        id="sec:duplicate",
+        level=2,
+        inlines=[Text(value="第二处")],
+        location=SourceLocation(
+            line=9,
+            column=2,
+            end_line=9,
+            end_column=6,
+            source_file="thesis.md",
+        ),
+    )
+    document = ThesisDocument(
+        source_path=tmp_path / "thesis.md",
+        blocks=[first, BlockQuote(children=(nested_duplicate,))],
+    )
+
+    duplicate_issues = [
+        issue for issue in validate_document(document) if issue.code == "duplicate-id"
+    ]
+
+    assert len(duplicate_issues) == 1
+    assert duplicate_issues[0].line == 9
+    assert duplicate_issues[0].target == "sec:duplicate"
+    assert duplicate_issues[0].details == {
+        "object_id": "sec:duplicate",
+        "related_message": "首次定义：sec:duplicate",
+        "source_file": "thesis.md",
+        "source_line": 9,
+        "source_column": 2,
+        "source_end_line": 9,
+        "source_end_column": 6,
+        "related_file": "thesis.md",
+        "related_line": 3,
+        "related_column": 1,
+        "related_end_line": 3,
+        "related_end_column": 5,
+    }
+
+
+def test_duplicate_id_build_report_preserves_canonical_locations(tmp_path: Path):
+    source = tmp_path / "thesis.md"
+    source.write_text(
+        "# 第一章 {#chap:x}\n\n# 第二章 {#chap:x}\n",
+        encoding="utf-8",
+    )
+    issues = tuple(
+        issue
+        for issue in validate_document(parse_markdown(source))
+        if issue.code == "duplicate-id"
+    )
+
+    report = BuildValidationError(issues).to_report(
+        build_id="build-duplicate",
+        intent=BuildIntent.PUBLISH,
+        source_file="thesis.md",
+    )
+
+    assert len(report.diagnostics) == 1
+    diagnostic = report.diagnostics[0]
+    assert diagnostic.id == "validation-1"
+    assert diagnostic.category is BuildDiagnosticCategory.SEMANTIC
+    assert diagnostic.code == "TF-SEMANTIC-DUPLICATE-ID"
+    assert diagnostic.stage is BuildReportStage.VALIDATE
+    assert diagnostic.source == BuildSourceRange(
+        file="thesis.md",
+        start_line=3,
+        end_line=3,
+    )
+    assert diagnostic.related_locations[0].source == BuildSourceRange(
+        file="thesis.md",
+        start_line=1,
+        end_line=1,
+    )
+    assert diagnostic.related_locations[0].message == "首次定义：chap:x"
+    assert diagnostic.details["object_id"] == "chap:x"
+    assert diagnostic.details["source_line"] == 3
+    assert diagnostic.details["related_line"] == 1
+
+
+def test_locationless_duplicate_build_report_keeps_unique_ids_and_file_ranges(
+    tmp_path: Path,
+):
+    document = ThesisDocument(
+        source_path=tmp_path / "thesis.md",
+        blocks=[
+            Heading(id="sec:duplicate"),
+            Heading(id="sec:duplicate"),
+            Heading(id="sec:duplicate"),
+        ],
+    )
+    issues = tuple(
+        issue
+        for issue in validate_document(document)
+        if issue.code == "duplicate-id"
+    )
+
+    report = BuildValidationError(issues).to_report(
+        build_id="build-locationless-duplicate",
+        intent=BuildIntent.LIVE_PREVIEW,
+        source_file="thesis.md",
+    )
+
+    assert [diagnostic.id for diagnostic in report.diagnostics] == [
+        "validation-1",
+        "validation-2",
+    ]
+    assert len({diagnostic.id for diagnostic in report.diagnostics}) == 2
+    assert all(
+        diagnostic.source == BuildSourceRange(file="thesis.md")
+        for diagnostic in report.diagnostics
+    )
+    assert all(
+        diagnostic.related_locations[0].source == BuildSourceRange(file="thesis.md")
+        for diagnostic in report.diagnostics
+    )
 
 
 def test_validation_context_can_replace_default_rules(tmp_path: Path):

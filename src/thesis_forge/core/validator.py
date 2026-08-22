@@ -249,11 +249,25 @@ def _validate_empty_document(
         )
 
 
+def _location_details(location: object, prefix: str) -> dict[str, str | int]:
+    details: dict[str, str | int] = {}
+    for detail_name, attribute in (
+        ("file", "source_file"),
+        ("line", "line"),
+        ("column", "column"),
+        ("end_line", "end_line"),
+        ("end_column", "end_column"),
+    ):
+        value = getattr(location, attribute, None)
+        if value is not None:
+            details[f"{prefix}_{detail_name}"] = value
+    return details
+
+
 def _validate_ids(
     document: ThesisDocument,
     _context: ValidationContext,
 ) -> Iterable[ValidationIssue]:
-    seen: dict[str, int | None] = {}
     for block in document.blocks:
         if not block.id:
             continue
@@ -273,16 +287,23 @@ def _validate_ids(
                 details={"expected": expected},
             )
 
-        if block.id in seen:
-            yield ValidationIssue(
-                code="duplicate-id",
-                severity="error",
-                message="Referencable object ID is duplicated",
-                line=block.location.line,
-                target=block.id,
-            )
-        else:
-            seen[block.id] = block.location.line
+    for conflict in DocumentIndex.from_document(document).id_conflicts:
+        duplicate = conflict.duplicate
+        object_id = conflict.object_id
+        details = {
+            "object_id": object_id,
+            "related_message": f"首次定义：{object_id}",
+        }
+        details.update(_location_details(duplicate.location, "source"))
+        details.update(_location_details(conflict.first.location, "related"))
+        yield ValidationIssue(
+            code="duplicate-id",
+            severity="error",
+            message="Referencable object ID is duplicated",
+            line=duplicate.location.line,
+            target=object_id,
+            details=details,
+        )
 
 
 def _validate_cross_references(
