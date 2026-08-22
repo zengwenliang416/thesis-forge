@@ -95,6 +95,8 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Open
 
+## Done
+
 - [V2-320C] Migrate the first canonical V2 test cluster off core.parser
   - Parent: ordered preparation child 3/3 of the re-sliced `V2-320`; depends on `V2-320A`; the original V2-320 Behavior and Acceptance remain unchanged across the children.
   - Files: `tests/core/test_legacy_source_rejection.py`, `tests/core/test_markdown_v2_inlines.py`, `tests/core/test_markdown_v2_figures.py`
@@ -102,9 +104,8 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
   - Verify: `.venv/bin/python -m pytest tests/core/test_legacy_source_rejection.py tests/core/test_markdown_v2_inlines.py tests/core/test_markdown_v2_figures.py`
   - Acceptance: the selected tests contain no `core.parser` import and remain green against the canonical markdown-it backend; no compatibility import is added.
   - Verification-surface change: no.
-  - Attempts: 0
-
-## Done
+  - Attempts: 1
+  - Attempt 1 (2026-08-22): Checker PASS; exact Verify passed 18/18; targeted Ruff, `git diff --check`, and `./lint-loop.sh` passed; candidate scope was exactly the three named test files with no production code, compatibility layer, or selector changes, the pre-existing `openspec/.specnav/change-registry.json` was preserved and uncommitted, one local commit, no push.
 
 - [V2-320B] Remove the legacy parser from the public core surface
   - Parent: ordered preparation child 2/3 of the re-sliced `V2-320`; depends on `V2-320A`; the original V2-320 Behavior and Acceptance remain unchanged across the children.
@@ -1529,5 +1530,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 - 2026-08-22 - V2-320 split into ordered children V2-320A through V2-320C after CodeGraph found that `parser_markdown_it.py` still imports eight shared primitives from `core.parser` and more than twenty tests/auxiliary tools import the legacy module; no product code edited in the refill cycle, next queue is V2-320A.
 - 2026-08-22 - V2-320A Checker PASS Attempt 1; exact Verify passed 73/73, targeted Ruff, `git diff --check`, final LOOP-LINT, and independent seam/parity/runtime probes passed; V2-320B and V2-320C remain Open, the pre-existing `change-registry.json` was preserved and uncommitted, and no push.
 - 2026-08-22 - V2-320B Checker PASS Attempt 1; exact Verify passed 2/2, related parser/backend regression 77/77, targeted Ruff, `git diff --check`, LOOP-LINT, independent AST/runtime boundary probes, and the 11-gap total-goal audit passed; V2-320C remains Open, the pre-existing `change-registry.json` was preserved and uncommitted, one local commit, no push.
+- 2026-08-22 - V2-320C Checker PASS Attempt 1; exact Verify passed 18/18, targeted Ruff, `git diff --check`, and LOOP-LINT passed; candidate scope was exactly the three named test files with no production code, compatibility layer, or selector changes, the pre-existing `change-registry.json` was preserved and uncommitted, one local commit, no push.
 
 ## Sync log

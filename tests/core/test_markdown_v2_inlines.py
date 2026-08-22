@@ -15,8 +15,8 @@ from thesis_forge.core.model import (
     Strong,
     Text,
 )
-from thesis_forge.core.parser import ParseError
 from thesis_forge.core.parser_markdown_it import MarkdownItParserBackend
+from thesis_forge.core.parser_support import ParseError
 
 
 def _paragraph(source: str) -> Paragraph:
@@ -139,6 +139,6 @@ def test_escaped_text_maps_to_source_without_parsing_escaped_dollar() -> None:
     assert paragraph.inlines[0].location.end_column == len(r"cost \$5 and ") + 1
 
 
-def test_unsupported_inline_token_fails_explicitly() -> None:
-    with pytest.raises(ParseError, match="行内 token: image"):
+def test_standard_image_without_id_fails_explicitly() -> None:
+    with pytest.raises(ParseError, match="标准图片必须独占一个段落并带有效的 fig ID"):
         _paragraph("![image](./image.png)\n")
