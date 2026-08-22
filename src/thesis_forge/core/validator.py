@@ -28,6 +28,7 @@ from thesis_forge.templates import (
 )
 
 from .ids import is_valid_stable_id
+from .index import DocumentIndex
 from .model import (
     Algorithm,
     Equation,
@@ -288,8 +289,9 @@ def _validate_cross_references(
     document: ThesisDocument,
     _context: ValidationContext,
 ) -> Iterable[ValidationIssue]:
-    index = document.index_by_id()
-    for reference in document.cross_references:
+    doc_index = DocumentIndex.from_document(document)
+    index = doc_index.by_id
+    for reference in doc_index.cross_references:
         if reference.target not in index:
             yield ValidationIssue(
                 code="missing-reference",
@@ -400,7 +402,8 @@ def _validate_bibliography(
         if bibliography_path is not None
         else None
     )
-    first_citation = document.citations[0] if document.citations else None
+    citations = DocumentIndex.from_document(document).citations
+    first_citation = citations[0] if citations else None
     if not bibliography_path:
         if first_citation is not None:
             yield ValidationIssue(
@@ -482,7 +485,7 @@ def _validate_bibliography(
         return
 
     context.bibliography_database = database
-    for citation in document.citations:
+    for citation in citations:
         for key in citation.keys:
             if key not in database.records:
                 yield ValidationIssue(
@@ -555,8 +558,9 @@ def _validate_template(
         elif isinstance(block, Equation) and template.equation is None:
             missing_styles.setdefault("equation", block.location.line)
 
-    if document.citations and template.citation is None:
-        missing_styles.setdefault("citation", document.citations[0].location.line)
+    citations = DocumentIndex.from_document(document).citations
+    if citations and template.citation is None:
+        missing_styles.setdefault("citation", citations[0].location.line)
 
     for target, line in missing_styles.items():
         yield ValidationIssue(
@@ -574,7 +578,7 @@ def _validate_layout_overrides(
 ) -> Iterable[ValidationIssue]:
     if not context.manifest_layout_objects:
         return
-    index = document.index_by_id()
+    index = DocumentIndex.from_document(document).by_id
     for object_id in sorted(context.manifest_layout_objects):
         block = index.get(object_id)
         if block is None:
