@@ -130,6 +130,18 @@ render:
         "ListBlock",
         "FootnoteDefinition",
     ]
+    assert [inline["kind"] for inline in payload["inline_content"]] == [
+        "Text",
+        "Text",
+        "CrossReference",
+        "Text",
+        "Citation",
+        "Text",
+        "Text",
+        "Text",
+        "FootnoteReference",
+        "Text",
+    ]
     assert payload["cross_references"][0]["target"] == "fig:model"
     assert payload["citations"][0]["keys"] == ["smith2025"]
     assert payload["footnote_references"][0]["label"] == "note"

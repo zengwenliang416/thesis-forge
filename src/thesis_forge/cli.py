@@ -26,6 +26,7 @@ from thesis_forge.application.contracts import (
     ProjectRequestIntent,
 )
 from thesis_forge.application.services import ProjectApplicationService
+from thesis_forge.core.index import DocumentIndex
 from thesis_forge.presentation import localized_issue_message
 from thesis_forge.project.loader import ProjectLoadError, load_project
 from thesis_forge.project.paths import ProjectPathError, resolve_project_paths
@@ -185,6 +186,7 @@ def inspect(source: Path) -> None:
         _report_project_error(error)
     except ApplicationStageError as error:
         _report_application_error(error, source=source)
+    index = DocumentIndex.from_document(doc)
     data = {
         "source": str(doc.source_path),
         "metadata": doc.metadata,
@@ -194,11 +196,11 @@ def inspect(source: Path) -> None:
         ],
         "inline_content": [
             {"kind": inline.__class__.__name__, **asdict(inline)}
-            for inline in doc.inline_content
+            for inline in index.inlines
         ],
-        "cross_references": [asdict(reference) for reference in doc.cross_references],
-        "citations": [asdict(citation) for citation in doc.citations],
-        "footnote_references": [asdict(reference) for reference in doc.footnote_references],
+        "cross_references": [asdict(reference) for reference in index.cross_references],
+        "citations": [asdict(citation) for citation in index.citations],
+        "footnote_references": [asdict(reference) for reference in index.footnote_references],
     }
     console.print_json(json.dumps(data, ensure_ascii=False, default=str))
 

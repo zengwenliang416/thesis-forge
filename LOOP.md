@@ -95,15 +95,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Open
 
-- [V2-307B] CLI inspect JSON derives semantic collections from the index
-  - Parent: ordered child 3/9 of `V2-307`; depends on `V2-307A`.
-  - Files: `src/thesis_forge/cli.py`, `tests/test_cli.py`
-  - Behavior: inspect's `inline_content`/`cross_references`/`citations`/`footnote_references` JSON entries are computed from DocumentIndex traversal.
-  - Verify: `.venv/bin/python -m pytest tests/test_cli.py tests/cli/`
-  - Acceptance: inspect JSON payloads stay shape- and value-identical on parser-shaped projects; no CLI read of the cache fields remains.
-  - Verification-surface change: authorized; migrates the inspect JSON pin.
-  - Attempts: 0
-
 - [V2-307C] QA parity tool derives normalized sequences from the index
   - Parent: ordered child 4/9 of `V2-307`; depends on `V2-307B`.
   - Files: `qa/tools/parser_diff.py`, `tests/test_parser_backend.py`
@@ -167,6 +158,16 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
   - Attempts: 0
 
 ## Done
+
+- [V2-307B] CLI inspect JSON derives semantic collections from the index
+  - Parent: ordered child 3/9 of `V2-307`; depends on `V2-307A2` (the split parent reference `V2-307A` was corrected when the parent split into A1/A2).
+  - Files: `src/thesis_forge/cli.py`, `tests/test_cli.py`
+  - Behavior: inspect's `inline_content`/`cross_references`/`citations`/`footnote_references` JSON entries are computed from DocumentIndex traversal.
+  - Verify: `.venv/bin/python -m pytest tests/test_cli.py tests/cli/`
+  - Acceptance: inspect JSON payloads stay shape- and value-identical on parser-shaped projects; no CLI read of the cache fields remains.
+  - Verification-surface change: authorized; migrates the inspect JSON pin.
+  - Attempts: 1
+  - Attempt 1 (2026-08-22): Checker PASS; cli.py diff is one sorted import plus index-derived reads of the four JSON entries, test_cli.py adds the full 10-kind inline_content sequence pin, exact Verify 23/23, broader cli/adapters baseline 48/48, Ruff and `git diff --check` clean, value-identity probe confirmed index-derived and cache-derived payloads are asdict-equal on the fixture, grep found no CLI cache-field read under any variable name; no push.
 
 - [V2-307A2] DocumentIndex gains the full inline sequence; compiler derives semantics from it
   - Parent: ordered child 2/9 of `V2-307`; depends on `V2-307A1`.
@@ -1137,6 +1138,7 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 - 2026-08-22 - V2-307A split into ordered children V2-307A1 and V2-307A2 after the exact Verify exposed tests/test_compiler.py's synthetic container-citation pin injecting a citation that exists only in the ThesisDocument.citations cache (a fourth file); A1 re-pins that test onto parsed figure-caption content (green before and after the flip), A2 carries the parked compiler/index flip (/tmp/v2-307a2.diff); no product code remains edited in the split cycle.
 - 2026-08-22 - V2-307A1 Checker PASS; container-citation pin re-based on parsed figure-caption content, exact Verify 24/24 (27/27 with the parked A2 flip), cache-only-citation survey clean; no push.
 - 2026-08-22 - V2-307A2 Checker PASS; compiler footnote/citation collection now derives from the DocumentIndex full inline sequence, exact Verify 39/39 and baselines 177/177, cache-clear compile equality and caption-citation probes green; no push.
+- 2026-08-22 - V2-307B Checker PASS; CLI inspect JSON now derives all four semantic collections from DocumentIndex with value-identical payloads, exact Verify 23/23 and cli/adapters baseline 48/48; no push.
 - 2026-08-22 - V2-307 split into eight ordered children V2-307A…G after grep mapping showed removing the four cache fields atomically spans model.py + both parsers (12 registration call sites) + compiler.py + validator.py + cli.py + qa/tools/parser_diff.py plus seven test files; children migrate readers first (compiler/CLI/parity-tool/test pins, with V2-308 landing between D2 and E), then stop registration per parser, then remove the fields; no product code edited in the split cycle.
 
 ## Sync log
