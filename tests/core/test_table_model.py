@@ -93,3 +93,11 @@ caption: "结果 [@table-source]"
     assert [cell.alignment for cell in table.rows[0].cells] == ["left", "right"]
     assert inline_plain_text(table.rows[1].cells[0].inlines) == "A [@cell-source]"
     assert inline_plain_text(table.rows[1].cells[1].inlines) == "0.91"
+
+
+def test_table_has_no_raw_caption_or_markdown_fields() -> None:
+    field_names = {field.name for field in dataclasses.fields(Table)}
+
+    assert "caption" not in field_names
+    assert "markdown" not in field_names
+    assert {"caption_inlines", "rows"} <= field_names

@@ -280,8 +280,6 @@ def _parse_container(kind: str, block_id: str | None, body: list[str], line: int
     if kind == "table":
         return Table(
             id=block_id,
-            caption=caption,
-            markdown=content,
             caption_inlines=tuple(_parse_inline_content(caption, line)),
             rows=table_rows,
             location=location,

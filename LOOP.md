@@ -95,15 +95,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Open
 
-- [V2-304E2B] Remove raw Table caption/markdown fields
-  - Parent: ordered child 7/7 of `V2-304`; depends on `V2-304E2A`.
-  - Files: `src/thesis_forge/core/model.py`, `src/thesis_forge/core/parser.py`, `tests/core/test_table_model.py`
-  - Behavior: Table owns only typed caption inlines and rows/cells; parser no longer stores pipe-delimited markdown on the model.
-  - Verify: `.venv/bin/python -m pytest tests/core/test_table_model.py tests/test_parser.py tests/test_parser_contract.py tests/test_compiler.py tests/test_docx_renderer.py`
-  - Acceptance: no Table `markdown` or raw caption source field remains; structured table behavior stays green end to end.
-  - Verification-surface change: authorized; finalizes the structured Table contract.
-  - Attempts: 0
-
 - [V2-305] Rich thesis object model
   - Files: `src/thesis_forge/core/model.py`, `tests/core/test_thesis_object_model.py`
   - Behavior: Figure, Listing and Algorithm own typed captions/content; Equation and Footnote have complete source identity.
@@ -113,6 +104,16 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
   - Attempts: 0
 
 ## Done
+
+- [V2-304E2B] Remove raw Table caption/markdown fields
+  - Parent: ordered child 7/7 of `V2-304`; depends on `V2-304E2A`.
+  - Files: `src/thesis_forge/core/model.py`, `src/thesis_forge/core/parser.py`, `tests/core/test_table_model.py`
+  - Behavior: Table owns only typed caption inlines and rows/cells; parser no longer stores pipe-delimited markdown on the model.
+  - Verify: `.venv/bin/python -m pytest tests/core/test_table_model.py tests/test_parser.py tests/test_parser_contract.py tests/test_compiler.py tests/test_docx_renderer.py`
+  - Acceptance: no Table `markdown` or raw caption source field remains; structured table behavior stays green end to end.
+  - Verification-surface change: authorized; finalizes the structured Table contract.
+  - Attempts: 1
+  - Attempt 1 (2026-08-22): Checker PASS; Table retains only caption_inlines/rows, parser no longer stores caption/markdown, raw Table constructor/read scan is clean, exact Verify 157/157, Ruff and `git diff --check` clean; no push.
 
 - [V2-304E2A] Migrate structured Table fixture captions
   - Parent: ordered child 6/7 of `V2-304`; depends on `V2-304E1`.
@@ -936,5 +937,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 - 2026-08-22 - V2-304E1 Checker PASS; parser table contract assertions now use structured caption/rows/cells, exact Verify 32/32, Ruff/diff-check clean; no push.
 - 2026-08-22 - V2-304E2 split into ordered children V2-304E2A and V2-304E2B after structured Table fixture audit found raw caption kwargs in compiler and DOCX tests; no product code edited in the split cycle, next queue V2-304E2A.
 - 2026-08-22 - V2-304E2A Checker PASS; compiler/DOCX structured Table fixtures now use caption inlines only, exact Verify 109/109, AST/Ruff/diff-check passed; no push.
+- 2026-08-22 - V2-304E2B Checker PASS; raw Table caption/markdown fields were removed, exact Verify 157/157, structured end-to-end regression and raw-field scan passed; no push.
 
 ## Sync log
