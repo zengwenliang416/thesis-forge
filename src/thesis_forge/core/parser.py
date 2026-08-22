@@ -214,12 +214,13 @@ def _table_alignment(cell: str) -> Literal["left", "center", "right"] | None:
     return None
 
 
-def _parse_table_rows(lines: list[str], start_line: int) -> tuple[TableRow, ...]:
-    meaningful = [line for line in lines if line.strip()]
+def _parse_table_rows(rows: list[tuple[int, str]]) -> tuple[TableRow, ...]:
+    meaningful = [(line_no, raw) for line_no, raw in rows if raw.strip()]
     if len(meaningful) < 2:
         return ()
-    header = _split_table_row(meaningful[0])
-    separator = _split_table_row(meaningful[1])
+    header_line, header_raw = meaningful[0]
+    header = _split_table_row(header_raw)
+    separator = _split_table_row(meaningful[1][1])
     if header is None or separator is None or len(header) != len(separator):
         return ()
     try:
@@ -241,46 +242,55 @@ def _parse_table_rows(lines: list[str], start_line: int) -> tuple[TableRow, ...]
             location=SourceLocation(line=line),
         )
 
-    rows = [make_row(header, is_header=True, line=start_line)]
-    for offset, raw in enumerate(meaningful[2:], start=2):
+    rows = [make_row(header, is_header=True, line=header_line)]
+    for line_no, raw in meaningful[2:]:
         values = _split_table_row(raw)
         if values is None or len(values) != len(header):
             return ()
-        rows.append(make_row(values, is_header=False, line=start_line + offset))
+        rows.append(make_row(values, is_header=False, line=line_no))
     return tuple(rows)
 
 
 def _parse_container(kind: str, block_id: str | None, body: list[str], line: int):
     values: dict[str, str] = {}
     content_lines: list[str] = []
+    located_lines: list[tuple[int, str]] = []
+    caption_line = line
+    caption_column = 1
     metadata_phase = True
 
-    for item in body:
+    for offset, item in enumerate(body):
         match = KV_RE.match(item.strip()) if metadata_phase else None
         if match:
-            values[match.group(1)] = match.group(2).strip('"')
+            value = match.group(2).strip('"')
+            values[match.group(1)] = value
+            if match.group(1) == "caption":
+                caption_line = line + 1 + offset
+                caption_column = item.find(value) + 1
         else:
             if item.strip():
                 metadata_phase = False
             content_lines.append(item)
+            located_lines.append((line + 1 + offset, item))
 
     content = "\n".join(content_lines).strip()
     location = SourceLocation(line=line)
     caption = values.get("caption", "")
-    table_rows = _parse_table_rows(content_lines, line + 1) if kind == "table" else ()
+    caption_inlines = tuple(_parse_inline_content(caption, caption_line, caption_column))
+    table_rows = _parse_table_rows(located_lines) if kind == "table" else ()
 
     if kind == "figure":
         return Figure(
             id=block_id,
             src=values.get("src", ""),
-            caption_inlines=tuple(_parse_inline_content(caption, line)),
+            caption_inlines=caption_inlines,
             width=values.get("width"),
             location=location,
         )
     if kind == "table":
         return Table(
             id=block_id,
-            caption_inlines=tuple(_parse_inline_content(caption, line)),
+            caption_inlines=caption_inlines,
             rows=table_rows,
             location=location,
         )
@@ -298,7 +308,7 @@ def _parse_container(kind: str, block_id: str | None, body: list[str], line: int
         code, language = _strip_listing_fence(content, values.get("language"))
         return Listing(
             id=block_id,
-            caption_inlines=tuple(_parse_inline_content(caption, line)),
+            caption_inlines=caption_inlines,
             language=language,
             code=code,
             location=location,

@@ -292,6 +292,8 @@ width: "85%"
     assert figure.src == "./images/model.png"
     assert inline_plain_text(figure.caption_inlines) == "模型总体结构 [@cap-src]"
     assert figure.width == "85%"
+    caption_citation = figure.caption_inlines[1]
+    assert (caption_citation.location.line, caption_citation.location.column) == (3, 18)
     assert [citation.keys for citation in doc.citations] == [["cap-src"]]
     assert doc.citations[0].location.line == 3
 
@@ -318,6 +320,8 @@ caption: "实验结果"
     assert table.rows[0].header is True
     assert table.rows[1].header is False
     assert [cell.alignment for cell in table.rows[0].cells] == [None, "right"]
+    cell_citation = table.rows[1].cells[0].inlines[1]
+    assert cell_citation.location.line == 6
     assert inline_plain_text(table.rows[1].cells[0].inlines) == "A [@cell-src]"
     assert inline_plain_text(table.rows[1].cells[1].inlines) == "0.91"
     assert [citation.keys for citation in doc.citations] == [["cell-src"]]

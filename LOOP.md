@@ -95,15 +95,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Open
 
-- [V2-307D1a] Caption and table-cell inline source locations are accurate
-  - Parent: ordered child 5/13 of `V2-307` (D1 re-sliced); depends on `V2-307C`.
-  - Files: `src/thesis_forge/core/parser.py`, `src/thesis_forge/core/parser_markdown_it.py`, `tests/test_parser_contract.py`
-  - Behavior: figure/table caption inlines carry the caption line/column and table-cell inlines carry their own row line, matching the locations the parser registers today, in both backends.
-  - Verify: `.venv/bin/python -m pytest tests/test_parser_contract.py tests/test_parser_backend.py tests/test_parser.py`
-  - Acceptance: typed caption/cell citation locations equal the cache-registered locations for the same source (e.g. figure caption line 3, table data-row line 6); both backends agree and parity stays OK.
-  - Verification-surface change: authorized; adds typed-object location pins.
-  - Attempts: 0
-
 - [V2-307D1b] Legacy parser populates typed Algorithm body lines
   - Parent: ordered child 6/13 of `V2-307`; depends on `V2-307D1a`.
   - Files: `src/thesis_forge/core/model.py`, `src/thesis_forge/core/parser.py`, `tests/test_parser_contract.py`
@@ -186,6 +177,16 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
   - Attempts: 0
 
 ## Done
+
+- [V2-307D1a] Caption and table-cell inline source locations are accurate
+  - Parent: ordered child 5/13 of `V2-307` (D1 re-sliced); depends on `V2-307C`.
+  - Files: `src/thesis_forge/core/parser.py`, `src/thesis_forge/core/parser_markdown_it.py`, `tests/test_parser_contract.py`
+  - Behavior: figure/table caption inlines carry the caption line/column and table-cell inlines carry their own row line, matching the locations the parser registers today, in both backends.
+  - Verify: `.venv/bin/python -m pytest tests/test_parser_contract.py tests/test_parser_backend.py tests/test_parser.py`
+  - Acceptance: typed caption/cell citation locations equal the cache-registered locations for the same source (e.g. figure caption line 3, table data-row line 6); both backends agree and parity stays OK.
+  - Verification-surface change: authorized; adds typed-object location pins.
+  - Attempts: 1
+  - Attempt 1 (2026-08-22): Checker PASS; parser.py diff confined to _parse_container (caption line/column via body offsets, located content lines, shared caption_inlines) and _parse_table_rows (located (line_no, raw) pairs, per-row source lines), parser_markdown_it.py needed zero changes because it reuses _parse_container, two typed-location pins added next to the cache pins, exact Verify 50/50, broader baselines 245/245 and CLI 23/23, parity OK on both shipped examples, probes confirmed typed caption (line,column) == cache and typed cell line == cache on both backends; no push.
 
 - [V2-307C] QA parity tool derives normalized sequences from the index
   - Parent: ordered child 4/9 of `V2-307`; depends on `V2-307B`.
@@ -1178,6 +1179,7 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 - 2026-08-22 - V2-307A2 Checker PASS; compiler footnote/citation collection now derives from the DocumentIndex full inline sequence, exact Verify 39/39 and baselines 177/177, cache-clear compile equality and caption-citation probes green; no push.
 - 2026-08-22 - V2-307B Checker PASS; CLI inspect JSON now derives all four semantic collections from DocumentIndex with value-identical payloads, exact Verify 23/23 and cli/adapters baseline 48/48; no push.
 - 2026-08-22 - V2-307C Checker PASS; parser_diff normalization now derives inline/citation/reference sequences from DocumentIndex with parity green on all three shipped examples and zero cache-field reads, exact Verify 48/48; no push.
+- 2026-08-22 - V2-307D1a Checker PASS; caption inlines now carry the caption line/column and table-cell inlines their own row line in both backends (markdown-it inherits the shared _parse_container fix), exact Verify 50/50 with typed-vs-cache location pins, baselines and parity green; no push.
 - 2026-08-22 - V2-307D1 Checker FAIL Attempt 1 then re-sliced into ordered children V2-307D1a…D1e after independent Checker grep found 20 cache-pin sites (18 in test_parser_contract.py) and completing them exposed typed-model defects the cache masked: caption inline locations carry the container start line in both backends, table-cell inline locations are misaligned by the metadata/blank rows, and algorithm-body citations exist only in the cache (Algorithm.body is verbatim-only); children fix caption/cell locations, add typed Algorithm body_lines to the model and both parsers, extend index traversal, then finish the pin migration; three test files restored, no product code edited in the split cycle.
 - 2026-08-22 - V2-307 split into eight ordered children V2-307A…G after grep mapping showed removing the four cache fields atomically spans model.py + both parsers (12 registration call sites) + compiler.py + validator.py + cli.py + qa/tools/parser_diff.py plus seven test files; children migrate readers first (compiler/CLI/parity-tool/test pins, with V2-308 landing between D2 and E), then stop registration per parser, then remove the fields; no product code edited in the split cycle.
 
