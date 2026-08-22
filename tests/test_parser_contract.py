@@ -296,9 +296,9 @@ width: "85%"
     assert doc.citations[0].location.line == 3
 
 
-def test_contract_table_container_preserves_markdown_and_inlines():
-    """SPEC「Table」：表格正文按原文保留在 Table.markdown；正文行做
-    inline 提取（单元格内 citation 进入文档级索引）。"""
+def test_contract_table_container_populates_structured_rows_and_inlines():
+    """SPEC「Table」：表格 caption、header/body rows、alignment 和 cell
+    inline content 都进入结构化 Table IR。"""
     doc = parse(
         """::: table {#tbl:results}
 caption: "实验结果"
@@ -313,9 +313,13 @@ caption: "实验结果"
     table = doc.blocks[0]
     assert isinstance(table, Table)
     assert table.id == "tbl:results"
-    assert table.caption == "实验结果"
-    assert "| --- | ---: |" in table.markdown
-    assert "| A [@cell-src] | 0.91 |" in table.markdown
+    assert inline_plain_text(table.caption_inlines) == "实验结果"
+    assert len(table.rows) == 2
+    assert table.rows[0].header is True
+    assert table.rows[1].header is False
+    assert [cell.alignment for cell in table.rows[0].cells] == [None, "right"]
+    assert inline_plain_text(table.rows[1].cells[0].inlines) == "A [@cell-src]"
+    assert inline_plain_text(table.rows[1].cells[1].inlines) == "0.91"
     assert [citation.keys for citation in doc.citations] == [["cell-src"]]
     assert doc.citations[0].location.line == 6
 

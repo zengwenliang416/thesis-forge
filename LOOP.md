@@ -95,15 +95,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Open
 
-- [V2-304E1] Migrate parser table contract to structured fields
-  - Parent: ordered child 5/6 of `V2-304`; depends on `V2-304D`.
-  - Files: `tests/test_parser_contract.py`
-  - Behavior: table contract assertions read caption inlines and typed rows/cells instead of raw Table caption/markdown fields.
-  - Verify: `.venv/bin/python -m pytest tests/test_parser_contract.py`
-  - Acceptance: parser contract remains green and no assertion depends on Table `markdown` or raw caption storage.
-  - Verification-surface change: authorized; migrates parser table contract assertions.
-  - Attempts: 0
-
 - [V2-304E2] Remove raw Table caption/markdown fields
   - Parent: ordered child 6/6 of `V2-304`; depends on `V2-304E1`.
   - Files: `src/thesis_forge/core/model.py`, `src/thesis_forge/core/parser.py`, `tests/core/test_table_model.py`
@@ -122,6 +113,17 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
   - Attempts: 0
 
 ## Done
+
+- [V2-304E1] Migrate parser table contract to structured fields
+  - Parent: ordered child 5/6 of `V2-304`; depends on `V2-304D`.
+  - Files: `tests/test_parser_contract.py`
+  - Behavior: table contract assertions read caption inlines and typed rows/cells instead of raw Table caption/markdown fields.
+  - Verify: `.venv/bin/python -m pytest tests/test_parser_contract.py`
+  - Acceptance: parser contract remains green and no assertion depends on Table `markdown` or raw caption storage.
+  - Verification-surface change: authorized; migrates parser table contract assertions.
+  - Attempts: 2
+  - Attempt 1 (2026-08-22): exact Verify exposed a test expectation error for an unmarked `---` separator (alignment is `None`, not `left`); no production change, assertion corrected.
+  - Attempt 2 (2026-08-22): Checker PASS; raw Table caption/markdown assertions are replaced by structured caption/row/cell assertions, exact Verify 32/32, Ruff and `git diff --check` clean; no push.
 
 - [V2-304D] Migrate DOCX table fixtures to structured Tables
   - Parent: ordered child 4/5 of `V2-304`; depends on `V2-304C`.
@@ -921,5 +923,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 - 2026-08-22 - V2-304C Checker PASS; compiler now consumes structured table rows without pipe parsing, exact Verify 109/109, parse-to-compile probe and Ruff/diff-check passed; no push.
 - 2026-08-22 - V2-304D Checker PASS; DOCX table fixtures are structured, exact Verify 86/86 and AST audit passed, with no additional product diff because migration landed in C; no push.
 - 2026-08-22 - V2-304E split into ordered children V2-304E1 and V2-304E2 after parser contract inspection found a fourth raw Table-field test file; no product code edited in the split cycle, next queue V2-304E1.
+- 2026-08-22 - V2-304E1 Checker PASS; parser table contract assertions now use structured caption/rows/cells, exact Verify 32/32, Ruff/diff-check clean; no push.
 
 ## Sync log
