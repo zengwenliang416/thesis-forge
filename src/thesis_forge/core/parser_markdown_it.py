@@ -3,18 +3,17 @@
 架构：markdown-it 负责块级分段与行映射（``token.map``，0-based），
 项目专属语义全部由自研规则承担，输出与 legacy 后端逐字段平价：
 
-- 六种 ``:::`` 容器：mdit-py-plugins ``container`` 按名注册 ×6，
-  ``validate`` 收紧为与 legacy ``CONTAINER_START_RE`` 等价的写法
-  （恰好 3 个冒号 + 可选 ``{#id}`` + 行尾无杂物）；容器体不读 mdit
-  子树，直接按行切片复用 parser 的 ``parse_container`` /
-  ``_parse_container_inlines``（kv 元数据、caption inline、listing
-  围栏剥离、`$$` 剥离等行为因此逐字节一致）。
+- 旧 Front Matter、``:::`` 学术对象容器和 ``@prefix:id`` 交叉引用在
+  markdown-it 通用解析前显式拒绝；代码块和 inline code 中的字面量不触发
+  旧格式诊断。拒绝消息带稳定 ``TF-SOURCE-LEGACY-*`` code 和替代示例。
+- 现有容器插件与行级消费者暂留在后端内部，供后续 capability 切片迁移；
+  legacy preflight 保证它们不会把旧输入静默转换为 v2 文档。
 - ``[^label]`` 脚注：``footnote`` 插件仅取块级定义（``move_to_end=False``
   使定义保持源码位置；``inline=False`` 关闭 legacy 不支持的 ``^[...]``）；
   定义正文按 legacy 算法（首行 + 四空格/Tab 续行）从源码行重建。
 - 标准 inline token（text / break / strong / emphasis / code / link）由本模块
   递归转换为 typed Inline；inline math ``$...$`` 在 text token 中显式识别。
-  语义标记 ``[@key; @key2, locator]`` / crossref ``@fig:x`` /
+  语义标记 ``[@key; @key2, locator]`` / semantic links /
   footnote_ref 仍通过公开的 ``parse_inline_content`` 原语处理，直到后续
   semantic-inline 切片完成；未知 token 统一走显式 ParseError。
 - 块级规则使用 ``markdown-it-py`` 的 default preset；table/fence/
@@ -88,6 +87,11 @@ CONTAINER_KINDS = ("figure", "table", "equation", "listing", "algorithm", "bibli
 _HEADING_ID_RE = re.compile(r"^(.+?)(?:\s+\{#([^}]+)\})?\s*$")
 # 容器头 info 中的 {#id}（validate 已保证其位于行尾）
 _CONTAINER_ID_RE = re.compile(r"\{#([^}]+)\}")
+_LEGACY_REFERENCE_RE = re.compile(
+    r"(?<![\w\[])@(?P<prefix>fig|tbl|eq|sec|chap|lst|alg):"
+    r"(?P<name>[A-Za-z0-9_.:-]+)"
+)
+_FENCE_START_RE = re.compile(r"^ {0,3}(?P<marker>`{3,}|~{3,})")
 
 _UNSUPPORTED_BLOCK_TOKEN_TYPES = frozenset(
     {"code_block", "hr", "html_block", "reference"}
@@ -111,6 +115,94 @@ def _make_container_validate(kind: str):
     return validate
 
 
+def _strip_inline_code(line: str) -> str:
+    """Blank out closed backtick spans before legacy-marker scanning."""
+    chars = list(line)
+    cursor = 0
+    while cursor < len(line):
+        if line[cursor] != "`":
+            cursor += 1
+            continue
+        start = cursor
+        while cursor < len(line) and line[cursor] == "`":
+            cursor += 1
+        marker = line[start:cursor]
+        close = line.find(marker, cursor)
+        if close < 0:
+            continue
+        for index in range(start, close + len(marker)):
+            chars[index] = " "
+        cursor = close + len(marker)
+    return "".join(chars)
+
+
+def _legacy_source_error(
+    code: str,
+    line: int,
+    message: str,
+    replacement: str,
+) -> ParseError:
+    return ParseError(
+        f"{code} at line {line}: {message}. "
+        f"Replacement example: {replacement}"
+    )
+
+
+def _reject_legacy_source(lines: list[str]) -> None:
+    """Reject v1 source constructs before markdown-it can flatten them."""
+    if lines and lines[0].strip() == "---":
+        raise _legacy_source_error(
+            "TF-SOURCE-LEGACY-001",
+            1,
+            "YAML Front Matter is not supported in thesis.md",
+            "move project metadata to thesisforge.yaml",
+        )
+
+    fence_char: str | None = None
+    fence_length = 0
+    for line_number, raw in enumerate(lines, start=1):
+        if fence_char is not None:
+            closing = re.match(
+                rf"^ {{0,3}}{re.escape(fence_char)}{{{fence_length},}}\s*$",
+                raw,
+            )
+            if closing:
+                fence_char = None
+                fence_length = 0
+            continue
+
+        opening = _FENCE_START_RE.match(raw)
+        if opening:
+            marker = opening.group("marker")
+            fence_char = marker[0]
+            fence_length = len(marker)
+            continue
+
+        if raw.startswith(("    ", "\t")):
+            continue
+
+        visible = _strip_inline_code(raw)
+        container = CONTAINER_START_RE.match(visible.strip())
+        if container:
+            kind = container.group(1)
+            raise _legacy_source_error(
+                "TF-SOURCE-LEGACY-002",
+                line_number,
+                f"legacy ::: {kind} containers are not supported",
+                "![caption](assets/image.png){#fig:example}",
+            )
+
+        reference = _LEGACY_REFERENCE_RE.search(visible)
+        if reference:
+            prefix = reference.group("prefix")
+            raise _legacy_source_error(
+                "TF-SOURCE-LEGACY-003",
+                line_number,
+                f"legacy @{prefix}:id cross-references are not supported",
+                f"[label](#{prefix}:example)",
+            )
+
+
 def _build_markdown_it() -> MarkdownIt:
     md = MarkdownIt("default")
     md.use(footnote_plugin, inline=False, move_to_end=False)
@@ -126,9 +218,35 @@ def _check_containers_closed(lines: list[str], start: int) -> None:
     的顺序跳过这两类结构，避免误报。
     """
     i = start
+    fence_char: str | None = None
+    fence_length = 0
     while i < len(lines):
-        stripped = lines[i].strip()
-        if FOOTNOTE_DEFINITION_RE.match(lines[i]):
+        raw = lines[i]
+        if fence_char is not None:
+            closing = re.match(
+                rf"^ {{0,3}}{re.escape(fence_char)}{{{fence_length},}}\s*$",
+                raw,
+            )
+            if closing:
+                fence_char = None
+                fence_length = 0
+            i += 1
+            continue
+
+        opening = _FENCE_START_RE.match(raw)
+        if opening:
+            marker = opening.group("marker")
+            fence_char = marker[0]
+            fence_length = len(marker)
+            i += 1
+            continue
+
+        if raw.startswith(("    ", "\t")):
+            i += 1
+            continue
+
+        stripped = raw.strip()
+        if FOOTNOTE_DEFINITION_RE.match(raw):
             i += 1
             while i < len(lines) and (lines[i].startswith("    ") or lines[i].startswith("\t")):
                 i += 1
@@ -631,6 +749,7 @@ class MarkdownItParserBackend:
 
     def parse_text(self, text: str, *, source_path: str | Path) -> ThesisDocument:
         lines = text.splitlines()
+        _reject_legacy_source(lines)
         metadata, start = parse_front_matter(lines)
         doc = ThesisDocument(
             source_path=Path(source_path).resolve(),

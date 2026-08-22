@@ -1,9 +1,7 @@
 """markdown-it 后端测试（ADR-0001 Phase 2）。
 
-覆盖：协议满足、注册表、与 legacy 后端在 semantic fixture 与完整示例上的
-归一化平价（直接调用 qa/tools/parser_diff.py 的比较函数，不经子进程）、
-标准 inline typed 节点、未闭合容器/front matter 错误消息一致、行内位置，
-以及 parser_diff 显式豁免机制本身的行为。
+覆盖：协议满足、注册表、标准 inline typed 节点、v2 标准块消费、
+legacy 输入显式拒绝、行内位置，以及 parser_diff 显式豁免机制本身的行为。
 """
 
 from __future__ import annotations
@@ -17,9 +15,7 @@ from markdown_it import MarkdownIt
 
 from thesis_forge.core.index import DocumentIndex
 from thesis_forge.core.model import (
-    Algorithm,
     BlockQuote,
-    Citation,
     CodeBlock,
     Heading,
     InlineCode,
@@ -40,10 +36,8 @@ from thesis_forge.core.parser_markdown_it import MarkdownItParserBackend
 REPO_ROOT = Path(__file__).resolve().parents[1]
 PARSER_DIFF_PATH = REPO_ROOT / "qa" / "tools" / "parser_diff.py"
 
-FULL_SYNTAX_FIXTURE = REPO_ROOT / "qa" / "fixtures" / "parser" / "full-syntax.md"
 COMPLETE_THESIS = REPO_ROOT / "examples" / "complete-thesis" / "thesis.md"
 BACHELOR_THESIS = REPO_ROOT / "examples" / "bachelor-thesis" / "thesis.md"
-BACHELOR_FULL_TEMPLATE = REPO_ROOT / "examples" / "bachelor-thesis" / "thesis-full-template.md"
 
 
 def _load_parser_diff():
@@ -117,7 +111,7 @@ def test_backend_registry_includes_markdown_it() -> None:
 
 
 # ---------------------------------------------------------------------------
-# 仍与 legacy 共享语义的 fixture 平价（标准块 typed 行为另行 pin）
+# Legacy fixtures are rejected by the v2 parser before generic parsing.
 # ---------------------------------------------------------------------------
 
 
@@ -126,18 +120,16 @@ def test_backend_registry_includes_markdown_it() -> None:
     [COMPLETE_THESIS, BACHELOR_THESIS],
     ids=["complete-thesis", "bachelor-thesis"],
 )
-def test_parity_with_legacy_on_fixtures(source: Path) -> None:
-    normalized_a, normalized_b = _normalized_pair(source)
-    report = parser_diff.diff_documents(
-        _without_span_ends(normalized_a),
-        _without_span_ends(normalized_b),
-    )
-    assert report.allowed == []
-    assert report.blocking == []
+def test_legacy_fixtures_are_rejected(source: Path) -> None:
+    with pytest.raises(ParseError, match=r"TF-SOURCE-LEGACY-00[1-3]"):
+        markdown_it.parse_file(source)
 
 
 def test_full_syntax_standard_inline_nodes_are_typed() -> None:
-    document = markdown_it.parse_file(FULL_SYNTAX_FIXTURE)
+    document = markdown_it.parse_text(
+        "a **bold** `code` $E = m c^2$.\n",
+        source_path="standard-inline.md",
+    )
     paragraph = next(
         block
         for block in document.blocks
@@ -150,23 +142,26 @@ def test_full_syntax_standard_inline_nodes_are_typed() -> None:
     literal = next(
         inline for inline in paragraph.inlines if isinstance(inline, InlineCode)
     )
-    assert literal.value == "$...$"
+    assert literal.value == "code"
 
 
 def test_full_template_standard_blocks_are_typed() -> None:
-    doc = markdown_it.parse_file(BACHELOR_FULL_TEMPLATE)
-    standard_tables = [
-        block for block in doc.blocks if isinstance(block, Table) and block.id is None
-    ]
-    assert [(table.location.line, len(table.rows)) for table in standard_tables] == [
-        (121, 3),
-        (128, 3),
-    ]
+    doc = _parse_with_default_preset(
+        "> quoted text\n\n"
+        "| Model | AUROC |\n"
+        "| --- | ---: |\n"
+        "| A | 0.91 |\n\n"
+        "| Model | Accuracy |\n"
+        "| --- | ---: |\n"
+        "| A | 0.94 |\n"
+    )
+    standard_tables = [block for block in doc.blocks if isinstance(block, Table)]
+    assert [len(table.rows) for table in standard_tables] == [2, 2]
 
     standard_quote = next(
-        block for block in doc.blocks if isinstance(block, BlockQuote) and block.id is None
+        block for block in doc.blocks if isinstance(block, BlockQuote)
     )
-    assert standard_quote.location.line == 525
+    assert standard_quote.location.line == 1
     assert len(standard_quote.children) == 1
     assert isinstance(standard_quote.children[0], Paragraph)
 
@@ -180,15 +175,13 @@ def test_full_template_standard_blocks_are_typed() -> None:
     "text",
     [
         # 段落 inline 序列与行列位置（contract 基准样本）
-        "如 @fig:model 所示，已有研究给出相关结论 [@smith2025, p. 12]。[^note]\n",
+        "已有研究给出相关结论 [@smith2025, p. 12]。[^note]\n",
         # citation 三种形态
         "单文献 [@smith2025]。\n\n多文献：[@smith2025; @wang2024]。\n\n带页码：[@smith2025, p. 12]。\n",
-        # 七种 crossref 前缀
-        "见 @fig:a @tbl:b @eq:c @alg:d @lst:e @sec:f @chap:g。\n",
-        # 标题内 inline 提取与 {#id}
-        "## 结果 [@k1] 见 @fig:x {#sec:r}\n",
+        # 标题内 citation 提取与 {#id}
+        "## 结果 [@k1] {#sec:r}\n",
         # 列表项 inline 位置
-        "- 见 @fig:m 与 [@k]\n",
+        "- 见 [@k]\n",
         # 有序列表起始序号 / 无序嵌套层级
         "3. 从 3 开始\n4. 下一项\n\n- 第一项\n  - 第二级项目\n- 第三项\n",
         # 混合 marker 截断为两个列表块
@@ -202,20 +195,13 @@ def test_full_template_standard_blocks_are_typed() -> None:
         # 列表项续行：legacy 截断列表、续行成段落
         "- 第一项\n  继续内容\n- 第二项\n",
         # 脚注定义（含续行）inline 提取与位置
-        "[^src]: 引用 [@fn-src]。\n    续行见 @fig:m。\n",
-        # 容器 caption / 表单元格 / 算法正文中的 citation
-        "::: figure {#fig:model}\nsrc: \"./images/model.png\"\ncaption: \"模型总体结构 [@cap-src]\"\nwidth: \"85%\"\n:::\n",
-        "::: table {#tbl:results}\ncaption: \"实验结果\"\n\n| 模型 | AUROC |\n| --- | ---: |\n| A [@cell-src] | 0.91 |\n:::\n",
-        "::: algorithm {#alg:train}\ncaption: \"训练流程\"\n\n1. 初始化参数；\n2. 读取数据 [@alg-src]。\n:::\n",
-        # listing 围栏与语言推断
-        "::: listing {#lst:predict}\ncaption: \"预测函数\"\nlanguage: \"python\"\n\n```javascript\ndef predict(x):\n    return model(x)\n```\n:::\n",
+        "[^src]: 引用 [@fn-src]。\n    续行保留。\n",
         # 脚注引用指向未定义 label（legacy 照常产出 FootnoteReference）
         "正文引用。[^undefined]\n",
     ],
     ids=[
         "paragraph-inline-positions",
         "citation-forms",
-        "crossref-prefixes",
         "heading-inline",
         "list-item-inline",
         "list-levels-and-start",
@@ -225,10 +211,6 @@ def test_full_template_standard_blocks_are_typed() -> None:
         "loose-list-splits",
         "list-item-continuation",
         "footnote-definition-inlines",
-        "figure-caption-inline",
-        "table-cell-inline",
-        "algorithm-body-inline",
-        "listing-fence-language",
         "undefined-footnote-ref",
     ],
 )
@@ -237,18 +219,14 @@ def test_inline_and_block_parity_samples(text: str) -> None:
 
 
 # ---------------------------------------------------------------------------
-# 错误与降级行为一致
+# legacy 输入必须显式失败，不得降级为普通文本
 # ---------------------------------------------------------------------------
 
 
-def test_unclosed_container_error_matches_legacy() -> None:
+def test_legacy_container_error_is_explicit() -> None:
     text = '# 标题\n\n::: figure {#fig:x}\nsrc: "./a.png"\n'
-    with pytest.raises(ParseError) as legacy_error:
-        legacy.parse_text(text, source_path="err.md")
-    with pytest.raises(ParseError) as markdown_it_error:
+    with pytest.raises(ParseError, match="TF-SOURCE-LEGACY-002"):
         markdown_it.parse_text(text, source_path="err.md")
-    assert str(markdown_it_error.value) == str(legacy_error.value)
-    assert "第 3 行的 figure 容器未闭合" in str(markdown_it_error.value)
 
 
 @pytest.mark.parametrize(
@@ -260,12 +238,10 @@ def test_unclosed_container_error_matches_legacy() -> None:
     ],
     ids=["unclosed-front-matter", "invalid-yaml", "non-mapping"],
 )
-def test_front_matter_errors_match_legacy(text: str) -> None:
-    with pytest.raises(ParseError) as legacy_error:
-        legacy.parse_text(text, source_path="err.md")
-    with pytest.raises(ParseError) as markdown_it_error:
+def test_front_matter_is_rejected_with_replacement(text: str) -> None:
+    with pytest.raises(ParseError, match="TF-SOURCE-LEGACY-001") as captured:
         markdown_it.parse_text(text, source_path="err.md")
-    assert str(markdown_it_error.value) == str(legacy_error.value)
+    assert "thesisforge.yaml" in str(captured.value)
 
 
 @pytest.mark.parametrize(
@@ -340,7 +316,7 @@ def test_parse_text_preserves_logical_source_path(tmp_path: Path) -> None:
     assert inline_plain_text(doc.blocks[0].inlines) == "编辑器新标题"
 
 
-def test_algorithm_body_lines_match_legacy_backend(tmp_path: Path) -> None:
+def test_legacy_algorithm_container_is_rejected(tmp_path: Path) -> None:
     source = tmp_path / "algorithm.md"
     source.write_text(
         "::: algorithm {#alg:train}\n"
@@ -351,16 +327,8 @@ def test_algorithm_body_lines_match_legacy_backend(tmp_path: Path) -> None:
         ":::\n",
         encoding="utf-8",
     )
-    doc = markdown_it.parse_file(source)
-    algorithm = doc.blocks[0]
-    assert isinstance(algorithm, Algorithm)
-    body_citation = algorithm.body_lines[1][1]
-    assert isinstance(body_citation, Citation)
-    assert (body_citation.location.line, body_citation.location.column) == (5, 9)
-
-    legacy_algorithm = LegacyParserBackend().parse_file(source).blocks[0]
-    assert algorithm.body_lines == legacy_algorithm.body_lines
-    assert algorithm.body == legacy_algorithm.body
+    with pytest.raises(ParseError, match="TF-SOURCE-LEGACY-002"):
+        markdown_it.parse_file(source)
 
 
 def test_empty_document_is_inspectable(tmp_path: Path) -> None:

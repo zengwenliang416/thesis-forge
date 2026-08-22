@@ -97,6 +97,16 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Done
 
+- [V2-318] Explicit legacy syntax rejection
+  - Files: `src/thesis_forge/core/parser_markdown_it.py`, `tests/core/test_legacy_source_rejection.py`, `tests/test_parser_markdown_it.py`
+  - Scope note: the existing markdown-it backend test contains legacy parity fixtures; its legacy-input assertions are re-expressed as explicit rejection checks while standard-token coverage remains.
+  - Behavior: reject YAML Front Matter, legacy thesis containers and legacy `@fig:*` references before generic parsing.
+  - Verify: `.venv/bin/python -m pytest tests/core/test_legacy_source_rejection.py`
+  - Acceptance: diagnostics include replacement examples and do not flatten old syntax to text.
+  - Verification-surface change: authorized; creates focused legacy-source rejection evidence.
+  - Attempts: 1
+  - Attempt 1 (2026-08-22): Checker PASS; exact Verify 5/5, related parser/backend/contract regression 76/76, core/parser/compiler regression 183/183, target Ruff, `git diff --check`, and `./lint-loop.sh` passed. Independent probes confirmed valid/unclosed/invalid Front Matter, all six legacy containers, all seven legacy reference prefixes, line/code/replacement diagnostics, citation-like/inline/fenced literal safety, preflight ordering before `self._md.parse` and document node construction, and fenced CodeBlock preservation.
+
 - [V2-311] Standard inline conversion
   - Files: `src/thesis_forge/core/parser_markdown_it.py`, `tests/core/test_markdown_v2_inlines.py`, `tests/test_parser_markdown_it.py`
   - Behavior: convert text, breaks, strong, emphasis, code, links and inline math to typed Inline nodes with SourceSpan.
@@ -1316,5 +1326,7 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 - 2026-08-22 - V2-310B2 Checker PASS; exact Verify `.venv/bin/python -m pytest tests/core/test_markdown_v2_parser_config.py` passed 2/2; related regression `.venv/bin/python -m pytest tests/test_parser_markdown_it.py tests/test_parser_backend.py tests/test_parser_contract.py` passed 85/85 and core/parser/compiler regression `.venv/bin/python -m pytest tests/core/ tests/test_parser.py tests/test_compiler.py` passed 134/134; `.venv/bin/ruff check src/thesis_forge/core/parser_markdown_it.py tests/core/test_markdown_v2_parser_config.py tests/test_parser_markdown_it.py`, `git diff --check`, and `./lint-loop.sh` passed; production probe confirmed active block/inline rules, no disabled rules or disable call, `MarkdownIt("default")`, mixed `BlockQuote -> CodeBlock -> Table -> Heading`, and explicit unsupported diagnostics; full-repo candidate/clean-HEAD failure sets were 45/46 with candidate a subset and only `tests/test_parser_markdown_it.py::test_parity_with_legacy_on_fixtures[bachelor-full-template]` clean-only; scope was the three named files plus `LOOP.md`, pre-existing `openspec/.specnav/change-registry.json` was preserved, no push.
 - 2026-08-22 - V2-311 Checker FAIL Attempt 1; exact Verify passed 5/5, related parser/backend/contract regression passed 81/81, core/parser/compiler regression passed 139/139, target Ruff, diff-check, and LOOP-LINT passed, but independent probes rejected a valid balanced-parenthesis link destination and escaped text during source mapping; the three candidate files were restored, the pre-existing `change-registry.json` was preserved, and no commit or push.
 - 2026-08-22 - V2-311 Checker PASS Attempt 2; exact Verify passed 8/8, related parser/backend/contract regression passed 81/81, core/parser/compiler regression passed 183/183, target Ruff, diff-check, and LOOP-LINT passed, and independent probes covered nested inlines, distinct soft/hard breaks, code-math isolation, balanced ordinary/reference links, escaped-dollar mapping, autolinks, and explicit image-token errors; candidate scope was the three named product files, `change-registry.json` was preserved, one local commit and no push.
+
+- 2026-08-22 - V2-318 Checker PASS
 
 ## Sync log
