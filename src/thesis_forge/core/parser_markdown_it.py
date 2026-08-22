@@ -20,14 +20,14 @@
   blockquote/setext heading 等标准 token 由 typed consumer 消费，
   未支持的 token 统一走显式 ParseError，不再静默降级或丢弃。
 - 未闭合容器、front matter 强校验由后端无关预检承担，直接复用
-  ``parser.py`` 的 ``parse_front_matter`` 与同构行扫描，ParseError
+  ``parser_support.py`` 的 ``parse_front_matter`` 与同构行扫描，ParseError
   消息与行号逐字节一致。
 
 SourceLocation 策略：块级行号 = ``token.map[0] + 1 + front matter 偏移``，
 column 恒为 None（与 legacy 现状一致）；标准 inline 节点记录起止行列，
 语义节点继续沿用 ``parse_inline_content`` 的起始行列。
 
-本模块通过 ``parser.py`` 的公开共享原语复用现有解析语义；
+本模块通过 ``parser_support.py`` 的公开共享原语复用现有解析语义；
 凡语义问题一律以 legacy 为准（ADR-0001 §5.2 已知差异见文末清单）。
 """
 
@@ -73,7 +73,7 @@ from .model import (
     ThesisDocument,
     inline_plain_text,
 )
-from .parser import (
+from .parser_support import (
     CONTAINER_START_RE,
     FOOTNOTE_DEFINITION_RE,
     LIST_ITEM_RE,

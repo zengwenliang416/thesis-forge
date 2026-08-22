@@ -95,7 +95,35 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Open
 
+- [V2-320B] Remove the legacy parser from the public core surface
+  - Parent: ordered preparation child 2/3 of the re-sliced `V2-320`; depends on `V2-320A`; the original V2-320 Behavior and Acceptance remain unchanged across the children.
+  - Files: `src/thesis_forge/core/__init__.py`, `tests/architecture/test_no_legacy_parser.py`
+  - Behavior: stop importing or exporting `parse_markdown` and `parse_markdown_text` from `thesis_forge.core`, and add an architecture contract proving production modules no longer depend on `core.parser` outside the legacy implementation itself.
+  - Verify: `.venv/bin/python -m pytest tests/architecture/test_no_legacy_parser.py`
+  - Acceptance: the public core surface exposes the canonical parser factory/type and support ParseError only; the architecture test fails on any production import of `core.parser` outside `parser.py`.
+  - Verification-surface change: no.
+  - Attempts: 0
+
+- [V2-320C] Migrate the first canonical V2 test cluster off core.parser
+  - Parent: ordered preparation child 3/3 of the re-sliced `V2-320`; depends on `V2-320A`; the original V2-320 Behavior and Acceptance remain unchanged across the children.
+  - Files: `tests/core/test_legacy_source_rejection.py`, `tests/core/test_markdown_v2_inlines.py`, `tests/core/test_markdown_v2_figures.py`
+  - Behavior: canonical V2 tests import ParseError and shared parser primitives from the parser-support seam rather than the legacy parser module, while preserving their rejection, inline, and figure assertions.
+  - Verify: `.venv/bin/python -m pytest tests/core/test_legacy_source_rejection.py tests/core/test_markdown_v2_inlines.py tests/core/test_markdown_v2_figures.py`
+  - Acceptance: the selected tests contain no `core.parser` import and remain green against the canonical markdown-it backend; no compatibility import is added.
+  - Verification-surface change: no.
+  - Attempts: 0
+
 ## Done
+
+- [V2-320A] Extract parser-neutral primitives from the legacy parser seam
+  - Parent: ordered preparation child 1/3 of the re-sliced `V2-320`; the original V2-320 Behavior and Acceptance remain unchanged across the children.
+  - Files: `src/thesis_forge/core/parser.py`, `src/thesis_forge/core/parser_markdown_it.py`, `src/thesis_forge/core/parser_support.py`
+  - Behavior: move the shared ParseError, Front Matter, container, inline, and bibliography primitives used by the canonical markdown-it backend into one parser-support module; route both current parser implementations through that module without duplicating or re-exporting a backend selector.
+  - Verify: `.venv/bin/python -m pytest tests/test_parser_backend.py tests/test_parser_markdown_it.py tests/test_parser_contract.py`
+  - Acceptance: `parser_markdown_it.py` has no dependency on `core.parser`; every shared symbol has one authoritative definition; canonical parser and existing parser-contract coverage remain green.
+  - Verification-surface change: no.
+  - Attempts: 1
+  - Attempt 1 (2026-08-22): Checker PASS; exact Verify passed 73/73; targeted Ruff, `git diff --check`, and the final LOOP-LINT passed; the independent AST seam probe found no `core.parser` import in `parser_markdown_it.py`, exactly one definition each for ParseError, Front Matter, inline, container, and bibliography helpers in `parser_support.py`, and shared-symbol identity through the support module; normalized output for a rich legacy fixture was identical between the clean HEAD parser and the extracted parser with 0 diffs; both current parser paths parsed a stable heading, while the legacy and v2 fixtures produced their expected stable IDs; candidate scope was exactly the three named product files, the pre-existing `openspec/.specnav/change-registry.json` was preserved and uncommitted, no push.
 
 - [V2-319D] Delete the parser registry and legacy backend API
   - Parent: ordered child 4/4 of the re-sliced `V2-319`; depends on `V2-319C`; parent Behavior and Acceptance remain unchanged.
@@ -1497,5 +1525,7 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 - 2026-08-22 - V2-319C2A Checker PASS; candidate failure set was a strict subset of isolated clean HEAD (`97 passed/5 pre-existing package-sample missing-DOCX failures` vs `96 passed/6 failed`), targeted Ruff, `git diff --check`, LOOP-LINT, canonical parser/L5/duplicate-ID probes passed, and only C2A plus `LOOP.md` changed; C2B and the pre-existing registry were preserved, no push.
 - 2026-08-22 - V2-319C2B Checker PASS; exact Verify passed 4/4, targeted Ruff, `git diff --check`, LOOP-LINT, and the canonical duplicate-ID fixture audit passed; candidate scope was only `tests/test_template_v2_editor.py`, with no production or compatibility diff, the pre-existing registry preserved and unstaged, and no push.
 - 2026-08-22 - V2-319D Checker PASS Attempt 1; exact Verify passed 45/45, targeted Ruff, `git diff --check`, LOOP-LINT, and the single-parser static/runtime audit passed; candidate scope was exactly the two named files, the pre-existing registry was preserved and uncommitted, the total-goal verifier retained 11 unrelated contract gaps, one local commit, no push.
+- 2026-08-22 - V2-320 split into ordered children V2-320A through V2-320C after CodeGraph found that `parser_markdown_it.py` still imports eight shared primitives from `core.parser` and more than twenty tests/auxiliary tools import the legacy module; no product code edited in the refill cycle, next queue is V2-320A.
+- 2026-08-22 - V2-320A Checker PASS Attempt 1; exact Verify passed 73/73, targeted Ruff, `git diff --check`, final LOOP-LINT, and independent seam/parity/runtime probes passed; V2-320B and V2-320C remain Open, the pre-existing `change-registry.json` was preserved and uncommitted, and no push.
 
 ## Sync log
