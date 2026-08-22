@@ -95,16 +95,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Open
 
-- [V2-307D1e] Parser test cache pins migrate to index reads
-  - Parent: ordered child 9/13 of `V2-307`; depends on `V2-307D1d`.
-  - Files: `tests/test_parser.py`, `tests/test_parser_contract.py`, `tests/test_parser_markdown_it.py`
-  - Behavior: assertions on `doc.inline_content`/`doc.citations`/`doc.cross_references`/`doc.footnote_references` re-express against DocumentIndex-derived sequences.
-  - Verify: `.venv/bin/python -m pytest tests/test_parser.py tests/test_parser_contract.py tests/test_parser_markdown_it.py`
-  - Acceptance: no cache-field assertion remains in the three files; suites stay green.
-  - Verification-surface change: authorized; migrates parser test assertions.
-  - Attempts: 1
-  - Attempt 1 (2026-08-22): Checker FAIL; migrating all 20 cache-pin sites left 4 tests red — expected index-derived values, observed typed-model defects the cache had masked: caption inline locations carry the container start line (figure line 1 vs caption line 3; both backends), table-cell inline locations are misaligned (line 4 vs data-row line 6), and algorithm-body citations are unrepresentable (Algorithm.body is verbatim-only, cache-only semantics). Files restored; re-sliced into D1a–D1e fixing the typed model first.
-
 - [V2-307D2] E2E and object-model test cache pins migrate to index reads
   - Parent: ordered child 10/13 of `V2-307`; depends on `V2-307D1`.
   - Files: `tests/test_qa_e2e.py`, `tests/core/test_thesis_object_model.py`
@@ -150,6 +140,17 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
   - Attempts: 0
 
 ## Done
+
+- [V2-307D1e] Parser test cache pins migrate to index reads
+  - Parent: ordered child 9/13 of `V2-307`; depends on `V2-307D1d`.
+  - Files: `tests/test_parser.py`, `tests/test_parser_contract.py`, `tests/test_parser_markdown_it.py`
+  - Behavior: assertions on `doc.inline_content`/`doc.citations`/`doc.cross_references`/`doc.footnote_references` re-express against DocumentIndex-derived sequences.
+  - Verify: `.venv/bin/python -m pytest tests/test_parser.py tests/test_parser_contract.py tests/test_parser_markdown_it.py`
+  - Acceptance: no cache-field assertion remains in the three files; suites stay green.
+  - Verification-surface change: authorized; migrates parser test assertions.
+  - Attempts: 2
+  - Attempt 2 (2026-08-22): Checker PASS after the D1a-D1d re-slice prerequisites landed; unstaged diff is purely assertion-source swaps plus one sorted import per file, exact Verify 83/83, Ruff and `git diff --check` clean, grep sweep finds zero cache-field assertions in the three files, value-equivalence probe showed index-derived and cache-derived citations/cross-references/footnote labels are object-identical on the complete-thesis corpus, broader baselines 99/99 and parity OK (45 blocks / 92 inlines), expected-value sides unchanged; no push.
+  - Attempt 1 (2026-08-22): Checker FAIL; migrating all 20 cache-pin sites left 4 tests red — expected index-derived values, observed typed-model defects the cache had masked: caption inline locations carry the container start line (figure line 1 vs caption line 3; both backends), table-cell inline locations are misaligned (line 4 vs data-row line 6), and algorithm-body citations are unrepresentable (Algorithm.body is verbatim-only, cache-only semantics). Files restored; re-sliced into D1a–D1e fixing the typed model first.
 
 - [V2-307D1d] DocumentIndex traverses Algorithm body lines
   - Parent: ordered child 8/13 of `V2-307`; depends on `V2-307D1c`.
@@ -1186,6 +1187,7 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 - 2026-08-22 - V2-307D1b Checker PASS; Algorithm owns typed body_lines populated from located content lines with cache-equal locations, exact Verify 118/118 and baselines 148/148; no push.
 - 2026-08-22 - V2-307D1c Checker PASS; markdown-it typed body_lines pinned identical to legacy through the shared container path with zero production changes, exact Verify 49/49; no push.
 - 2026-08-22 - V2-307D1d Checker PASS; DocumentIndex now traverses Algorithm body_lines so body citations join the derived collections with accurate locations and document order, exact Verify 16/16 and baselines 153/153; no push.
+- 2026-08-22 - V2-307D1e Checker PASS on Attempt 2 after the re-slice prerequisites; all parser-test cache pins now read DocumentIndex-derived sequences with zero cache-field assertions remaining, exact Verify 83/83 and value-equivalence probes green; no push.
 - 2026-08-22 - V2-307D1 Checker FAIL Attempt 1 then re-sliced into ordered children V2-307D1a…D1e after independent Checker grep found 20 cache-pin sites (18 in test_parser_contract.py) and completing them exposed typed-model defects the cache masked: caption inline locations carry the container start line in both backends, table-cell inline locations are misaligned by the metadata/blank rows, and algorithm-body citations exist only in the cache (Algorithm.body is verbatim-only); children fix caption/cell locations, add typed Algorithm body_lines to the model and both parsers, extend index traversal, then finish the pin migration; three test files restored, no product code edited in the split cycle.
 - 2026-08-22 - V2-307 split into eight ordered children V2-307A…G after grep mapping showed removing the four cache fields atomically spans model.py + both parsers (12 registration call sites) + compiler.py + validator.py + cli.py + qa/tools/parser_diff.py plus seven test files; children migrate readers first (compiler/CLI/parity-tool/test pins, with V2-308 landing between D2 and E), then stop registration per parser, then remove the fields; no product code edited in the split cycle.
 

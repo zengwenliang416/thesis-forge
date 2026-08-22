@@ -3,6 +3,7 @@ from pathlib import Path
 import pytest
 
 from thesis_forge.core.ids import is_valid_stable_id, split_stable_id
+from thesis_forge.core.index import DocumentIndex
 from thesis_forge.core.model import (
     Algorithm,
     BibliographyBlock,
@@ -53,7 +54,7 @@ width: "80%"
     assert doc.metadata["thesis"]["title"] == "测试论文"
     assert any(isinstance(x, Heading) and x.id == "chap:intro" for x in doc.blocks)
     assert any(isinstance(x, Figure) and x.id == "fig:model" for x in doc.blocks)
-    assert [x.target for x in doc.cross_references] == ["fig:model"]
+    assert [x.target for x in DocumentIndex.from_document(doc).cross_references] == ["fig:model"]
 
 
 def test_parse_markdown_text_preserves_the_logical_source_path(tmp_path: Path):
@@ -190,8 +191,8 @@ def predict(x):
     assert isinstance(footnote, FootnoteDefinition)
     assert footnote.label == "note"
     assert any(isinstance(item, Citation) for item in footnote.inlines)
-    assert [item.label for item in doc.footnote_references] == ["note"]
-    assert [item.keys for item in doc.citations] == [["smith2025"], ["footnote-source"]]
+    assert [item.label for item in DocumentIndex.from_document(doc).footnote_references] == ["note"]
+    assert [item.keys for item in DocumentIndex.from_document(doc).citations] == [["smith2025"], ["footnote-source"]]
 
 
 def test_parse_bibliography_marker_as_renderer_neutral_block(tmp_path: Path):
@@ -247,7 +248,7 @@ def test_empty_document_is_inspectable(tmp_path: Path):
 
     assert doc.metadata == {}
     assert doc.blocks == []
-    assert doc.inline_content == []
+    assert DocumentIndex.from_document(doc).inlines == ()
 
 
 def test_container_and_footnote_continuation_inline_locations(tmp_path: Path):
@@ -265,13 +266,14 @@ caption: "训练 [@caption-source]"
 
     doc = parse_markdown(source)
 
-    assert [citation.keys for citation in doc.citations] == [
+    index = DocumentIndex.from_document(doc)
+    assert [citation.keys for citation in index.citations] == [
         ["caption-source"],
         ["algorithm-source"],
         ["footnote-source"],
     ]
     assert [
-        (citation.location.line, citation.location.column) for citation in doc.citations
+        (citation.location.line, citation.location.column) for citation in index.citations
     ] == [
         (2, 14),
         (4, 6),

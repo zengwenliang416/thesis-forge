@@ -14,6 +14,7 @@ from pathlib import Path
 
 import pytest
 
+from thesis_forge.core.index import DocumentIndex
 from thesis_forge.core.model import Algorithm, Citation, Paragraph, inline_plain_text
 from thesis_forge.core.parser import ParseError
 from thesis_forge.core.parser_backend import (
@@ -277,7 +278,7 @@ def test_empty_document_is_inspectable(tmp_path: Path) -> None:
     doc = markdown_it.parse_file(source)
     assert doc.metadata == {}
     assert doc.blocks == []
-    assert doc.inline_content == []
+    assert DocumentIndex.from_document(doc).inlines == ()
 
 
 # ---------------------------------------------------------------------------

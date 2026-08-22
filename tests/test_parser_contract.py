@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import pytest
 
+from thesis_forge.core.index import DocumentIndex
 from thesis_forge.core.model import (
     Algorithm,
     BibliographyBlock,
@@ -128,9 +129,10 @@ def test_contract_heading_inline_extraction():
         Text,
         CrossReference,
     ]
-    assert [citation.keys for citation in doc.citations] == [["k1"]]
-    assert [ref.target for ref in doc.cross_references] == ["fig:x"]
-    citation = doc.citations[0]
+    index = DocumentIndex.from_document(doc)
+    assert [citation.keys for citation in index.citations] == [["k1"]]
+    assert [ref.target for ref in index.cross_references] == ["fig:x"]
+    citation = index.citations[0]
     assert (citation.location.line, citation.location.column) == (1, 7)
 
 
@@ -179,13 +181,14 @@ def test_contract_citation_forms():
         "单文献 [@smith2025]。\n\n多文献：[@smith2025; @wang2024]。\n\n带页码：[@smith2025, p. 12]。\n"
     )
 
-    assert [citation.keys for citation in doc.citations] == [
+    index = DocumentIndex.from_document(doc)
+    assert [citation.keys for citation in index.citations] == [
         ["smith2025"],
         ["smith2025", "wang2024"],
         ["smith2025"],
     ]
-    assert [citation.locator for citation in doc.citations] == [None, None, "p. 12"]
-    assert doc.citations[1].raw == "[@smith2025; @wang2024]"
+    assert [citation.locator for citation in index.citations] == [None, None, "p. 12"]
+    assert index.citations[1].raw == "[@smith2025; @wang2024]"
 
 
 def test_contract_cross_reference_all_prefixes():
@@ -193,7 +196,7 @@ def test_contract_cross_reference_all_prefixes():
     `@prefix:name` 引用。"""
     doc = parse("见 @fig:a @tbl:b @eq:c @alg:d @lst:e @sec:f @chap:g。\n")
 
-    assert [ref.target for ref in doc.cross_references] == [
+    assert [ref.target for ref in DocumentIndex.from_document(doc).cross_references] == [
         "fig:a",
         "tbl:b",
         "eq:c",
@@ -248,8 +251,9 @@ def test_contract_list_item_inline_extraction():
         Text,
         Citation,
     ]
-    assert [ref.target for ref in doc.cross_references] == ["fig:m"]
-    assert [citation.keys for citation in doc.citations] == [["k"]]
+    index = DocumentIndex.from_document(doc)
+    assert [ref.target for ref in index.cross_references] == ["fig:m"]
+    assert [citation.keys for citation in index.citations] == [["k"]]
     crossref = item.inlines[1]
     assert isinstance(crossref, CrossReference)
     assert (crossref.location.line, crossref.location.column) == (1, 5)
@@ -294,8 +298,9 @@ width: "85%"
     assert figure.width == "85%"
     caption_citation = figure.caption_inlines[1]
     assert (caption_citation.location.line, caption_citation.location.column) == (3, 18)
-    assert [citation.keys for citation in doc.citations] == [["cap-src"]]
-    assert doc.citations[0].location.line == 3
+    index = DocumentIndex.from_document(doc)
+    assert [citation.keys for citation in index.citations] == [["cap-src"]]
+    assert index.citations[0].location.line == 3
 
 
 def test_contract_table_container_populates_structured_rows_and_inlines():
@@ -324,8 +329,9 @@ caption: "实验结果"
     assert cell_citation.location.line == 6
     assert inline_plain_text(table.rows[1].cells[0].inlines) == "A [@cell-src]"
     assert inline_plain_text(table.rows[1].cells[1].inlines) == "0.91"
-    assert [citation.keys for citation in doc.citations] == [["cell-src"]]
-    assert doc.citations[0].location.line == 6
+    index = DocumentIndex.from_document(doc)
+    assert [citation.keys for citation in index.citations] == [["cell-src"]]
+    assert index.citations[0].location.line == 6
 
 
 def test_contract_equation_container_strips_dollar_fence():
@@ -369,8 +375,9 @@ caption: "训练流程"
     body_citation = algorithm.body_lines[1][1]
     assert isinstance(body_citation, Citation)
     assert (body_citation.location.line, body_citation.location.column) == (5, 9)
-    assert [citation.keys for citation in doc.citations] == [["alg-src"]]
-    assert doc.citations[0].location.line == 5
+    index = DocumentIndex.from_document(doc)
+    assert [citation.keys for citation in index.citations] == [["alg-src"]]
+    assert index.citations[0].location.line == 5
 
 
 def test_contract_listing_language_kv_wins_over_fence():
@@ -437,7 +444,9 @@ def test_contract_footnote_definition_and_continuation():
     续行并入定义正文。"""
     doc = parse("正文引用。[^note]\n\n[^note]: 第一行。\n    第二行续行。\n")
 
-    assert [ref.label for ref in doc.footnote_references] == ["note"]
+    assert [
+        ref.label for ref in DocumentIndex.from_document(doc).footnote_references
+    ] == ["note"]
     definition = doc.blocks[1]
     assert isinstance(definition, FootnoteDefinition)
     assert definition.label == "note"
@@ -451,10 +460,11 @@ def test_contract_footnote_definition_inline_extraction():
     做 inline 提取。"""
     doc = parse("[^src]: 引用 [@fn-src]。\n    续行见 @fig:m。\n")
 
-    assert [citation.keys for citation in doc.citations] == [["fn-src"]]
-    assert [ref.target for ref in doc.cross_references] == ["fig:m"]
-    assert doc.citations[0].location.line == 1
-    crossref = doc.cross_references[0]
+    index = DocumentIndex.from_document(doc)
+    assert [citation.keys for citation in index.citations] == [["fn-src"]]
+    assert [ref.target for ref in index.cross_references] == ["fig:m"]
+    assert index.citations[0].location.line == 1
+    crossref = index.cross_references[0]
     assert crossref.location.line == 2
 
 
@@ -499,8 +509,8 @@ def test_contract_unsupported_constructs_degrade_to_paragraph():
         and inline.children[0].value == "粗体"
         for inline in paragraph.inlines
     )
-    assert doc.citations == []
-    assert doc.cross_references == []
+    assert DocumentIndex.from_document(doc).citations == ()
+    assert DocumentIndex.from_document(doc).cross_references == ()
 
 
 def test_contract_inline_code_preserves_semantics_without_markers():
