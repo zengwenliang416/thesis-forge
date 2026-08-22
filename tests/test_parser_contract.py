@@ -479,7 +479,12 @@ def test_contract_unsupported_constructs_degrade_to_paragraph():
     assert "粗体" in paragraph.text
     assert "[链接](https://example.com)" in paragraph.text
     assert "![图片](./a.png)" in paragraph.text
-    assert any(isinstance(inline, Strong) for inline in paragraph.inlines)
+    assert any(
+        isinstance(inline, Strong)
+        and [type(child) for child in inline.children] == [Text]
+        and inline.children[0].value == "粗体"
+        for inline in paragraph.inlines
+    )
     assert doc.citations == []
     assert doc.cross_references == []
 

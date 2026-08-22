@@ -95,15 +95,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Open
 
-- [V2-302E1] Re-pin the Strong contract on recursive children
-  - Parent: ordered child 6/7 of `V2-302`; depends on `V2-302D2`.
-  - Files: `tests/test_parser_contract.py`, `tests/core/test_inline_model.py`
-  - Behavior: the Strong contract assertion pins recursive children content (restoring the content pin dropped in `V2-302C`); the inline-model tests cover Strong(children) recursion and its lack of a plain-text value field.
-  - Verify: `.venv/bin/python -m pytest tests/test_parser_contract.py tests/core/test_inline_model.py`
-  - Acceptance: the Strong contract pins children content; baselines stay green.
-  - Verification-surface change: authorized; finalizes the inline contract assertions.
-  - Attempts: 0
-
 - [V2-302E2] Retire the CodeSpan type
   - Parent: ordered child 7/7 of `V2-302`; depends on `V2-302E1`.
   - Files: `src/thesis_forge/core/model.py`, `tests/core/test_source_identity.py`
@@ -122,6 +113,16 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
   - Attempts: 0
 
 ## Done
+
+- [V2-302E1] Re-pin the Strong contract on recursive children
+  - Parent: ordered child 6/7 of `V2-302`; depends on `V2-302D2`.
+  - Files: `tests/test_parser_contract.py`, `tests/core/test_inline_model.py`
+  - Behavior: the Strong contract assertion pins recursive children content (restoring the content pin dropped in `V2-302C`); the inline-model tests cover Strong(children) recursion and its lack of a plain-text value field.
+  - Verify: `.venv/bin/python -m pytest tests/test_parser_contract.py tests/core/test_inline_model.py`
+  - Acceptance: the Strong contract pins children content; baselines stay green.
+  - Verification-surface change: authorized; finalizes the inline contract assertions.
+  - Attempts: 1
+  - Attempt 1 (2026-08-22): Checker PASS; diff confined to the 2 named files (isinstance-only Strong assertion replaced by a stricter children-content pin `Strong(children==[Text], children[0].value=="粗体")`, contract docstring untouched, 5 new Strong inline-model tests plus the disclosed one-line module-docstring update, all 12 prior tests intact), exact Verify 49/49 (32 contract + 17 inline-model), baselines 205/205 green, ruff and `git diff --check` clean, independent probes confirmed the re-pin is load-bearing (/tmp wrong-value `"错体"` and wrong-child-type `[Emphasis]` variants both fail against the real parser while the committed form passes and the weakened isinstance-only form is strictly weaker), all 5 new tests non-vacuous under dataclass mutations (tuple storage, empty default, field set exactly {location, node_id, origin, children}, nested Strong(Emphasis(Text)) access path, compare=False node_id equality), and both parser backends yield identical `Strong(children=[Text("粗体")])`, full suite 46 failed / 978 passed confined to the 7 known pre-existing files; no push.
 
 - [V2-302D2] Make Strong a recursive container
   - Parent: ordered child 5/7 of `V2-302`; depends on `V2-302D1`.
@@ -726,5 +727,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 - 2026-08-22 - V2-302D split into ordered children V2-302D1 (unpin legacy Strong shape in tests/core/test_inline_model.py) and V2-302D2 (the recursive-container flip) after the Maker's exact Verify went red on the V2-302A-era Emphasis test using `Strong(value="y")` as a child example — a fourth file the parent slice could not absorb; the Maker's parked diff (/tmp/v2-302d.diff, +27/−4 across model.py/parser.py/compiler.py) was set aside uncommitted and will be re-applied verbatim for the V2-302D2 Checker audit after D1 lands; sibling ordinals updated to /7, Done entries left verbatim; no product code committed in the split cycle.
 - 2026-08-22 - V2-302D1 Checker PASS; diff exactly +1/−2 confined to tests/core/test_inline_model.py (child swap to InlineCode + Strong import removal, zero Strong matches), Verify 12/12, tests/core/ 34/34, edited file 12/12 against both current model and /tmp flipped Strong(children) copy (import verified), full suite 46/973 confined to the 7 known files; no push.
 - 2026-08-22 - V2-302D2 Checker PASS; Maker-parked diff re-applied verbatim audited contract-exact (+27/−4 across model.py/parser.py/compiler.py, no scope creep), Verify 146/146, docx_renderer 86/86, ruff/diff-check clean, independent probes confirmed both-backend nesting with locations/registration/pre-order, compile lowering (CitationRun/bold TextRun/code+bold/FootnoteReferenceRun), and byte-identical HEAD-vs-candidate example parity, full suite 46/973 confined to the 7 known files; no push.
+- 2026-08-22 - V2-302E1 Checker PASS; 2-file diff contract-exact (stricter Strong children-content re-pin + 5 non-vacuous Strong inline-model tests), exact Verify 49/49, baselines 205/205, load-bearing/mutation/two-backend probes green, full suite 46 failed / 978 passed confined to the 7 known files; no push.
 
 ## Sync log

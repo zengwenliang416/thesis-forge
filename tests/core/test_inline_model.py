@@ -1,4 +1,4 @@
-"""Focused tests for the recursive inline type set (SoftBreak/HardBreak/Emphasis/Link/InlineMath/InlineCode)."""
+"""Focused tests for the recursive inline type set (SoftBreak/HardBreak/Strong/Emphasis/Link/InlineMath/InlineCode)."""
 
 from __future__ import annotations
 
@@ -13,6 +13,7 @@ from thesis_forge.core.model import (
     InlineMath,
     Link,
     SoftBreak,
+    Strong,
     Text,
 )
 
@@ -52,6 +53,45 @@ def test_emphasis_has_no_plain_text_field() -> None:
 
 def test_emphasis_defaults_to_empty_children() -> None:
     assert Emphasis().children == ()
+
+
+def test_strong_children_are_inline_tuple() -> None:
+    children = (Text(value="x"),)
+    node = Strong(children=children)
+    assert isinstance(node.children, tuple)
+    assert node.children == children
+    assert all(isinstance(child, Inline) for child in node.children)
+
+
+def test_strong_defaults_to_empty_children() -> None:
+    assert Strong().children == ()
+
+
+def test_strong_has_no_plain_text_field() -> None:
+    field_names = {f.name for f in dataclasses.fields(Strong)}
+    assert "value" not in field_names
+    assert "text" not in field_names
+    assert field_names == {"location", "node_id", "origin", "children"}
+
+
+def test_nested_strong_emphasis_is_representable() -> None:
+    node = Strong(children=(Emphasis(children=(Text(value="deep"),)),))
+    inner = node.children[0]
+    assert isinstance(inner, Emphasis)
+    leaf = inner.children[0]
+    assert isinstance(leaf, Text)
+    assert leaf.value == "deep"
+
+
+def test_strong_inherits_inline_node_identity() -> None:
+    node = Strong(children=(Text(value="x"),))
+    assert node.node_id
+    assert node.origin is None
+    other = Strong(children=(Text(value="x"),))
+    assert other.node_id != node.node_id
+    # node_id is excluded from equality (compare=False), so two Strong nodes
+    # with equal children compare equal despite distinct node_ids.
+    assert node == other
 
 
 def test_link_round_trip_and_defaults() -> None:
