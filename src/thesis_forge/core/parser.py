@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import re
 from pathlib import Path
-from typing import Any
+from typing import Any, Literal
 
 import yaml
 
@@ -26,6 +26,8 @@ from .model import (
     SourceLocation,
     Strong,
     Table,
+    TableCell,
+    TableRow,
     Text,
     ThesisDocument,
 )
@@ -37,6 +39,7 @@ CONTAINER_START_RE = re.compile(
 )
 CITATION_KEY_RE = re.compile(r"@([A-Za-z0-9_.:-]+)")
 KV_RE = re.compile(r'^([A-Za-z_][A-Za-z0-9_-]*):\s*"?(.+?)"?\s*$')
+TABLE_SEPARATOR_RE = re.compile(r"^:?-{3,}:?$")
 LIST_ITEM_RE = re.compile(r"^(?P<indent>[ \t]*)(?P<marker>[-+*]|\d+[.)])\s+(?P<text>.+?)\s*$")
 FOOTNOTE_DEFINITION_RE = re.compile(r"^\[\^(?P<label>[A-Za-z0-9_.:-]+)\]:\s*(?P<text>.*)$")
 INLINE_TOKEN_RE = re.compile(
@@ -192,6 +195,61 @@ def _parse_container_inlines(kind: str, body: list[str], start_line: int) -> lis
     return inlines
 
 
+def _split_table_row(line: str) -> list[str] | None:
+    stripped = line.strip()
+    if not stripped.startswith("|") or not stripped.endswith("|"):
+        return None
+    return [cell.strip() for cell in stripped[1:-1].split("|")]
+
+
+def _table_alignment(cell: str) -> Literal["left", "center", "right"] | None:
+    if TABLE_SEPARATOR_RE.fullmatch(cell) is None:
+        raise ValueError(f"invalid table separator cell: {cell!r}")
+    if cell.startswith(":") and cell.endswith(":"):
+        return "center"
+    if cell.endswith(":"):
+        return "right"
+    if cell.startswith(":"):
+        return "left"
+    return None
+
+
+def _parse_table_rows(lines: list[str], start_line: int) -> tuple[TableRow, ...]:
+    meaningful = [line for line in lines if line.strip()]
+    if len(meaningful) < 2:
+        return ()
+    header = _split_table_row(meaningful[0])
+    separator = _split_table_row(meaningful[1])
+    if header is None or separator is None or len(header) != len(separator):
+        return ()
+    try:
+        alignments = tuple(_table_alignment(cell) for cell in separator)
+    except ValueError:
+        return ()
+
+    def make_row(values: list[str], *, is_header: bool, line: int) -> TableRow:
+        return TableRow(
+            header=is_header,
+            cells=tuple(
+                TableCell(
+                    inlines=tuple(_parse_inline_content(value, line)),
+                    alignment=alignment,
+                    location=SourceLocation(line=line),
+                )
+                for value, alignment in zip(values, alignments, strict=True)
+            ),
+            location=SourceLocation(line=line),
+        )
+
+    rows = [make_row(header, is_header=True, line=start_line)]
+    for offset, raw in enumerate(meaningful[2:], start=2):
+        values = _split_table_row(raw)
+        if values is None or len(values) != len(header):
+            return ()
+        rows.append(make_row(values, is_header=False, line=start_line + offset))
+    return tuple(rows)
+
+
 def _parse_container(kind: str, block_id: str | None, body: list[str], line: int):
     values: dict[str, str] = {}
     content_lines: list[str] = []
@@ -208,6 +266,8 @@ def _parse_container(kind: str, block_id: str | None, body: list[str], line: int
 
     content = "\n".join(content_lines).strip()
     location = SourceLocation(line=line)
+    caption = values.get("caption", "")
+    table_rows = _parse_table_rows(content_lines, line + 1) if kind == "table" else ()
 
     if kind == "figure":
         return Figure(
@@ -218,7 +278,14 @@ def _parse_container(kind: str, block_id: str | None, body: list[str], line: int
             location=location,
         )
     if kind == "table":
-        return Table(id=block_id, caption=values.get("caption", ""), markdown=content, location=location)
+        return Table(
+            id=block_id,
+            caption=caption,
+            markdown=content,
+            caption_inlines=tuple(_parse_inline_content(caption, line)),
+            rows=table_rows,
+            location=location,
+        )
     if kind == "equation":
         latex = content
         if latex.startswith("$$") and latex.endswith("$$"):

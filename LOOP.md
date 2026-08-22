@@ -95,15 +95,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Open
 
-- [V2-304B] Populate structured table fields during parsing
-  - Parent: ordered child 2/5 of `V2-304`; depends on `V2-304A`.
-  - Files: `src/thesis_forge/core/model.py`, `src/thesis_forge/core/parser.py`, `tests/core/test_table_model.py`
-  - Behavior: table-container parsing populates typed caption inlines and structured rows/cells with alignment while the current compiler consumer remains green during the ordered migration.
-  - Verify: `.venv/bin/python -m pytest tests/core/test_table_model.py tests/test_parser.py tests/test_parser_contract.py`
-  - Acceptance: parser-produced table structure preserves header/body shape, alignment and inline cell content; malformed table input remains diagnosable.
-  - Verification-surface change: authorized; extends focused table/parser contract coverage.
-  - Attempts: 0
-
 - [V2-304C] Compile structured table rows and migrate compiler fixtures
   - Parent: ordered child 3/5 of `V2-304`; depends on `V2-304B`.
   - Files: `src/thesis_forge/core/compiler.py`, `tests/test_compiler.py`
@@ -140,6 +131,16 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
   - Attempts: 0
 
 ## Done
+
+- [V2-304B] Populate structured table fields during parsing
+  - Parent: ordered child 2/5 of `V2-304`; depends on `V2-304A`.
+  - Files: `src/thesis_forge/core/model.py`, `src/thesis_forge/core/parser.py`, `tests/core/test_table_model.py`
+  - Behavior: table-container parsing populates typed caption inlines and structured rows/cells with alignment while the current compiler consumer remains green during the ordered migration.
+  - Verify: `.venv/bin/python -m pytest tests/core/test_table_model.py tests/test_parser.py tests/test_parser_contract.py`
+  - Acceptance: parser-produced table structure preserves header/body shape, alignment and inline cell content; malformed table input remains diagnosable.
+  - Verification-surface change: authorized; extends focused table/parser contract coverage.
+  - Attempts: 1
+  - Attempt 1 (2026-08-22): Checker PASS; valid table containers populate caption inlines, header/body rows, cell alignment and inline citations; malformed shapes leave the structured side empty for the existing compiler diagnostic path, exact Verify 87/87 including markdown-it parser regressions, Ruff and `git diff --check` clean; no push.
 
 - [V2-304A] Add typed table cell and row primitives
   - Parent: ordered child 1/5 of `V2-304`; parent behavior remains unchanged.
@@ -904,5 +905,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 - 2026-08-22 - V2-303J Checker PASS; Heading/Paragraph/ListItem text fields were removed, exact Verify 141/141 plus 123 affected regressions passed, full-suite known failure set remained stable apart from a non-reproducible LibreOffice QA failure; no push.
 - 2026-08-22 - V2-304 split into ordered children V2-304A…E after CodeGraph found structured Table migration spans model/parser/compiler/render-plan and DOCX/parser/compiler fixtures beyond the original two-file slice; no product code edited in the split cycle, next queue V2-304A.
 - 2026-08-22 - V2-304A Checker PASS; typed TableCell/TableRow primitives and focused model tests added, exact Verify 4/4, Ruff/diff-check clean; no push.
+- 2026-08-22 - V2-304B Checker PASS; parser now populates structured table caption/rows/cells while retaining the raw consumer transition, exact Verify 87/87, Ruff/diff-check clean; no push.
 
 ## Sync log

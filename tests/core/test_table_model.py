@@ -3,14 +3,18 @@
 from __future__ import annotations
 
 import dataclasses
+from pathlib import Path
 
 from thesis_forge.core.model import (
     GeneratedOrigin,
     SourceLocation,
+    Table,
     TableCell,
     TableRow,
     Text,
+    inline_plain_text,
 )
+from thesis_forge.core.parser import parse_markdown_text
 
 
 def test_table_cell_defaults_and_identity() -> None:
@@ -67,3 +71,25 @@ def test_table_primitives_have_stable_structural_fields() -> None:
         "node_id",
         "origin",
     ]
+
+
+def test_parser_populates_structured_table_caption_rows_and_cells() -> None:
+    source = """::: table {#tbl:results}
+caption: "结果 [@table-source]"
+
+| 模型 | AUROC |
+| :--- | ---: |
+| A [@cell-source] | 0.91 |
+:::
+"""
+    document = parse_markdown_text(source, source_path=Path("table.md"))
+
+    table = document.blocks[0]
+    assert isinstance(table, Table)
+    assert inline_plain_text(table.caption_inlines) == "结果 [@table-source]"
+    assert len(table.rows) == 2
+    assert table.rows[0].header is True
+    assert table.rows[1].header is False
+    assert [cell.alignment for cell in table.rows[0].cells] == ["left", "right"]
+    assert inline_plain_text(table.rows[1].cells[0].inlines) == "A [@cell-source]"
+    assert inline_plain_text(table.rows[1].cells[1].inlines) == "0.91"

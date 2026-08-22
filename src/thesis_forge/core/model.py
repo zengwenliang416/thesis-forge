@@ -217,6 +217,8 @@ class Figure(Block):
 class Table(Block):
     caption: str = ""
     markdown: str = ""
+    caption_inlines: tuple[Inline, ...] = ()
+    rows: tuple[TableRow, ...] = ()
 
 
 @dataclass(slots=True)
