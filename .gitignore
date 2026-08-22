@@ -21,3 +21,6 @@ tmp/
 
 # Kimi assistant session exports (large dev logs, not source)
 docs/sessions/
+
+# Local source-delivery archives
+/thesis-forge-src-*.zip
