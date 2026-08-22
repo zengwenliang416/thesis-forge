@@ -95,17 +95,26 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Open
 
-- [V2-303D] Projections derive heading text from inlines
-  - Parent: ordered child 4/10 of `V2-303`; depends on `V2-303C`.
-  - Files: `src/thesis_forge/presentation/preview.py`, `src/thesis_forge/adapters/runtime.py`
-  - Behavior: the structure/outline projections read heading text via `inline_plain_text` instead of the block `text` field.
-  - Verify: `.venv/bin/python -m pytest tests/test_preview_presentation.py tests/test_adapters.py`
-  - Acceptance: projection output unchanged on the suite; no projection read of the block `text` field remains.
-  - Verification-surface change: none.
+- [V2-303D1] Preview outline derives heading text from inlines
+  - Parent: ordered child 4/11 of `V2-303`; depends on `V2-303C`.
+  - Files: `src/thesis_forge/presentation/preview.py`, `tests/test_preview_presentation.py`
+  - Behavior: the preview outline projection reads heading text via `inline_plain_text` instead of the block `text` field.
+  - Verify: `.venv/bin/python -m pytest tests/test_preview_presentation.py`
+  - Acceptance: preview outline text remains unchanged for parser-shaped documents; no preview outline read of the block `text` field remains.
+  - Verification-surface change: authorized; migrates preview fixtures to parser-shaped inlines.
+  - Attempts: 0
+
+- [V2-303D2] Runtime outline derives heading text from inlines
+  - Parent: ordered child 5/11 of `V2-303`; depends on `V2-303D1`.
+  - Files: `src/thesis_forge/adapters/runtime.py`, `tests/test_adapters.py`
+  - Behavior: desktop/project inspect outline projections read heading text via `inline_plain_text` instead of the block `text` field.
+  - Verify: `.venv/bin/python -m pytest tests/test_adapters.py`
+  - Acceptance: runtime outline text remains unchanged for parser-shaped documents; no runtime outline read of the block `text` field remains.
+  - Verification-surface change: authorized; migrates adapter fixtures to parser-shaped inlines.
   - Attempts: 0
 
 - [V2-303E] Parsers stop populating block text
-  - Parent: ordered child 5/10 of `V2-303`; depends on `V2-303D`.
+  - Parent: ordered child 6/11 of `V2-303`; depends on `V2-303D2`.
   - Files: `src/thesis_forge/core/parser.py`, `src/thesis_forge/core/parser_markdown_it.py`, `src/thesis_forge/core/compiler.py`
   - Behavior: Heading/Paragraph/ListItem construction stops passing `text=`; the now-dead `_fallback_text_runs` path is removed from the compiler.
   - Verify: `.venv/bin/python -m pytest tests/test_parser.py tests/test_parser_markdown_it.py tests/test_parser_backend.py tests/test_parser_contract.py tests/test_compiler.py tests/core/`
@@ -114,7 +123,7 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
   - Attempts: 0
 
 - [V2-303F] Drop text kwargs from docx-renderer fixtures
-  - Parent: ordered child 6/10 of `V2-303`; depends on `V2-303E`.
+  - Parent: ordered child 7/11 of `V2-303`; depends on `V2-303E`.
   - Files: `tests/test_docx_renderer.py`
   - Behavior: block constructions drop the redundant `text=` kwarg; inlines stay the single content source.
   - Verify: `.venv/bin/python -m pytest tests/test_docx_renderer.py`
@@ -123,7 +132,7 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
   - Attempts: 0
 
 - [V2-303G] Drop text kwargs from compiler fixtures
-  - Parent: ordered child 7/10 of `V2-303`; depends on `V2-303F`.
+  - Parent: ordered child 8/11 of `V2-303`; depends on `V2-303F`.
   - Files: `tests/test_compiler.py`
   - Behavior: block constructions drop the redundant `text=` kwarg.
   - Verify: `.venv/bin/python -m pytest tests/test_compiler.py`
@@ -132,7 +141,7 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
   - Attempts: 0
 
 - [V2-303H] Drop text kwargs from remaining core/adapter fixtures
-  - Parent: ordered child 8/10 of `V2-303`; depends on `V2-303G`.
+  - Parent: ordered child 9/11 of `V2-303`; depends on `V2-303G`.
   - Files: `tests/core/test_source_identity.py`, `tests/test_adapters.py`, `tests/core/test_manifest_resource_validation.py`
   - Behavior: block constructions drop the redundant `text=` kwarg.
   - Verify: `.venv/bin/python -m pytest tests/core/ tests/test_adapters.py`
@@ -141,7 +150,7 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
   - Attempts: 0
 
 - [V2-303I] Drop text kwargs from CLI fixtures
-  - Parent: ordered child 9/10 of `V2-303`; depends on `V2-303H`.
+  - Parent: ordered child 10/11 of `V2-303`; depends on `V2-303H`.
   - Files: `tests/cli/test_project_commands.py`
   - Behavior: the remaining block `text=` construction drops the kwarg.
   - Verify: `.venv/bin/python -m pytest tests/cli/test_project_commands.py`
@@ -150,7 +159,7 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
   - Attempts: 0
 
 - [V2-303J] Remove the block text fields
-  - Parent: ordered child 10/10 of `V2-303`; depends on `V2-303I`.
+  - Parent: ordered child 11/11 of `V2-303`; depends on `V2-303I`.
   - Files: `src/thesis_forge/core/model.py`, `tests/core/test_block_model.py`
   - Behavior: Heading, Paragraph and ListItem lose the `text` field; block-model tests pin that inlines are the single content source.
   - Verify: `.venv/bin/python -m pytest tests/core/test_block_model.py tests/core/ tests/test_parser_contract.py tests/test_compiler.py`
@@ -838,5 +847,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 - 2026-08-22 - V2-303B Checker PASS; diff exactly the 3 named test files (+21/−17, 16/16 HEAD `.text` pins migrated to inline_plain_text, zero residual `.text`), both disclosed re-pins verbatim with comments, exact Verify 82/82, ruff/diff-check clean, baselines 81/81, both-backend probes green incl. no-`text`-kwarg forward simulation, full-suite failure sets identical HEAD vs candidate at 46/998 confined to the 7 known files; no push.
 
 - 2026-08-22 - V2-303C Checker PASS; compiler text authority migrated to inline_plain_text, DOCX/compiler fixtures are parser-shaped, exact Verify 168/168, Ruff/diff-check and full-suite baseline audit passed with 46 known failures / 999 passes; no push.
+- 2026-08-22 - V2-303D split into ordered children V2-303D1 and V2-303D2 after CodeGraph/test inspection found preview.py + preview tests and runtime.py + adapter tests are four files; no product code edited in the split cycle, next queue V2-303D1.
 
 ## Sync log
