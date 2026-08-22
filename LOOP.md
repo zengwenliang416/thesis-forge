@@ -95,8 +95,17 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Open
 
-- [V2-302D] Make Strong a recursive container
-  - Parent: ordered child 4/6 of `V2-302`; depends on `V2-302C`.
+- [V2-302D1] Unpin the legacy Strong shape in the inline-model tests
+  - Parent: ordered child 4/7 of `V2-302`; depends on `V2-302C`.
+  - Files: `tests/core/test_inline_model.py`
+  - Behavior: the Emphasis children test stops using `Strong(value=...)` as its child example (uses a non-Strong inline), so no test pins Strong's legacy plain-string shape before the container flip.
+  - Verify: `.venv/bin/python -m pytest tests/core/test_inline_model.py`
+  - Acceptance: inline-model tests green both before and after the Strong flip; the Emphasis children assertions keep their intent.
+  - Verification-surface change: authorized; adjusts the focused inline-model tests ahead of the flip.
+  - Attempts: 0
+
+- [V2-302D2] Make Strong a recursive container
+  - Parent: ordered child 5/7 of `V2-302`; depends on `V2-302D1`.
   - Files: `src/thesis_forge/core/model.py`, `src/thesis_forge/core/parser.py`, `src/thesis_forge/core/compiler.py`
   - Behavior: Strong owns `tuple[Inline, ...]` children parsed recursively; inline registration and citation/footnote collection walk nested inlines; the compiler lowers Strong children with bold applied.
   - Verify: `.venv/bin/python -m pytest tests/test_parser_contract.py tests/test_parser.py tests/test_parser_markdown_it.py tests/test_parser_backend.py tests/test_compiler.py tests/core/`
@@ -105,7 +114,7 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
   - Attempts: 0
 
 - [V2-302E1] Re-pin the Strong contract on recursive children
-  - Parent: ordered child 5/6 of `V2-302`; depends on `V2-302D`.
+  - Parent: ordered child 6/7 of `V2-302`; depends on `V2-302D2`.
   - Files: `tests/test_parser_contract.py`, `tests/core/test_inline_model.py`
   - Behavior: the Strong contract assertion pins recursive children content (restoring the content pin dropped in `V2-302C`); the inline-model tests cover Strong(children) recursion and its lack of a plain-text value field.
   - Verify: `.venv/bin/python -m pytest tests/test_parser_contract.py tests/core/test_inline_model.py`
@@ -114,7 +123,7 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
   - Attempts: 0
 
 - [V2-302E2] Retire the CodeSpan type
-  - Parent: ordered child 6/6 of `V2-302`; depends on `V2-302E1`.
+  - Parent: ordered child 7/7 of `V2-302`; depends on `V2-302E1`.
   - Files: `src/thesis_forge/core/model.py`, `tests/core/test_source_identity.py`
   - Behavior: remove the unemitted and undispatched CodeSpan class and drop it from the source-identity class enumeration.
   - Verify: `.venv/bin/python -m pytest tests/core/ tests/test_parser_contract.py tests/test_parser.py tests/test_compiler.py`
@@ -712,5 +721,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 - 2026-08-22 - Protocol note: commit f91b0d8 (chore: ignore local source-delivery archives, .gitignore +3) was created inside the V2-302B subagent window contrary to Maker/Checker commit discipline; content is limited to ignoring the local `thesis-forge-src-*.zip` archive, touches no product code or verification surface, and is retained to avoid revert churn; future Maker/Checker briefs reiterate the single-commit rule.
 - 2026-08-22 - V2-302E re-sliced into ordered children V2-302E1 (re-pin Strong contract on recursive children) and V2-302E2 (retire CodeSpan) after the V2-302C Maker found `tests/core/test_source_identity.py` enumerates CodeSpan for identity coverage, which would have made the combined retirement a four-file item; sibling child ordinals updated to /6, historical Done entries left verbatim; no product code edited.
 - 2026-08-22 - V2-302C Checker PASS; three-file contract-exact diff (parser single-site InlineCode emission, compiler InlineCode dispatch, contract assertions migrated with Strong isinstance-only), Verify 112/112, baselines 120/120, parse/compile/parity probes green, CodeSpan residuals only in model.py + test_source_identity.py, full suite 46/973 confined to the 7 known files; no push.
+- 2026-08-22 - V2-302D split into ordered children V2-302D1 (unpin legacy Strong shape in tests/core/test_inline_model.py) and V2-302D2 (the recursive-container flip) after the Maker's exact Verify went red on the V2-302A-era Emphasis test using `Strong(value="y")` as a child example — a fourth file the parent slice could not absorb; the Maker's parked diff (/tmp/v2-302d.diff, +27/−4 across model.py/parser.py/compiler.py) was set aside uncommitted and will be re-applied verbatim for the V2-302D2 Checker audit after D1 lands; sibling ordinals updated to /7, Done entries left verbatim; no product code committed in the split cycle.
 
 ## Sync log
