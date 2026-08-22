@@ -30,6 +30,7 @@ SRC = REPO_ROOT / "src"
 if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
+from thesis_forge.core.index import DocumentIndex
 from thesis_forge.core.model import ThesisDocument
 from thesis_forge.core.parser_backend import (
     get_parser_backend,
@@ -68,7 +69,7 @@ def normalize_document(document: ThesisDocument) -> dict[str, Any]:
 
     每个节点带 ``kind``（类名）+ dataclass 字段（含 id、location
     行列号、inlines 递归；``compare=False`` 的逐实例身份字段除外）；文档级带
-    metadata、bibliography 与
+    metadata、bibliography 与 DocumentIndex 派生的
     inline_content / cross_references / citations / footnote_references 序列。
     source_path 只保留文件名，使报告跨机器稳定。
     """
@@ -76,15 +77,16 @@ def normalize_document(document: ThesisDocument) -> dict[str, Any]:
     def tagged(node: Any) -> dict[str, Any]:
         return {"kind": type(node).__name__, **_jsonable(node)}
 
+    index = DocumentIndex.from_document(document)
     return {
         "source_path": Path(document.source_path).name,
         "metadata": _jsonable(document.metadata),
         "bibliography": _jsonable(document.bibliography),
         "blocks": [tagged(block) for block in document.blocks],
-        "inline_content": [tagged(inline) for inline in document.inline_content],
-        "cross_references": [tagged(ref) for ref in document.cross_references],
-        "citations": [tagged(citation) for citation in document.citations],
-        "footnote_references": [tagged(ref) for ref in document.footnote_references],
+        "inline_content": [tagged(inline) for inline in index.inlines],
+        "cross_references": [tagged(ref) for ref in index.cross_references],
+        "citations": [tagged(citation) for citation in index.citations],
+        "footnote_references": [tagged(ref) for ref in index.footnote_references],
     }
 
 
@@ -248,7 +250,7 @@ def main(argv: list[str] | None = None) -> int:
     if report.ok:
         print(
             f"OK: {args.backend_a} 与 {args.backend_b} 输出一致"
-            f"（{len(document_a.blocks)} 个块，{len(document_a.inline_content)} 个 inline"
+            f"（{len(document_a.blocks)} 个块，{len(normalized_a['inline_content'])} 个 inline"
             f"，豁免 {len(report.allowed)} 条）"
         )
         return 0

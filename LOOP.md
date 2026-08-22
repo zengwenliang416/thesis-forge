@@ -95,15 +95,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Open
 
-- [V2-307C] QA parity tool derives normalized sequences from the index
-  - Parent: ordered child 4/9 of `V2-307`; depends on `V2-307B`.
-  - Files: `qa/tools/parser_diff.py`, `tests/test_parser_backend.py`
-  - Behavior: parser_diff's normalized inline/citation/reference sequences come from DocumentIndex; parity semantics and normalized keys are unchanged.
-  - Verify: `.venv/bin/python -m pytest tests/test_parser_backend.py tests/test_parser_markdown_it.py`
-  - Acceptance: legacy-vs-markdown-it parity stays OK on shipped examples; no parser_diff read of the cache fields remains.
-  - Verification-surface change: authorized; migrates the parity-tool regression.
-  - Attempts: 0
-
 - [V2-307D1] Parser test cache pins migrate to index reads
   - Parent: ordered child 5/9 of `V2-307`; depends on `V2-307C`.
   - Files: `tests/test_parser.py`, `tests/test_parser_contract.py`, `tests/test_parser_markdown_it.py`
@@ -158,6 +149,16 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
   - Attempts: 0
 
 ## Done
+
+- [V2-307C] QA parity tool derives normalized sequences from the index
+  - Parent: ordered child 4/9 of `V2-307`; depends on `V2-307B`.
+  - Files: `qa/tools/parser_diff.py`, `tests/test_parser_backend.py`
+  - Behavior: parser_diff's normalized inline/citation/reference sequences come from DocumentIndex; parity semantics and normalized keys are unchanged.
+  - Verify: `.venv/bin/python -m pytest tests/test_parser_backend.py tests/test_parser_markdown_it.py`
+  - Acceptance: legacy-vs-markdown-it parity stays OK on shipped examples; no parser_diff read of the cache fields remains.
+  - Verification-surface change: authorized; migrates the parity-tool regression.
+  - Attempts: 1
+  - Attempt 1 (2026-08-22): Checker PASS; parser_diff.py diff is the DocumentIndex import, one index build in normalize_document, docstring note, and OK-message count source swap (tests/test_parser_backend.py needed zero changes), exact Verify 48/48, Ruff and `git diff --check` clean, parity probes green on all three shipped examples (45/87, 43/82, 185/305 blocks/inlines; 0 exemptions) plus legacy/legacy self-check, index-vs-cache completeness probe showed equal index-derived counts (87=87) on both backends with six caption/cell inlines newly covered, normalized JSON keys unchanged, grep found no cache-field read; no push.
 
 - [V2-307B] CLI inspect JSON derives semantic collections from the index
   - Parent: ordered child 3/9 of `V2-307`; depends on `V2-307A2` (the split parent reference `V2-307A` was corrected when the parent split into A1/A2).
@@ -1139,6 +1140,7 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 - 2026-08-22 - V2-307A1 Checker PASS; container-citation pin re-based on parsed figure-caption content, exact Verify 24/24 (27/27 with the parked A2 flip), cache-only-citation survey clean; no push.
 - 2026-08-22 - V2-307A2 Checker PASS; compiler footnote/citation collection now derives from the DocumentIndex full inline sequence, exact Verify 39/39 and baselines 177/177, cache-clear compile equality and caption-citation probes green; no push.
 - 2026-08-22 - V2-307B Checker PASS; CLI inspect JSON now derives all four semantic collections from DocumentIndex with value-identical payloads, exact Verify 23/23 and cli/adapters baseline 48/48; no push.
+- 2026-08-22 - V2-307C Checker PASS; parser_diff normalization now derives inline/citation/reference sequences from DocumentIndex with parity green on all three shipped examples and zero cache-field reads, exact Verify 48/48; no push.
 - 2026-08-22 - V2-307 split into eight ordered children V2-307A…G after grep mapping showed removing the four cache fields atomically spans model.py + both parsers (12 registration call sites) + compiler.py + validator.py + cli.py + qa/tools/parser_diff.py plus seven test files; children migrate readers first (compiler/CLI/parity-tool/test pins, with V2-308 landing between D2 and E), then stop registration per parser, then remove the fields; no product code edited in the split cycle.
 
 ## Sync log
