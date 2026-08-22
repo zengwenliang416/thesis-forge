@@ -95,15 +95,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Open
 
-- [V2-302D1] Unpin the legacy Strong shape in the inline-model tests
-  - Parent: ordered child 4/7 of `V2-302`; depends on `V2-302C`.
-  - Files: `tests/core/test_inline_model.py`
-  - Behavior: the Emphasis children test stops using `Strong(value=...)` as its child example (uses a non-Strong inline), so no test pins Strong's legacy plain-string shape before the container flip.
-  - Verify: `.venv/bin/python -m pytest tests/core/test_inline_model.py`
-  - Acceptance: inline-model tests green both before and after the Strong flip; the Emphasis children assertions keep their intent.
-  - Verification-surface change: authorized; adjusts the focused inline-model tests ahead of the flip.
-  - Attempts: 0
-
 - [V2-302D2] Make Strong a recursive container
   - Parent: ordered child 5/7 of `V2-302`; depends on `V2-302D1`.
   - Files: `src/thesis_forge/core/model.py`, `src/thesis_forge/core/parser.py`, `src/thesis_forge/core/compiler.py`
@@ -140,6 +131,16 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
   - Attempts: 0
 
 ## Done
+
+- [V2-302D1] Unpin the legacy Strong shape in the inline-model tests
+  - Parent: ordered child 4/7 of `V2-302`; depends on `V2-302C`.
+  - Files: `tests/core/test_inline_model.py`
+  - Behavior: the Emphasis children test stops using `Strong(value=...)` as its child example (uses a non-Strong inline), so no test pins Strong's legacy plain-string shape before the container flip.
+  - Verify: `.venv/bin/python -m pytest tests/core/test_inline_model.py`
+  - Acceptance: inline-model tests green both before and after the Strong flip; the Emphasis children assertions keep their intent.
+  - Verification-surface change: authorized; adjusts the focused inline-model tests ahead of the flip.
+  - Attempts: 1
+  - Attempt 1 (2026-08-22): Checker PASS; diff exactly 1 insertion / 2 deletions confined to tests/core/test_inline_model.py (`Strong(value="y")` child swapped for `InlineCode(value="y")`, now-unused Strong import removed, zero Strong matches remain), exact Verify 12 passed, tests/core/ 34 passed, ruff and `git diff --check` clean, independent probes ran the edited file 12 passed against BOTH the current model and a /tmp copy with /tmp/v2-302d.diff applied (import of the flipped Strong(children) model verified via `__file__` + dataclass fields), children-tuple assertions (tuple type, equality, all-Inline) unchanged in substance, full suite 46 failed / 973 passed confined to the 7 known pre-existing files; no push.
 
 - [V2-302C] Flip code-span emission to InlineCode
   - Parent: ordered child 3/6 of `V2-302`; depends on `V2-302B`.
@@ -722,5 +723,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 - 2026-08-22 - V2-302E re-sliced into ordered children V2-302E1 (re-pin Strong contract on recursive children) and V2-302E2 (retire CodeSpan) after the V2-302C Maker found `tests/core/test_source_identity.py` enumerates CodeSpan for identity coverage, which would have made the combined retirement a four-file item; sibling child ordinals updated to /6, historical Done entries left verbatim; no product code edited.
 - 2026-08-22 - V2-302C Checker PASS; three-file contract-exact diff (parser single-site InlineCode emission, compiler InlineCode dispatch, contract assertions migrated with Strong isinstance-only), Verify 112/112, baselines 120/120, parse/compile/parity probes green, CodeSpan residuals only in model.py + test_source_identity.py, full suite 46/973 confined to the 7 known files; no push.
 - 2026-08-22 - V2-302D split into ordered children V2-302D1 (unpin legacy Strong shape in tests/core/test_inline_model.py) and V2-302D2 (the recursive-container flip) after the Maker's exact Verify went red on the V2-302A-era Emphasis test using `Strong(value="y")` as a child example — a fourth file the parent slice could not absorb; the Maker's parked diff (/tmp/v2-302d.diff, +27/−4 across model.py/parser.py/compiler.py) was set aside uncommitted and will be re-applied verbatim for the V2-302D2 Checker audit after D1 lands; sibling ordinals updated to /7, Done entries left verbatim; no product code committed in the split cycle.
+- 2026-08-22 - V2-302D1 Checker PASS; diff exactly +1/−2 confined to tests/core/test_inline_model.py (child swap to InlineCode + Strong import removal, zero Strong matches), Verify 12/12, tests/core/ 34/34, edited file 12/12 against both current model and /tmp flipped Strong(children) copy (import verified), full suite 46/973 confined to the 7 known files; no push.
 
 ## Sync log

@@ -13,7 +13,6 @@ from thesis_forge.core.model import (
     InlineMath,
     Link,
     SoftBreak,
-    Strong,
     Text,
 )
 
@@ -37,7 +36,7 @@ def test_soft_break_and_hard_break_are_marker_nodes() -> None:
 
 
 def test_emphasis_children_are_inline_tuple() -> None:
-    children = (Text(value="x"), Strong(value="y"))
+    children = (Text(value="x"), InlineCode(value="y"))
     node = Emphasis(children=children)
     assert isinstance(node.children, tuple)
     assert node.children == children
