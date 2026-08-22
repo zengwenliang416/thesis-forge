@@ -95,12 +95,49 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Open
 
-- [V2-305] Rich thesis object model
+- [V2-305A] Add typed thesis-object caption/content primitives
+  - Parent: ordered child 1/5 of `V2-305`; parent behavior remains unchanged.
   - Files: `src/thesis_forge/core/model.py`, `tests/core/test_thesis_object_model.py`
-  - Behavior: Figure, Listing and Algorithm own typed captions/content; Equation and Footnote have complete source identity.
+  - Behavior: Figure/Listing/Algorithm expose typed caption inline storage; Equation exposes display state; source identity defaults remain stable.
   - Verify: `.venv/bin/python -m pytest tests/core/test_thesis_object_model.py`
-  - Acceptance: caption citations/cross-references/strong text are representable.
-  - Verification-surface change: authorized; creates focused thesis-object-model tests.
+  - Acceptance: typed object primitives construct with source identity and caption inline tuples without changing parser/compiler consumers yet.
+  - Verification-surface change: authorized; creates focused thesis-object model tests.
+  - Attempts: 0
+
+- [V2-305B] Populate typed object fields during parsing
+  - Parent: ordered child 2/5 of `V2-305`; depends on `V2-305A`.
+  - Files: `src/thesis_forge/core/model.py`, `src/thesis_forge/core/parser.py`, `tests/core/test_thesis_object_model.py`
+  - Behavior: figure/listing/algorithm captions and equation display state are populated from parser-normalized source data while current consumers remain green.
+  - Verify: `.venv/bin/python -m pytest tests/core/test_thesis_object_model.py tests/test_parser.py tests/test_parser_contract.py`
+  - Acceptance: parser-produced typed captions preserve citations/cross-references and object source locations; existing code/body semantics remain unchanged.
+  - Verification-surface change: authorized; extends parser/object contract tests.
+  - Attempts: 0
+
+- [V2-305C] Compile typed object captions and content
+  - Parent: ordered child 3/5 of `V2-305`; depends on `V2-305B`.
+  - Files: `src/thesis_forge/core/compiler.py`, `tests/test_compiler.py`
+  - Behavior: compiler consumes typed captions/content and derives renderer-neutral instruction text/runs without reading raw caption duplicates.
+  - Verify: `.venv/bin/python -m pytest tests/test_compiler.py`
+  - Acceptance: caption citations/cross-references/strong text and equation display semantics remain represented in the RenderPlan.
+  - Verification-surface change: authorized; migrates compiler object fixtures.
+  - Attempts: 0
+
+- [V2-305D] Migrate DOCX/preview object fixtures
+  - Parent: ordered child 4/5 of `V2-305`; depends on `V2-305C`.
+  - Files: `tests/test_docx_renderer.py`, `tests/test_preview_presentation.py`, `tests/core/test_manifest_resource_validation.py`
+  - Behavior: object fixtures construct typed captions/content and preserve DOCX/preview/validation assertions.
+  - Verify: `.venv/bin/python -m pytest tests/test_docx_renderer.py tests/test_preview_presentation.py tests/core/test_manifest_resource_validation.py`
+  - Acceptance: object XML/preview/resource checks remain green without raw caption fixture fields.
+  - Verification-surface change: authorized; migrates object fixtures.
+  - Attempts: 0
+
+- [V2-305E] Remove raw thesis-object caption/text fields
+  - Parent: ordered child 5/5 of `V2-305`; depends on `V2-305D`.
+  - Files: `src/thesis_forge/core/model.py`, `src/thesis_forge/core/parser.py`, `tests/core/test_thesis_object_model.py`
+  - Behavior: Figure/Listing/Algorithm no longer store raw caption strings and FootnoteDefinition no longer stores duplicate text; typed inlines/content are authoritative.
+  - Verify: `.venv/bin/python -m pytest tests/core/test_thesis_object_model.py tests/test_parser.py tests/test_parser_contract.py tests/test_compiler.py tests/test_docx_renderer.py tests/test_preview_presentation.py`
+  - Acceptance: no raw caption/text plus typed-inline duplication remains for the targeted objects; all structured object paths stay green.
+  - Verification-surface change: authorized; finalizes the rich thesis-object model contract.
   - Attempts: 0
 
 ## Done
@@ -938,5 +975,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 - 2026-08-22 - V2-304E2 split into ordered children V2-304E2A and V2-304E2B after structured Table fixture audit found raw caption kwargs in compiler and DOCX tests; no product code edited in the split cycle, next queue V2-304E2A.
 - 2026-08-22 - V2-304E2A Checker PASS; compiler/DOCX structured Table fixtures now use caption inlines only, exact Verify 109/109, AST/Ruff/diff-check passed; no push.
 - 2026-08-22 - V2-304E2B Checker PASS; raw Table caption/markdown fields were removed, exact Verify 157/157, structured end-to-end regression and raw-field scan passed; no push.
+- 2026-08-22 - V2-305 split into ordered children V2-305A…E after AST/CodeGraph found typed caption/content and source-identity migration spans model/parser/compiler plus DOCX/preview/validation fixtures; no product code edited in the split cycle, next queue V2-305A.
 
 ## Sync log
