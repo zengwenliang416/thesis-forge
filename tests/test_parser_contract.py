@@ -366,6 +366,9 @@ caption: "训练流程"
     assert inline_plain_text(algorithm.caption_inlines) == "训练流程"
     assert "1. 初始化参数；" in algorithm.body
     assert "2. 读取数据 [@alg-src]。" in algorithm.body
+    body_citation = algorithm.body_lines[1][1]
+    assert isinstance(body_citation, Citation)
+    assert (body_citation.location.line, body_citation.location.column) == (5, 9)
     assert [citation.keys for citation in doc.citations] == [["alg-src"]]
     assert doc.citations[0].location.line == 5
 

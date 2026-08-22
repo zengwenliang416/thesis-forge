@@ -314,10 +314,16 @@ def _parse_container(kind: str, block_id: str | None, body: list[str], line: int
             location=location,
         )
     if kind == "algorithm":
+        body_lines = tuple(
+            tuple(_parse_inline_content(raw, body_line))
+            for body_line, raw in located_lines
+            if raw.strip()
+        )
         return Algorithm(
             id=block_id,
-            caption_inlines=tuple(_parse_inline_content(caption, line)),
+            caption_inlines=caption_inlines,
             body=content,
+            body_lines=body_lines,
             location=location,
         )
     if kind == "bibliography":

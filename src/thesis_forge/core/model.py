@@ -236,6 +236,7 @@ class Listing(Block):
 class Algorithm(Block):
     caption_inlines: tuple[Inline, ...] = ()
     body: str = ""
+    body_lines: tuple[tuple[Inline, ...], ...] = ()
 
 
 @dataclass(slots=True)
