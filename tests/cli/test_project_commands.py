@@ -16,7 +16,7 @@ from thesis_forge.application import (
 )
 from thesis_forge.application.contracts import ProjectRequestIntent
 from thesis_forge.cli import app
-from thesis_forge.core.model import Heading, ThesisDocument, ValidationIssue
+from thesis_forge.core.model import Heading, Text, ThesisDocument, ValidationIssue
 from thesis_forge.core.validator import ValidationContext
 
 PROJECT = Path(__file__).resolve().parents[1] / "fixtures" / "v2-project"
@@ -31,7 +31,7 @@ class RecordingProjectService:
         return InspectionResult(
             ThesisDocument(
                 source_path=PROJECT / "thesis.md",
-                blocks=[Heading(level=1, text="项目论文")],
+                blocks=[Heading(level=1, inlines=[Text(value="项目论文")])],
             )
         )
 
