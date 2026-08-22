@@ -1575,7 +1575,7 @@ def _lint_l5_fixture_dir(
     package_dir: Path, name: str, base_template_path: Path | None
 ) -> list[ValidationIssue]:
     """fixture markdown 可被 parser/validator 接受（v2 管线集成前的降级语义）。"""
-    from thesis_forge.core.parser_backend import LegacyParserBackend
+    from thesis_forge.core.parser_backend import create_parser_backend
     from thesis_forge.core.validator import ValidationContext, validate_document
     from thesis_forge.templates.resolver import resolve_template
 
@@ -1598,10 +1598,11 @@ def _lint_l5_fixture_dir(
         )
         template = resolved_base.template
         template_path = resolved_base.path
+    parser_backend = create_parser_backend()
     for markdown in markdown_files:
         label = f"fixtures/{name}/{markdown.name}"
         try:
-            document = LegacyParserBackend().parse_file(markdown)
+            document = parser_backend.parse_file(markdown)
         except Exception as error:  # noqa: BLE001 — parser 任意失败都转为 fixture 诊断
             issues.append(
                 _error(
@@ -1624,6 +1625,7 @@ def _lint_l5_fixture_dir(
             template=template,
             template_path=template_path,
             resource_roots=(fixture_dir,),
+            required_metadata=(),
         )
         errors = [
             issue

@@ -203,9 +203,8 @@ def _write_l1_complete_package(package_dir: Path, data: dict) -> Path:
     )
     minimal = package_dir / "fixtures" / "minimal"
     minimal.mkdir(parents=True)
-    # L5 fixture 冒烟：front matter 满足 validator 必需 metadata（thesis.title/author.name）
+    # L5 fixture 使用 canonical v2 source；metadata contract 由 lint 显式定义。
     (minimal / "thesis.md").write_text(
-        "---\nthesis:\n  title: 示例论文\nauthor:\n  name: 张三\n---\n\n"
         "# 绪论 {#chap:intro}\n\n正文段落。\n",
         encoding="utf-8",
     )

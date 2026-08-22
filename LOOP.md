@@ -95,12 +95,12 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Open
 
-- [V2-319C2] Migrate template-v2 L5 lint and fixtures to canonical v2 source
-  - Parent: ordered child 2/2 of the re-sliced `V2-319C`; depends on `V2-319C1`; the original `V2-319C` Behavior and Acceptance remain unchanged.
-  - Files: `src/thesis_forge/templates/v2/lint.py`, `tests/test_template_v2.py`, `spikes/phase0/docx-template/package-sample/fixtures/minimal/thesis.md`
-  - Behavior: template-v2 L5 fixture lint uses the canonical parser factory/type, the generated and shipped fixtures use canonical v2 source without YAML Front Matter, and metadata-free fixture validation explicitly uses `required_metadata=()` rather than a legacy fallback.
-  - Verify: `.venv/bin/python -m pytest tests/test_template_v2.py tests/test_parser_backend.py tests/test_parser_markdown_it.py`
-  - Acceptance: template tooling and its fixture coverage use the same single-parser API as the application path, with no legacy import, automatic migration, compatibility branch, or silent skip.
+- [V2-319C2B] Rebase template-v2 editor L5 fixtures on canonical source
+  - Parent: ordered child 2/2 of the re-sliced `V2-319C2`; depends on `V2-319C2A`; the original `V2-319C2` Behavior and Acceptance remain unchanged.
+  - Files: `tests/test_template_v2_editor.py`
+  - Behavior: the template-v2 editor L5 validator-error fixture uses canonical v2 Markdown and still proves duplicate IDs are reported after the parser seam changes.
+  - Verify: `.venv/bin/python -m pytest tests/test_template_v2_editor.py -k 'lint_l5'`
+  - Acceptance: all template-v2 L5 fixture coverage uses canonical source syntax without YAML Front Matter or a compatibility branch.
   - Verification-surface change: no.
   - Attempts: 0
 
@@ -114,6 +114,16 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
   - Attempts: 0
 
 ## Done
+
+- [V2-319C2A] Migrate template-v2 L5 lint and canonical fixtures
+  - Parent: ordered child 1/2 of the re-sliced `V2-319C2`; depends on `V2-319C1`; the original `V2-319C2` Behavior and Acceptance remain unchanged across C2A and C2B.
+  - Files: `src/thesis_forge/templates/v2/lint.py`, `tests/test_template_v2.py`, `spikes/phase0/docx-template/package-sample/fixtures/minimal/thesis.md`
+  - Behavior: template-v2 L5 fixture lint uses the canonical parser factory/type, the generated and shipped fixtures use canonical v2 source without YAML Front Matter, and metadata-free fixture validation explicitly uses `required_metadata=()` rather than a legacy fallback.
+  - Verify: `.venv/bin/python -m pytest tests/test_template_v2.py tests/test_parser_backend.py tests/test_parser_markdown_it.py`
+  - Acceptance: template tooling and its fixture coverage use the same single-parser API as the application path, with no legacy import, automatic migration, compatibility branch, or silent skip.
+  - Verification-surface change: no.
+  - Attempts: 1
+  - Attempt 1 (2026-08-22): Checker PASS; the effective LOOP Verify ran 102 tests with 97 passed and 5 pre-existing package-sample `reference.docx`/`shell.docx` missing-asset failures; isolated clean HEAD ran 96 passed and 6 failed, with the candidate failure set a strict subset and only the clean-only YAML Front Matter failure at `test_lint_l1_external_relationship_allowlist`; targeted Ruff, `git diff --check`, and `./lint-loop.sh` passed; canonical parser, metadata-free L5, and duplicate-ID probes passed; candidate scope was exactly the three named files, C2B was untouched, the pre-existing registry was preserved, and no push.
 
 - [V2-319C1] Migrate public core exports to the canonical parser API
   - Parent: ordered child 1/2 of the re-sliced `V2-319C`; depends on `V2-319B`; the original `V2-319C` Behavior and Acceptance remain unchanged across C1 and C2.
@@ -1481,5 +1491,7 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 - 2026-08-22 - V2-319C Checker FAIL Attempt 1; expected candidate and clean-HEAD exact Verify failure node sets to match, observed candidate 96/6 versus isolated clean HEAD 97/5 with the additional `tests/test_template_v2.py::test_lint_l1_external_relationship_allowlist` failure caused by canonical rejection of YAML Front Matter as `TF-SOURCE-LEGACY-001`; target Ruff, `git diff --check`, and LOOP-LINT passed, candidate files were restored, the pre-existing registry was preserved, and no Done move, commit, or push.
 - 2026-08-22 - V2-319C split into ordered children V2-319C1 and V2-319C2 after CodeGraph and fixture inspection showed the canonical L5 migration crosses the public core export, template lint, test-generated YAML fixture, and package-sample fixture surfaces; no product code edited in the split cycle, next queue is V2-319C1.
 - 2026-08-22 - V2-319C1 Checker PASS Attempt 1; exact Verify 44/44, targeted Ruff, `git diff --check`, LOOP-LINT, and the canonical public-surface probe passed; only `src/thesis_forge/core/__init__.py` plus this lifecycle update changed, `change-registry.json` was preserved and uncommitted, and no push.
+- 2026-08-22 - V2-319C2 split into ordered children V2-319C2A and V2-319C2B after fixture audit found `tests/test_template_v2_editor.py::test_lint_l5_fixture_validator_error_fails` writes YAML Front Matter that would fail the canonical parser; no product code edited in the split cycle, next queue is V2-319C2A.
+- 2026-08-22 - V2-319C2A Checker PASS; candidate failure set was a strict subset of isolated clean HEAD (`97 passed/5 pre-existing package-sample missing-DOCX failures` vs `96 passed/6 failed`), targeted Ruff, `git diff --check`, LOOP-LINT, canonical parser/L5/duplicate-ID probes passed, and only C2A plus `LOOP.md` changed; C2B and the pre-existing registry were preserved, no push.
 
 ## Sync log
