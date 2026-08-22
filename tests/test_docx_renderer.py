@@ -1441,14 +1441,12 @@ def test_docx_renderer_bookmarks_listing_and_algorithm_objects(tmp_path: Path):
         blocks=[
             Listing(
                 id="lst:service",
-                caption="构建服务",
                 caption_inlines=_text_inlines("构建服务"),
                 language="python",
                 code="build_service(source, output)",
             ),
             Algorithm(
                 id="alg:build",
-                caption="安全构建",
                 caption_inlines=_text_inlines("安全构建"),
                 body="1. validate\n2. render\n3. replace",
             ),
@@ -1804,14 +1802,12 @@ def test_docx_renderer_creates_real_figures_captions_bookmarks_and_three_line_ta
             Figure(
                 id="fig:model",
                 src="./images/model.png",
-                caption="系统模型",
                 caption_inlines=_text_inlines("系统模型"),
                 width="50%",
             ),
             Figure(
                 id="fig:default",
                 src="./images/model.png",
-                caption="默认宽度",
                 caption_inlines=_text_inlines("默认宽度"),
             ),
             _structured_table(
@@ -2009,7 +2005,6 @@ def test_docx_renderer_honors_non_default_caption_positions(tmp_path: Path):
             Figure(
                 id="fig:model",
                 src="./images/model.png",
-                caption="系统模型",
                 caption_inlines=_text_inlines("系统模型"),
             ),
             _structured_table(
@@ -2059,7 +2054,6 @@ def test_docx_renderer_preserves_intrinsic_image_size_without_width_policy(
             Figure(
                 id="fig:model",
                 src="./model.png",
-                caption="系统模型",
                 caption_inlines=_text_inlines("系统模型"),
             )
         ],
@@ -2179,7 +2173,6 @@ def test_docx_renderer_creates_real_math_fields_footnotes_and_page_structures(
             Figure(
                 id="fig:model",
                 src="./model.png",
-                caption="系统模型",
                 caption_inlines=_text_inlines("系统模型"),
             ),
             _structured_table(

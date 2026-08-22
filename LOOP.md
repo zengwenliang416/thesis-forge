@@ -95,15 +95,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Open
 
-- [V2-305E1A] Migrate compiler/DOCX/preview object captions
-  - Parent: ordered child 5/7 of `V2-305`; depends on `V2-305D`.
-  - Files: `tests/test_compiler.py`, `tests/test_docx_renderer.py`, `tests/test_preview_presentation.py`
-  - Behavior: Figure/Listing/Algorithm fixtures rely on caption inlines rather than raw caption strings.
-  - Verify: `.venv/bin/python -m pytest tests/test_compiler.py tests/test_docx_renderer.py tests/test_preview_presentation.py`
-  - Acceptance: object compiler, DOCX and preview regressions remain green with typed caption fixtures.
-  - Verification-surface change: authorized; migrates object caption fixtures.
-  - Attempts: 0
-
 - [V2-305E1B] Migrate manifest validation object captions
   - Parent: ordered child 6/7 of `V2-305`; depends on `V2-305E1A`.
   - Files: `tests/core/test_manifest_resource_validation.py`
@@ -123,6 +114,16 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
   - Attempts: 0
 
 ## Done
+
+- [V2-305E1A] Migrate compiler/DOCX/preview object captions
+  - Parent: ordered child 5/7 of `V2-305`; depends on `V2-305D`.
+  - Files: `tests/test_compiler.py`, `tests/test_docx_renderer.py`, `tests/test_preview_presentation.py`
+  - Behavior: Figure/Listing/Algorithm fixtures rely on caption inlines rather than raw caption strings.
+  - Verify: `.venv/bin/python -m pytest tests/test_compiler.py tests/test_docx_renderer.py tests/test_preview_presentation.py`
+  - Acceptance: object compiler, DOCX and preview regressions remain green with typed caption fixtures.
+  - Verification-surface change: authorized; migrates object caption fixtures.
+  - Attempts: 1
+  - Attempt 1 (2026-08-22): Checker PASS; AST found zero raw caption kwargs for Figure/Listing/Algorithm, exact Verify 115/115, Ruff and `git diff --check` clean; no push.
 
 - [V2-305D] Migrate DOCX/preview object fixtures
   - Parent: ordered child 4/5 of `V2-305`; depends on `V2-305C`.
@@ -1004,5 +1005,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 - 2026-08-22 - V2-305C Checker PASS; compiler typed caption/display flow is represented in RenderPlan, exact Verify 24/24 plus 11 render-plan/preview regressions, Ruff/diff-check clean; no push.
 - 2026-08-22 - V2-305D Checker PASS; DOCX/preview/validation fixtures use typed captions and equation display, exact Verify 95/95, AST/Ruff/diff-check clean; no push.
 - 2026-08-22 - V2-305E split into ordered children V2-305E1A, V2-305E1B and V2-305E2 after AST found raw object captions across five fixture/parser surfaces; no product code edited in the split cycle, next queue V2-305E1A.
+- 2026-08-22 - V2-305E1A Checker PASS; compiler/DOCX/preview object fixtures now use caption inlines only, exact Verify 115/115, AST/Ruff/diff-check passed; no push.
 
 ## Sync log

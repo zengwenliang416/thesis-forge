@@ -104,21 +104,18 @@ def test_compile_document_resolves_typed_instructions_and_global_semantics():
             Figure(
                 id="fig:model",
                 src="model.png",
-                caption="系统模型",
                 caption_inlines=_text_inlines("系统模型"),
             ),
             _structured_table("tbl:data", "数据表", (("A", None),), ((("1", None),),)),
             Equation(id="eq:loss", latex="E=mc^2"),
             Listing(
                 id="lst:demo",
-                caption="示例代码",
                 caption_inlines=_text_inlines("示例代码"),
                 language="python",
                 code="print(1)",
             ),
             Algorithm(
                 id="alg:sort",
-                caption="排序算法",
                 caption_inlines=_text_inlines("排序算法"),
                 body="1. 输入",
             ),
@@ -131,7 +128,6 @@ def test_compile_document_resolves_typed_instructions_and_global_semantics():
             Figure(
                 id="fig:flow",
                 src="flow.png",
-                caption="流程",
                 caption_inlines=_text_inlines("流程"),
             ),
         ],
@@ -309,13 +305,11 @@ def test_compile_document_reports_bookmark_name_collisions():
             Figure(
                 id="fig:a-b",
                 src="a.png",
-                caption="A",
                 caption_inlines=_text_inlines("A"),
             ),
             Figure(
                 id="fig:a_b",
                 src="b.png",
-                caption="B",
                 caption_inlines=_text_inlines("B"),
             ),
         ],
@@ -340,14 +334,12 @@ def test_compile_document_resolves_figure_assets_widths_and_structured_table_row
             Figure(
                 id="fig:explicit",
                 src="./images/model.png",
-                caption="显式宽度",
                 caption_inlines=_text_inlines("显式宽度"),
                 width="80%",
             ),
             Figure(
                 id="fig:default",
                 src="./images/default.png",
-                caption="模板宽度",
                 caption_inlines=_text_inlines("模板宽度"),
             ),
             _structured_table(
@@ -447,7 +439,6 @@ def test_compile_document_resolves_sequence_fields_and_footnote_ids():
             Figure(
                 id="fig:model",
                 src="model.png",
-                caption="模型",
                 caption_inlines=_text_inlines("模型"),
             ),
             _structured_table("tbl:data", "数据", (("A", None),), ((("1", None),),)),

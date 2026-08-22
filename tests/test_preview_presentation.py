@@ -83,7 +83,6 @@ def test_preview_mapper_matches_versioned_golden_contract(tmp_path: Path):
             Figure(
                 id="fig:arch",
                 src="./images/arch.png",
-                caption="系统架构",
                 caption_inlines=_text_inlines("系统架构"),
                 width="80%",
                 location=SourceLocation(line=12),
