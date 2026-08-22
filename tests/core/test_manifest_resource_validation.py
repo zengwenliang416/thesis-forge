@@ -64,7 +64,6 @@ def test_project_manifest_controls_template_and_resource_roots(
             Paragraph(inlines=[]),
             Figure(
                 src="assets/model.png",
-                caption="模型",
                 caption_inlines=(Text(value="模型"),),
             ),
         ],

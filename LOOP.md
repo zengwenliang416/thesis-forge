@@ -95,15 +95,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Open
 
-- [V2-305E1B] Migrate manifest validation object captions
-  - Parent: ordered child 6/7 of `V2-305`; depends on `V2-305E1A`.
-  - Files: `tests/core/test_manifest_resource_validation.py`
-  - Behavior: Figure fixtures rely on caption inlines rather than raw caption strings.
-  - Verify: `.venv/bin/python -m pytest tests/core/test_manifest_resource_validation.py`
-  - Acceptance: manifest/resource validation regression remains green with typed figure caption fixtures.
-  - Verification-surface change: authorized; migrates validation object fixtures.
-  - Attempts: 0
-
 - [V2-305E2] Remove raw thesis-object caption/text fields
   - Parent: ordered child 7/7 of `V2-305`; depends on `V2-305E1B`.
   - Files: `src/thesis_forge/core/model.py`, `src/thesis_forge/core/parser.py`, `tests/core/test_thesis_object_model.py`
@@ -114,6 +105,16 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
   - Attempts: 0
 
 ## Done
+
+- [V2-305E1B] Migrate manifest validation object captions
+  - Parent: ordered child 6/7 of `V2-305`; depends on `V2-305E1A`.
+  - Files: `tests/core/test_manifest_resource_validation.py`
+  - Behavior: Figure fixtures rely on caption inlines rather than raw caption strings.
+  - Verify: `.venv/bin/python -m pytest tests/core/test_manifest_resource_validation.py`
+  - Acceptance: manifest/resource validation regression remains green with typed figure caption fixtures.
+  - Verification-surface change: authorized; migrates validation object fixtures.
+  - Attempts: 1
+  - Attempt 1 (2026-08-22): Checker PASS; Figure fixture uses caption_inlines only, exact Verify 4/4, AST/Ruff/diff-check clean; no push.
 
 - [V2-305E1A] Migrate compiler/DOCX/preview object captions
   - Parent: ordered child 5/7 of `V2-305`; depends on `V2-305D`.
@@ -1006,5 +1007,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 - 2026-08-22 - V2-305D Checker PASS; DOCX/preview/validation fixtures use typed captions and equation display, exact Verify 95/95, AST/Ruff/diff-check clean; no push.
 - 2026-08-22 - V2-305E split into ordered children V2-305E1A, V2-305E1B and V2-305E2 after AST found raw object captions across five fixture/parser surfaces; no product code edited in the split cycle, next queue V2-305E1A.
 - 2026-08-22 - V2-305E1A Checker PASS; compiler/DOCX/preview object fixtures now use caption inlines only, exact Verify 115/115, AST/Ruff/diff-check passed; no push.
+- 2026-08-22 - V2-305E1B Checker PASS; manifest Figure fixture now uses caption inlines only, exact Verify 4/4, AST/Ruff/diff-check passed; no push.
 
 ## Sync log
