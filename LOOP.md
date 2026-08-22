@@ -95,15 +95,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Open
 
-- [V2-303D1] Preview outline derives heading text from inlines
-  - Parent: ordered child 4/11 of `V2-303`; depends on `V2-303C`.
-  - Files: `src/thesis_forge/presentation/preview.py`, `tests/test_preview_presentation.py`
-  - Behavior: the preview outline projection reads heading text via `inline_plain_text` instead of the block `text` field.
-  - Verify: `.venv/bin/python -m pytest tests/test_preview_presentation.py`
-  - Acceptance: preview outline text remains unchanged for parser-shaped documents; no preview outline read of the block `text` field remains.
-  - Verification-surface change: authorized; migrates preview fixtures to parser-shaped inlines.
-  - Attempts: 0
-
 - [V2-303D2] Runtime outline derives heading text from inlines
   - Parent: ordered child 5/11 of `V2-303`; depends on `V2-303D1`.
   - Files: `src/thesis_forge/adapters/runtime.py`, `tests/test_adapters.py`
@@ -184,6 +175,16 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
   - Attempts: 0
 
 ## Done
+
+- [V2-303D1] Preview outline derives heading text from inlines
+  - Parent: ordered child 4/11 of `V2-303`; depends on `V2-303C`.
+  - Files: `src/thesis_forge/presentation/preview.py`, `tests/test_preview_presentation.py`
+  - Behavior: the preview outline projection reads heading text via `inline_plain_text` instead of the block `text` field.
+  - Verify: `.venv/bin/python -m pytest tests/test_preview_presentation.py`
+  - Acceptance: preview outline text remains unchanged for parser-shaped documents; no preview outline read of the block `text` field remains.
+  - Verification-surface change: authorized; migrates preview fixtures to parser-shaped inlines.
+  - Attempts: 1
+  - Attempt 1 (2026-08-22): Checker PASS; `_outline` has zero model `block.text` reads, parser-shaped preview fixtures and stale-text regression are covered, exact Verify 5/5, Ruff and `git diff --check` clean; no push.
 
 - [V2-303C] Compiler derives block text from inlines
   - Parent: ordered child 3/10 of `V2-303`; depends on `V2-303B`.
@@ -848,5 +849,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 - 2026-08-22 - V2-303C Checker PASS; compiler text authority migrated to inline_plain_text, DOCX/compiler fixtures are parser-shaped, exact Verify 168/168, Ruff/diff-check and full-suite baseline audit passed with 46 known failures / 999 passes; no push.
 - 2026-08-22 - V2-303D split into ordered children V2-303D1 and V2-303D2 after CodeGraph/test inspection found preview.py + preview tests and runtime.py + adapter tests are four files; no product code edited in the split cycle, next queue V2-303D1.
+- 2026-08-22 - V2-303D1 Checker PASS; preview outline now derives heading text from inline_plain_text, exact Verify 5/5, Ruff/diff-check clean, stale-text regression and parser-shaped fixture coverage passed; no push.
 
 ## Sync log

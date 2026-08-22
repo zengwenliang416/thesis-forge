@@ -16,6 +16,7 @@ from thesis_forge.core.model import (
     Paragraph,
     SourceLocation,
     Table,
+    Text,
     ThesisDocument,
     ValidationIssue,
 )
@@ -50,6 +51,10 @@ ROOT = Path(__file__).resolve().parents[1]
 FIXTURE = ROOT / "tests" / "fixtures" / "preview-workbench-v1.json"
 
 
+def _text_inlines(value: str) -> list[Text]:
+    return [Text(value=value)]
+
+
 def _preview_api():
     assert hasattr(application, "PreviewResult")
     assert hasattr(presentation, "map_preview_result")
@@ -68,7 +73,8 @@ def test_preview_mapper_matches_versioned_golden_contract(tmp_path: Path):
             Heading(
                 id="chap:intro",
                 level=1,
-                text="绪论",
+                text="旧标题",
+                inlines=_text_inlines("绪论"),
                 location=SourceLocation(line=8),
             ),
             Paragraph(
@@ -303,6 +309,7 @@ def test_preview_mapper_preserves_outline_when_validation_blocks_compile(
                         id="chap:intro",
                         level=1,
                         text="绪论",
+                        inlines=_text_inlines("绪论"),
                         location=SourceLocation(line=4),
                     )
                 ],
@@ -327,3 +334,28 @@ def test_preview_mapper_preserves_outline_when_validation_blocks_compile(
         "disclaimer": "结构预览不代表 Word 最终分页。",
         "blocks": [],
     }
+
+
+def test_preview_outline_uses_inline_text_as_authority(tmp_path: Path):
+    _, map_preview_result = _preview_api()
+    result = map_preview_result(
+        application.PreviewResult(
+            document=ThesisDocument(
+                source_path=tmp_path / "thesis.md",
+                blocks=[
+                    Heading(
+                        id="chap:intro",
+                        level=1,
+                        text="旧标题",
+                        inlines=_text_inlines("真实标题"),
+                        location=SourceLocation(line=4),
+                    )
+                ],
+            ),
+            context=ValidationContext(),
+            issues=(),
+            plan=None,
+        )
+    )
+
+    assert result["outline"][0]["text"] == "真实标题"

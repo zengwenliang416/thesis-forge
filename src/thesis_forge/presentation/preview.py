@@ -18,6 +18,7 @@ from thesis_forge.core.model import (
     Paragraph,
     Table,
     ValidationIssue,
+    inline_plain_text,
 )
 from thesis_forge.core.render_plan import (
     AlgorithmInstruction,
@@ -367,7 +368,7 @@ def _outline(result: PreviewResult) -> list[dict[str, Any]]:
             ),
             "semanticId": block.id,
             "level": block.level,
-            "text": block.text,
+            "text": inline_plain_text(block.inlines),
             "line": block.location.line,
             "markers": _markers(result.issues, block.id, block.location.line),
         }
