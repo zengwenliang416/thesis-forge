@@ -11,7 +11,6 @@ from .model import (
     BibliographyBlock,
     BibliographyConfig,
     Citation,
-    CodeSpan,
     CrossReference,
     Equation,
     Figure,
@@ -19,6 +18,7 @@ from .model import (
     FootnoteReference,
     Heading,
     Inline,
+    InlineCode,
     ListBlock,
     Listing,
     ListItem,
@@ -104,7 +104,7 @@ def _parse_inline_content(
 
         location = _location_for_offset(text, match.start(), start_line, start_column)
         if match.group("code"):
-            inlines.append(CodeSpan(value=match.group("code_text"), location=location))
+            inlines.append(InlineCode(value=match.group("code_text"), location=location))
         elif match.group("strong"):
             inlines.append(Strong(value=match.group("strong_text"), location=location))
         elif match.group("footnote"):

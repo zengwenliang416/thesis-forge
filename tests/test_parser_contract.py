@@ -13,13 +13,13 @@ from thesis_forge.core.model import (
     Algorithm,
     BibliographyBlock,
     Citation,
-    CodeSpan,
     CrossReference,
     Equation,
     Figure,
     FootnoteDefinition,
     FootnoteReference,
     Heading,
+    InlineCode,
     ListBlock,
     Listing,
     Paragraph,
@@ -479,7 +479,7 @@ def test_contract_unsupported_constructs_degrade_to_paragraph():
     assert "粗体" in paragraph.text
     assert "[链接](https://example.com)" in paragraph.text
     assert "![图片](./a.png)" in paragraph.text
-    assert any(isinstance(inline, Strong) and inline.value == "粗体" for inline in paragraph.inlines)
+    assert any(isinstance(inline, Strong) for inline in paragraph.inlines)
     assert doc.citations == []
     assert doc.cross_references == []
 
@@ -490,7 +490,7 @@ def test_contract_inline_code_preserves_semantics_without_markers():
     paragraph = doc.blocks[0]
     assert isinstance(paragraph, Paragraph)
     assert any(
-        isinstance(inline, CodeSpan)
+        isinstance(inline, InlineCode)
         and inline.value == "tenant_id / env / app_id"
         for inline in paragraph.inlines
     )

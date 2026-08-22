@@ -17,7 +17,6 @@ from .model import (
     BibliographyBlock,
     Block,
     Citation,
-    CodeSpan,
     CrossReference,
     Equation,
     Figure,
@@ -25,6 +24,7 @@ from .model import (
     FootnoteReference,
     Heading,
     Inline,
+    InlineCode,
     ListBlock,
     Listing,
     Paragraph,
@@ -410,7 +410,7 @@ def _compile_inlines(
     for inline in inlines:
         if isinstance(inline, Text):
             runs.append(TextRun(inline.value))
-        elif isinstance(inline, CodeSpan):
+        elif isinstance(inline, InlineCode):
             runs.append(TextRun(inline.value, code=True))
         elif isinstance(inline, Strong):
             runs.append(TextRun(inline.value, bold=True))
