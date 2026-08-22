@@ -49,7 +49,7 @@ from thesis_forge.application.services import (
     BuildStageLifecycle,
     ProjectApplicationService,
 )
-from thesis_forge.core.model import Heading
+from thesis_forge.core.model import Heading, inline_plain_text
 from thesis_forge.presentation.preview import map_preview_result
 from thesis_forge.templates import default_template_search_roots, resolve_template
 from thesis_forge.ui.filesystem import LocalWorkspaceFileSystem
@@ -951,7 +951,7 @@ class WorkbenchCommandDispatcher:
                     {
                         "id": block.id,
                         "level": block.level,
-                        "text": block.text,
+                        "text": inline_plain_text(block.inlines),
                         "line": block.location.line,
                     }
                     for block in result.document.blocks
@@ -965,7 +965,7 @@ class WorkbenchCommandDispatcher:
             {
                 "id": block.id,
                 "level": block.level,
-                "text": block.text,
+                "text": inline_plain_text(block.inlines),
                 "line": block.location.line,
             }
             for block in result.document.blocks

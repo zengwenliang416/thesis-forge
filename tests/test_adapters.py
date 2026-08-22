@@ -26,8 +26,12 @@ from thesis_forge.application import (
     ValidationResult,
 )
 from thesis_forge.application.contracts import ProjectRequestIntent
-from thesis_forge.core.model import Heading, ThesisDocument, ValidationIssue
+from thesis_forge.core.model import Heading, Text, ThesisDocument, ValidationIssue
 from thesis_forge.core.validator import ValidationContext
+
+
+def _text_inlines(value: str) -> list[Text]:
+    return [Text(value=value)]
 
 
 def _dispatcher(tmp_path: Path):
@@ -42,7 +46,13 @@ def _dispatcher(tmp_path: Path):
             ThesisDocument(
                 source_path=source_path,
                 metadata={"thesis": {"title": "共享工作台"}},
-                blocks=[Heading(level=1, text="绪论")],
+                blocks=[
+                    Heading(
+                        level=1,
+                        text="旧绪论",
+                        inlines=_text_inlines("绪论"),
+                    )
+                ],
             )
         )
 
@@ -155,7 +165,13 @@ class _RecordingProjectService:
         return ThesisDocument(
             source_path=request.project.project_root / "thesis.md",
             metadata={"project": request.project.project_id},
-            blocks=[Heading(level=1, text="项目论文")],
+            blocks=[
+                Heading(
+                    level=1,
+                    text="旧项目论文",
+                    inlines=_text_inlines("项目论文"),
+                )
+            ],
         )
 
     def inspect(self, request):
