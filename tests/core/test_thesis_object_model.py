@@ -13,7 +13,9 @@ from thesis_forge.core.model import (
     Listing,
     SourceLocation,
     Text,
+    inline_plain_text,
 )
+from thesis_forge.core.parser import parse_markdown_text
 
 
 def test_rich_object_defaults_preserve_source_identity() -> None:
@@ -67,3 +69,46 @@ def test_rich_object_fields_are_structurally_pinned() -> None:
         field.name for field in dataclasses.fields(Algorithm)
     }
     assert "display" in {field.name for field in dataclasses.fields(Equation)}
+
+
+def test_parser_populates_typed_object_captions_and_equation_display() -> None:
+    source = """::: figure {#fig:model}
+src: "model.png"
+caption: "系统模型 [@figure-source]"
+:::
+
+::: listing {#lst:demo}
+caption: "示例代码 [@listing-source]"
+language: "python"
+
+```python
+print(1)
+```
+:::
+
+::: algorithm {#alg:demo}
+caption: "构建流程 [@algorithm-source]"
+
+1. 校验
+:::
+
+::: equation {#eq:loss}
+E = mc^2
+:::
+"""
+    document = parse_markdown_text(source, source_path="objects.md")
+
+    figure, listing, algorithm, equation = document.blocks
+    assert isinstance(figure, Figure)
+    assert isinstance(listing, Listing)
+    assert isinstance(algorithm, Algorithm)
+    assert isinstance(equation, Equation)
+    assert inline_plain_text(figure.caption_inlines) == "系统模型 [@figure-source]"
+    assert inline_plain_text(listing.caption_inlines) == "示例代码 [@listing-source]"
+    assert inline_plain_text(algorithm.caption_inlines) == "构建流程 [@algorithm-source]"
+    assert equation.display is True
+    assert [citation.keys for citation in document.citations] == [
+        ["figure-source"],
+        ["listing-source"],
+        ["algorithm-source"],
+    ]

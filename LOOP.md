@@ -95,15 +95,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Open
 
-- [V2-305B] Populate typed object fields during parsing
-  - Parent: ordered child 2/5 of `V2-305`; depends on `V2-305A`.
-  - Files: `src/thesis_forge/core/model.py`, `src/thesis_forge/core/parser.py`, `tests/core/test_thesis_object_model.py`
-  - Behavior: figure/listing/algorithm captions and equation display state are populated from parser-normalized source data while current consumers remain green.
-  - Verify: `.venv/bin/python -m pytest tests/core/test_thesis_object_model.py tests/test_parser.py tests/test_parser_contract.py`
-  - Acceptance: parser-produced typed captions preserve citations/cross-references and object source locations; existing code/body semantics remain unchanged.
-  - Verification-surface change: authorized; extends parser/object contract tests.
-  - Attempts: 0
-
 - [V2-305C] Compile typed object captions and content
   - Parent: ordered child 3/5 of `V2-305`; depends on `V2-305B`.
   - Files: `src/thesis_forge/core/compiler.py`, `tests/test_compiler.py`
@@ -132,6 +123,16 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
   - Attempts: 0
 
 ## Done
+
+- [V2-305B] Populate typed object fields during parsing
+  - Parent: ordered child 2/5 of `V2-305`; depends on `V2-305A`.
+  - Files: `src/thesis_forge/core/model.py`, `src/thesis_forge/core/parser.py`, `tests/core/test_thesis_object_model.py`
+  - Behavior: figure/listing/algorithm captions and equation display state are populated from parser-normalized source data while current consumers remain green.
+  - Verify: `.venv/bin/python -m pytest tests/core/test_thesis_object_model.py tests/test_parser.py tests/test_parser_contract.py`
+  - Acceptance: parser-produced typed captions preserve citations/cross-references and object source locations; existing code/body semantics remain unchanged.
+  - Verification-surface change: authorized; extends parser/object contract tests.
+  - Attempts: 1
+  - Attempt 1 (2026-08-22): Checker PASS; parser populates typed captions for figure/listing/algorithm and explicit Equation display=True, caption citations remain indexed, exact Verify 87/87 including markdown-it regression, Ruff and `git diff --check` clean; no push.
 
 - [V2-305A] Add typed thesis-object caption/content primitives
   - Parent: ordered child 1/5 of `V2-305`; parent behavior remains unchanged.
@@ -978,5 +979,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 - 2026-08-22 - V2-304E2B Checker PASS; raw Table caption/markdown fields were removed, exact Verify 157/157, structured end-to-end regression and raw-field scan passed; no push.
 - 2026-08-22 - V2-305 split into ordered children V2-305A…E after AST/CodeGraph found typed caption/content and source-identity migration spans model/parser/compiler plus DOCX/preview/validation fixtures; no product code edited in the split cycle, next queue V2-305A.
 - 2026-08-22 - V2-305A Checker PASS; typed object caption/display primitives and focused tests added, exact Verify 4/4, Ruff/diff-check clean; no push.
+- 2026-08-22 - V2-305B Checker PASS; parser populates typed object captions and explicit equation display state, exact Verify 87/87, Ruff/diff-check clean; no push.
 
 ## Sync log
