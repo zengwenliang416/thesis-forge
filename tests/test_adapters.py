@@ -49,7 +49,6 @@ def _dispatcher(tmp_path: Path):
                 blocks=[
                     Heading(
                         level=1,
-                        text="旧绪论",
                         inlines=_text_inlines("绪论"),
                     )
                 ],
@@ -168,7 +167,6 @@ class _RecordingProjectService:
             blocks=[
                 Heading(
                     level=1,
-                    text="旧项目论文",
                     inlines=_text_inlines("项目论文"),
                 )
             ],

@@ -60,7 +60,7 @@ def test_project_manifest_controls_template_and_resource_roots(
     document = ThesisDocument(
         source_path=(project_root / "thesis.md").resolve(),
         blocks=[
-            Paragraph(text="引用 [@smith2025]", inlines=[]),
+            Paragraph(inlines=[]),
             Figure(src="assets/model.png", caption="模型"),
         ],
         citations=[Citation(keys=["smith2025"])],
@@ -92,7 +92,7 @@ def test_manifest_bibliography_overrides_document_front_matter_path(
             path="does-not-exist.bib",
             citation_style="unsupported-style",
         ),
-        blocks=[Paragraph(text="引用", inlines=[])],
+        blocks=[Paragraph(inlines=[])],
         citations=[Citation(keys=["smith2025"])],
     )
 

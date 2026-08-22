@@ -60,7 +60,7 @@ def test_same_content_nodes_have_different_node_ids_but_compare_equal() -> None:
 
 
 def test_node_id_is_stable_across_repeated_reads() -> None:
-    node = Paragraph(text="hello")
+    node = Paragraph()
     first_read = node.node_id
     assert node.node_id == first_read
     assert node.node_id == first_read
@@ -105,9 +105,8 @@ def test_parsed_nodes_default_origin_is_none() -> None:
 
 
 def test_generated_node_refers_back_to_source_node() -> None:
-    source = Heading(level=1, text="Chapter")
+    source = Heading(level=1)
     generated = Paragraph(
-        text="Chapter .... 1",
         origin=GeneratedOrigin(generator="toc", source_node_ids=(source.node_id,)),
     )
     assert generated.origin is not None
@@ -117,7 +116,6 @@ def test_generated_node_refers_back_to_source_node() -> None:
 
 def test_generated_node_with_empty_source_location_is_representable() -> None:
     generated = Paragraph(
-        text="generated",
         location=SourceLocation(),
         origin=GeneratedOrigin(generator="toc"),
     )
@@ -128,7 +126,7 @@ def test_generated_node_with_empty_source_location_is_representable() -> None:
 
 def test_multi_line_paragraph_with_span_and_default_origin() -> None:
     span = SourceLocation(line=3, column=1, end_line=5, end_column=20, source_file="thesis.md")
-    paragraph = Paragraph(text="multi\nline\nparagraph", location=span)
+    paragraph = Paragraph(location=span)
     assert paragraph.location.end_line == 5
     assert paragraph.location.source_file == "thesis.md"
     assert paragraph.origin is None
