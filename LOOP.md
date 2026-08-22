@@ -95,12 +95,49 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Open
 
-- [V2-302] Replace the Inline model with recursive typed nodes
+- [V2-302A] Introduce the recursive inline type set
+  - Parent: ordered child 1/5 of `V2-302`; the parent behavior remains unchanged.
   - Files: `src/thesis_forge/core/model.py`, `tests/core/test_inline_model.py`
-  - Behavior: introduce recursive Text, SoftBreak, HardBreak, Strong, Emphasis, InlineCode, Link, InlineMath, Citation, CrossReference and FootnoteReference.
+  - Behavior: add SoftBreak, HardBreak, Emphasis(children), Link(label, destination), InlineMath, InlineCode leaf and CrossReference fallback/display_mode optional fields; containers own `tuple[Inline, ...]` children with no duplicate plain-text field.
   - Verify: `.venv/bin/python -m pytest tests/core/test_inline_model.py`
-  - Acceptance: containers own child inline nodes; Strong is not a plain string.
+  - Acceptance: every new type constructs with defaults and inherits node_id/origin; pure addition keeps existing parser/compiler baselines green.
   - Verification-surface change: authorized; creates focused inline-model tests.
+  - Attempts: 0
+
+- [V2-302B] Unify markdown-it inline construction onto the shared scanner
+  - Parent: ordered child 2/5 of `V2-302`; depends on `V2-302A`.
+  - Files: `src/thesis_forge/core/parser_markdown_it.py`
+  - Behavior: the markdown-it backend builds all inline content through the shared `_parse_inline_content` scanner; the duplicate `_extract_inlines` token walk and its dead inline-rule machinery are removed.
+  - Verify: `.venv/bin/python -m pytest tests/test_parser_markdown_it.py tests/test_parser_backend.py`
+  - Acceptance: parse output stays byte-identical under the parity gate; exactly one inline construction site remains.
+  - Verification-surface change: none.
+  - Attempts: 0
+
+- [V2-302C] Flip code-span emission to InlineCode
+  - Parent: ordered child 3/5 of `V2-302`; depends on `V2-302B`.
+  - Files: `src/thesis_forge/core/parser.py`, `src/thesis_forge/core/compiler.py`, `tests/test_parser_contract.py`
+  - Behavior: the parser emits InlineCode(value) instead of CodeSpan and the compiler lowers InlineCode to code runs; contract assertions migrate to InlineCode, and the Strong contract assertion becomes shape-neutral (isinstance-only) as ordered preparation for `V2-302D`.
+  - Verify: `.venv/bin/python -m pytest tests/test_parser_contract.py tests/test_parser.py tests/test_parser_markdown_it.py tests/test_parser_backend.py tests/test_compiler.py`
+  - Acceptance: nothing constructs or dispatches CodeSpan anymore; baselines stay green.
+  - Verification-surface change: authorized; migrates the parser contract inline assertions.
+  - Attempts: 0
+
+- [V2-302D] Make Strong a recursive container
+  - Parent: ordered child 4/5 of `V2-302`; depends on `V2-302C`.
+  - Files: `src/thesis_forge/core/model.py`, `src/thesis_forge/core/parser.py`, `src/thesis_forge/core/compiler.py`
+  - Behavior: Strong owns `tuple[Inline, ...]` children parsed recursively; inline registration and citation/footnote collection walk nested inlines; the compiler lowers Strong children with bold applied.
+  - Verify: `.venv/bin/python -m pytest tests/test_parser_contract.py tests/test_parser.py tests/test_parser_markdown_it.py tests/test_parser_backend.py tests/test_compiler.py tests/core/`
+  - Acceptance: Strong is not a plain string; nested citations/references inside strong register and resolve; baselines stay green.
+  - Verification-surface change: none.
+  - Attempts: 0
+
+- [V2-302E] Retire CodeSpan and re-pin Strong children
+  - Parent: ordered child 5/5 of `V2-302`; depends on `V2-302D`.
+  - Files: `src/thesis_forge/core/model.py`, `tests/test_parser_contract.py`, `tests/core/test_inline_model.py`
+  - Behavior: remove the unemitted and undispatched CodeSpan class; re-pin the Strong contract assertion on recursive children content and cover Strong children in the inline-model tests.
+  - Verify: `.venv/bin/python -m pytest tests/core/test_inline_model.py tests/test_parser_contract.py tests/test_parser.py tests/test_compiler.py`
+  - Acceptance: no CodeSpan reference remains in src or tests; the Strong contract pins recursive children.
+  - Verification-surface change: authorized; finalizes the inline contract assertions.
   - Attempts: 0
 
 - [V2-303] Replace the basic Block model
@@ -657,5 +694,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 - 2026-08-22 - V2-215 Checker PASS; exact Verify 7/7 green, baselines (67 core/application/adapter tests) and ruff clean, full-suite failure sets identical HEAD vs candidate (46 pre-existing, zero new), 5 independent probes confirmed structured orphan/type-mismatch errors, figure-width pass, projectless silence, and sorted output; no push.
 - 2026-08-22 - V2-301A Checker PASS; diff scoped to qa/tools/parser_diff.py with generic field.compare exclusion, exact Verify 48/48 green, HEAD-vs-worktree byte-parity probe diff empty, compare=False exclusion and semantic-detection probes green, full suite 46 failed / 950 passed matching the fresh baseline; no push.
 - 2026-08-22 - V2-301B Checker PASS; exact Verify 11/11 green, baselines 102 passed / 0 failed, 22 independent probes confirmed identity/span/GeneratedOrigin semantics plus `_jsonable` node_id exclusion and parsed-node identity, full-suite failure sets identical HEAD vs candidate (46 → 46, +11 passed); no push.
+- 2026-08-22 - V2-302 split into five ordered children V2-302A…E after investigation showed the Strong(children) shape change and CodeSpan→InlineCode rename atomically span model.py + both parser backends + compiler.py + test_parser_contract.py (5 files); V2-302A adds the new recursive types additively, V2-302B unifies markdown-it inline construction onto the shared byte-equivalent `_parse_inline_content` scanner so each flip fits three files, V2-302C/V2-302D flip InlineCode emission and Strong recursion, V2-302E retires CodeSpan and re-pins the Strong contract (the Strong contract assertion goes shape-neutral in V2-302C as disclosed ordered preparation); no product code edited in the split cycle.
 
 ## Sync log
