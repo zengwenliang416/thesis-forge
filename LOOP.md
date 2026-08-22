@@ -95,15 +95,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Open
 
-- [V2-302B] Unify markdown-it inline construction onto the shared scanner
-  - Parent: ordered child 2/5 of `V2-302`; depends on `V2-302A`.
-  - Files: `src/thesis_forge/core/parser_markdown_it.py`
-  - Behavior: the markdown-it backend builds all inline content through the shared `_parse_inline_content` scanner; the duplicate `_extract_inlines` token walk and its dead inline-rule machinery are removed.
-  - Verify: `.venv/bin/python -m pytest tests/test_parser_markdown_it.py tests/test_parser_backend.py`
-  - Acceptance: parse output stays byte-identical under the parity gate; exactly one inline construction site remains.
-  - Verification-surface change: none.
-  - Attempts: 0
-
 - [V2-302C] Flip code-span emission to InlineCode
   - Parent: ordered child 3/5 of `V2-302`; depends on `V2-302B`.
   - Files: `src/thesis_forge/core/parser.py`, `src/thesis_forge/core/compiler.py`, `tests/test_parser_contract.py`
@@ -140,6 +131,16 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
   - Attempts: 0
 
 ## Done
+
+- [V2-302B] Unify markdown-it inline construction onto the shared scanner
+  - Parent: ordered child 2/5 of `V2-302`; depends on `V2-302A`.
+  - Files: `src/thesis_forge/core/parser_markdown_it.py`
+  - Behavior: the markdown-it backend builds all inline content through the shared `_parse_inline_content` scanner; the duplicate `_extract_inlines` token walk and its dead inline-rule machinery are removed.
+  - Verify: `.venv/bin/python -m pytest tests/test_parser_markdown_it.py tests/test_parser_backend.py`
+  - Acceptance: parse output stays byte-identical under the parity gate; exactly one inline construction site remains.
+  - Verification-surface change: none.
+  - Attempts: 1
+  - Attempt 1 (2026-08-22): Checker PASS; diff scoped to the 1 named file (622→418 lines, 15 insertions / 219 deletions: six `self._extract_inlines` call sites swapped to `_parse_inline_content` with byte-identical args, `_extract_inlines` + 5 inline rules + 5 `ruler` registrations + `_SUPPORTED_INLINE_TOKENS` + `_DISABLED_INLINE_RULES` + 5 regexes deleted, now-unused imports cleaned, docstring re-truthed, block machinery and preflight untouched), repo-wide grep confirms zero remaining references to every deleted symbol and `Token`/`Inline` still used, exact Verify 48/48 passed, baselines 98 passed / 0 failed, ruff and `git diff --check` clean, HEAD-vs-candidate parity probe empty diff on both example theses (complete-thesis 45 blocks/81 inlines, bachelor-thesis 43/78, mdit==legacy on both), adversarial inline probe (mixed strong/citation/crossref/footnote_ref, boundary code spans, soft/hard breaks, escapes, pathological `**a**b**c**`, empty `****`, full-width adjacency) parser_diff OK exit 0 with 12 blocks/66 inlines, in-process smoke asserts 22-in-line sequences identical legacy vs markdown-it and all deleted symbols absent, full suite 46 failed / 973 passed confined to the 7 known pre-existing files; no push.
 
 - [V2-302A] Introduce the recursive inline type set
   - Parent: ordered child 1/5 of `V2-302`; the parent behavior remains unchanged.
@@ -697,5 +698,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 - 2026-08-22 - V2-301B Checker PASS; exact Verify 11/11 green, baselines 102 passed / 0 failed, 22 independent probes confirmed identity/span/GeneratedOrigin semantics plus `_jsonable` node_id exclusion and parsed-node identity, full-suite failure sets identical HEAD vs candidate (46 → 46, +11 passed); no push.
 - 2026-08-22 - V2-302 split into five ordered children V2-302A…E after investigation showed the Strong(children) shape change and CodeSpan→InlineCode rename atomically span model.py + both parser backends + compiler.py + test_parser_contract.py (5 files); V2-302A adds the new recursive types additively, V2-302B unifies markdown-it inline construction onto the shared byte-equivalent `_parse_inline_content` scanner so each flip fits three files, V2-302C/V2-302D flip InlineCode emission and Strong recursion, V2-302E retires CodeSpan and re-pins the Strong contract (the Strong contract assertion goes shape-neutral in V2-302C as disclosed ordered preparation); no product code edited in the split cycle.
 - 2026-08-22 - V2-302A Checker PASS; purely additive model.py diff (6 new inline types + CrossReference fallback/display_mode), Verify 12/12, baselines 146/146, probes confirmed identity semantics + HEAD-identical positional binding, full suite 46/973 confined to the 7 known files; no push.
+- 2026-08-22 - V2-302B Checker PASS; single-file 622→418 diff with six call sites moved onto `_parse_inline_content` and all dead inline-rule machinery deleted, Verify 48/48, baselines 98/98, HEAD-vs-candidate parity diffs empty on both examples plus adversarial and in-process smoke probes green, full suite 46/973 confined to the 7 known files; no push.
 
 ## Sync log

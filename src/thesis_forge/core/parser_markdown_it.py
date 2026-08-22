@@ -12,15 +12,12 @@
 - ``[^label]`` 脚注：``footnote`` 插件仅取块级定义（``move_to_end=False``
   使定义保持源码位置；``inline=False`` 关闭 legacy 不支持的 ``^[...]``）；
   定义正文按 legacy 算法（首行 + 四空格/Tab 续行）从源码行重建。
-  行内 ``footnote_ref`` 用 ``ruler.at`` 替换为与 legacy 字符集完全一致
-  的自研实现（不依赖定义是否存在，label 限定 ``[A-Za-z0-9_.:-]+``）。
-- citation ``[@key; @key2, locator]`` 与 crossref ``@fig:x``：
-  两条自研 inline rule（``citation`` / ``crossref``），匹配语义逐行
-  对齐 legacy 的 ``INLINE_TOKEN_RE``（含 crossref 的 ``(?<!\\[)`` 前视）。
-- 行内其余 CommonMark 规则（emphasis/link/image/escape/entity/…）全部
-  禁用，与 legacy「未知语法静默降级为段落原文」一致；``text`` /
-  ``softbreak`` 之外的意外 token 触发防御性回退（改用 legacy
-  ``_parse_inline_content`` 重扫该段，语义保证一致）。
+- 行内内容（段落、标题、列表项、容器 caption、脚注定义正文）统一交给
+  共享的 legacy 扫描器 ``_parse_inline_content``：code span / strong /
+  citation ``[@key; @key2, locator]`` / crossref ``@fig:x`` /
+  footnote_ref 的匹配语义逐行对齐 legacy 的 ``INLINE_TOKEN_RE``
+  （含 crossref 的 ``(?<!\\[)`` 前视），未知语法静默保留原文，
+  与 legacy 逐字节一致；本模块不再注册任何自研 inline rule。
 - 块级规则仅保留 heading/list/paragraph + 上述插件；table/fence/
   blockquote/html_block/hr/lheading/reference/code 禁用（禁用后这些
   行按段落原文处理，与 legacy 降级行为一致）。
@@ -29,8 +26,9 @@
   消息与行号逐字节一致。
 
 SourceLocation 策略：块级行号 = ``token.map[0] + 1 + front matter 偏移``，
-column 恒为 None（与 legacy 现状一致）；行内行列由 inline rule 记录的
-段内偏移经 legacy ``_location_for_offset`` 换算，与 legacy 完全一致。
+column 恒为 None（与 legacy 现状一致）；行内行列由共享扫描器
+``_parse_inline_content`` 经 legacy ``_location_for_offset`` 换算，
+与 legacy 完全一致。
 
 本模块有意复用 ``parser.py`` 的私有函数（冻结维护的对照基准），
 凡语义问题一律以 legacy 为准（ADR-0001 §5.2 已知差异见文末清单）。
@@ -42,35 +40,26 @@ import re
 from pathlib import Path
 
 from markdown_it import MarkdownIt
-from markdown_it.rules_inline import StateInline
 from markdown_it.token import Token
 from mdit_py_plugins.container import container_plugin
 from mdit_py_plugins.footnote import footnote_plugin
 
 from .model import (
-    Citation,
-    CodeSpan,
-    CrossReference,
     FootnoteDefinition,
-    FootnoteReference,
     Heading,
     Inline,
     ListBlock,
     ListItem,
     Paragraph,
     SourceLocation,
-    Strong,
-    Text,
     ThesisDocument,
 )
 from .parser import (
-    CITATION_KEY_RE,
     CONTAINER_START_RE,
     FOOTNOTE_DEFINITION_RE,
     LIST_ITEM_RE,
     ParseError,
     _bibliography_config,
-    _location_for_offset,
     _parse_container,
     _parse_container_inlines,
     _parse_front_matter,
@@ -85,26 +74,6 @@ CONTAINER_KINDS = ("figure", "table", "equation", "listing", "algorithm", "bibli
 _HEADING_ID_RE = re.compile(r"^(.+?)(?:\s+\{#([^}]+)\})?\s*$")
 # 容器头 info 中的 {#id}（validate 已保证其位于行尾）
 _CONTAINER_ID_RE = re.compile(r"\{#([^}]+)\}")
-# 三条自研 inline rule 的匹配式，与 legacy INLINE_TOKEN_RE 各分支逐一对应
-_CODE_AT_RE = re.compile(r"`(?P<text>[^`\n]+)`")
-_STRONG_AT_RE = re.compile(r"\*\*(?P<text>[^*\n]+)\*\*")
-_CITATION_AT_RE = re.compile(r"\[[^\]]*@[^\]]+\]")
-_CROSSREF_AT_RE = re.compile(r"@(?P<prefix>fig|tbl|eq|alg|lst|sec|chap):(?P<name>[A-Za-z0-9_.:-]+)")
-_FOOTNOTE_REF_AT_RE = re.compile(r"\[\^(?P<label>[A-Za-z0-9_.:-]+)\]")
-
-# inline children 中允许出现的 token 类型；其余一律触发 legacy 重扫兜底
-_SUPPORTED_INLINE_TOKENS = frozenset(
-    {
-        "text",
-        "softbreak",
-        "hardbreak",
-        "code_span",
-        "strong",
-        "citation",
-        "crossref",
-        "footnote_ref",
-    }
-)
 
 # legacy 不支持的 CommonMark 块级结构：禁用后按段落原文降级（与 legacy 一致）
 _DISABLED_BLOCK_RULES = (
@@ -116,107 +85,6 @@ _DISABLED_BLOCK_RULES = (
     "lheading",
     "reference",
 )
-# legacy 不支持的行内结构：禁用后保留原文（text/softbreak 之外只剩三条自研规则）
-_DISABLED_INLINE_RULES = (
-    "autolink",
-    "backticks",
-    "emphasis",
-    "entity",
-    "escape",
-    "html_inline",
-    "image",
-    "link",
-)
-
-
-# ---------------------------------------------------------------------------
-# 自研 inline rule（state.src 为段落文本，state.pos 为段内偏移）
-# ---------------------------------------------------------------------------
-
-
-def _footnote_ref_rule(state: StateInline, silent: bool) -> bool:
-    """``[^label]`` 脚注引用；label 字符集与 legacy 一致，不要求定义存在。"""
-    start = state.pos
-    match = _FOOTNOTE_REF_AT_RE.match(state.src, start)
-    if match is None:
-        return False
-    if not silent:
-        token = state.push("footnote_ref", "", 0)
-        token.meta = {
-            "label": match.group("label"),
-            "offset": start,
-            "length": match.end() - start,
-        }
-    state.pos = match.end()
-    return True
-
-
-def _strong_rule(state: StateInline, silent: bool) -> bool:
-    start = state.pos
-    match = _STRONG_AT_RE.match(state.src, start)
-    if match is None:
-        return False
-    if not silent:
-        token = state.push("strong", "", 0)
-        token.meta = {
-            "offset": start,
-            "length": match.end() - start,
-            "text": match.group("text"),
-        }
-    state.pos = match.end()
-    return True
-
-
-def _code_span_rule(state: StateInline, silent: bool) -> bool:
-    start = state.pos
-    match = _CODE_AT_RE.match(state.src, start)
-    if match is None:
-        return False
-    if not silent:
-        token = state.push("code_span", "", 0)
-        token.meta = {
-            "offset": start,
-            "length": match.end() - start,
-            "text": match.group("text"),
-        }
-    state.pos = match.end()
-    return True
-
-
-def _citation_rule(state: StateInline, silent: bool) -> bool:
-    """``[@key; @key2, locator]`` 文献引用；多 key 拆分与 locator 解析在转换层完成。"""
-    start = state.pos
-    if start >= state.posMax or state.src[start] != "[":
-        return False
-    match = _CITATION_AT_RE.match(state.src, start)
-    if match is None:
-        return False
-    if not silent:
-        token = state.push("citation", "", 0)
-        token.meta = {"offset": start, "raw": match.group(0)}
-    state.pos = match.end()
-    return True
-
-
-def _crossref_rule(state: StateInline, silent: bool) -> bool:
-    """``@fig|tbl|eq|alg|lst|sec|chap:name`` 交叉引用（含 legacy 的 ``(?<!\\[)`` 前视）。"""
-    start = state.pos
-    if start >= state.posMax or state.src[start] != "@":
-        return False
-    if start > 0 and state.src[start - 1] == "[":
-        return False
-    match = _CROSSREF_AT_RE.match(state.src, start)
-    if match is None:
-        return False
-    if not silent:
-        token = state.push("crossref", "", 0)
-        token.meta = {
-            "offset": start,
-            "target": f"{match.group('prefix')}:{match.group('name')}",
-            "length": match.end() - start,
-        }
-    state.pos = match.end()
-    return True
 
 
 def _make_container_validate(kind: str):
@@ -239,12 +107,6 @@ def _build_markdown_it() -> MarkdownIt:
     for kind in CONTAINER_KINDS:
         md.use(container_plugin, kind, validate=_make_container_validate(kind))
     md.block.ruler.disable(list(_DISABLED_BLOCK_RULES))
-    md.inline.ruler.disable(list(_DISABLED_INLINE_RULES))
-    md.inline.ruler.at("footnote_ref", _footnote_ref_rule)
-    md.inline.ruler.after("footnote_ref", "code_span", _code_span_rule)
-    md.inline.ruler.after("code_span", "strong", _strong_rule)
-    md.inline.ruler.after("strong", "citation", _citation_rule)
-    md.inline.ruler.after("citation", "crossref", _crossref_rule)
     return md
 
 
@@ -384,7 +246,7 @@ class MarkdownItParserBackend:
         assert open_token.map is not None
         line = open_token.map[0] + 1 + offset
         # legacy 以 len(marks) + 2 为行内列基准（假设 # 后恰好一个空格）
-        inlines = self._extract_inlines(text, line, level + 2)
+        inlines = _parse_inline_content(text, line, level + 2)
         doc.blocks.append(
             Heading(
                 id=block_id,
@@ -403,7 +265,7 @@ class MarkdownItParserBackend:
             return
         assert inline_token.map is not None
         line = inline_token.map[0] + 1 + offset
-        inlines = self._extract_inlines(text, line)
+        inlines = _parse_inline_content(text, line)
         doc.blocks.append(
             Paragraph(text=text, inlines=inlines, location=SourceLocation(line=line))
         )
@@ -422,7 +284,7 @@ class MarkdownItParserBackend:
         if not text:
             return
         line = start0 + 1 + offset
-        inlines = self._extract_inlines(text, line)
+        inlines = _parse_inline_content(text, line)
         doc.blocks.append(
             Paragraph(text=text, inlines=inlines, location=SourceLocation(line=line))
         )
@@ -471,7 +333,7 @@ class MarkdownItParserBackend:
             # label 超出 legacy 字符集：legacy 不视为定义，按段落原文降级
             text = "\n".join(lines[start0:end0]).strip()
             if text:
-                inlines = self._extract_inlines(text, line)
+                inlines = _parse_inline_content(text, line)
                 doc.blocks.append(
                     Paragraph(text=text, inlines=inlines, location=SourceLocation(line=line))
                 )
@@ -489,7 +351,7 @@ class MarkdownItParserBackend:
         text = "\n".join(segment[0] for segment in segments).strip()
         inlines: list[Inline] = []
         for segment_text, segment_line, segment_column in segments:
-            inlines.extend(self._extract_inlines(segment_text, segment_line, segment_column))
+            inlines.extend(_parse_inline_content(segment_text, segment_line, segment_column))
         doc.blocks.append(
             FootnoteDefinition(
                 label=label,
@@ -527,7 +389,7 @@ class MarkdownItParserBackend:
             item_text = item_match.group("text")
             indent = len(item_match.group("indent").expandtabs(4))
             item_line = i + 1 + offset
-            item_inlines = self._extract_inlines(
+            item_inlines = _parse_inline_content(
                 item_text,
                 item_line,
                 item_match.start("text") + 1,
@@ -554,69 +416,3 @@ class MarkdownItParserBackend:
             )
         )
         return i
-
-    # ------------------------------------------------------------------
-    # 行内转换：三条自研规则给出 match 边界，Text 段按原文切片（与 legacy
-    # 的 finditer 间隔扫描逐字节等价；mdit newline 规则会吞掉续行前导
-    # 空格，因此不能直接拼接 text/softbreak 子 token 的内容）。
-    # ------------------------------------------------------------------
-
-    def _extract_inlines(
-        self,
-        text: str,
-        start_line: int,
-        start_column: int = 1,
-    ) -> list[Inline]:
-        children: list[Token] = []
-        self._md.inline.parse(text, self._md, {}, children)
-        if any(child.type not in _SUPPORTED_INLINE_TOKENS for child in children):
-            # 防御性回退：出现未预期 token 时改用 legacy 行内扫描，
-            # 保证语义与位置逐字节一致
-            return _parse_inline_content(text, start_line, start_column)
-
-        inlines: list[Inline] = []
-        cursor = 0
-
-        def emit_text(end: int) -> None:
-            if end > cursor:
-                inlines.append(
-                    Text(
-                        value=text[cursor:end],
-                        location=_location_for_offset(text, cursor, start_line, start_column),
-                    )
-                )
-
-        for child in children:
-            if child.type in ("text", "softbreak", "hardbreak"):
-                continue  # 原文切片已覆盖，无需逐 token 处理
-            offset = child.meta["offset"]
-            emit_text(offset)
-            location = _location_for_offset(text, offset, start_line, start_column)
-            if child.type == "code_span":
-                inlines.append(CodeSpan(value=child.meta["text"], location=location))
-                cursor = offset + child.meta["length"]
-            elif child.type == "strong":
-                inlines.append(Strong(value=child.meta["text"], location=location))
-                cursor = offset + child.meta["length"]
-            elif child.type == "citation":
-                raw = child.meta["raw"]
-                body = raw[1:-1]
-                keys = CITATION_KEY_RE.findall(body)
-                locator = CITATION_KEY_RE.sub("", body).strip(" \t;,")
-                inlines.append(
-                    Citation(
-                        keys=keys,
-                        locator=locator or None,
-                        raw=raw,
-                        location=location,
-                    )
-                )
-                cursor = offset + len(raw)
-            elif child.type == "crossref":
-                inlines.append(CrossReference(target=child.meta["target"], location=location))
-                cursor = offset + child.meta["length"]
-            else:  # footnote_ref
-                inlines.append(FootnoteReference(label=child.meta["label"], location=location))
-                cursor = offset + child.meta["length"]
-        emit_text(len(text))
-        return inlines
