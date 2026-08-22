@@ -97,6 +97,10 @@ _SEMANTIC_LINK_RE = re.compile(
     r"^#(?P<target>(?:fig|tbl|eq|sec|chap|lst|alg):[A-Za-z0-9_.:-]+)$"
 )
 _FIGURE_ATTRIBUTE_RE = re.compile(r"^\{#(?P<id>fig:[A-Za-z0-9_.:-]+)\}$")
+_TABLE_CAPTION_RE = re.compile(
+    r"^:\s+(?P<caption>.+?)\s+\{#(?P<id>tbl:[A-Za-z0-9_.:-]+)\}\s*$"
+)
+_TABLE_SEPARATOR_RE = re.compile(r"^:?-{3,}:?$")
 _FENCE_START_RE = re.compile(r"^ {0,3}(?P<marker>`{3,}|~{3,})")
 
 _UNSUPPORTED_BLOCK_TOKEN_TYPES = frozenset(
@@ -345,6 +349,75 @@ def _find_inline_math(text: str, start: int = 0) -> tuple[int, int, str] | None:
             closing += 1
         opening += 1
     return None
+
+
+def _is_escaped(text: str, index: int) -> bool:
+    backslashes = 0
+    index -= 1
+    while index >= 0 and text[index] == "\\":
+        backslashes += 1
+        index -= 1
+    return backslashes % 2 == 1
+
+
+def _split_standard_table_row(line: str) -> list[str] | None:
+    stripped = line.strip()
+    if not stripped:
+        return None
+
+    start = 1 if stripped.startswith("|") else 0
+    end = len(stripped)
+    if stripped.endswith("|") and not _is_escaped(stripped, end):
+        end -= 1
+
+    cells: list[str] = []
+    current: list[str] = []
+    escaped = False
+    for char in stripped[start:end]:
+        if escaped:
+            current.append(char)
+            escaped = False
+        elif char == "\\":
+            current.append(char)
+            escaped = True
+        elif char == "|":
+            cells.append("".join(current).strip())
+            current = []
+        else:
+            current.append(char)
+    cells.append("".join(current).strip())
+    return cells
+
+
+def _validate_standard_table_rows(
+    lines: list[str],
+    start: int,
+    end: int,
+    *,
+    caption_line: int | None = None,
+) -> None:
+    rows = [
+        line
+        for line_no, line in enumerate(lines[start:end], start)
+        if line_no != caption_line and line.strip()
+    ]
+    if len(rows) < 2:
+        raise ParseError("标准表格至少需要表头和分隔行")
+
+    header = _split_standard_table_row(rows[0])
+    separator = _split_standard_table_row(rows[1])
+    if header is None or separator is None:
+        raise ParseError("标准表格的表头和分隔行格式无效")
+    if len(header) != len(separator):
+        raise ParseError("标准表格分隔行列数与表头不一致")
+    if any(_TABLE_SEPARATOR_RE.fullmatch(cell) is None for cell in separator):
+        raise ParseError("标准表格分隔行格式无效")
+
+    expected = len(header)
+    for row in rows[2:]:
+        cells = _split_standard_table_row(row)
+        if cells is None or len(cells) != expected:
+            raise ParseError("标准表格数据行列数与表头不一致")
 
 
 class _InlineTokenConverter:
@@ -841,7 +914,7 @@ class MarkdownItParserBackend:
             elif token_type == "fence":
                 idx = self._emit_fence(doc, tokens, idx, offset)
             elif token_type == "table_open":
-                idx = self._emit_table(doc, tokens, idx, offset)
+                idx = self._emit_table(doc, tokens, idx, lines, offset)
             elif token_type in _UNSUPPORTED_BLOCK_TOKEN_TYPES:
                 raise ParseError(f"不支持的 markdown-it 块 token: {token_type}")
             else:
@@ -946,11 +1019,23 @@ class MarkdownItParserBackend:
         doc: ThesisDocument,
         tokens: list[Token],
         idx: int,
+        lines: list[str],
         offset: int,
     ) -> int:
         open_token = tokens[idx]
         close_idx = _find_close(tokens, idx, "table_open", "table_close")
         assert open_token.map is not None
+        caption_line: int | None = None
+        if open_token.map[1] > open_token.map[0]:
+            candidate_line = open_token.map[1] - 1
+            if lines[candidate_line].strip().startswith(":"):
+                caption_line = candidate_line
+        _validate_standard_table_rows(
+            lines,
+            open_token.map[0],
+            open_token.map[1],
+            caption_line=caption_line,
+        )
         rows: list[TableRow] = []
         row_idx = idx + 1
         while row_idx < close_idx:
@@ -960,6 +1045,9 @@ class MarkdownItParserBackend:
 
             row_open = tokens[row_idx]
             row_close = _find_close(tokens, row_idx, "tr_open", "tr_close")
+            if row_open.map is not None and row_open.map[0] == caption_line:
+                row_idx = row_close + 1
+                continue
             cells: list[TableCell] = []
             header = False
             cell_idx = row_idx + 1
@@ -1029,13 +1117,58 @@ class MarkdownItParserBackend:
                 )
             row_idx = row_close + 1
 
+        table_id: str | None = None
+        caption_inlines: tuple[Inline, ...] = ()
+        next_idx = close_idx + 1
+        caption_text: str | None = None
+        caption_line_number: int | None = None
+        caption_column = 1
+        if caption_line is not None:
+            caption_text = lines[caption_line].strip()
+            caption_line_number = caption_line + 1 + offset
+            caption_column = lines[caption_line].find(caption_text) + 1
+        if (
+            next_idx + 2 < len(tokens)
+            and tokens[next_idx].type == "paragraph_open"
+            and tokens[next_idx + 1].type == "inline"
+            and tokens[next_idx + 2].type == "paragraph_close"
+        ):
+            caption_token = tokens[next_idx + 1]
+            if caption_token.content.strip().startswith(":"):
+                assert caption_token.map is not None
+                caption_text = caption_token.content.strip()
+                caption_line_number = caption_token.map[0] + 1 + offset
+                caption_column = caption_token.content.find(caption_text) + 1
+                next_idx += 3
+        if caption_text is not None:
+            caption_match = _TABLE_CAPTION_RE.fullmatch(caption_text)
+            if caption_match is None:
+                raise ParseError(
+                    "标准表格 caption 必须使用 : caption {#tbl:id} 格式"
+                )
+            caption = caption_match.group("caption")
+            caption_tokens = self._md.parseInline(caption, {})
+            if len(caption_tokens) != 1 or caption_tokens[0].type != "inline":
+                raise ParseError("标准表格 caption 无法转换为 typed inline")
+            assert caption_line_number is not None
+            caption_inlines = tuple(
+                _parse_inline_token(
+                    caption_tokens[0],
+                    start_line=caption_line_number,
+                    start_column=caption_column,
+                )
+            )
+            table_id = caption_match.group("id")
+
         doc.blocks.append(
             Table(
+                id=table_id,
+                caption_inlines=caption_inlines,
                 rows=tuple(rows),
                 location=SourceLocation(line=open_token.map[0] + 1 + offset),
             )
         )
-        return close_idx + 1
+        return next_idx
 
     def _emit_raw_paragraph(
         self,

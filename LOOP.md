@@ -97,6 +97,16 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Done
 
+- [V2-315] GFM table and caption
+  - Files: `src/thesis_forge/core/parser_markdown_it.py`, `tests/core/test_markdown_v2_tables.py`
+  - Behavior: parse structured rows/cells/alignment and the following `: caption {#tbl:id}` line.
+  - Verify: `.venv/bin/python -m pytest tests/core/test_markdown_v2_tables.py`
+  - Acceptance: escaped pipes and inline semantics in cells work; malformed column counts fail.
+  - Verification-surface change: authorized; creates focused standard-table evidence.
+  - Attempts: 2
+  - Attempt 1 (2026-08-22): Checker FAIL; exact Verify passed 6/6, related parser/backend/contract regression passed 76/76, target Ruff, `git diff --check`, and `./lint-loop.sh` passed, but an independent probe found valid GFM `A | B` / `--- | ---` rows were rejected because the candidate required outer pipes; candidate files were restored, registry was preserved and unstaged, no commit or push.
+  - Attempt 2 (2026-08-22): Checker PASS; exact Verify `.venv/bin/python -m pytest tests/core/test_markdown_v2_tables.py` passed 6/6; related regression `.venv/bin/python -m pytest tests/core/test_markdown_v2_tables.py tests/core/test_markdown_v2_figures.py tests/test_parser_markdown_it.py tests/test_parser_backend.py tests/test_parser_contract.py` passed 87/87; target Ruff `./.venv/bin/ruff check src/thesis_forge/core/parser_markdown_it.py tests/core/test_markdown_v2_tables.py`, `git diff --check`, and `./lint-loop.sh` passed. Independent Python/runtime probe printed markdown-it tight-caption token maps (`table_open.map=[0,4]`, caption `tr_open.map=[3,4]`), verified optional outer pipes, escaped pipe as one typed `Text` cell, left/center/right alignment, typed caption/id, no-blank and blank-line caption consumption before heading, malformed caption/column `ParseError`, and no-caption behavior. The repair removes the outer-pipe requirement and consumes caption content from the actual table/tr/paragraph token maps; registry remained preserved and unstaged.
+
 - [V2-314] Standard image to Figure
   - Files: `src/thesis_forge/core/parser_markdown_it.py`, `tests/core/test_markdown_v2_figures.py`
   - Behavior: parse `![caption](path){#fig:id}` as Figure and reject figure without valid ID.
@@ -1371,5 +1381,7 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 - 2026-08-22 - V2-312 Checker PASS; exact Verify passed 4/4, related parser/backend/contract regression passed 80/80, target Ruff, `git diff --check`, and `./lint-loop.sh` passed; independent semantic-inline probe covered seven CrossReference targets/fallbacks, ordinary URL and fragment Link preservation, Citation, FootnoteReference, FootnoteDefinition, and SourceLocation mapping; V2-312 product scope was exactly the two named files, registry preserved, no push.
 - 2026-08-22 - V2-313 Checker PASS; exact Verify passed 4/4, related parser/backend/contract regression passed 80/80, target Ruff, `git diff --check`, and `./lint-loop.sh` passed; independent block probe covered heading/paragraph/list/blockquote/fence fields and SourceLocation values, scope guard found no parser or undeclared production diff, and the pre-existing registry remained unchanged and unstaged; no blockquote-nested-list extension, no push.
 - 2026-08-22 - V2-314 Checker PASS; exact Verify passed 5/5, related parser/backend/contract regression passed 85/85, target Ruff, `git diff --check`, and `./lint-loop.sh` passed; independent probe covered Figure id/src/location, typed Strong/semantic captions, explicit invalid-ID errors, width not read, footnote `_walk` advancement with citation/semantic-link indexing, and ordinary-paragraph image rejection; scope was the two named product files plus LOOP, registry preserved and unstaged, no V2-315, no push.
+- 2026-08-22 - V2-315 Checker FAIL Attempt 1; exact Verify passed 6/6, related parser/backend/contract regression passed 76/76, target Ruff, `git diff --check`, and `./lint-loop.sh` passed, but an independent GFM probe found valid tables without outer pipes were rejected; candidate files were restored, registry preserved and unstaged, no commit or push.
+- 2026-08-22 - V2-315 Checker PASS Attempt 2; exact Verify 6/6, related regression 87/87, target Ruff, diff-check, LOOP-LINT, and independent GFM table/caption runtime probes passed; V2-315 moved to Done, scope limited to parser/test plus LOOP, registry preserved and unstaged, one local commit and no push.
 
 ## Sync log
