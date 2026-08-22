@@ -210,6 +210,7 @@ class BulletList(Block):
 class Figure(Block):
     src: str = ""
     caption: str = ""
+    caption_inlines: tuple[Inline, ...] = ()
     width: str | None = None
 
 
@@ -222,11 +223,13 @@ class Table(Block):
 @dataclass(slots=True)
 class Equation(Block):
     latex: str = ""
+    display: bool = True
 
 
 @dataclass(slots=True)
 class Listing(Block):
     caption: str = ""
+    caption_inlines: tuple[Inline, ...] = ()
     language: str | None = None
     code: str = ""
 
@@ -234,6 +237,7 @@ class Listing(Block):
 @dataclass(slots=True)
 class Algorithm(Block):
     caption: str = ""
+    caption_inlines: tuple[Inline, ...] = ()
     body: str = ""
 
 
