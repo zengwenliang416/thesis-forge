@@ -1074,6 +1074,16 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
   - Verification-surface change: authorized; creates one focused contract test
   - Attempts: 0
 
+- [V2-404] Review listing, algorithm, cover, TOC and bibliography
+  - Files: `src/thesis_forge/presentation/review.py`, `tests/presentation/test_review_regions.py`
+  - Behavior: cover all remaining typed instructions and semantic regions.
+  - Verify: `.venv/bin/python -m pytest tests/presentation/test_review_regions.py`
+  - Acceptance: no registered instruction lacks a Review projection.
+  - Verification-surface change: authorized; creates focused Review-region evidence.
+  - Attempts: 2
+  - Attempt 1 (2026-08-22): Checker FAIL; exact Verify passed 4/4, `git diff --check`, registry/unknown-instruction coverage, and static direct-import probe passed, but target Ruff failed with I001/UP035/RUF022/F401. Independent visible-content probes found ordinary non-code TextRun values leaking `fig:leak`, `[@secret-key]`, `{#fig:leak}`, and `/tmp/...`; expected Review content to hide stable IDs, citation keys, technical markers, and local paths. The two selected files were restored, `openspec/.specnav/change-registry.json` was preserved, no commit or push.
+  - Attempt 2 (2026-08-22): Checker PASS; exact Verify passed 4/4, target Ruff and `git diff --check` passed; registry coverage/unknown-instruction, visible-content marker, code/listing literal-exemption, and headless import-isolation probes passed. Ordinary non-code TextRun values hide fig/tbl/eq/sec/chap/lst/alg IDs, citation keys, `{#id}`, and `/tmp`/`/Users` paths; importing review does not initialize application or renderer/docx modules. Candidate scope was exactly the two named files, the pre-existing `change-registry.json` was preserved, one local commit and no push.
+
 ## Blocked
 
 ## Blocked archive
@@ -1328,5 +1338,7 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 - 2026-08-22 - V2-311 Checker PASS Attempt 2; exact Verify passed 8/8, related parser/backend/contract regression passed 81/81, core/parser/compiler regression passed 183/183, target Ruff, diff-check, and LOOP-LINT passed, and independent probes covered nested inlines, distinct soft/hard breaks, code-math isolation, balanced ordinary/reference links, escaped-dollar mapping, autolinks, and explicit image-token errors; candidate scope was the three named product files, `change-registry.json` was preserved, one local commit and no push.
 
 - 2026-08-22 - V2-318 Checker PASS
+- 2026-08-22 - V2-404 Checker FAIL Attempt 1; exact Verify passed 4/4, `git diff --check` and registry/unknown/static-import probes passed, but target Ruff failed and normal Review TextRun content leaked stable IDs, raw citation keys, technical attributes, and local paths; selected files restored, `change-registry.json` preserved, no commit or push.
+- 2026-08-22 - V2-404 Checker PASS Attempt 2; exact Verify passed 4/4, target Ruff and `git diff --check` passed, registry/unknown-instruction coverage, visible-content marker, code/listing literal-exemption, and headless import-isolation probes passed; candidate scope was exactly the two named files, `change-registry.json` was preserved, one local commit and no push.
 
 ## Sync log
