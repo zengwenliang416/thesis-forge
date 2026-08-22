@@ -14,7 +14,7 @@ from pathlib import Path
 
 import pytest
 
-from thesis_forge.core.model import Paragraph, inline_plain_text
+from thesis_forge.core.model import Algorithm, Citation, Paragraph, inline_plain_text
 from thesis_forge.core.parser import ParseError
 from thesis_forge.core.parser_backend import (
     LegacyParserBackend,
@@ -246,6 +246,29 @@ def test_parse_text_preserves_logical_source_path(tmp_path: Path) -> None:
     doc = markdown_it.parse_text("# 编辑器新标题\n", source_path=source)
     assert doc.source_path == source.resolve()
     assert inline_plain_text(doc.blocks[0].inlines) == "编辑器新标题"
+
+
+def test_algorithm_body_lines_match_legacy_backend(tmp_path: Path) -> None:
+    source = tmp_path / "algorithm.md"
+    source.write_text(
+        "::: algorithm {#alg:train}\n"
+        'caption: "训练流程"\n'
+        "\n"
+        "1. 初始化参数；\n"
+        "2. 读取数据 [@alg-src]。\n"
+        ":::\n",
+        encoding="utf-8",
+    )
+    doc = markdown_it.parse_file(source)
+    algorithm = doc.blocks[0]
+    assert isinstance(algorithm, Algorithm)
+    body_citation = algorithm.body_lines[1][1]
+    assert isinstance(body_citation, Citation)
+    assert (body_citation.location.line, body_citation.location.column) == (5, 9)
+
+    legacy_algorithm = LegacyParserBackend().parse_file(source).blocks[0]
+    assert algorithm.body_lines == legacy_algorithm.body_lines
+    assert algorithm.body == legacy_algorithm.body
 
 
 def test_empty_document_is_inspectable(tmp_path: Path) -> None:
