@@ -3,33 +3,26 @@ from __future__ import annotations
 from pathlib import Path
 
 from thesis_forge.core.model import ValidationIssue
-from thesis_forge.core.parser import parse_markdown
+from thesis_forge.core.parser_backend import create_parser_backend
 from thesis_forge.core.validator import validate_document
 
 OVERRIDE_CODES = {"orphan-layout-override", "layout-override-type-mismatch"}
+PARSER = create_parser_backend()
 
 THESIS_MD = r"""
 # 绪论 {#chap:introduction}
 
-::: figure {#fig:model}
-src: assets/model.png
-caption: 模型总体结构
-:::
+![模型总体结构](assets/model.png){#fig:model}
 
-::: equation {#eq:loss}
 $$
 L=-\sum_i y_i \log \hat y_i
 $$
-:::
-
-::: table {#tbl:result}
-caption: 模型实验结果
+{#eq:loss}
 
 | 指标 | 实验组 |
 | --- | ---: |
 | 准确率 | 96.2% |
-
-:::
+: 模型实验结果 {#tbl:result}
 """.lstrip()
 
 MANIFEST = """
@@ -58,7 +51,7 @@ def write_project(tmp_path: Path, *, layout: str = "") -> Path:
 
 def override_issues(tmp_path: Path, *, layout: str = "") -> list[ValidationIssue]:
     root = write_project(tmp_path, layout=layout)
-    document = parse_markdown(root / "thesis.md")
+    document = PARSER.parse_file(root / "thesis.md")
     issues = validate_document(document)
     return [issue for issue in issues if issue.code in OVERRIDE_CODES]
 
@@ -131,7 +124,7 @@ def test_projectless_document_silences_layout_override_rule(tmp_path: Path) -> N
     source = tmp_path / "thesis.md"
     source.write_text(THESIS_MD, encoding="utf-8")
 
-    issues = validate_document(parse_markdown(source))
+    issues = validate_document(PARSER.parse_file(source))
 
     assert not any(issue.code in OVERRIDE_CODES for issue in issues)
 

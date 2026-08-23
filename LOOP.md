@@ -97,6 +97,16 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Done
 
+- [V2-523] Migrate object override validation tests to the canonical parser
+  - Parent: ordered parser-consumer migration after `V2-522`; removes the next direct test dependency on the deleted hand-written parser while retaining project manifest layout discovery.
+  - Files: `tests/core/test_object_overrides.py`, `LOOP.md`
+  - Behavior: object override tests parse standard V2 figure, display-equation and GFM table syntax through `create_parser_backend().parse_file()` and continue validating manifest-driven layout overrides.
+  - Verify: `.venv/bin/python -m pytest tests/core/test_object_overrides.py`
+  - Acceptance: the exact Verify passes; the test has no `thesis_forge.core.parser` import or legacy `:::` source, uses the canonical parser factory, and retains valid, orphan and type-mismatch override assertions.
+  - Verification-surface change: `no`
+  - Attempts: 1
+  - Attempt 1 (2026-08-23): Checker PASS; exact Verify passed 7/7, target Ruff, `git diff --check`, and `./lint-loop.sh` passed; independent AST/runtime audit confirmed canonical `parser_backend.create_parser_backend().parse_file()` usage, no legacy parser import, `parse_markdown*` API, YAML Front Matter or `:::` source, typed Figure/Equation/Table output with stable IDs, and valid/orphan/type-mismatch manifest override assertions; no fallback, compatibility layer, dual data source, or silent degradation; candidate scope remained exactly `LOOP.md` and `tests/core/test_object_overrides.py`, all pre-existing `openspec/**` changes were preserved and unstaged, one local commit, no push.
+
 - [V2-522] Remove the parser markdown-it test import from the legacy parser module
   - Parent: ordered parser-consumer migration after `V2-521`; moves the parser markdown-it error assertions to the canonical parser support module.
   - Files: `tests/test_parser_markdown_it.py`, `LOOP.md`
@@ -1701,6 +1711,7 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Cycle log
 
+- 2026-08-23 - V2-523 Checker PASS Attempt 1; exact Verify passed 7/7, target Ruff, `git diff --check`, and `./lint-loop.sh` passed; independent AST/runtime audit confirmed standard V2 figure/display-equation/GFM table parsing and manifest override issue coverage; V2-523 moved from Open to Done, candidate scope remained exactly `LOOP.md` and `tests/core/test_object_overrides.py`, all pre-existing `openspec/**` changes were preserved and unstaged, one local commit, no push.
 - 2026-08-23 - V2-522 Checker PASS Attempt 1; exact Verify passed 35/35, target Ruff, `git diff --check`, and `./lint-loop.sh` passed; independent AST/runtime audit confirmed the canonical parser backend import, `ParseError` from `parser_support` only, retained parser-diff/legacy rejection/structured-error assertions, and no legacy parser import, parse_markdown APIs, fallback, compatibility layer, or dual source of truth; V2-522 moved from Open to Done, candidate scope remained exactly `LOOP.md` and `tests/test_parser_markdown_it.py`, all pre-existing `openspec/**` paths were preserved and unstaged, one local commit, no push.
 - 2026-08-23 - V2-519 Checker FAIL Attempt 1; exact Verify passed 6/6, target Ruff and `git diff --check` passed, but independent evidence audit found no direct typed Citation/DocumentIndex assertion; candidate files were restored, no commit or push, and existing `openspec/**` changes were preserved.
 - 2026-08-23 - V2-519 Checker PASS Attempt 2; exact Verify passed 6/6, target Ruff, `git diff --check`, and `./lint-loop.sh` passed; independent AST/runtime audit confirmed the canonical parser backend import, no YAML Front Matter or legacy `:::` input, typed GFM `Table`/`TableRow`/`TableCell`/caption output, direct `Citation` nodes and `DocumentIndex` citation order, and no fallback, compatibility layer, or dual source of truth; V2-519 moved from Open to Done, candidate scope remained exactly the named test file plus this lifecycle update, all pre-existing `openspec/**` paths were preserved and unstaged, one local commit, no push.
