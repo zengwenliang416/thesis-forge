@@ -95,6 +95,8 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Open
 
+## Done
+
 - [V2-506D] Render canonical typed table cells in DOCX and add capability evidence
   - Parent: ordered preparation child 5/5 of the re-sliced `V2-506`; depends on `V2-506M2`; the original V2-506 Behavior and Acceptance remain unchanged.
   - Files: `src/thesis_forge/renderers/docx/tables.py`, `tests/renderers/docx/test_structured_table.py`
@@ -102,9 +104,8 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
   - Verify: `.venv/bin/python -m pytest tests/renderers/docx/test_structured_table.py`
   - Acceptance: the evidence test proves native table/caption/SEQ/bookmark and configured borders/alignment; cell strong/link/math/break/reference/citation/footnote semantics reach DOCX through the shared seam; visible cell text contains no raw citation or stable-ID markers; `spec/format-capabilities.yaml` object.table evidence path exists and is executable.
   - Verification-surface change: `yes`; creates the capability evidence required by `spec/format-capabilities.yaml`.
-  - Attempts: 0
-
-## Done
+  - Attempts: 1
+  - Attempt 1 (2026-08-23): Checker PASS; exact Verify passed 1/1; related regression passed 123/123 with no candidate-only failure; target Ruff, `git diff --check`, and `./lint-loop.sh` passed. CodeGraph/source audit confirmed the renderer uses canonical `TableCellInstruction.inlines` through `render_inline_runs`/`InlineHandlers`, preserves existing caption/SEQ/bookmark, alignment and border logic, and adds no pipe parsing, `cell.text` source, compatibility/fallback branch, raw marker or `[kind]` payload. Independent DOCX OPC/XML audit passed native table rows and alignments, borders, real SEQ begin/separate/end, paired bookmark start/end, bold/code/link/math/soft-break/hard-break/REF/citation/footnote cell semantics, hyperlink relationship and footnotes part, marker-free visible `w:t`, and matching executable `object.table` evidence path. Candidate scope was exactly the two named files; completed T/P1/M1/M2 and all pre-existing `openspec/**` paths were preserved; one local commit, no push.
 
 - [V2-506M2] Establish canonical typed table-cell RenderPlan runs
   - Parent: ordered preparation child 4/5 of the re-sliced `V2-506`; depends on `V2-506M1`; the original V2-506 Behavior and Acceptance remain unchanged.
@@ -1779,5 +1780,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 - 2026-08-23 - V2-506M1 Checker PASS Attempt 1; exact Verify 24/24, target Ruff, `git diff --check`, and `./lint-loop.sh` passed; the candidate diff was exactly one `tests/test_compiler.py` assertion replacement, `table.markdown` has no remaining consumer under `tests`, `src`, or `frontend`, no production compatibility path or compiler behavior change was introduced, and `V2-506M1` moved from Open to Done; `openspec/**` and pre-existing `LOOP.md` changes were preserved and unstaged, one local commit, no push.
 - 2026-08-23 - V2-506M2 Checker PASS Attempt 1; exact Verify passed 7/7, related regression passed 131/132 with the sole clean-baseline `TF-SOURCE-LEGACY-001` Preview failure reproduced on clean HEAD, target Ruff, `git diff --check`, LOOP-LINT, and independent typed-table CodeGraph/runtime/scope audits passed; V2-506D was not started, pre-existing `openspec/**` paths were preserved and unstaged, one local commit, no push.
+- 2026-08-23 - V2-506D Checker PASS Attempt 1; exact Verify 1/1, related regression 123/123, target Ruff, `git diff --check`, LOOP-LINT, and independent DOCX OPC/XML audit passed; object.table evidence path matched and was executable, all pre-existing `openspec/**` paths remained unstaged, one local commit, no push.
 
 ## Sync log

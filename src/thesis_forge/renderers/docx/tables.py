@@ -1,15 +1,31 @@
 from __future__ import annotations
 
 from docx.document import Document as DocumentObject
+from docx.opc.constants import RELATIONSHIP_TYPE as RT
 from docx.oxml import OxmlElement
 from docx.oxml.ns import qn
 from docx.shared import Pt
 from docx.table import Table
+from docx.text.paragraph import Paragraph
+from docx.text.run import Run
 
-from thesis_forge.core.render_plan import TableInstruction
+from thesis_forge.core.render_plan import (
+    FootnoteReferenceRun,
+    InlineRun,
+    TableInstruction,
+    TextRun,
+)
 from thesis_forge.templates.model import LengthSpec, TableSpec, ThesisTemplate
 
 from .captions import add_caption
+from .fields import add_reference_field
+from .inlines import (
+    InlineHandlers,
+    citation_run_element,
+    hyperlink_run_element,
+    math_run_element,
+    render_inline_runs,
+)
 from .styles import ALIGNMENTS
 from .units import to_points
 
@@ -91,6 +107,87 @@ def _apply_border_policy(table: Table, table_spec: TableSpec | None) -> None:
         )
 
 
+def _citation_superscript(template: ThesisTemplate | None) -> bool:
+    return (
+        template is not None
+        and template.citation is not None
+        and template.citation.presentation == "superscript"
+    )
+
+
+def _code_font(run: Run) -> None:
+    properties = run._r.get_or_add_rPr()
+    fonts = properties.get_or_add_rFonts()
+    for theme_name in ("asciiTheme", "hAnsiTheme", "eastAsiaTheme", "cstheme"):
+        fonts.attrib.pop(qn(f"w:{theme_name}"), None)
+    fonts.set(qn("w:ascii"), "Courier New")
+    fonts.set(qn("w:hAnsi"), "Courier New")
+    fonts.set(qn("w:eastAsia"), "Courier New")
+    if properties.find(qn("w:noProof")) is None:
+        properties.append(OxmlElement("w:noProof"))
+
+
+def _footnote_reference_element(item: FootnoteReferenceRun):
+    run = OxmlElement("w:r")
+    properties = OxmlElement("w:rPr")
+    style = OxmlElement("w:rStyle")
+    style.set(qn("w:val"), "FootnoteReference")
+    properties.append(style)
+    run.append(properties)
+    reference = OxmlElement("w:footnoteReference")
+    reference.set(qn("w:id"), str(item.footnote_id))
+    run.append(reference)
+    return run
+
+
+def _append_cell_runs(
+    paragraph: Paragraph,
+    runs: tuple[InlineRun, ...],
+    template: ThesisTemplate | None,
+) -> None:
+    code_runs: list[Run] = []
+
+    def append_text(item: TextRun) -> None:
+        run = paragraph.add_run(item.text)
+        if item.bold:
+            run.bold = True
+        if item.code:
+            code_runs.append(run)
+
+    render_inline_runs(
+        runs,
+        InlineHandlers(
+            text=append_text,
+            reference=lambda item: add_reference_field(paragraph, item),
+            citation=lambda item: paragraph._p.append(
+                citation_run_element(
+                    item,
+                    superscript=_citation_superscript(template),
+                )
+            ),
+            footnote_reference=lambda item: paragraph._p.append(
+                _footnote_reference_element(item)
+            ),
+            hyperlink=lambda item: paragraph._p.append(
+                hyperlink_run_element(
+                    item,
+                    paragraph.part.relate_to(
+                        item.destination,
+                        RT.HYPERLINK,
+                        is_external=True,
+                    ),
+                )
+            ),
+            math=lambda item: paragraph._p.append(math_run_element(item)),
+            soft_break=lambda _item: paragraph.add_run(" "),
+            hard_break=lambda _item: paragraph.add_run().add_break(),
+        ),
+        capability="table-cell",
+    )
+    for run in code_runs:
+        _code_font(run)
+
+
 def render_table(
     document: DocumentObject,
     instruction: TableInstruction,
@@ -127,8 +224,8 @@ def render_table(
             row_instruction.cells,
             strict=True,
         ):
-            cell.text = cell_instruction.text
             paragraph = cell.paragraphs[0]
+            _append_cell_runs(paragraph, cell_instruction.inlines, template)
             paragraph.alignment = ALIGNMENTS[cell_instruction.alignment or "center"]
             paragraph.paragraph_format.left_indent = Pt(0)
             paragraph.paragraph_format.right_indent = Pt(0)
