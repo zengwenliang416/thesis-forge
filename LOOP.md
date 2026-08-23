@@ -95,6 +95,8 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Open
 
+## Done
+
 - [V2-503E] Add executable capability evidence for semantic TOC and section resolution
   - Parent: evidence-closure child of catalogue item `V2-503`; depends on completed symbol/numbering and template section work.
   - Files: `tests/core/test_region_resolver.py`
@@ -102,9 +104,8 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
   - Verify: `.venv/bin/python -m pytest tests/core/test_region_resolver.py`
   - Acceptance: the evidence proves legal region order and required-region handling, one resolved TOC instruction with cached heading entries, section-break roles and page-number policy reaching DOCX, and duplicate/invalid placement rejection where the current validation contract defines it; it is non-empty executable evidence and the shared manifest path covers `region.toc` and `region.sections`.
   - Verification-surface change: `yes`; creates the capability evidence required by `spec/format-capabilities.yaml`.
-  - Attempts: 0
-
-## Done
+  - Attempts: 1
+  - Attempt 1 (2026-08-23): Checker PASS; exact Verify `.venv/bin/python -m pytest tests/core/test_region_resolver.py` passed 2/2; related canonical-parser, Review-region and DOCX regression passed 100/100; target Ruff, `git diff --check`, and `./lint-loop.sh` passed. Independent runtime audit confirmed manifest-selected template resolution, canonical markdown-it parser to compiler single TOC with cached heading entries, front_matter/main section roles, typed Review projection, DOCX sectPr/page-number policy, real TOC field/cache, and RegionsSpec duplicate/missing-main validation. Candidate diff contained only the named test file; existing `openspec/**` changes were preserved and ignored; no commit had been created before this lifecycle update and no push.
 
 - [V2-507E1] Establish template and symbol numbering inputs for listings and algorithms
   - Parent: ordered preparation child 1/4 of evidence-closure item `V2-507E`; the original `V2-507E` Behavior and Acceptance remain unchanged across E1 through E4.
@@ -1607,6 +1608,7 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Cycle log
 
+- 2026-08-23 - V2-503E Checker PASS Attempt 1; exact Verify passed 2/2, related canonical-parser/Review/DOCX regression passed 100/100, target Ruff, `git diff --check`, and LOOP-LINT passed; independent manifest-to-compiler/Review/DOCX runtime audit passed; V2-503E moved to Done, candidate scope was exactly `tests/core/test_region_resolver.py` plus this lifecycle update, all pre-existing `openspec/**` paths were preserved and unstaged, one local commit pending, no push.
 - 2026-08-23 - V2-507E4 Checker PASS Attempt 3; exact Verify passed 4/4, related DOCX/compiler/Review regression passed 103/103, target Ruff, `git diff --check`, LOOP-LINT, and independent DOCX XML/mutation audit passed; Attempt 1 evidence-strength and Attempt 2 unknown-RenderNode fallback/CaptionSpec.position findings were repaired within the three-file boundary; V2-507E4 moved to Done, V2-503E remains next, all pre-existing `openspec/**` paths were preserved and unstaged, one local commit, no push.
 - 2026-08-20 - V2-101 Checker PASS; exact Verify `.venv/bin/python -m pytest tests/application/test_build_report_contract.py` passed 6 tests; scope limited to the two named implementation/test files, no push.
 - 2026-08-20 - V2-102 Checker FAIL; exact Verify passed 8 tests, but two existing build-stream tests failed on the obsolete `type: error` contract; selected files restored, no commit or push.
