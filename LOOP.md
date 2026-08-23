@@ -95,16 +95,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Open
 
-- [V2-506M2] Establish canonical typed table-cell RenderPlan runs
-  - Parent: ordered preparation child 4/5 of the re-sliced `V2-506`; depends on `V2-506M1`; the original V2-506 Behavior and Acceptance remain unchanged.
-  - Files: `src/thesis_forge/core/render_plan.py`, `src/thesis_forge/core/compiler.py`, `tests/core/test_typed_table_render_plan.py`
-  - Behavior: make structured table cells carry one validated tuple of canonical `InlineRun` values, remove raw `TableInstruction.markdown` and stored cell text, and compile cell Inline semantics through the authoritative compiler seam.
-  - Verify: `.venv/bin/python -m pytest tests/core/test_typed_table_render_plan.py`
-  - Acceptance: typed cells preserve text, strong/emphasis/code, link, math, soft/hard break, reference, citation and footnote runs; readable `text` is only a derived projection; unknown Inline values fail explicitly; `TableInstruction.payload` has no raw markdown or second cell source; existing downstream consumers remain green through a derived projection only.
-  - Verification-surface change: `no`
-  - Attempts: 0
-  - Attempt 1 (2026-08-23): Checker FAIL; expected: the exact Verify and related regression would pass after the strict typed table-cell change. Observed: the exact Verify passed 7/7, but the related regression failed 130 passed, 2 failed because `tests/test_compiler.py` still accesses removed `table.markdown`; the second failure was the known clean-baseline `TF-SOURCE-LEGACY-001` YAML Front Matter rejection. The work was re-sliced into `V2-506M1` and `V2-506M2`, and all three candidate files were restored to `HEAD=e0ac590`; no commit or push.
-
 - [V2-506D] Render canonical typed table cells in DOCX and add capability evidence
   - Parent: ordered preparation child 5/5 of the re-sliced `V2-506`; depends on `V2-506M2`; the original V2-506 Behavior and Acceptance remain unchanged.
   - Files: `src/thesis_forge/renderers/docx/tables.py`, `tests/renderers/docx/test_structured_table.py`
@@ -115,6 +105,17 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
   - Attempts: 0
 
 ## Done
+
+- [V2-506M2] Establish canonical typed table-cell RenderPlan runs
+  - Parent: ordered preparation child 4/5 of the re-sliced `V2-506`; depends on `V2-506M1`; the original V2-506 Behavior and Acceptance remain unchanged.
+  - Files: `src/thesis_forge/core/render_plan.py`, `src/thesis_forge/core/compiler.py`, `tests/core/test_typed_table_render_plan.py`
+  - Behavior: make structured table cells carry one validated tuple of canonical `InlineRun` values, remove raw `TableInstruction.markdown` and stored cell text, and compile cell Inline semantics through the authoritative compiler seam.
+  - Verify: `.venv/bin/python -m pytest tests/core/test_typed_table_render_plan.py`
+  - Acceptance: typed cells preserve text, strong/emphasis/code, link, math, soft/hard break, reference, citation and footnote runs; readable `text` is only a derived projection; unknown Inline values fail explicitly; `TableInstruction.payload` has no raw markdown or second cell source; existing downstream consumers remain green through a derived projection only.
+  - Verification-surface change: `no`
+  - Attempts: 1
+  - Attempt 1 (2026-08-23): Checker PASS; exact Verify passed 7/7; related regression passed 131/132 with the sole clean-baseline failure at `tests/test_preview_presentation.py::test_complete_example_preview_preserves_compiler_order_and_numbering` (`TF-SOURCE-LEGACY-001` YAML Front Matter rejection), reproduced identically on an isolated clean `HEAD`. Target Ruff, `git diff --check`, and `./lint-loop.sh` passed. CodeGraph/source and runtime audits confirmed exactly three candidate files, one validated tuple of canonical InlineRun values, `TableCellInstruction.text` as a property only, no `TableCellRuns` or `TableInstruction.markdown`, compiler use of `context.inlines(... retain_citation_raw=False)`, derived-only downstream `cell.text` consumers, eight canonical run shapes, cleared citation raw, correct reference/footnote runs, explicit unknown-run failure, and no raw citation/target leakage in cell projections or table rows payload. V2-506D was not started; all pre-existing `openspec/**` paths remained uncommitted; one local commit, no push.
+  - Parent re-slice history (2026-08-23): Checker FAIL; expected: the exact Verify and related regression would pass after the strict typed table-cell change. Observed: the exact Verify passed 7/7, but the related regression failed 130 passed, 2 failed because `tests/test_compiler.py` still accesses removed `table.markdown`; the second failure was the known clean-baseline `TF-SOURCE-LEGACY-001` YAML Front Matter rejection. The work was re-sliced into `V2-506M1` and `V2-506M2`, and all three candidate files were restored to `HEAD=e0ac590`; no commit or push.
 
 - [V2-506M1] Migrate existing compiler table fixture assertion away from obsolete `table.markdown`
   - Parent: ordered preparation child 3/5 of the re-sliced `V2-506`; depends on `V2-506P1`; the original V2-506 Behavior and Acceptance remain unchanged.
@@ -1777,5 +1778,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 - 2026-08-23 - V2-506M Checker FAIL Attempt 1; exact Verify passed 7/7, related regression failed with 130 passed and 2 failed because `tests/test_compiler.py` still accesses removed `table.markdown`, plus the known clean-baseline `TF-SOURCE-LEGACY-001` YAML Front Matter failure; target Ruff, `git diff --check`, and `./lint-loop.sh` passed; candidate files were restored to `HEAD=e0ac590`, V2-506M was re-sliced into V2-506M1 and V2-506M2, V2-506D became ordered child 5/5, no product candidate remains, no commit or push.
 
 - 2026-08-23 - V2-506M1 Checker PASS Attempt 1; exact Verify 24/24, target Ruff, `git diff --check`, and `./lint-loop.sh` passed; the candidate diff was exactly one `tests/test_compiler.py` assertion replacement, `table.markdown` has no remaining consumer under `tests`, `src`, or `frontend`, no production compatibility path or compiler behavior change was introduced, and `V2-506M1` moved from Open to Done; `openspec/**` and pre-existing `LOOP.md` changes were preserved and unstaged, one local commit, no push.
+- 2026-08-23 - V2-506M2 Checker PASS Attempt 1; exact Verify passed 7/7, related regression passed 131/132 with the sole clean-baseline `TF-SOURCE-LEGACY-001` Preview failure reproduced on clean HEAD, target Ruff, `git diff --check`, LOOP-LINT, and independent typed-table CodeGraph/runtime/scope audits passed; V2-506D was not started, pre-existing `openspec/**` paths were preserved and unstaged, one local commit, no push.
 
 ## Sync log

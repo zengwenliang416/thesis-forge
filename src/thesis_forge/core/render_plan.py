@@ -156,24 +156,6 @@ class CaptionRuns(str):
         return self._runs
 
 
-class TableCellRuns(str):
-    """One validated typed table-cell value with a readable projection."""
-
-    _runs: tuple[InlineRun, ...]
-
-    def __new__(cls, runs: tuple[InlineRun, ...]) -> Self:
-        if type(runs) is not tuple:
-            raise TypeError("TableCellRuns requires tuple[InlineRun, ...]")
-        normalized = tuple(ensure_inline_run(run) for run in runs)
-        value = str.__new__(cls, _inline_run_text(normalized))
-        value._runs = normalized
-        return value
-
-    @property
-    def runs(self) -> tuple[InlineRun, ...]:
-        return self._runs
-
-
 ParagraphRole: TypeAlias = Literal[
     "body",
     "abstract.zh.title",
@@ -328,8 +310,14 @@ class FigureInstruction(_Instruction):
 
 @dataclass(frozen=True, slots=True)
 class TableCellInstruction:
-    text: str
+    inlines: tuple[InlineRun, ...]
     alignment: Literal["left", "center", "right"] | None = None
+
+    def __post_init__(self) -> None:
+        if type(self.inlines) is not tuple:
+            raise TypeError("TableCellInstruction requires tuple[InlineRun, ...]")
+        for inline in self.inlines:
+            ensure_inline_run(inline)
 
     @classmethod
     def from_inlines(
@@ -337,7 +325,11 @@ class TableCellInstruction:
         inlines: tuple[InlineRun, ...],
         alignment: Literal["left", "center", "right"] | None = None,
     ) -> Self:
-        return cls(text=TableCellRuns(inlines), alignment=alignment)
+        return cls(inlines=inlines, alignment=alignment)
+
+    @property
+    def text(self) -> str:
+        return _inline_run_text(self.inlines)
 
 
 @dataclass(frozen=True, slots=True)
@@ -351,7 +343,6 @@ class TableInstruction(_Instruction):
     kind: ClassVar[str] = "table"
     source_id: str | None
     caption: str
-    markdown: str
     rows: tuple[TableRowInstruction, ...]
     chapter: int
     number: str | None
@@ -375,7 +366,6 @@ class TableInstruction(_Instruction):
         return cls(
             source_id=source_id,
             caption=caption,
-            markdown="",
             rows=rows,
             chapter=chapter,
             number=number,
@@ -389,7 +379,6 @@ class TableInstruction(_Instruction):
         return {
             "id": self.source_id,
             "caption": self.caption,
-            "markdown": self.markdown,
             "rows": [
                 {
                     "header": row.header,

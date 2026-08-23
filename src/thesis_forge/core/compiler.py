@@ -251,6 +251,7 @@ def _resolve_figure_asset(source_path: Path, src: str) -> Path:
 def _compile_table_rows(
     rows: tuple[TableRow, ...],
     source_id: str | None,
+    context: _CompilationContext,
 ) -> tuple[TableRowInstruction, ...]:
     if not rows:
         return ()
@@ -265,8 +266,11 @@ def _compile_table_rows(
             TableRowInstruction(
                 header=row.header,
                 cells=tuple(
-                    TableCellInstruction(
-                        text=inline_plain_text(cell.inlines),
+                    TableCellInstruction.from_inlines(
+                        context.inlines(
+                            cell.inlines,
+                            retain_citation_raw=False,
+                        ),
                         alignment=cell.alignment,
                     )
                     for cell in row.cells
@@ -698,11 +702,10 @@ def _compile_block(
             sequence=sequence,
         )
     if isinstance(block, Table):
-        return TableInstruction(
+        return TableInstruction.from_typed_rows(
             source_id=block.id,
             caption=inline_plain_text(block.caption_inlines),
-            markdown="",
-            rows=_compile_table_rows(block.rows, block.id),
+            rows=_compile_table_rows(block.rows, block.id, context),
             chapter=chapter,
             number=number,
             label=label,
