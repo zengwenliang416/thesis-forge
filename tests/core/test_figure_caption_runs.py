@@ -29,12 +29,15 @@ from thesis_forge.core.render_plan import (
     FootnoteReferenceRun,
     HardBreakRun,
     HyperlinkRun,
+    InlineRun,
     MathRun,
     ParagraphInstruction,
     ReferenceRun,
     SoftBreakRun,
     TextRun,
 )
+from thesis_forge.renderers.docx.errors import DocxRenderError
+from thesis_forge.renderers.docx.inlines import InlineHandlers, render_inline_runs
 from thesis_forge.templates import load_template
 
 
@@ -109,6 +112,31 @@ def _marker_document() -> ThesisDocument:
     )
 
 
+def _dispatch_values(
+    runs: tuple[object, ...],
+    *,
+    capability: str,
+) -> list[tuple[str, str]]:
+    values: list[tuple[str, str]] = []
+    render_inline_runs(
+        runs,  # type: ignore[arg-type]
+        InlineHandlers(
+            text=lambda item: values.append(("text", item.text)),
+            reference=lambda item: values.append(("reference", item.display_text)),
+            citation=lambda item: values.append(("citation", item.text)),
+            footnote_reference=lambda item: values.append(
+                ("footnote-reference", item.label)
+            ),
+            hyperlink=lambda item: values.append(("hyperlink", item.text)),
+            math=lambda item: values.append(("math", item.latex)),
+            soft_break=lambda _item: values.append(("soft-break", " ")),
+            hard_break=lambda _item: values.append(("hard-break", "\n")),
+        ),
+        capability=capability,
+    )
+    return values
+
+
 def test_figure_caption_uses_one_typed_value_for_all_inline_variants() -> None:
     plan = compile_document(
         _rich_document(),
@@ -157,6 +185,67 @@ def test_figure_caption_uses_one_typed_value_for_all_inline_variants() -> None:
         run for run in paragraph.inlines if isinstance(run, CitationRun)
     )
     assert body_citation.raw == "[@body]"
+
+
+def test_docx_shared_inline_seam_consumes_body_and_figure_caption_runs() -> None:
+    plan = compile_document(
+        _rich_document(),
+        template=load_template("templates/base/bachelor.yaml"),
+    )
+    figure = next(node for node in plan.nodes if isinstance(node, FigureInstruction))
+    body_runs: tuple[InlineRun, ...] = (
+        TextRun("正文"),
+        ReferenceRun("fig:main", "tf_fig_main", "图1-1"),
+        HyperlinkRun("项目主页", "https://example.com"),
+        MathRun("x^2"),
+        SoftBreakRun(),
+        HardBreakRun(),
+        CitationRun(
+            keys=("body",),
+            ordinals=(1,),
+            raw="[@body]",
+            text="[1]",
+        ),
+        FootnoteReferenceRun("note", 1),
+    )
+
+    body_values = _dispatch_values(body_runs, capability="paragraph")
+    caption_values = _dispatch_values(
+        figure.caption.runs,
+        capability="figure-caption",
+    )
+
+    assert [kind for kind, _value in body_values] == [
+        "text",
+        "reference",
+        "hyperlink",
+        "math",
+        "soft-break",
+        "hard-break",
+        "citation",
+        "footnote-reference",
+    ]
+    assert [kind for kind, _value in caption_values] == [
+        "text",
+        "text",
+        "text",
+        "text",
+        "hyperlink",
+        "math",
+        "soft-break",
+        "hard-break",
+        "reference",
+        "citation",
+        "footnote-reference",
+    ]
+    assert ("citation", "[1]") in caption_values
+    assert "[@caption]" not in repr(caption_values)
+    assert "sec:target" not in repr(caption_values)
+
+
+def test_docx_shared_inline_seam_rejects_unknown_run() -> None:
+    with pytest.raises(DocxRenderError, match="unsupported inline run object"):
+        _dispatch_values((object(),), capability="figure-caption")
 
 
 def test_figure_caption_citations_follow_document_order() -> None:
