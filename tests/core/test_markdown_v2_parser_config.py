@@ -5,14 +5,14 @@ from pathlib import Path
 
 from thesis_forge.core.parser_markdown_it import _build_markdown_it
 
-PARSER_PATH = (
+PARSER_SUPPORT_PATH = (
     Path(__file__).resolve().parents[2]
     / "src"
     / "thesis_forge"
     / "core"
-    / "parser.py"
+    / "parser_support.py"
 )
-MARKDOWN_IT_PARSER_PATH = PARSER_PATH.with_name("parser_markdown_it.py")
+MARKDOWN_IT_PARSER_PATH = PARSER_SUPPORT_PATH.with_name("parser_markdown_it.py")
 
 
 def _parser_imports(tree: ast.Module) -> set[str]:
@@ -21,14 +21,14 @@ def _parser_imports(tree: ast.Module) -> set[str]:
         for node in tree.body
         if isinstance(node, ast.ImportFrom)
         and node.level == 1
-        and node.module == "parser"
+        and node.module == "parser_support"
         for alias in node.names
     }
 
 
 def test_markdown_v2_uses_public_parser_primitives() -> None:
     markdown_it_tree = ast.parse(MARKDOWN_IT_PARSER_PATH.read_text(encoding="utf-8"))
-    parser_tree = ast.parse(PARSER_PATH.read_text(encoding="utf-8"))
+    parser_support_tree = ast.parse(PARSER_SUPPORT_PATH.read_text(encoding="utf-8"))
 
     imported = _parser_imports(markdown_it_tree)
     assert {
@@ -41,7 +41,7 @@ def test_markdown_v2_uses_public_parser_primitives() -> None:
 
     definitions = {
         node.name
-        for node in parser_tree.body
+        for node in parser_support_tree.body
         if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef))
     }
     assert {
