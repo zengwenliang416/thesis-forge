@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 import re
 from collections.abc import Callable, Mapping
 from dataclasses import dataclass
@@ -47,7 +48,9 @@ __all__ = [
     "ReviewMarkdownBlock",
     "ReviewMarkdownResult",
     "render_review_markdown",
+    "render_review_source_map",
     "serialize_review_markdown",
+    "serialize_review_source_map",
 ]
 
 
@@ -778,3 +781,143 @@ def serialize_review_markdown(
         source_name=source_name,
         asset_links=asset_links,
     ).markdown
+
+
+def _contains_absolute_source_path(value: str) -> bool:
+    normalized = value.replace("\\", "/")
+    if (
+        normalized.startswith(("/", "//"))
+        or re.match(r"^[A-Za-z]:/", normalized)
+        or re.search(r"(?<![A-Za-z0-9_./-])/(?!/)", normalized)
+    ):
+        return True
+
+    parsed = urlsplit(value)
+    if parsed.netloc or parsed.path.startswith("/"):
+        return True
+    if parsed.scheme and parsed.path != value:
+        return _contains_absolute_source_path(parsed.path)
+    return False
+
+
+def _validate_source_map_node_id(node_id: str) -> None:
+    decoded = _decode_asset_value(node_id)
+    if decoded is None or _contains_absolute_source_path(decoded):
+        raise ValueError("ReviewSource.node_id must not contain an absolute path")
+
+
+def _validate_source_map_source(source: ReviewSource | None) -> None:
+    _validate_source(source)
+    if source is None:
+        return
+    _validate_source_map_node_id(source.node_id)
+    for field in ("line", "column", "end_line", "end_column"):
+        value = getattr(source, field)
+        if value is not None and value < 1:
+            raise ValueError(f"ReviewSource.{field} must be 1-based")
+    if (
+        source.line is not None
+        and source.end_line is not None
+        and source.end_line < source.line
+    ):
+        raise ValueError("ReviewSource source span lines must be ordered")
+    if (
+        source.column is not None
+        and source.end_column is not None
+        and (
+            source.line is None
+            or source.end_line is None
+            or source.end_line == source.line
+        )
+        and source.end_column < source.column
+    ):
+        raise ValueError("ReviewSource source span columns must be ordered")
+
+
+def _validate_review_markdown_result(result: object) -> ReviewMarkdownResult:
+    if type(result) is not ReviewMarkdownResult:
+        raise TypeError(
+            "result must be ReviewMarkdownResult, "
+            f"got {type(result).__name__}"
+        )
+    _require_text(result.markdown, "ReviewMarkdownResult.markdown")
+    if type(result.blocks) is not tuple:
+        raise TypeError("ReviewMarkdownResult.blocks must be tuple")
+
+    markdown_line_count = len(result.markdown.splitlines())
+    for block in result.blocks:
+        if type(block) is not ReviewMarkdownBlock:
+            raise TypeError(
+                "unsupported ReviewMarkdownBlock: "
+                f"{type(block).__name__}"
+            )
+        _require_text(block.kind, "ReviewMarkdownBlock.kind")
+        if block.kind not in _BLOCK_KINDS:
+            raise TypeError(f"unsupported ReviewMarkdownBlock kind: {block.kind!r}")
+        _require_int(block.start_line, "ReviewMarkdownBlock.start_line")
+        _require_int(block.end_line, "ReviewMarkdownBlock.end_line")
+        if block.start_line < 1 or block.end_line < block.start_line:
+            raise ValueError("ReviewMarkdownBlock line range must be 1-based and ordered")
+        if block.end_line > markdown_line_count:
+            raise ValueError(
+                "ReviewMarkdownBlock line range exceeds rendered Markdown"
+            )
+        _validate_source_map_source(block.source)
+        _require_bool(block.generated, "ReviewMarkdownBlock.generated")
+        if block.generated is not (block.source is None):
+            raise ValueError(
+                "ReviewMarkdownBlock.generated must match whether source is absent"
+            )
+    return result
+
+
+def _serialize_review_source(source: ReviewSource) -> dict[str, object]:
+    return {
+        "nodeId": source.node_id,
+        "sourceSpan": {
+            "line": source.line,
+            "column": source.column,
+            "endLine": source.end_line,
+            "endColumn": source.end_column,
+        },
+    }
+
+
+def render_review_source_map(
+    result: ReviewMarkdownResult,
+) -> dict[str, object]:
+    """Project generated Markdown ranges into source navigation metadata."""
+
+    result = _validate_review_markdown_result(result)
+    blocks: list[dict[str, object]] = []
+    for block in result.blocks:
+        blocks.append(
+            {
+                "kind": block.kind,
+                "startLine": block.start_line,
+                "endLine": block.end_line,
+                "generated": block.generated,
+                "source": (
+                    None
+                    if block.source is None
+                    else _serialize_review_source(block.source)
+                ),
+            }
+        )
+    return {"schemaVersion": 1, "blocks": blocks}
+
+
+def serialize_review_source_map(
+    result: ReviewMarkdownResult,
+) -> str:
+    """Return a deterministic JSON source map without visible Markdown text."""
+
+    return (
+        json.dumps(
+            render_review_source_map(result),
+            ensure_ascii=False,
+            indent=2,
+            sort_keys=False,
+        )
+        + "\n"
+    )

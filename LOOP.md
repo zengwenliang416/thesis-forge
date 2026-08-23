@@ -95,15 +95,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Open
 
-- [V2-539B] Add the Review source-map serializer
-  - Parent: ordered prerequisite child 2/3 of `V2-539`; depends on `V2-539A-R1`, and the original V2-539 Behavior and Acceptance remain unchanged across A through C.
-  - Files: `src/thesis_forge/presentation/review_markdown.py`, `tests/presentation/test_review_source_map.py`, `LOOP.md`
-  - Behavior: map generated Review block line ranges to the typed source `NodeId` and `SourceSpan`, labeling generated-only blocks without exposing source metadata in visible Markdown.
-  - Verify: `.venv/bin/python -m pytest tests/presentation/test_review_source_map.py`
-  - Acceptance: every generated content block is traceable when a source exists, generated-only blocks are explicit, line ranges are deterministic and the map contains no absolute machine paths or visible-content fallback payloads.
-  - Verification-surface change: `no`
-  - Attempts: 0
-
 - [V2-539C] Add offline CLI Review export
   - Parent: ordered integration child 3/3 of `V2-539`; depends on `V2-539A-R1` and `V2-539B`, and the original V2-539 Behavior and Acceptance remain unchanged.
   - Files: `src/thesis_forge/cli.py`, `tests/cli/test_review_command.py`, `LOOP.md`
@@ -124,6 +115,16 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
   - Verification-surface change: `no`
   - Attempts: 1
   - Attempt 1 (2026-08-23): Independent Checker PASS; exact Verify passed 13/13; target Ruff and `C901`, `git diff --check`, and `./lint-loop.sh` passed (`open=3 done=173 blocked=1` before this lifecycle update); independent black-box probe passed 68/68 across all 14 `ReviewContent` and 8 `ReviewInline` variants, bold/code formatting, generated/read-only/source notice, source ID/SourceSpan isolation, partial/blocked suppression, strict typed-contract rejection, unsafe asset URL/path and repeated encoded traversal matrices, ordinary/math/link marker sanitization, literal listing/code preservation, deterministic line ranges, and technical/legacy leak checks; real ready typed fixture projected 14 blocks and serialized to JSON without path or marker leakage, and the repository fixture serialized as explicit blocked Review without leakage; the candidate scope before lifecycle update was exactly `src/thesis_forge/presentation/review_markdown.py` and `tests/presentation/test_review_markdown.py`, all pre-existing `openspec/**`, `tests/test_lo_finalizer.py`, `LOOP.md` history, and other untracked paths were preserved, V2-539B/C remained Open and dependent on R1, no push.
+
+- [V2-539B] Add the Review source-map serializer
+  - Parent: ordered prerequisite child 2/3 of `V2-539`; depends on `V2-539A-R1`, and the original V2-539 Behavior and Acceptance remain unchanged across A through C.
+  - Files: `src/thesis_forge/presentation/review_markdown.py`, `tests/presentation/test_review_source_map.py`, `LOOP.md`
+  - Behavior: map generated Review block line ranges to the typed source `NodeId` and `SourceSpan`, labeling generated-only blocks without exposing source metadata in visible Markdown.
+  - Verify: `.venv/bin/python -m pytest tests/presentation/test_review_source_map.py`
+  - Acceptance: every generated content block is traceable when a source exists, generated-only blocks are explicit, line ranges are deterministic and the map contains no absolute machine paths or visible-content fallback payloads.
+  - Verification-surface change: `no`
+  - Attempts: 1
+  - Attempt 1 (2026-08-23): Independent Checker PASS; exact Verify passed 27/27; related Review Markdown regression passed 13/13; target Ruff, `C901`, `git diff --check`, and `./lint-loop.sh` passed; independent black-box audit passed exact typed result/block rejection, generated/source consistency, deterministic 1-based Markdown ranges, positive and ordered SourceSpan coordinates, POSIX/Windows/UNC/URI/nested URI/repeated percent-encoded absolute NodeId rejection, stable raw JSON key order, and Markdown/source-metadata isolation; candidate scope was exactly `src/thesis_forge/presentation/review_markdown.py`, `tests/presentation/test_review_source_map.py`, and this lifecycle update, all pre-existing `openspec/**`, `tests/test_lo_finalizer.py`, and other dirty/untracked paths were preserved, no push.
 
 - [V2-538] Expose Review as the third preview mode
   - Parent: V2-537; completes the frontend mode contract after the existing Structure and Final Layout modes.
@@ -2258,5 +2259,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 - 2026-08-23 - V2-539A Checker FAIL Attempt 3; exact Verify passed 6/6, target Ruff, `git diff --check`, and `./lint-loop.sh` passed; independent typed/variant/mutation probes passed 14/14 content variants, 8/8 inline variants and 7/7 contract-breaking mutants, but repeated percent-encoded figure traversal still emitted image links and generic POSIX absolute paths including `/srv` and `/srv/private/thesis.md:` leaked from normal text; the two candidate files were restored, V2-539A moved verbatim to `## Blocked` with a fresh-replacement supersession note, no commit and no push, and all unrelated dirty paths were preserved.
 - 2026-08-23 - V2-539A-R1 queued as a fresh replacement after V2-539A reached three independent Checker failures; the misplaced Attempt line was removed from the `Use this shape` example, `V2-539B/C` now depend on the replacement, the blocked history was not mutated, and no product code was edited.
 - 2026-08-23 - V2-539A-R1 Checker PASS Attempt 1; exact Verify passed 13/13, target Ruff and `C901`, `git diff --check`, and `./lint-loop.sh` passed; independent 68/68 typed/variant, sanitization, asset-safety, status, source-map-boundary and fixture-serialization probes passed; V2-539A-R1 moved from Open to Done, V2-539B/C remained Open and dependent on R1, blocked V2-539A history remained unchanged, only the two candidate files plus `LOOP.md` were authorized, all pre-existing dirty/untracked paths were preserved, no push.
+- 2026-08-23 - V2-539B Checker PASS Attempt 1; exact Verify passed 27/27, related Review Markdown regression passed 13/13, target Ruff, `C901`, `git diff --check`, and `./lint-loop.sh` passed; independent black-box audit passed exact typed result/block rejection, generated/source consistency, deterministic 1-based Markdown ranges, positive and ordered SourceSpan coordinates, POSIX/Windows/UNC/URI/nested URI/repeated percent-encoded absolute NodeId rejection, stable raw JSON key order, and Markdown/source-metadata isolation; V2-539B moved from Open to Done, V2-539C remains Open and depends on B, the blocked V2-539A history and all pre-existing dirty/untracked paths were preserved, no push.
 
 ## Sync log
