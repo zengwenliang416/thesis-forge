@@ -159,14 +159,18 @@ def _all_region_instructions(tmp_path: Path) -> list[object]:
             label="图 1-1",
             bookmark="fig_arch",
         ),
-        TableInstruction(
+        TableInstruction.from_typed_rows(
             source_id="tbl:data",
             caption="实验数据",
-            markdown="| A |",
             rows=(
                 TableRowInstruction(
                     header=True,
-                    cells=(TableCellInstruction("A", "center"),),
+                    cells=(
+                        TableCellInstruction.from_inlines(
+                            (TextRun("A"),),
+                            alignment="center",
+                        ),
+                    ),
                 ),
             ),
             chapter=1,

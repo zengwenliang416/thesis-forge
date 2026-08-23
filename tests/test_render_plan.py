@@ -112,18 +112,27 @@ def test_figure_and_table_instructions_keep_renderer_neutral_compatibility_paylo
         label="图1-1",
         bookmark="tf_fig_model",
     )
-    table = TableInstruction(
+    table = TableInstruction.from_typed_rows(
         source_id="tbl:results",
         caption="结果",
-        markdown="| A |\n| --- |\n| 1 |",
         rows=(
             TableRowInstruction(
                 header=True,
-                cells=(TableCellInstruction(text="A", alignment=None),),
+                cells=(
+                    TableCellInstruction.from_inlines(
+                        (TextRun("A"),),
+                        alignment=None,
+                    ),
+                ),
             ),
             TableRowInstruction(
                 header=False,
-                cells=(TableCellInstruction(text="1", alignment=None),),
+                cells=(
+                    TableCellInstruction.from_inlines(
+                        (TextRun("1"),),
+                        alignment=None,
+                    ),
+                ),
             ),
         ),
         chapter=1,

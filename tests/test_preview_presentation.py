@@ -308,20 +308,24 @@ def test_preview_mapper_covers_every_typed_instruction_and_unknown_fallback(
                 "图 1-1",
                 "fig_a",
             ),
-            TableInstruction(
-                "tbl:a",
-                "表题",
-                "| A |",
-                (
+            TableInstruction.from_typed_rows(
+                source_id="tbl:a",
+                caption="表题",
+                rows=(
                     TableRowInstruction(
                         True,
-                        (TableCellInstruction("A", "center"),),
+                        (
+                            TableCellInstruction.from_inlines(
+                                (TextRun("A"),),
+                                alignment="center",
+                            ),
+                        ),
                     ),
                 ),
-                1,
-                "1-1",
-                "表 1-1",
-                "tbl_a",
+                chapter=1,
+                number="1-1",
+                label="表 1-1",
+                bookmark="tbl_a",
             ),
             EquationInstruction(
                 "eq:a",

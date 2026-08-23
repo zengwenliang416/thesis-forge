@@ -95,15 +95,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Open
 
-- [V2-506P1] Migrate direct RenderPlan table fixtures to canonical typed cells
-  - Parent: ordered preparation child 2/4 of the re-sliced `V2-506`; depends on `V2-506T`; the original V2-506 Behavior and Acceptance remain unchanged.
-  - Files: `tests/test_render_plan.py`, `tests/test_preview_presentation.py`, `tests/presentation/test_review_regions.py`
-  - Behavior: migrate every direct `TableInstruction` fixture to the upcoming canonical typed-cell constructor and remove raw `markdown` fixture data before strict RenderPlan enforcement.
-  - Verify: `.venv/bin/python -m pytest tests/test_render_plan.py tests/test_preview_presentation.py tests/presentation/test_review_regions.py`
-  - Acceptance: the named fixtures contain no `TableCellInstruction(text=...)` or `TableInstruction(markdown=...)` construction; all existing table payload, Preview and Review assertions remain green; no production compatibility path or alternate cell source is added.
-  - Verification-surface change: `no`
-  - Attempts: 0
-
 - [V2-506M] Establish canonical typed table-cell RenderPlan runs
   - Parent: ordered preparation child 3/4 of the re-sliced `V2-506`; depends on `V2-506P1`; the original V2-506 Behavior and Acceptance remain unchanged.
   - Files: `src/thesis_forge/core/render_plan.py`, `src/thesis_forge/core/compiler.py`, `tests/core/test_typed_table_render_plan.py`
@@ -123,6 +114,16 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
   - Attempts: 0
 
 ## Done
+
+- [V2-506P1] Migrate direct RenderPlan table fixtures to canonical typed cells
+  - Parent: ordered preparation child 2/4 of the re-sliced `V2-506`; depends on `V2-506T`; the original V2-506 Behavior and Acceptance remain unchanged.
+  - Files: `tests/test_render_plan.py`, `tests/test_preview_presentation.py`, `tests/presentation/test_review_regions.py`
+  - Behavior: migrate every direct `TableInstruction` fixture to the upcoming canonical typed-cell constructor and remove raw `markdown` fixture data before strict RenderPlan enforcement.
+  - Verify: `.venv/bin/python -m pytest tests/test_render_plan.py tests/test_preview_presentation.py tests/presentation/test_review_regions.py`
+  - Acceptance: the named fixtures contain no `TableCellInstruction(text=...)` or `TableInstruction(markdown=...)` construction; all existing table payload, Preview and Review assertions remain green; no production compatibility path or alternate cell source is added.
+  - Verification-surface change: `no`
+  - Attempts: 1
+  - Attempt 1 (2026-08-23): Checker PASS; exact Verify collected 18 tests with 17 passed and one known clean-baseline failure at `tests/test_preview_presentation.py::test_complete_example_preview_preserves_compiler_order_and_numbering` (`TF-SOURCE-LEGACY-001` YAML Front Matter rejection); isolated clean `HEAD=08eb4d8` produced the identical 17/1 result. AST/static audit found all three direct `TableInstruction` fixtures use `TableInstruction.from_typed_rows`, all four cells use `TableCellInstruction.from_inlines`, no `TableCellInstruction(text=...)`, `TableInstruction(markdown=...)`, or raw markdown fixture field, and the header/alignment/numbering/payload/Preview/Review assertions remain present and passing where reached. Typed-table/compiler regression passed 30/30, DOCX renderer regression passed 90/90; target Ruff, `git diff --check`, and `./lint-loop.sh` passed (`LOOP-LINT: PASS — open=3 done=132 blocked=0`). Candidate product scope was exactly the three named test files with no production compatibility layer or alternate source; unrelated `openspec/**` paths were preserved and unstaged; one local Checker commit, no push.
 
 - [V2-506T] Define canonical typed table-cell constructors
   - Parent: ordered preparation child 1/4 of the re-sliced `V2-506`; the original V2-506 Behavior and Acceptance remain unchanged across T, P1, M and D.
@@ -1760,5 +1761,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 - 2026-08-23 - V2-506P1 re-sliced before implementation: direct table fixtures require the canonical typed-cell constructor, but the current production RenderPlan exposes only `text`/`markdown`; moved V2-506M ahead of V2-506P1 so the next cycle can establish the constructor without a failing fixture-only intermediate state; no product code edited, no commit or push.
 - 2026-08-23 - V2-506M re-sliced before implementation: strict typed-cell removal spans `render_plan.py`, `compiler.py` and the three direct fixture files, so a green three-file cycle needs an ordered typed-constructor preparation first; added V2-506T, then V2-506P1, V2-506M and V2-506D, with no product code edited, no commit or push.
 - 2026-08-23 - V2-506T Checker PASS Attempt 1; exact Verify 6/6, related compiler/DOCX/core inline regression 124/124, Preview/Review 11/12 with the identical clean-HEAD YAML Front Matter baseline failure, target Ruff, `git diff --check`, LOOP-LINT, and independent typed-boundary/renderer-neutral/scope audits passed; V2-506T moved from Open to Done, `openspec/**` was preserved and unstaged, one local commit, no push.
+- 2026-08-23 - V2-506P1 Checker PASS Attempt 1; exact Verify 17/18 with the sole clean-baseline `TF-SOURCE-LEGACY-001` failure reproduced at the same Preview test on isolated `HEAD=08eb4d8`, AST fixture audit and table payload/Preview/Review assertions passed, typed-table/compiler regression 30/30 and DOCX regression 90/90 passed, target Ruff/diff-check/LOOP-LINT passed, three-file product scope and unstaged `openspec/**` were preserved, one local commit, no push.
 
 ## Sync log
