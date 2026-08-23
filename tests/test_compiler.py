@@ -34,7 +34,7 @@ from thesis_forge.core.model import (
     Text,
     ThesisDocument,
 )
-from thesis_forge.core.parser import parse_markdown_text
+from thesis_forge.core.parser_backend import create_parser_backend
 from thesis_forge.core.render_plan import (
     AlgorithmInstruction,
     BibliographyInstruction,
@@ -59,6 +59,8 @@ from thesis_forge.core.render_plan import (
     TocInstruction,
 )
 from thesis_forge.templates import LengthSpec, SectionsSpec, load_template
+
+PARSER = create_parser_backend()
 
 
 def _text_inlines(value: str) -> list[Text]:
@@ -174,8 +176,8 @@ def test_compile_document_resolves_typed_instructions_and_global_semantics():
 
 
 def test_compile_document_includes_parsed_container_citations_in_global_order():
-    document = parse_markdown_text(
-        '::: figure {#fig:model}\nsrc: "./model.png"\ncaption: "模型 [@container2026]"\n:::\n',
+    document = PARSER.parse_text(
+        '![模型 [@container2026]](./model.png){#fig:model}\n',
         source_path=Path("/tmp/thesis.md"),
     )
 
