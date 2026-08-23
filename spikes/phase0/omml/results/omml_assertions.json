@@ -21,7 +21,7 @@
     "stderr": null
   },
   "assertions": {
-    "omath_total": 47,
+    "omath_total": 49,
     "omath_expected": 47,
     "seq_equation_field_count": 47,
     "bookmark_total": 49,
@@ -404,17 +404,17 @@
       }
     ],
     "per_equation_all_ok": true,
-    "inline_math_converted": false,
+    "inline_math_converted": true,
     "inline_literal_evidence": [
       {
         "id": "eq49-inline-complexity",
         "latex": "O(n \\log n)",
-        "found_as_literal_text": true
+        "found_as_literal_text": false
       },
       {
         "id": "eq50-inline-slope",
         "latex": "k = \\frac{y_2 - y_1}{x_2 - x_1}",
-        "found_as_literal_text": true
+        "found_as_literal_text": false
       }
     ]
   }

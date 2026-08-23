@@ -95,7 +95,36 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Open
 
+- [V2-530] Migrate QA E2E parser consumers to canonical V2 sources
+  - Parent: ordered child of the single-parser legacy-file removal gap; removes the QA E2E test's direct dependency on the hand-written parser without preserving legacy fixtures.
+  - Files: `tests/test_qa_e2e.py`, `LOOP.md`
+  - Behavior: QA E2E tests parse standard V2 source through `create_parser_backend()` and retain full DOCX structure, reference, duplicate-ID and missing-reference assertions.
+  - Verify: `.venv/bin/python -m pytest tests/test_qa_e2e.py`
+  - Acceptance: the exact Verify passes; the test has no `thesis_forge.core.parser` import or `parse_markdown` call; all source inputs are standard V2 Markdown or typed in-test fixtures; no fallback or compatibility branch is introduced.
+  - Verification-surface change: `no`
+  - Attempts: 0
+
+- [V2-531] Retire the obsolete legacy-parser comparison spike
+  - Parent: ordered child of the single-parser legacy-file removal gap; removes a historical comparison entrypoint whose purpose depends on the deleted hand-written parser.
+  - Files: `spikes/phase0/parser/compare.py`, `LOOP.md`
+  - Behavior: the obsolete parser comparison script is removed so no active tooling entrypoint depends on `thesis_forge.core.parser`.
+  - Verify: `test ! -e spikes/phase0/parser/compare.py && ! rg -n "thesis_forge\\.core\\.parser|existing\\.parse_markdown" spikes/phase0/parser`
+  - Acceptance: the script is absent; no remaining file under `spikes/phase0/parser` imports or invokes the hand-written parser; historical reports remain untouched unless separately named by a later item.
+  - Verification-surface change: `yes`; removes obsolete spike evidence whose implementation depends on the parser being deleted.
+  - Attempts: 0
+
 ## Done
+
+- [V2-529] Migrate the OMML sample spike to the canonical V2 parser
+  - Parent: ordered child of the single-parser legacy-file removal gap; removes one remaining tooling consumer before the hand-written parser can be deleted.
+  - Files: `spikes/phase0/omml/build_sample.py`, `spikes/phase0/omml/results/omml_assertions.json`, `LOOP.md`
+  - Behavior: the OMML sample builder uses `create_parser_backend()` and generates only manifest-free V2 Markdown semantics, while preserving validation, compilation, DOCX rendering and refreshed OMML evidence.
+  - Verify: `.venv/bin/python spikes/phase0/omml/build_sample.py`
+  - Acceptance: the script exits 0; the generated sample contains no YAML Front Matter or legacy `:::` container; the tracked JSON evidence reports successful OpenXML validation, per-equation assertions and inline OMML conversion; no `thesis_forge.core.parser` import, fallback or compatibility path remains in the spike.
+  - Verification-surface change: `yes`; refreshes the tracked OMML evidence because the canonical parser changes inline-math output.
+  - Attempts: 2
+  - Attempt 1 (2026-08-23): Checker FAIL; the first canonical migration generated standard V2 source and passed parser/DOCX regressions, but the script exited 0 while its generated evidence reported `inline_math_converted: false`, still used a hard-coded template path alongside manifest metadata, and rewrote the tracked OMML evidence without naming it in Files. The candidate remained uncommitted for repair.
+  - Attempt 2 (2026-08-23): Checker PASS; the repaired script selects metadata and `template_id` through generated manifest discovery, fails fast on OpenXML/equation/inline-OMML assertion failures, and refreshes the named evidence JSON. Exact Verify exited 0 with 47 display equations, 2 inline equations, 49 `m:oMath` nodes, `per_equation_all_ok=True`, `inline_math_converted=True`, and `openxml_validate exit=0`; related regression passed 22/22; Ruff, `git diff --check`, and `./lint-loop.sh` passed (`open=3 done=159 blocked=0` before this move). Independent Checker confirmed stable three-file scope, no old parser/fallback/compatibility path, and no pre-existing `openspec/**` changes were touched.
 
 - [V2-528] Migrate architecture tests off the legacy parser module
   - Parent: ordered child of the single-parser legacy-file removal gap; removes the remaining architecture-test import before `src/thesis_forge/core/parser.py` can be deleted.
@@ -2048,5 +2077,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 - 2026-08-23 - V2-527B Checker PASS Attempt 1; exact Verify passed 21/21, target Ruff, `git diff --check`, `./lint-loop.sh`, and canonical parser regression passed 97/97; independent AST/runtime audit confirmed the obsolete V1 parser tests are absent, no production/tooling reference or test-only compatibility shim exists, canonical V2 parser construction/blocks/inlines and structured Front Matter/legacy rejection evidence remain executable, V2-527B moved from Open to Done, V2-527C remained Open, all pre-existing `openspec/**` changes were preserved, one local commit, no push.
 - 2026-08-23 - V2-527C Checker PASS Attempt 1; exact Verify passed 17/17, related regression passed 19/19, target Ruff via the project `.venv/bin/ruff`, `git diff --check`, and `./lint-loop.sh` passed; independent AST/assertion/runtime audit confirmed canonical parser and typed-domain fixture coverage, all 17 tests and 53 assertions retained, no legacy parser import/call, YAML Front Matter, `:::`, old reference source, fallback, compatibility branch or dual data source, and only `tests/test_validator.py` was the candidate diff while all pre-existing `openspec/**` changes were preserved; V2-527C moved from Open to Done, no push.
 - 2026-08-23 - V2-528 Checker PASS Attempt 1; exact Verify `.venv/bin/python -m pytest tests/test_architecture.py` passed 9/9; related regression `.venv/bin/python -m pytest tests/core/test_single_parser_backend.py tests/core/test_legacy_source_rejection.py tests/test_parser_backend.py` passed 15/15; `.venv/bin/ruff check tests/test_architecture.py`, `git diff --check`, and `./lint-loop.sh` passed (`open=0 done=159 blocked=0` after this move); independent AST/import audit confirmed the canonical target `thesis_forge.core.parser_backend`, no legacy import statement or `parser_module` identifier, three retained `thesis_forge.core.parser` string rejection assertions, all 9 test functions and 17 assertions retained, unchanged renderer/CLI/UI/frontend forbidden-import test bodies, and no fallback, compatibility branch, or product code; candidate scope before this lifecycle update was exactly `tests/test_architecture.py`, all pre-existing `openspec/**` changes were preserved and unstaged, one local commit, no push.
+- 2026-08-23 - V2-529 Checker PASS Attempt 2; exact Verify passed with 47 display equations, 2 inline equations, 49 `m:oMath` nodes, `per_equation_all_ok=True`, `inline_math_converted=True`, and `openxml_validate exit=0`; related parser/OMML regression passed 22/22, target Ruff, `git diff --check`, and LOOP-LINT passed (`open=2 done=160 blocked=0`); independent scope and runtime audit confirmed the three named files, manifest-derived metadata/template selection, fail-fast structural assertions, no legacy parser/fallback/compatibility path, and preservation of all pre-existing `openspec/**` changes; one local commit, no push.
 
 ## Sync log

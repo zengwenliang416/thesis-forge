@@ -1,11 +1,11 @@
 """用项目完整管线构建 OMML 语料样例 DOCX，并做结构断言。
 
-管线：parse_markdown → ValidationContext/validate_document → compile_document
+管线：canonical parser backend → ValidationContext/validate_document → compile_document
       → DocxRenderer.render（与 thesis_forge.application.services 同一链路，
       仅跳过 LibreOffice 字段刷新与 PDF 预览，保持离线确定性）。
 
-包含 corpus 中项目子集能转换的全部 display 公式（逐条 ::: equation 容器），
-另加一段行内公式混排场景（现有语法不支持行内数学，作为事实记录）。
+包含 corpus 中项目子集能转换的全部 display 公式（标准 display-math 块），
+另加一段行内公式混排场景，验证行内公式的 OMML 转换结果。
 
 断言（lxml XPath，结果落盘 JSON）：
   1. 每个公式段落都有 m:oMath；
@@ -43,16 +43,16 @@ if str(SRC) not in sys.path:
 
 from thesis_forge.core.compiler import compile_document
 from thesis_forge.core.math import LatexMathConverter, MathConversionError
-from thesis_forge.core.parser import parse_markdown
+from thesis_forge.core.parser_backend import create_parser_backend
 from thesis_forge.core.validator import ValidationContext, validate_document
 from thesis_forge.renderers.docx import DocxRenderer
 
 CORPUS = SPIKE_DIR / "corpus" / "formulas.yaml"
 RESULTS = SPIKE_DIR / "results"
 OUTPUT = SPIKE_DIR / "output"
-TEMPLATE = ROOT / "templates" / "schools" / "example-university" / "2026.yaml"
 VALIDATOR = ROOT / "qa" / "tools" / "openxml_validate.py"
 PYTHON = ROOT / ".venv" / "bin" / "python"
+PARSER = create_parser_backend()
 
 NS = {
     "w": "http://schemas.openxmlformats.org/wordprocessingml/2006/main",
@@ -68,15 +68,6 @@ def bookmark_name(source_id: str) -> str:
 
 def build_markdown(display: list[dict[str, str]], inline: list[dict[str, str]]) -> str:
     lines = [
-        "---",
-        "thesis:",
-        "  title: OMML 语料验证样例",
-        "author:",
-        "  name: ThesisForge",
-        "render:",
-        "  template_id: example-university-2026",
-        "---",
-        "",
         "# 公式语料验证 {#chap:omml}",
         "",
         "以下公式来自 spikes/phase0/omml 语料库，覆盖项目 LaTeX 子集可转换的全部条目。",
@@ -85,25 +76,26 @@ def build_markdown(display: list[dict[str, str]], inline: list[dict[str, str]]) 
     for formula in display:
         lines.append(f"{formula['id']}（{formula['scenario']}）：")
         lines.append("")
-        lines.append(f"::: equation {{#eq:{formula['id']}}}")
         lines.append("$$")
         lines.append(formula["latex"])
         lines.append("$$")
-        lines.append(":::")
+        lines.append(f"{{#eq:{formula['id']}}}")
         lines.append("")
     inline_text = "、".join(f"${formula['latex']}$" for formula in inline)
     lines.append(
         f"行内混排场景：正文中夹注公式 {inline_text}，观察其是否被转换为 OMML。"
     )
     lines.append("")
-    lines.append(f"交叉引用：式 @eq:{display[0]['id']} 为语料第一条编号公式。")
+    lines.append(
+        f"交叉引用：[式](#eq:{display[0]['id']}) 为语料第一条编号公式。"
+    )
     lines.append("")
     return "\n".join(lines)
 
 
 def run_pipeline(markdown_path: Path, output_path: Path) -> dict[str, object]:
-    document = parse_markdown(markdown_path)
-    context = ValidationContext.from_document(document, template_path=TEMPLATE)
+    document = PARSER.parse_file(markdown_path)
+    context = ValidationContext.from_document(document)
     issues = validate_document(document, context)
     errors = [issue for issue in issues if issue.severity == "error"]
     if errors:
@@ -204,11 +196,7 @@ def assert_omml_structure(
         "bookmark_total": len(bookmark_names),
         "per_equation": per_equation,
         "per_equation_all_ok": all(item["ok"] for item in per_equation),
-        "inline_math_converted": any(
-            paragraph.xpath(".//m:oMath", namespaces=NS)
-            for paragraph in document.xpath(".//w:p", namespaces=NS)
-            if "$" in "".join(paragraph.xpath(".//w:t/text()", namespaces=NS))
-        ),
+        "inline_math_converted": len(omath_nodes) >= len(display) + len(inline),
         "inline_literal_evidence": inline_evidence,
     }
 
@@ -230,11 +218,40 @@ def main() -> None:
     RESULTS.mkdir(exist_ok=True)
     markdown_path = OUTPUT / "sample_thesis.md"
     markdown_path.write_text(build_markdown(display, inline), encoding="utf-8")
+    (OUTPUT / "thesisforge.yaml").write_text(
+        """schema: thesisforge.project.v2
+project:
+  id: omml-sample
+  language: zh-CN
+document:
+  source: sample_thesis.md
+metadata:
+  title:
+    zh: OMML 语料验证样例
+  author:
+    name: ThesisForge
+  institution:
+    university: 示例大学
+  degree:
+    name: 工学硕士
+  advisor:
+    name: 指导教师
+render:
+  template_id: example-university-2026
+""",
+        encoding="utf-8",
+    )
     docx_path = OUTPUT / "sample.docx"
 
     pipeline_info = run_pipeline(markdown_path, docx_path)
     validation = run_openxml_validate(docx_path)
     assertions = assert_omml_structure(docx_path, display, inline)
+    if validation["exit_code"] != 0:
+        raise RuntimeError(f"openxml_validate failed: {validation}")
+    if not assertions["per_equation_all_ok"]:
+        raise RuntimeError(f"OMML equation assertions failed: {assertions}")
+    if not assertions["inline_math_converted"]:
+        raise RuntimeError(f"inline OMML assertion failed: {assertions}")
 
     report = {
         "display_equations_included": len(display),
