@@ -97,6 +97,16 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Done
 
+- [V2-517] Add field, bookmark, style and numbering DOCX postflight validation
+  - Files: `src/thesis_forge/renderers/docx/package.py`, `tests/renderers/docx/test_package_semantics_v2.py`, `LOOP.md`
+  - Behavior: validate bookmark pairs/names, field structure, style IDs, numIds, footnotes, sections and media in generated DOCX packages.
+  - Verify: `.venv/bin/python -m pytest tests/renderers/docx/test_package_semantics_v2.py`
+  - Acceptance: structural Word repair risks are reported as stable `TF-DOCX-*` errors.
+  - Verification-surface change: `yes`; adds the executable `docx.postflight` capability evidence named by `spec/format-capabilities.yaml`.
+  - Attempts: 2
+  - Attempt 1 (2026-08-23): Checker FAIL; exact Verify passed 8/8, related DOCX/application regressions, target Ruff and `git diff --check` passed, but deleting a positive footnote definition's `w:footnoteRef` expected `TF-DOCX-FOOTNOTE-005` and observed `PASS`; candidate remained uncommitted for Maker repair.
+  - Attempt 2 (2026-08-23): Checker PASS; exact Verify passed 9/9, related DOCX regression passed 9/9, full DOCX renderer regression passed 90/90, related application regression passed 16/16, target Ruff and `git diff --check` passed; independent audit confirmed valid packages with retained `-1/0` separator footnotes, `TF-DOCX-FOOTNOTE-005` for a missing positive `w:footnoteRef`, and the bookmark/field/style/numbering/section/media diagnostics; all pre-existing `openspec/**` paths were preserved and unstaged, one local commit, no push.
+
 - [V2-406] Add executable evidence for the Review marker-leak contract
   - Parent: evidence-closure child of catalogue item `V2-406`; the existing canonical fixture and Review projector provide the source and production seams.
   - Files: `tests/contracts/test_review_marker_leaks.py`
@@ -1640,6 +1650,7 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Cycle log
 
+- 2026-08-23 - V2-517 Checker PASS Attempt 2; exact Verify passed 9/9, related DOCX/application regressions passed, target Ruff and `git diff --check` passed, and independent DOCX footnote/semantic mutation audit passed; V2-517 moved from Open to Done, candidate scope remained exactly the three named files, all pre-existing `openspec/**` paths were preserved and unstaged, one local commit, no push.
 - 2026-08-23 - V2-508 Checker PASS Attempt 1; exact Verify passed 1/1, related DOCX regression passed 90/90, architecture/RenderPlan regression passed 15/15, target Ruff, `git diff --check`, and independent 10/10 mutation audit passed; V2-508 moved to Done, the existing field production chain was audited unchanged, all pre-existing `openspec/**` paths were preserved and unstaged, one local commit, no push.
 - 2026-08-23 - V2-514 Checker PASS Attempt 2; exact Verify passed 1/1, related manifest/resource/compiler/Review/DOCX regression passed 140/140, target Ruff, `git diff --check`, and LOOP-LINT passed; independent 10/10 mutation audit passed for manifest resource/provider attribution, unique semantic title/list, Review marker hygiene, and concrete DOCX bibliography styles; V2-514 moved to Done, all pre-existing `openspec/**` paths were preserved and unstaged, no push.
 - 2026-08-23 - V2-503E Checker PASS Attempt 1; exact Verify passed 2/2, related canonical-parser/Review/DOCX regression passed 100/100, target Ruff, `git diff --check`, and LOOP-LINT passed; independent manifest-to-compiler/Review/DOCX runtime audit passed; V2-503E moved to Done, candidate scope was exactly `tests/core/test_region_resolver.py` plus this lifecycle update, all pre-existing `openspec/**` paths were preserved and unstaged, one local commit pending, no push.
