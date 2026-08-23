@@ -97,6 +97,16 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Done
 
+- [V2-521] Remove the V2 table test import from the legacy parser module
+  - Parent: ordered parser-consumer migration after `V2-520`; moves the remaining V2 table error assertions to the canonical parser support module.
+  - Files: `tests/core/test_markdown_v2_tables.py`, `LOOP.md`
+  - Behavior: V2 table tests import `ParseError` from `parser_support` while continuing to exercise `MarkdownItParserBackend`.
+  - Verify: `.venv/bin/python -m pytest tests/core/test_markdown_v2_tables.py`
+  - Acceptance: the exact Verify passes; the test has no `thesis_forge.core.parser` import, and standard GFM table/caption, alignment, typed inline and structured error assertions remain unchanged.
+  - Verification-surface change: `no`
+  - Attempts: 1
+  - Attempt 1 (2026-08-23): Checker PASS; exact Verify passed 6/6, target Ruff, `git diff --check`, and `./lint-loop.sh` passed; independent AST/runtime audit confirmed the canonical `MarkdownItParserBackend` path, `ParseError` from `parser_support` only, unchanged table/caption/alignment/typed-inline/structured-error assertions, no legacy parser import, YAML Front Matter, legacy `:::`, fallback, compatibility layer, or dual source of truth; candidate scope remained exactly `LOOP.md` and `tests/core/test_markdown_v2_tables.py`, all pre-existing `openspec/**` paths were preserved and unstaged, one local commit, no push.
+
 - [V2-520] Remove V2 fence and equation test imports from the legacy parser module
   - Parent: ordered parser-consumer migration after `V2-519`; moves error assertions to the canonical parser support module without changing parser behavior.
   - Files: `tests/core/test_markdown_v2_fences.py`, `tests/core/test_markdown_v2_equations.py`, `LOOP.md`
@@ -1935,5 +1945,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 - 2026-08-23 - V2-406 Checker PASS Attempt 2; exact Verify passed 6/6, Review regression passed 8/8, target Ruff, `git diff --check`, LOOP-LINT, and independent 8/8 runtime plus 5/5 static mutation audits passed; V2-406 moved to Done with original Behavior/Acceptance and Attempt 1 retained, the canonical parser/compiler/Review path and source-navigation/code-literal boundaries were verified, candidate scope was exactly the named test file plus this lifecycle update, all pre-existing `openspec/**` paths were preserved and unstaged, one local commit, no push.
 - 2026-08-23 - V2-518 Checker PASS Attempt 1; exact Verify passed 9/9, target Ruff, `git diff --check`, and `./lint-loop.sh` passed; independent AST/runtime audit confirmed the canonical parser backend import, no YAML Front Matter or legacy `:::` inputs, typed Figure/Listing/Algorithm/Equation objects, citation order and manual-cache absence; V2-518 moved from Open to Done, candidate scope remained exactly the three named files, all pre-existing `openspec/**` paths were preserved and unstaged, one local commit, no push.
 - 2026-08-23 - V2-520 Checker PASS Attempt 1; exact Verify passed 18/18, target Ruff, `git diff --check`, and `./lint-loop.sh` passed; independent AST/runtime audit confirmed both tests import `MarkdownItParserBackend` and `ParseError` from canonical modules, retain standard fence/equation typed assertions and structured diagnostics, and contain no legacy parser import, fallback, compatibility layer, or dual source of truth; V2-520 moved to Done, candidate scope remained exactly the two named tests plus `LOOP.md`, all pre-existing `openspec/**` paths were preserved and unstaged, one local commit, no push.
+- 2026-08-23 - V2-521 Checker PASS; exact Verify passed 6/6, target Ruff, `git diff --check`, and `./lint-loop.sh` passed; independent AST/runtime audit confirmed the canonical `MarkdownItParserBackend` path, `ParseError` from `parser_support` only, unchanged table/caption/alignment/typed-inline/structured-error assertions, no legacy parser import, YAML Front Matter, legacy `:::`, fallback, compatibility layer, or dual source of truth; candidate scope remained exactly `LOOP.md` and `tests/core/test_markdown_v2_tables.py`, all pre-existing `openspec/**` paths were preserved and unstaged, one local commit, no push.
 
 ## Sync log
