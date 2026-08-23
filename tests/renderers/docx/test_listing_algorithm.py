@@ -14,7 +14,6 @@ from thesis_forge.core.parser_markdown_it import MarkdownItParserBackend
 from thesis_forge.core.render_plan import (
     AlgorithmInstruction,
     ListingInstruction,
-    RenderNode,
     RenderPlan,
     SequenceInstruction,
 )
@@ -268,7 +267,6 @@ print("@fig:inside")
     "instruction",
     [
         UnknownInstruction(),
-        RenderNode(kind="unknown", payload={"x": 1}),
     ],
 )
 def test_docx_rejects_unknown_instruction_instead_of_debug_fallback(

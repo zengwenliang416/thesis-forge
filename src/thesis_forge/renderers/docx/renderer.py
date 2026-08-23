@@ -23,7 +23,6 @@ from thesis_forge.core.render_plan import (
     PageBreakInstruction,
     ParagraphInstruction,
     ParagraphRole,
-    RenderNode,
     RenderPlan,
     SectionBreakInstruction,
     TableInstruction,
@@ -347,21 +346,6 @@ def _render_typed(
         )
 
 
-def _render_legacy(document: DocumentObject, node: RenderNode) -> None:
-    if node.kind == "heading":
-        document.add_heading(
-            node.payload.get("text", ""),
-            level=min(int(node.payload.get("level", 1)), 9),
-        )
-    elif node.kind == "paragraph":
-        document.add_paragraph(node.payload.get("text", ""))
-    else:
-        raise DocxRenderError(
-            "instruction",
-            f"unsupported instruction {node.kind}",
-        )
-
-
 class DocxRenderer:
     """Render a renderer-neutral plan into an editable DOCX."""
 
@@ -386,10 +370,7 @@ class DocxRenderer:
 
         for node in plan.nodes:
             try:
-                if isinstance(node, RenderNode):
-                    _render_legacy(document, node)
-                else:
-                    _render_typed(document, node, plan.template, plan, footnotes)
+                _render_typed(document, node, plan.template, plan, footnotes)
             except DocxRenderError:
                 raise
             except MathConversionError:
