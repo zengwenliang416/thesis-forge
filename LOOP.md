@@ -95,7 +95,44 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Open
 
+- [V2-506P1] Migrate direct RenderPlan table fixtures to canonical typed cells
+  - Parent: ordered preparation child 2/4 of the re-sliced `V2-506`; depends on `V2-506T`; the original V2-506 Behavior and Acceptance remain unchanged.
+  - Files: `tests/test_render_plan.py`, `tests/test_preview_presentation.py`, `tests/presentation/test_review_regions.py`
+  - Behavior: migrate every direct `TableInstruction` fixture to the upcoming canonical typed-cell constructor and remove raw `markdown` fixture data before strict RenderPlan enforcement.
+  - Verify: `.venv/bin/python -m pytest tests/test_render_plan.py tests/test_preview_presentation.py tests/presentation/test_review_regions.py`
+  - Acceptance: the named fixtures contain no `TableCellInstruction(text=...)` or `TableInstruction(markdown=...)` construction; all existing table payload, Preview and Review assertions remain green; no production compatibility path or alternate cell source is added.
+  - Verification-surface change: `no`
+  - Attempts: 0
+
+- [V2-506M] Establish canonical typed table-cell RenderPlan runs
+  - Parent: ordered preparation child 3/4 of the re-sliced `V2-506`; depends on `V2-506P1`; the original V2-506 Behavior and Acceptance remain unchanged.
+  - Files: `src/thesis_forge/core/render_plan.py`, `src/thesis_forge/core/compiler.py`, `tests/core/test_typed_table_render_plan.py`
+  - Behavior: make structured table cells carry one validated tuple of canonical `InlineRun` values, remove raw `TableInstruction.markdown` and stored cell text, and compile cell Inline semantics through the authoritative compiler seam.
+  - Verify: `.venv/bin/python -m pytest tests/core/test_typed_table_render_plan.py`
+  - Acceptance: typed cells preserve text, strong/emphasis/code, link, math, soft/hard break, reference, citation and footnote runs; readable `text` is only a derived projection; unknown Inline values fail explicitly; `TableInstruction.payload` has no raw markdown or second cell source; existing downstream consumers remain green through a derived projection only.
+  - Verification-surface change: `no`
+  - Attempts: 0
+
+- [V2-506D] Render canonical typed table cells in DOCX and add capability evidence
+  - Parent: ordered preparation child 4/4 of the re-sliced `V2-506`; depends on `V2-506M`; the original V2-506 Behavior and Acceptance remain unchanged.
+  - Files: `src/thesis_forge/renderers/docx/tables.py`, `tests/renderers/docx/test_structured_table.py`
+  - Behavior: render structured headers, alignments and canonical typed cell runs in native DOCX tables without pipe parsing or semantic flattening.
+  - Verify: `.venv/bin/python -m pytest tests/renderers/docx/test_structured_table.py`
+  - Acceptance: the evidence test proves native table/caption/SEQ/bookmark and configured borders/alignment; cell strong/link/math/break/reference/citation/footnote semantics reach DOCX through the shared seam; visible cell text contains no raw citation or stable-ID markers; `spec/format-capabilities.yaml` object.table evidence path exists and is executable.
+  - Verification-surface change: `yes`; creates the capability evidence required by `spec/format-capabilities.yaml`.
+  - Attempts: 0
+
 ## Done
+
+- [V2-506T] Define canonical typed table-cell constructors
+  - Parent: ordered preparation child 1/4 of the re-sliced `V2-506`; the original V2-506 Behavior and Acceptance remain unchanged across T, P1, M and D.
+  - Files: `src/thesis_forge/core/render_plan.py`, `tests/core/test_typed_table_render_plan.py`
+  - Behavior: define the renderer-neutral typed table-cell value and canonical constructors that accept validated `InlineRun` tuples before the strict RenderPlan consumer migration.
+  - Verify: `.venv/bin/python -m pytest tests/core/test_typed_table_render_plan.py`
+  - Acceptance: the typed cell value accepts exactly a tuple of declared `InlineRun` values, exposes only a derived readable projection, and provides canonical table constructors without raw `text=` or `markdown=` fixture arguments; existing compiler, Preview, Review and DOCX consumers remain green and no renderer/compiler path changes.
+  - Verification-surface change: `no`
+  - Attempts: 1
+  - Attempt 1 (2026-08-23): Checker PASS; exact Verify passed 6/6; related compiler/DOCX/core inline regression passed 124/124; Preview/Review combination passed 11/12 with the sole clean-baseline `TF-SOURCE-LEGACY-001` YAML Front Matter failure at `tests/test_preview_presentation.py::test_complete_example_preview_preserves_compiler_order_and_numbering`, reproduced identically on isolated clean `HEAD=b77449f`; target Ruff, `git diff --check`, and `./lint-loop.sh` passed. Independent typed-boundary audit confirmed all eight InlineRun types are retained, readable projection is derived through the shared helper, list/iterator/tuple-subclass/unknown inputs are rejected, canonical constructor signatures expose neither `text` nor `markdown`, RenderPlan imports remain renderer-neutral, compiler/Preview/Review/DOCX consumer files are unchanged, and no silent fallback, legacy compatibility branch, second source of truth, or `[kind]` payload was added. Candidate product scope was exactly `src/thesis_forge/core/render_plan.py` and `tests/core/test_typed_table_render_plan.py`; `LOOP.md` is lifecycle-only, all `openspec/**` paths were preserved and unstaged, and no push.
 
 - [V2-505B] Render rich figure captions in DOCX
   - Parent: ordered preparation child after the re-sliced `V2-505A`; depends on `V2-505A2C` and all seven `V2-505A1*` preparation children; the parent Behavior and Acceptance remain unchanged.
@@ -1720,5 +1757,8 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 - 2026-08-23 - V2-505A2M Checker PASS Attempt 3; exact Verify 5/5, related regression 300/301 plus Preview 5/6 with only the two clean-HEAD baseline failures, target Ruff, `git diff --check`, `./lint-loop.sh`, and independent typed-caption/marker/import probes passed; V2-505A2M moved to Done, V2-505A2C and V2-505B remain Open, one local commit, no push.
 - 2026-08-23 - V2-505A2C Checker PASS Attempt 1; exact Verify 7/7, full DOCX regression 90/90, target Ruff, `git diff --check`, post-update `./lint-loop.sh`, and independent shared-seam probes passed; V2-505A2C moved from Open to Done, the candidate test was the only product diff, all pre-existing dirty paths were preserved, one local commit, no push.
 - 2026-08-23 - V2-505B Checker PASS Attempt 1; exact Verify 1/1, related DOCX regression 91/91, target Ruff, `git diff --check`, LOOP-LINT, and independent DOCX OPC/XML audit passed; V2-505B moved from Open to Done, `figures.py` was audited unchanged and ordinary table caption regression passed, the three named candidate files remained the scope, all pre-existing dirty paths including `openspec/**` were preserved, one local commit, no push.
+- 2026-08-23 - V2-506P1 re-sliced before implementation: direct table fixtures require the canonical typed-cell constructor, but the current production RenderPlan exposes only `text`/`markdown`; moved V2-506M ahead of V2-506P1 so the next cycle can establish the constructor without a failing fixture-only intermediate state; no product code edited, no commit or push.
+- 2026-08-23 - V2-506M re-sliced before implementation: strict typed-cell removal spans `render_plan.py`, `compiler.py` and the three direct fixture files, so a green three-file cycle needs an ordered typed-constructor preparation first; added V2-506T, then V2-506P1, V2-506M and V2-506D, with no product code edited, no commit or push.
+- 2026-08-23 - V2-506T Checker PASS Attempt 1; exact Verify 6/6, related compiler/DOCX/core inline regression 124/124, Preview/Review 11/12 with the identical clean-HEAD YAML Front Matter baseline failure, target Ruff, `git diff --check`, LOOP-LINT, and independent typed-boundary/renderer-neutral/scope audits passed; V2-506T moved from Open to Done, `openspec/**` was preserved and unstaged, one local commit, no push.
 
 ## Sync log

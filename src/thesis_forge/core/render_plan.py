@@ -155,6 +155,25 @@ class CaptionRuns(str):
     def runs(self) -> tuple[InlineRun, ...]:
         return self._runs
 
+
+class TableCellRuns(str):
+    """One validated typed table-cell value with a readable projection."""
+
+    _runs: tuple[InlineRun, ...]
+
+    def __new__(cls, runs: tuple[InlineRun, ...]) -> Self:
+        if type(runs) is not tuple:
+            raise TypeError("TableCellRuns requires tuple[InlineRun, ...]")
+        normalized = tuple(ensure_inline_run(run) for run in runs)
+        value = str.__new__(cls, _inline_run_text(normalized))
+        value._runs = normalized
+        return value
+
+    @property
+    def runs(self) -> tuple[InlineRun, ...]:
+        return self._runs
+
+
 ParagraphRole: TypeAlias = Literal[
     "body",
     "abstract.zh.title",
@@ -312,6 +331,14 @@ class TableCellInstruction:
     text: str
     alignment: Literal["left", "center", "right"] | None = None
 
+    @classmethod
+    def from_inlines(
+        cls,
+        inlines: tuple[InlineRun, ...],
+        alignment: Literal["left", "center", "right"] | None = None,
+    ) -> Self:
+        return cls(text=TableCellRuns(inlines), alignment=alignment)
+
 
 @dataclass(frozen=True, slots=True)
 class TableRowInstruction:
@@ -331,6 +358,31 @@ class TableInstruction(_Instruction):
     label: str
     bookmark: str | None
     sequence: SequenceInstruction | None = None
+
+    @classmethod
+    def from_typed_rows(
+        cls,
+        *,
+        source_id: str | None,
+        caption: str,
+        rows: tuple[TableRowInstruction, ...],
+        chapter: int,
+        number: str | None,
+        label: str,
+        bookmark: str | None,
+        sequence: SequenceInstruction | None = None,
+    ) -> Self:
+        return cls(
+            source_id=source_id,
+            caption=caption,
+            markdown="",
+            rows=rows,
+            chapter=chapter,
+            number=number,
+            label=label,
+            bookmark=bookmark,
+            sequence=sequence,
+        )
 
     @property
     def payload(self) -> dict[str, Any]:
