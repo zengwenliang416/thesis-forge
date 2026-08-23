@@ -10,8 +10,8 @@ from thesis_forge.core.model import (
     Strong,
     inline_plain_text,
 )
-from thesis_forge.core.parser import ParseError
 from thesis_forge.core.parser_markdown_it import MarkdownItParserBackend
+from thesis_forge.core.parser_support import ParseError
 
 BACKEND = MarkdownItParserBackend()
 
