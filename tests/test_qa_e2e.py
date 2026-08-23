@@ -1,14 +1,15 @@
 """QA E2E 结构门禁测试（对应用例 TF-D4-REF-001 / TF-D1-SYN-001 /
 TF-D2-ID-001 / TF-D2-REF-004）。
 
-对 qa/fixtures/e2e/figure-reference 走完整编译管线
-（parse → validate → compile → render，不走 finalizer），
+对测试内的标准 V2 项目走完整编译管线
+（canonical parser backend → validate → compile → render，不走 finalizer），
 随后运行 qa/tools/openxml_validate.py 全部检查，并用 zipfile + lxml
 做 XPath/field 语义断言。证据 JSON 落在 pytest tmp_path，不写入 qa/results/。
 """
 
 from __future__ import annotations
 
+import base64
 import json
 import re
 import subprocess
@@ -18,18 +19,169 @@ from zipfile import ZipFile
 
 from lxml import etree
 
+from thesis_forge.bibliography import resolve_citation_provider
 from thesis_forge.core.compiler import compile_document
 from thesis_forge.core.index import DocumentIndex
-from thesis_forge.core.parser import parse_markdown
+from thesis_forge.core.parser_backend import create_parser_backend
+from thesis_forge.core.render_plan import (
+    BibliographyInstruction,
+    FootnoteDefinitionInstruction,
+)
 from thesis_forge.core.validator import ValidationContext, validate_document
 from thesis_forge.renderers.docx import DocxRenderer
 
 ROOT = Path(__file__).resolve().parents[1]
-FIXTURE_DIR = ROOT / "qa" / "fixtures" / "e2e" / "figure-reference"
-SOURCE = FIXTURE_DIR / "thesis.md"
-TEMPLATE = ROOT / "templates" / "schools" / "example-university" / "2026.yaml"
 OPENXML_VALIDATE = ROOT / "qa" / "tools" / "openxml_validate.py"
-PARSER_FIXTURE = ROOT / "qa" / "fixtures" / "parser" / "full-syntax.md"
+PARSER = create_parser_backend()
+PNG_BYTES = base64.b64decode(
+    "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk"
+    "+A8AAQUBAScY42YAAAAASUVORK5CYII="
+)
+
+E2E_MANIFEST = """schema: thesisforge.project.v2
+project:
+  id: qa-e2e-v2
+  language: zh-CN
+document:
+  source: thesis.md
+metadata:
+  title:
+    zh: QA E2E 结构门禁夹具
+  author:
+    name: 质量夹具
+  institution:
+    university: 示例大学
+  degree:
+    name: 工学硕士
+  advisor:
+    name: 示例导师
+resources:
+  root: .
+  assets: images
+  bibliography: refs/references.bib
+render:
+  template_id: example-university-2026
+  citation_style: gbt7714-2025-numeric
+"""
+
+E2E_SOURCE = """# 摘要 {#chap:abstract}
+
+# 绪论 {#chap:introduction}
+
+系统总体管线如[图](#fig:pipeline)所示。确定性编译方法已有充分研究
+[@fixture-compile-2025]，字段级验证思路参见[@fixture-fields-2024]。[^fixture-note]
+
+![确定性编译管线示意](images/pipeline.png){#fig:pipeline}
+
+# 实验与分析 {#chap:experiments}
+
+实验结果见[图](#fig:dashboard)、[表](#tbl:metrics)和[式](#eq:score)。
+
+![质量指标结果面板](images/dashboard.png){#fig:dashboard}
+
+| 指标 | 通过数 |
+| --- | ---: |
+| 书签配对 | 13 |
+| 字段配对 | 13 |
+: 结构校验核心指标 {#tbl:metrics}
+
+$$
+S = \\alpha P + \\beta R
+$$
+{#eq:score}
+
+# 参考文献 {#chap:references}
+
+[^fixture-note]: 本脚注用于覆盖脚注定义与引用的结构校验路径。
+"""
+
+BIBLIOGRAPHY_SOURCE = """@article{fixture-compile-2025,
+  author  = {Smith, Jane and Zhang, Wei},
+  title   = {Deterministic Compilation for Academic Documents},
+  journal = {Journal of Document Engineering},
+  year    = {2025},
+  volume  = {12},
+  number  = {3},
+  pages   = {101--120}
+}
+
+@article{fixture-fields-2024,
+  author  = {Doe, John},
+  title   = {Field-Level Validation of DOCX Pipelines},
+  journal = {Document Systems Review},
+  year    = {2024},
+  volume  = {8},
+  number  = {2},
+  pages   = {10--18}
+}
+"""
+
+FULL_SYNTAX_SOURCE = """# 绪论 {#chap:introduction}
+
+## 研究背景 {#sec:background}
+
+传统排版依赖手工调整 [@smith2025]，确定性编译可降低成本
+[@smith2025; @wang2024]。[^note]
+
+如[图](#fig:model)所示，并参见[表](#tbl:results)、[式](#eq:loss)、
+[算法](#alg:train)、[代码](#lst:predict)、[章节](#sec:background)与
+[绪论](#chap:introduction)。
+
+行内数学 $E = m c^2$ 与普通文本混排。[^long]
+
+![模型总体结构](images/model.png){#fig:model}
+
+| 模型 | AUROC |
+| --- | ---: |
+| A | 0.91 |
+| B | 0.94 |
+: 实验结果 {#tbl:results}
+
+$$
+L=-\\sum_i y_i \\log \\hat y_i
+$$
+{#eq:loss}
+
+```algorithm {#alg:train title="训练流程"}
+输入：训练集 D
+1. 初始化参数
+2. 读取数据
+```
+
+```python {#lst:predict title="预测函数"}
+def predict(x):
+    return model(x)
+```
+
+## 列表示例 {#sec:lists}
+
+- 第一项
+  - 第二级项目
+- 第三项
+
+3. 从 3 开始
+4. 下一项
+
+# 参考文献 {#chap:references}
+
+[^note]: 这是普通脚注。
+[^long]: 第一行。
+    第二行（续行）。
+"""
+
+DUPLICATE_ID_SOURCE = """# 重复 ID 负例 {#chap:dup-case}
+
+![第一处重复 ID 的示例图](images/model.png){#fig:dup}
+
+![第二处重复 ID 的示例图](images/model.png){#fig:dup}
+"""
+
+MISSING_REFERENCE_SOURCE = """# 交叉引用目标缺失负例 {#chap:missing-ref-case}
+
+正文引用[图](#fig:ghost)，但全文没有 ID 为 `fig:ghost` 的图。
+
+![真实存在的示例图](images/model.png){#fig:real}
+"""
 
 NS = {"w": "http://schemas.openxmlformats.org/wordprocessingml/2006/main"}
 
@@ -50,10 +202,30 @@ EXPECTED_REF_TARGETS = EXPECTED_BOOKMARKS
 REF_INSTRUCTION_RE = re.compile(r"^REF (\S+)")
 
 
-def _build_fixture_docx(output: Path) -> None:
-    """parse → validate → compile → render（不走 finalizer / 办公软件刷新）。"""
-    document = parse_markdown(SOURCE)
-    context = ValidationContext.from_document(document, template_path=TEMPLATE)
+def _write_e2e_project(root: Path) -> Path:
+    image_root = root / "images"
+    image_root.mkdir(parents=True)
+    for name in ("pipeline.png", "dashboard.png"):
+        (image_root / name).write_bytes(PNG_BYTES)
+    bibliography_root = root / "refs"
+    bibliography_root.mkdir()
+    (root / "thesis.md").write_text(E2E_SOURCE, encoding="utf-8")
+    (root / "thesisforge.yaml").write_text(E2E_MANIFEST, encoding="utf-8")
+    (bibliography_root / "references.bib").write_text(
+        BIBLIOGRAPHY_SOURCE,
+        encoding="utf-8",
+    )
+    return root / "thesis.md"
+
+
+def _build_fixture_docx(output: Path, tmp_path: Path):
+    """canonical parser → validate → compile → render（不走 finalizer）。"""
+    source = _write_e2e_project(tmp_path / "qa-e2e-project")
+    document = PARSER.parse_file(source)
+    context = ValidationContext.from_document(
+        document,
+        template_roots=(ROOT / "templates",),
+    )
     issues = validate_document(document, context)
     errors = [issue for issue in issues if issue.severity == "error"]
     assert not errors, f"夹具校验存在错误: {[(i.code, i.target) for i in errors]}"
@@ -63,8 +235,10 @@ def _build_fixture_docx(output: Path) -> None:
         template=context.template,
         template_path=context.template_path,
         bibliography_database=context.bibliography_database,
+        citation_formatter=resolve_citation_provider(context.manifest_citation_style),
     )
     DocxRenderer().render(plan, output)
+    return document, plan
 
 
 def _xml_part(path: Path, part: str):
@@ -82,8 +256,27 @@ def _field_instructions(document_xml) -> tuple[str, ...]:
 def test_figure_reference_pipeline_passes_structural_gates(tmp_path: Path):
     output = tmp_path / "figure-reference.docx"
     report_path = tmp_path / "openxml-report.json"
-    _build_fixture_docx(output)
+    document, plan = _build_fixture_docx(output, tmp_path)
     assert output.is_file()
+
+    document_index = DocumentIndex.from_document(document)
+    assert {"fixture-compile-2025", "fixture-fields-2024"} <= {
+        key for citation in document_index.citations for key in citation.keys
+    }
+    assert {
+        reference.label for reference in document_index.footnote_references
+    } == {"fixture-note"}
+    bibliography_nodes = [
+        node for node in plan.nodes if isinstance(node, BibliographyInstruction)
+    ]
+    assert len(bibliography_nodes) == 1
+    assert [(entry.key, entry.ordinal) for entry in bibliography_nodes[0].entries] == [
+        ("fixture-compile-2025", 1),
+        ("fixture-fields-2024", 2),
+    ]
+    assert sum(
+        isinstance(node, FootnoteDefinitionInstruction) for node in plan.nodes
+    ) == 1
 
     result = subprocess.run(
         [sys.executable, str(OPENXML_VALIDATE), str(output), "--json", str(report_path)],
@@ -136,11 +329,31 @@ def test_figure_reference_pipeline_passes_structural_gates(tmp_path: Path):
     ), "缺少含 \\o \"1-3\" 的 TOC 字段"
 
     with ZipFile(output) as package:
+        package_names = set(package.namelist())
         footer_parts = sorted(
             name
-            for name in package.namelist()
+            for name in package_names
             if name.startswith("word/footer") and name.endswith(".xml")
         )
+    assert "word/footnotes.xml" in package_names, "缺少脚注部件"
+    footnotes_xml = _xml_part(output, "word/footnotes.xml")
+    assert len(
+        document_xml.xpath(".//w:footnoteReference", namespaces=NS)
+    ) == 1, "正文缺少脚注引用对象"
+    assert len(
+        footnotes_xml.xpath(".//w:footnote[not(@w:type)]", namespaces=NS)
+    ) == 1, "脚注部件缺少脚注定义"
+    paragraph_texts = [
+        "".join(paragraph.xpath(".//w:t/text()", namespaces=NS))
+        for paragraph in document_xml.xpath(".//w:body/w:p", namespaces=NS)
+    ]
+    assert all(
+        marker not in "\n".join(paragraph_texts)
+        for marker in ("[@fixture-compile-2025]", "[@fixture-fields-2024]")
+    ), "DOCX 泄漏了原始 citation marker"
+    assert all(
+        entry.text in paragraph_texts for entry in bibliography_nodes[0].entries
+    ), "DOCX 缺少编译后的参考文献条目"
     assert footer_parts, "缺少页脚部件"
     footer_instructions = tuple(
         field
@@ -156,7 +369,10 @@ def test_figure_reference_pipeline_passes_structural_gates(tmp_path: Path):
 
 
 def test_full_syntax_parser_fixture_parses_all_block_kinds():
-    document = parse_markdown(PARSER_FIXTURE)
+    document = PARSER.parse_text(
+        FULL_SYNTAX_SOURCE,
+        source_path=Path("in-memory/full-syntax.md"),
+    )
     block_kinds = {block.__class__.__name__ for block in document.blocks}
     assert {
         "Heading",
@@ -168,7 +384,6 @@ def test_full_syntax_parser_fixture_parses_all_block_kinds():
         "Algorithm",
         "Listing",
         "FootnoteDefinition",
-        "BibliographyBlock",
     } <= block_kinds
 
     block_ids = {block.id for block in document.blocks if getattr(block, "id", None)}
@@ -205,7 +420,7 @@ def test_full_syntax_parser_fixture_parses_all_block_kinds():
         "note",
         "long",
     }
-    assert document.metadata["document"]["type"] == "master_thesis"
+    assert document.metadata == {}
 
 
 # ---------------------------------------------------------------------------
@@ -213,15 +428,22 @@ def test_full_syntax_parser_fixture_parses_all_block_kinds():
 # ---------------------------------------------------------------------------
 
 
-def _validate_fixture(source: Path):
-    document = parse_markdown(source)
-    context = ValidationContext.from_document(document, template_path=TEMPLATE)
+def _validate_fixture(source: str, source_path: Path):
+    document = PARSER.parse_text(source, source_path=source_path)
+    context = ValidationContext.from_document(
+        document,
+        template_roots=(ROOT / "templates",),
+        required_metadata=(),
+    )
     issues = validate_document(document, context)
     return document, issues
 
 
 def test_duplicate_id_fixture_reports_structured_diagnostic():
-    document, issues = _validate_fixture(ROOT / "qa/fixtures/parser/duplicate-id.md")
+    document, issues = _validate_fixture(
+        DUPLICATE_ID_SOURCE,
+        Path("in-memory/duplicate-id.md"),
+    )
 
     duplicates = [i for i in issues if i.code == "duplicate-id"]
     assert duplicates, "应报告 duplicate-id"
@@ -234,7 +456,8 @@ def test_duplicate_id_fixture_reports_structured_diagnostic():
 
 def test_missing_reference_fixture_reports_structured_diagnostic():
     document, issues = _validate_fixture(
-        ROOT / "qa/fixtures/parser/missing-reference.md"
+        MISSING_REFERENCE_SOURCE,
+        Path("in-memory/missing-reference.md"),
     )
 
     missing = [i for i in issues if i.code == "missing-reference"]

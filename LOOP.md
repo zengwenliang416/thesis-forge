@@ -95,15 +95,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Open
 
-- [V2-530] Migrate QA E2E parser consumers to canonical V2 sources
-  - Parent: ordered child of the single-parser legacy-file removal gap; removes the QA E2E test's direct dependency on the hand-written parser without preserving legacy fixtures.
-  - Files: `tests/test_qa_e2e.py`, `LOOP.md`
-  - Behavior: QA E2E tests parse standard V2 source through `create_parser_backend()` and retain full DOCX structure, reference, duplicate-ID and missing-reference assertions.
-  - Verify: `.venv/bin/python -m pytest tests/test_qa_e2e.py`
-  - Acceptance: the exact Verify passes; the test has no `thesis_forge.core.parser` import or `parse_markdown` call; all source inputs are standard V2 Markdown or typed in-test fixtures; no fallback or compatibility branch is introduced.
-  - Verification-surface change: `no`
-  - Attempts: 0
-
 - [V2-531] Retire the obsolete legacy-parser comparison spike
   - Parent: ordered child of the single-parser legacy-file removal gap; removes a historical comparison entrypoint whose purpose depends on the deleted hand-written parser.
   - Files: `spikes/phase0/parser/compare.py`, `LOOP.md`
@@ -114,6 +105,17 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
   - Attempts: 0
 
 ## Done
+
+- [V2-530] Migrate QA E2E parser consumers to canonical V2 sources
+  - Parent: ordered child of the single-parser legacy-file removal gap; removes the QA E2E test's direct dependency on the hand-written parser without preserving legacy fixtures.
+  - Files: `tests/test_qa_e2e.py`, `LOOP.md`
+  - Behavior: QA E2E tests parse standard V2 source through `create_parser_backend()` and retain full DOCX structure, reference, duplicate-ID and missing-reference assertions.
+  - Verify: `.venv/bin/python -m pytest tests/test_qa_e2e.py`
+  - Acceptance: the exact Verify passes; the test has no `thesis_forge.core.parser` import or `parse_markdown` call; all source inputs are standard V2 Markdown or typed in-test fixtures; no fallback or compatibility branch is introduced.
+  - Verification-surface change: `no`
+  - Attempts: 2
+  - Attempt 1 (2026-08-23): Checker FAIL; the canonical parser migration passed the exact 4-test command and related regression, but the positive E2E still copied PNGs from `qa/fixtures/e2e/figure-reference/images`, and its new source removed citation, footnote and bibliography coverage from the positive compile/DOCX path. The candidate remained uncommitted for repair; all pre-existing `openspec/**` changes were preserved.
+  - Attempt 2 (2026-08-23): Checker PASS; the test now generates PNGs, BibTeX, manifest and standard V2 Markdown entirely under `tmp_path`, restores citation/index, footnote, bibliography-instruction and `word/footnotes.xml` coverage, and retains bookmarks, SEQ/REF/TOC, footer PAGE, `updateFields`, duplicate-ID and missing-reference assertions. Exact Verify passed 4/4; the independent wider regression passed 197/197, target Ruff, `git diff --check`, and LOOP-LINT passed (`open=2 done=160 blocked=0` before this move); AST/runtime and mutation audits found no legacy reads, fallback, compatibility branch, production parser selector or scope creep. Candidate scope before this lifecycle update was exactly `tests/test_qa_e2e.py`; all pre-existing `openspec/**` changes were preserved and unstaged, one local commit, no push.
 
 - [V2-529] Migrate the OMML sample spike to the canonical V2 parser
   - Parent: ordered child of the single-parser legacy-file removal gap; removes one remaining tooling consumer before the hand-written parser can be deleted.
@@ -2078,5 +2080,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 - 2026-08-23 - V2-527C Checker PASS Attempt 1; exact Verify passed 17/17, related regression passed 19/19, target Ruff via the project `.venv/bin/ruff`, `git diff --check`, and `./lint-loop.sh` passed; independent AST/assertion/runtime audit confirmed canonical parser and typed-domain fixture coverage, all 17 tests and 53 assertions retained, no legacy parser import/call, YAML Front Matter, `:::`, old reference source, fallback, compatibility branch or dual data source, and only `tests/test_validator.py` was the candidate diff while all pre-existing `openspec/**` changes were preserved; V2-527C moved from Open to Done, no push.
 - 2026-08-23 - V2-528 Checker PASS Attempt 1; exact Verify `.venv/bin/python -m pytest tests/test_architecture.py` passed 9/9; related regression `.venv/bin/python -m pytest tests/core/test_single_parser_backend.py tests/core/test_legacy_source_rejection.py tests/test_parser_backend.py` passed 15/15; `.venv/bin/ruff check tests/test_architecture.py`, `git diff --check`, and `./lint-loop.sh` passed (`open=0 done=159 blocked=0` after this move); independent AST/import audit confirmed the canonical target `thesis_forge.core.parser_backend`, no legacy import statement or `parser_module` identifier, three retained `thesis_forge.core.parser` string rejection assertions, all 9 test functions and 17 assertions retained, unchanged renderer/CLI/UI/frontend forbidden-import test bodies, and no fallback, compatibility branch, or product code; candidate scope before this lifecycle update was exactly `tests/test_architecture.py`, all pre-existing `openspec/**` changes were preserved and unstaged, one local commit, no push.
 - 2026-08-23 - V2-529 Checker PASS Attempt 2; exact Verify passed with 47 display equations, 2 inline equations, 49 `m:oMath` nodes, `per_equation_all_ok=True`, `inline_math_converted=True`, and `openxml_validate exit=0`; related parser/OMML regression passed 22/22, target Ruff, `git diff --check`, and LOOP-LINT passed (`open=2 done=160 blocked=0`); independent scope and runtime audit confirmed the three named files, manifest-derived metadata/template selection, fail-fast structural assertions, no legacy parser/fallback/compatibility path, and preservation of all pre-existing `openspec/**` changes; one local commit, no push.
+- 2026-08-23 - V2-530 Checker PASS Attempt 2; exact Verify passed 4/4, the independent wider regression passed 197/197, target Ruff, `git diff --check`, and LOOP-LINT passed (`open=2 done=160 blocked=0` before this move); runtime and mutation audits confirmed zero legacy fixture reads, complete tmp-path V2 project inputs, restored citation/footnote/bibliography DOCX coverage, retained structural field/bookmark/footer/diagnostic assertions, and unchanged pre-existing `openspec/**` worktree state; one local commit, no push.
 
 ## Sync log
