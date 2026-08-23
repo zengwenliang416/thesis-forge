@@ -3,7 +3,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from decimal import Decimal
 from pathlib import Path
-from typing import Any, ClassVar, Literal, Protocol, TypeAlias
+from typing import Any, ClassVar, Literal, Protocol, Self, TypeAlias
 
 from thesis_forge.templates.model import SectionsSpec, ThesisTemplate
 
@@ -112,6 +112,48 @@ def ensure_inline_run(value: object) -> InlineRun:
     ):
         return value
     raise TypeError(f"unsupported InlineRun: {type(value).__name__}")
+
+
+def _inline_run_text(runs: tuple[InlineRun, ...]) -> str:
+    parts: list[str] = []
+    for run in runs:
+        if isinstance(run, TextRun):
+            parts.append(run.text)
+        elif isinstance(run, ReferenceRun):
+            parts.append(run.display_text)
+        elif isinstance(run, CitationRun):
+            parts.append(run.text)
+        elif isinstance(run, FootnoteReferenceRun):
+            parts.append("")
+        elif isinstance(run, HyperlinkRun):
+            parts.append(run.text)
+        elif isinstance(run, MathRun):
+            parts.append(run.latex)
+        elif isinstance(run, SoftBreakRun):
+            parts.append(" ")
+        elif isinstance(run, HardBreakRun):
+            parts.append("\n")
+        else:
+            raise TypeError(f"unsupported InlineRun: {type(run).__name__}")
+    return "".join(parts)
+
+
+class CaptionRuns(str):
+    """One validated typed caption value with a readable string projection."""
+
+    _runs: tuple[InlineRun, ...]
+
+    def __new__(cls, runs: tuple[InlineRun, ...]) -> Self:
+        if type(runs) is not tuple:
+            raise TypeError("CaptionRuns requires tuple[InlineRun, ...]")
+        normalized = tuple(ensure_inline_run(run) for run in runs)
+        value = str.__new__(cls, _inline_run_text(normalized))
+        value._runs = normalized
+        return value
+
+    @property
+    def runs(self) -> tuple[InlineRun, ...]:
+        return self._runs
 
 ParagraphRole: TypeAlias = Literal[
     "body",
