@@ -95,6 +95,8 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Open
 
+## Done
+
 - [V2-505B] Render rich figure captions in DOCX
   - Parent: ordered preparation child after the re-sliced `V2-505A`; depends on `V2-505A2C` and all seven `V2-505A1*` preparation children; the parent Behavior and Acceptance remain unchanged.
   - Files: `src/thesis_forge/renderers/docx/captions.py`, `src/thesis_forge/renderers/docx/figures.py`, `tests/renderers/docx/test_figure_rich_caption.py`
@@ -102,9 +104,8 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
   - Verify: `.venv/bin/python -m pytest tests/renderers/docx/test_figure_rich_caption.py`
   - Acceptance: figure caption XML contains resolved readable content and valid field/bookmark structure, with no raw citation or cross-reference marker.
   - Verification-surface change: authorized; creates the capability evidence required by `spec/format-capabilities.yaml`.
-  - Attempts: 0
-
-## Done
+  - Attempts: 1
+  - Attempt 1 (2026-08-23): Checker PASS; exact Verify passed 1/1; related DOCX regression passed 91/91; target Ruff, `git diff --check`, and `./lint-loop.sh` passed. Independent CodeGraph/source and DOCX OPC/XML audits confirmed that `render_figure` forwards `FigureInstruction.caption` unchanged into the shared `add_caption` seam; all requested Text/Strong/Code/Hyperlink/Math/SoftBreak/HardBreak/Reference/Citation/FootnoteReference semantics are preserved; SEQ/REF fields have begin/separate/end structure and readable cached results; bookmarks cover only label/sequence; hyperlink, OMML, breaks, footnote references, template font/size/alignment, ordinary table captions, and marker-free visible `w:t` are valid. Candidate scope was exactly the three named files with `figures.py` unchanged; all pre-existing dirty paths were preserved; one local Checker commit, no push.
 
 - [V2-505A2M] Store canonical typed figure-caption runs in the RenderPlan
   - Parent: ordered preparation child 3/4 of the re-sliced `V2-505A2`; depends on `V2-505A2P2` and `V2-505A1M`; the original V2-505A2 Behavior and Acceptance remain unchanged across `V2-505A2M` and `V2-505A2C`.
@@ -1718,5 +1719,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 - 2026-08-23 - V2-505A2M Checker PASS Attempt 3; exact Verify 5/5, related regression 300/301 plus Preview 5/6 with only the two clean-HEAD baseline failures, target Ruff, `git diff --check`, `./lint-loop.sh`, and independent typed-caption/marker/import probes passed; V2-505A2M moved to Done, V2-505A2C and V2-505B remain Open, one local commit, no push.
 - 2026-08-23 - V2-505A2C Checker PASS Attempt 1; exact Verify 7/7, full DOCX regression 90/90, target Ruff, `git diff --check`, post-update `./lint-loop.sh`, and independent shared-seam probes passed; V2-505A2C moved from Open to Done, the candidate test was the only product diff, all pre-existing dirty paths were preserved, one local commit, no push.
+- 2026-08-23 - V2-505B Checker PASS Attempt 1; exact Verify 1/1, related DOCX regression 91/91, target Ruff, `git diff --check`, LOOP-LINT, and independent DOCX OPC/XML audit passed; V2-505B moved from Open to Done, `figures.py` was audited unchanged and ordinary table caption regression passed, the three named candidate files remained the scope, all pre-existing dirty paths including `openspec/**` were preserved, one local commit, no push.
 
 ## Sync log
