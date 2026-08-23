@@ -3,24 +3,9 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from decimal import Decimal
 from pathlib import Path
-from typing import Any, ClassVar, Literal, Protocol, Self, TypeAlias
+from typing import Any, ClassVar, Literal, Self, TypeAlias
 
 from thesis_forge.templates.model import SectionsSpec, ThesisTemplate
-
-
-@dataclass(slots=True)
-class RenderNode:
-    kind: str
-    payload: dict[str, Any] = field(default_factory=dict)
-
-
-class TypedInstruction(Protocol):
-    kind: ClassVar[str]
-
-    @property
-    def payload(self) -> dict[str, Any]: ...
-
-    def to_render_node(self) -> RenderNode: ...
 
 
 class _Instruction:
@@ -29,9 +14,6 @@ class _Instruction:
     @property
     def payload(self) -> dict[str, Any]:
         raise NotImplementedError
-
-    def to_render_node(self) -> RenderNode:
-        return RenderNode(kind=self.kind, payload=self.payload)
 
 
 @dataclass(frozen=True, slots=True)
@@ -649,7 +631,7 @@ class ResolvedReference:
 
 @dataclass(slots=True)
 class RenderPlan:
-    nodes: list[RenderInstruction | RenderNode] = field(default_factory=list)
+    nodes: list[RenderInstruction] = field(default_factory=list)
     template: ThesisTemplate | None = None
     template_path: Path | None = None
     bookmarks: dict[str, str] = field(default_factory=dict)

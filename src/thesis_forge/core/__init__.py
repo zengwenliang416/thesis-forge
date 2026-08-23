@@ -49,7 +49,6 @@ from .parser_support import ParseError
 from .render_plan import (
     BibliographyEntryInstruction,
     BibliographyInstruction,
-    RenderNode,
     RenderPlan,
 )
 from .validator import ValidationContext, ValidationRule, validate_document
@@ -85,7 +84,6 @@ __all__ = [
     "Paragraph",
     "ParseError",
     "ParserBackend",
-    "RenderNode",
     "RenderPlan",
     "SourceLocation",
     "Table",
