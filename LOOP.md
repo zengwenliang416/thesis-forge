@@ -104,17 +104,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
   - Verification-surface change: `no`
   - Attempts: 0
 
-- [V2-533] Delete the obsolete hand-written parser module
-  - Parent: ordered child of the single-parser legacy-file removal gap; depends on V2-531, V2-532 and V2-533A.
-  - Files: `src/thesis_forge/core/parser.py`, `LOOP.md`
-  - Behavior: remove the obsolete hand-written Markdown parser after all active tooling and test consumers use the canonical backend.
-  - Verify: `test ! -e src/thesis_forge/core/parser.py && ! rg -n --glob '*.py' "from thesis_forge\\.core\\.parser([[:space:]]|$)|import thesis_forge\\.core\\.parser([[:space:]]|$)|parse_markdown(_text)?\\(" src tests qa/tools spikes`
-  - Acceptance: the module is absent; no active Python source imports or invokes its APIs; canonical parser tests and application/DOCX regressions remain green; historical reports and catalog prose remain untouched; no compatibility shim is added.
-  - Verification-surface change: `yes`; removes the obsolete parser implementation after its active consumers are migrated.
-  - Attempts: 1
-  - Attempt 1 (2026-08-23): Checker FAIL; the original Verify regex matched canonical `parser_backend`, `parser_markdown_it` and `parser_support` imports because it lacked a module-name boundary, and the independent canonical parser regression found `tests/core/test_markdown_v2_parser_config.py` still reading `src/thesis_forge/core/parser.py` (`96 passed, 1 failed`). Finalizer passed 26/26, application regression 173/173, DOCX/compiler regression 133/133, `git diff --check` and LOOP-LINT passed; the parser deletion was restored, no commit or Done update. V2-533A was split as the ordered prerequisite.
-
-
 ## Done
 
 - [V2-533A] Migrate the remaining parser-configuration test off the obsolete parser module
@@ -127,6 +116,17 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
   - Attempts: 1
   - Attempt 1 (2026-08-23): Checker PASS; exact Verify passed 2/2, canonical parser regression passed 46/46, target Ruff, `git diff --check`, and LOOP-LINT passed (`open=2 done=163 blocked=0` before this move); independent AST audit confirmed the parser_support target, all four primitive import/definition assertions, private-name guard, CommonMark/GFM rules, and no compatibility/fallback/legacy branch; candidate product diff was exactly `tests/core/test_markdown_v2_parser_config.py`, all pre-existing LOOP/openspec/tests/test_lo_finalizer.py changes were preserved, no push.
 
+
+- [V2-533] Delete the obsolete hand-written parser module
+  - Parent: ordered child of the single-parser legacy-file removal gap; depends on V2-531, V2-532 and V2-533A.
+  - Files: `src/thesis_forge/core/parser.py`, `LOOP.md`, `openspec/changes/template-v2-build-pipeline-p1/scope.json` (formal scope contract repaired to authorize this deletion).
+  - Behavior: remove the obsolete hand-written Markdown parser after all active tooling and test consumers use the canonical backend.
+  - Verify: `test ! -e src/thesis_forge/core/parser.py && ! rg -n --glob '*.py' "from thesis_forge\\.core\\.parser([[:space:]]|$)|import thesis_forge\\.core\\.parser([[:space:]]|$)|parse_markdown(_text)?\\(" src tests qa/tools spikes`
+  - Acceptance: the module is absent; no active Python source imports or invokes its APIs; canonical parser tests and application/DOCX regressions remain green; historical reports and catalog prose remain untouched; no compatibility shim is added.
+  - Verification-surface change: `yes`; removes the obsolete parser implementation after its active consumers are migrated.
+  - Attempts: 2
+  - Attempt 1 (2026-08-23): Checker FAIL; the original Verify regex matched canonical `parser_backend`, `parser_markdown_it` and `parser_support` imports because it lacked a module-name boundary, and the independent canonical parser regression found `tests/core/test_markdown_v2_parser_config.py` still reading `src/thesis_forge/core/parser.py` (`96 passed, 1 failed`). Finalizer passed 26/26, application regression 173/173, DOCX/compiler regression 133/133, `git diff --check` and LOOP-LINT passed; the parser deletion was restored, no commit or Done update. V2-533A was split as the ordered prerequisite.
+  - Attempt 2 (2026-08-23): Checker PASS; the exact Verify exited 0 with `parser.py` absent and no module-boundary parser imports/calls; parser regression passed 48/48, application/services/adapters regression 198/198, DOCX/compiler regression 133/133, and LibreOffice finalizer regression 26/26; target Ruff, `git diff --check`, and LOOP-LINT passed (`open=1 done=164 blocked=0` before this move). Independent AST/runtime audit confirmed the four `parser_support` public primitive import/definition assertions and CommonMark/GFM rule coverage, with no legacy parser compatibility/fallback path; `scope.json` exactly authorized `LOOP.md`, `parser.py`, the V2-533A parser-config test, and finalizer test with `delete=true`; historical reports/catalog prose and pre-existing V2-532, `tests/test_lo_finalizer.py`, and `openspec/**` changes were preserved; official override prune removed 0 files and the override directory remained empty; no push.
 
 - [V2-531] Retire the obsolete legacy-parser comparison spike
   - Parent: ordered child of the single-parser legacy-file removal gap; removes a historical comparison entrypoint whose purpose depends on the deleted hand-written parser.
@@ -2116,4 +2116,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 - 2026-08-23 - V2-531 Checker PASS Attempt 1; exact Verify exited 0, `git diff --check` and LOOP-LINT passed (`open=3 done=161 blocked=0` before this move); independent AST/runtime and protected-path audits confirmed `compare.py` removal, no active legacy parser calls in `spikes/phase0/parser`, unchanged historical reports/results/fixtures, and preserved pre-existing `openspec/**` changes; one local commit, no push.
 
 - 2026-08-23 - V2-533A Checker PASS Attempt 1; exact Verify passed 2/2, canonical parser regression passed 46/46, target Ruff, `git diff --check`, and LOOP-LINT passed (`open=2 done=163 blocked=0` before this move); independent AST audit confirmed the parser_support target, all four primitive import/definition assertions, private-name guard, CommonMark/GFM rules, and no compatibility/fallback/legacy branch; candidate product diff was exactly `tests/core/test_markdown_v2_parser_config.py`, all pre-existing LOOP/openspec/tests/test_lo_finalizer.py changes were preserved, no push.
+- 2026-08-23 - V2-533 Checker PASS Attempt 2; exact Verify exited 0 with parser.py absent and no module-boundary parser imports/calls; parser regression passed 48/48, application/services/adapters regression 198/198, DOCX/compiler regression 133/133, and LibreOffice finalizer regression 26/26; target Ruff, `git diff --check`, and LOOP-LINT passed (`open=1 done=164 blocked=0` before this move); scope.json was an exact four-root delete-enabled contract, historical reports/catalog prose and all pre-existing V2-532, test_lo_finalizer.py and openspec/** changes were preserved, official override prune removed 0 files, and no push.
+
 ## Sync log

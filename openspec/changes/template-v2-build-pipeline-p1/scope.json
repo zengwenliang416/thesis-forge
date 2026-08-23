@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "change_id": "template-v2-build-pipeline-p1",
+  "stage": "development",
+  "allowed_roots": [
+    "LOOP.md",
+    "src/thesis_forge/core/parser.py",
+    "tests/core/test_markdown_v2_parser_config.py",
+    "tests/test_lo_finalizer.py"
+  ],
+  "denied_roots": [
+    ".git",
+    "node_modules",
+    "dist",
+    "coverage"
+  ],
+  "requires_review_on": [
+    "package.json",
+    "database",
+    "migrations"
+  ],
+  "allowed_operations": {
+    "create": true,
+    "modify": true,
+    "delete": true,
+    "rename": false
+  },
+  "prototype_sources": [
+    "openspec/changes/template-v2-build-pipeline-p1/prototype/component/component-map.md"
+  ],
+  "expires_when": "verification_started"
+}
