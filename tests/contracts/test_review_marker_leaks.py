@@ -25,7 +25,6 @@ from thesis_forge.core.render_plan import (
     ListingInstruction,
     ParagraphInstruction,
     ReferenceRun,
-    RenderNode,
     RenderPlan,
 )
 from thesis_forge.core.validator import ValidationContext
@@ -260,7 +259,7 @@ def test_review_sanitizes_dirty_reference_display_and_citation_text() -> None:
 
 def test_review_rejects_unknown_instruction_and_inline_boundaries() -> None:
     with pytest.raises(TypeError, match="unsupported RenderInstruction"):
-        project_instruction(RenderNode(kind="future-node"))  # type: ignore[arg-type]
+        project_instruction(object())  # type: ignore[arg-type]
 
     with pytest.raises(TypeError, match="unsupported InlineRun"):
         project_instruction(

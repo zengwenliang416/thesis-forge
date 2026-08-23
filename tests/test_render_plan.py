@@ -13,7 +13,6 @@ from thesis_forge.core.render_plan import (
     HeadingInstruction,
     ParagraphInstruction,
     ParagraphRole,
-    RenderNode,
     RenderPlan,
     SectionBreakInstruction,
     SequenceInstruction,
@@ -39,7 +38,7 @@ def test_cover_instruction_resolves_closed_renderer_neutral_fields():
         instruction.value_for("word.style")
 
 
-def test_typed_instruction_preserves_generic_render_node_contract():
+def test_typed_instruction_preserves_renderer_neutral_fields():
     instruction = HeadingInstruction(
         source_id="chap:intro",
         level=1,
@@ -58,16 +57,6 @@ def test_typed_instruction_preserves_generic_render_node_contract():
         "bookmark": "tf_chap_intro",
         "role": "abstract.zh.title",
     }
-    assert instruction.to_render_node() == RenderNode(
-        kind="heading",
-        payload={
-            "id": "chap:intro",
-            "level": 1,
-            "text": "绪论",
-            "bookmark": "tf_chap_intro",
-            "role": "abstract.zh.title",
-        },
-    )
 
 
 def test_paragraph_roles_are_closed_renderer_neutral_values_with_compatible_defaults():
@@ -165,11 +154,8 @@ def test_sequence_and_section_instructions_remain_renderer_neutral():
     section = SectionBreakInstruction(role="main")
 
     assert sequence.field_code == "SEQ TF_Figure_1 \\r 2 \\* ARABIC"
+    assert section.kind == "section_break"
     assert section.payload == {"role": "main"}
-    assert section.to_render_node() == RenderNode(
-        kind="section_break",
-        payload={"role": "main"},
-    )
 
 
 def test_bibliography_instruction_has_renderer_neutral_ordered_payload():
@@ -202,7 +188,3 @@ def test_bibliography_instruction_has_renderer_neutral_ordered_payload():
             },
         ]
     }
-    assert instruction.to_render_node() == RenderNode(
-        kind="bibliography",
-        payload=instruction.payload,
-    )

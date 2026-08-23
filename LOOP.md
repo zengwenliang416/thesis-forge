@@ -95,15 +95,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Open
 
-- [V2-535A] Migrate remaining RenderNode test consumers
-  - Parent: ordered prerequisite of V2-535B; follows V2-534C so the production RenderNode type can be removed without leaving generic fixtures or conversion assertions.
-  - Files: `tests/test_render_plan.py`, `tests/contracts/test_review_marker_leaks.py`, `LOOP.md`
-  - Behavior: core RenderPlan and Review boundary tests use typed instruction fields and explicit unknown objects without constructing RenderNode or calling `to_render_node()`.
-  - Verify: `! rg -n --glob '*.py' "\bRenderNode\b|to_render_node\b" tests/test_render_plan.py tests/contracts/test_review_marker_leaks.py && .venv/bin/python -m pytest tests/test_render_plan.py tests/contracts/test_review_marker_leaks.py`
-  - Acceptance: both test suites pass; typed payload/field assertions remain active; unknown RenderInstruction rejection remains explicit; no compatibility fixture or weakened assertion is introduced.
-  - Verification-surface change: `no`
-  - Attempts: 0
-
 - [V2-535B] Remove the core RenderNode compatibility type
   - Parent: ordered child of the typed RenderPlan migration; follows V2-535A after all current test consumers have moved off the generic node.
   - Files: `src/thesis_forge/core/render_plan.py`, `src/thesis_forge/core/__init__.py`, `LOOP.md`
@@ -123,6 +114,16 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
   - Attempts: 0
 
 ## Done
+
+- [V2-535A] Migrate remaining RenderNode test consumers
+  - Parent: ordered prerequisite of V2-535B; follows V2-534C so the production RenderNode type can be removed without leaving generic fixtures or conversion assertions.
+  - Files: `tests/test_render_plan.py`, `tests/contracts/test_review_marker_leaks.py`, `LOOP.md`
+  - Behavior: core RenderPlan and Review boundary tests use typed instruction fields and explicit unknown objects without constructing RenderNode or calling `to_render_node()`.
+  - Verify: `! rg -n --glob '*.py' "\bRenderNode\b|to_render_node\b" tests/test_render_plan.py tests/contracts/test_review_marker_leaks.py && .venv/bin/python -m pytest tests/test_render_plan.py tests/contracts/test_review_marker_leaks.py`
+  - Acceptance: both test suites pass; typed payload/field assertions remain active; unknown RenderInstruction rejection remains explicit; no compatibility fixture or weakened assertion is introduced.
+  - Verification-surface change: `no`
+  - Attempts: 1
+  - Attempt 1 (2026-08-23): Checker PASS; exact Verify passed 12/12; independent AST/import audit confirmed no `RenderNode` or `to_render_node()` in either named test, retained heading/section/bibliography `kind`/`payload` and sequence `field_code` assertions, and explicit Review unknown-instruction and inline-unknown TypeError boundaries; target Ruff, `git diff --check`, and `./lint-loop.sh` passed (`open=3 done=168 blocked=0` before this lifecycle move); candidate product diff was exactly the two named test files, no compatibility fixture or weakened assertion was introduced, all pre-existing `openspec/**`, `tests/test_lo_finalizer.py`, `openspec/.specnav/overrides/`, and `template-v2-build-pipeline-p1/development/` paths were preserved, no push.
 
 - [V2-534C] Remove DOCX legacy renderer fallback
   - Parent: ordered child of implementation-plan V2-327; follows V2-534A and V2-534B before core RenderNode removal.
@@ -2185,5 +2186,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 - 2026-08-23 - V2-534B Checker PASS Attempt 1; exact Verify passed 12/12, target Ruff, `git diff --check`, and `./lint-loop.sh` passed (`open=2 done=166 blocked=0` before this move); independent unknown-object and AST/import audits confirmed explicit `unsupported` kind/status/content, no `RenderNode` import/name/attribute, and no fallback, compatibility alias, or silent-acceptance path; V2-534B moved from Open to Done, V2-534C remained Open, candidate product diff was exactly `src/thesis_forge/presentation/preview.py` before the lifecycle update, all pre-existing `openspec/**`, `tests/test_lo_finalizer.py`, and `openspec/.specnav/overrides` paths were preserved, no push.
 
 - 2026-08-23 - V2-534C Checker PASS Attempt 1; exact Verify passed 3/3, independent unknown-instruction rejection passed with no output DOCX, target Ruff, `git diff --check`, and LOOP-LINT passed (`open=1 done=167 blocked=0` before this move); V2-534C moved from Open to Done, the candidate product diff was exactly `src/thesis_forge/renderers/docx/renderer.py` and `tests/renderers/docx/test_listing_algorithm.py`, and all pre-existing `openspec/**`, `tests/test_lo_finalizer.py`, `openspec/.specnav/overrides/`, and `template-v2-build-pipeline-p1/development/` paths were preserved, no push.
+- 2026-08-23 - V2-535A Checker PASS Attempt 1; exact Verify passed 12/12, target Ruff, `git diff --check`, and `./lint-loop.sh` passed; independent AST/import audit confirmed no `RenderNode` or `to_render_node()` in the two named tests, retained typed `kind`/`payload`/`field_code` assertions, and explicit unknown RenderInstruction/InlineRun rejection; V2-535A moved from Open to Done, candidate scope was exactly the two named test files plus `LOOP.md`, all pre-existing `openspec/**`, `tests/test_lo_finalizer.py`, `openspec/.specnav/overrides/`, and `template-v2-build-pipeline-p1/development/` paths were preserved, no push.
 
 ## Sync log
