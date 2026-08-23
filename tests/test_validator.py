@@ -8,29 +8,39 @@ from thesis_forge.application.contracts import (
     BuildValidationError,
 )
 from thesis_forge.core.model import (
+    BibliographyConfig,
     BlockQuote,
+    Figure,
     Heading,
     SourceLocation,
     Text,
     ThesisDocument,
     ValidationIssue,
 )
-from thesis_forge.core.parser import parse_markdown
+from thesis_forge.core.parser_backend import create_parser_backend
 from thesis_forge.core.validator import ValidationContext, validate_document
 from thesis_forge.templates import load_template
+
+PARSER = create_parser_backend()
+
+
+def _parse(source: str, path: Path) -> ThesisDocument:
+    return PARSER.parse_text(source, source_path=path)
 
 
 def test_missing_cross_reference(tmp_path: Path):
     source = tmp_path / "thesis.md"
-    source.write_text("# 绪论\n\n如 @fig:missing 所示。\n", encoding="utf-8")
-    issues = validate_document(parse_markdown(source))
+    document = _parse("# 绪论\n\n如[图](#fig:missing)所示。\n", source)
+    issues = validate_document(document)
     assert any(x.code == "missing-reference" for x in issues)
 
 
 def test_duplicate_id(tmp_path: Path):
     source = tmp_path / "thesis.md"
     source.write_text("# 第一章 {#chap:x}\n\n# 第二章 {#chap:x}\n", encoding="utf-8")
-    issues = validate_document(parse_markdown(source))
+    issues = validate_document(
+        _parse(source.read_text(encoding="utf-8"), source)
+    )
     assert any(x.code == "duplicate-id" for x in issues)
 
 
@@ -95,7 +105,9 @@ def test_duplicate_id_build_report_preserves_canonical_locations(tmp_path: Path)
     )
     issues = tuple(
         issue
-        for issue in validate_document(parse_markdown(source))
+        for issue in validate_document(
+            _parse(source.read_text(encoding="utf-8"), source)
+        )
         if issue.code == "duplicate-id"
     )
 
@@ -168,7 +180,7 @@ def test_locationless_duplicate_build_report_keeps_unique_ids_and_file_ranges(
 def test_validation_context_can_replace_default_rules(tmp_path: Path):
     source = tmp_path / "thesis.md"
     source.write_text("# 绪论 {#chap:intro}\n", encoding="utf-8")
-    document = parse_markdown(source)
+    document = _parse(source.read_text(encoding="utf-8"), source)
 
     def custom_rule(_document, _context):
         return [
@@ -190,20 +202,24 @@ def test_validation_context_can_replace_default_rules(tmp_path: Path):
 
 def test_validation_reports_metadata_ids_bibliography_and_resources(tmp_path: Path):
     source = tmp_path / "thesis.md"
-    source.write_text(
+    document = _parse(
         """# 绪论 {#bad}
 
-参见 @fig:missing，并引用 [@smith2025]。
+参见[图](#fig:missing)，并引用 [@smith2025]。
 
-::: figure {#chap:figure}
-src: "./missing.png"
-caption: "错误前缀"
-:::
+![错误前缀](missing.png){#fig:figure}
 """,
-        encoding="utf-8",
+        source,
+    )
+    document.blocks.append(
+        Figure(
+            id="chap:figure",
+            src="missing.png",
+            caption_inlines=(Text(value="错误前缀"),),
+        )
     )
 
-    issues = validate_document(parse_markdown(source))
+    issues = validate_document(document)
     codes = {issue.code for issue in issues}
 
     assert {
@@ -249,25 +265,18 @@ heading:
     )
     source = tmp_path / "thesis.md"
     source.write_text(
-        """---
-thesis:
-  title: "测试论文"
-author:
-  name: "测试作者"
----
+        """# 绪论 {#chap:intro}
 
-# 绪论 {#chap:intro}
-
-::: figure {#fig:model}
-src: "./model.png"
-caption: "模型"
-:::
+![模型](model.png){#fig:model}
 """,
         encoding="utf-8",
     )
     context = ValidationContext(template=load_template(template_path))
 
-    issues = validate_document(parse_markdown(source), context)
+    issues = validate_document(
+        _parse(source.read_text(encoding="utf-8"), source),
+        context,
+    )
 
     assert any(
         issue.code == "missing-template-style" and issue.target == "figure"
@@ -275,7 +284,7 @@ caption: "模型"
     )
 
 
-def test_validation_context_resolves_front_matter_template_id(tmp_path: Path):
+def test_validation_context_resolves_manifest_template_id(tmp_path: Path):
     template_root = tmp_path / "templates"
     template_root.mkdir()
     template_path = template_root / "school.yaml"
@@ -307,22 +316,23 @@ heading:
 """,
         encoding="utf-8",
     )
-    source = tmp_path / "thesis.md"
-    source.write_text(
-        """---
-thesis:
-  title: "测试论文"
-author:
-  name: "测试作者"
+    project_root = tmp_path / "project"
+    project_root.mkdir()
+    source = project_root / "thesis.md"
+    source.write_text("# 绪论 {#chap:intro}\n", encoding="utf-8")
+    (project_root / "thesisforge.yaml").write_text(
+        """schema: thesisforge.project.v2
+project:
+  id: template-fixture
+  language: zh-CN
+document:
+  source: thesis.md
 render:
   template_id: school-2026
----
-
-# 绪论 {#chap:intro}
 """,
         encoding="utf-8",
     )
-    document = parse_markdown(source)
+    document = PARSER.parse_file(source)
 
     context = ValidationContext.from_document(
         document,
@@ -342,11 +352,11 @@ def test_validation_issues_are_deterministically_sorted(tmp_path: Path):
 
 ### 跳级标题 {#sec:jump}
 
-参见 @fig:missing。
+参见[图](#fig:missing)。
 """,
         encoding="utf-8",
     )
-    document = parse_markdown(source)
+    document = _parse(source.read_text(encoding="utf-8"), source)
 
     first = validate_document(document)
     second = validate_document(document)
@@ -364,25 +374,13 @@ def test_validation_issues_are_deterministically_sorted(tmp_path: Path):
 
 def test_configured_bibliography_is_checked_without_citations(tmp_path: Path):
     source = tmp_path / "thesis.md"
-    source.write_text(
-        """---
-thesis:
-  title: "测试论文"
-author:
-  name: "测试作者"
-render:
-  bibliography: "./missing.bib"
----
-
-# 绪论 {#chap:intro}
-""",
-        encoding="utf-8",
-    )
+    document = _parse("# 绪论 {#chap:intro}\n", source)
+    document.bibliography = BibliographyConfig(path="./missing.bib")
     context = ValidationContext(
         template=load_template("templates/base/bachelor.yaml"),
     )
 
-    issues = validate_document(parse_markdown(source), context)
+    issues = validate_document(document, context)
 
     assert any(
         issue.code == "missing-bibliography"
@@ -397,30 +395,16 @@ def test_resource_paths_cannot_escape_document_root(tmp_path: Path):
     (tmp_path / "secret.png").write_bytes(b"secret")
     (tmp_path / "references.bib").write_text("@book{x}", encoding="utf-8")
     source = document_root / "thesis.md"
-    source.write_text(
-        """---
-thesis:
-  title: "测试论文"
-author:
-  name: "测试作者"
-render:
-  bibliography: "../references.bib"
----
-
-# 绪论 {#chap:intro}
-
-::: figure {#fig:secret}
-src: "../secret.png"
-caption: "越界资源"
-:::
-""",
-        encoding="utf-8",
+    document = _parse(
+        "# 绪论 {#chap:intro}\n\n![越界资源](../secret.png){#fig:secret}\n",
+        source,
     )
+    document.bibliography = BibliographyConfig(path="../references.bib")
     context = ValidationContext(
         template=load_template("templates/base/bachelor.yaml"),
     )
 
-    issues = validate_document(parse_markdown(source), context)
+    issues = validate_document(document, context)
     escaped_targets = {
         issue.target
         for issue in issues
@@ -444,30 +428,19 @@ def test_validation_loads_bibliography_and_reports_missing_citation_at_source_li
         encoding="utf-8",
     )
     source = tmp_path / "thesis.md"
-    source.write_text(
-        """---
-thesis:
-  title: "测试论文"
-author:
-  name: "测试作者"
-render:
-  bibliography: "./references.bib"
----
-
-# 绪论 {#chap:intro}
-
-已有研究 [@known]，未知研究 [@missing-key]。
-""",
-        encoding="utf-8",
+    document = _parse(
+        "# 绪论 {#chap:intro}\n\n已有研究 [@known]，未知研究 [@missing-key]。\n",
+        source,
     )
+    document.bibliography = BibliographyConfig(path="./references.bib")
     context = ValidationContext(
         template=load_template("templates/base/bachelor.yaml"),
     )
 
-    issues = validate_document(parse_markdown(source), context)
+    issues = validate_document(document, context)
 
     missing = [issue for issue in issues if issue.code == "missing-citation"]
-    assert [(issue.line, issue.target) for issue in missing] == [(12, "missing-key")]
+    assert [(issue.line, issue.target) for issue in missing] == [(3, "missing-key")]
     assert context.bibliography_database is not None
     assert tuple(context.bibliography_database.records) == ("known",)
 
@@ -480,27 +453,13 @@ def test_validation_reports_invalid_bibliography_without_missing_key_noise(
         encoding="utf-8",
     )
     source = tmp_path / "thesis.md"
-    source.write_text(
-        """---
-thesis:
-  title: "测试论文"
-author:
-  name: "测试作者"
-render:
-  bibliography: "./references.bib"
----
-
-# 绪论 {#chap:intro}
-
-引用 [@bad]。
-""",
-        encoding="utf-8",
-    )
+    document = _parse("# 绪论 {#chap:intro}\n\n引用 [@bad]。\n", source)
+    document.bibliography = BibliographyConfig(path="./references.bib")
     context = ValidationContext(
         template=load_template("templates/base/bachelor.yaml"),
     )
 
-    issues = validate_document(parse_markdown(source), context)
+    issues = validate_document(document, context)
 
     invalid = [issue for issue in issues if issue.code == "invalid-bibliography"]
     assert len(invalid) == 1
@@ -524,23 +483,12 @@ def test_reused_validation_context_clears_stale_bibliography_when_rules_change(
         encoding="utf-8",
     )
     source = tmp_path / "thesis.md"
-    source.write_text(
-        """---
-thesis:
-  title: "测试论文"
-author:
-  name: "测试作者"
-render:
-  bibliography: "./references.bib"
----
-
-# 绪论 {#chap:intro}
-
-引用 [@known]。
-""",
-        encoding="utf-8",
-    )
-    document = parse_markdown(source)
+    document = _parse("# 绪论 {#chap:intro}\n\n引用 [@known]。\n", source)
+    document.metadata = {
+        "thesis": {"title": "测试论文"},
+        "author": {"name": "测试作者"},
+    }
+    document.bibliography = BibliographyConfig(path="./references.bib")
     context = ValidationContext(
         template=load_template("templates/base/bachelor.yaml"),
     )
@@ -565,34 +513,22 @@ def test_validation_reports_unsupported_citation_style(tmp_path: Path):
         encoding="utf-8",
     )
     source = tmp_path / "thesis.md"
-    source.write_text(
-        """---
-thesis:
-  title: "测试论文"
-author:
-  name: "测试作者"
-render:
-  bibliography: "./references.bib"
-  citation_style: "apa-7"
----
-
-# 绪论 {#chap:intro}
-
-已有研究 [@known]。
-""",
-        encoding="utf-8",
+    document = _parse("# 绪论 {#chap:intro}\n\n已有研究 [@known]。\n", source)
+    document.bibliography = BibliographyConfig(
+        path="./references.bib",
+        citation_style="apa-7",
     )
     context = ValidationContext(
         template=load_template("templates/base/bachelor.yaml"),
     )
 
-    issues = validate_document(parse_markdown(source), context)
+    issues = validate_document(document, context)
 
     unsupported = [issue for issue in issues if issue.code == "unsupported-citation-style"]
     assert len(unsupported) == 1
     assert unsupported[0].severity == "error"
     assert unsupported[0].target == "apa-7"
-    assert unsupported[0].line == 13
+    assert unsupported[0].line == 3
     assert "GB-T-7714-2025" in unsupported[0].details["supported_styles"]
     # 样式不可解析时不应静默加载并继续渲染。
     assert context.bibliography_database is None
@@ -611,28 +547,16 @@ def test_validation_accepts_citation_style_alias_and_template_default(tmp_path: 
         encoding="utf-8",
     )
     source = tmp_path / "thesis.md"
-    source.write_text(
-        """---
-thesis:
-  title: "测试论文"
-author:
-  name: "测试作者"
-render:
-  bibliography: "./references.bib"
-  citation_style: "gbt7714"
----
-
-# 绪论 {#chap:intro}
-
-已有研究 [@known]。
-""",
-        encoding="utf-8",
+    document = _parse("# 绪论 {#chap:intro}\n\n已有研究 [@known]。\n", source)
+    document.bibliography = BibliographyConfig(
+        path="./references.bib",
+        citation_style="gbt7714",
     )
     context = ValidationContext(
         template=load_template("templates/base/bachelor.yaml"),
     )
 
-    issues = validate_document(parse_markdown(source), context)
+    issues = validate_document(document, context)
 
     assert not any(issue.code == "unsupported-citation-style" for issue in issues)
     assert context.bibliography_database is not None

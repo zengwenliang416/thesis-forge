@@ -95,6 +95,8 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Open
 
+## Done
+
 - [V2-527C] Migrate validator tests from the deleted hand-written parser
   - Parent: ordered child of the single-parser legacy-file removal gap; preserves validator regression coverage while removing the remaining direct parser import.
   - Files: `tests/test_validator.py`, `LOOP.md`
@@ -102,9 +104,8 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
   - Verify: `.venv/bin/python -m pytest tests/test_validator.py`
   - Acceptance: no `thesis_forge.core.parser` import or `parse_markdown*` call remains; missing-reference, duplicate-ID, metadata, resource, bibliography, deterministic-order and structured-diagnostic assertions remain green through the V2 path; no fallback or compatibility branch is introduced.
   - Verification-surface change: `no`
-  - Attempts: 0
-
-## Done
+  - Attempts: 1
+  - Attempt 1 (2026-08-23): Checker PASS; exact Verify `.venv/bin/python -m pytest tests/test_validator.py` passed 17/17; related regression `.venv/bin/python -m pytest tests/core/test_validator_document_index.py tests/core/test_manifest_resource_validation.py tests/core/test_legacy_source_rejection.py tests/test_parser_backend.py` passed 19/19; target Ruff passed through the project `.venv/bin/ruff`, `git diff --check`, and `./lint-loop.sh` passed (`open=1 done=157 blocked=0` before this move). Independent AST, assertion, typed-fixture and runtime audit confirmed the same 17 test functions and 53 assertions remain active, canonical `create_parser_backend().parse_text()`/`parse_file()` usage, typed `Figure`/`BibliographyConfig` fixtures, no `thesis_forge.core.parser` import, no `parse_markdown*` call, no YAML Front Matter, legacy `:::` or old `@prefix:id` source, retained missing-reference/duplicate-ID/metadata/resource/bibliography/deterministic-order/BuildReport structured-diagnostic coverage, and no fallback, compatibility branch or dual data source; candidate scope before lifecycle update was exactly `tests/test_validator.py`, no product code or related regression file changed, all pre-existing `openspec/**` changes were preserved, no push.
 
 - [V2-527B] Retire obsolete V1 hand-written parser contract tests after canonical coverage
   - Parent: ordered child of the single-parser legacy-file removal gap; the deleted parser's Front Matter/V1 container contract must not remain as a production test entry.
@@ -2035,5 +2036,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 - 2026-08-23 - V2-527A Checker PASS Attempt 1; exact Verify passed 90/90, target Ruff, `git diff --check`, and `./lint-loop.sh` passed; independent AST/runtime audit confirmed the canonical parser migration, front-matter-free source, retained style/field/Review-neutral/DOCX XML assertions, no legacy parser/fallback/compatibility/alternate-source path, and no production diff; V2-527A moved from Open to Done, V2-527B/C remained Open, candidate scope was exactly `LOOP.md` and `tests/test_docx_renderer.py`, all pre-existing `openspec/**` changes were preserved, one local commit, no push.
 
 - 2026-08-23 - V2-527B Checker PASS Attempt 1; exact Verify passed 21/21, target Ruff, `git diff --check`, `./lint-loop.sh`, and canonical parser regression passed 97/97; independent AST/runtime audit confirmed the obsolete V1 parser tests are absent, no production/tooling reference or test-only compatibility shim exists, canonical V2 parser construction/blocks/inlines and structured Front Matter/legacy rejection evidence remain executable, V2-527B moved from Open to Done, V2-527C remained Open, all pre-existing `openspec/**` changes were preserved, one local commit, no push.
+- 2026-08-23 - V2-527C Checker PASS Attempt 1; exact Verify passed 17/17, related regression passed 19/19, target Ruff via the project `.venv/bin/ruff`, `git diff --check`, and `./lint-loop.sh` passed; independent AST/assertion/runtime audit confirmed canonical parser and typed-domain fixture coverage, all 17 tests and 53 assertions retained, no legacy parser import/call, YAML Front Matter, `:::`, old reference source, fallback, compatibility branch or dual data source, and only `tests/test_validator.py` was the candidate diff while all pre-existing `openspec/**` changes were preserved; V2-527C moved from Open to Done, no push.
 
 ## Sync log
