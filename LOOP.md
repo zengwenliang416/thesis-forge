@@ -95,15 +95,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Open
 
-- [V2-505A1R] Project every canonical inline run in Review
-  - Parent: ordered preparation child 4/7 of the re-sliced `V2-505A1`; depends on `V2-505A1P3`.
-  - Files: `src/thesis_forge/presentation/review.py`, `tests/presentation/test_review_regions.py`
-  - Behavior: Review projects every canonical InlineRun into readable marker-free content while retaining math and visible break semantics.
-  - Verify: `.venv/bin/python -m pytest tests/presentation/test_review_regions.py -k test_review_projects_all_inline_run_variants`
-  - Acceptance: link destinations and citation keys remain out of visible normal Review text; math has readable fallback content; soft/hard breaks remain distinguishable; unknown runs raise explicitly.
-  - Verification-surface change: no
-  - Attempts: 0
-
 - [V2-505A1D1] Consume canonical inline runs in DOCX body rendering
   - Parent: ordered preparation child 5/7 of the re-sliced `V2-505A1`; depends on `V2-505A1R`.
   - Files: `src/thesis_forge/renderers/docx/inlines.py`, `src/thesis_forge/renderers/docx/renderer.py`, `tests/test_docx_renderer.py`
@@ -174,6 +165,16 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
   - Verification-surface change: no
   - Attempts: 1
   - Attempt 1 (2026-08-22): Checker PASS; exact Verify passed 6/6; `pnpm --dir frontend typecheck`, `pnpm --dir frontend lint`, `git diff --check`, and `./lint-loop.sh` passed; independent audit confirmed all eight canonical inline runs, real hyperlink destination semantics without visible technical markers, readable math fallback, soft-break space normalization, hard-break `<br>` semantics, and unchanged reference/citation/footnote rendering; candidate scope was exactly the two named frontend files before this lifecycle update, all unrelated dirty paths were preserved, and no push.
+
+- [V2-505A1R] Project every canonical inline run in Review
+  - Parent: ordered preparation child 4/7 of the re-sliced `V2-505A1`; depends on `V2-505A1P3`.
+  - Files: `src/thesis_forge/presentation/review.py`, `tests/presentation/test_review_regions.py`
+  - Behavior: Review projects every canonical InlineRun into readable marker-free content while retaining math and visible break semantics.
+  - Verify: `.venv/bin/python -m pytest tests/presentation/test_review_regions.py -k test_review_projects_all_inline_run_variants`
+  - Acceptance: link destinations and citation keys remain out of visible normal Review text; math has readable fallback content; soft/hard breaks remain distinguishable; unknown runs fail explicitly.
+  - Verification-surface change: no
+  - Attempts: 1
+  - Attempt 1 (2026-08-22): Checker PASS; focused Verify passed 1/1; full `tests/presentation/test_review_regions.py` passed 6/6; target Ruff, `git diff --check`, and `./lint-loop.sh` passed; independent code audit confirmed all eight canonical inline projections, readable hyperlink/math fields with technical markers excluded from visible text, distinct soft/hard break Review runs, preserved text/reference/citation/footnote behavior, and explicit unknown-run `TypeError`; candidate scope was exactly the two named files before this lifecycle update, all unrelated dirty paths were preserved, no `V2-505A1D1` was started, no push.
 
 - [V2-505A1M] Establish canonical typed inline RenderPlan runs
   - Parent: ordered preparation child 1/7 of the re-sliced `V2-505A1`; the original V2-505A1 Behavior and Acceptance remain unchanged across A1M, A1P1, A1P2, A1P3, A1R, A1D1 and A1D2.
@@ -1664,5 +1665,7 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 - 2026-08-22 - V2-505A1P1 Checker PASS Attempt 1; exact Verify passed 1/1, target Ruff, `git diff --check`, and LOOP-LINT passed; complete preview tests were 5 passed/1 known clean-HEAD baseline failure at `test_complete_example_preview_preserves_compiler_order_and_numbering` with `TF-SOURCE-LEGACY-001`, clean HEAD was 4 passed/1 with the identical failure, and independent AST/runtime probes passed for all eight ordered variants, raw citation suppression, formatted citation preservation, and explicit unknown-run rejection; V2-505A1P1 moved to Done, candidate scope was exactly the two named files plus this lifecycle update, unrelated dirty paths were preserved, one local commit, no push.
 - 2026-08-22 - V2-505A1P2 Checker PASS Attempt 1; exact Verify passed 9/9, combined Preview transport regression passed 31/31, frontend typecheck/lint, `git diff --check`, and LOOP-LINT passed; independent DTO audit confirmed all eight canonical runs, strict new-run field shapes, and rejection of unknown types, extra keys, and malformed shapes; V2-505A1P2 moved from Open to Done, candidate scope was exactly the two named frontend files plus this lifecycle update, all unrelated dirty paths were preserved, one local commit, no push.
 - 2026-08-22 - V2-505A1P3 Checker PASS Attempt 1; exact Verify passed 6/6, `pnpm --dir frontend typecheck`, `pnpm --dir frontend lint`, `git diff --check`, and `./lint-loop.sh` passed; independent audit confirmed all eight canonical inline runs, real hyperlink destination semantics without visible technical markers, readable math fallback, soft-break space normalization, hard-break `<br>` semantics, and unchanged reference/citation/footnote rendering; candidate scope was exactly the two named frontend files before this lifecycle update, all unrelated dirty paths were preserved, one local commit, no push.
+
+- 2026-08-22 - V2-505A1R Checker PASS Attempt 1; exact focused Verify passed 1/1, full Review regression passed 6/6, target Ruff, `git diff --check`, and LOOP-LINT passed; Review code audit confirmed all eight canonical inline projections, marker-free visible text, preserved hyperlink/math semantics, distinct soft/hard breaks, unchanged text/reference/citation/footnote behavior, and explicit unknown-run rejection; V2-505A1R moved from Open to Done, no `V2-505A1D1` started, unrelated dirty paths preserved, no push.
 
 ## Sync log

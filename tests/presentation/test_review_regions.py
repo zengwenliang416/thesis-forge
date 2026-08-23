@@ -33,10 +33,13 @@ from thesis_forge.core.render_plan import (
     FigureInstruction,
     FootnoteDefinitionInstruction,
     FootnoteReferenceRun,
+    HardBreakRun,
     HeadingInstruction,
+    HyperlinkRun,
     ListingInstruction,
     ListInstruction,
     ListItemInstruction,
+    MathRun,
     PageBreakInstruction,
     ParagraphInstruction,
     ReferenceRun,
@@ -44,6 +47,7 @@ from thesis_forge.core.render_plan import (
     RenderNode,
     RenderPlan,
     SectionBreakInstruction,
+    SoftBreakRun,
     TableCellInstruction,
     TableInstruction,
     TableRowInstruction,
@@ -59,8 +63,13 @@ from thesis_forge.presentation.review import (
     ReviewCoverContent,
     ReviewDocument,
     ReviewFigureContent,
+    ReviewHardBreakRun,
+    ReviewHyperlinkRun,
     ReviewListingContent,
+    ReviewMathRun,
     ReviewPageBreakContent,
+    ReviewParagraphContent,
+    ReviewSoftBreakRun,
     ReviewTableContent,
     ReviewTocContent,
     map_review_result,
@@ -282,6 +291,66 @@ def test_review_projects_all_regions_without_visible_technical_markers(
         str(tmp_path),
     ):
         assert marker not in serialized
+
+
+def test_review_projects_all_inline_run_variants(tmp_path: Path) -> None:
+    document = _source_document(tmp_path / "thesis.md")
+    plan = RenderPlan(
+        nodes=[
+            ParagraphInstruction(
+                text="",
+                inlines=(
+                    TextRun("前"),
+                    ReferenceRun("fig:arch", "fig_arch", "图 1-1"),
+                    HyperlinkRun("项目主页", "https://example.test/project"),
+                    MathRun(r"x^2 + y^2"),
+                    SoftBreakRun(),
+                    HardBreakRun(),
+                    CitationRun(
+                        keys=("secret-key",),
+                        ordinals=(1,),
+                        raw="[@secret-key]",
+                        text="[@secret-key]",
+                    ),
+                    FootnoteReferenceRun("scope", 1),
+                ),
+            )
+        ]
+    )
+
+    review = map_review_result(
+        PreviewResult(
+            document=document,
+            context=ValidationContext(),
+            issues=(),
+            plan=plan,
+        )
+    )
+
+    paragraph = review.blocks[0].content
+    assert isinstance(paragraph, ReviewParagraphContent)
+    assert paragraph.text == "前图 1-1项目主页x^2 + y^2 \n[1]脚注1"
+    assert "https://example.test/project" not in paragraph.text
+    assert "secret-key" not in paragraph.text
+    assert "fig:arch" not in paragraph.text
+
+    assert isinstance(paragraph.runs[2], ReviewHyperlinkRun)
+    assert paragraph.runs[2].text == "项目主页"
+    assert paragraph.runs[2].destination == "https://example.test/project"
+    assert isinstance(paragraph.runs[3], ReviewMathRun)
+    assert paragraph.runs[3].text == "x^2 + y^2"
+    assert paragraph.runs[3].latex == r"x^2 + y^2"
+    assert isinstance(paragraph.runs[4], ReviewSoftBreakRun)
+    assert paragraph.runs[4].text == " "
+    assert isinstance(paragraph.runs[5], ReviewHardBreakRun)
+    assert paragraph.runs[5].text == "\n"
+
+
+def test_unknown_inline_run_fails_explicitly() -> None:
+    with pytest.raises(TypeError, match="unsupported InlineRun"):
+        project_instruction(
+            ParagraphInstruction(text="", inlines=(object(),))  # type: ignore[arg-type]
+        )
 
 
 def test_review_blocks_when_plan_is_unavailable(tmp_path: Path) -> None:

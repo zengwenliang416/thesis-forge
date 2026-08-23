@@ -34,15 +34,19 @@ from thesis_forge.core.render_plan import (
     FigureInstruction,
     FootnoteDefinitionInstruction,
     FootnoteReferenceRun,
+    HardBreakRun,
     HeadingInstruction,
+    HyperlinkRun,
     InlineRun,
     ListingInstruction,
     ListInstruction,
+    MathRun,
     PageBreakInstruction,
     ParagraphInstruction,
     ReferenceRun,
     RenderInstruction,
     SectionBreakInstruction,
+    SoftBreakRun,
     TableInstruction,
     TextRun,
     TocInstruction,
@@ -67,15 +71,19 @@ __all__ = [
     "ReviewFigureContent",
     "ReviewFootnoteContent",
     "ReviewFootnoteReferenceRun",
+    "ReviewHardBreakRun",
     "ReviewHeadingContent",
+    "ReviewHyperlinkRun",
     "ReviewInline",
     "ReviewListContent",
     "ReviewListItem",
     "ReviewListingContent",
+    "ReviewMathRun",
     "ReviewPageBreakContent",
     "ReviewParagraphContent",
     "ReviewReferenceRun",
     "ReviewSectionContent",
+    "ReviewSoftBreakRun",
     "ReviewSource",
     "ReviewTableCell",
     "ReviewTableContent",
@@ -125,11 +133,37 @@ class ReviewFootnoteReferenceRun:
     footnote_id: int
 
 
+@dataclass(frozen=True, slots=True)
+class ReviewHyperlinkRun:
+    text: str
+    destination: str
+
+
+@dataclass(frozen=True, slots=True)
+class ReviewMathRun:
+    text: str
+    latex: str
+
+
+@dataclass(frozen=True, slots=True)
+class ReviewSoftBreakRun:
+    text: str = " "
+
+
+@dataclass(frozen=True, slots=True)
+class ReviewHardBreakRun:
+    text: str = "\n"
+
+
 ReviewInline: TypeAlias = (
     ReviewTextRun
     | ReviewReferenceRun
     | ReviewCitationRun
     | ReviewFootnoteReferenceRun
+    | ReviewHyperlinkRun
+    | ReviewMathRun
+    | ReviewSoftBreakRun
+    | ReviewHardBreakRun
 )
 
 
@@ -346,6 +380,24 @@ def _inline_runs(runs: tuple[InlineRun, ...]) -> tuple[ReviewInline, ...]:
                     footnote_id=run.footnote_id,
                 )
             )
+        elif isinstance(run, HyperlinkRun):
+            projected.append(
+                ReviewHyperlinkRun(
+                    text=_safe_plain_text(run.text),
+                    destination=run.destination,
+                )
+            )
+        elif isinstance(run, MathRun):
+            projected.append(
+                ReviewMathRun(
+                    text=_safe_plain_text(run.latex),
+                    latex=run.latex,
+                )
+            )
+        elif isinstance(run, SoftBreakRun):
+            projected.append(ReviewSoftBreakRun())
+        elif isinstance(run, HardBreakRun):
+            projected.append(ReviewHardBreakRun())
         else:
             raise TypeError(f"unsupported InlineRun: {type(run).__name__}")
     return tuple(projected)
