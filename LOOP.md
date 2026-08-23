@@ -95,7 +95,35 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Open
 
+- [V2-538] Expose Review as the third preview mode
+  - Parent: V2-537; completes the frontend mode contract after the existing Structure and Final Layout modes.
+  - Files: `frontend/src/state/workspace.ts`, `frontend/src/components/PreviewPanels.tsx`, `LOOP.md`
+  - Behavior: the typed preview mode includes `review`, the mode control exposes it, and selecting it renders ReviewPanel while preserving Structure and Final Layout behavior.
+  - Verify: `pnpm --dir frontend test -- PreviewPanels.test.tsx`
+  - Acceptance: all three modes are selectable through the existing state/event path; Review selection does not expose technical markers; Structure and Final Layout regressions remain green.
+  - Verification-surface change: `no`
+  - Attempts: 0
+
+- [V2-539] Add offline CLI Review export
+  - Parent: the normative Review export contract and the existing typed `ReviewDocument` projector.
+  - Files: `src/thesis_forge/cli.py`, `tests/cli/test_project_commands.py`, `LOOP.md`
+  - Behavior: `thesisforge review <project> --output-dir <dir>` writes a generated Review Markdown file and source map from the typed Review projection without raw IDs, citation keys, absolute paths or legacy syntax.
+  - Verify: `.venv/bin/python -m pytest tests/cli/test_project_commands.py -k review`
+  - Acceptance: the command works offline, returns structured diagnostics on blocked input, produces the declared Review artifacts and preserves reader-facing content/source navigation separation.
+  - Verification-surface change: `no`
+  - Attempts: 0
+
 ## Done
+
+- [V2-537] Implement the reader-facing ReviewPanel core
+  - Parent: the typed preview transport and V2-536 Build Output panel; precedes exposing Review as the third preview mode.
+  - Files: `frontend/src/components/ReviewPanel.tsx`, `frontend/src/components/ReviewPanel.test.tsx`, `LOOP.md`
+  - Behavior: ReviewPanel projects the typed `WorkspaceState.preview` into clean reader-facing content with source navigation, without exposing semantic IDs, citation keys, local paths or raw unsupported kinds.
+  - Verify: `pnpm --dir frontend test -- ReviewPanel.test.tsx`
+  - Acceptance: resolved prose, references, citations, footnotes, links and math remain readable; figures, tables, listings, algorithms and bibliography remain visible; empty, blocked and unsupported states are explicit; selection navigates to the source; technical markers are absent from visible Review content.
+  - Verification-surface change: `no`
+  - Attempts: 1
+  - Attempt 1 (2026-08-23): Checker PASS; exact Verify passed with Vitest 19 files and 225 tests, and the direct candidate command passed 1/1 file and 4/4 tests; `pnpm --dir frontend lint`, `pnpm --dir frontend typecheck`, and `git diff --check` passed; independent SSR/DOM probes covered all required content types and statuses, source click/Enter navigation, stable IDs, technical prefixes, cite-key/secret-key, absolute paths, aria-label/title/alt/href/src sanitization, unsafe URL variants, ordinary HTTP(S) links/images, citation/bibliography key hiding, multiline math without `$`/LaTeX backslashes, and literal listing preservation; candidate scope before lifecycle update was exactly the two named ReviewPanel files, all pre-existing changes were preserved, no push.
 
 - [V2-536] Implement the Build Output panel core
   - Parent: first frontend slice after the typed RenderPlan boundary; follows the existing BuildReport transport/state contract and precedes shell integration, ReviewPanel, and the third preview mode.
@@ -2191,5 +2219,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 - 2026-08-23 - V2-535A Checker PASS Attempt 1; exact Verify passed 12/12, target Ruff, `git diff --check`, and `./lint-loop.sh` passed; independent AST/import audit confirmed no `RenderNode` or `to_render_node()` in the two named tests, retained typed `kind`/`payload`/`field_code` assertions, and explicit unknown RenderInstruction/InlineRun rejection; V2-535A moved from Open to Done, candidate scope was exactly the two named test files plus `LOOP.md`, all pre-existing `openspec/**`, `tests/test_lo_finalizer.py`, `openspec/.specnav/overrides/`, and `template-v2-build-pipeline-p1/development/` paths were preserved, no push.
 - 2026-08-23 - V2-535B Checker PASS Attempt 1; exact Verify passed 24/24, target Ruff, `git diff --check`, and `./lint-loop.sh` passed; independent AST/runtime audit confirmed the legacy core type and conversion method are absent, typed instruction payloads and fields remain, `RenderPlan.nodes` is typed-only, core exports are clean, and Review/inline/table unknown-instruction rejection remains explicit; V2-535B moved from Open to Done, candidate scope before the lifecycle update was exactly the two named core files, V2-536 remained Open, all pre-existing `openspec/**`, `tests/test_lo_finalizer.py`, `openspec/.specnav/overrides/`, and `template-v2-build-pipeline-p1/development/` paths were preserved, no push.
 - 2026-08-23 - V2-536 Checker PASS Attempt 1; exact Verify passed (18 files, 221 tests), the candidate file independently passed 3/3, frontend lint, typecheck, and `git diff --check` passed, and the typed BuildReport/stage/diagnostic/log projection and scope audit passed; V2-536 moved from Open to Done, only the two named candidate files plus `LOOP.md` were authorized, all pre-existing `openspec/**`, `tests/test_lo_finalizer.py`, `openspec/.specnav/overrides/`, and `template-v2-build-pipeline-p1/development/` paths were preserved, no push.
+- 2026-08-23 - V2-537 Checker PASS Attempt 1; exact Verify passed (19 files, 225 tests), the direct candidate command passed 1/1 file and 4/4 tests, frontend lint, typecheck, and `git diff --check` passed; independent SSR/DOM probes covered all required content types and statuses, source click/Enter navigation, stable IDs, technical prefixes, cite-key/secret-key, absolute paths, aria-label/title/alt/href/src sanitization, unsafe URL variants, ordinary HTTP(S) links/images, citation/bibliography key hiding, multiline math without `$`/LaTeX backslashes, and literal listing preservation; V2-537 moved from Open to Done, candidate scope was exactly the two named ReviewPanel files plus this lifecycle update, all pre-existing changes were preserved, one local commit, no push.
 
 ## Sync log
