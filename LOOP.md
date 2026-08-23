@@ -95,15 +95,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Open
 
-- [V2-527B] Retire obsolete V1 hand-written parser contract tests after canonical coverage
-  - Parent: ordered child of the single-parser legacy-file removal gap; the deleted parser's Front Matter/V1 container contract must not remain as a production test entry.
-  - Files: `tests/test_parser.py`, `tests/test_parser_contract.py`, `LOOP.md`
-  - Behavior: remove the tests that exercise the deleted hand-written parser while retaining their supported V2 parser behavior and explicit legacy rejection coverage in the canonical parser test suites.
-  - Verify: `.venv/bin/python -m pytest tests/core/test_single_parser_backend.py tests/core/test_markdown_v2_blocks.py tests/core/test_markdown_v2_inlines.py tests/core/test_legacy_source_rejection.py`
-  - Acceptance: neither obsolete test file remains as a direct parser entry; the canonical suites pass and cover parser construction, supported V2 blocks/inlines, and structured rejection of Front Matter/legacy syntax; no test-only compatibility shim is added.
-  - Verification-surface change: `yes`; removes obsolete V1 parser-contract evidence whose implementation is being deleted while retaining canonical V2 and rejection evidence.
-  - Attempts: 0
-
 - [V2-527C] Migrate validator tests from the deleted hand-written parser
   - Parent: ordered child of the single-parser legacy-file removal gap; preserves validator regression coverage while removing the remaining direct parser import.
   - Files: `tests/test_validator.py`, `LOOP.md`
@@ -114,6 +105,16 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
   - Attempts: 0
 
 ## Done
+
+- [V2-527B] Retire obsolete V1 hand-written parser contract tests after canonical coverage
+  - Parent: ordered child of the single-parser legacy-file removal gap; the deleted parser's Front Matter/V1 container contract must not remain as a production test entry.
+  - Files: `tests/test_parser.py`, `tests/test_parser_contract.py`, `LOOP.md`
+  - Behavior: remove the tests that exercise the deleted hand-written parser while retaining their supported V2 parser behavior and explicit legacy rejection coverage in the canonical parser test suites.
+  - Verify: `.venv/bin/python -m pytest tests/core/test_single_parser_backend.py tests/core/test_markdown_v2_blocks.py tests/core/test_markdown_v2_inlines.py tests/core/test_legacy_source_rejection.py`
+  - Acceptance: neither obsolete test file remains as a direct parser entry; the canonical suites pass and cover parser construction, supported V2 blocks/inlines, and structured rejection of Front Matter/legacy syntax; no test-only compatibility shim is added.
+  - Verification-surface change: `yes`; removes obsolete V1 parser-contract evidence whose implementation is being deleted while retaining canonical V2 and rejection evidence.
+  - Attempts: 1
+  - Attempt 1 (2026-08-23): Checker PASS; exact Verify passed 21/21, target Ruff, `git diff --check`, and `./lint-loop.sh` passed; canonical parser regression passed 97/97; independent AST/runtime audit confirmed no production/tooling reference to either deleted test file, canonical factory construction without a selector or legacy registry, typed V2 block/inline coverage, structured `TF-SOURCE-LEGACY-001/002/003` rejection with replacements, code-literal marker exemptions, and no compatibility shim or production diff; candidate scope remained exactly `tests/test_parser.py`, `tests/test_parser_contract.py` and `LOOP.md`, V2-527C remained Open, all pre-existing `openspec/**` changes were preserved, one local commit, no push.
 
 - [V2-527A] Migrate the DOCX renderer test's remaining legacy parser consumer
   - Parent: ordered child of the single-parser legacy-file removal gap; this child removes one remaining direct test dependency before the legacy module can be deleted.
@@ -2032,5 +2033,7 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 - 2026-08-23 - V2-526 Checker PASS Attempt 2; exact Verify passed 5/5, target Ruff, `git diff --check`, `./lint-loop.sh`, and related manifest/validator/compiler regression passed 130/130; independent runtime/static audit passed complete and empty manifest projection, 11/11 cover fields, stale-metadata replacement, canonical parser use, and no legacy parser/fallback/compatibility path; mutation audit caught 11/11 cover-field mutations, empty-manifest diagnostic suppression, and stale-metadata merge; V2-526 moved from Open to Done, candidate scope remained exactly `LOOP.md`, `src/thesis_forge/core/validator.py`, and `tests/core/test_manifest_resource_validation.py`, all pre-existing `openspec/**` changes were preserved, one local commit, no push.
 - 2026-08-23 - V2-527A Checker PASS Attempt 1; exact Verify passed 90/90, target Ruff, `git diff --check`, and `./lint-loop.sh` passed; independent AST/runtime audit confirmed the canonical parser migration, front-matter-free source, retained style/field/Review-neutral/DOCX XML assertions, no legacy parser/fallback/compatibility/alternate-source path, and no production diff; V2-527A moved from Open to Done, V2-527B/C remained Open, candidate scope was exactly `LOOP.md` and `tests/test_docx_renderer.py`, all pre-existing `openspec/**` changes were preserved, one local commit, no push.
+
+- 2026-08-23 - V2-527B Checker PASS Attempt 1; exact Verify passed 21/21, target Ruff, `git diff --check`, `./lint-loop.sh`, and canonical parser regression passed 97/97; independent AST/runtime audit confirmed the obsolete V1 parser tests are absent, no production/tooling reference or test-only compatibility shim exists, canonical V2 parser construction/blocks/inlines and structured Front Matter/legacy rejection evidence remain executable, V2-527B moved from Open to Done, V2-527C remained Open, all pre-existing `openspec/**` changes were preserved, one local commit, no push.
 
 ## Sync log
