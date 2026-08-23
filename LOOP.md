@@ -95,15 +95,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Open
 
-- [V2-534B] Remove preview RenderNode dispatch
-  - Parent: ordered child of the first unmet typed RenderPlan contract; follows V2-534A and removes the preview-side legacy branch.
-  - Files: `src/thesis_forge/presentation/preview.py`, `LOOP.md`
-  - Behavior: preview projection accepts typed instructions only and routes every unknown object through the explicit unsupported boundary without importing or dispatching RenderNode.
-  - Verify: `! rg -n --glob '*.py' "RenderNode" src/thesis_forge/presentation/preview.py && .venv/bin/python -m pytest tests/test_preview_presentation.py tests/presentation/test_review_regions.py`
-  - Acceptance: the source has no RenderNode import or isinstance branch; preview/review regression remains green; unknown instructions remain explicit unsupported results/errors.
-  - Verification-surface change: `yes`
-  - Attempts: 0
-
 - [V2-534C] Remove DOCX legacy renderer fallback
   - Parent: ordered child of implementation-plan V2-327; follows V2-534A and V2-534B before core RenderNode removal.
   - Files: `src/thesis_forge/renderers/docx/renderer.py`, `tests/renderers/docx/test_listing_algorithm.py`, `LOOP.md`
@@ -114,6 +105,16 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
   - Attempts: 0
 
 ## Done
+
+- [V2-534B] Remove preview RenderNode dispatch
+  - Parent: ordered child of the first unmet typed RenderPlan contract; follows V2-534A and removes the preview-side legacy branch.
+  - Files: `src/thesis_forge/presentation/preview.py`, `LOOP.md`
+  - Behavior: preview projection accepts typed instructions only and routes every unknown object through the explicit unsupported boundary without importing or dispatching RenderNode.
+  - Verify: `! rg -n --glob '*.py' "RenderNode" src/thesis_forge/presentation/preview.py && .venv/bin/python -m pytest tests/test_preview_presentation.py tests/presentation/test_review_regions.py`
+  - Acceptance: the source has no RenderNode import or isinstance branch; preview/review regression remains green; unknown instructions remain explicit unsupported results/errors.
+  - Verification-surface change: `yes`
+  - Attempts: 1
+  - Attempt 1 (2026-08-23): Checker PASS; exact Verify passed 12/12; the independent unknown-object assertion returned kind/status `unsupported` and content `{"type": "unsupported", "originalKind": "UnknownInstruction"}`, with no `RenderNode` attribute on the preview module; independent AST/import audit confirmed no `RenderNode` import/name and an explicit unsupported terminal boundary; no fallback, compatibility alias, or silent-acceptance path was found. Target Ruff, `git diff --check`, and `./lint-loop.sh` passed (`open=2 done=166 blocked=0` before this lifecycle move); candidate product diff before the lifecycle update was exactly `src/thesis_forge/presentation/preview.py` (7 deletions), all pre-existing `openspec/**`, `tests/test_lo_finalizer.py`, and `openspec/.specnav/overrides` paths were preserved, no push.
 
 - [V2-534A] Migrate preview and review tests off generic RenderNode fixtures
   - Parent: ordered child of the first unmet typed RenderPlan contract; removes obsolete unknown-node fixtures before deleting the production compatibility type.
@@ -2152,5 +2153,7 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 - 2026-08-23 - V2-533 Checker PASS Attempt 2; exact Verify exited 0 with parser.py absent and no module-boundary parser imports/calls; parser regression passed 48/48, application/services/adapters regression 198/198, DOCX/compiler regression 133/133, and LibreOffice finalizer regression 26/26; target Ruff, `git diff --check`, and LOOP-LINT passed (`open=1 done=164 blocked=0` before this move); scope.json was an exact four-root delete-enabled contract, historical reports/catalog prose and all pre-existing V2-532, test_lo_finalizer.py and openspec/** changes were preserved, official override prune removed 0 files, and no push.
 - 2026-08-23 - LOOP refill after stop-check; with LOOP previously empty, goal verification surfaced 9 unmet contracts, led by `typed-render-plan:no-RenderNode` and then `docx:no-legacy-renderer`; V2-534A/B/C were added in A→B→C dependency order, with no product code changed.
 - 2026-08-23 - V2-534A Checker PASS Attempt 1; exact Verify passed 12/12, related Preview/Review/Compiler/RenderPlan regression passed 57/57, target Ruff, `git diff --check`, and LOOP-LINT passed (`open=2 done=166 blocked=0` after this move); mutation audit killed manifest template selection, preview unknown-fixture, and Review unknown-assertion mutations, and confirmed no RenderNode fixture or explicit template_path remained; candidate scope was exactly the two named tests, all pre-existing `openspec/**`, `tests/test_lo_finalizer.py`, and `openspec/.specnav/overrides` changes were preserved, no push.
+
+- 2026-08-23 - V2-534B Checker PASS Attempt 1; exact Verify passed 12/12, target Ruff, `git diff --check`, and `./lint-loop.sh` passed (`open=2 done=166 blocked=0` before this move); independent unknown-object and AST/import audits confirmed explicit `unsupported` kind/status/content, no `RenderNode` import/name/attribute, and no fallback, compatibility alias, or silent-acceptance path; V2-534B moved from Open to Done, V2-534C remained Open, candidate product diff was exactly `src/thesis_forge/presentation/preview.py` before the lifecycle update, all pre-existing `openspec/**`, `tests/test_lo_finalizer.py`, and `openspec/.specnav/overrides` paths were preserved, no push.
 
 ## Sync log

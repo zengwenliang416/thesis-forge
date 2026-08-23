@@ -39,7 +39,6 @@ from thesis_forge.core.render_plan import (
     MathRun,
     ParagraphInstruction,
     ReferenceRun,
-    RenderNode,
     SectionBreakInstruction,
     SoftBreakRun,
     TableInstruction,
@@ -381,12 +380,6 @@ def _content(instruction: object) -> tuple[str, str, dict[str, Any]]:
                     for entry in instruction.entries
                 ],
             },
-        )
-    if isinstance(instruction, RenderNode):
-        return (
-            "unsupported",
-            "unsupported",
-            {"type": "unsupported", "originalKind": instruction.kind},
         )
     return (
         "unsupported",
