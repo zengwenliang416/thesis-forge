@@ -95,6 +95,8 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Open
 
+## Done
+
 - [V2-536] Implement the Build Output panel core
   - Parent: first frontend slice after the typed RenderPlan boundary; follows the existing BuildReport transport/state contract and precedes shell integration, ReviewPanel, and the third preview mode.
   - Files: `frontend/src/components/BuildOutputPanel.tsx`, `frontend/src/components/BuildOutputPanel.test.tsx`, `LOOP.md`
@@ -102,9 +104,8 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
   - Verify: `pnpm --dir frontend test -- BuildOutputPanel.test.tsx`
   - Acceptance: diagnostic code, stage, message, source, suggestion and copy action are visible; stage status is distinguishable; logs are selectable and copyable; the component is a real typed BuildReport projection, not a file-existence stub.
   - Verification-surface change: `no`
-  - Attempts: 0
-
-## Done
+  - Attempts: 1
+  - Attempt 1 (2026-08-23): Checker PASS; the exact Verify passed with Vitest 18 files and 221 tests, and the candidate file independently passed 1/1 file and 3/3 tests; `pnpm --dir frontend lint`, `pnpm --dir frontend typecheck`, and `git diff --check` passed; independent CodeGraph/source audit confirmed the component consumes the typed `BuildReport`, projects all seven `BuildStage` values and five stage statuses, exposes All/Errors/Warnings/Raw Logs views, expands the primary diagnostic with code/stage/message/source/suggestion and copy action, and supports log selection plus single/all copy; no prohibited compatibility/parser fallback, file-existence stub, unnamed file, or scope creep was found; the candidate scope before lifecycle update was exactly the two named component files, all pre-existing `openspec/**`, `tests/test_lo_finalizer.py`, `openspec/.specnav/overrides/`, and `template-v2-build-pipeline-p1/development/` paths were preserved, no push.
 
 - [V2-535B] Remove the core RenderNode compatibility type
   - Parent: ordered child of the typed RenderPlan migration; follows V2-535A after all current test consumers have moved off the generic node.
@@ -2189,5 +2190,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 - 2026-08-23 - V2-534C Checker PASS Attempt 1; exact Verify passed 3/3, independent unknown-instruction rejection passed with no output DOCX, target Ruff, `git diff --check`, and LOOP-LINT passed (`open=1 done=167 blocked=0` before this move); V2-534C moved from Open to Done, the candidate product diff was exactly `src/thesis_forge/renderers/docx/renderer.py` and `tests/renderers/docx/test_listing_algorithm.py`, and all pre-existing `openspec/**`, `tests/test_lo_finalizer.py`, `openspec/.specnav/overrides/`, and `template-v2-build-pipeline-p1/development/` paths were preserved, no push.
 - 2026-08-23 - V2-535A Checker PASS Attempt 1; exact Verify passed 12/12, target Ruff, `git diff --check`, and `./lint-loop.sh` passed; independent AST/import audit confirmed no `RenderNode` or `to_render_node()` in the two named tests, retained typed `kind`/`payload`/`field_code` assertions, and explicit unknown RenderInstruction/InlineRun rejection; V2-535A moved from Open to Done, candidate scope was exactly the two named test files plus `LOOP.md`, all pre-existing `openspec/**`, `tests/test_lo_finalizer.py`, `openspec/.specnav/overrides/`, and `template-v2-build-pipeline-p1/development/` paths were preserved, no push.
 - 2026-08-23 - V2-535B Checker PASS Attempt 1; exact Verify passed 24/24, target Ruff, `git diff --check`, and `./lint-loop.sh` passed; independent AST/runtime audit confirmed the legacy core type and conversion method are absent, typed instruction payloads and fields remain, `RenderPlan.nodes` is typed-only, core exports are clean, and Review/inline/table unknown-instruction rejection remains explicit; V2-535B moved from Open to Done, candidate scope before the lifecycle update was exactly the two named core files, V2-536 remained Open, all pre-existing `openspec/**`, `tests/test_lo_finalizer.py`, `openspec/.specnav/overrides/`, and `template-v2-build-pipeline-p1/development/` paths were preserved, no push.
+- 2026-08-23 - V2-536 Checker PASS Attempt 1; exact Verify passed (18 files, 221 tests), the candidate file independently passed 3/3, frontend lint, typecheck, and `git diff --check` passed, and the typed BuildReport/stage/diagnostic/log projection and scope audit passed; V2-536 moved from Open to Done, only the two named candidate files plus `LOOP.md` were authorized, all pre-existing `openspec/**`, `tests/test_lo_finalizer.py`, `openspec/.specnav/overrides/`, and `template-v2-build-pipeline-p1/development/` paths were preserved, no push.
 
 ## Sync log
