@@ -506,6 +506,16 @@ class EquationSpec(TemplateModel):
     alignment: Literal["left", "center", "right"] = "center"
 
 
+class ListingSpec(TemplateModel):
+    numbering: NumberingSpec = Field(default_factory=NumberingSpec)
+    caption: CaptionSpec
+
+
+class AlgorithmSpec(TemplateModel):
+    numbering: NumberingSpec = Field(default_factory=NumberingSpec)
+    caption: CaptionSpec
+
+
 class ParagraphBorderSpec(TemplateModel):
     style: Literal["none", "single", "double", "dotted", "dashed"] = "single"
     width: LengthSpec | None = None
@@ -651,6 +661,8 @@ class ThesisTemplate(TemplateModel):
     figure: FigureSpec | None = None
     table: TableSpec | None = None
     equation: EquationSpec | None = None
+    listing: ListingSpec | None = None
+    algorithm: AlgorithmSpec | None = None
     sections: SectionsSpec = Field(default_factory=SectionsSpec)
     citation: CitationSpec | None = None
 

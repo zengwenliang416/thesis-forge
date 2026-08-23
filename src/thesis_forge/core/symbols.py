@@ -24,7 +24,7 @@ from .model import (
 BOOKMARK_MAX_LENGTH = 40
 BOOKMARK_INVALID_RE = re.compile(r"[^A-Za-z0-9_]")
 
-NumberingKind = Literal["figure", "table", "equation"]
+NumberingKind = Literal["figure", "table", "equation", "listing", "algorithm"]
 NumberingMode = Literal["chapter", "continuous", "none"]
 
 
@@ -187,6 +187,10 @@ def _numbering_inputs(
         kind = "table"
     elif isinstance(block, Equation):
         kind = "equation"
+    elif isinstance(block, Listing):
+        kind = "listing"
+    elif isinstance(block, Algorithm):
+        kind = "algorithm"
     if kind is None:
         return None
 
@@ -241,16 +245,15 @@ def _display_label(
     block: Block,
     numbering_inputs: NumberingInputs | None,
 ) -> str:
-    if isinstance(block, (Figure, Table, Equation)):
+    if isinstance(block, Equation):
         number = numbering_inputs.number if numbering_inputs is not None else None
-        if isinstance(block, Equation):
-            return f"({number})" if number else block.id or ""
+        return f"({number})" if number else block.id or ""
+    if isinstance(block, (Figure, Table, Listing, Algorithm)):
+        number = numbering_inputs.number if numbering_inputs is not None else None
         caption = inline_plain_text(block.caption_inlines)
         if number and numbering_inputs is not None:
             return f"{numbering_inputs.caption_prefix}{number}"
         return caption
     if isinstance(block, Heading):
         return inline_plain_text(block.inlines)
-    if isinstance(block, (Listing, Algorithm)):
-        return inline_plain_text(block.caption_inlines)
     return block.id or ""
