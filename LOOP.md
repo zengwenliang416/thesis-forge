@@ -95,6 +95,26 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Open
 
+- [V2-532] Migrate finalizer tests off the deleted parser
+  - Parent: ordered child of the single-parser legacy-file removal gap; prepares the last active test consumer before deleting the hand-written parser module.
+  - Files: `tests/test_lo_finalizer.py`, `LOOP.md`
+  - Behavior: finalizer tests build a standard V2 project through the canonical parser/application path while retaining field capture, restore, rollback and LibreOffice integration assertions.
+  - Verify: `.venv/bin/python -m pytest tests/test_lo_finalizer.py`
+  - Acceptance: no `thesis_forge.core.parser` import or `parse_markdown` call remains; the raw and final-auto DOCX fixtures come from a manifest-based V2 project; all existing field, style, OpenXML and TOC assertions remain active; no fallback or compatibility branch is introduced.
+  - Verification-surface change: `no`
+  - Attempts: 0
+
+- [V2-533] Delete the obsolete hand-written parser module
+  - Parent: ordered child of the single-parser legacy-file removal gap; depends on V2-531 and V2-532.
+  - Files: `src/thesis_forge/core/parser.py`, `LOOP.md`
+  - Behavior: remove the obsolete hand-written Markdown parser after all active tooling and test consumers use the canonical backend.
+  - Verify: `test ! -e src/thesis_forge/core/parser.py && ! rg -n --glob '*.py' "from thesis_forge\\.core\\.parser|import thesis_forge\\.core\\.parser|parse_markdown(_text)?\\(" src tests qa/tools spikes`
+  - Acceptance: the module is absent; no active Python source imports or invokes its APIs; canonical parser tests and application/DOCX regressions remain green; historical reports and catalog prose remain untouched; no compatibility shim is added.
+  - Verification-surface change: `yes`; removes the obsolete parser implementation after its active consumers are migrated.
+  - Attempts: 0
+
+## Done
+
 - [V2-531] Retire the obsolete legacy-parser comparison spike
   - Parent: ordered child of the single-parser legacy-file removal gap; removes a historical comparison entrypoint whose purpose depends on the deleted hand-written parser.
   - Files: `spikes/phase0/parser/compare.py`, `LOOP.md`
@@ -102,9 +122,8 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
   - Verify: `test ! -e spikes/phase0/parser/compare.py && ! rg -n "thesis_forge\\.core\\.parser|existing\\.parse_markdown" spikes/phase0/parser`
   - Acceptance: the script is absent; no remaining file under `spikes/phase0/parser` imports or invokes the hand-written parser; historical reports remain untouched unless separately named by a later item.
   - Verification-surface change: `yes`; removes obsolete spike evidence whose implementation depends on the parser being deleted.
-  - Attempts: 0
-
-## Done
+  - Attempts: 1
+  - Attempt 1 (2026-08-23): Checker PASS; exact Verify exited 0, `git diff --check` and LOOP-LINT passed (`open=3 done=161 blocked=0` before this move), the candidate deleted only `spikes/phase0/parser/compare.py`, active parser spike entrypoints had no legacy import or invocation, and `REPORT.md`, `results/*.json` and `fixtures/**` were unchanged. Independent AST/runtime and protected-path mutation audits passed; all pre-existing `openspec/**` changes were preserved, one local commit, no push.
 
 - [V2-530] Migrate QA E2E parser consumers to canonical V2 sources
   - Parent: ordered child of the single-parser legacy-file removal gap; removes the QA E2E test's direct dependency on the hand-written parser without preserving legacy fixtures.
@@ -2081,5 +2100,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 - 2026-08-23 - V2-528 Checker PASS Attempt 1; exact Verify `.venv/bin/python -m pytest tests/test_architecture.py` passed 9/9; related regression `.venv/bin/python -m pytest tests/core/test_single_parser_backend.py tests/core/test_legacy_source_rejection.py tests/test_parser_backend.py` passed 15/15; `.venv/bin/ruff check tests/test_architecture.py`, `git diff --check`, and `./lint-loop.sh` passed (`open=0 done=159 blocked=0` after this move); independent AST/import audit confirmed the canonical target `thesis_forge.core.parser_backend`, no legacy import statement or `parser_module` identifier, three retained `thesis_forge.core.parser` string rejection assertions, all 9 test functions and 17 assertions retained, unchanged renderer/CLI/UI/frontend forbidden-import test bodies, and no fallback, compatibility branch, or product code; candidate scope before this lifecycle update was exactly `tests/test_architecture.py`, all pre-existing `openspec/**` changes were preserved and unstaged, one local commit, no push.
 - 2026-08-23 - V2-529 Checker PASS Attempt 2; exact Verify passed with 47 display equations, 2 inline equations, 49 `m:oMath` nodes, `per_equation_all_ok=True`, `inline_math_converted=True`, and `openxml_validate exit=0`; related parser/OMML regression passed 22/22, target Ruff, `git diff --check`, and LOOP-LINT passed (`open=2 done=160 blocked=0`); independent scope and runtime audit confirmed the three named files, manifest-derived metadata/template selection, fail-fast structural assertions, no legacy parser/fallback/compatibility path, and preservation of all pre-existing `openspec/**` changes; one local commit, no push.
 - 2026-08-23 - V2-530 Checker PASS Attempt 2; exact Verify passed 4/4, the independent wider regression passed 197/197, target Ruff, `git diff --check`, and LOOP-LINT passed (`open=2 done=160 blocked=0` before this move); runtime and mutation audits confirmed zero legacy fixture reads, complete tmp-path V2 project inputs, restored citation/footnote/bibliography DOCX coverage, retained structural field/bookmark/footer/diagnostic assertions, and unchanged pre-existing `openspec/**` worktree state; one local commit, no push.
+- 2026-08-23 - V2-531 Checker PASS Attempt 1; exact Verify exited 0, `git diff --check` and LOOP-LINT passed (`open=3 done=161 blocked=0` before this move); independent AST/runtime and protected-path audits confirmed `compare.py` removal, no active legacy parser calls in `spikes/phase0/parser`, unchanged historical reports/results/fixtures, and preserved pre-existing `openspec/**` changes; one local commit, no push.
 
 ## Sync log
