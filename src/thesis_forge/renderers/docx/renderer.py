@@ -33,6 +33,7 @@ from thesis_forge.core.render_plan import (
 from thesis_forge.templates.model import ListSpec, ThesisTemplate
 
 from .bookmarks import wrap_paragraph_in_bookmark
+from .captions import add_caption
 from .cover import render_cover
 from .document import create_document
 from .equations import render_equation
@@ -119,8 +120,20 @@ def _add_text_run(paragraph, item: TextRun) -> None:
         properties.append(OxmlElement("w:noProof"))
 
 
-def _add_preformatted_paragraph(document: DocumentObject, text: str):
-    paragraph = document.add_paragraph(text)
+def _add_preformatted_paragraph(
+    document: DocumentObject,
+    text: str,
+    template: ThesisTemplate | None = None,
+):
+    paragraph = document.add_paragraph()
+    if template is not None:
+        apply_paragraph_style(
+            paragraph,
+            template.body,
+            fallback_font=template.body.font,
+            fallback_size=template.body.size,
+        )
+    _add_text_run(paragraph, TextRun(text=text, code=True))
     paragraph.alignment = WD_ALIGN_PARAGRAPH.LEFT
     paragraph.paragraph_format.line_spacing_rule = WD_LINE_SPACING.SINGLE
     properties = paragraph._p.get_or_add_pPr()
@@ -130,6 +143,37 @@ def _add_preformatted_paragraph(document: DocumentObject, text: str):
         properties.append(indentation)
     indentation.set(qn("w:firstLine"), "0")
     return paragraph
+
+
+def _render_captioned_preformatted(
+    document: DocumentObject,
+    *,
+    text: str,
+    label: str,
+    caption: str,
+    bookmark: str | None,
+    sequence,
+    caption_spec,
+    template: ThesisTemplate | None,
+) -> None:
+    def render_caption() -> None:
+        add_caption(
+            document,
+            label=label,
+            caption=caption,
+            bookmark=bookmark,
+            spec=caption_spec,
+            template=template,
+            fallback_alignment="center",
+            sequence=sequence,
+        )
+
+    if caption_spec is not None and caption_spec.position == "bottom":
+        _add_preformatted_paragraph(document, text, template)
+        render_caption()
+    else:
+        render_caption()
+        _add_preformatted_paragraph(document, text, template)
 
 
 def _exclude_from_outline(paragraph) -> None:
@@ -244,17 +288,31 @@ def _render_typed(
     elif isinstance(instruction, EquationInstruction):
         render_equation(document, instruction)
     elif isinstance(instruction, ListingInstruction):
-        anchor = None
-        if instruction.caption:
-            anchor = document.add_paragraph(instruction.caption)
-        code = _add_preformatted_paragraph(document, instruction.code)
-        wrap_paragraph_in_bookmark(anchor or code, instruction.bookmark)
+        listing_spec = template.listing if template is not None else None
+        caption_spec = listing_spec.caption if listing_spec is not None else None
+        _render_captioned_preformatted(
+            document,
+            text=instruction.code,
+            label=instruction.label,
+            caption=instruction.caption,
+            bookmark=instruction.bookmark,
+            sequence=instruction.sequence,
+            caption_spec=caption_spec,
+            template=template,
+        )
     elif isinstance(instruction, AlgorithmInstruction):
-        anchor = None
-        if instruction.caption:
-            anchor = document.add_paragraph(instruction.caption)
-        body = _add_preformatted_paragraph(document, instruction.body)
-        wrap_paragraph_in_bookmark(anchor or body, instruction.bookmark)
+        algorithm_spec = template.algorithm if template is not None else None
+        caption_spec = algorithm_spec.caption if algorithm_spec is not None else None
+        _render_captioned_preformatted(
+            document,
+            text=instruction.body,
+            label=instruction.label,
+            caption=instruction.caption,
+            bookmark=instruction.bookmark,
+            sequence=instruction.sequence,
+            caption_spec=caption_spec,
+            template=template,
+        )
     elif isinstance(instruction, FootnoteDefinitionInstruction):
         footnotes.add_definition(instruction)
     elif isinstance(instruction, BibliographyInstruction):
@@ -298,7 +356,10 @@ def _render_legacy(document: DocumentObject, node: RenderNode) -> None:
     elif node.kind == "paragraph":
         document.add_paragraph(node.payload.get("text", ""))
     else:
-        document.add_paragraph(f"[{node.kind}] {node.payload}")
+        raise DocxRenderError(
+            "instruction",
+            f"unsupported instruction {node.kind}",
+        )
 
 
 class DocxRenderer:

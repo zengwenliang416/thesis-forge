@@ -95,15 +95,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Open
 
-- [V2-507E4] Add executable listing and algorithm DOCX capability evidence
-  - Parent: ordered evidence child 4/4 of `V2-507E`; depends on `V2-507E1`, `V2-507E2` and `V2-507E3`; the original `V2-507E` Behavior and Acceptance remain unchanged.
-  - Files: `src/thesis_forge/renderers/docx/renderer.py`, `tests/renderers/docx/test_listing_algorithm.py`
-  - Behavior: render listing and algorithm captions/content through configured paragraph styles with real sequence fields and paired stable bookmarks, and prove the complete source/IR/compiler/Review/DOCX path.
-  - Verify: `.venv/bin/python -m pytest tests/renderers/docx/test_listing_algorithm.py`
-  - Acceptance: the non-empty evidence proves both capabilities are not flattened to generic prose, captions and literal bodies survive Review and DOCX, configured style tokens are applied, real SEQ/bookmark structures are paired, unsupported object policy is explicit, and visible output contains no technical ID markers; the shared manifest evidence paths are executable.
-  - Verification-surface change: `yes`; creates the capability evidence required by `spec/format-capabilities.yaml`.
-  - Attempts: 0
-
 - [V2-503E] Add executable capability evidence for semantic TOC and section resolution
   - Parent: evidence-closure child of catalogue item `V2-503`; depends on completed symbol/numbering and template section work.
   - Files: `tests/core/test_region_resolver.py`
@@ -146,6 +137,18 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
   - Verification-surface change: `no`
   - Attempts: 1
   - Attempt 1 (2026-08-23): Checker PASS; exact Verify passed 2/2, related Review-region regression passed 6/6, Preview regression passed 5/6 with the known clean-baseline YAML Front Matter rejection at `tests/test_preview_presentation.py::test_complete_example_preview_preserves_compiler_order_and_numbering`, compiler/RenderPlan regression passed 30/30, target Ruff, `git diff --check`, and `./lint-loop.sh` passed. Independent audit confirmed the existing Review projector preserves listing code verbatim, sanitizes algorithm/caption technical markers, keeps source navigation in `ReviewBlock.source`, rejects unknown instructions explicitly, and adds no compatibility/fallback path. Candidate scope was the single named test file plus this lifecycle update; all pre-existing `openspec/**` paths were preserved and unstaged; one local commit, no push.
+
+- [V2-507E4] Add executable listing and algorithm DOCX capability evidence
+  - Parent: ordered evidence child 4/4 of `V2-507E`; depends on `V2-507E1`, `V2-507E2` and `V2-507E3`; the original `V2-507E` Behavior and Acceptance remain unchanged.
+  - Files: `src/thesis_forge/renderers/docx/renderer.py`, `tests/renderers/docx/test_listing_algorithm.py`
+  - Behavior: render listing and algorithm captions/content through configured paragraph styles with real sequence fields and paired stable bookmarks, and prove the complete source/IR/compiler/Review/DOCX path.
+  - Verify: `.venv/bin/python -m pytest tests/renderers/docx/test_listing_algorithm.py`
+  - Acceptance: the non-empty evidence proves both capabilities are not flattened to generic prose, captions and literal bodies survive Review and DOCX, configured style tokens are applied, real SEQ/bookmark structures are paired, unsupported object policy is explicit, and visible output contains no technical ID markers; the shared manifest evidence paths are executable.
+  - Verification-surface change: `yes`; creates the capability evidence required by `spec/format-capabilities.yaml`.
+  - Attempts: 3
+  - Attempt 1 (2026-08-23): Checker FAIL; exact Verify passed 2/2, related parser/numbering/RenderPlan/Review/DOCX regression passed 107 tests plus figure/table/math caption regression passed 5 tests, target Ruff, `git diff --check`, and `./lint-loop.sh` passed. Independent mutation audit found weak evidence for real SEQ field structure, readable label placement inside the bookmark range, and complete literal listing/algorithm content; the candidate was retained for repair with no commit or push.
+  - Attempt 2 (2026-08-23): Checker FAIL; exact Verify passed 2/2, target Ruff and `git diff --check` passed, but independent probes found unknown `RenderNode` still emitted the forbidden `[kind] {payload}` debug fallback and Listing/Algorithm ignored `CaptionSpec.position="bottom"`; the candidate was retained for repair with no commit or push.
+  - Attempt 3 (2026-08-23): Checker PASS; exact Verify passed 4/4, related DOCX/compiler/Review regression passed 103/103, target Ruff, `git diff --check`, and `./lint-loop.sh` passed. Independent audit confirmed real SEQ `begin/separate/end` with dirty flag, readable labels inside paired stable bookmarks, complete parser/IR/compiler/Review/DOCX literal preservation including XML line breaks, configured caption styles and top/bottom positions, explicit rejection of unknown typed and `RenderNode` instructions, and no compatibility alias, debug fallback, duplicate source field, or scope creep. Candidate scope was exactly the two named product/test files plus this lifecycle update; all pre-existing `openspec/**` paths were preserved and unstaged; one local commit, no push.
 
 - [V2-511E] Add executable capability evidence for the required DOCX math corpus
   - Parent: evidence-closure child of catalogue item `V2-511`; depends on completed `V2-510A`; the first unmet contract reported by `scripts/verify_thesisforge_v2_goal.py`.
@@ -1604,6 +1607,7 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Cycle log
 
+- 2026-08-23 - V2-507E4 Checker PASS Attempt 3; exact Verify passed 4/4, related DOCX/compiler/Review regression passed 103/103, target Ruff, `git diff --check`, LOOP-LINT, and independent DOCX XML/mutation audit passed; Attempt 1 evidence-strength and Attempt 2 unknown-RenderNode fallback/CaptionSpec.position findings were repaired within the three-file boundary; V2-507E4 moved to Done, V2-503E remains next, all pre-existing `openspec/**` paths were preserved and unstaged, one local commit, no push.
 - 2026-08-20 - V2-101 Checker PASS; exact Verify `.venv/bin/python -m pytest tests/application/test_build_report_contract.py` passed 6 tests; scope limited to the two named implementation/test files, no push.
 - 2026-08-20 - V2-102 Checker FAIL; exact Verify passed 8 tests, but two existing build-stream tests failed on the obsolete `type: error` contract; selected files restored, no commit or push.
 - 2026-08-20 - V2-102 split into ordered children V2-102A and V2-102B after Checker evidence showed four repository files were required; no product code edited in the split cycle.
