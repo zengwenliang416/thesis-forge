@@ -13,7 +13,13 @@ from thesis_forge.core.render_plan import FootnoteDefinitionInstruction, Footnot
 
 from .errors import DocxRenderError
 from .fields import reference_field_runs
-from .inlines import InlineHandlers, citation_run_element, render_inline_runs
+from .inlines import (
+    InlineHandlers,
+    citation_run_element,
+    hyperlink_run_element,
+    math_run_element,
+    render_inline_runs,
+)
 
 
 def _text_run(text: str, *, bold: bool = False, code: bool = False):
@@ -50,6 +56,12 @@ def _reserved_footnote(footnote_id: int, kind: str):
     return footnote
 
 
+def _break_run():
+    run = OxmlElement("w:r")
+    run.append(OxmlElement("w:br"))
+    return run
+
+
 class FootnoteManager:
     def __init__(
         self,
@@ -81,8 +93,6 @@ class FootnoteManager:
         root = parse_xml(f"<w:footnotes {nsdecls('w')}/>")
         root.append(_reserved_footnote(-1, "separator"))
         root.append(_reserved_footnote(0, "continuationSeparator"))
-        for footnote_id in sorted(self.definitions):
-            root.append(self._definition_element(self.definitions[footnote_id]))
 
         part = XmlPart(
             PackURI("/word/footnotes.xml"),
@@ -91,8 +101,10 @@ class FootnoteManager:
             self.document.part.package,
         )
         self.document.part.relate_to(part, RT.FOOTNOTES)
+        for footnote_id in sorted(self.definitions):
+            root.append(self._definition_element(self.definitions[footnote_id], part))
 
-    def _definition_element(self, definition: FootnoteDefinitionInstruction):
+    def _definition_element(self, definition: FootnoteDefinitionInstruction, part):
         footnote = OxmlElement("w:footnote")
         footnote.set(qn("w:id"), str(definition.footnote_id))
         paragraph = OxmlElement("w:p")
@@ -116,6 +128,19 @@ class FootnoteManager:
                 footnote_reference=lambda item: self._reject_nested_reference(
                     item.label
                 ),
+                hyperlink=lambda item: paragraph.append(
+                    hyperlink_run_element(
+                        item,
+                        part.relate_to(
+                            item.destination,
+                            RT.HYPERLINK,
+                            is_external=True,
+                        ),
+                    )
+                ),
+                math=lambda item: paragraph.append(math_run_element(item)),
+                soft_break=lambda item: paragraph.append(_text_run(" ")),
+                hard_break=lambda item: paragraph.append(_break_run()),
             ),
             capability="footnote",
         )

@@ -95,15 +95,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Open
 
-- [V2-505A1D2] Consume canonical inline runs in DOCX footnote rendering
-  - Parent: ordered preparation child 6/7 of the re-sliced `V2-505A1`; depends on `V2-505A1D1`.
-  - Files: `src/thesis_forge/renderers/docx/footnotes.py`, `tests/test_docx_renderer.py`
-  - Behavior: footnote definitions and references use the same canonical inline consumer seam as body content.
-  - Verify: `.venv/bin/python -m pytest tests/test_docx_renderer.py -k test_docx_footnote_consumes_all_inline_run_variants`
-  - Acceptance: footnote inline content preserves hyperlink, math and break semantics, shares no duplicate dispatch logic, and rejects unknown runs explicitly.
-  - Verification-surface change: no
-  - Attempts: 0
-
 - [V2-505A2] Compile rich figure captions and complete the DOCX inline consumer seam
   - Parent: ordered preparation child after all seven preparation children of the re-sliced `V2-505A`; depends on `V2-505A1M`, `V2-505A1P3`, `V2-505A1R`, `V2-505A1D1` and `V2-505A1D2`; the original V2-505A Behavior and Acceptance remain unchanged.
   - Files: `src/thesis_forge/core/compiler.py`, `src/thesis_forge/renderers/docx/inlines.py`, `tests/core/test_figure_caption_runs.py`
@@ -125,6 +116,16 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
   - Attempts: 0
 
 ## Done
+
+- [V2-505A1D2] Consume canonical inline runs in DOCX footnote rendering
+  - Parent: ordered preparation child 6/7 of the re-sliced `V2-505A1`; depends on `V2-505A1D1`.
+  - Files: `src/thesis_forge/renderers/docx/footnotes.py`, `tests/test_docx_renderer.py`
+  - Behavior: footnote definitions and references use the same canonical inline consumer seam as body content.
+  - Verify: `.venv/bin/python -m pytest tests/test_docx_renderer.py -k test_docx_footnote_consumes_all_inline_run_variants`
+  - Acceptance: footnote inline content preserves hyperlink, math and break semantics, shares no duplicate dispatch logic, and rejects unknown runs explicitly.
+  - Verification-surface change: no
+  - Attempts: 1
+  - Attempt 1 (2026-08-23): Checker PASS; exact focused Verify passed 1/1, full `tests/test_docx_renderer.py` passed 90/90, target Ruff, `git diff --check`, and `./lint-loop.sh` passed; independent DOCX/XML audit confirmed the shared `render_inline_runs` seam, footnote-part hyperlink relationship, native inline OMML, space-only soft breaks, real `w:br` hard breaks, preserved reference/citation/footnote-reference behavior, and explicit nested/unknown-run failures; candidate scope was exactly the two named files before this lifecycle update, all unrelated dirty paths were preserved, `V2-505A2` was not started, one local commit, no push.
 
 - [V2-505A1D1] Consume canonical inline runs in DOCX body rendering
   - Parent: ordered preparation child 5/7 of the re-sliced `V2-505A1`; depends on `V2-505A1R`.
@@ -1669,5 +1670,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 - 2026-08-22 - V2-505A1R Checker PASS Attempt 1; exact focused Verify passed 1/1, full Review regression passed 6/6, target Ruff, `git diff --check`, and LOOP-LINT passed; Review code audit confirmed all eight canonical inline projections, marker-free visible text, preserved hyperlink/math semantics, distinct soft/hard breaks, unchanged text/reference/citation/footnote behavior, and explicit unknown-run rejection; V2-505A1R moved from Open to Done, no `V2-505A1D1` started, unrelated dirty paths preserved, no push.
 - 2026-08-22 - V2-505A1D1 Checker PASS; exact focused Verify 1/1, full DOCX renderer regression 88/88, target Ruff, `git diff --check`, and `./lint-loop.sh` passed; independent DOCX/XML audit confirmed the eight canonical inline runs, shared body/heading/list dispatch, native hyperlink/math and soft/hard break semantics, preserved reference/citation/footnote-reference behavior, and explicit unknown/unconfigured-run errors; V2-505A1D1 moved from Open to Done, candidate scope was exactly the three named files before this lifecycle update, unrelated dirty paths were preserved, V2-505A1D2 was not started, no push.
+- 2026-08-23 - V2-505A1D2 Checker PASS Attempt 1; exact focused Verify passed 1/1, full DOCX renderer regression 90/90, target Ruff, `git diff --check`, and LOOP-LINT passed; independent DOCX/XML audit confirmed the shared `render_inline_runs` seam, footnote-part hyperlink relationship, native inline OMML, space-only soft breaks, real `w:br` hard breaks, preserved reference/citation/footnote-reference behavior, and explicit nested/unknown-run failures; V2-505A1D2 moved from Open to Done, V2-505A2 was not started, unrelated dirty paths preserved, one local commit, no push.
 
 ## Sync log

@@ -3273,6 +3273,98 @@ def test_docx_renderer_consumes_all_inline_run_variants(tmp_path: Path):
     assert hyperlink_relationships[0].get("TargetMode") == "External"
 
 
+def test_docx_footnote_consumes_all_inline_run_variants(tmp_path: Path):
+    template = load_template("templates/base/bachelor.yaml")
+    output = tmp_path / "footnote-inline-runs.docx"
+    DocxRenderer().render(
+        RenderPlan(
+            nodes=[
+                ParagraphInstruction(
+                    text="",
+                    inlines=(FootnoteReferenceRun("note", 1),),
+                ),
+                FootnoteDefinitionInstruction(
+                    label="note",
+                    footnote_id=1,
+                    text="",
+                    inlines=(
+                        TextRun("脚注前"),
+                        ReferenceRun(
+                            target_id="fig:model",
+                            bookmark="tf_fig_model",
+                            display_text="图1-1",
+                        ),
+                        HyperlinkRun(
+                            "项目主页",
+                            "https://example.test/footnote",
+                        ),
+                        MathRun("x^2"),
+                        SoftBreakRun(),
+                        HardBreakRun(),
+                        CitationRun(
+                            keys=("smith2025",),
+                            ordinals=(1,),
+                            raw="[@smith2025]",
+                            text="[1]",
+                        ),
+                    ),
+                ),
+            ],
+            template=template,
+        ),
+        output,
+    )
+
+    document_xml = _xml_part(output, "word/document.xml")
+    footnotes_xml = _xml_part(output, "word/footnotes.xml")
+    footnote_relationships_xml = _xml_part(
+        output,
+        "word/_rels/footnotes.xml.rels",
+    )
+    footnote = footnotes_xml.xpath(
+        "./w:footnote[@w:id='1']",
+        namespaces=NS,
+    )[0]
+    assert document_xml.xpath(
+        ".//w:footnoteReference[@w:id='1']",
+        namespaces=NS,
+    )
+    assert footnote.xpath(".//w:hyperlink", namespaces=NS)
+    assert footnote.xpath(".//m:oMath", namespaces=NS)
+    assert len(footnote.xpath(".//w:br", namespaces=NS)) == 1
+    assert len(footnote.xpath(".//w:t[text()=' ']", namespaces=NS)) >= 2
+    assert footnote.xpath(
+        ".//w:instrText[text()='REF tf_fig_model \\h']",
+        namespaces=NS,
+    )
+    assert footnote.xpath(".//w:t[text()='[1]']", namespaces=NS)
+
+    hyperlink_relationships = footnote_relationships_xml.xpath(
+        "./pr:Relationship[contains(@Type, '/hyperlink')]",
+        namespaces=REL_NS,
+    )
+    assert len(hyperlink_relationships) == 1
+    assert hyperlink_relationships[0].get("Target") == "https://example.test/footnote"
+    assert hyperlink_relationships[0].get("TargetMode") == "External"
+
+
+def test_docx_footnote_rejects_unknown_inline_run(tmp_path: Path):
+    with pytest.raises(DocxRenderError, match="unsupported inline run object"):
+        DocxRenderer().render(
+            RenderPlan(
+                nodes=[
+                    FootnoteDefinitionInstruction(
+                        label="note",
+                        footnote_id=1,
+                        text="",
+                        inlines=(object(),),  # type: ignore[arg-type]
+                    )
+                ]
+            ),
+            tmp_path / "unknown-footnote-inline.docx",
+        )
+
+
 def test_docx_renderer_rejects_unknown_inline_run(tmp_path: Path):
     with pytest.raises(DocxRenderError, match="unsupported inline run object"):
         DocxRenderer().render(
