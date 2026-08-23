@@ -736,6 +736,10 @@ def _compile_block(
             language=block.language,
             code=block.code,
             bookmark=bookmark,
+            chapter=chapter,
+            number=number,
+            label=label,
+            sequence=sequence,
         )
     if isinstance(block, Algorithm):
         return AlgorithmInstruction(
@@ -743,6 +747,10 @@ def _compile_block(
             caption=inline_plain_text(block.caption_inlines),
             body=block.body,
             bookmark=bookmark,
+            chapter=chapter,
+            number=number,
+            label=label,
+            sequence=sequence,
         )
     if isinstance(block, FootnoteDefinition):
         text = inline_plain_text(block.inlines)

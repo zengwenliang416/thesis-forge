@@ -267,7 +267,6 @@ class SequenceInstruction:
             "prefix": self.prefix,
             "suffix": self.suffix,
             "result": self.result,
-            "field_code": self.field_code,
         }
 
 
@@ -429,6 +428,10 @@ class ListingInstruction(_Instruction):
     language: str | None
     code: str
     bookmark: str | None
+    chapter: int = 1
+    number: str | None = None
+    label: str = ""
+    sequence: SequenceInstruction | None = None
 
     @property
     def payload(self) -> dict[str, Any]:
@@ -437,7 +440,10 @@ class ListingInstruction(_Instruction):
             "caption": self.caption,
             "language": self.language,
             "code": self.code,
+            "number": self.number,
+            "label": self.label,
             "bookmark": self.bookmark,
+            "sequence": self.sequence.payload if self.sequence is not None else None,
         }
 
 
@@ -448,6 +454,10 @@ class AlgorithmInstruction(_Instruction):
     caption: str
     body: str
     bookmark: str | None
+    chapter: int = 1
+    number: str | None = None
+    label: str = ""
+    sequence: SequenceInstruction | None = None
 
     @property
     def payload(self) -> dict[str, Any]:
@@ -455,7 +465,10 @@ class AlgorithmInstruction(_Instruction):
             "id": self.source_id,
             "caption": self.caption,
             "body": self.body,
+            "number": self.number,
+            "label": self.label,
             "bookmark": self.bookmark,
+            "sequence": self.sequence.payload if self.sequence is not None else None,
         }
 
 

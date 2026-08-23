@@ -95,15 +95,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Open
 
-- [V2-507E2] Carry typed listing and algorithm numbering through the RenderPlan compiler
-  - Parent: ordered preparation child 2/4 of evidence-closure item `V2-507E`; depends on `V2-507E1`; the original `V2-507E` Behavior and Acceptance remain unchanged across E1 through E4.
-  - Files: `src/thesis_forge/core/render_plan.py`, `src/thesis_forge/core/compiler.py`, `tests/core/test_listing_algorithm_render_plan.py`
-  - Behavior: compile Listing and Algorithm nodes into typed instructions carrying their resolved caption/body data, stable bookmark and sequence information without flattening semantic source content.
-  - Verify: `.venv/bin/python -m pytest tests/core/test_listing_algorithm_render_plan.py`
-  - Acceptance: compiler output is driven by `SymbolTable` numbering inputs, `ListingInstruction` and `AlgorithmInstruction` expose one authoritative typed contract, literal code/body remains exact, and payloads contain no duplicate raw/resolved source or renderer-specific implementation detail.
-  - Verification-surface change: `no`
-  - Attempts: 0
-
 - [V2-507E3] Project typed listing and algorithm instructions into readable Review content
   - Parent: ordered preparation child 3/4 of evidence-closure item `V2-507E`; depends on `V2-507E2`; the original `V2-507E` Behavior and Acceptance remain unchanged across E1 through E4.
   - Files: `src/thesis_forge/presentation/review.py`, `tests/presentation/test_listing_algorithm_review.py`
@@ -142,6 +133,18 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
   - Verification-surface change: `no`
   - Attempts: 1
   - Attempt 1 (2026-08-23): Checker PASS; exact Verify passed 4/4; related symbol/template regression passed 83/83, compiler/DOCX regression passed 114/114, target Ruff, `git diff --check`, and `./lint-loop.sh` passed. Independent audit confirmed distinct `ListingSpec`/`AlgorithmSpec` template entries, authoritative `SymbolTable` chapter/continuous/none inputs, deterministic chapter reset and continuous increments, configured prefixes, stable bookmarks, invalid-mode diagnostics, unchanged figure/table/equation behavior, no renderer-side counter, no compatibility alias or second source, and no unrelated candidate files. The split-cycle `LOOP.md` changes and pre-existing `openspec/**` paths were preserved; one local commit, no push.
+
+- [V2-507E2] Carry typed listing and algorithm numbering through the RenderPlan compiler
+  - Parent: ordered preparation child 2/4 of evidence-closure item `V2-507E`; depends on `V2-507E1`; the original `V2-507E` Behavior and Acceptance remain unchanged across E1 through E4.
+  - Files: `src/thesis_forge/core/render_plan.py`, `src/thesis_forge/core/compiler.py`, `tests/core/test_listing_algorithm_render_plan.py`
+  - Behavior: compile Listing and Algorithm nodes into typed instructions carrying their resolved caption/body data, stable bookmark and sequence information without flattening semantic source content.
+  - Verify: `.venv/bin/python -m pytest tests/core/test_listing_algorithm_render_plan.py`
+  - Acceptance: compiler output is driven by `SymbolTable` numbering inputs, `ListingInstruction` and `AlgorithmInstruction` expose one authoritative typed contract, literal code/body remains exact, and payloads contain no duplicate raw/resolved source or renderer-specific implementation detail.
+  - Verification-surface change: `no`
+  - Attempts: 2
+  - Pre-check repair (2026-08-23): the exact Verify initially failed 2/2 because the new test used the legacy `parse_markdown_text` entry and therefore did not produce typed Listing/Algorithm nodes; the test was changed to the canonical `MarkdownItParserBackend` entry, and the exact Verify then passed 2/2.
+  - Attempt 1 (2026-08-23): Checker FAIL; exact Verify passed 2/2, related core/compiler/DOCX regression passed 129/129, target Ruff, `git diff --check`, and `./lint-loop.sh` passed. Independent audit found that listing and algorithm payloads reused `SequenceInstruction.payload` and exposed DOCX-specific `field_code`; the candidate remained uncommitted and was retained for repair.
+  - Attempt 2 (2026-08-23): Checker PASS; exact Verify passed 2/2, related core/compiler/DOCX regression passed 129/129, target Ruff, `git diff --check`, and `./lint-loop.sh` passed. Independent audit confirmed SymbolTable-only numbering/bookmark inputs, chapter/continuous/none behavior, exact literal code/body, renderer-neutral payloads without `field_code`/`raw`/`markdown`, preserved typed `SequenceInstruction.field_code` for DOCX renderers, no compatibility alias or second source, and no `docx`/`lxml` imports. Candidate scope remained the three named files plus this lifecycle update; all pre-existing `openspec/**` paths were preserved and unstaged; one local commit, no push.
 
 - [V2-511E] Add executable capability evidence for the required DOCX math corpus
   - Parent: evidence-closure child of catalogue item `V2-511`; depends on completed `V2-510A`; the first unmet contract reported by `scripts/verify_thesisforge_v2_goal.py`.
@@ -1842,5 +1845,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 - 2026-08-23 - V2-511E Checker PASS Attempt 2; exact Verify passed 3/3, target Ruff, `git diff --check`, LOOP-LINT, and independent AST/runtime/XML audit all passed; canonical parser -> Equation IR -> EquationInstruction -> validation/math preflight -> ReviewEquationContent -> DOCX was executable offline, fraction/sum/matrix produced real `m:f`/`m:nary`/`m:m`, SEQ and formula bookmark pairs were exact, visible Review/DOCX text was marker-free, unsupported/malformed diagnostics were structured, raw backslash corpus and no-hidden-skip checks passed, and the manifest evidence path was executable; V2-511E moved to Done with original Behavior/Acceptance and Attempt 1 retained, Open order preserved, candidate scope limited to `tests/renderers/docx/test_math_corpus_v2.py` plus `LOOP.md`, all pre-existing `openspec/**` paths preserved and unstaged, one local commit, no push.
 - 2026-08-23 - V2-507E split into ordered children V2-507E1 through V2-507E4 after current CodeGraph and source audits found listing/algorithm numbering policy, symbol resolution, typed RenderPlan/compiler data, Review projection and DOCX evidence span more than three repository files; no product code edited, the original Behavior/Acceptance remain immutable, V2-503E stays after the four children, and the preserved `openspec/**` worktree remains untouched.
 - 2026-08-23 - V2-507E1 Checker PASS Attempt 1; exact Verify passed 4/4, related symbol/template regression passed 83/83, compiler/DOCX regression passed 114/114, target Ruff, `git diff --check`, LOOP-LINT, and independent template/symbol runtime probes passed; V2-507E1 moved to Done, V2-507E2 remains next, the candidate scope was exactly the three named files plus this lifecycle update, all pre-existing `openspec/**` paths were preserved and unstaged, one local commit, no push.
+- 2026-08-23 - V2-507E2 Checker PASS Attempt 2; exact Verify passed 2/2, related core/compiler/DOCX regression passed 129/129, target Ruff, `git diff --check`, LOOP-LINT, and independent typed numbering/payload/renderer-neutral probes passed; Attempt 1's DOCX `field_code` payload leakage was removed while `SequenceInstruction.field_code` remained available to DOCX renderers; V2-507E2 moved to Done, V2-507E3 remains next, the candidate scope was exactly the three named files plus this lifecycle update, all pre-existing `openspec/**` paths were preserved and unstaged, one local commit, no push.
 
 ## Sync log
