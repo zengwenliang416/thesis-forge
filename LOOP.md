@@ -95,15 +95,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Open
 
-- [V2-507E3] Project typed listing and algorithm instructions into readable Review content
-  - Parent: ordered preparation child 3/4 of evidence-closure item `V2-507E`; depends on `V2-507E2`; the original `V2-507E` Behavior and Acceptance remain unchanged across E1 through E4.
-  - Files: `src/thesis_forge/presentation/review.py`, `tests/presentation/test_listing_algorithm_review.py`
-  - Behavior: map compiled listing and algorithm instructions to reader-facing Review content while keeping source navigation and technical identity outside visible prose.
-  - Verify: `.venv/bin/python -m pytest tests/presentation/test_listing_algorithm_review.py`
-  - Acceptance: captions remain readable, literal code/body is preserved, stable IDs/bookmark names and citation/reference syntax do not leak into normal visible text, and literal code marker text remains exempt only inside the code block.
-  - Verification-surface change: `no`
-  - Attempts: 0
-
 - [V2-507E4] Add executable listing and algorithm DOCX capability evidence
   - Parent: ordered evidence child 4/4 of `V2-507E`; depends on `V2-507E1`, `V2-507E2` and `V2-507E3`; the original `V2-507E` Behavior and Acceptance remain unchanged.
   - Files: `src/thesis_forge/renderers/docx/renderer.py`, `tests/renderers/docx/test_listing_algorithm.py`
@@ -145,6 +136,16 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
   - Pre-check repair (2026-08-23): the exact Verify initially failed 2/2 because the new test used the legacy `parse_markdown_text` entry and therefore did not produce typed Listing/Algorithm nodes; the test was changed to the canonical `MarkdownItParserBackend` entry, and the exact Verify then passed 2/2.
   - Attempt 1 (2026-08-23): Checker FAIL; exact Verify passed 2/2, related core/compiler/DOCX regression passed 129/129, target Ruff, `git diff --check`, and `./lint-loop.sh` passed. Independent audit found that listing and algorithm payloads reused `SequenceInstruction.payload` and exposed DOCX-specific `field_code`; the candidate remained uncommitted and was retained for repair.
   - Attempt 2 (2026-08-23): Checker PASS; exact Verify passed 2/2, related core/compiler/DOCX regression passed 129/129, target Ruff, `git diff --check`, and `./lint-loop.sh` passed. Independent audit confirmed SymbolTable-only numbering/bookmark inputs, chapter/continuous/none behavior, exact literal code/body, renderer-neutral payloads without `field_code`/`raw`/`markdown`, preserved typed `SequenceInstruction.field_code` for DOCX renderers, no compatibility alias or second source, and no `docx`/`lxml` imports. Candidate scope remained the three named files plus this lifecycle update; all pre-existing `openspec/**` paths were preserved and unstaged; one local commit, no push.
+
+- [V2-507E3] Project typed listing and algorithm instructions into readable Review content
+  - Parent: ordered preparation child 3/4 of evidence-closure item `V2-507E`; depends on `V2-507E2`; the original `V2-507E` Behavior and Acceptance remain unchanged across E1 through E4.
+  - Files: `src/thesis_forge/presentation/review.py`, `tests/presentation/test_listing_algorithm_review.py`
+  - Behavior: map compiled listing and algorithm instructions to reader-facing Review content while keeping source navigation and technical identity outside visible prose.
+  - Verify: `.venv/bin/python -m pytest tests/presentation/test_listing_algorithm_review.py`
+  - Acceptance: captions remain readable, literal code/body is preserved, stable IDs/bookmark names and citation/reference syntax do not leak into normal visible prose, and literal code marker text remains exempt only inside the code block.
+  - Verification-surface change: `no`
+  - Attempts: 1
+  - Attempt 1 (2026-08-23): Checker PASS; exact Verify passed 2/2, related Review-region regression passed 6/6, Preview regression passed 5/6 with the known clean-baseline YAML Front Matter rejection at `tests/test_preview_presentation.py::test_complete_example_preview_preserves_compiler_order_and_numbering`, compiler/RenderPlan regression passed 30/30, target Ruff, `git diff --check`, and `./lint-loop.sh` passed. Independent audit confirmed the existing Review projector preserves listing code verbatim, sanitizes algorithm/caption technical markers, keeps source navigation in `ReviewBlock.source`, rejects unknown instructions explicitly, and adds no compatibility/fallback path. Candidate scope was the single named test file plus this lifecycle update; all pre-existing `openspec/**` paths were preserved and unstaged; one local commit, no push.
 
 - [V2-511E] Add executable capability evidence for the required DOCX math corpus
   - Parent: evidence-closure child of catalogue item `V2-511`; depends on completed `V2-510A`; the first unmet contract reported by `scripts/verify_thesisforge_v2_goal.py`.
@@ -1846,5 +1847,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 - 2026-08-23 - V2-507E split into ordered children V2-507E1 through V2-507E4 after current CodeGraph and source audits found listing/algorithm numbering policy, symbol resolution, typed RenderPlan/compiler data, Review projection and DOCX evidence span more than three repository files; no product code edited, the original Behavior/Acceptance remain immutable, V2-503E stays after the four children, and the preserved `openspec/**` worktree remains untouched.
 - 2026-08-23 - V2-507E1 Checker PASS Attempt 1; exact Verify passed 4/4, related symbol/template regression passed 83/83, compiler/DOCX regression passed 114/114, target Ruff, `git diff --check`, LOOP-LINT, and independent template/symbol runtime probes passed; V2-507E1 moved to Done, V2-507E2 remains next, the candidate scope was exactly the three named files plus this lifecycle update, all pre-existing `openspec/**` paths were preserved and unstaged, one local commit, no push.
 - 2026-08-23 - V2-507E2 Checker PASS Attempt 2; exact Verify passed 2/2, related core/compiler/DOCX regression passed 129/129, target Ruff, `git diff --check`, LOOP-LINT, and independent typed numbering/payload/renderer-neutral probes passed; Attempt 1's DOCX `field_code` payload leakage was removed while `SequenceInstruction.field_code` remained available to DOCX renderers; V2-507E2 moved to Done, V2-507E3 remains next, the candidate scope was exactly the three named files plus this lifecycle update, all pre-existing `openspec/**` paths were preserved and unstaged, one local commit, no push.
+- 2026-08-23 - V2-507E3 Checker PASS Attempt 1; exact Verify passed 2/2, related Review regions passed 6/6, Preview passed 5/6 with only the known clean-baseline YAML Front Matter rejection, compiler/RenderPlan passed 30/30, target Ruff, `git diff --check`, LOOP-LINT, and independent Review marker/source-navigation probes passed; V2-507E3 moved to Done, V2-507E4 remains next, the candidate scope was exactly the named test file plus this lifecycle update, all pre-existing `openspec/**` paths were preserved and unstaged, one local commit, no push.
 
 ## Sync log
