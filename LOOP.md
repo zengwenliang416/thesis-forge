@@ -97,6 +97,16 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Done
 
+- [V2-508] Add executable capability evidence for the Word field builder contract
+  - Parent: evidence-closure child of catalogue item `V2-508`; the existing DOCX field helpers already emit the required field families and cached values.
+  - Files: `src/thesis_forge/renderers/docx/fields.py`, `tests/renderers/docx/test_fields_v2.py`
+  - Behavior: build typed TOC, SEQ, REF, PAGEREF, PAGE and NUMPAGES field structures with cached results.
+  - Verify: `.venv/bin/python -m pytest tests/renderers/docx/test_fields_v2.py`
+  - Acceptance: begin/separate/end structure is valid and Word-specific code stays in DOCX layer; the evidence covers typed TOC/SEQ/REF/PAGEREF/PAGE/NUMPAGES production, cached reader-visible results, update-on-open/dirty semantics, and field pairing.
+  - Verification-surface change: `yes`; creates the capability evidence required by `spec/format-capabilities.yaml`.
+  - Attempts: 1
+  - Attempt 1 (2026-08-23): Checker PASS; exact Verify passed 1/1, related `tests/test_docx_renderer.py` regression passed 90/90, architecture/RenderPlan regression passed 15/15, target Ruff, and `git diff --check` passed. Independent mutation audit passed 10/10 across field instructions, cached results, begin dirty, separate/end pairing, nested TOC PAGEREF, TOC end placement, update-on-open settings, and the core DOCX/OXML boundary. The persisted DOCX XML proved all six field families, reader-visible caches, dirty/updateFields semantics, hyperlinks, and paired structures; `core/render_plan.py` remained DOCX/OXML-free. Candidate scope was the named test file plus this lifecycle update; `fields.py`, `toc.py`, `captions.py`, and `core/render_plan.py` were audited unchanged, all pre-existing `openspec/**` paths were preserved and unstaged, one local commit, no push.
+
 - [V2-514] Add executable capability evidence for the semantic bibliography region
   - Parent: evidence-closure child of catalogue item `V2-514`; existing compiler, Review, and DOCX bibliography seams are already present.
   - Files: `tests/core/test_bibliography_region.py`
@@ -1619,6 +1629,7 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Cycle log
 
+- 2026-08-23 - V2-508 Checker PASS Attempt 1; exact Verify passed 1/1, related DOCX regression passed 90/90, architecture/RenderPlan regression passed 15/15, target Ruff, `git diff --check`, and independent 10/10 mutation audit passed; V2-508 moved to Done, the existing field production chain was audited unchanged, all pre-existing `openspec/**` paths were preserved and unstaged, one local commit, no push.
 - 2026-08-23 - V2-514 Checker PASS Attempt 2; exact Verify passed 1/1, related manifest/resource/compiler/Review/DOCX regression passed 140/140, target Ruff, `git diff --check`, and LOOP-LINT passed; independent 10/10 mutation audit passed for manifest resource/provider attribution, unique semantic title/list, Review marker hygiene, and concrete DOCX bibliography styles; V2-514 moved to Done, all pre-existing `openspec/**` paths were preserved and unstaged, no push.
 - 2026-08-23 - V2-503E Checker PASS Attempt 1; exact Verify passed 2/2, related canonical-parser/Review/DOCX regression passed 100/100, target Ruff, `git diff --check`, and LOOP-LINT passed; independent manifest-to-compiler/Review/DOCX runtime audit passed; V2-503E moved to Done, candidate scope was exactly `tests/core/test_region_resolver.py` plus this lifecycle update, all pre-existing `openspec/**` paths were preserved and unstaged, one local commit pending, no push.
 - 2026-08-23 - V2-507E4 Checker PASS Attempt 3; exact Verify passed 4/4, related DOCX/compiler/Review regression passed 103/103, target Ruff, `git diff --check`, LOOP-LINT, and independent DOCX XML/mutation audit passed; Attempt 1 evidence-strength and Attempt 2 unknown-RenderNode fallback/CaptionSpec.position findings were repaired within the three-file boundary; V2-507E4 moved to Done, V2-503E remains next, all pre-existing `openspec/**` paths were preserved and unstaged, one local commit, no push.
