@@ -24,12 +24,16 @@ from .model import (
     Figure,
     FootnoteDefinition,
     FootnoteReference,
+    HardBreak,
     Heading,
     Inline,
     InlineCode,
+    InlineMath,
+    Link,
     ListBlock,
     Listing,
     Paragraph,
+    SoftBreak,
     Strong,
     Table,
     TableRow,
@@ -41,6 +45,7 @@ from .render_plan import (
     AlgorithmInstruction,
     BibliographyEntryInstruction,
     BibliographyInstruction,
+    CaptionRuns,
     CitationRun,
     CoverInstruction,
     EquationInstruction,
@@ -48,11 +53,14 @@ from .render_plan import (
     FigureWidthInstruction,
     FootnoteDefinitionInstruction,
     FootnoteReferenceRun,
+    HardBreakRun,
     HeadingInstruction,
+    HyperlinkRun,
     InlineRun,
     ListingInstruction,
     ListInstruction,
     ListItemInstruction,
+    MathRun,
     PageBreakInstruction,
     ParagraphInstruction,
     ParagraphRole,
@@ -62,6 +70,7 @@ from .render_plan import (
     ResolvedReference,
     SectionBreakInstruction,
     SequenceInstruction,
+    SoftBreakRun,
     TableCellInstruction,
     TableInstruction,
     TableRowInstruction,
@@ -80,11 +89,32 @@ from .symbols import (
 FIGURE_WIDTH_RE = re.compile(
     r"^(?P<value>\d+(?:\.\d+)?)(?P<unit>%|mm|cm|pt|em)$"
 )
+RAW_REFERENCE_MARKER_RE = re.compile(r"\[@[^\]]+\]|\{#[^}]+\}")
+TECHNICAL_REFERENCE_ID_TOKEN_RE = re.compile(
+    r"\b(?:chap|sec|fig|tbl|eq|alg|lst|bib|ref|fn|footnote):[A-Za-z0-9_.-]+\b"
+)
 ZH_KEYWORDS_RE = re.compile(r"^\s*(?:\*\*)?关键词\s*[：:](?:\*\*)?")
 EN_KEYWORDS_RE = re.compile(
     r"^\s*(?:\*\*)?keywords\s*:(?:\*\*)?",
     re.IGNORECASE,
 )
+
+
+def _marker_free_text(value: str) -> str:
+    return " ".join(
+        TECHNICAL_REFERENCE_ID_TOKEN_RE.sub(
+            " ",
+            RAW_REFERENCE_MARKER_RE.sub(" ", value),
+        ).split()
+    )
+
+
+def _reference_display_text(display_label: str, fallback: str | None) -> str:
+    for candidate in (display_label, fallback):
+        visible = _marker_free_text(candidate or "")
+        if visible:
+            return visible
+    return "引用"
 
 SEMANTIC_HEADING_ROLES: dict[str, ParagraphRole] = {
     "chap:abstract-zh": "abstract.zh.title",
@@ -253,6 +283,8 @@ def _compile_inlines(
     footnote_ids: dict[str, int],
     bibliography_database: BibliographyDatabase | None,
     citation_formatter: CitationFormatter | None,
+    *,
+    retain_citation_raw: bool = True,
 ) -> tuple[InlineRun, ...]:
     runs: list[InlineRun] = []
     for inline in inlines:
@@ -268,11 +300,32 @@ def _compile_inlines(
                 footnote_ids,
                 bibliography_database,
                 citation_formatter,
+                retain_citation_raw=retain_citation_raw,
             ):
                 if isinstance(run, TextRun):
                     runs.append(replace(run, bold=True))
                 else:
                     runs.append(run)
+        elif isinstance(inline, Emphasis):
+            runs.extend(
+                _compile_inlines(
+                    list(inline.children),
+                    resolved,
+                    citation_numbers,
+                    footnote_ids,
+                    bibliography_database,
+                    citation_formatter,
+                    retain_citation_raw=retain_citation_raw,
+                )
+            )
+        elif isinstance(inline, Link):
+            runs.append(HyperlinkRun(text=inline.label, destination=inline.destination))
+        elif isinstance(inline, InlineMath):
+            runs.append(MathRun(latex=inline.latex))
+        elif isinstance(inline, SoftBreak):
+            runs.append(SoftBreakRun())
+        elif isinstance(inline, HardBreak):
+            runs.append(HardBreakRun())
         elif isinstance(inline, CrossReference):
             target = resolved.get(inline.target)
             if target is None or target.bookmark is None:
@@ -281,7 +334,10 @@ def _compile_inlines(
                 ReferenceRun(
                     target_id=inline.target,
                     bookmark=target.bookmark,
-                    display_text=target.display_label or inline.target,
+                    display_text=_reference_display_text(
+                        target.display_label,
+                        inline.fallback,
+                    ),
                 )
             )
         elif isinstance(inline, Citation):
@@ -312,8 +368,8 @@ def _compile_inlines(
                     keys=tuple(inline.keys),
                     ordinals=tuple(ordinals),
                     locator=inline.locator,
-                    raw=inline.raw,
-                    text=text,
+                    raw=inline.raw if retain_citation_raw else "",
+                    text=_marker_free_text(text),
                 )
             )
         elif isinstance(inline, FootnoteReference):
@@ -321,6 +377,8 @@ def _compile_inlines(
             if footnote_id is None:
                 raise UnresolvedFootnoteError(inline.label)
             runs.append(FootnoteReferenceRun(inline.label, footnote_id))
+        else:
+            raise TypeError(f"unknown Inline subclass: {type(inline).__name__}")
     return tuple(runs)
 
 
@@ -444,14 +502,20 @@ class _CompilationContext:
     semantic: _SemanticContext
     bibliography_emitted: bool = False
 
-    def inlines(self, values: list[Inline]) -> tuple[InlineRun, ...]:
+    def inlines(
+        self,
+        values: list[Inline] | tuple[Inline, ...],
+        *,
+        retain_citation_raw: bool = True,
+    ) -> tuple[InlineRun, ...]:
         return _compile_inlines(
-            values,
+            list(values),
             self.symbols.entries,
             self.citation_numbers,
             self.footnote_ids,
             self.bibliography_database,
             self.citation_formatter,
+            retain_citation_raw=retain_citation_raw,
         )
 
     def bibliography(self) -> BibliographyInstruction:
@@ -520,6 +584,8 @@ def _initial_citation_numbers(document: ThesisDocument) -> dict[str, int]:
         elif isinstance(block, ListBlock):
             for item in block.items:
                 yield from citations_from_inlines(item.inlines)
+        elif isinstance(block, Figure):
+            yield from citations_from_inlines(list(block.caption_inlines))
         elif (
             isinstance(block, FootnoteDefinition)
             and block.label not in referenced_labels
@@ -586,7 +652,7 @@ def _compile_block(
     bookmark = symbol.bookmark if symbol else None
     chapter = numbering_inputs.chapter if numbering_inputs else 1
     number = numbering_inputs.number if numbering_inputs else None
-    label = symbol.display_label if symbol else ""
+    label = _marker_free_text(symbol.display_label) if symbol else ""
     sequence = (
         _sequence_instruction(inputs=numbering_inputs, label=label)
         if numbering_inputs is not None and numbering_inputs.number is not None
@@ -617,7 +683,12 @@ def _compile_block(
             source_id=block.id,
             src=block.src,
             asset_path=_resolve_figure_asset(context.document.source_path, block.src),
-            caption=inline_plain_text(block.caption_inlines),
+            caption=CaptionRuns(
+                context.inlines(
+                    block.caption_inlines,
+                    retain_citation_raw=False,
+                )
+            ),
             width=block.width,
             resolved_width=_resolved_figure_width(block.width, context.template),
             chapter=chapter,
@@ -692,7 +763,7 @@ def _resolved_references(
         source_id: ResolvedReference(
             target_id=source_id,
             bookmark=value.bookmark,
-            display_text=value.display_label or source_id,
+            display_text=_reference_display_text(value.display_label, None),
         )
         for source_id, value in symbols.entries.items()
     }

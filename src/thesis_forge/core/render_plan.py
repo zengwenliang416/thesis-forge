@@ -276,7 +276,7 @@ class FigureInstruction(_Instruction):
     source_id: str | None
     src: str
     asset_path: Path
-    caption: str
+    caption: CaptionRuns
     width: str | None
     resolved_width: FigureWidthInstruction | None
     chapter: int
@@ -284,6 +284,10 @@ class FigureInstruction(_Instruction):
     label: str
     bookmark: str | None
     sequence: SequenceInstruction | None = None
+
+    def __post_init__(self) -> None:
+        if not isinstance(self.caption, CaptionRuns):
+            raise TypeError("FigureInstruction caption must be CaptionRuns")
 
     @property
     def payload(self) -> dict[str, Any]:
