@@ -97,6 +97,17 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Done
 
+- [V2-514] Add executable capability evidence for the semantic bibliography region
+  - Parent: evidence-closure child of catalogue item `V2-514`; existing compiler, Review, and DOCX bibliography seams are already present.
+  - Files: `tests/core/test_bibliography_region.py`
+  - Behavior: exercise one manifest-selected bibliography region from canonical source parsing through validation, typed compilation, Review projection, and DOCX rendering.
+  - Verify: `.venv/bin/python -m pytest tests/core/test_bibliography_region.py`
+  - Acceptance: the evidence proves the manifest bibliography resource and citation closure, exactly one semantic bibliography title and one ordered entry list, no orphan bibliography instruction without its title region, readable Review entries, and styled DOCX title/entries without raw citation markers.
+  - Verification-surface change: `yes`; creates the capability evidence required by `spec/format-capabilities.yaml`.
+  - Attempts: 2
+  - Attempt 1 (2026-08-23): Checker FAIL; exact Verify passed 1/1 and related compiler/Review/DOCX/resource regression passed 147/147, but independent mutation audit found four evidence gaps: the manifest bibliography path was not independently attributable, one entry did not prove ordering or omission behavior, the explicit formatter bypassed manifest citation-style selection, and DOCX assertions only checked that styles were non-empty rather than checking semantic style IDs and definitions. Candidate remained Open for repair; no production code changed, no commit or push.
+  - Attempt 2 (2026-08-23): Checker PASS; exact Verify passed 1/1, related manifest/resource/compiler/Review/DOCX regression passed 140/140, target Ruff, `git diff --check`, and `./lint-loop.sh` passed. Independent mutation audit passed 10/10: unique semantic title and bibliography instruction, non-orphan ordering, manifest path/database source attribution, manifest citation-style/provider attribution, two-entry ordering, marker-free Review, concrete `TFBibliographyTitle`/`TFBibliographyEntry` DOCX styles and definitions. Candidate scope remained exactly the named test file plus this lifecycle update; all pre-existing `openspec/**` paths were preserved and unstaged; no production code changed, no push.
+
 - [V2-503E] Add executable capability evidence for semantic TOC and section resolution
   - Parent: evidence-closure child of catalogue item `V2-503`; depends on completed symbol/numbering and template section work.
   - Files: `tests/core/test_region_resolver.py`
@@ -1608,6 +1619,7 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Cycle log
 
+- 2026-08-23 - V2-514 Checker PASS Attempt 2; exact Verify passed 1/1, related manifest/resource/compiler/Review/DOCX regression passed 140/140, target Ruff, `git diff --check`, and LOOP-LINT passed; independent 10/10 mutation audit passed for manifest resource/provider attribution, unique semantic title/list, Review marker hygiene, and concrete DOCX bibliography styles; V2-514 moved to Done, all pre-existing `openspec/**` paths were preserved and unstaged, no push.
 - 2026-08-23 - V2-503E Checker PASS Attempt 1; exact Verify passed 2/2, related canonical-parser/Review/DOCX regression passed 100/100, target Ruff, `git diff --check`, and LOOP-LINT passed; independent manifest-to-compiler/Review/DOCX runtime audit passed; V2-503E moved to Done, candidate scope was exactly `tests/core/test_region_resolver.py` plus this lifecycle update, all pre-existing `openspec/**` paths were preserved and unstaged, one local commit pending, no push.
 - 2026-08-23 - V2-507E4 Checker PASS Attempt 3; exact Verify passed 4/4, related DOCX/compiler/Review regression passed 103/103, target Ruff, `git diff --check`, LOOP-LINT, and independent DOCX XML/mutation audit passed; Attempt 1 evidence-strength and Attempt 2 unknown-RenderNode fallback/CaptionSpec.position findings were repaired within the three-file boundary; V2-507E4 moved to Done, V2-503E remains next, all pre-existing `openspec/**` paths were preserved and unstaged, one local commit, no push.
 - 2026-08-20 - V2-101 Checker PASS; exact Verify `.venv/bin/python -m pytest tests/application/test_build_report_contract.py` passed 6 tests; scope limited to the two named implementation/test files, no push.
