@@ -95,15 +95,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Open
 
-- [V2-538] Expose Review as the third preview mode
-  - Parent: V2-537; completes the frontend mode contract after the existing Structure and Final Layout modes.
-  - Files: `frontend/src/state/workspace.ts`, `frontend/src/components/PreviewPanels.tsx`, `LOOP.md`
-  - Behavior: the typed preview mode includes `review`, the mode control exposes it, and selecting it renders ReviewPanel while preserving Structure and Final Layout behavior.
-  - Verify: `pnpm --dir frontend test -- PreviewPanels.test.tsx`
-  - Acceptance: all three modes are selectable through the existing state/event path; Review selection does not expose technical markers; Structure and Final Layout regressions remain green.
-  - Verification-surface change: `no`
-  - Attempts: 0
-
 - [V2-539] Add offline CLI Review export
   - Parent: the normative Review export contract and the existing typed `ReviewDocument` projector.
   - Files: `src/thesis_forge/cli.py`, `tests/cli/test_project_commands.py`, `LOOP.md`
@@ -114,6 +105,16 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
   - Attempts: 0
 
 ## Done
+
+- [V2-538] Expose Review as the third preview mode
+  - Parent: V2-537; completes the frontend mode contract after the existing Structure and Final Layout modes.
+  - Files: `frontend/src/state/workspace.ts`, `frontend/src/components/PreviewPanels.tsx`, `LOOP.md`
+  - Behavior: the typed preview mode includes `review`, the mode control exposes it, and selecting it renders ReviewPanel while preserving Structure and Final Layout behavior.
+  - Verify: `pnpm --dir frontend test -- PreviewPanels.test.tsx`
+  - Acceptance: all three modes are selectable through the existing state/event path; Review selection does not expose technical markers; Structure and Final Layout regressions remain green.
+  - Verification-surface change: `no`
+  - Attempts: 1
+  - Attempt 1 (2026-08-23): Checker PASS; exact Verify passed with Vitest 19 files and 225 tests; independent stdin jsdom/DOM probe passed three tabs, reducer event sequence `structure,final-layout,review`, original Structure `.paper-stage` content, Final Layout PDF iframe/status, existing `.review-panel`, and hidden `{#...}`/`@secret-key` markers; `pnpm --dir frontend lint`, `pnpm --dir frontend typecheck`, and `git diff --check` passed; candidate scope before lifecycle update was exactly `frontend/src/state/workspace.ts` and `frontend/src/components/PreviewPanels.tsx`, with no fallback/compatibility/silent-degradation path; all pre-existing `openspec/**`, `tests/test_lo_finalizer.py`, `openspec/.specnav/overrides/`, and other untracked files were preserved, no push.
 
 - [V2-537] Implement the reader-facing ReviewPanel core
   - Parent: the typed preview transport and V2-536 Build Output panel; precedes exposing Review as the third preview mode.
@@ -2220,5 +2221,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 - 2026-08-23 - V2-535B Checker PASS Attempt 1; exact Verify passed 24/24, target Ruff, `git diff --check`, and `./lint-loop.sh` passed; independent AST/runtime audit confirmed the legacy core type and conversion method are absent, typed instruction payloads and fields remain, `RenderPlan.nodes` is typed-only, core exports are clean, and Review/inline/table unknown-instruction rejection remains explicit; V2-535B moved from Open to Done, candidate scope before the lifecycle update was exactly the two named core files, V2-536 remained Open, all pre-existing `openspec/**`, `tests/test_lo_finalizer.py`, `openspec/.specnav/overrides/`, and `template-v2-build-pipeline-p1/development/` paths were preserved, no push.
 - 2026-08-23 - V2-536 Checker PASS Attempt 1; exact Verify passed (18 files, 221 tests), the candidate file independently passed 3/3, frontend lint, typecheck, and `git diff --check` passed, and the typed BuildReport/stage/diagnostic/log projection and scope audit passed; V2-536 moved from Open to Done, only the two named candidate files plus `LOOP.md` were authorized, all pre-existing `openspec/**`, `tests/test_lo_finalizer.py`, `openspec/.specnav/overrides/`, and `template-v2-build-pipeline-p1/development/` paths were preserved, no push.
 - 2026-08-23 - V2-537 Checker PASS Attempt 1; exact Verify passed (19 files, 225 tests), the direct candidate command passed 1/1 file and 4/4 tests, frontend lint, typecheck, and `git diff --check` passed; independent SSR/DOM probes covered all required content types and statuses, source click/Enter navigation, stable IDs, technical prefixes, cite-key/secret-key, absolute paths, aria-label/title/alt/href/src sanitization, unsafe URL variants, ordinary HTTP(S) links/images, citation/bibliography key hiding, multiline math without `$`/LaTeX backslashes, and literal listing preservation; V2-537 moved from Open to Done, candidate scope was exactly the two named ReviewPanel files plus this lifecycle update, all pre-existing changes were preserved, one local commit, no push.
+- 2026-08-23 - V2-538 Checker PASS Attempt 1; exact Verify `pnpm --dir frontend test -- PreviewPanels.test.tsx` passed with Vitest 19 files and 225 tests; independent stdin jsdom/DOM probe passed all three selectable tabs, reducer event sequence `structure,final-layout,review`, original Structure `.paper-stage` content, Final Layout PDF iframe/status, existing ReviewPanel rendering, and Review technical-marker hiding; frontend lint, typecheck, and `git diff --check` passed; candidate scope before lifecycle update was exactly `frontend/src/state/workspace.ts` and `frontend/src/components/PreviewPanels.tsx`, no fallback/compatibility/silent-degradation path was introduced, all pre-existing `openspec/**`, `tests/test_lo_finalizer.py`, `openspec/.specnav/overrides/`, and other untracked files were preserved, one local commit, no push.
 
 ## Sync log

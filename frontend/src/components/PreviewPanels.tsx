@@ -23,6 +23,7 @@ import type {
   SerializedPreviewRun,
 } from "../transport/dto";
 import { PanelHeader } from "./PanelHeader";
+import { ReviewPanel } from "./ReviewPanel";
 import { usePdfObjectUrl } from "./usePdfObjectUrl";
 
 interface PreviewPanelProps {
@@ -412,7 +413,12 @@ export function PreviewModeControl({
   onChanged(mode: PreviewMode): void;
 }) {
   return (
-    <div className="preview-mode-control" role="tablist" aria-label="预览模式">
+    <div
+      className="preview-mode-control"
+      role="tablist"
+      aria-label="预览模式"
+      style={{ gridTemplateColumns: "repeat(3, auto)" }}
+    >
       <button
         type="button"
         role="tab"
@@ -428,6 +434,14 @@ export function PreviewModeControl({
         onClick={() => onChanged("final-layout")}
       >
         实时版式
+      </button>
+      <button
+        type="button"
+        role="tab"
+        aria-selected={mode === "review"}
+        onClick={() => onChanged("review")}
+      >
+        审阅
       </button>
     </div>
   );
@@ -564,11 +578,18 @@ export function DualPreviewPanel({
   onSelectWpsPdf(): void;
 }) {
   const finalLayout = state.previewMode === "final-layout";
+  const reviewMode = state.previewMode === "review";
   return (
     <section
       className="panel preview-panel dual-preview-panel"
       role="region"
-      aria-label={finalLayout ? "论文最终版式预览" : "论文结构预览"}
+      aria-label={
+        finalLayout
+          ? "论文最终版式预览"
+          : reviewMode
+            ? "论文内容审阅"
+            : "论文结构预览"
+      }
       data-mobile-active={state.mobilePanel === "preview"}
     >
       <div className="preview-panel-toolbar">
@@ -585,6 +606,8 @@ export function DualPreviewPanel({
           onBuild={onBuild}
           onSelectWpsPdf={onSelectWpsPdf}
         />
+      ) : reviewMode ? (
+        <ReviewPanel state={state} onActivated={onActivated} />
       ) : (
         <PaperPreviewBody state={state} onActivated={onActivated} />
       )}

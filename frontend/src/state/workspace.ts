@@ -45,7 +45,7 @@ export interface WorkspaceProject {
   name: string;
 }
 
-export type PreviewMode = "structure" | "final-layout";
+export type PreviewMode = "structure" | "final-layout" | "review";
 
 export type FinalPreviewStatus =
   | "empty"
