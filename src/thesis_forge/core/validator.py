@@ -95,6 +95,8 @@ class ValidationContext:
             )
         except (ProjectLoadError, ProjectPathError) as error:
             project_error = error
+        if project is not None:
+            document.metadata = _manifest_metadata(project)
         render = document.metadata.get("render")
         template_id = render.get("template_id") if isinstance(render, dict) else None
         if not isinstance(template_id, str):
@@ -184,6 +186,46 @@ def _discover_project(source_path: Path):
         if manifest_path.is_file():
             return load_project(manifest_path)
     return None
+
+
+def _manifest_metadata(project) -> dict[str, dict[str, str]]:
+    metadata = project.manifest.metadata
+    normalized: dict[str, dict[str, str]] = {}
+
+    def add(group: str, field: str, value: str | None) -> None:
+        if value:
+            normalized.setdefault(group, {})[field] = value
+
+    title = metadata.title
+    if title is not None:
+        add("thesis", "title", title.zh or title.en)
+        add("thesis", "title_en", title.en)
+
+    institution = metadata.institution
+    if institution is not None:
+        add("university", "name", institution.university)
+        add("university", "college", institution.college)
+
+    degree = metadata.degree
+    if degree is not None:
+        add("thesis", "degree", degree.name)
+        add("thesis", "major", degree.major)
+
+    author = metadata.author
+    if author is not None:
+        add("author", "name", author.name)
+        add("author", "student_id", author.student_id)
+
+    advisor = metadata.advisor
+    if advisor is not None:
+        add("advisor", "name", advisor.name)
+        add("advisor", "title", advisor.title)
+
+    dates = metadata.dates
+    if dates is not None:
+        add("dates", "completed", dates.completed)
+
+    return normalized
 
 
 def _metadata_value(document: ThesisDocument, dotted_path: str) -> object | None:

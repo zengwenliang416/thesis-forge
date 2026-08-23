@@ -5,6 +5,7 @@ from pathlib import Path
 
 import pytest
 
+from thesis_forge.core.compiler import compile_document
 from thesis_forge.core.model import (
     BibliographyConfig,
     Citation,
@@ -13,6 +14,8 @@ from thesis_forge.core.model import (
     Text,
     ThesisDocument,
 )
+from thesis_forge.core.parser_backend import create_parser_backend
+from thesis_forge.core.render_plan import CoverInstruction
 from thesis_forge.core.validator import ValidationContext, validate_document
 
 REFERENCE = (
@@ -24,6 +27,7 @@ def write_project(
     tmp_path: Path,
     *,
     bibliography: str | None = None,
+    metadata: bool = False,
 ) -> Path:
     root = tmp_path / "project"
     (root / "assets").mkdir(parents=True)
@@ -33,14 +37,39 @@ def write_project(
         bibliography or REFERENCE.read_text(encoding="utf-8"),
         encoding="utf-8",
     )
-    (root / "thesisforge.yaml").write_text(
+    metadata_block = (
         """
+metadata:
+  title:
+    zh: 测试论文
+    en: Test Thesis
+  author:
+    name: 张三
+    student_id: "20260001"
+  institution:
+    university: 示例大学
+    college: 计算机学院
+  degree:
+    name: 工学硕士
+    major: 计算机科学与技术
+  advisor:
+    name: 李教授
+    title: 教授
+  dates:
+    completed: "2026-05"
+"""
+        if metadata
+        else ""
+    )
+    (root / "thesisforge.yaml").write_text(
+        f"""
 schema: thesisforge.project.v2
 project:
   id: validation-fixture
   language: zh-CN
 document:
   source: thesis.md
+{metadata_block}
 resources:
   root: .
   assets: assets
@@ -84,6 +113,63 @@ def test_project_manifest_controls_template_and_resource_roots(
     assert "smith2025" in context.bibliography_database.records
     assert not any(issue.code == "missing-bibliography" for issue in issues)
     assert not any(issue.code == "missing-image" for issue in issues)
+    assert {
+        issue.target
+        for issue in issues
+        if issue.code == "required-metadata"
+    } == {"thesis.title", "author.name"}
+
+
+def test_manifest_metadata_drives_validation_and_cover_compilation(
+    tmp_path: Path,
+) -> None:
+    project_root = write_project(tmp_path, metadata=True)
+    document = create_parser_backend().parse_file(project_root / "thesis.md")
+    document.metadata = {
+        "thesis": {"title": "旧标题"},
+        "author": {"name": "旧作者"},
+    }
+
+    context = ValidationContext.from_document(document)
+    issues = validate_document(document, context)
+
+    assert not any(issue.code == "required-metadata" for issue in issues)
+    assert document.metadata == {
+        "thesis": {
+            "title": "测试论文",
+            "title_en": "Test Thesis",
+            "degree": "工学硕士",
+            "major": "计算机科学与技术",
+        },
+        "university": {"name": "示例大学", "college": "计算机学院"},
+        "author": {"name": "张三", "student_id": "20260001"},
+        "advisor": {"name": "李教授", "title": "教授"},
+        "dates": {"completed": "2026-05"},
+    }
+
+    plan = compile_document(
+        document,
+        template=context.template,
+        template_path=context.template_path,
+        bibliography_database=context.bibliography_database,
+    )
+    cover = next(node for node in plan.nodes if isinstance(node, CoverInstruction))
+    expected_cover = {
+        "university.name": "示例大学",
+        "university.college": "计算机学院",
+        "thesis.title": "测试论文",
+        "thesis.title_en": "Test Thesis",
+        "thesis.major": "计算机科学与技术",
+        "thesis.degree": "工学硕士",
+        "author.name": "张三",
+        "author.student_id": "20260001",
+        "advisor.name": "李教授",
+        "advisor.title": "教授",
+        "dates.completed": "2026-05",
+    }
+    assert {
+        field: cover.value_for(field) for field in expected_cover
+    } == expected_cover
 
 
 def test_manifest_bibliography_overrides_document_front_matter_path(
