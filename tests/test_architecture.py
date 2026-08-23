@@ -14,7 +14,7 @@ import thesis_forge.cli as cli_module
 import thesis_forge.core.compiler as compiler_module
 import thesis_forge.core.math as math_module
 import thesis_forge.core.model as model_module
-import thesis_forge.core.parser as parser_module
+import thesis_forge.core.parser_backend as parser_backend_module
 import thesis_forge.core.render_plan as render_plan_module
 import thesis_forge.presentation as presentation_module
 import thesis_forge.renderers.docx.renderer as docx_renderer_module
@@ -56,8 +56,8 @@ def _typescript_import_sources(module_path: Path) -> set[str]:
     }
 
 
-def test_domain_and_parser_do_not_import_forbidden_layers():
-    for module in (model_module, parser_module):
+def test_domain_and_parser_backend_do_not_import_forbidden_layers():
+    for module in (model_module, parser_backend_module):
         imports = _import_names(Path(module.__file__))
         forbidden = {
             name

@@ -97,6 +97,16 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Done
 
+- [V2-528] Migrate architecture tests off the legacy parser module
+  - Parent: ordered child of the single-parser legacy-file removal gap; removes the remaining architecture-test import before `src/thesis_forge/core/parser.py` can be deleted.
+  - Files: `tests/test_architecture.py`, `LOOP.md`
+  - Behavior: architecture tests inspect the canonical parser backend module instead of importing the deleted hand-written parser, while preserving the domain/parser layer-boundary and legacy-import rejection assertions.
+  - Verify: `.venv/bin/python -m pytest tests/test_architecture.py`
+  - Acceptance: no `import thesis_forge.core.parser` or `parser_module` reference remains; canonical parser backend layer-boundary assertions remain active; renderer, CLI, UI and frontend forbidden-import checks remain unchanged; no fallback or compatibility branch is introduced.
+  - Verification-surface change: `no`
+  - Attempts: 1
+  - Attempt 1 (2026-08-23): Checker PASS; exact Verify `.venv/bin/python -m pytest tests/test_architecture.py` passed 9/9; related regression `.venv/bin/python -m pytest tests/core/test_single_parser_backend.py tests/core/test_legacy_source_rejection.py tests/test_parser_backend.py` passed 15/15; `.venv/bin/ruff check tests/test_architecture.py`, `git diff --check`, and `./lint-loop.sh` passed (`open=1 done=158 blocked=0` before this move). Independent AST/import audit confirmed the canonical target `thesis_forge.core.parser_backend`, no legacy import statement or `parser_module` identifier, three retained `thesis_forge.core.parser` string rejection assertions, all 9 test functions and 17 assertions retained, unchanged renderer/CLI/UI/frontend forbidden-import test bodies, and no fallback, compatibility branch, or product code; candidate scope before this lifecycle update was exactly `tests/test_architecture.py`, all pre-existing `openspec/**` changes were preserved and unstaged, no push.
+
 - [V2-527C] Migrate validator tests from the deleted hand-written parser
   - Parent: ordered child of the single-parser legacy-file removal gap; preserves validator regression coverage while removing the remaining direct parser import.
   - Files: `tests/test_validator.py`, `LOOP.md`
@@ -2037,5 +2047,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 - 2026-08-23 - V2-527B Checker PASS Attempt 1; exact Verify passed 21/21, target Ruff, `git diff --check`, `./lint-loop.sh`, and canonical parser regression passed 97/97; independent AST/runtime audit confirmed the obsolete V1 parser tests are absent, no production/tooling reference or test-only compatibility shim exists, canonical V2 parser construction/blocks/inlines and structured Front Matter/legacy rejection evidence remain executable, V2-527B moved from Open to Done, V2-527C remained Open, all pre-existing `openspec/**` changes were preserved, one local commit, no push.
 - 2026-08-23 - V2-527C Checker PASS Attempt 1; exact Verify passed 17/17, related regression passed 19/19, target Ruff via the project `.venv/bin/ruff`, `git diff --check`, and `./lint-loop.sh` passed; independent AST/assertion/runtime audit confirmed canonical parser and typed-domain fixture coverage, all 17 tests and 53 assertions retained, no legacy parser import/call, YAML Front Matter, `:::`, old reference source, fallback, compatibility branch or dual data source, and only `tests/test_validator.py` was the candidate diff while all pre-existing `openspec/**` changes were preserved; V2-527C moved from Open to Done, no push.
+- 2026-08-23 - V2-528 Checker PASS Attempt 1; exact Verify `.venv/bin/python -m pytest tests/test_architecture.py` passed 9/9; related regression `.venv/bin/python -m pytest tests/core/test_single_parser_backend.py tests/core/test_legacy_source_rejection.py tests/test_parser_backend.py` passed 15/15; `.venv/bin/ruff check tests/test_architecture.py`, `git diff --check`, and `./lint-loop.sh` passed (`open=0 done=159 blocked=0` after this move); independent AST/import audit confirmed the canonical target `thesis_forge.core.parser_backend`, no legacy import statement or `parser_module` identifier, three retained `thesis_forge.core.parser` string rejection assertions, all 9 test functions and 17 assertions retained, unchanged renderer/CLI/UI/frontend forbidden-import test bodies, and no fallback, compatibility branch, or product code; candidate scope before this lifecycle update was exactly `tests/test_architecture.py`, all pre-existing `openspec/**` changes were preserved and unstaged, one local commit, no push.
 
 ## Sync log
