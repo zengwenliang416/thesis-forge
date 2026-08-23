@@ -6,6 +6,7 @@ import pytest
 from thesis_forge.core.render_plan import (
     BibliographyEntryInstruction,
     BibliographyInstruction,
+    CaptionRuns,
     CoverInstruction,
     FigureInstruction,
     FigureWidthInstruction,
@@ -99,7 +100,7 @@ def test_figure_and_table_instructions_keep_renderer_neutral_compatibility_paylo
         source_id="fig:model",
         src="./images/model.png",
         asset_path="/tmp/thesis/images/model.png",
-        caption="模型",
+        caption=CaptionRuns((TextRun("模型"),)),
         width="80%",
         resolved_width=FigureWidthInstruction(
             value=Decimal(80),

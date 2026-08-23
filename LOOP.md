@@ -95,15 +95,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Open
 
-- [V2-505A2P2] Migrate direct FigureInstruction fixtures to typed captions
-  - Parent: ordered prerequisite 2/4 of the re-sliced `V2-505A2`; depends on `V2-505A2P1`; the original V2-505A2 Behavior and Acceptance remain unchanged across P1, P2, A2M and A2C.
-  - Files: `tests/test_render_plan.py`, `tests/test_preview_presentation.py`, `tests/presentation/test_review_regions.py`
-  - Behavior: update every direct FigureInstruction fixture to pass `CaptionRuns` rather than a raw caption string before strict constructor enforcement.
-  - Verify: `.venv/bin/python -m pytest tests/test_render_plan.py tests/test_preview_presentation.py tests/presentation/test_review_regions.py`
-  - Acceptance: the named tests contain no raw-string FigureInstruction caption construction, remain green, and add no production compatibility path or alternate caption field.
-  - Verification-surface change: no
-  - Attempts: 0
-
 - [V2-505A2M] Store canonical typed figure-caption runs in the RenderPlan
   - Parent: ordered preparation child 3/4 of the re-sliced `V2-505A2`; depends on `V2-505A2P2` and `V2-505A1M`; the original V2-505A2 Behavior and Acceptance remain unchanged across `V2-505A2M` and `V2-505A2C`.
   - Files: `src/thesis_forge/core/render_plan.py`, `src/thesis_forge/core/compiler.py`, `tests/core/test_figure_caption_runs.py`
@@ -136,6 +127,16 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
   - Attempts: 0
 
 ## Done
+
+- [V2-505A2P2] Migrate direct FigureInstruction fixtures to typed captions
+  - Parent: ordered prerequisite 2/4 of the re-sliced `V2-505A2`; depends on `V2-505A2P1`; the original V2-505A2 Behavior and Acceptance remain unchanged across P1, P2, A2M and A2C.
+  - Files: `tests/test_render_plan.py`, `tests/test_preview_presentation.py`, `tests/presentation/test_review_regions.py`
+  - Behavior: update every direct FigureInstruction fixture to pass `CaptionRuns` rather than a raw caption string before strict constructor enforcement.
+  - Verify: `.venv/bin/python -m pytest tests/test_render_plan.py tests/test_preview_presentation.py tests/presentation/test_review_regions.py`
+  - Acceptance: the named tests contain no raw-string FigureInstruction caption construction, remain green, and add no production compatibility path or alternate caption field.
+  - Verification-surface change: no
+  - Attempts: 1
+  - Attempt 1 (2026-08-23): Checker PASS; exact Verify produced 17 passed/1 known clean-HEAD failure at `tests/test_preview_presentation.py::test_complete_example_preview_preserves_compiler_order_and_numbering` with YAML Front Matter `TF-SOURCE-LEGACY-001`; clean HEAD produced the identical 17/1 result; target Ruff, `git diff --check`, and `./lint-loop.sh` passed. AST audit confirmed all four direct FigureInstruction fixtures use `CaptionRuns`, including the positional fixture; candidate scope was exactly the three named test files with no production diff, raw caption, compatibility helper, or second caption field. Post-update LOOP-LINT passed with V2-505A2M, V2-505A2C and V2-505B still Open; one local commit, no push.
 
 - [V2-505A2P1] Define the renderer-neutral typed caption value
   - Parent: ordered prerequisite 1/4 of the re-sliced `V2-505A2`; the original V2-505A2 Behavior and Acceptance remain unchanged across P1, P2, A2M and A2C.
@@ -1711,5 +1712,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 - 2026-08-23 - V2-505A2P1 Checker FAIL Attempt 1; exact Verify passed 2/2, target Ruff, `git diff --check`, and `./lint-loop.sh` passed; independent runtime probe showed `CaptionRuns` accepts list and iterator inputs despite the tuple-only typed-boundary contract, while renderer-neutral imports and the unchanged FigureInstruction/compiler seam passed; candidate files restored, V2-505A2P1 remains Open, V2-505A2P2/V2-505A2M/V2-505A2C/V2-505B remain Open, no commit or push.
 - 2026-08-23 - V2-505A2P1 Checker FAIL Attempt 2; exact Verify passed 4/4, target Ruff, `git diff --check`, and `./lint-loop.sh` passed; the independent strict-boundary probe rejected list, iterator, and unknown-object inputs and passed all-eight projection, renderer-neutral import, and unchanged FigureInstruction/compiler checks, but accepted a tuple subclass through `isinstance(runs, tuple)` despite the exact built-in tuple contract; candidate files restored, V2-505A2P1 remains Open, V2-505A2P2/V2-505A2M/V2-505A2C/V2-505B remain Open, no commit or push.
 - 2026-08-23 - V2-505A2P1 Checker PASS Attempt 3; exact Verify passed 5/5, target Ruff, `git diff --check`, and `./lint-loop.sh` passed; independent audit confirmed exact built-in tuple acceptance with list, iterator and tuple-subclass rejection, all-eight canonical projections, `ensure_inline_run` validation, explicit unknown-element/container failures, renderer-neutral imports, unchanged FigureInstruction/compiler seams, and no raw caption alias or dual payload source; V2-505A2P1 moved to Done, V2-505A2P2/V2-505A2M/V2-505A2C/V2-505B remain Open, one local commit, no push.
+- 2026-08-23 - V2-505A2P2 Checker PASS Attempt 1; exact Verify was 17 passed/1 known clean-HEAD YAML Front Matter baseline failure (`TF-SOURCE-LEGACY-001`), clean HEAD matched exactly; target Ruff, `git diff --check`, and `./lint-loop.sh` passed; all four direct FigureInstruction fixtures use CaptionRuns including the positional fixture, candidate scope is the three named test files with no production or compatibility diff, V2-505A2M/V2-505A2C/V2-505B remain Open, one local commit, no push.
 
 ## Sync log
