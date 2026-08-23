@@ -97,6 +97,17 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Done
 
+- [V2-519] Migrate the typed table model test to the canonical parser
+  - Parent: ordered parser-consumer migration after `V2-518`; reduces the remaining test dependency on the removable hand-written parser.
+  - Files: `tests/core/test_table_model.py`, `LOOP.md`
+  - Behavior: the table model test parses standard GFM table syntax through `create_parser_backend()` and asserts typed rows, cells and caption in the canonical path.
+  - Verify: `.venv/bin/python -m pytest tests/core/test_table_model.py`
+  - Acceptance: the exact Verify passes; the test has no `core.parser` import, YAML Front Matter or legacy `:::` source, and retains typed table/cell/caption assertions.
+  - Verification-surface change: `no`
+  - Attempts: 2
+  - Attempt 1 (2026-08-23): Checker FAIL; exact Verify passed 6/6, target Ruff and `git diff --check` passed, and the canonical GFM/typed table runtime passed, but the test only compared `inline_plain_text(...)` containing raw `[@...]` text and had no direct `Citation` or `DocumentIndex` assertion. Candidate files were restored; no commit or push. Existing `openspec/**` changes were preserved.
+  - Attempt 2 (2026-08-23): Checker PASS; exact Verify passed 6/6, target Ruff, `git diff --check`, and `./lint-loop.sh` passed; independent AST/runtime audit confirmed the canonical parser backend import, no YAML Front Matter or legacy `:::` input, typed GFM `Table`/`TableRow`/`TableCell`/caption output, direct `Citation` nodes and `DocumentIndex` citation order, and no fallback, compatibility layer, or dual source of truth; candidate scope remained exactly the named test file plus this lifecycle update; all pre-existing `openspec/**` paths were preserved and unstaged; one local commit, no push.
+
 - [V2-518] Migrate core model tests to the canonical parser entry
   - Parent: ordered preparation child after `V2-320`; removes two remaining core-test dependencies on the deleted hand-written parser before the legacy module can be removed.
   - Files: `tests/core/test_no_manual_caches.py`, `tests/core/test_thesis_object_model.py`, `LOOP.md`
@@ -1660,6 +1671,8 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Cycle log
 
+- 2026-08-23 - V2-519 Checker FAIL Attempt 1; exact Verify passed 6/6, target Ruff and `git diff --check` passed, but independent evidence audit found no direct typed Citation/DocumentIndex assertion; candidate files were restored, no commit or push, and existing `openspec/**` changes were preserved.
+- 2026-08-23 - V2-519 Checker PASS Attempt 2; exact Verify passed 6/6, target Ruff, `git diff --check`, and `./lint-loop.sh` passed; independent AST/runtime audit confirmed the canonical parser backend import, no YAML Front Matter or legacy `:::` input, typed GFM `Table`/`TableRow`/`TableCell`/caption output, direct `Citation` nodes and `DocumentIndex` citation order, and no fallback, compatibility layer, or dual source of truth; V2-519 moved from Open to Done, candidate scope remained exactly the named test file plus this lifecycle update, all pre-existing `openspec/**` paths were preserved and unstaged, one local commit, no push.
 - 2026-08-23 - V2-517 Checker PASS Attempt 2; exact Verify passed 9/9, related DOCX/application regressions passed, target Ruff and `git diff --check` passed, and independent DOCX footnote/semantic mutation audit passed; V2-517 moved from Open to Done, candidate scope remained exactly the three named files, all pre-existing `openspec/**` paths were preserved and unstaged, one local commit, no push.
 - 2026-08-23 - V2-508 Checker PASS Attempt 1; exact Verify passed 1/1, related DOCX regression passed 90/90, architecture/RenderPlan regression passed 15/15, target Ruff, `git diff --check`, and independent 10/10 mutation audit passed; V2-508 moved to Done, the existing field production chain was audited unchanged, all pre-existing `openspec/**` paths were preserved and unstaged, one local commit, no push.
 - 2026-08-23 - V2-514 Checker PASS Attempt 2; exact Verify passed 1/1, related manifest/resource/compiler/Review/DOCX regression passed 140/140, target Ruff, `git diff --check`, and LOOP-LINT passed; independent 10/10 mutation audit passed for manifest resource/provider attribution, unique semantic title/list, Review marker hygiene, and concrete DOCX bibliography styles; V2-514 moved to Done, all pre-existing `openspec/**` paths were preserved and unstaged, no push.

@@ -5,7 +5,9 @@ from __future__ import annotations
 import dataclasses
 from pathlib import Path
 
+from thesis_forge.core.index import DocumentIndex
 from thesis_forge.core.model import (
+    Citation,
     GeneratedOrigin,
     SourceLocation,
     Table,
@@ -14,7 +16,9 @@ from thesis_forge.core.model import (
     Text,
     inline_plain_text,
 )
-from thesis_forge.core.parser import parse_markdown_text
+from thesis_forge.core.parser_backend import create_parser_backend
+
+BACKEND = create_parser_backend()
 
 
 def test_table_cell_defaults_and_identity() -> None:
@@ -74,15 +78,12 @@ def test_table_primitives_have_stable_structural_fields() -> None:
 
 
 def test_parser_populates_structured_table_caption_rows_and_cells() -> None:
-    source = """::: table {#tbl:results}
-caption: "结果 [@table-source]"
-
-| 模型 | AUROC |
+    source = """| 模型 | AUROC |
 | :--- | ---: |
 | A [@cell-source] | 0.91 |
-:::
+: 结果 [@table-source] {#tbl:results}
 """
-    document = parse_markdown_text(source, source_path=Path("table.md"))
+    document = BACKEND.parse_text(source, source_path=Path("table.md"))
 
     table = document.blocks[0]
     assert isinstance(table, Table)
@@ -93,6 +94,11 @@ caption: "结果 [@table-source]"
     assert [cell.alignment for cell in table.rows[0].cells] == ["left", "right"]
     assert inline_plain_text(table.rows[1].cells[0].inlines) == "A [@cell-source]"
     assert inline_plain_text(table.rows[1].cells[1].inlines) == "0.91"
+    assert isinstance(table.caption_inlines[1], Citation)
+    assert isinstance(table.rows[1].cells[0].inlines[1], Citation)
+    assert [
+        citation.keys for citation in DocumentIndex.from_document(document).citations
+    ] == [["table-source"], ["cell-source"]]
 
 
 def test_table_has_no_raw_caption_or_markdown_fields() -> None:
