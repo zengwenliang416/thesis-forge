@@ -25,12 +25,12 @@ from thesis_forge.core.model import (
     Table,
     inline_plain_text,
 )
-from thesis_forge.core.parser import ParseError
 from thesis_forge.core.parser_backend import (
     ParserBackend,
     create_parser_backend,
 )
 from thesis_forge.core.parser_markdown_it import MarkdownItParserBackend
+from thesis_forge.core.parser_support import ParseError
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 PARSER_DIFF_PATH = REPO_ROOT / "qa" / "tools" / "parser_diff.py"
