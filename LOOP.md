@@ -95,7 +95,36 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Open
 
+- [V2-507E] Add executable capability evidence for listing and algorithm DOCX output
+  - Parent: evidence-closure child of catalogue item `V2-507`; depends on completed parser fence work and the shared typed RenderPlan/DOCX seams.
+  - Files: `tests/renderers/docx/test_listing_algorithm.py`
+  - Behavior: exercise typed Listing and Algorithm source/IR/compiler/Review/DOCX paths with literal code/body, typed captions, configured paragraph styles and stable bookmarks.
+  - Verify: `.venv/bin/python -m pytest tests/renderers/docx/test_listing_algorithm.py`
+  - Acceptance: the evidence proves listing and algorithm nodes are not flattened to generic prose, captions and literal bodies survive Review and DOCX, configured style tokens are applied, stable bookmarks are paired, and the visible output contains no technical ID markers; it is non-empty executable evidence and the shared manifest path covers both capabilities.
+  - Verification-surface change: `yes`; creates the capability evidence required by `spec/format-capabilities.yaml`.
+  - Attempts: 0
+
+- [V2-503E] Add executable capability evidence for semantic TOC and section resolution
+  - Parent: evidence-closure child of catalogue item `V2-503`; depends on completed symbol/numbering and template section work.
+  - Files: `tests/core/test_region_resolver.py`
+  - Behavior: exercise the compiler’s manifest-selected TOC and section planning path as one resolved semantic region flow.
+  - Verify: `.venv/bin/python -m pytest tests/core/test_region_resolver.py`
+  - Acceptance: the evidence proves legal region order and required-region handling, one resolved TOC instruction with cached heading entries, section-break roles and page-number policy reaching DOCX, and duplicate/invalid placement rejection where the current validation contract defines it; it is non-empty executable evidence and the shared manifest path covers `region.toc` and `region.sections`.
+  - Verification-surface change: `yes`; creates the capability evidence required by `spec/format-capabilities.yaml`.
+  - Attempts: 0
+
 ## Done
+
+- [V2-511E] Add executable capability evidence for the required DOCX math corpus
+  - Parent: evidence-closure child of catalogue item `V2-511`; depends on completed `V2-510A`; the first unmet contract reported by `scripts/verify_thesisforge_v2_goal.py`.
+  - Files: `tests/renderers/docx/test_math_corpus_v2.py`
+  - Behavior: exercise the canonical Equation source/IR/compiler/Review/DOCX path for the required offline math corpus and prove editable OMML plus resolved sequence/bookmark semantics.
+  - Verify: `.venv/bin/python -m pytest tests/renderers/docx/test_math_corpus_v2.py`
+  - Acceptance: the evidence covers supported inline/display formula shapes through `EquationInstruction`, readable Review projection, native `m:oMath` output, real SEQ/bookmark structure when numbered, and explicit failure for unsupported or malformed math; it is non-empty executable evidence and the manifest path becomes valid without changing the capability registry.
+  - Verification-surface change: `yes`; creates the capability evidence required by `spec/format-capabilities.yaml`.
+  - Attempts: 2
+  - Attempt 1 (2026-08-23): Checker FAIL; exact Verify `.venv/bin/python -m pytest tests/renderers/docx/test_math_corpus_v2.py` passed 3/3, but `.venv/bin/ruff check tests/renderers/docx/test_math_corpus_v2.py` failed `I001` because the `pytest` and `lxml` imports are out of order; `git diff --check` passed. Independent AST/runtime/XML audit passed the canonical parser -> Equation IR -> EquationInstruction -> math preflight -> ReviewEquationContent -> DOCX path, native fraction/sum/matrix OMML (`m:f`/`m:nary`/`m:m`), real SEQ and paired bookmarks, marker-free Review/DOCX text, structured unsupported/malformed diagnostics, and matching `object.equation` manifest evidence path. V2-511E remains Open; the Checker did not modify the candidate test, no commit or push, and all pre-existing `openspec/**` paths were preserved.
+  - Attempt 2 (2026-08-23): Checker PASS; exact Verify `.venv/bin/python -m pytest tests/renderers/docx/test_math_corpus_v2.py` passed 3/3, `.venv/bin/ruff check tests/renderers/docx/test_math_corpus_v2.py` passed, and `git diff --check` passed. Independent AST/runtime/XML audit confirmed the canonical markdown-it parser -> Equation IR -> EquationInstruction -> validation/math preflight -> ReviewEquationContent -> DOCX path, real fraction/sum/matrix AST and `m:f`/`m:nary`/`m:m` OMML, exact SEQ fields with one-to-one same-paragraph formula bookmark pairs, marker-free Review/DOCX visible text, structured unsupported/malformed diagnostics, raw backslash corpus, no hidden skip or Pandoc/API/network dependency, and matching executable `object.equation` manifest evidence path. `./lint-loop.sh` passed; original Behavior/Acceptance and Attempt 1 remain intact, Open order is preserved, and all pre-existing `openspec/**` paths remain preserved and unstaged.
 
 - [V2-506D] Render canonical typed table cells in DOCX and add capability evidence
   - Parent: ordered preparation child 5/5 of the re-sliced `V2-506`; depends on `V2-506M2`; the original V2-506 Behavior and Acceptance remain unchanged.
@@ -1781,5 +1810,7 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 - 2026-08-23 - V2-506M1 Checker PASS Attempt 1; exact Verify 24/24, target Ruff, `git diff --check`, and `./lint-loop.sh` passed; the candidate diff was exactly one `tests/test_compiler.py` assertion replacement, `table.markdown` has no remaining consumer under `tests`, `src`, or `frontend`, no production compatibility path or compiler behavior change was introduced, and `V2-506M1` moved from Open to Done; `openspec/**` and pre-existing `LOOP.md` changes were preserved and unstaged, one local commit, no push.
 - 2026-08-23 - V2-506M2 Checker PASS Attempt 1; exact Verify passed 7/7, related regression passed 131/132 with the sole clean-baseline `TF-SOURCE-LEGACY-001` Preview failure reproduced on clean HEAD, target Ruff, `git diff --check`, LOOP-LINT, and independent typed-table CodeGraph/runtime/scope audits passed; V2-506D was not started, pre-existing `openspec/**` paths were preserved and unstaged, one local commit, no push.
 - 2026-08-23 - V2-506D Checker PASS Attempt 1; exact Verify 1/1, related regression 123/123, target Ruff, `git diff --check`, LOOP-LINT, and independent DOCX OPC/XML audit passed; object.table evidence path matched and was executable, all pre-existing `openspec/**` paths remained unstaged, one local commit, no push.
+- 2026-08-23 - V2-511E Checker FAIL Attempt 1; pytest passed 3/3 and `git diff --check` passed, but the exact target Ruff failed `I001` import ordering in `tests/renderers/docx/test_math_corpus_v2.py`; independent canonical-pipeline, native OMML/XML, SEQ/bookmark, Review marker, structured-diagnostic, wrong-backslash, and manifest-path audits passed; V2-511E remains Open, no candidate repair, no commit or push, and pre-existing `openspec/**` paths were preserved.
+- 2026-08-23 - V2-511E Checker PASS Attempt 2; exact Verify passed 3/3, target Ruff, `git diff --check`, LOOP-LINT, and independent AST/runtime/XML audit all passed; canonical parser -> Equation IR -> EquationInstruction -> validation/math preflight -> ReviewEquationContent -> DOCX was executable offline, fraction/sum/matrix produced real `m:f`/`m:nary`/`m:m`, SEQ and formula bookmark pairs were exact, visible Review/DOCX text was marker-free, unsupported/malformed diagnostics were structured, raw backslash corpus and no-hidden-skip checks passed, and the manifest evidence path was executable; V2-511E moved to Done with original Behavior/Acceptance and Attempt 1 retained, Open order preserved, candidate scope limited to `tests/renderers/docx/test_math_corpus_v2.py` plus `LOOP.md`, all pre-existing `openspec/**` paths preserved and unstaged, one local commit, no push.
 
 ## Sync log
