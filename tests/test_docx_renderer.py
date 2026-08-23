@@ -34,7 +34,7 @@ from thesis_forge.core.model import (
     Text,
     ThesisDocument,
 )
-from thesis_forge.core.parser import parse_markdown
+from thesis_forge.core.parser_backend import create_parser_backend
 from thesis_forge.core.render_plan import (
     CitationRun,
     FootnoteDefinitionInstruction,
@@ -1126,7 +1126,10 @@ Keywords: compiler; template
     output = tmp_path / "semantic-fragment.docx"
 
     DocxRenderer().render(
-        compile_document(parse_markdown(source), template=template),
+        compile_document(
+            create_parser_backend().parse_file(source),
+            template=template,
+        ),
         output,
     )
 
