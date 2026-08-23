@@ -380,7 +380,7 @@ def test_compile_document_resolves_figure_assets_widths_and_structured_table_row
         "right",
         "center",
     ]
-    assert table.markdown == ""
+    assert table.payload["rows"][0]["cells"][0]["text"] == "模型"
 
 
 def test_compile_document_rejects_malformed_markdown_table():
