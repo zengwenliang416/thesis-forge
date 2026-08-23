@@ -4,6 +4,7 @@ from pathlib import Path
 
 from docx.document import Document as DocumentObject
 from docx.enum.text import WD_ALIGN_PARAGRAPH, WD_LINE_SPACING
+from docx.opc.constants import RELATIONSHIP_TYPE as RT
 from docx.oxml import OxmlElement
 from docx.oxml.ns import qn
 
@@ -39,7 +40,13 @@ from .errors import DocxRenderError
 from .fields import add_reference_field, set_update_fields
 from .figures import render_figure
 from .footnotes import FootnoteManager
-from .inlines import InlineHandlers, citation_run_element, render_inline_runs
+from .inlines import (
+    InlineHandlers,
+    citation_run_element,
+    hyperlink_run_element,
+    math_run_element,
+    render_inline_runs,
+)
 from .lists import apply_list_numbering, create_list_numbering, resolve_list_level
 from .sections import add_section, configure_initial_section
 from .styles import (
@@ -79,9 +86,22 @@ def _add_runs(
                 )
             ),
             footnote_reference=lambda item: footnotes.add_reference(paragraph, item),
+            hyperlink=lambda item: _add_hyperlink_run(paragraph, item),
+            math=lambda item: paragraph._p.append(math_run_element(item)),
+            soft_break=lambda item: paragraph.add_run(" "),
+            hard_break=lambda item: paragraph.add_run().add_break(),
         ),
         capability="paragraph",
     )
+
+
+def _add_hyperlink_run(paragraph, item) -> None:
+    relationship_id = paragraph.part.relate_to(
+        item.destination,
+        RT.HYPERLINK,
+        is_external=True,
+    )
+    paragraph._p.append(hyperlink_run_element(item, relationship_id))
 
 
 def _add_text_run(paragraph, item: TextRun) -> None:

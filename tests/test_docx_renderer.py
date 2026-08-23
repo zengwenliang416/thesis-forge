@@ -37,9 +37,18 @@ from thesis_forge.core.model import (
 from thesis_forge.core.parser import parse_markdown
 from thesis_forge.core.render_plan import (
     CitationRun,
+    FootnoteDefinitionInstruction,
+    FootnoteReferenceRun,
+    HardBreakRun,
+    HeadingInstruction,
+    HyperlinkRun,
+    ListInstruction,
+    ListItemInstruction,
+    MathRun,
     ParagraphInstruction,
     ReferenceRun,
     RenderPlan,
+    SoftBreakRun,
     TextRun,
     TocEntryInstruction,
     TocInstruction,
@@ -3175,6 +3184,108 @@ def test_reference_field_runs_centralize_ref_instruction():
         for node in run.xpath("./w:instrText")
     ]
     assert instructions == ["REF tf_fig_model \\h"]
+
+
+def test_docx_renderer_consumes_all_inline_run_variants(tmp_path: Path):
+    template = load_template("templates/base/bachelor.yaml")
+
+    def inline_runs():
+        return (
+            TextRun("前"),
+            ReferenceRun(
+                target_id="fig:model",
+                bookmark="tf_fig_model",
+                display_text="图1-1",
+            ),
+            HyperlinkRun("项目主页", "https://example.test/project"),
+            MathRun("x^2"),
+            SoftBreakRun(),
+            HardBreakRun(),
+            CitationRun(
+                keys=("smith2025",),
+                ordinals=(1,),
+                raw="[@smith2025]",
+                text="[1]",
+            ),
+            FootnoteReferenceRun("note", 1),
+        )
+
+    output = tmp_path / "inline-runs.docx"
+    DocxRenderer().render(
+        RenderPlan(
+            nodes=[
+                HeadingInstruction(
+                    source_id=None,
+                    level=1,
+                    text="",
+                    inlines=inline_runs(),
+                ),
+                ParagraphInstruction(text="", inlines=inline_runs()),
+                ListInstruction(
+                    ordered=False,
+                    start=None,
+                    items=(
+                        ListItemInstruction(
+                            text="",
+                            level=0,
+                            ordinal=None,
+                            inlines=inline_runs(),
+                        ),
+                    ),
+                ),
+                FootnoteDefinitionInstruction(
+                    label="note",
+                    footnote_id=1,
+                    text="脚注",
+                    inlines=(TextRun("脚注"),),
+                ),
+            ],
+            template=template,
+        ),
+        output,
+    )
+
+    document_xml = _xml_part(output, "word/document.xml")
+    relationships_xml = _xml_part(output, "word/_rels/document.xml.rels")
+    assert len(document_xml.xpath(".//w:hyperlink", namespaces=NS)) == 3
+    assert len(document_xml.xpath(".//m:oMath", namespaces=NS)) == 3
+    assert len(document_xml.xpath(".//w:t[text()=' ']", namespaces=NS)) == 3
+    assert len(document_xml.xpath(".//w:br", namespaces=NS)) == 3
+    assert len(
+        document_xml.xpath(
+            ".//w:instrText[text()='REF tf_fig_model \\h']",
+            namespaces=NS,
+        )
+    ) == 3
+    assert len(
+        document_xml.xpath(
+            ".//w:footnoteReference[@w:id='1']",
+            namespaces=NS,
+        )
+    ) == 3
+
+    hyperlink_relationships = relationships_xml.xpath(
+        "./pr:Relationship[contains(@Type, '/hyperlink')]",
+        namespaces=REL_NS,
+    )
+    assert len(hyperlink_relationships) == 1
+    assert hyperlink_relationships[0].get("Target") == "https://example.test/project"
+    assert hyperlink_relationships[0].get("TargetMode") == "External"
+
+
+def test_docx_renderer_rejects_unknown_inline_run(tmp_path: Path):
+    with pytest.raises(DocxRenderError, match="unsupported inline run object"):
+        DocxRenderer().render(
+            RenderPlan(
+                nodes=[
+                    ParagraphInstruction(
+                        text="",
+                        inlines=(object(),),  # type: ignore[arg-type]
+                    )
+                ]
+            ),
+            tmp_path / "unknown-inline.docx",
+        )
 
 
 def test_docx_renderer_writes_resolved_body_footnote_and_bibliography_text(
