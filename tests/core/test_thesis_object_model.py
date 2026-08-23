@@ -17,7 +17,9 @@ from thesis_forge.core.model import (
     Text,
     inline_plain_text,
 )
-from thesis_forge.core.parser import parse_markdown_text
+from thesis_forge.core.parser_backend import create_parser_backend
+
+BACKEND = create_parser_backend()
 
 
 def test_rich_object_defaults_preserve_source_identity() -> None:
@@ -85,31 +87,20 @@ def test_rich_object_fields_are_structurally_pinned() -> None:
 
 
 def test_parser_populates_typed_object_captions_and_equation_display() -> None:
-    source = """::: figure {#fig:model}
-src: "model.png"
-caption: "系统模型 [@figure-source]"
-:::
+    source = """![系统模型 [@figure-source]](model.png){#fig:model}
 
-::: listing {#lst:demo}
-caption: "示例代码 [@listing-source]"
-language: "python"
-
-```python
+```python {#lst:demo title="示例代码 [@listing-source]"}
 print(1)
 ```
-:::
 
-::: algorithm {#alg:demo}
-caption: "构建流程 [@algorithm-source]"
-
+```algorithm {#alg:demo title="构建流程 [@algorithm-source]"}
 1. 校验
-:::
+```
 
-::: equation {#eq:loss}
-E = mc^2
-:::
+$$E = mc^2$$
+{#eq:loss}
 """
-    document = parse_markdown_text(source, source_path="objects.md")
+    document = BACKEND.parse_text(source, source_path="objects.md")
 
     figure, listing, algorithm, equation = document.blocks
     assert isinstance(figure, Figure)

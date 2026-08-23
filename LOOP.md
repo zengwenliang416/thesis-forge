@@ -97,6 +97,16 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Done
 
+- [V2-518] Migrate core model tests to the canonical parser entry
+  - Parent: ordered preparation child after `V2-320`; removes two remaining core-test dependencies on the deleted hand-written parser before the legacy module can be removed.
+  - Files: `tests/core/test_no_manual_caches.py`, `tests/core/test_thesis_object_model.py`, `LOOP.md`
+  - Behavior: core model and cache tests parse standard V2 Markdown through `create_parser_backend()` instead of importing `core.parser`.
+  - Verify: `.venv/bin/python -m pytest tests/core/test_no_manual_caches.py tests/core/test_thesis_object_model.py`
+  - Acceptance: the exact Verify passes; both tests contain no `core.parser` import, use no YAML Front Matter or legacy `:::` containers, and retain typed object/citation assertions.
+  - Verification-surface change: `no`
+  - Attempts: 1
+  - Attempt 1 (2026-08-23): Checker PASS; exact Verify passed 9/9, target Ruff, `git diff --check`, and `./lint-loop.sh` passed; independent AST/runtime audit confirmed the canonical parser backend import, no YAML Front Matter or legacy `:::` inputs, typed Figure/Listing/Algorithm/Equation objects, citation order and manual-cache absence; candidate scope remained exactly the three named files, all pre-existing `openspec/**` paths were preserved and unstaged, one local commit, no push.
+
 - [V2-517] Add field, bookmark, style and numbering DOCX postflight validation
   - Files: `src/thesis_forge/renderers/docx/package.py`, `tests/renderers/docx/test_package_semantics_v2.py`, `LOOP.md`
   - Behavior: validate bookmark pairs/names, field structure, style IDs, numIds, footnotes, sections and media in generated DOCX packages.
@@ -1900,5 +1910,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 - 2026-08-23 - V2-507E2 Checker PASS Attempt 2; exact Verify passed 2/2, related core/compiler/DOCX regression passed 129/129, target Ruff, `git diff --check`, LOOP-LINT, and independent typed numbering/payload/renderer-neutral probes passed; Attempt 1's DOCX `field_code` payload leakage was removed while `SequenceInstruction.field_code` remained available to DOCX renderers; V2-507E2 moved to Done, V2-507E3 remains next, the candidate scope was exactly the three named files plus this lifecycle update, all pre-existing `openspec/**` paths were preserved and unstaged, one local commit, no push.
 - 2026-08-23 - V2-507E3 Checker PASS Attempt 1; exact Verify passed 2/2, related Review regions passed 6/6, Preview passed 5/6 with only the known clean-baseline YAML Front Matter rejection, compiler/RenderPlan passed 30/30, target Ruff, `git diff --check`, LOOP-LINT, and independent Review marker/source-navigation probes passed; V2-507E3 moved to Done, V2-507E4 remains next, the candidate scope was exactly the named test file plus this lifecycle update, all pre-existing `openspec/**` paths were preserved and unstaged, one local commit, no push.
 - 2026-08-23 - V2-406 Checker PASS Attempt 2; exact Verify passed 6/6, Review regression passed 8/8, target Ruff, `git diff --check`, LOOP-LINT, and independent 8/8 runtime plus 5/5 static mutation audits passed; V2-406 moved to Done with original Behavior/Acceptance and Attempt 1 retained, the canonical parser/compiler/Review path and source-navigation/code-literal boundaries were verified, candidate scope was exactly the named test file plus this lifecycle update, all pre-existing `openspec/**` paths were preserved and unstaged, one local commit, no push.
+- 2026-08-23 - V2-518 Checker PASS Attempt 1; exact Verify passed 9/9, target Ruff, `git diff --check`, and `./lint-loop.sh` passed; independent AST/runtime audit confirmed the canonical parser backend import, no YAML Front Matter or legacy `:::` inputs, typed Figure/Listing/Algorithm/Equation objects, citation order and manual-cache absence; V2-518 moved from Open to Done, candidate scope remained exactly the three named files, all pre-existing `openspec/**` paths were preserved and unstaged, one local commit, no push.
 
 ## Sync log

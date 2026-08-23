@@ -18,7 +18,9 @@ from thesis_forge.core.model import (
     Text,
     ThesisDocument,
 )
-from thesis_forge.core.parser import parse_markdown_text
+from thesis_forge.core.parser_backend import create_parser_backend
+
+BACKEND = create_parser_backend()
 
 CACHE_FIELDS = (
     "document.inline_content",
@@ -37,14 +39,11 @@ REMOVED_MEMBERS = (
 
 SOURCE = """# 绪论 {#chap:intro}
 
-引用 [@k1]，如 @fig:model 所示，脚注见[^n1]。
+引用 [@k1]，如[模型](#fig:model)所示，脚注见[^n1]。
 
 - 列表项引用 [@k2]
 
-::: figure {#fig:model}
-src: "./model.png"
-caption: "模型 [@k4]"
-:::
+![模型 [@k4]](./model.png){#fig:model}
 
 [^n1]: 脚注内容 [@k3]。
 """
@@ -70,7 +69,7 @@ def test_document_index_exposes_full_preorder_inline_sequence() -> None:
 
 
 def test_thesis_document_has_no_manual_caches() -> None:
-    document = parse_markdown_text(SOURCE, source_path=Path("thesis.md"))
+    document = BACKEND.parse_text(SOURCE, source_path=Path("thesis.md"))
     for member in REMOVED_MEMBERS:
         assert not hasattr(document, member), f"ThesisDocument still exposes {member}"
     index = DocumentIndex.from_document(document)
