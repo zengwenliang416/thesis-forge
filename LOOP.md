@@ -95,16 +95,35 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Open
 
-- [V2-539] Add offline CLI Review export
-  - Parent: the normative Review export contract and the existing typed `ReviewDocument` projector.
-  - Files: `src/thesis_forge/cli.py`, `tests/cli/test_project_commands.py`, `LOOP.md`
-  - Behavior: `thesisforge review <project> --output-dir <dir>` writes a generated Review Markdown file and source map from the typed Review projection without raw IDs, citation keys, absolute paths or legacy syntax.
-  - Verify: `.venv/bin/python -m pytest tests/cli/test_project_commands.py -k review`
-  - Acceptance: the command works offline, returns structured diagnostics on blocked input, produces the declared Review artifacts and preserves reader-facing content/source navigation separation.
+- [V2-539B] Add the Review source-map serializer
+  - Parent: ordered prerequisite child 2/3 of `V2-539`; depends on `V2-539A-R1`, and the original V2-539 Behavior and Acceptance remain unchanged across A through C.
+  - Files: `src/thesis_forge/presentation/review_markdown.py`, `tests/presentation/test_review_source_map.py`, `LOOP.md`
+  - Behavior: map generated Review block line ranges to the typed source `NodeId` and `SourceSpan`, labeling generated-only blocks without exposing source metadata in visible Markdown.
+  - Verify: `.venv/bin/python -m pytest tests/presentation/test_review_source_map.py`
+  - Acceptance: every generated content block is traceable when a source exists, generated-only blocks are explicit, line ranges are deterministic and the map contains no absolute machine paths or visible-content fallback payloads.
+  - Verification-surface change: `no`
+  - Attempts: 0
+
+- [V2-539C] Add offline CLI Review export
+  - Parent: ordered integration child 3/3 of `V2-539`; depends on `V2-539A-R1` and `V2-539B`, and the original V2-539 Behavior and Acceptance remain unchanged.
+  - Files: `src/thesis_forge/cli.py`, `tests/cli/test_review_command.py`, `LOOP.md`
+  - Behavior: `thesisforge review <project> --output-dir <dir>` obtains the typed Review projection and writes the declared Review Markdown file and source map without raw IDs, citation keys, absolute paths or legacy syntax.
+  - Verify: `.venv/bin/python -m pytest tests/cli/test_review_command.py`
+  - Acceptance: the command works offline, accepts only a project directory or `thesisforge.yaml`, returns structured diagnostics on blocked input, writes both Review artifacts under the requested output directory and preserves reader-facing content/source navigation separation.
   - Verification-surface change: `no`
   - Attempts: 0
 
 ## Done
+
+- [V2-539A-R1] Add the typed Review Markdown serializer after blocked V2-539A
+  - Parent: fresh replacement for blocked `V2-539A`; this item must not mutate or retry the blocked history, and the original V2-539 Behavior and Acceptance remain unchanged across A through C.
+  - Files: `src/thesis_forge/presentation/review_markdown.py`, `tests/presentation/test_review_markdown.py`, `LOOP.md`
+  - Behavior: serialize the typed `ReviewDocument` into generated reader-facing Markdown with an explicit generated/read-only source notice and sanitized project-relative asset links.
+  - Verify: `.venv/bin/python -m pytest tests/presentation/test_review_markdown.py`
+  - Acceptance: headings, prose, lists, figures, tables, equations, listings, algorithms, footnotes, bibliography and literal code remain readable; technical IDs, citation keys, absolute paths and legacy containers do not leak outside literal code; blocked and partial Review states remain explicit; figure assets reject absolute paths and single, double, triple or otherwise repeatedly percent-encoded traversal, including encoded backslashes; ordinary text rejects generic POSIX absolute paths; the public API requires the typed `ReviewDocument`, `ReviewBlock` and `ReviewSource` contracts.
+  - Verification-surface change: `no`
+  - Attempts: 1
+  - Attempt 1 (2026-08-23): Independent Checker PASS; exact Verify passed 13/13; target Ruff and `C901`, `git diff --check`, and `./lint-loop.sh` passed (`open=3 done=173 blocked=1` before this lifecycle update); independent black-box probe passed 68/68 across all 14 `ReviewContent` and 8 `ReviewInline` variants, bold/code formatting, generated/read-only/source notice, source ID/SourceSpan isolation, partial/blocked suppression, strict typed-contract rejection, unsafe asset URL/path and repeated encoded traversal matrices, ordinary/math/link marker sanitization, literal listing/code preservation, deterministic line ranges, and technical/legacy leak checks; real ready typed fixture projected 14 blocks and serialized to JSON without path or marker leakage, and the repository fixture serialized as explicit blocked Review without leakage; the candidate scope before lifecycle update was exactly `src/thesis_forge/presentation/review_markdown.py` and `tests/presentation/test_review_markdown.py`, all pre-existing `openspec/**`, `tests/test_lo_finalizer.py`, `LOOP.md` history, and other untracked paths were preserved, V2-539B/C remained Open and dependent on R1, no push.
 
 - [V2-538] Expose Review as the third preview mode
   - Parent: V2-537; completes the frontend mode contract after the existing Structure and Final Layout modes.
@@ -1854,6 +1873,19 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Blocked
 
+- [V2-539A] Add the typed Review Markdown serializer
+  - Parent: ordered prerequisite child 1/3 of `V2-539`; the original V2-539 Behavior and Acceptance remain unchanged across A through C.
+  - Files: `src/thesis_forge/presentation/review_markdown.py`, `tests/presentation/test_review_markdown.py`, `LOOP.md`
+  - Behavior: serialize the typed `ReviewDocument` into generated reader-facing Markdown with an explicit generated/read-only source notice and sanitized project-relative asset links.
+  - Verify: `.venv/bin/python -m pytest tests/presentation/test_review_markdown.py`
+  - Acceptance: headings, prose, lists, figures, tables, equations, listings, algorithms, footnotes, bibliography and literal code remain readable; technical IDs, citation keys, absolute paths and legacy containers do not leak outside literal code; blocked and partial Review states remain explicit.
+  - Verification-surface change: `no`
+  - Attempts: 3
+  - Attempt 1 (2026-08-23): Independent Checker FAIL; the exact Verify passed 4/4, target Ruff, `git diff --check`, and `./lint-loop.sh` passed, but independent contract probes found that figure asset links accepted HTTP(S) URLs instead of project-relative paths, `ReviewTextRun.bold` was dropped, and the serializer accepted duck-typed objects instead of requiring `ReviewDocument`; the candidate implementation and test files were restored, no commit or Done update.
+  - Attempt 2 (2026-08-23): Independent Checker FAIL; the exact Verify passed 5/5, target Ruff, `git diff --check`, and `./lint-loop.sh` passed, but encoded traversal in figure asset links (`%2e%2e`/`%2f`) bypassed the path guard, generic `/srv/...` absolute paths leaked from normal text, `:::` leaked through math text, and a blocked Review with blocks emitted both a no-content status and visible content; the candidate implementation and test files were restored, no commit or Done update.
+  - Attempt 3 (2026-08-23): Independent Checker FAIL. Expected: the exact Verify is green; all project-relative figure asset links reject absolute paths and single or repeatedly percent-encoded traversal; normal Review text hides generic POSIX absolute paths while preserving readable non-code content; literal code remains exempt; typed 14-content/8-inline boundaries, bold/code semantics, generated/read-only notice, partial/blocked states and no raw IDs/citation keys remain green. Observed: exact Verify passed 6/6, target Ruff passed, `git diff --check` passed, and `./lint-loop.sh` passed (`open=3 done=173 blocked=0` before this lifecycle update); independent variant/type/mutation probes passed for all 14 `ReviewContent` and 8 `ReviewInline` variants, typed `ReviewDocument`/`ReviewBlock`/`ReviewSource` rejection, bold/code semantics, normal/math `:::` hiding with literal-code preservation, blocked-content suppression, and 7/7 contract-breaking mutants killed. However, the runtime asset matrix emitted `![资源](assets/%2e%2e%2fsecret/model.png)` for `assets/%252e%252e%252fsecret/model.png`, emitted `![资源](assets/%252e%252e%252fsecret/model.png)` for triple-encoded traversal, and emitted an image for double-encoded backslash traversal; the visible-text matrix leaked `/srv`, `/srv/`, `prefix /srv suffix`, and `/srv/private/thesis.md:` from normal text. These violate the immutable project-relative-only asset and no-absolute-path acceptance. The candidate implementation and test files were restored; no commit was created.
+  - Supersession: V2-539A is blocked after three independent Checker failures; any retry must use a fresh replacement item ID and must not mutate this blocked history.
+
 ## Blocked archive
 
 - [V2-114A] Extend frontend BuildReport output decoding for authorized previews
@@ -2222,5 +2254,9 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 - 2026-08-23 - V2-536 Checker PASS Attempt 1; exact Verify passed (18 files, 221 tests), the candidate file independently passed 3/3, frontend lint, typecheck, and `git diff --check` passed, and the typed BuildReport/stage/diagnostic/log projection and scope audit passed; V2-536 moved from Open to Done, only the two named candidate files plus `LOOP.md` were authorized, all pre-existing `openspec/**`, `tests/test_lo_finalizer.py`, `openspec/.specnav/overrides/`, and `template-v2-build-pipeline-p1/development/` paths were preserved, no push.
 - 2026-08-23 - V2-537 Checker PASS Attempt 1; exact Verify passed (19 files, 225 tests), the direct candidate command passed 1/1 file and 4/4 tests, frontend lint, typecheck, and `git diff --check` passed; independent SSR/DOM probes covered all required content types and statuses, source click/Enter navigation, stable IDs, technical prefixes, cite-key/secret-key, absolute paths, aria-label/title/alt/href/src sanitization, unsafe URL variants, ordinary HTTP(S) links/images, citation/bibliography key hiding, multiline math without `$`/LaTeX backslashes, and literal listing preservation; V2-537 moved from Open to Done, candidate scope was exactly the two named ReviewPanel files plus this lifecycle update, all pre-existing changes were preserved, one local commit, no push.
 - 2026-08-23 - V2-538 Checker PASS Attempt 1; exact Verify `pnpm --dir frontend test -- PreviewPanels.test.tsx` passed with Vitest 19 files and 225 tests; independent stdin jsdom/DOM probe passed all three selectable tabs, reducer event sequence `structure,final-layout,review`, original Structure `.paper-stage` content, Final Layout PDF iframe/status, existing ReviewPanel rendering, and Review technical-marker hiding; frontend lint, typecheck, and `git diff --check` passed; candidate scope before lifecycle update was exactly `frontend/src/state/workspace.ts` and `frontend/src/components/PreviewPanels.tsx`, no fallback/compatibility/silent-degradation path was introduced, all pre-existing `openspec/**`, `tests/test_lo_finalizer.py`, `openspec/.specnav/overrides/`, and other untracked files were preserved, one local commit, no push.
+- 2026-08-23 - V2-539 split into ordered children V2-539A, V2-539B and V2-539C after CodeGraph and source-contract inspection found that the typed Review Markdown serializer, source-map serializer and CLI integration cannot be completed within the original three-file item without collapsing presentation serialization into `cli.py`; no product code was edited in the split cycle, the original V2-539 Behavior and Acceptance remain unchanged across the children, and the next queue is V2-539A.
+- 2026-08-23 - V2-539A Checker FAIL Attempt 3; exact Verify passed 6/6, target Ruff, `git diff --check`, and `./lint-loop.sh` passed; independent typed/variant/mutation probes passed 14/14 content variants, 8/8 inline variants and 7/7 contract-breaking mutants, but repeated percent-encoded figure traversal still emitted image links and generic POSIX absolute paths including `/srv` and `/srv/private/thesis.md:` leaked from normal text; the two candidate files were restored, V2-539A moved verbatim to `## Blocked` with a fresh-replacement supersession note, no commit and no push, and all unrelated dirty paths were preserved.
+- 2026-08-23 - V2-539A-R1 queued as a fresh replacement after V2-539A reached three independent Checker failures; the misplaced Attempt line was removed from the `Use this shape` example, `V2-539B/C` now depend on the replacement, the blocked history was not mutated, and no product code was edited.
+- 2026-08-23 - V2-539A-R1 Checker PASS Attempt 1; exact Verify passed 13/13, target Ruff and `C901`, `git diff --check`, and `./lint-loop.sh` passed; independent 68/68 typed/variant, sanitization, asset-safety, status, source-map-boundary and fixture-serialization probes passed; V2-539A-R1 moved from Open to Done, V2-539B/C remained Open and dependent on R1, blocked V2-539A history remained unchanged, only the two candidate files plus `LOOP.md` were authorized, all pre-existing dirty/untracked paths were preserved, no push.
 
 ## Sync log
