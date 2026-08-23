@@ -95,15 +95,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Open
 
-- [V2-534A] Migrate preview and review tests off generic RenderNode fixtures
-  - Parent: ordered child of the first unmet typed RenderPlan contract; removes obsolete unknown-node fixtures before deleting the production compatibility type.
-  - Files: `tests/test_preview_presentation.py`, `tests/presentation/test_review_regions.py`, `LOOP.md`
-  - Behavior: preview and review boundary tests use explicit unknown objects for rejection/projection cases instead of constructing the legacy RenderNode.
-  - Verify: `! rg -n --glob '*.py' "RenderNode" tests/test_preview_presentation.py tests/presentation/test_review_regions.py && .venv/bin/python -m pytest tests/test_preview_presentation.py tests/presentation/test_review_regions.py`
-  - Acceptance: both test suites pass; unknown instruction behavior remains explicit; no assertion is weakened and no compatibility alias is introduced.
-  - Verification-surface change: `no`
-  - Attempts: 0
-
 - [V2-534B] Remove preview RenderNode dispatch
   - Parent: ordered child of the first unmet typed RenderPlan contract; follows V2-534A and removes the preview-side legacy branch.
   - Files: `src/thesis_forge/presentation/preview.py`, `LOOP.md`
@@ -122,16 +113,17 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
   - Verification-surface change: `yes`
   - Attempts: 0
 
-- [V2-532] Migrate finalizer tests off the deleted parser
-  - Parent: ordered child of the single-parser legacy-file removal gap; prepares the last active test consumer before deleting the hand-written parser module.
-  - Files: `tests/test_lo_finalizer.py`, `LOOP.md`
-  - Behavior: finalizer tests build a standard V2 project through the canonical parser/application path while retaining field capture, restore, rollback and LibreOffice integration assertions.
-  - Verify: `.venv/bin/python -m pytest tests/test_lo_finalizer.py`
-  - Acceptance: no `thesis_forge.core.parser` import or `parse_markdown` call remains; the raw and final-auto DOCX fixtures come from a manifest-based V2 project; all existing field, style, OpenXML and TOC assertions remain active; no fallback or compatibility branch is introduced.
-  - Verification-surface change: `no`
-  - Attempts: 0
-
 ## Done
+
+- [V2-534A] Migrate preview and review tests off generic RenderNode fixtures
+  - Parent: ordered child of the first unmet typed RenderPlan contract; removes obsolete unknown-node fixtures before deleting the production compatibility type.
+  - Files: `tests/test_preview_presentation.py`, `tests/presentation/test_review_regions.py`, `LOOP.md`
+  - Behavior: preview and review boundary tests use explicit unknown objects for rejection/projection cases instead of constructing the legacy RenderNode.
+  - Verify: `! rg -n --glob '*.py' "RenderNode" tests/test_preview_presentation.py tests/presentation/test_review_regions.py && .venv/bin/python -m pytest tests/test_preview_presentation.py tests/presentation/test_review_regions.py`
+  - Acceptance: both test suites pass; unknown instruction behavior remains explicit; no assertion is weakened and no compatibility alias is introduced.
+  - Verification-surface change: `no`
+  - Attempts: 1
+  - Attempt 1 (2026-08-23): Checker PASS; the previous mutation failure was repaired: removing the explicit `template_path` leaves `application.preview_service(project / "thesis.md")` driven by manifest metadata/resources/template selection, and mutating `render.template_id` to `does-not-exist-v2-534a-mutation` produced `1 failed, 11 passed` with preview status `blocked`; the mutation was restored. Exact Verify passed 12/12; related Preview/Review/Compiler/RenderPlan regression passed 57/57; target Ruff and `git diff --check` passed; LOOP-LINT passed after this move (`open=2 done=166 blocked=0`). Independent audit confirmed no `RenderNode` import/construct, explicit unknown-object projection and rejection, golden `originalKind=custom-widget`, no Front Matter/::: /legacy `@id`, no hidden skip/fallback/compatibility alias/automatic migration/weakened assertion, and candidate diff exactly the two named tests; pre-existing `openspec/**`, `tests/test_lo_finalizer.py`, and `openspec/.specnav/overrides` were preserved, no push.
 
 - [V2-533A] Migrate the remaining parser-configuration test off the obsolete parser module
   - Parent: ordered prerequisite of V2-533; the active parser-configuration test still reads the deleted hand-written parser path.
@@ -143,7 +135,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
   - Attempts: 1
   - Attempt 1 (2026-08-23): Checker PASS; exact Verify passed 2/2, canonical parser regression passed 46/46, target Ruff, `git diff --check`, and LOOP-LINT passed (`open=2 done=163 blocked=0` before this move); independent AST audit confirmed the parser_support target, all four primitive import/definition assertions, private-name guard, CommonMark/GFM rules, and no compatibility/fallback/legacy branch; candidate product diff was exactly `tests/core/test_markdown_v2_parser_config.py`, all pre-existing LOOP/openspec/tests/test_lo_finalizer.py changes were preserved, no push.
 
-
 - [V2-533] Delete the obsolete hand-written parser module
   - Parent: ordered child of the single-parser legacy-file removal gap; depends on V2-531, V2-532 and V2-533A.
   - Files: `src/thesis_forge/core/parser.py`, `LOOP.md`, `openspec/changes/template-v2-build-pipeline-p1/scope.json` (formal scope contract repaired to authorize this deletion).
@@ -154,6 +145,22 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
   - Attempts: 2
   - Attempt 1 (2026-08-23): Checker FAIL; the original Verify regex matched canonical `parser_backend`, `parser_markdown_it` and `parser_support` imports because it lacked a module-name boundary, and the independent canonical parser regression found `tests/core/test_markdown_v2_parser_config.py` still reading `src/thesis_forge/core/parser.py` (`96 passed, 1 failed`). Finalizer passed 26/26, application regression 173/173, DOCX/compiler regression 133/133, `git diff --check` and LOOP-LINT passed; the parser deletion was restored, no commit or Done update. V2-533A was split as the ordered prerequisite.
   - Attempt 2 (2026-08-23): Checker PASS; the exact Verify exited 0 with `parser.py` absent and no module-boundary parser imports/calls; parser regression passed 48/48, application/services/adapters regression 198/198, DOCX/compiler regression 133/133, and LibreOffice finalizer regression 26/26; target Ruff, `git diff --check`, and LOOP-LINT passed (`open=1 done=164 blocked=0` before this move). Independent AST/runtime audit confirmed the four `parser_support` public primitive import/definition assertions and CommonMark/GFM rule coverage, with no legacy parser compatibility/fallback path; `scope.json` exactly authorized `LOOP.md`, `parser.py`, the V2-533A parser-config test, and finalizer test with `delete=true`; historical reports/catalog prose and pre-existing V2-532, `tests/test_lo_finalizer.py`, and `openspec/**` changes were preserved; official override prune removed 0 files and the override directory remained empty; no push.
+
+- [V2-532] Migrate finalizer tests off the deleted parser
+  - Parent: ordered child of the single-parser legacy-file removal gap; prepares the last active test consumer before deleting the hand-written parser module.
+  - Files: `tests/test_lo_finalizer.py`, `LOOP.md`
+  - Behavior: finalizer tests build a standard V2 project through the canonical parser/application path while retaining field capture, restore, rollback and LibreOffice integration assertions.
+  - Verify: `.venv/bin/python -m pytest tests/test_lo_finalizer.py`
+  - Acceptance: no `thesis_forge.core.parser` import or `parse_markdown` call remains; the raw and final-auto DOCX fixtures come from a manifest-based V2 project; all existing field, style, OpenXML and TOC assertions remain active; no fallback or compatibility branch is introduced.
+  - Verification-surface change: `no`
+  - Attempts: 7
+  - Attempt 1 (2026-08-23): Checker FAIL; exact Verify passed 13/13, but independent mutation audit found a hard-coded HUT template context and the V2 positive fixture had removed real footnote/HardBreak coverage; no commit or LOOP update.
+  - Attempt 2 (2026-08-23): Checker FAIL; manifest-driven template loading and footnote coverage were repaired, but mutation audits found missing negative `template_id` coverage, swallowed normalization failures, missing production-validator protection, and malformed continuation-separator handling; exact Verify passed 14/14; no commit or LOOP update.
+  - Attempt 3 (2026-08-23): Checker FAIL; manifest, normalization, and validator mutations were covered, but direct continuation-separator ID guards remained mutation-survivable; exact Verify passed 17/17; no commit or LOOP update.
+  - Attempt 4 (2026-08-23): Checker FAIL; direct ID and aggregate guards were partially covered, but separator/continuation direct-guard mutations still survived because assertions matched only generic failure; exact Verify passed 19/19; no commit or LOOP update.
+  - Attempt 5 (2026-08-23): Checker FAIL; direct guard diagnostics were made specific, but the wrapper's normalization exception-to-fail-fast behavior had no direct test and an `except ...: pass` mutation survived; exact Verify passed 23/23; no commit or LOOP update.
+  - Attempt 6 (2026-08-23): Checker FAIL; direct wrapper exception coverage was still missing; a normalization swallow mutation returned success; exact Verify passed 23/23; no commit or LOOP update.
+  - Attempt 7 (2026-08-23): Checker PASS; exact Verify passed 26/26 with real LibreOffice integration unskipped; related application/DOCX regression passed 198/198 independently and the local joint regression passed 151/151; target Ruff, `git diff --check`, and LOOP-LINT passed (`open=2 done=162 blocked=0` before this move). Independent mutation audit killed manifest-template, separator/continuation/aggregate, normalization RuntimeError/OSError/ValueError, and production package-validator no-op mutations; raw/final DOCX retained `word/footnotes.xml`, `w:footnoteReference`, `w:footnoteRef`, and `w:br`; candidate scope was exactly `tests/test_lo_finalizer.py`, all pre-existing `openspec/**` changes were preserved, no push.
 
 - [V2-531] Retire the obsolete legacy-parser comparison spike
   - Parent: ordered child of the single-parser legacy-file removal gap; removes a historical comparison entrypoint whose purpose depends on the deleted hand-written parser.
@@ -2141,10 +2148,9 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 - 2026-08-23 - V2-529 Checker PASS Attempt 2; exact Verify passed with 47 display equations, 2 inline equations, 49 `m:oMath` nodes, `per_equation_all_ok=True`, `inline_math_converted=True`, and `openxml_validate exit=0`; related parser/OMML regression passed 22/22, target Ruff, `git diff --check`, and LOOP-LINT passed (`open=2 done=160 blocked=0`); independent scope and runtime audit confirmed the three named files, manifest-derived metadata/template selection, fail-fast structural assertions, no legacy parser/fallback/compatibility path, and preservation of all pre-existing `openspec/**` changes; one local commit, no push.
 - 2026-08-23 - V2-530 Checker PASS Attempt 2; exact Verify passed 4/4, the independent wider regression passed 197/197, target Ruff, `git diff --check`, and LOOP-LINT passed (`open=2 done=160 blocked=0` before this move); runtime and mutation audits confirmed zero legacy fixture reads, complete tmp-path V2 project inputs, restored citation/footnote/bibliography DOCX coverage, retained structural field/bookmark/footer/diagnostic assertions, and unchanged pre-existing `openspec/**` worktree state; one local commit, no push.
 - 2026-08-23 - V2-531 Checker PASS Attempt 1; exact Verify exited 0, `git diff --check` and LOOP-LINT passed (`open=3 done=161 blocked=0` before this move); independent AST/runtime and protected-path audits confirmed `compare.py` removal, no active legacy parser calls in `spikes/phase0/parser`, unchanged historical reports/results/fixtures, and preserved pre-existing `openspec/**` changes; one local commit, no push.
-
 - 2026-08-23 - V2-533A Checker PASS Attempt 1; exact Verify passed 2/2, canonical parser regression passed 46/46, target Ruff, `git diff --check`, and LOOP-LINT passed (`open=2 done=163 blocked=0` before this move); independent AST audit confirmed the parser_support target, all four primitive import/definition assertions, private-name guard, CommonMark/GFM rules, and no compatibility/fallback/legacy branch; candidate product diff was exactly `tests/core/test_markdown_v2_parser_config.py`, all pre-existing LOOP/openspec/tests/test_lo_finalizer.py changes were preserved, no push.
 - 2026-08-23 - V2-533 Checker PASS Attempt 2; exact Verify exited 0 with parser.py absent and no module-boundary parser imports/calls; parser regression passed 48/48, application/services/adapters regression 198/198, DOCX/compiler regression 133/133, and LibreOffice finalizer regression 26/26; target Ruff, `git diff --check`, and LOOP-LINT passed (`open=1 done=164 blocked=0` before this move); scope.json was an exact four-root delete-enabled contract, historical reports/catalog prose and all pre-existing V2-532, test_lo_finalizer.py and openspec/** changes were preserved, official override prune removed 0 files, and no push.
-
 - 2026-08-23 - LOOP refill after stop-check; with LOOP previously empty, goal verification surfaced 9 unmet contracts, led by `typed-render-plan:no-RenderNode` and then `docx:no-legacy-renderer`; V2-534A/B/C were added in A→B→C dependency order, with no product code changed.
+- 2026-08-23 - V2-534A Checker PASS Attempt 1; exact Verify passed 12/12, related Preview/Review/Compiler/RenderPlan regression passed 57/57, target Ruff, `git diff --check`, and LOOP-LINT passed (`open=2 done=166 blocked=0` after this move); mutation audit killed manifest template selection, preview unknown-fixture, and Review unknown-assertion mutations, and confirmed no RenderNode fixture or explicit template_path remained; candidate scope was exactly the two named tests, all pre-existing `openspec/**`, `tests/test_lo_finalizer.py`, and `openspec/.specnav/overrides` changes were preserved, no push.
 
 ## Sync log

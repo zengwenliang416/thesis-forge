@@ -45,7 +45,6 @@ from thesis_forge.core.render_plan import (
     ParagraphInstruction,
     ReferenceRun,
     RenderInstruction,
-    RenderNode,
     RenderPlan,
     SectionBreakInstruction,
     SoftBreakRun,
@@ -373,4 +372,4 @@ def test_review_blocks_when_plan_is_unavailable(tmp_path: Path) -> None:
 
 def test_unknown_instruction_fails_explicitly() -> None:
     with pytest.raises(TypeError, match="unsupported RenderInstruction"):
-        project_instruction(RenderNode(kind="future-node"))  # type: ignore[arg-type]
+        project_instruction(object())  # type: ignore[arg-type]

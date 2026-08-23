@@ -42,7 +42,6 @@ from thesis_forge.core.render_plan import (
     MathRun,
     ParagraphInstruction,
     ReferenceRun,
-    RenderNode,
     RenderPlan,
     SectionBreakInstruction,
     SoftBreakRun,
@@ -56,6 +55,115 @@ from thesis_forge.core.validator import ValidationContext
 
 ROOT = Path(__file__).resolve().parents[1]
 FIXTURE = ROOT / "tests" / "fixtures" / "preview-workbench-v1.json"
+
+
+def _unknown_instruction(name: str) -> object:
+    return type(name, (), {})()
+
+
+_COMPLETE_V2_SOURCE = """\
+# 绪论 {#chap:introduction}
+
+系统总体架构如[图](#fig:architecture)所示。
+
+![ThesisForge 确定性编译架构](assets/architecture.png){#fig:architecture}
+
+# 系统设计 {#chap:design}
+
+## 编译流水线 {#sec:pipeline}
+
+系统采用单向编译链路，其抽象关系见[式](#eq:pipeline)。
+
+$$
+D_{docx} = R(C(V(P(D_{md}))))
+$$
+{#eq:pipeline}
+
+## 能力模型 {#sec:capabilities}
+
+V1 核心能力见[表](#tbl:capabilities)。
+
+| 能力 | 输入 | DOCX 输出 |
+| --- | --- | --- |
+| 图 | 本地图片 | Drawing 与题注 |
+| 表 | Markdown 表格 | 三线表 |
+| 公式 | LaTeX 子集 | OMML |
+| 引用 | BibTeX key | 顺序编码引用 |
+
+: ThesisForge V1 核心能力 {#tbl:capabilities}
+
+## 安全构建算法 {#sec:safe-build}
+
+安全构建流程见[算法](#alg:build)。
+
+```algorithm {#alg:build title="安全构建流程"}
+1. 解析并验证本地输入；
+2. 编译 renderer-neutral RenderPlan；
+3. 渲染到目标目录临时文件；
+4. 校验 DOCX ZIP 与核心 XML；
+5. 原子替换最终输出。
+```
+
+## 应用服务接口 {#sec:application-service}
+
+核心服务接口示意见[代码](#lst:service)。
+
+```python {#lst:service title="安全构建服务调用"}
+result = build_service(
+    source="thesis.md",
+    output="thesis.docx",
+)
+```
+"""
+
+_COMPLETE_V2_MANIFEST = """\
+schema: thesisforge.project.v2
+project:
+  id: preview-order
+  language: zh-CN
+document:
+  source: thesis.md
+metadata:
+  title:
+    zh: Preview order
+  author:
+    name: Test Author
+  institution:
+    university: Test University
+  degree:
+    name: Bachelor
+  advisor:
+    name: Test Advisor
+  dates:
+    completed: "2026-08"
+resources:
+  root: .
+  assets: assets
+render:
+  template_id: example-university-2026
+  citation_style: GB-T-7714-2025
+"""
+
+
+def _complete_v2_project(tmp_path: Path) -> Path:
+    project = tmp_path / "complete-v2"
+    assets = project / "assets"
+    assets.mkdir(parents=True)
+    (assets / "architecture.png").write_bytes(
+        (
+            ROOT
+            / "examples"
+            / "bachelor-thesis"
+            / "images"
+            / "acceptance-architecture.png"
+        ).read_bytes()
+    )
+    (project / "thesis.md").write_text(_COMPLETE_V2_SOURCE, encoding="utf-8")
+    (project / "thesisforge.yaml").write_text(
+        _COMPLETE_V2_MANIFEST,
+        encoding="utf-8",
+    )
+    return project
 
 
 def _text_inlines(value: str) -> list[Text]:
@@ -127,7 +235,7 @@ def test_preview_mapper_matches_versioned_golden_contract(tmp_path: Path):
                 label="图 1-1",
                 bookmark="fig_arch",
             ),
-            RenderNode(kind="custom-widget", payload={"private": object()}),
+            _unknown_instruction("custom-widget"),
         ]
     )
     issues = (
@@ -159,14 +267,14 @@ def test_preview_mapper_matches_versioned_golden_contract(tmp_path: Path):
     assert str(tmp_path) not in json.dumps(result, ensure_ascii=False)
 
 
-def test_complete_example_preview_preserves_compiler_order_and_numbering():
+def test_complete_example_preview_preserves_compiler_order_and_numbering(
+    tmp_path: Path,
+):
     _, map_preview_result = _preview_api()
+    project = _complete_v2_project(tmp_path)
     result = map_preview_result(
         application.preview_service(
-            ROOT / "examples" / "bachelor-thesis" / "thesis.md",
-            template_path=(
-                ROOT / "templates" / "schools" / "example-university" / "2026.yaml"
-            ),
+            project / "thesis.md",
         )
     )
 
@@ -342,7 +450,7 @@ def test_preview_mapper_covers_every_typed_instruction_and_unknown_fallback(
             BibliographyInstruction(
                 (BibliographyEntryInstruction("ref-1", 1, "[1] 文献"),)
             ),
-            RenderNode(kind="future-node", payload={}),
+            _unknown_instruction("future-node"),
         ]
     )
     result = map_preview_result(
