@@ -30,7 +30,7 @@ The loop reads this file first in every cycle and writes it last.
 - One cycle handles exactly one Open item. Finish, split, reject, or block it; never start a second item.
 - Before editing, list every repository file expected to change.
 - **One implementation item may modify at most 3 repository files.** Source, test, fixture, documentation, schema, configuration, workflow, lockfile, generated output, creation, deletion, move, and rename all count.
-- **User-authorized atomic exception (2026-08-24):** `REG-015C-ATOM` may modify its explicitly listed cross-layer files and its validator in one cycle because the browser project-entry contract has no green three-file slice. `lint-loop.sh` recognizes only this exact item ID as a 14-file exception; all other items remain capped at three files. This exception does not permit compatibility paths, fallback protocols, or hidden migration behavior.
+- **User-authorized atomic exception (2026-08-24):** `REG-015C-ATOM` may modify its explicitly listed cross-layer files and its validator in one cycle because the browser project-entry contract has no green three-file slice, and `REG-015D-ATOM` may modify its explicitly listed transport, adapter-test and real-HTTP acceptance files in one cycle because the strict terminal event contract is required to expose the real acceptance regression. `lint-loop.sh` recognizes only these exact item IDs as 14-file and 6-file exceptions; all other items remain capped at three files. These exceptions do not permit compatibility paths, fallback protocols, or hidden migration behavior.
 - If a fourth file is required, do not edit product code. Split the item into ordered child items, each naming at most 3 exact files and one executable Verify command; update Open, append the Cycle log, and end the cycle.
 - `docs/THESISFORGE_V2_PRODUCT_SPEC.md` is normative. `docs/THESISFORGE_V2_IMPLEMENTATION_PLAN.md` is a discovery catalogue, not a script. Re-slice any catalogue task that cannot finish green in one cycle.
 - Every completed cycle must leave the selected item’s baseline green. Do not commit intentionally failing normal tests, disabled checks, partial public-entry migrations, or placeholder success paths.
@@ -96,16 +96,18 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Open
 
-- [REG-015D] Migrate the real HTTP acceptance to canonical V2 project input
-  - Parent: ordered child 4/4 of `REG-015`; depends on `REG-015C-ATOM`; the original REG-015 Behavior and Acceptance remain unchanged across the ordered children.
-  - Files: `frontend/e2e/real-http.acceptance.ts`, `frontend/e2e/real_http_server.py`
-  - Behavior: the real WSGI acceptance opens a manifest-backed V2 project with front-matter-free canonical Markdown and retains the workspace save, validation, publish build, persisted-source and DOCX package assertions.
-  - Verify: `pnpm --dir frontend exec playwright test --config e2e/real-http.playwright.config.ts e2e/real-http.acceptance.ts`
-  - Acceptance: the exact real-HTTP Playwright test passes through the Python adapter; `thesisforge.yaml` supplies metadata/template/resource authority; no YAML Front Matter, legacy `:::` source, test-only auto-wrap, production compatibility path or fallback is used; saved source and generated DOCX assertions remain intact.
-  - Verification-surface change: authorized; migrates the real HTTP acceptance and its local WSGI fixture.
-  - Attempts: 0
-
 ## Done
+
+- [REG-015D-ATOM] Complete the real HTTP canonical V2 acceptance and strict build terminal contract
+  - Parent: user-authorized atomic replacement for ordered child 4/4 `REG-015D`; the original REG-015D Behavior and Acceptance remain unchanged.
+  - Files: `src/thesis_forge/adapters/runtime.py`, `tests/test_adapters.py`, `tests/test_sidecar.py`, `frontend/e2e/real-http.acceptance.ts`, `LOOP.md`, `lint-loop.sh`
+  - Behavior: the production build stream emits one strict `completed` event carrying a complete `thesisforge.build-report.v2` success report, while the real WSGI acceptance opens a manifest-backed V2 project with front-matter-free canonical Markdown and retains the workspace save, validation, publish build, persisted-source and DOCX package assertions.
+  - Verify: `.venv/bin/python -m pytest tests/test_adapters.py tests/test_sidecar.py && pnpm --dir frontend exec playwright test --config e2e/real-http.playwright.config.ts e2e/real-http.acceptance.ts`
+  - Acceptance: the exact real-HTTP Playwright test passes through the Python adapter; successful terminal events use `type: "completed"` plus `report`, never `type: "success"` plus `result`; `thesisforge.yaml` supplies metadata/template authority; no YAML Front Matter, legacy `:::`, test-only auto-wrap, production compatibility path or fallback is used; saved manifest/source and generated DOCX assertions remain intact.
+  - Verification-surface change: authorized; this is the explicit user-approved atomic transport and real-HTTP acceptance migration; the local WSGI fixture was inspected and requires no source change.
+  - Attempts: 2
+  - Attempt 1 (2026-08-24): Independent Checker FAIL; exact Verify passed backend `45/45` and real HTTP Playwright `1 passed`, target Ruff, frontend typecheck/lint and `git diff --check` passed, but successful reports marked every stage succeeded even without a final preview, preserved raw validation codes such as `heading-level-jump` that violate the `TF-*` BuildReport boundary, and accepted output names containing traversal/path separators; candidate remained Open for repair, no commit or push.
+  - Attempt 2 (2026-08-24): Independent Checker PASS; exact Verify passed backend `47/47` and real HTTP Playwright `1 passed`, BuildReport regressions `20/20`, target Ruff, frontend typecheck/lint, CodeGraph sync, `git diff --check` and `./lint-loop.sh` passed. Independent lifecycle/contract/path probes confirmed no-preview `postflight`/`preview` are skipped, real final preview marks only `preview` succeeded, validation codes normalize to `TF-VALIDATION-*`, traversal/separator/`.`/`..` output names fail with no output report, strict `completed.report` has no legacy `success`/`result`, canonical manifest/source acceptance and DOCX assertions remain intact, exact six-file scope was preserved, unrelated dirty paths stayed untouched, no push.
 
 - [REG-015C-ATOM] Complete the manifest-backed browser project-entry migration
   - Parent: user-authorized atomic replacement for the ordered REG-015C1A, REG-015C1B and REG-015C1C preparation children; the original REG-015C1 Behavior and Acceptance remain unchanged.
@@ -2149,6 +2151,7 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Cycle log
 
+- 2026-08-24 - REG-015D-ATOM Checker FAIL Attempt 1 then PASS Attempt 2; strict completed BuildReport, accurate stage lifecycle, TF-* diagnostic normalization, plain output-name boundary and canonical real-HTTP manifest/source acceptance are green; exact scope remained the six declared files, unrelated dirty paths were preserved and unstaged, no push.
 - 2026-08-23 - V2-525 Checker PASS Attempt 1; exact Verify passed 14/14, target Ruff, `git diff --check`, and `./lint-loop.sh` passed; independent AST/runtime/OpenXML audit confirmed canonical parser migration, the existing V2 fixture, real DOCX 13/13 OpenXML checks, unchanged exit-code/JSON/no-repair assertions, and no fallback/compatibility/dual-source/silent-degradation path; V2-525 moved from Open to Done, candidate scope remained exactly `LOOP.md` and `tests/test_qa_tools.py`, all pre-existing `openspec/**` changes were preserved and unstaged, no push.
 - 2026-08-23 - V2-524 Checker PASS Attempt 1; exact Verify passed 24/24, target Ruff, `git diff --check`, and `./lint-loop.sh` passed; independent AST/runtime audit confirmed canonical parser migration, typed Figure/caption Citation output, `RenderPlan.citation_order == ("container2026",)`, unchanged non-target compiler tests/assertions, and no fallback/compatibility/dual-source/silent-degradation path; V2-524 moved from Open to Done, candidate scope remained exactly `LOOP.md` and `tests/test_compiler.py`, all pre-existing `openspec/**` changes were preserved and unstaged, no push.
 - 2026-08-23 - V2-523 Checker PASS Attempt 1; exact Verify passed 7/7, target Ruff, `git diff --check`, and `./lint-loop.sh` passed; independent AST/runtime audit confirmed standard V2 figure/display-equation/GFM table parsing and manifest override issue coverage; V2-523 moved from Open to Done, candidate scope remained exactly `LOOP.md` and `tests/core/test_object_overrides.py`, all pre-existing `openspec/**` changes were preserved and unstaged, one local commit, no push.

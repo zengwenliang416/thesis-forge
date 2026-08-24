@@ -66,7 +66,7 @@ for index, match in enumerate(matches):
 
 item_header = re.compile(r"^- \[([A-Za-z0-9_-]+)\]\s+(.+)$", re.MULTILINE)
 ids: dict[str, str] = {}
-authorized_atomic_file_limits = {"REG-015C-ATOM": 14}
+authorized_atomic_file_limits = {"REG-015C-ATOM": 14, "REG-015D-ATOM": 6}
 
 for section_name in ("Open", "Done", "Blocked"):
     body = sections.get(section_name, "")

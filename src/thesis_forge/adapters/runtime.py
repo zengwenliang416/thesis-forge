@@ -4,7 +4,7 @@ import re
 import shutil
 import tempfile
 from collections.abc import Callable, Iterator
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, replace
 from pathlib import Path, PurePosixPath
 from queue import Queue
 from threading import Lock, Thread
@@ -37,6 +37,7 @@ from thesis_forge.application.contracts import (
     BuildLogEntry,
     BuildLogLevel,
     BuildOutcome,
+    BuildOutput,
     BuildReport,
     BuildReportStage,
     BuildStage,
@@ -51,7 +52,7 @@ from thesis_forge.application.services import (
     BuildStageLifecycle,
     ProjectApplicationService,
 )
-from thesis_forge.core.model import Heading, inline_plain_text
+from thesis_forge.core.model import Heading, ValidationIssue, inline_plain_text
 from thesis_forge.presentation.preview import map_preview_result
 from thesis_forge.project.loader import load_project
 from thesis_forge.project.model import ProjectRelativePath
@@ -76,6 +77,7 @@ CancellationPredicate = Callable[[], bool]
 LIVE_PREVIEW_STEM_RE = re.compile(
     r"^\.?thesisforge-live-preview-[0-9a-f]{32}$"
 )
+BUILD_REPORT_CODE_RE = re.compile(r"^TF-[A-Z0-9-]+$")
 _serialize_build_report = serialize_build_report
 
 
@@ -267,6 +269,149 @@ def _failed_build_report(
         stages=stages,
         logs=logs,
     )
+
+
+def _plain_file_name(value: object, *, label: str) -> str:
+    if (
+        not isinstance(value, str)
+        or not value
+        or value in {".", ".."}
+        or Path(value).name != value
+        or "/" in value
+        or "\\" in value
+    ):
+        raise ValueError(f"{label} must be a plain file name")
+    return value
+
+
+def _canonical_build_report_code(code: str) -> str:
+    if BUILD_REPORT_CODE_RE.fullmatch(code):
+        return code
+    normalized = re.sub(r"[^A-Za-z0-9]+", "-", code).strip("-").upper()
+    normalized = normalized.removeprefix("TF-")
+    if not normalized:
+        raise ValueError("build result diagnostic code is required")
+    return f"TF-VALIDATION-{normalized}"
+
+
+def _successful_build_stages(
+    progressed: tuple[BuildStage, ...],
+    *,
+    has_final_preview: bool,
+) -> tuple[BuildStageState, ...]:
+    succeeded = {BuildReportStage(stage.value) for stage in progressed}
+    if has_final_preview:
+        succeeded.add(BuildReportStage.PREVIEW)
+    return tuple(
+        BuildStageState(
+            name=stage,
+            status=(
+                BuildStageStatus.SUCCEEDED
+                if stage in succeeded
+                else BuildStageStatus.SKIPPED
+            ),
+        )
+        for stage in BuildReportStage
+    )
+
+
+def _build_report_diagnostic(
+    item: dict,
+    *,
+    sequence: int,
+    source_file: str | None,
+) -> BuildDiagnostic:
+    diagnostic = BuildDiagnostic.from_validation_issue(
+        ValidationIssue(
+            code=item["code"],
+            severity=item["severity"],
+            message=item["message"],
+            line=item.get("line"),
+            target=item.get("target"),
+            details=item.get("details", {}),
+        ),
+        sequence=sequence,
+        source_file=source_file,
+    )
+    return replace(
+        diagnostic,
+        code=_canonical_build_report_code(diagnostic.code),
+    )
+
+
+def _serialize_success_build_report(
+    result: dict,
+    *,
+    build_id: str,
+    intent: BuildIntent,
+    source_file: str | None,
+    progressed: tuple[BuildStage, ...],
+) -> dict:
+    output = result.get("output")
+    if not isinstance(output, dict):
+        raise TypeError("build result output must be an object")
+    output_name = _plain_file_name(
+        output.get("name"),
+        label="build result output name",
+    )
+
+    final_preview = output.get("finalPreview")
+    if final_preview is not None and not isinstance(final_preview, dict):
+        raise TypeError("build result final preview must be an object")
+    preview_name = (
+        _plain_file_name(
+            final_preview.get("fileName"),
+            label="build result final preview file name",
+        )
+        if final_preview is not None
+        else None
+    )
+    if preview_name is not None and not preview_name.lower().endswith(".pdf"):
+        raise ValueError("build result final preview file name must be a PDF")
+
+    diagnostics = tuple(
+        _build_report_diagnostic(
+            item,
+            sequence=sequence,
+            source_file=source_file,
+        )
+        for sequence, item in enumerate(result.get("diagnostics", ()), start=1)
+    )
+    primary = next(
+        (
+            diagnostic.id
+            for diagnostic in diagnostics
+            if diagnostic.severity is BuildDiagnosticSeverity.ERROR
+        ),
+        None,
+    )
+    report = BuildReport(
+        schema_version=BuildReport.SCHEMA_VERSION,
+        build_id=build_id,
+        intent=intent,
+        outcome=BuildOutcome.SUCCEEDED,
+        stages=_successful_build_stages(
+            progressed,
+            has_final_preview=final_preview is not None,
+        ),
+        failed_stage=None,
+        primary_diagnostic_id=primary,
+        diagnostics=diagnostics,
+        logs=(),
+        output=BuildOutput(
+            docx_path=Path(output_name),
+            pdf_path=Path(preview_name) if preview_name is not None else None,
+            preview_stale=False,
+            successful_build_id=build_id,
+        ),
+    )
+    serialized = serialize_build_report(report)
+    if final_preview is not None:
+        serialized_output = serialized.get("output")
+        if not isinstance(serialized_output, dict):
+            raise ValueError("successful build report output is missing")
+        serialized_output["finalPreview"] = final_preview
+    return serialized
 
 
 def _final_preview_descriptor(
@@ -1013,8 +1158,14 @@ class WorkbenchCommandDispatcher:
                 {
                     "protocol": PROTOCOL_VERSION,
                     "requestId": request_id,
-                    "type": "success",
-                    "result": result,
+                    "type": "completed",
+                    "report": _serialize_success_build_report(
+                        result,
+                        build_id=build_id,
+                        intent=intent,
+                        source_file=source_file,
+                        progressed=tuple(progressed),
+                    ),
                 }
             )
         except Exception as error:  # noqa: BLE001 - terminal report boundary

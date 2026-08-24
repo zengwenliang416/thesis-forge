@@ -1267,7 +1267,9 @@ def test_web_rejects_microsoft_word_preview_metadata(tmp_path: Path):
     assert response["error"]["message"] == "web automatic preview must use LibreOffice"
 
 
-def test_build_event_stream_emits_ordered_progress_and_one_success(tmp_path: Path):
+def test_build_event_stream_emits_ordered_progress_and_completed_report(
+    tmp_path: Path,
+):
     dispatcher, source, _calls = _dispatcher(tmp_path)
     output = tmp_path / "thesis.docx"
 
@@ -1299,7 +1301,7 @@ def test_build_event_stream_emits_ordered_progress_and_one_success(tmp_path: Pat
         "progress",
         "progress",
         "progress",
-        "success",
+        "completed",
     ]
     assert [event["stage"] for event in events[:-1]] == [
         "parse",
@@ -1308,12 +1310,94 @@ def test_build_event_stream_emits_ordered_progress_and_one_success(tmp_path: Pat
         "render",
         "finalize",
     ]
-    assert events[-1]["result"]["output"] == {
-        "kind": "desktop",
-        "name": "thesis.docx",
+    report = events[-1]["report"]
+    assert report["schemaVersion"] == "thesisforge.build-report.v2"
+    assert report["outcome"] == "succeeded"
+    assert report["failedStage"] is None
+    assert report["primaryDiagnosticId"] is None
+    assert [stage["status"] for stage in report["stages"]] == [
+        "succeeded",
+        "succeeded",
+        "succeeded",
+        "succeeded",
+        "succeeded",
+        "skipped",
+        "skipped",
+    ]
+    assert report["output"] == {
+        "docxPath": "thesis.docx",
+        "pdfPath": None,
+        "previewStale": False,
+        "successfulBuildId": report["buildId"],
     }
+    assert "result" not in events[-1]
     assert all(event["requestId"] == "build-1" for event in events)
     json.dumps(events)
+
+
+def test_build_event_stream_normalizes_validation_codes(tmp_path: Path):
+    _dispatcher_instance, source, _calls = _dispatcher(tmp_path)
+    output = tmp_path / "thesis.docx"
+
+    def build(_source, output_path, *, on_progress=None, **_kwargs):
+        on_progress(BuildStage.PARSE)
+        Path(output_path).write_bytes(b"docx")
+        return BuildResult(
+            output_path=Path(output_path),
+            issues=(
+                ValidationIssue(
+                    code="heading-level-jump",
+                    severity="warning",
+                    message="标题层级跳跃",
+                    line=2,
+                ),
+            ),
+        )
+
+    request = _request("build", source)
+    request["payload"]["output"] = {
+        "kind": "desktop",
+        "path": str(output),
+        "fileName": output.name,
+    }
+    events: list[dict] = []
+
+    WorkbenchCommandDispatcher(
+        runtime=DesktopRuntime(),
+        build=build,
+    ).stream_build(request, events.append)
+
+    report = events[-1]["report"]
+    assert report["diagnostics"][0]["code"] == (
+        "TF-VALIDATION-HEADING-LEVEL-JUMP"
+    )
+
+
+def test_build_event_stream_rejects_non_plain_output_name(tmp_path: Path):
+    _dispatcher_instance, source, _calls = _dispatcher(tmp_path)
+    output = tmp_path / "thesis.docx"
+
+    def build(_source, output_path, **_kwargs):
+        Path(output_path).write_bytes(b"docx")
+        return BuildResult(output_path=Path(output_path), issues=())
+
+    request = _request("build", source)
+    request["payload"]["output"] = {
+        "kind": "desktop",
+        "path": str(output),
+        "fileName": "../secret.docx",
+    }
+    events: list[dict] = []
+
+    WorkbenchCommandDispatcher(
+        runtime=DesktopRuntime(),
+        build=build,
+    ).stream_build(request, events.append)
+
+    report = events[-1]["report"]
+    assert report["outcome"] == "failed"
+    assert report["diagnostics"][0]["code"] == "TF-TRANSPORT-BUILD-FAILED"
+    assert "../secret.docx" not in json.dumps(report)
 
 
 def test_build_event_stream_emits_one_typed_cancellation_error(tmp_path: Path):

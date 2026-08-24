@@ -5,20 +5,21 @@ import { fileURLToPath } from "node:url";
 const workspaceRoot = fileURLToPath(
   new URL("../test-results/real-http-workspaces/", import.meta.url),
 );
-const sourceText = `---
-document:
-  type: bachelor_thesis
+const manifestText = `schema: thesisforge.project.v2
+project:
+  id: real-http-acceptance
   language: zh-CN
-  spec_version: "1.0"
-thesis:
-  title: "真实 HTTP 验收"
-author:
-  name: "测试作者"
+document:
+  source: thesis.md
+metadata:
+  title:
+    zh: 真实 HTTP 验收
+  author:
+    name: 测试作者
 render:
-  template_id: "bachelor-base"
----
-
-# 绪论 {#chap:introduction}
+  template_id: example-university-2026
+`;
+const sourceText = `# 绪论 {#chap:introduction}
 
 初始正文。
 `;
@@ -37,20 +38,32 @@ test("runs the Web workbench through the real Python HTTP adapter", async ({
       response.url().endsWith("/api/v1/workspaces") &&
       response.request().method() === "POST",
   );
-  await page.locator('input[type="file"]').setInputFiles({
-    name: "thesis.md",
-    mimeType: "text/markdown",
-    buffer: Buffer.from(sourceText),
-  });
+  await page.locator('input[type="file"]').setInputFiles([
+    {
+      name: "thesisforge.yaml",
+      mimeType: "application/yaml",
+      buffer: Buffer.from(manifestText),
+    },
+    {
+      name: "thesis.md",
+      mimeType: "text/markdown",
+      buffer: Buffer.from(sourceText),
+    },
+  ]);
   const workspaceResponse = await workspaceResponsePromise;
   expect(workspaceResponse.status()).toBe(201);
   expect(workspaceResponse.headers()["x-thesisforge-adapter"]).toBe(
     "python-wsgi",
   );
   const workspacePayload = (await workspaceResponse.json()) as {
-    source: { workspaceId: string };
+    project: { id: string; root: string; manifestPath: string };
+    source: { workspaceId: string; fileName: string };
   };
   const workspaceId = workspacePayload.source.workspaceId;
+  expect(workspacePayload.project.id).toBe("real-http-acceptance");
+  expect(workspacePayload.project.root).not.toContain(workspaceRoot);
+  expect(workspacePayload.project.manifestPath).not.toContain(workspaceRoot);
+  expect(workspacePayload.source.fileName).toBe("thesis.md");
 
   const editor = page.getByRole("textbox", { name: "Markdown 文稿内容" });
   await expect(editor).toHaveValue(sourceText);
@@ -101,6 +114,9 @@ test("runs the Web workbench through the real Python HTTP adapter", async ({
   expect(
     await readFile(`${workspaceRoot}/${workspaceId}/thesis.md`, "utf8"),
   ).toBe(savedText);
+  expect(
+    await readFile(`${workspaceRoot}/${workspaceId}/thesisforge.yaml`, "utf8"),
+  ).toBe(manifestText);
   const docx = await readFile(`${workspaceRoot}/${workspaceId}/thesis.docx`);
   expect(docx.byteLength).toBeGreaterThan(1_000);
   expect(docx.subarray(0, 2).toString("ascii")).toBe("PK");

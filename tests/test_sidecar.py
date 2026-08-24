@@ -89,13 +89,18 @@ def test_sidecar_build_stream_uses_the_shared_event_contract(tmp_path: Path):
     assert [event["type"] for event in events] == [
         "progress",
         "progress",
-        "success",
+        "completed",
     ]
     assert [event.get("stage") for event in events] == [
         "parse",
         "finalize",
         None,
     ]
+    report = events[-1]["report"]
+    assert report["outcome"] == "succeeded"
+    assert report["output"]["docxPath"] == "thesis.docx"
+    assert report["output"]["successfulBuildId"] == report["buildId"]
+    assert "result" not in events[-1]
     assert all(event["requestId"] == "sidecar-build-1" for event in events)
 
 
@@ -255,11 +260,13 @@ def test_sidecar_build_event_exposes_only_the_strict_preview_descriptor(
         list(stream_json_lines(dispatcher, json.dumps(request)))[-1]
     )
 
-    assert event["result"]["output"]["finalPreview"] == {
+    assert event["type"] == "completed"
+    assert event["report"]["output"]["finalPreview"] == {
         "engine": "libreoffice",
         "label": "LibreOffice PDF",
         "fileName": "thesis.preview.pdf",
     }
+    assert event["report"]["stages"][-1]["status"] == "succeeded"
     assert str(tmp_path) not in json.dumps(event)
 
 
