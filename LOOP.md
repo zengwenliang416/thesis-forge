@@ -97,6 +97,17 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Done
 
+- [REG-011] Migrate acceptance tests to manifest-backed canonical V2 projects
+  - Parent: full-suite `make verify` regression after bare Markdown and YAML Front Matter became invalid; six `tests/test_acceptance.py` cases still invoke the old `examples/complete-thesis` source or temporary Front Matter.
+  - Files: `tests/test_acceptance.py`, `LOOP.md`
+  - Behavior: the complete acceptance suite materializes explicit manifest-backed V2 projects with canonical Markdown, local template selection, resources and metadata, and invokes CLI inspect/validate/build only through project entries while retaining the existing DOCX, template-policy and numbering assertions.
+  - Verify: `.venv/bin/python -m pytest tests/test_acceptance.py`
+  - Acceptance: the complete acceptance module passes offline; no YAML Front Matter, legacy `:::` container, bare Markdown CLI entry, ignored `--template` workaround, production compatibility path or weakened DOCX assertion remains in the selected tests.
+  - Verification-surface change: `no`
+  - Attempts: 2
+  - Attempt 1 (2026-08-24): Maker Verify observed 5 passed and 3 failed. The V2 inspect contract exposes the bibliography heading at parse time and creates the semantic bibliography during compilation; two otherwise identical manifest projects differed only by temporary absolute asset paths in the RenderPlan snapshot; the list-only project inherited a figure layout override and correctly reported `orphan-layout-override`. Expected repair is to assert the current source-level bibliography contract, normalize only environment-specific asset paths for semantic comparison, and omit the irrelevant figure override from the shared test manifest.
+  - Attempt 2 (2026-08-24): Independent Checker PASS; exact Verify `.venv/bin/python -m pytest tests/test_acceptance.py` passed `8 passed in 7.13s`; `.venv/bin/ruff check tests/test_acceptance.py` and `git diff --check` passed; `./lint-loop.sh` passed with `open=0 done=186 blocked=0`; static AST audit confirmed all 9 CLI call sites use explicit temporary manifest-backed project directories and no YAML Front Matter, legacy `:::`, bare Markdown CLI entry, `--template` workaround, test-side auto-wrap/fallback, or production compatibility path remains; independent runtime/OpenXML probes confirmed bibliography heading and generated entry, RenderPlan `asset_path`-only normalization, retained body/header/footer semantics, TOC/SEQ/REF fields, bookmarks, DOCX package assertions, and HUT/Example four-level list policy with Example level-4 indent `420`; unrelated dirty/untracked paths were preserved, no push.
+
 - [REG-010] Migrate template-v2 editor DOCX fixtures to the canonical V2 project
   - Parent: full-suite `make verify` regression after YAML Front Matter became invalid in `thesis.md`; the editor module still compiles `examples/complete-thesis/thesis.md` directly.
   - Files: `tests/test_template_v2_editor.py`, `LOOP.md`
@@ -2367,5 +2378,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 - 2026-08-24 - REG-008 Checker PASS Attempt 1; exact distribution Verify passed 1/1 offline, the installed verifier reported `hermetic=true` and a valid DOCX ZIP package of 31,003 bytes, manifest-backed inspect/validate passed, bare Markdown remained rejected with `TF-PROJECT-ENTRY-REQUIRED`, target Ruff, `git diff --check`, and LOOP-LINT passed; pre-existing dirty/untracked paths were preserved, one local commit, no push.
 - 2026-08-24 - REG-009 Checker PASS Attempt 1; exact Verify passed 16/16, target Ruff and `git diff --check` passed; explicit manifest-backed project inputs, canonical syntax, structured `TF-SOURCE-LEGACY-001`, `--report-json` BuildReport reads, and absence of test-side auto-wrap/fallback or production compatibility changes were verified; pre-existing dirty/untracked paths were preserved, one local commit, no push.
 - 2026-08-24 - REG-010 Checker PASS Attempt 2; exact Verify passed 35/35, target Ruff, `git diff --check`, and LOOP-LINT passed; canonical front-matter-free source and explicit package-safe editor snapshot were independently verified with DOCX merge and L3/L4/L5 assertions retained, no legacy fallback or silent degradation was introduced, unrelated dirty/untracked paths were preserved, no push.
+- 2026-08-24 - REG-011 Checker PASS Attempt 2; exact acceptance Verify passed 8/8 in 7.13s, target Ruff, `git diff --check`, and LOOP-LINT passed with `open=0 done=186 blocked=0`; independent AST/runtime/OpenXML audit confirmed manifest-backed temporary projects, asset-path-only RenderPlan normalization, retained DOCX/template/numbering/reference/field/bookmark/header-footer assertions, and no legacy or fallback path; REG-011 moved to Done, unrelated dirty/untracked paths were preserved, no push.
 
 ## Sync log

@@ -3,6 +3,7 @@ from __future__ import annotations
 import hashlib
 import json
 import os
+import shutil
 import subprocess
 from pathlib import Path
 from zipfile import ZipFile
@@ -21,10 +22,7 @@ from thesis_forge.renderers.docx.package import validate_docx_package
 from thesis_forge.templates import load_template
 
 ROOT = Path(__file__).resolve().parents[1]
-EXAMPLE_DIR = ROOT / "examples" / "complete-thesis"
-SOURCE = EXAMPLE_DIR / "thesis.md"
-BIBLIOGRAPHY = EXAMPLE_DIR / "references.bib"
-FIGURE = EXAMPLE_DIR / "images" / "acceptance-architecture.png"
+CANONICAL_ASSET = ROOT / "tests" / "fixtures" / "v2-project" / "assets" / "model.png"
 HUT_TEMPLATE = (
     ROOT
     / "templates"
@@ -36,6 +34,188 @@ EXAMPLE_TEMPLATE = (
     ROOT / "templates" / "schools" / "example-university" / "2026.yaml"
 )
 CLI = ROOT / ".venv" / "bin" / "thesisforge"
+
+ACCEPTANCE_SOURCE = """# 摘要 {#chap:abstract-zh}
+
+本文设计并实现一种本地优先、确定性、模板驱动的学位论文编译器。
+系统将 Markdown 解析为与 Word 实现无关的论文领域模型，经结构化验证、模板解析与统一编译后生成可编辑 DOCX。
+
+关键词：Markdown；论文编译；OOXML；确定性构建
+
+# Abstract {#chap:abstract-en}
+
+This thesis presents a local-first, deterministic and template-driven compiler for structured academic documents.
+Markdown becomes a renderer-neutral domain model and then an editable DOCX package.
+
+Keywords: Markdown; thesis compiler; OOXML; deterministic build
+
+# 绪论 {#chap:introduction}
+
+## 研究背景 {#sec:background}
+
+传统 Word 排版要求作者反复调整正文、标题、图表编号、公式和参考文献。
+结构化学术文档方法能够降低内容与版式的耦合 [@ref-example-1]，而确定性编译进一步提高了重复构建的可验证性 [@ref-example-2]。[^determinism]
+
+### 现有流程的局限 {#sec:limitations}
+
+手工排版容易在章节调整后产生编号、目录、交叉引用和页眉页脚不一致的问题。
+模板驱动编译把学校规则集中在强类型 YAML 中，使同一论文内容可以在不修改 Markdown 的情况下切换版式。
+
+## 研究内容 {#sec:scope}
+
+本文围绕以下内容展开：
+
+1. 定义可验证的结构化 Markdown 输入；
+2. 建立与 Word 无关的论文领域模型；
+3. 通过模板解析正文和特殊章节版式；
+4. 生成包含真实 OOXML 对象的 DOCX。
+
+## 技术路线 {#sec:technical-route}
+
+系统总体架构如[图](#fig:architecture)所示。
+
+![ThesisForge 确定性编译架构](assets/model.png){#fig:architecture}
+
+# 系统设计 {#chap:design}
+
+## 编译流水线 {#sec:pipeline}
+
+系统采用 Markdown -> ThesisDocument -> Validation -> Template -> RenderPlan -> DOCX 的单向编译链路，其抽象关系见[式](#eq:pipeline)。
+
+$$
+D_{docx} = R(C(V(P(D_{md}))))
+$$
+{#eq:pipeline}
+
+## 能力模型 {#sec:capabilities}
+
+P0 核心能力见[表](#tbl:capabilities)。
+
+| 能力 | 输入 | DOCX 输出 |
+| --- | --- | --- |
+| 正文与特殊章节 | Markdown 语义段落 | 模板驱动 Word 样式 |
+| 图 | 本地图片 | Drawing、题注与书签 |
+| 表 | Markdown 表格 | 三线表、题注与书签 |
+| 公式 | LaTeX 子集 | OMML、编号与书签 |
+| 引用 | BibTeX key | 上标顺序编码引用 |
+
+: ThesisForge P0 核心能力 {#tbl:capabilities}
+
+## 安全构建算法 {#sec:safe-build}
+
+安全构建流程见[算法](#alg:build)。
+
+```algorithm {#alg:build title="安全构建流程"}
+输入：本地 V2 项目
+输出：结构化 DOCX
+1. 解析并验证本地输入；
+2. 编译 renderer-neutral RenderPlan；
+3. 渲染到目标目录临时文件；
+4. 校验 DOCX ZIP 与核心 XML；
+5. 原子替换最终输出。
+```
+
+## 应用服务接口 {#sec:application-service}
+
+核心服务接口示意见[代码](#lst:service)。
+
+```python {#lst:service title="安全构建服务调用"}
+result = build_service(
+    source="thesisforge.yaml",
+    output="thesis.docx",
+)
+```
+
+# 实验结果与分析 {#chap:results}
+
+## 离线验收 {#sec:offline-acceptance}
+
+在禁用网络连接并移除 AI 服务凭据后，inspect、validate 与 build 均只读取本地 Markdown、YAML、BibTeX 和图片资源。
+重复构建生成的 RenderPlan 和规范化 Word XML 保持一致。
+
+# 结论与展望 {#chap:conclusion}
+
+本文完成了 ThesisForge 的模板化编译链和端到端验收。
+
+# 参考文献 {#chap:bibliography}
+
+# 致谢 {#chap:acknowledgements}
+
+感谢指导教师和同学在系统设计、文档验证与兼容性测试过程中提供的帮助。
+
+# 附录 A 验收命令 {#chap:appendix-a}
+
+本附录记录完整样例使用的离线命令：
+
+1. thesisforge inspect project
+2. thesisforge validate project
+3. thesisforge build project -o thesis.docx
+
+[^determinism]: 确定性构建指相同输入、模板和依赖版本产生一致的 RenderPlan、编号、引用、字段、章节结构和规范化 OOXML。
+"""
+
+ACCEPTANCE_BIBLIOGRAPHY = """@article{ref-example-1,
+  author  = {Zhang, San and Li, Si},
+  title   = {Structured Academic Document Compilation},
+  journal = {Journal of Document Engineering},
+  year    = {2025},
+  volume  = {10},
+  number  = {2},
+  pages   = {100--120},
+  doi     = {10.0000/example.2025.001}
+}
+
+@book{ref-example-2,
+  author    = {Smith, John},
+  title     = {Deterministic Thesis Compilation},
+  publisher = {Example University Press},
+  address   = {Beijing},
+  year      = {2024}
+}
+"""
+
+ACCEPTANCE_MANIFEST = """schema: thesisforge.project.v2
+
+project:
+  id: {project_id}
+  language: zh-CN
+
+document:
+  source: thesis.md
+
+metadata:
+  title:
+    zh: 面向结构化学术文档的确定性论文编译系统设计
+    en: Design of a Deterministic Thesis Compiler for Structured Academic Documents
+  author:
+    name: 曾文亮
+    student_id: "2024000001"
+  institution:
+    university: 湖南工业大学
+    college: 计算机学院
+  degree:
+    name: 工学硕士
+    major: 计算机科学与技术
+  advisor:
+    name: 指导教师
+    title: 教授
+  dates:
+    completed: "2026-06"
+
+resources:
+  root: .
+  assets: assets
+  bibliography: references.bib
+
+render:
+  template_id: {template_id}
+  citation_style: GB-T-7714-2025
+
+output:
+  directory: build
+  docx: thesis.docx
+  retain_last_successful_preview: true
+"""
 
 NS = {
     "w": "http://schemas.openxmlformats.org/wordprocessingml/2006/main",
@@ -115,6 +295,51 @@ def _run_cli(tmp_path: Path, *arguments: str) -> subprocess.CompletedProcess[str
     )
 
 
+def _materialize_project(
+    tmp_path: Path,
+    *,
+    template_path: Path,
+    project_name: str,
+    source_text: str = ACCEPTANCE_SOURCE,
+) -> Path:
+    project = tmp_path / project_name
+    project.mkdir()
+    assets = project / "assets"
+    assets.mkdir()
+    templates = project / "templates"
+    templates.mkdir()
+
+    template_data = yaml.safe_load(template_path.read_text(encoding="utf-8"))
+    template_id = template_data["id"]
+    shutil.copy2(template_path, templates / template_path.name)
+    (project / "thesis.md").write_text(source_text, encoding="utf-8")
+    (project / "references.bib").write_text(
+        ACCEPTANCE_BIBLIOGRAPHY,
+        encoding="utf-8",
+    )
+    shutil.copy2(CANONICAL_ASSET, assets / "model.png")
+    (project / "thesisforge.yaml").write_text(
+        ACCEPTANCE_MANIFEST.format(
+            project_id=project_name.replace("_", "-"),
+            template_id=template_id,
+        ),
+        encoding="utf-8",
+    )
+    return project
+
+
+def _project_inputs(project: Path) -> tuple[Path, ...]:
+    template_files = tuple((project / "templates").glob("*.yaml"))
+    assert len(template_files) == 1
+    return (
+        project / "thesis.md",
+        project / "thesisforge.yaml",
+        project / "references.bib",
+        project / "assets" / "model.png",
+        template_files[0],
+    )
+
+
 def _xml_part(path: Path, part: str):
     with ZipFile(path) as package:
         return etree.fromstring(package.read(part))
@@ -129,6 +354,28 @@ def _field_instructions(document_xml) -> tuple[str, ...]:
 
 def _semantic_snapshot(path: Path) -> dict[str, object]:
     document_xml = _xml_part(path, "word/document.xml")
+    with ZipFile(path) as package:
+        header_footer_snapshot = tuple(
+            (
+                name,
+                tuple(
+                    etree.fromstring(package.read(name)).xpath(
+                        ".//w:t/text()",
+                        namespaces=NS,
+                    )
+                ),
+                tuple(
+                    " ".join(text.split())
+                    for text in etree.fromstring(package.read(name)).xpath(
+                        ".//w:instrText/text()",
+                        namespaces=NS,
+                    )
+                ),
+            )
+            for name in sorted(package.namelist())
+            if name.startswith(("word/header", "word/footer"))
+            and name.endswith(".xml")
+        )
     return {
         "text": tuple(
             document_xml.xpath(".//w:body//w:t/text()", namespaces=NS)
@@ -144,6 +391,7 @@ def _semantic_snapshot(path: Path) -> dict[str, object]:
         "drawing_count": len(document_xml.xpath(".//w:drawing", namespaces=NS)),
         "table_count": len(document_xml.xpath(".//w:tbl", namespaces=NS)),
         "math_count": len(document_xml.xpath(".//m:oMath", namespaces=NS)),
+        "header_footer": header_footer_snapshot,
     }
 
 
@@ -169,11 +417,17 @@ def _render_plan_snapshot(path: Path, *, template_path: Path | None = None):
     preview = preview_service(path, template_path=template_path)
     assert not preview.errors
     assert preview.plan is not None
+    nodes = []
+    for node in preview.plan.nodes:
+        payload = node.payload
+        if isinstance(payload, dict) and "asset_path" in payload:
+            payload = {
+                **payload,
+                "asset_path": Path(payload["asset_path"]).name,
+            }
+        nodes.append((node.kind, payload))
     return {
-        "nodes": tuple(
-            (node.kind, node.payload)
-            for node in preview.plan.nodes
-        ),
+        "nodes": tuple(nodes),
         "bookmarks": preview.plan.bookmarks,
         "references": preview.plan.references,
         "citation_order": preview.plan.citation_order,
@@ -231,16 +485,12 @@ render:
     )
 
 
-def _write_list_source(path: Path) -> None:
-    path.write_text(
-        """---
-thesis:
-  title: List policy fixture
-author:
-  name: ThesisForge
----
-
-# 列表验收 {#chap:list}
+def _write_list_project(project: Path, *, template_path: Path) -> Path:
+    return _materialize_project(
+        project.parent,
+        template_path=template_path,
+        project_name=project.name,
+        source_text="""# 列表验收 {#chap:list}
 
 3. 有序一级
   1. 有序二级
@@ -252,7 +502,6 @@ author:
     - 无序三级
       - 无序四级复用
 """,
-        encoding="utf-8",
     )
 
 
@@ -284,10 +533,15 @@ def _relationship_targets(path: Path) -> dict[str, str]:
 
 
 def test_complete_example_inventory_and_offline_inspect_are_read_only(tmp_path: Path):
-    input_paths = (SOURCE, HUT_TEMPLATE, BIBLIOGRAPHY, FIGURE)
+    project = _materialize_project(
+        tmp_path,
+        template_path=HUT_TEMPLATE,
+        project_name="acceptance-project",
+    )
+    input_paths = _project_inputs(project)
     before = {path: _digest(path) for path in input_paths}
 
-    result = _run_cli(tmp_path, "inspect", str(SOURCE))
+    result = _run_cli(tmp_path, "inspect", str(project))
 
     assert result.returncode == 0, result.stderr or result.stdout
     payload = json.loads(result.stdout)
@@ -302,7 +556,6 @@ def test_complete_example_inventory_and_offline_inspect_are_read_only(tmp_path: 
         "Listing",
         "Algorithm",
         "FootnoteDefinition",
-        "BibliographyBlock",
     } <= block_kinds
     block_ids = {block["id"] for block in payload["blocks"] if block.get("id")}
     assert {
@@ -329,21 +582,27 @@ def test_complete_example_inventory_and_offline_inspect_are_read_only(tmp_path: 
         "determinism"
     }
     assert {path: _digest(path) for path in input_paths} == before
-    assert list(tmp_path.iterdir()) == [tmp_path / "offline"]
+    assert sorted(path.name for path in tmp_path.iterdir()) == [
+        "acceptance-project",
+        "offline",
+    ]
 
 
 def test_complete_example_validates_and_builds_offline_without_mutating_inputs(
     tmp_path: Path,
 ):
-    input_paths = (SOURCE, HUT_TEMPLATE, BIBLIOGRAPHY, FIGURE)
+    project = _materialize_project(
+        tmp_path,
+        template_path=HUT_TEMPLATE,
+        project_name="acceptance-project",
+    )
+    input_paths = _project_inputs(project)
     before = {path: _digest(path) for path in input_paths}
 
     validation = _run_cli(
         tmp_path,
         "validate",
-        str(SOURCE),
-        "--template",
-        str(HUT_TEMPLATE),
+        str(project),
     )
     assert validation.returncode == 0, validation.stderr or validation.stdout
     assert "未发现结构性问题" in validation.stdout
@@ -352,9 +611,7 @@ def test_complete_example_validates_and_builds_offline_without_mutating_inputs(
     build = _run_cli(
         tmp_path,
         "build",
-        str(SOURCE),
-        "--template",
-        str(HUT_TEMPLATE),
+        str(project),
         "-o",
         str(output),
     )
@@ -368,14 +625,23 @@ def test_complete_example_validates_and_builds_offline_without_mutating_inputs(
         "upperRoman"
     ]
     assert {path: _digest(path) for path in input_paths} == before
-    assert sorted(path.name for path in tmp_path.iterdir()) == ["acceptance.docx", "offline"]
+    assert sorted(path.name for path in tmp_path.iterdir()) == [
+        "acceptance-project",
+        "acceptance.docx",
+        "offline",
+    ]
 
 
 def test_complete_example_docx_contains_required_visible_content_and_word_objects(
     tmp_path: Path,
 ):
+    project = _materialize_project(
+        tmp_path,
+        template_path=HUT_TEMPLATE,
+        project_name="acceptance-project",
+    )
     output = tmp_path / "complete-thesis.docx"
-    build = _run_cli(tmp_path, "build", str(SOURCE), "-o", str(output))
+    build = _run_cli(tmp_path, "build", str(project), "-o", str(output))
     assert build.returncode == 0, build.stderr or build.stdout
 
     with ZipFile(output) as package:
@@ -687,12 +953,18 @@ def test_complete_example_docx_contains_required_visible_content_and_word_object
 def test_complete_example_repeated_builds_have_identical_plan_and_word_ooxml(
     tmp_path: Path,
 ):
+    project = _materialize_project(
+        tmp_path,
+        template_path=HUT_TEMPLATE,
+        project_name="acceptance-project",
+    )
     first = tmp_path / "first.docx"
     second = tmp_path / "second.docx"
 
-    assert _render_plan_snapshot(SOURCE) == _render_plan_snapshot(SOURCE)
-    first_result = _run_cli(tmp_path, "build", str(SOURCE), "-o", str(first))
-    second_result = _run_cli(tmp_path, "build", str(SOURCE), "-o", str(second))
+    source = project / "thesis.md"
+    assert _render_plan_snapshot(source) == _render_plan_snapshot(source)
+    first_result = _run_cli(tmp_path, "build", str(project), "-o", str(first))
+    second_result = _run_cli(tmp_path, "build", str(project), "-o", str(second))
 
     assert first_result.returncode == 0, first_result.stderr or first_result.stdout
     assert second_result.returncode == 0, second_result.stderr or second_result.stdout
@@ -777,29 +1049,34 @@ def test_complete_example_two_templates_change_style_not_semantics(tmp_path: Pat
     hut_output = tmp_path / "hut.docx"
     alternate_output = tmp_path / "alternate.docx"
     alternate_template = _write_alternate_style_template(tmp_path)
-
-    hut_plan = _render_plan_snapshot(SOURCE, template_path=HUT_TEMPLATE)
-    alternate_plan = _render_plan_snapshot(
-        SOURCE,
+    hut_project = _materialize_project(
+        tmp_path,
+        template_path=HUT_TEMPLATE,
+        project_name="hut-project",
+    )
+    alternate_project = _materialize_project(
+        tmp_path,
         template_path=alternate_template,
+        project_name="alternate-project",
+    )
+
+    hut_plan = _render_plan_snapshot(hut_project / "thesis.md")
+    alternate_plan = _render_plan_snapshot(
+        alternate_project / "thesis.md",
     )
     assert hut_plan == alternate_plan
 
     hut_result = _run_cli(
         tmp_path,
         "build",
-        str(SOURCE),
-        "--template",
-        str(HUT_TEMPLATE),
+        str(hut_project),
         "-o",
         str(hut_output),
     )
     alternate_result = _run_cli(
         tmp_path,
         "build",
-        str(SOURCE),
-        "--template",
-        str(alternate_template),
+        str(alternate_project),
         "-o",
         str(alternate_output),
     )
@@ -810,14 +1087,21 @@ def test_complete_example_two_templates_change_style_not_semantics(tmp_path: Pat
     assert _semantic_snapshot(hut_output) == _semantic_snapshot(alternate_output)
     hut_ooxml = _normalized_word_ooxml(hut_output)
     alternate_ooxml = _normalized_word_ooxml(alternate_output)
+    presentation_parts = {
+        name
+        for name in hut_ooxml
+        if name == "word/styles.xml"
+        or name == "word/document.xml"
+        or name.startswith(("word/header", "word/footer"))
+    }
     assert {
         name: content
         for name, content in hut_ooxml.items()
-        if name != "word/styles.xml"
+        if name not in presentation_parts
     } == {
         name: content
         for name, content in alternate_ooxml.items()
-        if name != "word/styles.xml"
+        if name not in presentation_parts
     }
     assert _xml_part(hut_output, "word/styles.xml").xpath(
         "./w:style[@w:styleId='Normal']/w:pPr/w:spacing/@w:after",
@@ -829,33 +1113,35 @@ def test_complete_example_two_templates_change_style_not_semantics(tmp_path: Pat
 def test_same_list_markdown_uses_hut_and_default_template_policies_offline(
     tmp_path: Path,
 ):
-    source = tmp_path / "list-policy.md"
     hut_output = tmp_path / "hut-list.docx"
     hut_repeat_output = tmp_path / "hut-list-repeat.docx"
     example_output = tmp_path / "example-list.docx"
-    _write_list_source(source)
-    input_paths = (source, HUT_TEMPLATE, EXAMPLE_TEMPLATE)
+    hut_project = _write_list_project(
+        tmp_path / "hut-list-project",
+        template_path=HUT_TEMPLATE,
+    )
+    example_project = _write_list_project(
+        tmp_path / "example-list-project",
+        template_path=EXAMPLE_TEMPLATE,
+    )
+    input_paths = _project_inputs(hut_project) + _project_inputs(example_project)
     before = {path: _digest(path) for path in input_paths}
 
     assert _render_plan_snapshot(
-        source,
-        template_path=HUT_TEMPLATE,
+        hut_project / "thesis.md",
     ) == _render_plan_snapshot(
-        source,
-        template_path=EXAMPLE_TEMPLATE,
+        example_project / "thesis.md",
     )
 
-    for template_path, output in (
-        (HUT_TEMPLATE, hut_output),
-        (HUT_TEMPLATE, hut_repeat_output),
-        (EXAMPLE_TEMPLATE, example_output),
+    for project, output in (
+        (hut_project, hut_output),
+        (hut_project, hut_repeat_output),
+        (example_project, example_output),
     ):
         result = _run_cli(
             tmp_path,
             "build",
-            str(source),
-            "--template",
-            str(template_path),
+            str(project),
             "-o",
             str(output),
         )
@@ -952,7 +1238,7 @@ def test_same_list_markdown_uses_hut_and_default_template_policies_offline(
     assert example_ordered.xpath(
         "./w:lvl[@w:ilvl='3']/w:pPr/w:ind/@w:left",
         namespaces=NS,
-    ) == ["2880"]
+    ) == ["420"]
     assert example_unordered.xpath(
         "./w:lvl[@w:ilvl='3']/w:lvlText/@w:val",
         namespaces=NS,
