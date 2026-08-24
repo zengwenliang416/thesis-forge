@@ -97,6 +97,16 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Done
 
+- [REG-009] Migrate CLI regression tests to the manifest-backed v2 entry contract
+  - Parent: full-suite `make verify` regression after bare Markdown and YAML Front Matter became invalid CLI inputs.
+  - Files: `tests/test_cli.py`, `LOOP.md`
+  - Behavior: CLI regression tests create and pass explicit `thesisforge.yaml` project entries, assert structured legacy-source rejection, and no longer auto-wrap bare Markdown through a test-only compatibility runner.
+  - Verify: `.venv/bin/python -m pytest tests/test_cli.py`
+  - Acceptance: the complete CLI test module passes; project metadata/resources/template selection are expressed through the manifest; malformed/legacy source tests assert the current structured diagnostics; no production compatibility path or silent test fallback is introduced.
+  - Verification-surface change: `no`
+  - Attempts: 1
+  - Attempt 1 (2026-08-24): Independent Checker PASS; exact Verify passed 16/16, target Ruff and `git diff --check` passed; static audit confirmed explicit manifest-backed project inputs, canonical link/figure/equation syntax, structured `TF-SOURCE-LEGACY-001` assertions, project BuildReport reads through `--report-json`, and no test-side auto-wrap/fallback or production compatibility diff.
+
 - [REG-008] Verify the installed distribution through a manifest-backed project entry
   - Parent: full-suite distribution regression after bare Markdown became an invalid CLI entry.
   - Files: `scripts/verify_distribution.py`, `tests/test_distribution.py`, `LOOP.md`
@@ -2344,5 +2354,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 - 2026-08-24 - REG-006 Checker PASS Attempt 1; restored the two declared Phase 0 v2 sample DOCX assets, exact package tests passed 61/61, both OpenXML packages passed 13/13, semantic regeneration was stable, and only REG-007/REG-008 remain Open; pre-existing dirty/untracked paths were preserved, no push.
 - 2026-08-24 - REG-007 Checker PASS Attempt 1; migrated v2 fixtures now use canonical front-matter-free Markdown, exact migration Verify passed 3/3, full package/pack regression passed 24/24, target Ruff and `git diff --check` passed, and only REG-008 remains Open; pre-existing dirty/untracked paths were preserved, no push.
 - 2026-08-24 - REG-008 Checker PASS Attempt 1; exact distribution Verify passed 1/1 offline, the installed verifier reported `hermetic=true` and a valid DOCX ZIP package of 31,003 bytes, manifest-backed inspect/validate passed, bare Markdown remained rejected with `TF-PROJECT-ENTRY-REQUIRED`, target Ruff, `git diff --check`, and LOOP-LINT passed; pre-existing dirty/untracked paths were preserved, one local commit, no push.
+- 2026-08-24 - REG-009 Checker PASS Attempt 1; exact Verify passed 16/16, target Ruff and `git diff --check` passed; explicit manifest-backed project inputs, canonical syntax, structured `TF-SOURCE-LEGACY-001`, `--report-json` BuildReport reads, and absence of test-side auto-wrap/fallback or production compatibility changes were verified; pre-existing dirty/untracked paths were preserved, one local commit, no push.
 
 ## Sync log
