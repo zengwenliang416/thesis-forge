@@ -1,0 +1,947 @@
+{
+  "schemaVersion": 1,
+  "blocks": [
+    {
+      "kind": "cover",
+      "startLine": 6,
+      "endLine": 16,
+      "generated": true,
+      "source": null
+    },
+    {
+      "kind": "section_break",
+      "startLine": 18,
+      "endLine": 18,
+      "generated": true,
+      "source": null
+    },
+    {
+      "kind": "heading",
+      "startLine": 20,
+      "endLine": 20,
+      "generated": false,
+      "source": {
+        "nodeId": "n3",
+        "sourceSpan": {
+          "line": 1,
+          "column": null,
+          "endLine": null,
+          "endColumn": null
+        }
+      }
+    },
+    {
+      "kind": "paragraph",
+      "startLine": 22,
+      "endLine": 22,
+      "generated": false,
+      "source": {
+        "nodeId": "n15",
+        "sourceSpan": {
+          "line": 3,
+          "column": null,
+          "endLine": null,
+          "endColumn": null
+        }
+      }
+    },
+    {
+      "kind": "paragraph",
+      "startLine": 24,
+      "endLine": 24,
+      "generated": false,
+      "source": {
+        "nodeId": "n41",
+        "sourceSpan": {
+          "line": 8,
+          "column": null,
+          "endLine": null,
+          "endColumn": null
+        }
+      }
+    },
+    {
+      "kind": "paragraph",
+      "startLine": 26,
+      "endLine": 26,
+      "generated": false,
+      "source": {
+        "nodeId": "n44",
+        "sourceSpan": {
+          "line": 13,
+          "column": null,
+          "endLine": null,
+          "endColumn": null
+        }
+      }
+    },
+    {
+      "kind": "heading",
+      "startLine": 28,
+      "endLine": 28,
+      "generated": false,
+      "source": {
+        "nodeId": "n47",
+        "sourceSpan": {
+          "line": 15,
+          "column": null,
+          "endLine": null,
+          "endColumn": null
+        }
+      }
+    },
+    {
+      "kind": "paragraph",
+      "startLine": 30,
+      "endLine": 30,
+      "generated": false,
+      "source": {
+        "nodeId": "n65",
+        "sourceSpan": {
+          "line": 17,
+          "column": null,
+          "endLine": null,
+          "endColumn": null
+        }
+      }
+    },
+    {
+      "kind": "paragraph",
+      "startLine": 32,
+      "endLine": 32,
+      "generated": false,
+      "source": {
+        "nodeId": "n68",
+        "sourceSpan": {
+          "line": 23,
+          "column": null,
+          "endLine": null,
+          "endColumn": null
+        }
+      }
+    },
+    {
+      "kind": "page_break",
+      "startLine": 34,
+      "endLine": 34,
+      "generated": true,
+      "source": null
+    },
+    {
+      "kind": "toc",
+      "startLine": 36,
+      "endLine": 56,
+      "generated": true,
+      "source": null
+    },
+    {
+      "kind": "section_break",
+      "startLine": 58,
+      "endLine": 58,
+      "generated": true,
+      "source": null
+    },
+    {
+      "kind": "heading",
+      "startLine": 60,
+      "endLine": 60,
+      "generated": false,
+      "source": {
+        "nodeId": "n71",
+        "sourceSpan": {
+          "line": 25,
+          "column": null,
+          "endLine": null,
+          "endColumn": null
+        }
+      }
+    },
+    {
+      "kind": "heading",
+      "startLine": 62,
+      "endLine": 62,
+      "generated": false,
+      "source": {
+        "nodeId": "n74",
+        "sourceSpan": {
+          "line": 27,
+          "column": null,
+          "endLine": null,
+          "endColumn": null
+        }
+      }
+    },
+    {
+      "kind": "paragraph",
+      "startLine": 64,
+      "endLine": 64,
+      "generated": false,
+      "source": {
+        "nodeId": "n87",
+        "sourceSpan": {
+          "line": 29,
+          "column": null,
+          "endLine": null,
+          "endColumn": null
+        }
+      }
+    },
+    {
+      "kind": "paragraph",
+      "startLine": 66,
+      "endLine": 66,
+      "generated": false,
+      "source": {
+        "nodeId": "n111",
+        "sourceSpan": {
+          "line": 34,
+          "column": null,
+          "endLine": null,
+          "endColumn": null
+        }
+      }
+    },
+    {
+      "kind": "paragraph",
+      "startLine": 68,
+      "endLine": 69,
+      "generated": false,
+      "source": {
+        "nodeId": "n117",
+        "sourceSpan": {
+          "line": 38,
+          "column": null,
+          "endLine": null,
+          "endColumn": null
+        }
+      }
+    },
+    {
+      "kind": "paragraph",
+      "startLine": 71,
+      "endLine": 71,
+      "generated": false,
+      "source": {
+        "nodeId": "n131",
+        "sourceSpan": {
+          "line": 41,
+          "column": null,
+          "endLine": null,
+          "endColumn": null
+        }
+      }
+    },
+    {
+      "kind": "heading",
+      "startLine": 73,
+      "endLine": 73,
+      "generated": false,
+      "source": {
+        "nodeId": "n144",
+        "sourceSpan": {
+          "line": 47,
+          "column": null,
+          "endLine": null,
+          "endColumn": null
+        }
+      }
+    },
+    {
+      "kind": "paragraph",
+      "startLine": 75,
+      "endLine": 75,
+      "generated": false,
+      "source": {
+        "nodeId": "n147",
+        "sourceSpan": {
+          "line": 49,
+          "column": null,
+          "endLine": null,
+          "endColumn": null
+        }
+      }
+    },
+    {
+      "kind": "list",
+      "startLine": 77,
+      "endLine": 79,
+      "generated": false,
+      "source": {
+        "nodeId": "n154",
+        "sourceSpan": {
+          "line": 51,
+          "column": null,
+          "endLine": null,
+          "endColumn": null
+        }
+      }
+    },
+    {
+      "kind": "paragraph",
+      "startLine": 81,
+      "endLine": 81,
+      "generated": false,
+      "source": {
+        "nodeId": "n157",
+        "sourceSpan": {
+          "line": 55,
+          "column": null,
+          "endLine": null,
+          "endColumn": null
+        }
+      }
+    },
+    {
+      "kind": "list",
+      "startLine": 83,
+      "endLine": 94,
+      "generated": false,
+      "source": {
+        "nodeId": "n182",
+        "sourceSpan": {
+          "line": 57,
+          "column": null,
+          "endLine": null,
+          "endColumn": null
+        }
+      }
+    },
+    {
+      "kind": "heading",
+      "startLine": 96,
+      "endLine": 96,
+      "generated": false,
+      "source": {
+        "nodeId": "n185",
+        "sourceSpan": {
+          "line": 70,
+          "column": null,
+          "endLine": null,
+          "endColumn": null
+        }
+      }
+    },
+    {
+      "kind": "heading",
+      "startLine": 98,
+      "endLine": 98,
+      "generated": false,
+      "source": {
+        "nodeId": "n188",
+        "sourceSpan": {
+          "line": 72,
+          "column": null,
+          "endLine": null,
+          "endColumn": null
+        }
+      }
+    },
+    {
+      "kind": "paragraph",
+      "startLine": 100,
+      "endLine": 100,
+      "generated": false,
+      "source": {
+        "nodeId": "n203",
+        "sourceSpan": {
+          "line": 74,
+          "column": null,
+          "endLine": null,
+          "endColumn": null
+        }
+      }
+    },
+    {
+      "kind": "paragraph",
+      "startLine": 102,
+      "endLine": 102,
+      "generated": false,
+      "source": {
+        "nodeId": "n206",
+        "sourceSpan": {
+          "line": 78,
+          "column": null,
+          "endLine": null,
+          "endColumn": null
+        }
+      }
+    },
+    {
+      "kind": "figure",
+      "startLine": 104,
+      "endLine": 104,
+      "generated": false,
+      "source": {
+        "nodeId": "n209",
+        "sourceSpan": {
+          "line": 80,
+          "column": null,
+          "endLine": null,
+          "endColumn": null
+        }
+      }
+    },
+    {
+      "kind": "paragraph",
+      "startLine": 106,
+      "endLine": 106,
+      "generated": false,
+      "source": {
+        "nodeId": "n212",
+        "sourceSpan": {
+          "line": 82,
+          "column": null,
+          "endLine": null,
+          "endColumn": null
+        }
+      }
+    },
+    {
+      "kind": "list",
+      "startLine": 108,
+      "endLine": 112,
+      "generated": false,
+      "source": {
+        "nodeId": "n227",
+        "sourceSpan": {
+          "line": 84,
+          "column": null,
+          "endLine": null,
+          "endColumn": null
+        }
+      }
+    },
+    {
+      "kind": "heading",
+      "startLine": 114,
+      "endLine": 114,
+      "generated": false,
+      "source": {
+        "nodeId": "n230",
+        "sourceSpan": {
+          "line": 90,
+          "column": null,
+          "endLine": null,
+          "endColumn": null
+        }
+      }
+    },
+    {
+      "kind": "paragraph",
+      "startLine": 116,
+      "endLine": 116,
+      "generated": false,
+      "source": {
+        "nodeId": "n236",
+        "sourceSpan": {
+          "line": 92,
+          "column": null,
+          "endLine": null,
+          "endColumn": null
+        }
+      }
+    },
+    {
+      "kind": "equation",
+      "startLine": 118,
+      "endLine": 121,
+      "generated": false,
+      "source": {
+        "nodeId": "n237",
+        "sourceSpan": {
+          "line": 95,
+          "column": null,
+          "endLine": null,
+          "endColumn": null
+        }
+      }
+    },
+    {
+      "kind": "paragraph",
+      "startLine": 123,
+      "endLine": 123,
+      "generated": false,
+      "source": {
+        "nodeId": "n252",
+        "sourceSpan": {
+          "line": 100,
+          "column": null,
+          "endLine": null,
+          "endColumn": null
+        }
+      }
+    },
+    {
+      "kind": "equation",
+      "startLine": 125,
+      "endLine": 128,
+      "generated": false,
+      "source": {
+        "nodeId": "n253",
+        "sourceSpan": {
+          "line": 103,
+          "column": null,
+          "endLine": null,
+          "endColumn": null
+        }
+      }
+    },
+    {
+      "kind": "paragraph",
+      "startLine": 130,
+      "endLine": 130,
+      "generated": false,
+      "source": {
+        "nodeId": "n269",
+        "sourceSpan": {
+          "line": 108,
+          "column": null,
+          "endLine": null,
+          "endColumn": null
+        }
+      }
+    },
+    {
+      "kind": "heading",
+      "startLine": 132,
+      "endLine": 132,
+      "generated": false,
+      "source": {
+        "nodeId": "n272",
+        "sourceSpan": {
+          "line": 111,
+          "column": null,
+          "endLine": null,
+          "endColumn": null
+        }
+      }
+    },
+    {
+      "kind": "paragraph",
+      "startLine": 134,
+      "endLine": 134,
+      "generated": false,
+      "source": {
+        "nodeId": "n275",
+        "sourceSpan": {
+          "line": 113,
+          "column": null,
+          "endLine": null,
+          "endColumn": null
+        }
+      }
+    },
+    {
+      "kind": "table",
+      "startLine": 136,
+      "endLine": 141,
+      "generated": false,
+      "source": {
+        "nodeId": "n330",
+        "sourceSpan": {
+          "line": 115,
+          "column": null,
+          "endLine": null,
+          "endColumn": null
+        }
+      }
+    },
+    {
+      "kind": "paragraph",
+      "startLine": 143,
+      "endLine": 143,
+      "generated": false,
+      "source": {
+        "nodeId": "n336",
+        "sourceSpan": {
+          "line": 123,
+          "column": null,
+          "endLine": null,
+          "endColumn": null
+        }
+      }
+    },
+    {
+      "kind": "heading",
+      "startLine": 145,
+      "endLine": 145,
+      "generated": false,
+      "source": {
+        "nodeId": "n339",
+        "sourceSpan": {
+          "line": 126,
+          "column": null,
+          "endLine": null,
+          "endColumn": null
+        }
+      }
+    },
+    {
+      "kind": "paragraph",
+      "startLine": 147,
+      "endLine": 147,
+      "generated": false,
+      "source": {
+        "nodeId": "n342",
+        "sourceSpan": {
+          "line": 128,
+          "column": null,
+          "endLine": null,
+          "endColumn": null
+        }
+      }
+    },
+    {
+      "kind": "listing",
+      "startLine": 149,
+      "endLine": 157,
+      "generated": false,
+      "source": {
+        "nodeId": "n345",
+        "sourceSpan": {
+          "line": 130,
+          "column": null,
+          "endLine": null,
+          "endColumn": null
+        }
+      }
+    },
+    {
+      "kind": "paragraph",
+      "startLine": 159,
+      "endLine": 159,
+      "generated": false,
+      "source": {
+        "nodeId": "n360",
+        "sourceSpan": {
+          "line": 139,
+          "column": null,
+          "endLine": null,
+          "endColumn": null
+        }
+      }
+    },
+    {
+      "kind": "heading",
+      "startLine": 161,
+      "endLine": 161,
+      "generated": false,
+      "source": {
+        "nodeId": "n363",
+        "sourceSpan": {
+          "line": 142,
+          "column": null,
+          "endLine": null,
+          "endColumn": null
+        }
+      }
+    },
+    {
+      "kind": "algorithm",
+      "startLine": 163,
+      "endLine": 173,
+      "generated": false,
+      "source": {
+        "nodeId": "n374",
+        "sourceSpan": {
+          "line": 144,
+          "column": null,
+          "endLine": null,
+          "endColumn": null
+        }
+      }
+    },
+    {
+      "kind": "heading",
+      "startLine": 175,
+      "endLine": 175,
+      "generated": false,
+      "source": {
+        "nodeId": "n377",
+        "sourceSpan": {
+          "line": 155,
+          "column": null,
+          "endLine": null,
+          "endColumn": null
+        }
+      }
+    },
+    {
+      "kind": "heading",
+      "startLine": 177,
+      "endLine": 177,
+      "generated": false,
+      "source": {
+        "nodeId": "n380",
+        "sourceSpan": {
+          "line": 157,
+          "column": null,
+          "endLine": null,
+          "endColumn": null
+        }
+      }
+    },
+    {
+      "kind": "paragraph",
+      "startLine": 179,
+      "endLine": 179,
+      "generated": false,
+      "source": {
+        "nodeId": "n397",
+        "sourceSpan": {
+          "line": 159,
+          "column": null,
+          "endLine": null,
+          "endColumn": null
+        }
+      }
+    },
+    {
+      "kind": "paragraph",
+      "startLine": 181,
+      "endLine": 181,
+      "generated": false,
+      "source": {
+        "nodeId": "n409",
+        "sourceSpan": {
+          "line": 163,
+          "column": null,
+          "endLine": null,
+          "endColumn": null
+        }
+      }
+    },
+    {
+      "kind": "footnote",
+      "startLine": 183,
+      "endLine": 184,
+      "generated": false,
+      "source": {
+        "nodeId": "n411",
+        "sourceSpan": {
+          "line": 166,
+          "column": null,
+          "endLine": null,
+          "endColumn": null
+        }
+      }
+    },
+    {
+      "kind": "heading",
+      "startLine": 186,
+      "endLine": 186,
+      "generated": false,
+      "source": {
+        "nodeId": "n414",
+        "sourceSpan": {
+          "line": 169,
+          "column": null,
+          "endLine": null,
+          "endColumn": null
+        }
+      }
+    },
+    {
+      "kind": "paragraph",
+      "startLine": 188,
+      "endLine": 188,
+      "generated": false,
+      "source": {
+        "nodeId": "n417",
+        "sourceSpan": {
+          "line": 171,
+          "column": null,
+          "endLine": null,
+          "endColumn": null
+        }
+      }
+    },
+    {
+      "kind": "list",
+      "startLine": 190,
+      "endLine": 195,
+      "generated": false,
+      "source": {
+        "nodeId": "n432",
+        "sourceSpan": {
+          "line": 173,
+          "column": null,
+          "endLine": null,
+          "endColumn": null
+        }
+      }
+    },
+    {
+      "kind": "paragraph",
+      "startLine": 197,
+      "endLine": 197,
+      "generated": false,
+      "source": {
+        "nodeId": "n438",
+        "sourceSpan": {
+          "line": 180,
+          "column": null,
+          "endLine": null,
+          "endColumn": null
+        }
+      }
+    },
+    {
+      "kind": "heading",
+      "startLine": 199,
+      "endLine": 199,
+      "generated": false,
+      "source": {
+        "nodeId": "n441",
+        "sourceSpan": {
+          "line": 183,
+          "column": null,
+          "endLine": null,
+          "endColumn": null
+        }
+      }
+    },
+    {
+      "kind": "heading",
+      "startLine": 201,
+      "endLine": 201,
+      "generated": false,
+      "source": {
+        "nodeId": "n444",
+        "sourceSpan": {
+          "line": 185,
+          "column": null,
+          "endLine": null,
+          "endColumn": null
+        }
+      }
+    },
+    {
+      "kind": "paragraph",
+      "startLine": 203,
+      "endLine": 203,
+      "generated": false,
+      "source": {
+        "nodeId": "n453",
+        "sourceSpan": {
+          "line": 187,
+          "column": null,
+          "endLine": null,
+          "endColumn": null
+        }
+      }
+    },
+    {
+      "kind": "heading",
+      "startLine": 205,
+      "endLine": 205,
+      "generated": false,
+      "source": {
+        "nodeId": "n456",
+        "sourceSpan": {
+          "line": 191,
+          "column": null,
+          "endLine": null,
+          "endColumn": null
+        }
+      }
+    },
+    {
+      "kind": "paragraph",
+      "startLine": 207,
+      "endLine": 207,
+      "generated": false,
+      "source": {
+        "nodeId": "n459",
+        "sourceSpan": {
+          "line": 193,
+          "column": null,
+          "endLine": null,
+          "endColumn": null
+        }
+      }
+    },
+    {
+      "kind": "list",
+      "startLine": 209,
+      "endLine": 212,
+      "generated": false,
+      "source": {
+        "nodeId": "n472",
+        "sourceSpan": {
+          "line": 195,
+          "column": null,
+          "endLine": null,
+          "endColumn": null
+        }
+      }
+    },
+    {
+      "kind": "heading",
+      "startLine": 214,
+      "endLine": 214,
+      "generated": false,
+      "source": {
+        "nodeId": "n475",
+        "sourceSpan": {
+          "line": 200,
+          "column": null,
+          "endLine": null,
+          "endColumn": null
+        }
+      }
+    },
+    {
+      "kind": "paragraph",
+      "startLine": 216,
+      "endLine": 216,
+      "generated": false,
+      "source": {
+        "nodeId": "n484",
+        "sourceSpan": {
+          "line": 202,
+          "column": null,
+          "endLine": null,
+          "endColumn": null
+        }
+      }
+    },
+    {
+      "kind": "heading",
+      "startLine": 218,
+      "endLine": 218,
+      "generated": false,
+      "source": {
+        "nodeId": "n487",
+        "sourceSpan": {
+          "line": 206,
+          "column": null,
+          "endLine": null,
+          "endColumn": null
+        }
+      }
+    },
+    {
+      "kind": "heading",
+      "startLine": 220,
+      "endLine": 220,
+      "generated": false,
+      "source": {
+        "nodeId": "n491",
+        "sourceSpan": {
+          "line": 215,
+          "column": null,
+          "endLine": null,
+          "endColumn": null
+        }
+      }
+    },
+    {
+      "kind": "bibliography",
+      "startLine": 222,
+      "endLine": 222,
+      "generated": true,
+      "source": null
+    }
+  ]
+}

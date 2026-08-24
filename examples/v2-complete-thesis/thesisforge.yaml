@@ -1,0 +1,51 @@
+schema: thesisforge.project.v2
+
+project:
+  id: v2-complete-thesis
+  language: zh-CN
+
+document:
+  source: thesis.md
+
+metadata:
+  title:
+    zh: 面向可验证文档编译的学术论文示例
+    en: An Academic Thesis Example for Verifiable Document Compilation
+  author:
+    name: 张三
+    student_id: "20260001"
+  institution:
+    university: 示例大学
+    college: 计算机学院
+  degree:
+    name: 工学硕士
+    major: 计算机科学与技术
+  advisor:
+    name: 李教授
+    title: 教授
+  dates:
+    completed: "2026-05"
+
+resources:
+  root: .
+  assets: assets
+  bibliography: references.bib
+
+render:
+  template_id: example-university-2026
+  citation_style: GB-T-7714-2025
+
+layout:
+  objects:
+    fig:architecture:
+      width: 82%
+
+output:
+  directory: build
+  docx: thesis.docx
+  retain_last_successful_preview: true
+
+review:
+  directory: review
+  markdown: thesis.review.md
+  source_map: thesis.review-map.json
