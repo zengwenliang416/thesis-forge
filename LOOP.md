@@ -95,6 +95,8 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Open
 
+## Done
+
 - [V2-539C] Add offline CLI Review export
   - Parent: ordered integration child 3/3 of `V2-539`; depends on `V2-539A-R1` and `V2-539B`, and the original V2-539 Behavior and Acceptance remain unchanged.
   - Files: `src/thesis_forge/cli.py`, `tests/cli/test_review_command.py`, `LOOP.md`
@@ -102,9 +104,8 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
   - Verify: `.venv/bin/python -m pytest tests/cli/test_review_command.py`
   - Acceptance: the command works offline, accepts only a project directory or `thesisforge.yaml`, returns structured diagnostics on blocked input, writes both Review artifacts under the requested output directory and preserves reader-facing content/source navigation separation.
   - Verification-surface change: `no`
-  - Attempts: 0
-
-## Done
+  - Attempts: 1
+  - Attempt 1 (2026-08-23): Independent Checker PASS; exact Verify passed 4/4; related Review/CLI regression passed 61/61; `.venv/bin/ruff check src/thesis_forge/cli.py tests/cli/test_review_command.py`, `git diff --check`, and `./lint-loop.sh` passed (`open=1 done=175 blocked=1` before this lifecycle update); offline black-box checks passed ready directory entry, ready `thesisforge.yaml` entry, custom manifest-declared nested artifact paths, long output-directory JSON without Rich line corruption, blocked Markdown/source-map artifacts with structured issues and exit 1, and bare Markdown rejection with structured error and exit 2; generated Markdown contained the read-only notice and no raw IDs, citation keys, project absolute paths or legacy `:::` syntax, while source-map JSON remained separate from visible Markdown; static audit found no compatibility layer, fallback, silent degradation or fourth task file, the repository fixture's own invalid citation style/ID was correctly reported as blocked, all pre-existing dirty/untracked paths were preserved, and no push.
 
 - [V2-539A-R1] Add the typed Review Markdown serializer after blocked V2-539A
   - Parent: fresh replacement for blocked `V2-539A`; this item must not mutate or retry the blocked history, and the original V2-539 Behavior and Acceptance remain unchanged across A through C.
@@ -2260,5 +2261,7 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 - 2026-08-23 - V2-539A-R1 queued as a fresh replacement after V2-539A reached three independent Checker failures; the misplaced Attempt line was removed from the `Use this shape` example, `V2-539B/C` now depend on the replacement, the blocked history was not mutated, and no product code was edited.
 - 2026-08-23 - V2-539A-R1 Checker PASS Attempt 1; exact Verify passed 13/13, target Ruff and `C901`, `git diff --check`, and `./lint-loop.sh` passed; independent 68/68 typed/variant, sanitization, asset-safety, status, source-map-boundary and fixture-serialization probes passed; V2-539A-R1 moved from Open to Done, V2-539B/C remained Open and dependent on R1, blocked V2-539A history remained unchanged, only the two candidate files plus `LOOP.md` were authorized, all pre-existing dirty/untracked paths were preserved, no push.
 - 2026-08-23 - V2-539B Checker PASS Attempt 1; exact Verify passed 27/27, related Review Markdown regression passed 13/13, target Ruff, `C901`, `git diff --check`, and `./lint-loop.sh` passed; independent black-box audit passed exact typed result/block rejection, generated/source consistency, deterministic 1-based Markdown ranges, positive and ordered SourceSpan coordinates, POSIX/Windows/UNC/URI/nested URI/repeated percent-encoded absolute NodeId rejection, stable raw JSON key order, and Markdown/source-metadata isolation; V2-539B moved from Open to Done, V2-539C remains Open and depends on B, the blocked V2-539A history and all pre-existing dirty/untracked paths were preserved, no push.
+
+- 2026-08-23 - V2-539C Checker PASS Attempt 1; V2-539C moved from Open to Done after exact Verify 4/4, related Review/CLI regression 61/61, target Ruff, `git diff --check`, LOOP-LINT, and independent ready/blocked/manifest/bare-input/long-path black-box checks passed; candidate scope was exactly `src/thesis_forge/cli.py`, `tests/cli/test_review_command.py`, and `LOOP.md`, all pre-existing dirty/untracked paths were preserved, one local commit, no push.
 
 ## Sync log

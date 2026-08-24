@@ -28,6 +28,11 @@ from thesis_forge.application.contracts import (
 from thesis_forge.application.services import ProjectApplicationService
 from thesis_forge.core.index import DocumentIndex
 from thesis_forge.presentation import localized_issue_message
+from thesis_forge.presentation.review import map_review_result
+from thesis_forge.presentation.review_markdown import (
+    render_review_markdown,
+    serialize_review_source_map,
+)
 from thesis_forge.project.loader import ProjectLoadError, load_project
 from thesis_forge.project.paths import ProjectPathError, resolve_project_paths
 from thesis_forge.templates import TemplateLoadError
@@ -174,6 +179,36 @@ def _report_application_error(error: ApplicationStageError, *, source: Path) -> 
     raise typer.Exit(2) from None
 
 
+def _report_review_error(
+    error: ProjectLoadError | ProjectPathError | ApplicationStageError | OSError,
+) -> None:
+    if isinstance(error, (ProjectLoadError, ProjectPathError)):
+        code = error.code
+    elif isinstance(error, ApplicationStageError):
+        code = f"TF-REVIEW-{error.stage.upper()}"
+    else:
+        code = "TF-REVIEW-OUTPUT-WRITE"
+    payload = {
+        "error": {
+            "code": code,
+            "message": str(error),
+        }
+    }
+    if getattr(error, "path", None) is not None:
+        payload["error"]["path"] = str(error.path)
+    console.print(
+        json.dumps(
+            payload,
+            ensure_ascii=False,
+            indent=2,
+            sort_keys=True,
+        ),
+        markup=False,
+        soft_wrap=True,
+    )
+    raise typer.Exit(2) from None
+
+
 @app.command()
 def inspect(source: Path) -> None:
     """解析 Markdown 并输出结构。"""
@@ -262,6 +297,71 @@ def validate(
     console.print(table)
 
     if any(i.severity == "error" for i in issues):
+        raise typer.Exit(1)
+
+
+@app.command()
+def review(
+    source: Path,
+    output_dir: Annotated[
+        Path,
+        typer.Option("--output-dir", help="Review 导出目录"),
+    ],
+) -> None:
+    """生成 reader-facing Review Markdown 和 source map。"""
+    try:
+        _require_project_input(source)
+        project = load_project(source)
+        request = ProjectRequest(
+            project=ProjectIdentity(
+                project_id=project.manifest.project.id,
+                project_root=project.project_root,
+                manifest_path=project.manifest_path,
+            ),
+            intent=ProjectRequestIntent.REVIEW,
+        )
+        preview = ProjectApplicationService().preview(request)
+        review_document = map_review_result(preview)
+        rendered = render_review_markdown(
+            review_document,
+            source_name=project.manifest.document.source.root,
+        )
+        source_map = serialize_review_source_map(rendered)
+
+        output_root = output_dir.expanduser().resolve()
+        markdown_path = (
+            output_root / project.manifest.review.markdown.root
+        ).resolve()
+        source_map_path = (
+            output_root / project.manifest.review.source_map.root
+        ).resolve()
+        if markdown_path == source_map_path:
+            raise ValueError("Review Markdown and source map output paths must differ")
+        markdown_path.parent.mkdir(parents=True, exist_ok=True)
+        source_map_path.parent.mkdir(parents=True, exist_ok=True)
+        markdown_path.write_text(rendered.markdown, encoding="utf-8")
+        source_map_path.write_text(source_map, encoding="utf-8")
+    except (ProjectLoadError, ProjectPathError, ApplicationStageError) as error:
+        _report_review_error(error)
+    except (OSError, ValueError) as error:
+        _report_review_error(error)
+
+    console.print(
+        json.dumps(
+            {
+                "status": review_document.status,
+                "markdown": str(markdown_path),
+                "sourceMap": str(source_map_path),
+                "issues": [asdict(issue) for issue in review_document.issues],
+            },
+            ensure_ascii=False,
+            indent=2,
+            sort_keys=True,
+        ),
+        markup=False,
+        soft_wrap=True,
+    )
+    if review_document.status == "blocked":
         raise typer.Exit(1)
 
 
