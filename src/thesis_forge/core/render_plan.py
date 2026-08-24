@@ -218,7 +218,7 @@ class ListInstruction(_Instruction):
 class FigureWidthInstruction:
     value: Decimal
     unit: Literal["percent", "mm", "cm", "pt", "em"]
-    origin: Literal["source", "template"]
+    origin: Literal["manifest", "source", "template"]
 
     @property
     def payload(self) -> dict[str, str]:

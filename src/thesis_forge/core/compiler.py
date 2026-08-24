@@ -1,9 +1,11 @@
 from __future__ import annotations
 
 import re
+from collections.abc import Mapping
 from dataclasses import dataclass, replace
 from decimal import Decimal, InvalidOperation
 from pathlib import Path
+from typing import Literal
 
 from thesis_forge.bibliography import (
     BibliographyDatabase,
@@ -207,6 +209,8 @@ def _sequence_instruction(
 def _resolved_figure_width(
     width: str | None,
     template: ThesisTemplate | None,
+    *,
+    origin: Literal["manifest", "source"] = "source",
 ) -> FigureWidthInstruction | None:
     if width is not None:
         match = FIGURE_WIDTH_RE.fullmatch(width.strip())
@@ -224,7 +228,7 @@ def _resolved_figure_width(
         return FigureWidthInstruction(
             value=value,
             unit="percent" if unit == "%" else unit,
-            origin="source",
+            origin=origin,
         )
 
     default_width = (
@@ -499,6 +503,7 @@ class _CompilationContext:
     document: ThesisDocument
     template: ThesisTemplate | None
     symbols: SymbolTable
+    figure_width_overrides: Mapping[str, str]
     citation_numbers: dict[str, int]
     footnote_ids: dict[str, int]
     bibliography_database: BibliographyDatabase | None
@@ -683,6 +688,12 @@ def _compile_block(
     if isinstance(block, ListBlock):
         return _compile_list(block, context)
     if isinstance(block, Figure):
+        manifest_width = (
+            context.figure_width_overrides.get(block.id)
+            if block.id is not None
+            else None
+        )
+        effective_width = manifest_width if manifest_width is not None else block.width
         return FigureInstruction(
             source_id=block.id,
             src=block.src,
@@ -693,8 +704,12 @@ def _compile_block(
                     retain_citation_raw=False,
                 )
             ),
-            width=block.width,
-            resolved_width=_resolved_figure_width(block.width, context.template),
+            width=effective_width,
+            resolved_width=_resolved_figure_width(
+                effective_width,
+                context.template,
+                origin="manifest" if manifest_width is not None else "source",
+            ),
             chapter=chapter,
             number=number,
             label=label,
@@ -840,6 +855,7 @@ def compile_document(
     template_path: str | Path | None = None,
     bibliography_database: BibliographyDatabase | None = None,
     citation_formatter: CitationFormatter | None = None,
+    figure_width_overrides: Mapping[str, str] | None = None,
 ) -> RenderPlan:
     """Resolve document-wide semantics into renderer-neutral instructions."""
     symbols = SymbolTable.from_document(document, template)
@@ -847,6 +863,7 @@ def compile_document(
         document=document,
         template=template,
         symbols=symbols,
+        figure_width_overrides=figure_width_overrides or {},
         citation_numbers=_initial_citation_numbers(document),
         footnote_ids=_footnote_ids(document),
         bibliography_database=bibliography_database,

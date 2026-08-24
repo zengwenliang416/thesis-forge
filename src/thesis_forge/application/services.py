@@ -383,6 +383,24 @@ def validation_service(
     return _validate_inspection(inspection, template_path, active)
 
 
+def _compile_validation(
+    validation: ValidationResult,
+    dependencies: ApplicationDependencies,
+) -> RenderPlan:
+    figure_width_overrides = {
+        object_id: override.width
+        for object_id, override in validation.context.manifest_layout_objects.items()
+        if override.width is not None
+    }
+    return dependencies.compiler(
+        validation.document,
+        template=validation.context.template,
+        template_path=validation.context.template_path,
+        bibliography_database=validation.context.bibliography_database,
+        figure_width_overrides=figure_width_overrides,
+    )
+
+
 def preview_service(
     source: str | Path,
     *,
@@ -406,12 +424,7 @@ def preview_service(
         )
 
     try:
-        plan = active.compiler(
-            validation.document,
-            template=validation.context.template,
-            template_path=validation.context.template_path,
-            bibliography_database=validation.context.bibliography_database,
-        )
+        plan = _compile_validation(validation, active)
     except ApplicationStageError:
         raise
     except Exception as error:
@@ -462,12 +475,7 @@ def build_service(
     _check_canceled(should_cancel, BuildStage.COMPILE)
     _notify(on_progress, BuildStage.COMPILE)
     try:
-        plan = active.compiler(
-            inspection.document,
-            template=validation.context.template,
-            template_path=validation.context.template_path,
-            bibliography_database=validation.context.bibliography_database,
-        )
+        plan = _compile_validation(validation, active)
     except Exception as error:
         raise ApplicationStageError(BuildStage.COMPILE, error) from error
 

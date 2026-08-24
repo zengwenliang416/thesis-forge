@@ -37,6 +37,7 @@ PROTOCOL_EXAMPLES = (
 W_NS = "http://schemas.openxmlformats.org/wordprocessingml/2006/main"
 M_NS = "http://schemas.openxmlformats.org/officeDocument/2006/math"
 R_NS = "http://schemas.openxmlformats.org/officeDocument/2006/relationships"
+WP_NS = "http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing"
 PKG_REL_NS = "http://schemas.openxmlformats.org/package/2006/relationships"
 HYPERLINK_REL_TYPE = (
     "http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink"
@@ -49,7 +50,7 @@ MONOSPACE_FONTS = {
     "liberation mono",
     "noto sans mono",
 }
-NS = {"w": W_NS, "m": M_NS, "r": R_NS}
+NS = {"w": W_NS, "m": M_NS, "r": R_NS, "wp": WP_NS}
 
 
 @dataclass
@@ -477,6 +478,35 @@ def validate_docx(path: Path) -> None:
                     if any(pattern.search(text) for pattern in marker_patterns):
                         errors.append(f"unresolved marker in normal paragraph: {text[:120]!r}")
                         break
+                sections = document.findall(".//w:sectPr", NS)
+                extents = document.findall(".//wp:extent", NS)
+                if not sections or not extents:
+                    errors.append("manifest figure width evidence is missing")
+                else:
+                    page_size = sections[-1].find("./w:pgSz", NS)
+                    page_margin = sections[-1].find("./w:pgMar", NS)
+                    if page_size is None or page_margin is None:
+                        errors.append("main section page geometry is missing")
+                    else:
+                        page_width = int(page_size.get(f"{{{W_NS}}}w", "0"))
+                        left = int(page_margin.get(f"{{{W_NS}}}left", "0"))
+                        right = int(page_margin.get(f"{{{W_NS}}}right", "0"))
+                        expected_width = round(
+                            (page_width - left - right) * 635 * 85 / 100
+                        )
+                        actual_widths = {
+                            int(extent.get("cx", "0")) for extent in extents
+                        }
+                        # LibreOffice may normalize DrawingML extents by a fraction
+                        # of one twip while refreshing fields.
+                        if not any(
+                            abs(actual_width - expected_width) <= 635
+                            for actual_width in actual_widths
+                        ):
+                            errors.append(
+                                "manifest figure width override not applied: "
+                                f"expected {expected_width}, got {sorted(actual_widths)}"
+                            )
             if not any(name.startswith("word/media/") for name in names):
                 errors.append("no embedded media found")
     except (OSError, zipfile.BadZipFile) as exc:
