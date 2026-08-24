@@ -1,5 +1,6 @@
 import { expect, test } from "@playwright/test";
 import { readFileSync } from "node:fs";
+import type { BuildReport } from "../src/transport/buildEvents";
 
 const workspaceId = "a".repeat(32);
 const previewFixture = JSON.parse(
@@ -14,6 +15,42 @@ const previewResult = {
   ...previewFixture,
   diagnostics: [],
 };
+const BUILD_STAGES = [
+  "parse",
+  "validate",
+  "compile",
+  "render",
+  "finalize",
+  "postflight",
+  "preview",
+] as const;
+
+type BuildOutput = NonNullable<BuildReport["output"]>;
+
+function completedBuildEvent(
+  requestId: string,
+  output: BuildOutput,
+  intent: BuildReport["intent"] = "publish",
+) {
+  const report: BuildReport = {
+    schemaVersion: "thesisforge.build-report.v2",
+    buildId: requestId,
+    intent,
+    outcome: "succeeded",
+    stages: BUILD_STAGES.map((name) => ({ name, status: "succeeded" as const })),
+    failedStage: null,
+    primaryDiagnosticId: null,
+    diagnostics: [],
+    logs: [],
+    output,
+  };
+  return {
+    protocol: "thesisforge.workbench.v1",
+    requestId,
+    type: "completed",
+    report,
+  };
+}
 
 test.beforeEach(async ({ page }) => {
   let livePreviewSequence = 0;
@@ -199,19 +236,12 @@ test("opens, edits, explicitly saves, refreshes, and builds through HTTP", async
           stage,
         }),
       ),
-      {
-        protocol: "thesisforge.workbench.v1",
-        requestId,
-        type: "success",
-        result: {
-          output: {
-            kind: "web-download",
-            name: "thesis.docx",
-            downloadId: workspaceId,
-          },
-          diagnostics: [],
-        },
-      },
+      completedBuildEvent(requestId, {
+        docxPath: "/tmp/thesis.docx",
+        pdfPath: null,
+        previewStale: false,
+        successfulBuildId: requestId,
+      }),
     ];
     await route.fulfill({
       status: 200,
@@ -346,31 +376,31 @@ test("loads and refreshes a complete automatic PDF after an edit", async ({
       livePreviewBuilds += 1;
     }
     const outputName = request.payload.output.fileName;
+    const finalPreview = {
+      engine: "libreoffice" as const,
+      label: "LibreOffice PDF" as const,
+      fileName: outputName.replace(/\.docx$/i, ".preview.pdf"),
+      downloadId: workspaceId,
+      ...(livePreview
+        ? { livePreviewId: request.payload.output.livePreviewId }
+        : {}),
+    };
     await route.fulfill({
       status: 200,
       contentType: "application/x-ndjson",
-      body: `${JSON.stringify({
-        protocol: "thesisforge.workbench.v1",
-        requestId: request.requestId,
-        type: "success",
-        result: {
-          output: {
-            kind: "web-download",
-            name: outputName,
-            downloadId: workspaceId,
-            finalPreview: {
-              engine: "libreoffice",
-              label: "LibreOffice PDF",
-              fileName: outputName.replace(/\.docx$/i, ".preview.pdf"),
-              downloadId: workspaceId,
-              ...(livePreview
-                ? { livePreviewId: request.payload.output.livePreviewId }
-                : {}),
-            },
+      body: `${JSON.stringify(
+        completedBuildEvent(
+          request.requestId,
+          {
+            docxPath: `/tmp/${outputName}`,
+            pdfPath: null,
+            previewStale: false,
+            successfulBuildId: request.requestId,
+            finalPreview,
           },
-          diagnostics: [],
-        },
-      })}\n`,
+          livePreview ? "live-preview" : "publish",
+        ),
+      )}\n`,
     });
   });
   await page.route(
@@ -450,15 +480,14 @@ test("cancels an active Web build and retries without losing prior output", asyn
     await route.fulfill({
       status: 200,
       contentType: "application/x-ndjson",
-      body: `${JSON.stringify({
-        protocol: "thesisforge.workbench.v1",
-        requestId: request.requestId,
-        type: "success",
-        result: {
-          output: { kind: "web-download", name: "retry.docx", downloadId: workspaceId },
-          diagnostics: [],
-        },
-      })}\n`,
+      body: `${JSON.stringify(
+        completedBuildEvent(request.requestId, {
+          docxPath: "/tmp/retry.docx",
+          pdfPath: null,
+          previewStale: false,
+          successfulBuildId: request.requestId,
+        }),
+      )}\n`,
     });
   });
   await page.route("**/api/v1/dispatch", async (route) => {

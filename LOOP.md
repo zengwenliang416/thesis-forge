@@ -97,6 +97,16 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Done
 
+- [REG-014] Migrate mocked frontend build streams to the canonical BuildReport event contract
+  - Parent: the second `./stop-check.sh` run reached real Playwright E2E after installing the missing browser and found four desktop failures; all failures report `无效的 ThesisForge 构建事件` because two E2E files still emit the retired `type: "success"` plus `result` terminal shape.
+  - Files: `frontend/e2e/acceptance.spec.ts`, `frontend/e2e/workbench.spec.ts`, `LOOP.md`
+  - Behavior: mocked build-stream terminals use `type: "completed"` with a complete `thesisforge.build-report.v2` report, including typed stages, output metadata, and final-preview metadata where applicable, so the current strict frontend decoder and all existing E2E assertions execute end to end.
+  - Verify: `pnpm --dir frontend exec playwright test e2e/acceptance.spec.ts e2e/workbench.spec.ts`
+  - Acceptance: the exact two-file Playwright command passes; no build-stream mock emits the retired `type: "success"`/`result` shape; output names, publish/live-preview intent, cancellation retry, PDF descriptor and existing UI assertions remain covered; no production decoder compatibility path or silent fallback is introduced.
+  - Verification-surface change: `no`
+  - Attempts: 1
+  - Attempt 1 (2026-08-24): Independent Checker PASS; exact Playwright Verify passed 16/16 with 20 skipped (36 total), frontend typecheck, lint, and `git diff --check` passed; independent static audit confirmed all four build-stream mocks use completed `thesisforge.build-report.v2` reports with complete fields, retained `accepted.docx`/`thesis.docx`/`retry.docx` names, publish/live-preview intent, LibreOffice PDF descriptor and cancellation retry assertions, no `type: "success"` or build-stream `result` terminal shape, no `frontend/src` production diff or compatibility/fallback path; pre-existing `LOOP.md` history hunks and all unrelated dirty/untracked paths were preserved, one local commit, no push.
+
 - [REG-013] Restore the prototype seam probe's global Ruff gate
   - Parent: full-suite `./stop-check.sh` regression after REG-012; all functional checks pass, but the existing read-only OpenSpec prototype has eight global Ruff errors that keep the stop condition red.
   - Files: `openspec/changes/template-v2-build-pipeline-p1/prototype/component/seam_probe.py`, `LOOP.md`
@@ -2402,5 +2412,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 - 2026-08-24 - REG-012 Checker PASS Attempt 1; exact Verify passed 22/22 in 0.11s, target Ruff, `git diff --check`, and LOOP-LINT passed; independent AST/runtime/static audit confirmed four `PACKAGE_DATA` template entries plus one explicit `docx/parts` `--add-data`, matching four wheel `force-include` entries, and the manifest-backed `打开 ThesisForge 项目` Windows native path with retained CDP/Tauri/save/validate/DOCX/ZIP/sensory/failure-evidence/process-snapshot assertions; REG-012 moved from Open to Done, no production behavior changed, unrelated dirty/untracked paths were preserved, one local commit, no push.
 
 - 2026-08-24 - REG-013 Checker PASS Attempt 1; exact target Ruff, `git diff --check`, and `./lint-loop.sh` passed; import-only seam-probe repair was independently scope-audited with unchanged non-import AST/control flow/output, REG-013 moved from Open to Done, historical `LOOP.md` hunks and all unrelated dirty/untracked paths were preserved, no parser compatibility fix, no push.
+- 2026-08-24 - REG-014 Checker PASS Attempt 1; exact Playwright Verify passed 16/16 with 20 skipped (36 total), frontend typecheck, lint, and `git diff --check` passed; independent static audit confirmed all four build-stream mocks use completed `thesisforge.build-report.v2` reports with complete fields, retained `accepted.docx`/`thesis.docx`/`retry.docx` names, publish/live-preview intent, LibreOffice PDF descriptor and cancellation retry assertions, no `type: "success"` or build-stream `result` terminal shape, no `frontend/src` production diff or compatibility/fallback path; pre-existing `LOOP.md` history hunks and all unrelated dirty/untracked paths were preserved, one local commit, no push.
 
 ## Sync log

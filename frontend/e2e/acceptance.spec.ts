@@ -1,5 +1,6 @@
 import { expect, test } from "@playwright/test";
 import { readFileSync } from "node:fs";
+import type { BuildReport } from "../src/transport/buildEvents";
 
 const workspaceId = "b".repeat(32);
 const previewFixture = JSON.parse(
@@ -12,6 +13,42 @@ const acceptedPreview = {
   ...previewFixture,
   diagnostics: [],
 };
+const BUILD_STAGES = [
+  "parse",
+  "validate",
+  "compile",
+  "render",
+  "finalize",
+  "postflight",
+  "preview",
+] as const;
+
+type BuildOutput = NonNullable<BuildReport["output"]>;
+
+function completedBuildEvent(
+  requestId: string,
+  output: BuildOutput,
+  intent: BuildReport["intent"] = "publish",
+) {
+  const report: BuildReport = {
+    schemaVersion: "thesisforge.build-report.v2",
+    buildId: requestId,
+    intent,
+    outcome: "succeeded",
+    stages: BUILD_STAGES.map((name) => ({ name, status: "succeeded" as const })),
+    failedStage: null,
+    primaryDiagnosticId: null,
+    diagnostics: [],
+    logs: [],
+    output,
+  };
+  return {
+    protocol: "thesisforge.workbench.v1",
+    requestId,
+    type: "completed",
+    report,
+  };
+}
 
 test.beforeEach(async ({ page }) => {
   let livePreviewSequence = 0;
@@ -295,19 +332,12 @@ test("verifies populated, dirty, and successful output states with the complete 
         type: "progress",
         stage,
       })),
-      {
-        protocol: "thesisforge.workbench.v1",
-        requestId: request.requestId,
-        type: "success",
-        result: {
-          output: {
-            kind: "web-download",
-            name: "accepted.docx",
-            downloadId: workspaceId,
-          },
-          diagnostics: [],
-        },
-      },
+      completedBuildEvent(request.requestId, {
+        docxPath: "/tmp/accepted.docx",
+        pdfPath: null,
+        previewStale: false,
+        successfulBuildId: request.requestId,
+      }),
     ];
     await route.fulfill({
       status: 200,
