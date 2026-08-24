@@ -190,6 +190,53 @@ def test_desktop_verifier_decodes_sidecar_output_as_utf8(
     assert observed["encoding"] == "utf-8"
 
 
+def test_desktop_verifier_uses_canonical_v2_fixture_and_strict_build_reports() -> None:
+    verifier = _load_module(VERIFY_DESKTOP, "verify_desktop_distribution_contract")
+
+    assert verifier.CANONICAL_PROJECT == ROOT / "tests" / "fixtures" / "v2-project"
+    assert (verifier.CANONICAL_PROJECT / "thesisforge.yaml").is_file()
+    assert (verifier.CANONICAL_PROJECT / "thesis.md").read_text(
+        encoding="utf-8"
+    ).splitlines()[0] == "# 绪论 {#chap:introduction}"
+
+    canceled = verifier._require_build_report(
+        [
+            {
+                "type": "completed",
+                "report": {
+                    "schemaVersion": "thesisforge.build-report.v2",
+                    "outcome": "canceled",
+                },
+            }
+        ],
+        outcome="canceled",
+        label="canceled",
+    )
+    assert canceled["outcome"] == "canceled"
+
+    succeeded = verifier._require_build_report(
+        [
+            {
+                "type": "completed",
+                "report": {
+                    "schemaVersion": "thesisforge.build-report.v2",
+                    "outcome": "succeeded",
+                },
+            }
+        ],
+        outcome="succeeded",
+        label="succeeded",
+    )
+    assert succeeded["outcome"] == "succeeded"
+
+    with pytest.raises(RuntimeError, match="legacy"):
+        verifier._require_build_report(
+            [{"type": "success", "result": {}}],
+            outcome="succeeded",
+            label="legacy",
+        )
+
+
 def test_windows_bundle_verifier_finds_the_managed_sidecar_in_release_directory(
     tmp_path: Path,
 ) -> None:

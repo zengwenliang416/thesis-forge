@@ -26,6 +26,7 @@ from build_sidecar import (
 
 PROTOCOL_VERSION = "thesisforge.workbench.v1"
 BUILD_STAGES = ("parse", "validate", "compile", "render", "finalize")
+CANONICAL_PROJECT = ROOT / "tests" / "fixtures" / "v2-project"
 
 
 def required_bundle_suffixes(platform: str) -> tuple[str, ...]:
@@ -153,12 +154,31 @@ def _run_sidecar(
         raise RuntimeError(f"Sidecar produced malformed JSON: {result.stdout}") from error
 
 
+def _require_build_report(
+    events: list[dict],
+    *,
+    outcome: str,
+    label: str,
+) -> dict:
+    terminal = events[-1] if events else {}
+    report = terminal.get("report")
+    if (
+        terminal.get("type") != "completed"
+        or "result" in terminal
+        or not isinstance(report, dict)
+        or report.get("schemaVersion") != "thesisforge.build-report.v2"
+        or report.get("outcome") != outcome
+    ):
+        raise RuntimeError(f"{label}: {events}")
+    return report
+
+
 def verify_sidecar(sidecar: Path) -> dict[str, object]:
     validate_sidecar_artifact(sidecar)
 
     with tempfile.TemporaryDirectory(prefix="thesisforge-desktop-") as raw_temp:
         workspace = Path(raw_temp) / "workspace"
-        shutil.copytree(ROOT / "examples" / "bachelor-thesis", workspace)
+        shutil.copytree(CANONICAL_PROJECT, workspace)
         source = workspace / "thesis.md"
         output = workspace / "output" / "thesis.docx"
         output.parent.mkdir()
@@ -188,9 +208,11 @@ def verify_sidecar(sidecar: Path) -> dict[str, object]:
             cwd=workspace,
             environment=environment | {"THESISFORGE_CANCEL_FILE": str(cancel_file)},
         )
-        terminal = canceled[-1]
-        if terminal.get("type") != "error" or terminal.get("error", {}).get("kind") != "canceled":
-            raise RuntimeError(f"Sidecar cancellation smoke failed: {canceled}")
+        _require_build_report(
+            canceled,
+            outcome="canceled",
+            label="Sidecar cancellation smoke failed",
+        )
         if output.read_bytes() != prior:
             raise RuntimeError("Canceled sidecar build replaced the prior output")
 
@@ -207,8 +229,11 @@ def verify_sidecar(sidecar: Path) -> dict[str, object]:
         )
         if stages != BUILD_STAGES:
             raise RuntimeError(f"Unexpected sidecar build stages: {stages}")
-        if built[-1].get("type") != "success":
-            raise RuntimeError(f"Sidecar build did not succeed: {built}")
+        _require_build_report(
+            built,
+            outcome="succeeded",
+            label="Sidecar build did not succeed",
+        )
         if not output.is_file() or not zipfile.is_zipfile(output):
             raise RuntimeError("Frozen sidecar did not produce a valid DOCX package")
 

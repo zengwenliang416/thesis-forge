@@ -98,6 +98,15 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Done
 
+- [REG-017] Migrate the frozen sidecar distribution smoke to the canonical V2 project and BuildReport terminal contract
+  - Files: `scripts/verify_desktop_distribution.py`, `tests/test_desktop_distribution.py`, `LOOP.md`
+  - Behavior: the offline frozen-sidecar smoke copies the manifest-backed `tests/fixtures/v2-project` and validates cancellation and successful build terminals through strict `completed.report` outcomes.
+  - Verify: `make verify-desktop-dist && .venv/bin/python -m pytest tests/test_desktop_distribution.py`
+  - Acceptance: the exact Verify command passes; the smoke no longer copies the legacy `examples/bachelor-thesis` Front Matter fixture; cancellation requires `type: "completed"` with `report.outcome: "canceled"` and preserves the prior DOCX; success requires `type: "completed"` with `report.outcome: "succeeded"` and a valid DOCX; no `type: "success"`/`result`, compatibility path, fallback, or weakened distribution assertion is introduced.
+  - Verification-surface change: `no`
+  - Attempts: 1
+  - Attempt 1 (2026-08-24): Independent Checker PASS; exact Verify passed with `23` focused tests, target Ruff, `git diff --check`, and `./lint-loop.sh` passed; independent audit confirmed the canonical `tests/fixtures/v2-project` copy, strict completed `thesisforge.build-report.v2` canceled/succeeded outcomes with no terminal `result`, prior-output byte preservation, valid DOCX ZIP validation, and no compatibility/fallback/weakened distribution path; candidate scope remained exactly the three named files, all pre-existing dirty/untracked paths were preserved, no push.
+
 - [REG-016] Migrate remaining mocked frontend E2E to the manifest-backed V2 project entry
   - Files: `frontend/e2e/acceptance.spec.ts`, `frontend/e2e/workbench.spec.ts`, `LOOP.md`
   - Behavior: mocked browser E2E opens one manifest-backed project from exactly `thesisforge.yaml` and one Markdown source, receives the typed project identity/source response, and continues exercising loading, permission, save, preview, build, cancel, template, focus, and responsive assertions.
@@ -2160,6 +2169,7 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Cycle log
 
+- 2026-08-24 - REG-017 Checker PASS Attempt 1; exact Verify passed with `23` focused tests, target Ruff, `git diff --check`, and LOOP-LINT passed; canonical V2 fixture, strict completed BuildReport terminal outcomes, prior-output preservation and valid DOCX ZIP checks remained active; REG-017 moved from Open to Done, candidate scope was exactly the three named files, all pre-existing dirty/untracked paths were preserved, no push.
 - 2026-08-24 - REG-016 Checker PASS Attempt 1; exact Playwright Verify passed `16/16` with `20` skipped (`36` total), the seven selected uploads and seven workspace mocks satisfied the manifest-backed V2 contract, no compatibility/fallback/YAML-parser/silent-downgrade path or production frontend diff was found, REG-016 moved from Open to Done, unrelated dirty/untracked paths were preserved and unstaged, one local commit, no push.
 - 2026-08-24 - REG-015D-ATOM Checker FAIL Attempt 1 then PASS Attempt 2; strict completed BuildReport, accurate stage lifecycle, TF-* diagnostic normalization, plain output-name boundary and canonical real-HTTP manifest/source acceptance are green; exact scope remained the six declared files, unrelated dirty paths were preserved and unstaged, no push.
 - 2026-08-23 - V2-525 Checker PASS Attempt 1; exact Verify passed 14/14, target Ruff, `git diff --check`, and `./lint-loop.sh` passed; independent AST/runtime/OpenXML audit confirmed canonical parser migration, the existing V2 fixture, real DOCX 13/13 OpenXML checks, unchanged exit-code/JSON/no-repair assertions, and no fallback/compatibility/dual-source/silent-degradation path; V2-525 moved from Open to Done, candidate scope remained exactly `LOOP.md` and `tests/test_qa_tools.py`, all pre-existing `openspec/**` changes were preserved and unstaged, no push.
