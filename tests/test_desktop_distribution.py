@@ -493,6 +493,7 @@ def test_tauri_uses_packaged_sidecar_without_removing_development_overrides() ->
 def test_makefile_keeps_web_python_and_desktop_outputs_isolated() -> None:
     makefile = (ROOT / "Makefile").read_text(encoding="utf-8")
 
+    assert "CHANGE ?= template-v2-build-pipeline-p1" in makefile
     assert "WEB_DIST_DIR ?= dist/web" in makefile
     assert "PYTHON_DIST_DIR ?= dist/python" in makefile
     assert "SIDECAR_DIST_DIR ?= src-tauri/binaries" in makefile

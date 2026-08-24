@@ -1,5 +1,5 @@
 PYTHON ?= .venv/bin/python
-CHANGE ?= build-thesisforge-desktop-ui
+CHANGE ?= template-v2-build-pipeline-p1
 WEB_DIST_DIR ?= dist/web
 PYTHON_DIST_DIR ?= dist/python
 SIDECAR_DIST_DIR ?= src-tauri/binaries

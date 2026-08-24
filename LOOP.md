@@ -98,6 +98,15 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Done
 
+- [REG-018] Point the default OpenSpec verification at the current active change
+  - Files: `Makefile`, `tests/test_desktop_distribution.py`, `LOOP.md`
+  - Behavior: `make openspec-validate` uses the current active `template-v2-build-pipeline-p1` change by default instead of the archived `build-thesisforge-desktop-ui`, while preserving the explicit `CHANGE=` override.
+  - Verify: `make openspec-validate && .venv/bin/python -m pytest tests/test_desktop_distribution.py`
+  - Acceptance: the exact Verify command passes; the default change is a valid current OpenSpec change; the distribution contract test asserts the default and the override-capable `CHANGE ?=` form; no OpenSpec source/artifact or unrelated product behavior changes.
+  - Verification-surface change: `no`
+  - Attempts: 1
+  - Attempt 1 (2026-08-24): Independent Checker PASS; exact Verify passed with strict OpenSpec validation and `23` focused tests, explicit `CHANGE=template-v2-build-pipeline-p1` validation passed, target Ruff, `git diff --check`, and `./lint-loop.sh` passed; Makefile/test audit confirmed the `CHANGE ?=` default and explicit override path, no `openspec/**` paths changed during this cycle, and only the three named candidate files were selected for the lifecycle commit; no push.
+
 - [REG-017] Migrate the frozen sidecar distribution smoke to the canonical V2 project and BuildReport terminal contract
   - Files: `scripts/verify_desktop_distribution.py`, `tests/test_desktop_distribution.py`, `LOOP.md`
   - Behavior: the offline frozen-sidecar smoke copies the manifest-backed `tests/fixtures/v2-project` and validates cancellation and successful build terminals through strict `completed.report` outcomes.
@@ -2169,6 +2178,7 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Cycle log
 
+- 2026-08-24 - REG-018 Checker PASS Attempt 1; exact Verify, explicit CHANGE override validation, target Ruff, git diff check, and LOOP-LINT passed; active OpenSpec validation and the three-file scope audit were clean, REG-018 moved from Open to Done, one local commit, no push.
 - 2026-08-24 - REG-017 Checker PASS Attempt 1; exact Verify passed with `23` focused tests, target Ruff, `git diff --check`, and LOOP-LINT passed; canonical V2 fixture, strict completed BuildReport terminal outcomes, prior-output preservation and valid DOCX ZIP checks remained active; REG-017 moved from Open to Done, candidate scope was exactly the three named files, all pre-existing dirty/untracked paths were preserved, no push.
 - 2026-08-24 - REG-016 Checker PASS Attempt 1; exact Playwright Verify passed `16/16` with `20` skipped (`36` total), the seven selected uploads and seven workspace mocks satisfied the manifest-backed V2 contract, no compatibility/fallback/YAML-parser/silent-downgrade path or production frontend diff was found, REG-016 moved from Open to Done, unrelated dirty/untracked paths were preserved and unstaged, one local commit, no push.
 - 2026-08-24 - REG-015D-ATOM Checker FAIL Attempt 1 then PASS Attempt 2; strict completed BuildReport, accurate stage lifecycle, TF-* diagnostic normalization, plain output-name boundary and canonical real-HTTP manifest/source acceptance are green; exact scope remained the six declared files, unrelated dirty paths were preserved and unstaged, no push.
