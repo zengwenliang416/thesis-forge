@@ -97,6 +97,16 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Done
 
+- [REG-004] Accept LibreOffice separator footnotes
+  - Parent: REG-003 build verification; this fresh item repairs the next DOCX finalizer contract exposed after the LO hyperlink style was declared.
+  - Files: `src/thesis_forge/renderers/docx/package.py`, `tests/renderers/docx/test_package_semantics_v2.py`, `LOOP.md`
+  - Behavior: production DOCX validation distinguishes `separator` and `continuationSeparator` footnote nodes from real footnote definitions and does not require them to contain `footnoteRef`.
+  - Verify: `tmp="$(mktemp -d)" && .venv/bin/python -m pytest tests/renderers/docx/test_package_semantics_v2.py && .venv/bin/python -m thesis_forge.cli build tests/fixtures/v2-project -o "$tmp/thesis.docx" --report-json "$tmp/build-report.json" && ./qa/tools/openxml_validate.py "$tmp/thesis.docx"`
+  - Acceptance: the focused XML test passes; canonical V2 build returns exit 0 with a successful BuildReport; production validation still rejects a real definition with a missing `footnoteRef`, while refreshed LO separator nodes pass.
+  - Verification-surface change: `no`
+  - Attempts: 1
+  - Attempt 1 (2026-08-24): Independent Checker PASS; exact Verify passed with 11 focused tests, successful canonical BuildReport through `preview`, and QA OpenXML `13/13`; target Ruff, `git diff --check`, and LOOP-LINT passed. Explicit tests cover both `separator` and `continuationSeparator`, while the real numeric-definition missing-`footnoteRef` negative remains `TF-DOCX-FOOTNOTE-005`. Pre-existing dirty/untracked paths were preserved, no push.
+
 - [REG-003] Declare the LibreOffice hyperlink character style
   - Parent: REG-002 build verification; this fresh item repairs the DOCX finalizer contract uncovered after the canonical fixture became valid.
   - Files: `src/thesis_forge/renderers/docx/styles.py`, `tests/renderers/docx/test_package_semantics_v2.py`, `LOOP.md`
@@ -2287,5 +2297,7 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 - 2026-08-24 - REG-002 Checker PASS Attempt 1; exact goal verifier and direct canonical validate passed, target Ruff, `git diff --check`, and LOOP-LINT passed; fixture-only contract change was confirmed without CLI entry-rule or legacy-input changes, all pre-existing dirty/untracked paths were preserved, no push.
 
 - 2026-08-24 - REG-003 Checker PASS Attempt 1; exact focused DOCX test/build/QA command passed (`11` tests, BuildReport succeeded, OpenXML `13/13`), target Ruff, `git diff --check`, and LOOP-LINT passed; Style declaration remained scoped to the renderer and semantic package test, no push.
+
+- 2026-08-24 - REG-004 Checker PASS Attempt 1; exact focused DOCX test/build/QA command passed (`11` tests, BuildReport succeeded, OpenXML `13/13`), target Ruff, `git diff --check`, and LOOP-LINT passed; both separator node types and the real footnote negative remained covered, no push.
 
 ## Sync log

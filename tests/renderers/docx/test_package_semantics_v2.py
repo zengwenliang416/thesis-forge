@@ -269,6 +269,31 @@ def test_package_declares_libreoffice_hyperlink_character_style(
     )
 
 
+def test_separator_footnote_definitions_do_not_require_a_reference(
+    tmp_path: Path,
+) -> None:
+    output = _semantic_package(tmp_path)
+
+    with ZipFile(output) as package:
+        footnotes = _xml(
+            {"word/footnotes.xml": package.read("word/footnotes.xml")},
+            "word/footnotes.xml",
+        )
+
+    for footnote_type in ("separator", "continuationSeparator"):
+        separators = footnotes.xpath(
+            f".//w:footnote[@w:type='{footnote_type}']",
+            namespaces=NS,
+        )
+        assert separators
+        assert all(
+            separator.find(f".//{W('footnoteRef')}") is None
+            for separator in separators
+        )
+
+    validate_docx_package(output)
+
+
 @pytest.mark.parametrize(
     ("name", "mutator", "expected_code"),
     [

@@ -678,9 +678,10 @@ def _validate_footnotes(
                 f"duplicate or missing footnote ID: {footnote_id}",
             )
         definitions[footnote_id] = footnote
+        footnote_type = footnote.get(W("type"))
         if (
-            footnote_id.isdigit()
-            and footnote_id not in {"0"}
+            footnote_type not in {"separator", "continuationSeparator"}
+            and footnote_id.isdigit()
             and footnote.find(f".//{W('footnoteRef')}") is None
         ):
             _fail(
@@ -689,7 +690,14 @@ def _validate_footnotes(
             )
 
     positive_definitions = {
-        footnote_id for footnote_id in definitions if footnote_id.isdigit()
+        footnote_id
+        for footnote_id, footnote in definitions.items()
+        if (
+            footnote_id.isdigit()
+            and footnote_id not in {"0"}
+            and footnote.get(W("type"))
+            not in {"separator", "continuationSeparator"}
+        )
     }
     for part, footnote_id in references:
         if footnote_id not in positive_definitions:
