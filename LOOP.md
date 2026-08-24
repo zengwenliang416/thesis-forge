@@ -97,6 +97,16 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Done
 
+- [REG-005] Make the V2 goal verifier project-entry aware
+  - Parent: REG-002 through REG-004 canonical goal flow; this fresh verifier item repairs only the verifier's temporary-path reporting and legacy-input setup.
+  - Files: `scripts/verify_thesisforge_v2_goal.py`, `LOOP.md`
+  - Behavior: verifier diagnostics support temporary files outside the repository root, and the legacy source is inspected through a temporary manifest-backed project while bare Markdown remains rejected by the CLI.
+  - Verify: `.venv/bin/python scripts/verify_thesisforge_v2_goal.py`
+  - Acceptance: the verifier exits 0 without a traceback; canonical V2 inspect/validate/review/build and generated DOCX checks pass; direct bare Markdown reports `TF-PROJECT-ENTRY-REQUIRED`; the manifest-backed legacy project reports `TF-SOURCE-LEGACY-*`.
+  - Verification-surface change: `no`
+  - Attempts: 1
+  - Attempt 1 (2026-08-24): Independent Checker PASS; exact Verify exited 0 with no traceback; canonical inspect/validate/review/build and all DOCX stages passed; nested BuildReport envelope, legal HTTP(S) hyperlink, bare Markdown `TF-PROJECT-ENTRY-REQUIRED`, and manifest-backed `TF-SOURCE-LEGACY-001` were verified. Negative mutations adding `w:noProof` or Courier New to ordinary正文 still failed on unresolved marker. Target Ruff, `git diff --check`, and LOOP-LINT passed; explicit C901 remains a non-blocking baseline complexity debt, pre-existing dirty/untracked paths were preserved, no push.
+
 - [REG-004] Accept LibreOffice separator footnotes
   - Parent: REG-003 build verification; this fresh item repairs the next DOCX finalizer contract exposed after the LO hyperlink style was declared.
   - Files: `src/thesis_forge/renderers/docx/package.py`, `tests/renderers/docx/test_package_semantics_v2.py`, `LOOP.md`
@@ -2299,5 +2309,7 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 - 2026-08-24 - REG-003 Checker PASS Attempt 1; exact focused DOCX test/build/QA command passed (`11` tests, BuildReport succeeded, OpenXML `13/13`), target Ruff, `git diff --check`, and LOOP-LINT passed; Style declaration remained scoped to the renderer and semantic package test, no push.
 
 - 2026-08-24 - REG-004 Checker PASS Attempt 1; exact focused DOCX test/build/QA command passed (`11` tests, BuildReport succeeded, OpenXML `13/13`), target Ruff, `git diff --check`, and LOOP-LINT passed; both separator node types and the real footnote negative remained covered, no push.
+
+- 2026-08-24 - REG-005 Checker PASS Attempt 1; exact goal verifier passed, both ordinary-body marker mutations were rejected, target Ruff, `git diff --check`, and LOOP-LINT passed; non-blocking C901 baseline debt was recorded, no push.
 
 ## Sync log

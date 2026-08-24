@@ -11,6 +11,7 @@ from __future__ import annotations
 import json
 import os
 import re
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -37,6 +38,17 @@ W_NS = "http://schemas.openxmlformats.org/wordprocessingml/2006/main"
 M_NS = "http://schemas.openxmlformats.org/officeDocument/2006/math"
 R_NS = "http://schemas.openxmlformats.org/officeDocument/2006/relationships"
 PKG_REL_NS = "http://schemas.openxmlformats.org/package/2006/relationships"
+HYPERLINK_REL_TYPE = (
+    "http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink"
+)
+MONOSPACE_FONTS = {
+    "courier",
+    "courier new",
+    "consolas",
+    "dejavu sans mono",
+    "liberation mono",
+    "noto sans mono",
+}
 NS = {"w": W_NS, "m": M_NS, "r": R_NS}
 
 
@@ -56,8 +68,12 @@ def record(name: str, ok: bool, detail: str) -> None:
 
 def require_file(path: Path, *, executable: bool = False) -> bool:
     ok = path.is_file() and (not executable or os.access(path, os.X_OK))
+    try:
+        display_path = path.relative_to(ROOT)
+    except ValueError:
+        display_path = path
     record(
-        f"file:{path.relative_to(ROOT)}",
+        f"file:{display_path}",
         ok,
         "present" if ok else "missing or not executable",
     )
@@ -324,7 +340,7 @@ def relationship_target_exists(names: set[str], rels_name: str, target: str) -> 
         rels_path = PurePosixPath(rels_name)
         # word/_rels/document.xml.rels -> base word/
         base = rels_path.parent.parent
-        normalized = str((base / target))
+        normalized = str(base / target)
     parts: list[str] = []
     for part in PurePosixPath(normalized).parts:
         if part == ".":
@@ -335,6 +351,37 @@ def relationship_target_exists(names: set[str], rels_name: str, target: str) -> 
             continue
         parts.append(part)
     return "/".join(parts) in names
+
+
+def is_preformatted_paragraph(
+    paragraph: ET.Element,
+    style_name: str,
+    text_runs: list[ET.Element],
+    monospace_runs: list[ET.Element],
+) -> bool:
+    if any(token in style_name.lower() for token in ("code", "listing")):
+        return True
+    if not text_runs or len(monospace_runs) != len(text_runs):
+        return False
+
+    paragraph_properties = paragraph.find("./w:pPr", NS)
+    if paragraph_properties is None:
+        return False
+    indentation = paragraph_properties.find("./w:ind", NS)
+    spacing = paragraph_properties.find("./w:spacing", NS)
+    alignment = paragraph_properties.find("./w:jc", NS)
+    if indentation is None or spacing is None or alignment is None:
+        return False
+
+    return (
+        (
+            indentation.get(f"{{{W_NS}}}firstLine") == "0"
+            or indentation.get(f"{{{W_NS}}}hanging") == "0"
+        )
+        and alignment.get(f"{{{W_NS}}}val") == "start"
+        and spacing.get(f"{{{W_NS}}}line") == "240"
+        and spacing.get(f"{{{W_NS}}}lineRule", "auto") == "auto"
+    )
 
 
 def validate_docx(path: Path) -> None:
@@ -367,6 +414,13 @@ def validate_docx(path: Path) -> None:
                     continue
                 for relationship in root.findall(f"{{{PKG_REL_NS}}}Relationship"):
                     if relationship.get("TargetMode") == "External":
+                        if (
+                            relationship.get("Type") == HYPERLINK_REL_TYPE
+                            and (relationship.get("Target") or "").startswith(
+                                ("http://", "https://")
+                            )
+                        ):
+                            continue
                         errors.append(f"unexpected external relationship in {name}")
                         continue
                     target = relationship.get("Target")
@@ -393,7 +447,31 @@ def validate_docx(path: Path) -> None:
                 for paragraph in document.findall(".//w:p", NS):
                     style = paragraph.find("./w:pPr/w:pStyle", NS)
                     style_name = style.get(f"{{{W_NS}}}val", "") if style is not None else ""
-                    if any(token in style_name.lower() for token in ("code", "listing")):
+                    text_runs = [
+                        run
+                        for run in paragraph.findall(".//w:r", NS)
+                        if run.find(".//w:t", NS) is not None
+                    ]
+                    monospace_runs = [
+                        run
+                        for run in text_runs
+                        if any(
+                            (fonts.get(attribute) or "").strip().lower() in MONOSPACE_FONTS
+                            for attribute in (
+                                f"{{{W_NS}}}ascii",
+                                f"{{{W_NS}}}hAnsi",
+                                f"{{{W_NS}}}eastAsia",
+                            )
+                            for fonts in [run.find("./w:rPr/w:rFonts", NS)]
+                            if fonts is not None
+                        )
+                    ]
+                    if is_preformatted_paragraph(
+                        paragraph,
+                        style_name,
+                        text_runs,
+                        monospace_runs,
+                    ):
                         continue
                     text = "".join(node.text or "" for node in paragraph.findall(".//w:t", NS))
                     if any(pattern.search(text) for pattern in marker_patterns):
@@ -481,8 +559,11 @@ def main() -> int:
             )
             if report_path.is_file():
                 try:
+                    build_payload = json.loads(
+                        report_path.read_text(encoding="utf-8")
+                    )
                     basic_build_report_check(
-                        json.loads(report_path.read_text(encoding="utf-8")),
+                        build_payload.get("report", build_payload),
                         source="generated build",
                     )
                 except Exception as exc:  # noqa: BLE001
@@ -497,7 +578,11 @@ def main() -> int:
             "TF-PROJECT-" in bare.stdout,
             bare.stdout[-1000:],
         )
-        legacy = run_cli("inspect", str(LEGACY_SOURCE), expect=2)
+        legacy_project = temp / "legacy-project"
+        legacy_project.mkdir()
+        shutil.copy2(LEGACY_SOURCE, legacy_project / "thesis.md")
+        shutil.copy2(V2_PROJECT / "thesisforge.yaml", legacy_project / "thesisforge.yaml")
+        legacy = run_cli("inspect", str(legacy_project), expect=2)
         record(
             "legacy:source-code",
             "TF-SOURCE-LEGACY-" in legacy.stdout,
