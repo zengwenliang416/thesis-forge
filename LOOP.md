@@ -97,6 +97,17 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Done
 
+- [REG-010] Migrate template-v2 editor DOCX fixtures to the canonical V2 project
+  - Parent: full-suite `make verify` regression after YAML Front Matter became invalid in `thesis.md`; the editor module still compiles `examples/complete-thesis/thesis.md` directly.
+  - Files: `tests/test_template_v2_editor.py`, `LOOP.md`
+  - Behavior: PackageEditor merge and L3/L4/L5 tests compile the repository's manifest-backed, front-matter-free V2 project source through an explicit package-safe editor snapshot, while retaining all existing DOCX merge and lint assertions.
+  - Verify: `.venv/bin/python -m pytest tests/test_template_v2_editor.py`
+  - Acceptance: the complete editor test module passes; no YAML Front Matter, legacy `:::` source, bare-Markdown CLI compatibility, production code, shared V2 fixture, or silent fallback is introduced.
+  - Verification-surface change: `no`
+  - Attempts: 2
+  - Attempt 1 (2026-08-24): Maker Verify observed 34 passed and 1 failed; `test_merge_bookmarks_and_content` still expected the old complete-thesis-only `摘要` and `致谢` chapters, while the canonical V2 fixture intentionally lacked them. All other editor merge, DOCX structure, relationship, footnote, numbering, determinism and L3/L4/L5 lint tests passed. No production code or shared fixture was changed; expected repair is an explicit editor snapshot extension.
+  - Attempt 2 (2026-08-24): Independent Checker PASS; exact Verify passed 35/35, `.venv/bin/ruff check tests/test_template_v2_editor.py`, `git diff --check`, and `./lint-loop.sh` passed; static audit confirmed the canonical front-matter-free source, explicit package-safe editor snapshot, retained DOCX merge and L3/L4/L5 assertions, and no legacy compatibility, fallback or silent degradation; unrelated LOOP history hunks and all other dirty/untracked paths were preserved, no push.
+
 - [REG-009] Migrate CLI regression tests to the manifest-backed v2 entry contract
   - Parent: full-suite `make verify` regression after bare Markdown and YAML Front Matter became invalid CLI inputs.
   - Files: `tests/test_cli.py`, `LOOP.md`
@@ -2355,5 +2366,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 - 2026-08-24 - REG-007 Checker PASS Attempt 1; migrated v2 fixtures now use canonical front-matter-free Markdown, exact migration Verify passed 3/3, full package/pack regression passed 24/24, target Ruff and `git diff --check` passed, and only REG-008 remains Open; pre-existing dirty/untracked paths were preserved, no push.
 - 2026-08-24 - REG-008 Checker PASS Attempt 1; exact distribution Verify passed 1/1 offline, the installed verifier reported `hermetic=true` and a valid DOCX ZIP package of 31,003 bytes, manifest-backed inspect/validate passed, bare Markdown remained rejected with `TF-PROJECT-ENTRY-REQUIRED`, target Ruff, `git diff --check`, and LOOP-LINT passed; pre-existing dirty/untracked paths were preserved, one local commit, no push.
 - 2026-08-24 - REG-009 Checker PASS Attempt 1; exact Verify passed 16/16, target Ruff and `git diff --check` passed; explicit manifest-backed project inputs, canonical syntax, structured `TF-SOURCE-LEGACY-001`, `--report-json` BuildReport reads, and absence of test-side auto-wrap/fallback or production compatibility changes were verified; pre-existing dirty/untracked paths were preserved, one local commit, no push.
+- 2026-08-24 - REG-010 Checker PASS Attempt 2; exact Verify passed 35/35, target Ruff, `git diff --check`, and LOOP-LINT passed; canonical front-matter-free source and explicit package-safe editor snapshot were independently verified with DOCX merge and L3/L4/L5 assertions retained, no legacy fallback or silent degradation was introduced, unrelated dirty/untracked paths were preserved, no push.
 
 ## Sync log

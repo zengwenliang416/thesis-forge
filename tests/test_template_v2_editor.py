@@ -1,9 +1,10 @@
 """Template Package v2 PackageEditor 合并与 L3/L4/L5 lint 测试（ADR-0002 本切片）。
 
 - 合并正例：`spikes/phase0/docx-template/package-sample/` 的 shell.docx +
-  examples/complete-thesis 经完整管线（parse → validate → compile → render，
-  不走 finalizer）产出的 compiled.docx；断言 openxml_validate 全过、sections/
-  页码格式保留、图片 rel 有效、书签配对、双跑字节一致、台账结构完整。
+  `tests/fixtures/v2-project/` 的 canonical V2 Markdown 经完整管线（parse →
+  validate → compile → render，不走 finalizer）产出的 compiled.docx；断言
+  openxml_validate 全过、sections/页码格式保留、图片 rel 有效、书签配对、
+  双跑字节一致、台账结构完整。
 - 合并负例：缺 tf_body 锚点、宏、外部关系（§5.5 合并兜底拦截）。
 - 边界落地：部件级 rels 递归（合成 header 内嵌图片）、footnotes 双侧 w:id
   重映射（向 shell 注入既有脚注部件）、numbering 双侧 numId 重映射（真实
@@ -38,7 +39,8 @@ from thesis_forge.templates.v2.package_editor import (
 REPO_ROOT = Path(__file__).resolve().parents[1]
 SAMPLE_PACKAGE = REPO_ROOT / "spikes" / "phase0" / "docx-template" / "package-sample"
 SHELL = SAMPLE_PACKAGE / "shell.docx"
-SOURCE = REPO_ROOT / "examples" / "complete-thesis" / "thesis.md"
+V2_PROJECT = REPO_ROOT / "tests" / "fixtures" / "v2-project"
+SOURCE = V2_PROJECT / "thesis.md"
 HUT_YAML = (
     REPO_ROOT / "templates" / "schools" / "hunan-university-of-technology" / "master-2026.yaml"
 )
@@ -57,6 +59,43 @@ def _r(tag: str) -> str:
     return f"{{{R_NS}}}{tag}"
 
 
+def _package_editor_source_text() -> str:
+    """Use the canonical V2 source without external relationships.
+
+    PackageEditor deliberately rejects external relationships in compiled
+    packages. Keep the shared goal fixture unchanged and use an explicit
+    internal cross-reference for this merge-specific snapshot instead.
+    """
+    source_text = SOURCE.read_text(encoding="utf-8")
+    external_link = (
+        "这里使用一个[普通链接](https://example.com)，模型流程见[图](#fig:model)。"
+    )
+    package_safe_link = (
+        "这里使用一个[普通链接](#chap:introduction)，模型流程见[图](#fig:model)。"
+    )
+    assert source_text.count(external_link) == 1
+    source_text = source_text.replace(external_link, package_safe_link, 1)
+    source_text = source_text.replace(
+        "# 绪论 {#chap:introduction}",
+        (
+            "# 摘要 {#chap:abstract}\n\n"
+            "本编辑器快照验证 canonical V2 项目可以生成可合并的 DOCX。\n\n"
+            "# 绪论 {#chap:introduction}"
+        ),
+        1,
+    )
+    source_text = source_text.replace(
+        "\n# 参考文献 {#chap:bibliography}\n",
+        (
+            "\n# 致谢 {#chap:acknowledgements}\n\n"
+            "感谢参与本地编译和文档验证的同事。\n\n"
+            "# 参考文献 {#chap:bibliography}\n"
+        ),
+        1,
+    )
+    return source_text
+
+
 # 1x1 透明 PNG（确定性字节）
 _PNG_1PX = bytes.fromhex(
     "89504e470d0a1a0a0000000d494844520000000100000001080600000"
@@ -72,9 +111,13 @@ _PNG_1PX = bytes.fromhex(
 
 @pytest.fixture(scope="module")
 def compiled_docx(tmp_path_factory) -> Path:
-    """完整管线编译 complete-thesis（HUT 模板，不走 finalizer）。"""
+    """完整管线编译 canonical V2 project（HUT 模板，不走 finalizer）。"""
     output = tmp_path_factory.mktemp("compiled") / "compiled.docx"
-    preview = preview_service(SOURCE, template_path=HUT_YAML)
+    preview = preview_service(
+        SOURCE,
+        source_text=_package_editor_source_text(),
+        template_path=HUT_YAML,
+    )
     assert not preview.errors, preview.errors
     assert preview.plan is not None
     DocxRenderer().render(preview.plan, output)
