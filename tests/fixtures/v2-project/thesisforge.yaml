@@ -33,7 +33,7 @@ resources:
 
 render:
   template_id: example-university-2026
-  citation_style: gbt7714-numeric
+  citation_style: GB-T-7714-2025
 
 layout:
   objects:

@@ -46,4 +46,4 @@ for epoch in range(epochs):
 
 [^scope]: Review 中显示脚注号和正文，DOCX 中生成原生脚注。
 
-# 参考文献 {#region:bibliography}
+# 参考文献 {#chap:bibliography}
