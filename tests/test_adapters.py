@@ -586,7 +586,34 @@ def test_http_workspace_creation_returns_opaque_handle(tmp_path: Path):
     runtime = WebWorkspaceRuntime(tmp_path / "workspaces")
     dispatcher = WorkbenchCommandDispatcher(runtime=runtime)
     app = WorkbenchHttpApp(dispatcher, web_runtime=runtime)
-    body = json.dumps({"fileName": "thesis.md", "text": "# 绪论\n"}).encode()
+    body = json.dumps(
+        {
+            "project": {
+                "id": "web-fixture",
+                "root": str(runtime.root),
+                "manifestPath": str(runtime.root / "thesisforge.yaml"),
+            },
+            "manifest": {
+                "fileName": "thesisforge.yaml",
+                "text": (
+                    "schema: thesisforge.project.v2\n"
+                    "project:\n"
+                    "  id: web-fixture\n"
+                    "  language: zh-CN\n"
+                    "document:\n"
+                    "  source: thesis.md\n"
+                    "metadata:\n"
+                    "  title:\n"
+                    "    zh: Web 项目\n"
+                    "  author:\n"
+                    "    name: 测试作者\n"
+                    "render:\n"
+                    "  template_id: example-university-2026\n"
+                ),
+            },
+            "source": {"fileName": "thesis.md", "text": "# 绪论\n"},
+        }
+    ).encode()
     status: list[str] = []
     environ = {
         "REQUEST_METHOD": "POST",
@@ -602,10 +629,178 @@ def test_http_workspace_creation_returns_opaque_handle(tmp_path: Path):
     assert status == ["201 Created"]
     assert payload["protocol"] == PROTOCOL_VERSION
     assert payload["ok"] is True
+    workspace_id = payload["source"]["workspaceId"]
+    assert payload["project"] == {
+        "id": "web-fixture",
+        "root": f"/thesisforge-web/{workspace_id}",
+        "manifestPath": f"/thesisforge-web/{workspace_id}/thesisforge.yaml",
+    }
     assert payload["source"]["kind"] == "web-workspace"
     assert payload["source"]["fileName"] == "thesis.md"
     assert payload["text"] == "# 绪论\n"
+    workspace = runtime.root / workspace_id
+    assert (workspace / "thesisforge.yaml").is_file()
+    assert (workspace / "thesis.md").read_text(encoding="utf-8") == "# 绪论\n"
     assert str(runtime.root) not in json.dumps(payload)
+
+
+def test_http_workspace_creation_rejects_bare_markdown(tmp_path: Path):
+    runtime = WebWorkspaceRuntime(tmp_path / "workspaces")
+    app = WorkbenchHttpApp(
+        WorkbenchCommandDispatcher(runtime=runtime),
+        web_runtime=runtime,
+    )
+    body = json.dumps({"fileName": "thesis.md", "text": "# 绪论\n"}).encode()
+    status: list[str] = []
+
+    payload = json.loads(
+        b"".join(
+            app(
+                {
+                    "REQUEST_METHOD": "POST",
+                    "PATH_INFO": "/api/v1/workspaces",
+                    "CONTENT_LENGTH": str(len(body)),
+                    "wsgi.input": io.BytesIO(body),
+                },
+                lambda value, _headers: status.append(value),
+            )
+        )
+    )
+
+    assert status == ["400 Bad Request"]
+    assert payload["ok"] is False
+    assert "project, manifest and source are required" in payload["error"]["message"]
+    assert list(runtime.root.iterdir()) == []
+
+
+def test_web_runtime_project_dispatch_uses_persisted_manifest(
+    tmp_path: Path,
+):
+    runtime = WebWorkspaceRuntime(tmp_path / "workspaces")
+    opened = runtime.create_project_workspace(
+        {
+            "id": "web-fixture",
+            "root": "/browser/thesis",
+            "manifestPath": "/browser/thesis/thesisforge.yaml",
+        },
+        {
+            "fileName": "thesisforge.yaml",
+            "text": (
+                "schema: thesisforge.project.v2\n"
+                "project:\n"
+                "  id: web-fixture\n"
+                "  language: zh-CN\n"
+                "document:\n"
+                "  source: thesis.md\n"
+                "render:\n"
+                "  template_id: example-university-2026\n"
+            ),
+        },
+        {"fileName": "thesis.md", "text": "# 绪论\n"},
+    )
+    service = _RecordingProjectService()
+    dispatcher = WorkbenchCommandDispatcher(
+        runtime=runtime,
+        project_service=service,
+    )
+
+    response = dispatcher.dispatch(
+        {
+            "protocol": PROTOCOL_VERSION,
+            "requestId": "web-project-inspect",
+            "operation": "inspect",
+            "payload": {
+                "project": opened["project"],
+                "source": opened["source"],
+                "text": opened["text"],
+            },
+        }
+    )
+
+    assert response["ok"] is True
+    assert service.requests[0].project.project_id == "web-fixture"
+    assert service.requests[0].project.project_root == (
+        runtime.root / opened["source"]["workspaceId"]
+    )
+    assert service.requests[0].project.manifest_path == (
+        runtime.root / opened["source"]["workspaceId"] / "thesisforge.yaml"
+    )
+
+
+@pytest.mark.parametrize(
+    "source",
+    [
+        None,
+        {
+            "kind": "web-upload",
+            "uploadId": "a" * 32,
+            "fileName": "thesis.md",
+        },
+    ],
+)
+def test_web_runtime_rejects_unbound_project_dispatch(
+    tmp_path: Path,
+    source: dict | None,
+):
+    runtime = WebWorkspaceRuntime(tmp_path / "workspaces")
+    dispatcher = WorkbenchCommandDispatcher(
+        runtime=runtime,
+        project_service=_RecordingProjectService(),
+    )
+    payload = {
+        "project": {
+            "id": "web-fixture",
+            "root": "/client/root",
+            "manifestPath": "/client/root/thesisforge.yaml",
+        },
+        "text": "# 绪论\n",
+    }
+    if source is not None:
+        payload["source"] = source
+
+    response = dispatcher.dispatch(
+        {
+            "protocol": PROTOCOL_VERSION,
+            "requestId": "web-project-unbound",
+            "operation": "inspect",
+            "payload": payload,
+        }
+    )
+
+    assert response["ok"] is False
+    assert response["error"]["kind"] == "request"
+    assert "project source" in response["error"]["message"]
+
+
+def test_web_runtime_rejects_manifest_project_identity_mismatch(
+    tmp_path: Path,
+):
+    runtime = WebWorkspaceRuntime(tmp_path / "workspaces")
+
+    with pytest.raises(ValueError, match="does not match manifest project"):
+        runtime.create_project_workspace(
+            {
+                "id": "client-id",
+                "root": "/browser/thesis",
+                "manifestPath": "/browser/thesis/thesisforge.yaml",
+            },
+            {
+                "fileName": "thesisforge.yaml",
+                "text": (
+                    "schema: thesisforge.project.v2\n"
+                    "project:\n"
+                    "  id: manifest-id\n"
+                    "  language: zh-CN\n"
+                    "document:\n"
+                    "  source: thesis.md\n"
+                    "render:\n"
+                    "  template_id: example-university-2026\n"
+                ),
+            },
+            {"fileName": "thesis.md", "text": "# 绪论\n"},
+        )
+
+    assert list(runtime.root.iterdir()) == []
 
 
 def test_desktop_save_uses_atomic_source_persistence(tmp_path: Path):

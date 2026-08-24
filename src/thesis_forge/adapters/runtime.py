@@ -1,14 +1,16 @@
 from __future__ import annotations
 
 import re
+import shutil
 import tempfile
 from collections.abc import Callable, Iterator
 from dataclasses import asdict, dataclass
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 from queue import Queue
 from threading import Lock, Thread
 from time import monotonic, time
 from typing import Protocol
+from urllib.parse import urlsplit
 from uuid import uuid4
 
 from thesis_forge.application import (
@@ -51,6 +53,9 @@ from thesis_forge.application.services import (
 )
 from thesis_forge.core.model import Heading, inline_plain_text
 from thesis_forge.presentation.preview import map_preview_result
+from thesis_forge.project.loader import load_project
+from thesis_forge.project.model import ProjectRelativePath
+from thesis_forge.project.paths import resolve_project_paths
 from thesis_forge.templates import default_template_search_roots, resolve_template
 from thesis_forge.ui.filesystem import LocalWorkspaceFileSystem
 
@@ -106,6 +111,8 @@ def desktop_final_preview_build_service(
 
 class RuntimePaths(Protocol):
     def source_path(self, source: dict) -> Path: ...
+
+    def project_identity(self, source: dict, project: object) -> ProjectIdentity: ...
 
     def output_path(self, output: dict) -> Path: ...
 
@@ -343,6 +350,9 @@ class DesktopRuntime:
             raise ValueError("desktop source path is required")
         return Path(source["path"])
 
+    def project_identity(self, source: dict, project: object) -> ProjectIdentity:
+        return _project_identity_from_payload(project)
+
     def output_path(self, output: dict) -> Path:
         if output.get("kind") != "desktop" or not output.get("path"):
             raise ValueError("desktop output path is required")
@@ -399,6 +409,27 @@ def _is_token(value: object) -> bool:
     )
 
 
+def _project_identity_from_payload(project: object) -> ProjectIdentity:
+    if not isinstance(project, dict):
+        raise TypeError("project must be an object")
+    if set(project) != {"id", "root", "manifestPath"}:
+        raise ValueError("project identity must contain only id, root and manifestPath")
+    project_id = project.get("id")
+    project_root = project.get("root")
+    manifest_path = project.get("manifestPath")
+    if not isinstance(project_id, str):
+        raise TypeError("project.id must be a string")
+    if not isinstance(project_root, str):
+        raise TypeError("project.root must be a string")
+    if not isinstance(manifest_path, str):
+        raise TypeError("project.manifestPath must be a string")
+    return ProjectIdentity(
+        project_id=project_id,
+        project_root=Path(project_root),
+        manifest_path=Path(manifest_path),
+    )
+
+
 @dataclass(frozen=True, slots=True)
 class _WebLivePreviewGrant:
     workspace_id: str
@@ -447,7 +478,137 @@ class WebWorkspaceRuntime:
             raise ValueError("invalid web workspace ID")
         return value
 
+    @staticmethod
+    def _relative_file_name(file_name: object) -> str:
+        if not isinstance(file_name, str) or not file_name.strip():
+            raise ValueError("web workspace fileName must be a project-relative file path")
+        normalized = file_name.strip().replace("\\", "/")
+        if urlsplit(normalized).scheme:
+            raise ValueError("web workspace fileName must be a project-relative file path")
+        try:
+            relative = ProjectRelativePath.model_validate(normalized).root
+        except (TypeError, ValueError) as error:
+            raise ValueError(
+                "web workspace fileName must be a project-relative file path"
+            ) from error
+        if relative == ".":
+            raise ValueError("web workspace fileName must identify a file")
+        return PurePosixPath(relative).as_posix()
+
+    def _workspace_directory(self, workspace_id: object) -> Path:
+        safe_workspace_id = self._workspace_id(workspace_id)
+        workspace = self.root / safe_workspace_id
+        if workspace.is_symlink() or not workspace.is_dir():
+            raise ValueError("web workspace does not exist")
+        return workspace
+
+    @staticmethod
+    def _opaque_project_snapshot(workspace_id: str, project_id: str) -> dict:
+        root = Path("/thesisforge-web") / workspace_id
+        return {
+            "id": project_id,
+            "root": str(root),
+            "manifestPath": str(root / "thesisforge.yaml"),
+        }
+
+    def _write_workspace_file(
+        self,
+        workspace: Path,
+        file_name: str,
+        text: str,
+    ) -> Path:
+        path = workspace / file_name
+        path.parent.mkdir(mode=0o700, parents=True, exist_ok=True)
+        self._filesystem.write_text_atomic(path, text)
+        return path
+
+    def create_project_workspace(
+        self,
+        project: object,
+        manifest: object,
+        source: object,
+    ) -> dict:
+        requested = _project_identity_from_payload(project)
+        if not isinstance(manifest, dict) or set(manifest) != {"fileName", "text"}:
+            raise TypeError("manifest must contain only fileName and text")
+        if not isinstance(source, dict) or set(source) != {"fileName", "text"}:
+            raise TypeError("source must contain only fileName and text")
+
+        manifest_name = manifest.get("fileName")
+        manifest_text = manifest.get("text")
+        source_name = self._relative_file_name(source.get("fileName"))
+        source_text = source.get("text")
+        if manifest_name != "thesisforge.yaml":
+            raise ValueError("manifest fileName must be thesisforge.yaml")
+        if not isinstance(manifest_text, str):
+            raise TypeError("manifest.text must be a string")
+        if not isinstance(source_text, str):
+            raise TypeError("source.text must be a string")
+        if source_name == manifest_name or not source_name.lower().endswith(".md"):
+            raise ValueError("source.fileName must identify a Markdown source")
+
+        workspace_id = uuid4().hex
+        workspace = self.root / workspace_id
+        workspace.mkdir(mode=0o700)
+        try:
+            self._write_workspace_file(workspace, manifest_name, manifest_text)
+            self._write_workspace_file(workspace, source_name, source_text)
+            loaded = load_project(workspace)
+            resolve_project_paths(loaded)
+            declared_source = self._relative_file_name(
+                loaded.manifest.document.source.root
+            )
+            if declared_source != source_name:
+                raise ValueError(
+                    "uploaded source does not match manifest document.source"
+                )
+            if loaded.manifest.project.id != requested.project_id:
+                raise ValueError("project identity does not match manifest project")
+        except Exception:
+            shutil.rmtree(workspace, ignore_errors=True)
+            raise
+
+        return {
+            "project": self._opaque_project_snapshot(
+                workspace_id,
+                loaded.manifest.project.id,
+            ),
+            "source": {
+                "kind": "web-workspace",
+                "workspaceId": workspace_id,
+                "fileName": source_name,
+            },
+            "text": source_text,
+        }
+
+    def project_identity(self, source: dict, project: object) -> ProjectIdentity:
+        if source.get("kind") != "web-workspace":
+            raise ValueError("manifest-backed Web projects require a web workspace")
+        requested = _project_identity_from_payload(project)
+        workspace_id = self._workspace_id(source.get("workspaceId"))
+        workspace = self._workspace_directory(workspace_id)
+        loaded = load_project(workspace)
+        resolve_project_paths(loaded)
+        source_path = self.source_path(source)
+        expected = self._opaque_project_snapshot(
+            workspace_id,
+            loaded.manifest.project.id,
+        )
+        if (
+            requested.project_id != expected["id"]
+            or str(requested.project_root) != expected["root"]
+            or str(requested.manifest_path) != expected["manifestPath"]
+            or source_path.resolve() != loaded.source_path.resolve()
+        ):
+            raise ValueError("Web project identity does not match workspace manifest")
+        return ProjectIdentity(
+            project_id=loaded.manifest.project.id,
+            project_root=loaded.project_root,
+            manifest_path=loaded.manifest_path,
+        )
+
     def create_workspace(self, file_name: str, text: str) -> dict:
+        """Allocate a raw source workspace for non-project artifact tests."""
         safe_name = self._plain_file_name(file_name)
         workspace_id = uuid4().hex
         workspace = self.root / workspace_id
@@ -549,13 +710,15 @@ class WebWorkspaceRuntime:
         return grant
 
     def source_path(self, source: dict) -> Path:
-        if source.get("kind") not in {"web-workspace", "web-upload"}:
+        if source.get("kind") != "web-workspace":
             raise ValueError("web workspace source is required")
-        workspace_id = self._workspace_id(
-            source.get("workspaceId") or source.get("uploadId")
-        )
-        file_name = self._plain_file_name(source.get("fileName"))
-        path = self.root / workspace_id / file_name
+        workspace = self._workspace_directory(source.get("workspaceId"))
+        file_name = self._relative_file_name(source.get("fileName"))
+        path = workspace / file_name
+        try:
+            path.resolve().relative_to(workspace.resolve())
+        except ValueError as error:
+            raise ValueError("web workspace source escapes its workspace") from error
         if not path.is_file():
             raise ValueError("web workspace source does not exist")
         return path
@@ -882,34 +1045,28 @@ class WorkbenchCommandDispatcher:
             raise TypeError("source must be an object")
         return source, self._runtime.source_path(source)
 
-    @staticmethod
     def _project_request(
+        self,
         payload: dict,
         intent: ProjectRequestIntent,
         *,
         output_path: Path | None = None,
     ) -> ProjectRequest:
         project = payload.get("project")
-        if not isinstance(project, dict):
-            raise TypeError("project must be an object")
-        project_id = project.get("id")
-        project_root = project.get("root")
-        manifest_path = project.get("manifestPath")
-        if not isinstance(project_id, str):
-            raise TypeError("project.id must be a string")
-        if not isinstance(project_root, str):
-            raise TypeError("project.root must be a string")
-        if not isinstance(manifest_path, str):
-            raise TypeError("project.manifestPath must be a string")
+        source = payload.get("source")
+        if not isinstance(source, dict):
+            raise TypeError("project source is required")
+        if source.get("kind") == "web-workspace":
+            project_identity = self._runtime.project_identity(source, project)
+        elif source.get("kind") == "desktop":
+            project_identity = _project_identity_from_payload(project)
+        else:
+            raise ValueError("project source must be a desktop or web workspace")
         text = payload.get("text")
         if text is not None and not isinstance(text, str):
             raise TypeError("text must be a string")
         return ProjectRequest(
-            project=ProjectIdentity(
-                project_id=project_id,
-                project_root=Path(project_root),
-                manifest_path=Path(manifest_path),
-            ),
+            project=project_identity,
             intent=intent,
             output=ProjectOutput(output_path) if output_path is not None else None,
             editor_snapshot=text,

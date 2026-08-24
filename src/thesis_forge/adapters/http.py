@@ -13,7 +13,12 @@ class Dispatcher(Protocol):
 
 
 class WebRuntime(Protocol):
-    def create_workspace(self, file_name: str, text: str) -> dict: ...
+    def create_project_workspace(
+        self,
+        project: object,
+        manifest: object,
+        source: object,
+    ) -> dict: ...
 
     def read_pdf(self, workspace_id: object, file_name: object) -> bytes: ...
 
@@ -102,16 +107,19 @@ class WorkbenchHttpApp:
                     payload = self._dispatcher.dispatch(request)
                     status = "200 OK"
                 elif path == "/api/v1/workspaces" and self._web_runtime is not None:
-                    file_name = request.get("fileName")
-                    text = request.get("text")
-                    if not isinstance(file_name, str) or not isinstance(text, str):
-                        raise ValueError("fileName and text are required")
-                    source = self._web_runtime.create_workspace(file_name, text)
+                    if set(request) != {"project", "manifest", "source"}:
+                        raise ValueError(
+                            "project, manifest and source are required"
+                        )
+                    opened = self._web_runtime.create_project_workspace(
+                        request["project"],
+                        request["manifest"],
+                        request["source"],
+                    )
                     payload = {
                         "protocol": PROTOCOL_VERSION,
                         "ok": True,
-                        "source": source,
-                        "text": text,
+                        **opened,
                     }
                     status = "201 Created"
                 elif (
