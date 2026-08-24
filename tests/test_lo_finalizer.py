@@ -22,6 +22,13 @@ from zipfile import ZipFile
 
 import pytest
 
+from thesis_forge.application.contracts import (
+    ApplicationStageError,
+    ProjectIdentity,
+    ProjectOutput,
+    ProjectRequest,
+    ProjectRequestIntent,
+)
 from thesis_forge.application.office_refresh import (
     LibreOfficeDocumentRefresher,
     _capture_field_instructions,
@@ -35,19 +42,146 @@ from thesis_forge.application.office_refresh import (
 )
 from thesis_forge.application.services import (
     ApplicationDependencies,
-    build_service,
+    ProjectApplicationService,
 )
-from thesis_forge.core.compiler import compile_document
-from thesis_forge.core.parser import parse_markdown
 from thesis_forge.renderers.docx import DocxRenderer
-from thesis_forge.templates import load_template
+from thesis_forge.renderers.docx.package import (
+    DocxPackageValidationError,
+    validate_docx_package,
+)
 
 ROOT = Path(__file__).resolve().parents[1]
-EXAMPLE_SOURCE = ROOT / "examples" / "complete-thesis" / "thesis.md"
 HUT_TEMPLATE = (
     ROOT / "templates" / "schools" / "hunan-university-of-technology" / "master-2026.yaml"
 )
 EXPECTED_TOC_INSTRUCTION = 'TOC \\o "1-3" \\h \\z \\u'
+
+V2_SOURCE = r"""# 摘要 {#chap:abstract-zh}
+
+本文验证 V2 manifest 项目经过 canonical parser 和 application service 后，
+仍能生成包含真实 Word 字段的论文文档。
+
+关键词：论文编译；DOCX；确定性构建
+
+# Abstract {#chap:abstract-en}
+
+This fixture verifies the canonical V2 project path and LibreOffice finalizer.
+
+Keywords: thesis compiler; DOCX; deterministic build
+
+# 绪论 {#chap:introduction}
+
+## 研究背景 {#sec:background}
+
+已有研究表明，**结构化编译**与*可验证反馈*能够提升论文工程的一致性 [@smith2025]。
+本项目使用 `thesisforge.yaml` 作为入口，普通源码换行
+不应在 Word 中产生手动换行，模型流程见[图](#fig:model)。
+
+![模型总体结构](assets/model.png){#fig:model}
+
+# 系统设计 {#chap:design}
+
+损失函数定义如下：
+
+$$
+L=-\sum_{i=1}^{N} y_i \log \hat y_i
+$$
+{#eq:loss}
+
+其计算方式见[式](#eq:loss)。
+
+| 指标 | 实验组 | 对照组 |
+|---|---:|---:|
+| **准确率** | 96.2% | 91.8% |
+| 召回率 | 94.1% | 89.6% |
+
+: 模型实验结果 {#tbl:experiment}
+
+结果汇总见[表](#tbl:experiment)。
+
+```python {#lst:training title="训练代码"}
+# 代码中的 {#literal}、[@literal] 与 @fig:literal 必须保持字面量
+for epoch in range(epochs):
+    train_one_epoch()
+```
+
+```algorithm {#alg:training title="训练流程"}
+输入：训练集 D
+输出：模型 M
+1. 初始化参数
+2. 迭代优化
+```
+
+这里包含一个说明性脚注[^scope]。\
+这一行使用显式 HardBreak。
+
+[^scope]: Review 中显示脚注号和正文，DOCX 中生成原生脚注。
+
+# 参考文献
+"""
+
+V2_MANIFEST = """schema: thesisforge.project.v2
+
+project:
+  id: lo-finalizer-fixture
+  language: zh-CN
+
+document:
+  source: thesis.md
+
+metadata:
+  title:
+    zh: ThesisForge finalizer V2 fixture
+    en: ThesisForge finalizer V2 fixture
+  author:
+    name: 张三
+    student_id: "20260001"
+  institution:
+    university: 示例大学
+    college: 计算机学院
+  degree:
+    name: 工学硕士
+    major: 计算机科学与技术
+  advisor:
+    name: 李教授
+    title: 教授
+  dates:
+    completed: "2026-05"
+
+resources:
+  root: .
+  assets: assets
+  bibliography: references.bib
+
+render:
+  template_id: hut-master-2026
+  citation_style: GB-T-7714-2025
+
+layout:
+  objects:
+    fig:model:
+      width: 85%
+
+output:
+  directory: build
+  docx: thesis.docx
+
+review:
+  directory: review
+  markdown: thesis.review.md
+  source_map: thesis.review-map.json
+"""
+
+V2_BIBLIOGRAPHY = """@article{smith2025,
+  author  = {Smith, Jane and Zhang, Wei},
+  title   = {Typed Document Pipelines for Academic Publishing},
+  journal = {Journal of Document Engineering},
+  year    = {2025},
+  volume  = {12},
+  number  = {3},
+  pages   = {101--120}
+}
+"""
 
 SOFFICE = shutil.which("soffice") or (
     "/Applications/LibreOffice.app/Contents/MacOS/soffice"
@@ -75,12 +209,303 @@ class _NoRefresh:
 
 
 @pytest.fixture(scope="module")
-def raw_docx(tmp_path_factory: pytest.TempPathFactory) -> Path:
+def v2_project(tmp_path_factory: pytest.TempPathFactory) -> Path:
+    project_root = tmp_path_factory.mktemp("v2-project")
+    (project_root / "assets").mkdir()
+    template_root = project_root / "templates"
+    template_root.mkdir()
+    (project_root / "thesisforge.yaml").write_text(V2_MANIFEST, encoding="utf-8")
+    (project_root / "thesis.md").write_text(V2_SOURCE, encoding="utf-8")
+    (project_root / "references.bib").write_text(
+        V2_BIBLIOGRAPHY,
+        encoding="utf-8",
+    )
+    shutil.copy2(HUT_TEMPLATE, template_root / HUT_TEMPLATE.name)
+    shutil.copy2(
+        ROOT / "tests" / "fixtures" / "v2-project" / "assets" / "model.png",
+        project_root / "assets" / "model.png",
+    )
+    return project_root
+
+
+def _project_request(
+    project_root: Path,
+    intent: ProjectRequestIntent,
+    *,
+    output: Path | None = None,
+) -> ProjectRequest:
+    project_root = project_root.resolve()
+    return ProjectRequest(
+        project=ProjectIdentity(
+            project_id="lo-finalizer-fixture",
+            project_root=project_root,
+            manifest_path=(project_root / "thesisforge.yaml").resolve(),
+        ),
+        intent=intent,
+        output=ProjectOutput(output.resolve()) if output is not None else None,
+    )
+
+
+def _project_service(
+    *,
+    document_refresher=None,
+) -> ProjectApplicationService:
+    return ProjectApplicationService(
+        ApplicationDependencies(document_refresher=document_refresher)
+        if document_refresher is not None
+        else ApplicationDependencies()
+    )
+
+
+def test_manifest_template_id_controls_default_template_selection(
+    v2_project: Path,
+    tmp_path: Path,
+) -> None:
+    mutated_project = tmp_path / "missing-template"
+    shutil.copytree(v2_project, mutated_project)
+    manifest_path = mutated_project / "thesisforge.yaml"
+    manifest_path.write_text(
+        manifest_path.read_text(encoding="utf-8").replace(
+            "hut-master-2026",
+            "mutation-missing-template",
+        ),
+        encoding="utf-8",
+    )
+
+    result = _project_service().preview(
+        _project_request(mutated_project, ProjectRequestIntent.REVIEW)
+    )
+
+    assert result.plan is None
+    assert result.context.template is None
+    assert any(issue.code == "missing-template" for issue in result.issues)
+
+
+def test_project_service_uses_production_package_validator_by_default() -> None:
+    assert _project_service().dependencies.package_validator is validate_docx_package
+
+
+def test_production_package_validator_rejects_invalid_docx(tmp_path: Path) -> None:
+    invalid = tmp_path / "invalid.docx"
+    with ZipFile(invalid, "w") as package:
+        package.writestr("not-a-docx.txt", b"invalid")
+
+    with pytest.raises(DocxPackageValidationError, match="TF-DOCX-OPC-003"):
+        validate_docx_package(invalid)
+
+
+def test_build_invokes_configured_package_validator(
+    v2_project: Path,
+    tmp_path: Path,
+) -> None:
+    calls: list[Path] = []
+
+    def package_validator(path: str | Path) -> None:
+        calls.append(Path(path))
+        validate_docx_package(path)
+
+    service = ProjectApplicationService(
+        ApplicationDependencies(
+            document_refresher=_NoRefresh(),
+            package_validator=package_validator,
+        )
+    )
+    output = tmp_path / "validated.docx"
+    service.build(
+        _project_request(
+            v2_project,
+            ProjectRequestIntent.BUILD,
+            output=output,
+        )
+    )
+
+    assert len(calls) == 1
+    assert output.is_file()
+
+
+def test_build_preserves_existing_output_when_package_validation_fails(
+    v2_project: Path,
+    tmp_path: Path,
+) -> None:
+    class InvalidDocxRenderer:
+        def render(self, _plan, output: str | Path) -> None:
+            with ZipFile(output, "w") as package:
+                package.writestr("not-a-docx.txt", b"invalid")
+
+    output = tmp_path / "existing.docx"
+    original = b"previous-output"
+    output.write_bytes(original)
+    service = ProjectApplicationService(
+        ApplicationDependencies(
+            renderer=InvalidDocxRenderer(),
+            document_refresher=_NoRefresh(),
+        )
+    )
+
+    with pytest.raises(ApplicationStageError, match="TF-DOCX-OPC-003"):
+        service.build(
+            _project_request(
+                v2_project,
+                ProjectRequestIntent.BUILD,
+                output=output,
+            )
+        )
+
+    assert output.read_bytes() == original
+
+
+def _normalize_libreoffice_footnote_ids(path: Path) -> None:
+    """把 LO 的保留脚注 ID 归一化为渲染器的 canonical 表示。"""
+    from lxml import etree
+
+    w_ns = "http://schemas.openxmlformats.org/wordprocessingml/2006/main"
+    w = f"{{{w_ns}}}"
+    namespaces = {"w": w_ns}
+    with ZipFile(path) as package:
+        footnotes_xml = package.read("word/footnotes.xml")
+        document_xml = package.read("word/document.xml")
+
+    footnotes_root = etree.fromstring(footnotes_xml)
+    body_ids: dict[str, str] = {}
+    separator_ids: list[str] = []
+    continuation_separator_ids: list[str] = []
+    next_id = 1
+    for footnote in footnotes_root.xpath("./w:footnote", namespaces=namespaces):
+        footnote_id = footnote.get(f"{w}id")
+        footnote_type = footnote.get(f"{w}type")
+        if footnote_type == "separator":
+            if footnote_id != "0":
+                raise ValueError(
+                    "LibreOffice produced an unexpected separator footnote ID: "
+                    f"{footnote_id}"
+                )
+            separator_ids.append(footnote_id)
+            footnote.set(f"{w}id", "-1")
+        elif footnote_type == "continuationSeparator":
+            if footnote_id != "1":
+                raise ValueError(
+                    "LibreOffice produced an unexpected continuation separator "
+                    f"footnote ID: {footnote_id}"
+                )
+            continuation_separator_ids.append(footnote_id)
+            footnote.set(f"{w}id", "0")
+        else:
+            if footnote_id is None or not footnote_id.isdigit():
+                raise ValueError(
+                    f"LibreOffice produced an invalid body footnote ID: {footnote_id}"
+                )
+            if footnote_id in body_ids:
+                raise ValueError(
+                    f"LibreOffice produced a duplicate body footnote ID: {footnote_id}"
+                )
+            body_ids[footnote_id] = str(next_id)
+            footnote.set(f"{w}id", str(next_id))
+            next_id += 1
+
+    if separator_ids != ["0"] or continuation_separator_ids != ["1"]:
+        raise ValueError(
+            "LibreOffice produced an unexpected footnote separator layout"
+        )
+    if not body_ids:
+        raise ValueError("LibreOffice produced no body footnote definitions")
+    expected_body_ids = {str(index) for index in range(2, 2 + len(body_ids))}
+    if set(body_ids) != expected_body_ids:
+        raise ValueError(
+            "LibreOffice produced non-contiguous body footnote IDs: "
+            f"{sorted(body_ids)}"
+        )
+
+    document_root = etree.fromstring(document_xml)
+    references = document_root.xpath(
+        ".//w:footnoteReference",
+        namespaces=namespaces,
+    )
+    if not references:
+        raise ValueError("LibreOffice removed all body footnote references")
+    for reference in references:
+        old_id = reference.get(f"{w}id")
+        if old_id not in body_ids:
+            raise ValueError(
+                f"LibreOffice produced an unknown body footnote reference: {old_id}"
+            )
+        reference.set(f"{w}id", body_ids[old_id])
+
+    _replace_package_part(
+        path,
+        "word/footnotes.xml",
+        etree.tostring(
+            footnotes_root,
+            xml_declaration=True,
+            encoding="UTF-8",
+            standalone=True,
+        ),
+    )
+    _replace_package_part(
+        path,
+        "word/document.xml",
+        etree.tostring(
+            document_root,
+            xml_declaration=True,
+            encoding="UTF-8",
+            standalone=True,
+        ),
+    )
+
+
+class _LibreOfficeFootnoteNormalizer:
+    def __init__(self, delegate) -> None:
+        self._delegate = delegate
+
+    def refresh(self, path) -> bool:
+        refreshed = self._delegate.refresh(path)
+        if refreshed:
+            try:
+                _normalize_libreoffice_footnote_ids(Path(path))
+            except Exception as error:
+                # Refresh failures may be treated as a no-op by production;
+                # malformed normalization must instead fail this build.
+                raise ValueError(
+                    "LibreOffice footnote normalization failed"
+                ) from error
+        return refreshed
+
+
+@pytest.mark.parametrize("error_type", (RuntimeError, OSError, ValueError))
+def test_libreoffice_footnote_normalizer_does_not_swallow_errors(
+    monkeypatch,
+    error_type,
+) -> None:
+    class Refreshed:
+        def refresh(self, _path) -> bool:
+            return True
+
+    def fail_normalization(_path) -> None:
+        raise error_type("normalization sentinel")
+
+    monkeypatch.setattr(
+        sys.modules[__name__],
+        "_normalize_libreoffice_footnote_ids",
+        fail_normalization,
+    )
+
+    with pytest.raises(ValueError, match="normalization failed"):
+        _LibreOfficeFootnoteNormalizer(Refreshed()).refresh(
+            Path("unused.docx")
+        )
+
+
+@pytest.fixture(scope="module")
+def raw_docx(
+    tmp_path_factory: pytest.TempPathFactory,
+    v2_project: Path,
+) -> Path:
     """生成态构建（绕开 finalizer），保留渲染器原始字段状态。"""
     output = tmp_path_factory.mktemp("raw") / "thesis.docx"
-    document = parse_markdown(EXAMPLE_SOURCE)
-    template = load_template(HUT_TEMPLATE)
-    DocxRenderer().render(compile_document(document, template=template), output)
+    preview = _project_service().preview(
+        _project_request(v2_project, ProjectRequestIntent.REVIEW)
+    )
+    assert preview.plan is not None, preview.issues
+    DocxRenderer().render(preview.plan, output)
     return output
 
 
@@ -119,6 +544,115 @@ class TestRendererStyles:
                 styles_xml,
             )
             assert match is not None, f"styles.xml 缺少字符样式 {style_id}"
+
+    def test_raw_docx_contains_footnote_and_hardbreak(self, raw_docx: Path):
+        with ZipFile(raw_docx) as package:
+            document_xml = package.read("word/document.xml")
+            footnotes_xml = package.read("word/footnotes.xml")
+        assert b"<w:footnoteReference" in document_xml
+        assert b"<w:br" in document_xml
+        assert b"<w:footnoteRef" in footnotes_xml
+
+    @pytest.mark.parametrize(
+        ("mutation", "expected_error"),
+        (
+            ("missing-node", "unexpected footnote separator layout"),
+            ("missing-id", "unexpected continuation separator footnote ID"),
+            ("wrong-id", "unexpected continuation separator footnote ID"),
+            ("wrong-separator-id", "unexpected separator footnote ID"),
+        ),
+    )
+    def test_footnote_normalizer_rejects_continuation_mutations(
+        self,
+        raw_docx: Path,
+        tmp_path: Path,
+        mutation: str,
+        expected_error: str,
+    ):
+        from lxml import etree
+
+        path = tmp_path / f"{mutation}.docx"
+        shutil.copy(raw_docx, path)
+        w_ns = "http://schemas.openxmlformats.org/wordprocessingml/2006/main"
+        w = f"{{{w_ns}}}"
+        namespaces = {"w": w_ns}
+        with ZipFile(path) as package:
+            footnotes_xml = package.read("word/footnotes.xml")
+            document_xml = package.read("word/document.xml")
+        footnotes_root = etree.fromstring(footnotes_xml)
+        document_root = etree.fromstring(document_xml)
+
+        for footnote in footnotes_root.xpath("./w:footnote", namespaces=namespaces):
+            footnote_type = footnote.get(f"{w}type")
+            if footnote_type == "separator":
+                footnote.set(f"{w}id", "0")
+            elif footnote_type == "continuationSeparator":
+                footnote.set(f"{w}id", "1")
+            else:
+                footnote.set(
+                    f"{w}id",
+                    str(int(footnote.get(f"{w}id", "0")) + 1),
+                )
+        for reference in document_root.xpath(
+            ".//w:footnoteReference",
+            namespaces=namespaces,
+        ):
+            reference.set(
+                f"{w}id",
+                str(int(reference.get(f"{w}id", "0")) + 1),
+            )
+        _replace_package_part(
+            path,
+            "word/footnotes.xml",
+            etree.tostring(
+                footnotes_root,
+                xml_declaration=True,
+                encoding="UTF-8",
+                standalone=True,
+            ),
+        )
+        _replace_package_part(
+            path,
+            "word/document.xml",
+            etree.tostring(
+                document_root,
+                xml_declaration=True,
+                encoding="UTF-8",
+                standalone=True,
+            ),
+        )
+
+        with ZipFile(path) as package:
+            footnotes_root = etree.fromstring(package.read("word/footnotes.xml"))
+        continuation = footnotes_root.xpath(
+            "./w:footnote[@w:type='continuationSeparator']",
+            namespaces=namespaces,
+        )[0]
+        if mutation == "missing-node":
+            continuation.getparent().remove(continuation)
+        elif mutation == "missing-id":
+            del continuation.attrib[f"{w}id"]
+        elif mutation == "wrong-id":
+            continuation.set(f"{w}id", "99")
+        else:
+            separator = footnotes_root.xpath(
+                "./w:footnote[@w:type='separator']",
+                namespaces=namespaces,
+            )[0]
+            separator.set(f"{w}id", "99")
+        _replace_package_part(
+            path,
+            "word/footnotes.xml",
+            etree.tostring(
+                footnotes_root,
+                xml_declaration=True,
+                encoding="UTF-8",
+                standalone=True,
+            ),
+        )
+
+        with pytest.raises(ValueError, match=expected_error):
+            _normalize_libreoffice_footnote_ids(path)
 
 
 class TestFieldInstructionCapture:
@@ -276,8 +810,11 @@ def _toc_result_text(path: Path) -> str:
 
 
 @pytest.fixture(scope="module")
-def lo_final_docx(tmp_path_factory: pytest.TempPathFactory) -> Path:
-    """真 final-auto 路径：build_service + LibreOfficeDocumentRefresher。"""
+def lo_final_docx(
+    tmp_path_factory: pytest.TempPathFactory,
+    v2_project: Path,
+) -> Path:
+    """真 final-auto 路径：ProjectApplicationService + LibreOffice。"""
     if SOFFICE is None:
         pytest.skip("本机未安装 LibreOffice")
     executable = discover_libreoffice_executable()
@@ -293,11 +830,16 @@ def lo_final_docx(tmp_path_factory: pytest.TempPathFactory) -> Path:
             timeout_seconds=180.0,
         )
     )
-    build_service(
-        EXAMPLE_SOURCE,
-        output,
-        template_path=HUT_TEMPLATE,
-        dependencies=dependencies,
+    _project_service(
+        document_refresher=_LibreOfficeFootnoteNormalizer(
+            dependencies.document_refresher
+        )
+    ).build(
+        _project_request(
+            v2_project,
+            ProjectRequestIntent.BUILD,
+            output=output,
+        )
     )
     return output
 
