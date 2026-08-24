@@ -1,5 +1,6 @@
 import {
   assertCommandResponse,
+  PROTOCOL_VERSION,
   type CommandEnvelope,
   type CommandOutputRef,
   type SourceRef,
@@ -7,7 +8,7 @@ import {
 import { assertBuildEvent, type BuildEvent } from "./buildEvents";
 import {
   readOpenedProject,
-  readProjectIdentity,
+  readOpenProjectInput,
   type OpenProjectInput,
   type OpenedProject,
   type OpenSourceInput,
@@ -25,6 +26,33 @@ interface WebTransportOptions {
   baseUrl?: string;
   fetch?: typeof globalThis.fetch;
   pickPdf?: () => Promise<{ fileName: string; bytes: Uint8Array } | null>;
+}
+
+function isObject(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
+function hasOnlyKeys(
+  value: Record<string, unknown>,
+  keys: readonly string[],
+): boolean {
+  return Object.keys(value).every((key) => keys.includes(key));
+}
+
+function readWebProjectResponse(value: unknown): OpenedProject {
+  if (
+    !isObject(value) ||
+    !hasOnlyKeys(value, ["protocol", "ok", "project", "source", "text"]) ||
+    value.protocol !== PROTOCOL_VERSION ||
+    value.ok !== true
+  ) {
+    throw new Error("无效的 Web project 响应");
+  }
+  return readOpenedProject({
+    project: value.project,
+    source: value.source,
+    text: value.text,
+  });
 }
 
 export class WebWorkbenchTransport implements WorkbenchTransport {
@@ -87,46 +115,20 @@ export class WebWorkbenchTransport implements WorkbenchTransport {
     if (!input) {
       throw new Error("Web project input is required");
     }
-    const project = readProjectIdentity(input.project);
-    if (
-      typeof input.fileName !== "string" ||
-      input.fileName.length === 0 ||
-      typeof input.text !== "string"
-    ) {
-      throw new Error("Web project input is required");
-    }
+    const projectInput = readOpenProjectInput(input);
     const response = await this.#fetch(`${this.#baseUrl}/api/v1/workspaces`, {
       method: "POST",
       headers: {
         "content-type": "application/json",
       },
-      body: JSON.stringify({
-        project,
-        fileName: input.fileName,
-        text: input.text,
-      }),
+      body: JSON.stringify(projectInput),
     });
     const body: unknown = await response.json();
-    if (
-      !response.ok ||
-      typeof body !== "object" ||
-      body === null ||
-      !("protocol" in body) ||
-      body.protocol !== "thesisforge.workbench.v1" ||
-      !("ok" in body) ||
-      body.ok !== true ||
-      !("project" in body) ||
-      !("source" in body) ||
-      !("text" in body)
-    ) {
+    if (!response.ok) {
       throw new Error("打开 Web 项目工作区失败");
     }
     try {
-      return readOpenedProject({
-        project: body.project,
-        source: body.source,
-        text: body.text,
-      });
+      return readWebProjectResponse(body);
     } catch {
       throw new Error("打开 Web 项目工作区失败");
     }

@@ -1,6 +1,8 @@
 import { PROTOCOL_VERSION } from "./dto";
 import {
+  readOpenProjectInput,
   readOpenedProject,
+  readProjectFileSnapshot,
   readProjectIdentity,
   type OpenProjectInput,
   type ProjectIdentityRef,
@@ -15,11 +17,19 @@ const project: ProjectIdentityRef = {
 };
 
 const sourceText = "# 绪论\n\n公式 $a^2 + b^2 = c^2$，引用“文献”。\n";
+const manifestText =
+  "schema: thesisforge.project.v2\nproject:\n  id: project-1\n";
 
 const input: OpenProjectInput = {
   project,
-  fileName: "thesis.md",
-  text: sourceText,
+  manifest: {
+    fileName: "thesisforge.yaml",
+    text: manifestText,
+  },
+  source: {
+    fileName: "thesis.md",
+    text: sourceText,
+  },
 };
 
 const workspaceSource = {
@@ -65,8 +75,14 @@ describe("WebWorkbenchTransport.openProject", () => {
         root: "/workspace/thesis",
         manifestPath: "/workspace/thesis/thesisforge.yaml",
       },
-      fileName: "thesis.md",
-      text: sourceText,
+      manifest: {
+        fileName: "thesisforge.yaml",
+        text: manifestText,
+      },
+      source: {
+        fileName: "thesis.md",
+        text: sourceText,
+      },
     });
   });
 
@@ -175,14 +191,17 @@ describe("WebWorkbenchTransport.openProject", () => {
     ).rejects.toThrow("无效的 ThesisForge project 标识");
   });
 
-  it("rejects when the input fileName is empty", async () => {
+  it("rejects when the input source snapshot fileName is empty", async () => {
     const transport = new WebWorkbenchTransport({
       fetch: async () => jsonResponse(openedProjectBody),
     });
 
     await expect(
-      transport.openProject({ ...input, fileName: "" }),
-    ).rejects.toThrow("Web project input is required");
+      transport.openProject({
+        ...input,
+        source: { ...input.source, fileName: "" },
+      }),
+    ).rejects.toThrow("无效的 ThesisForge source 快照");
   });
 
   it("rejects a response with a wrong protocol version", async () => {
@@ -268,6 +287,38 @@ describe("WebWorkbenchTransport.openProject", () => {
             mirrorId: "mirror-1",
             fileName: "thesis.md",
           },
+        }),
+    });
+
+    await expect(transport.openProject(input)).rejects.toThrow(
+      "打开 Web 项目工作区失败",
+    );
+  });
+
+  it("rejects a response containing an uploaded-file-only project source", async () => {
+    const transport = new WebWorkbenchTransport({
+      fetch: async () =>
+        jsonResponse({
+          ...openedProjectBody,
+          source: {
+            kind: "web-upload",
+            uploadId: "u".repeat(32),
+            fileName: "thesis.md",
+          },
+        }),
+    });
+
+    await expect(transport.openProject(input)).rejects.toThrow(
+      "打开 Web 项目工作区失败",
+    );
+  });
+
+  it("rejects a response with duplicate manifest metadata", async () => {
+    const transport = new WebWorkbenchTransport({
+      fetch: async () =>
+        jsonResponse({
+          ...openedProjectBody,
+          manifest: input.manifest,
         }),
     });
 
@@ -537,6 +588,51 @@ describe("project transport readers", () => {
     ).toThrow("无效的 ThesisForge project 标识");
   });
 
+  it("readProjectFileSnapshot accepts the manifest and source shapes", () => {
+    expect(
+      readProjectFileSnapshot(
+        { fileName: "thesisforge.yaml", text: manifestText },
+        "manifest",
+      ),
+    ).toEqual({ fileName: "thesisforge.yaml", text: manifestText });
+    expect(
+      readProjectFileSnapshot(
+        { fileName: "chapters/intro.md", text: sourceText },
+        "source",
+      ),
+    ).toEqual({ fileName: "chapters/intro.md", text: sourceText });
+  });
+
+  it("readProjectFileSnapshot rejects non-canonical manifest and source names", () => {
+    expect(() =>
+      readProjectFileSnapshot(
+        { fileName: "project.yaml", text: manifestText },
+        "manifest",
+      ),
+    ).toThrow("必须是 thesisforge.yaml");
+    expect(() =>
+      readProjectFileSnapshot(
+        { fileName: "thesisforge.yaml", text: sourceText },
+        "source",
+      ),
+    ).toThrow("必须是 Markdown 文件");
+  });
+
+  it("readOpenProjectInput rejects projectless and duplicate-metadata input", () => {
+    expect(() =>
+      readOpenProjectInput({
+        manifest: input.manifest,
+        source: input.source,
+      }),
+    ).toThrow("无效的 ThesisForge project 标识");
+    expect(() =>
+      readOpenProjectInput({
+        ...input,
+        fileName: "thesis.md",
+      }),
+    ).toThrow("无效的 ThesisForge project 输入");
+  });
+
   it("readOpenedProject accepts the shared typed contract", () => {
     const desktopSource = {
       kind: "desktop",
@@ -572,6 +668,20 @@ describe("project transport readers", () => {
       readOpenedProject({
         project,
         source: { kind: "web-mirror", mirrorId: "mirror-1", fileName: "thesis.md" },
+        text: sourceText,
+      }),
+    ).toThrow("无效的 ThesisForge project 响应");
+  });
+
+  it("readOpenedProject rejects an uploaded-file-only source", () => {
+    expect(() =>
+      readOpenedProject({
+        project,
+        source: {
+          kind: "web-upload",
+          uploadId: "u".repeat(32),
+          fileName: "thesis.md",
+        },
         text: sourceText,
       }),
     ).toThrow("无效的 ThesisForge project 响应");

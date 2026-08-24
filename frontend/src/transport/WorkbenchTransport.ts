@@ -34,15 +34,22 @@ export interface ProjectIdentityRef {
   manifestPath: string;
 }
 
-export interface OpenProjectInput {
-  project: ProjectIdentityRef;
+export interface ProjectFileSnapshot {
   fileName: string;
   text: string;
 }
 
+export interface OpenProjectInput {
+  project: ProjectIdentityRef;
+  manifest: ProjectFileSnapshot;
+  source: ProjectFileSnapshot;
+}
+
+export type ProjectSourceRef = Exclude<SourceRef, { kind: "web-upload" }>;
+
 export interface OpenedProject {
   project: ProjectIdentityRef;
-  source: SourceRef;
+  source: ProjectSourceRef;
   text: string;
 }
 
@@ -99,7 +106,45 @@ export function readProjectIdentity(value: unknown): ProjectIdentityRef {
   };
 }
 
-function readSourceRef(value: unknown): SourceRef {
+export function readProjectFileSnapshot(
+  value: unknown,
+  role: "manifest" | "source",
+): ProjectFileSnapshot {
+  if (
+    !isObject(value) ||
+    !hasOnlyKeys(value, ["fileName", "text"]) ||
+    !isNonEmptyString(value.fileName) ||
+    typeof value.text !== "string"
+  ) {
+    throw new Error(`无效的 ThesisForge ${role} 快照`);
+  }
+  if (role === "manifest" && value.fileName !== "thesisforge.yaml") {
+    throw new Error("ThesisForge project manifest 必须是 thesisforge.yaml");
+  }
+  if (role === "source" && !value.fileName.toLowerCase().endsWith(".md")) {
+    throw new Error("ThesisForge project source 必须是 Markdown 文件");
+  }
+  return {
+    fileName: value.fileName,
+    text: value.text,
+  };
+}
+
+export function readOpenProjectInput(value: unknown): OpenProjectInput {
+  if (
+    !isObject(value) ||
+    !hasOnlyKeys(value, ["project", "manifest", "source"])
+  ) {
+    throw new Error("无效的 ThesisForge project 输入");
+  }
+  return {
+    project: readProjectIdentity(value.project),
+    manifest: readProjectFileSnapshot(value.manifest, "manifest"),
+    source: readProjectFileSnapshot(value.source, "source"),
+  };
+}
+
+function readSourceRef(value: unknown): ProjectSourceRef {
   if (!isObject(value)) {
     throw new Error("无效的 ThesisForge project 响应");
   }
@@ -124,20 +169,6 @@ function readSourceRef(value: unknown): SourceRef {
     return {
       kind: "web-workspace",
       workspaceId: value.workspaceId,
-      fileName: value.fileName,
-    };
-  }
-  if (value.kind === "web-upload") {
-    if (
-      !hasOnlyKeys(value, ["kind", "uploadId", "fileName"]) ||
-      !isNonEmptyString(value.uploadId) ||
-      !isNonEmptyString(value.fileName)
-    ) {
-      throw new Error("无效的 ThesisForge project 响应");
-    }
-    return {
-      kind: "web-upload",
-      uploadId: value.uploadId,
       fileName: value.fileName,
     };
   }
