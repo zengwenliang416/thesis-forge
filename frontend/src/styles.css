@@ -682,6 +682,32 @@ svg {
   font-weight: 650;
 }
 
+.preview-inline-code,
+.review-inline-code {
+  border-radius: 2px;
+  padding: 1px 3px;
+  background: #eef0ef;
+  color: #24323d;
+  font: 0.92em "SFMono-Regular", Menlo, monospace;
+}
+
+.preview-blockquote,
+.review-blockquote {
+  margin: 7px 0 0;
+  border-left: 3px solid #bbc3ca;
+  padding: 2px 0 2px 12px;
+}
+
+.preview-blockquote-child,
+.review-blockquote-child {
+  margin: 4px 0;
+}
+
+.preview-blockquote-child[data-preview-state="unsupported"],
+.review-blockquote-child[data-review-state="unsupported"] {
+  opacity: 0.75;
+}
+
 .preview-cover {
   display: grid;
   gap: 8px;
@@ -768,7 +794,9 @@ svg {
   text-align: center;
 }
 
-.preview-block pre {
+.preview-block pre,
+.preview-code-block,
+.review-code-block {
   overflow: auto;
   margin: 7px 0 0;
   border-left: 3px solid #bbc3ca;

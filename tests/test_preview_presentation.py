@@ -9,6 +9,8 @@ from thesis_forge import application, presentation
 from thesis_forge.core.model import (
     Algorithm,
     BibliographyBlock,
+    BlockQuote,
+    CodeBlock,
     Equation,
     Figure,
     FootnoteDefinition,
@@ -26,8 +28,10 @@ from thesis_forge.core.render_plan import (
     AlgorithmInstruction,
     BibliographyEntryInstruction,
     BibliographyInstruction,
+    BlockQuoteInstruction,
     CaptionRuns,
     CitationRun,
+    CodeBlockInstruction,
     CoverInstruction,
     EquationInstruction,
     FigureInstruction,
@@ -306,7 +310,7 @@ def test_complete_example_preview_preserves_compiler_order_and_numbering(
 def test_preview_serializes_all_inline_run_variants(tmp_path: Path):
     PreviewResult, map_preview_result = _preview_api()
     runs = (
-        TextRun("前"),
+        TextRun("前", bold=True, italic=True),
         ReferenceRun("fig:arch", "fig_arch", "图 1-1"),
         HyperlinkRun("项目主页", "https://example.test"),
         MathRun(r"x^2 + y^2"),
@@ -327,7 +331,12 @@ def test_preview_serializes_all_inline_run_variants(tmp_path: Path):
     )
 
     assert result["preview"]["blocks"][0]["content"]["runs"] == [
-        {"type": "text", "text": "前"},
+        {
+            "type": "text",
+            "text": "前",
+            "bold": True,
+            "italic": True,
+        },
         {"type": "reference", "targetId": "fig:arch", "text": "图 1-1"},
         {
             "type": "hyperlink",
@@ -379,18 +388,20 @@ def test_preview_mapper_covers_every_typed_instruction_and_unknown_fallback(
     blocks = [
         Heading(id="chap:intro", location=SourceLocation(line=10)),
         Paragraph(location=SourceLocation(line=11)),
-        ListBlock(location=SourceLocation(line=12)),
+        CodeBlock(location=SourceLocation(line=12)),
+        BlockQuote(location=SourceLocation(line=13)),
+        ListBlock(location=SourceLocation(line=14)),
         Figure(
             id="fig:a",
             caption_inlines=_text_inlines("图题"),
-            location=SourceLocation(line=13),
+            location=SourceLocation(line=15),
         ),
-        Table(id="tbl:a", location=SourceLocation(line=14)),
-        Equation(id="eq:a", display=True, location=SourceLocation(line=15)),
-        Listing(id="lst:a", location=SourceLocation(line=16)),
-        Algorithm(id="alg:a", location=SourceLocation(line=17)),
-        FootnoteDefinition(label="note", location=SourceLocation(line=18)),
-        BibliographyBlock(location=SourceLocation(line=19)),
+        Table(id="tbl:a", location=SourceLocation(line=16)),
+        Equation(id="eq:a", display=True, location=SourceLocation(line=17)),
+        Listing(id="lst:a", location=SourceLocation(line=18)),
+        Algorithm(id="alg:a", location=SourceLocation(line=19)),
+        FootnoteDefinition(label="note", location=SourceLocation(line=20)),
+        BibliographyBlock(location=SourceLocation(line=21)),
     ]
     plan = RenderPlan(
         nodes=[
@@ -399,6 +410,10 @@ def test_preview_mapper_covers_every_typed_instruction_and_unknown_fallback(
             TocInstruction(min_level=1, max_level=3),
             HeadingInstruction("chap:intro", 1, "绪论"),
             ParagraphInstruction("正文", (TextRun("正文"),)),
+            CodeBlockInstruction("python", "print(1)\n"),
+            BlockQuoteInstruction(
+                (ParagraphInstruction("引用正文", (TextRun("引用正文"),)),)
+            ),
             ListInstruction(
                 ordered=True,
                 start=3,
@@ -468,6 +483,8 @@ def test_preview_mapper_covers_every_typed_instruction_and_unknown_fallback(
         "toc",
         "text",
         "text",
+        "code-block",
+        "blockquote",
         "list",
         "figure",
         "table",

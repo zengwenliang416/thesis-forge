@@ -164,7 +164,7 @@ def test_figure_caption_uses_one_typed_value_for_all_inline_variants() -> None:
     ]
     assert runs[1] == TextRun("code", code=True)
     assert runs[2] == TextRun("粗体", bold=True)
-    assert runs[3] == TextRun("强调")
+    assert runs[3] == TextRun("强调", italic=True)
     assert runs[4] == HyperlinkRun("链接", "https://example.com")
     assert runs[5] == MathRun("x^2")
     assert isinstance(runs[8], ReferenceRun)

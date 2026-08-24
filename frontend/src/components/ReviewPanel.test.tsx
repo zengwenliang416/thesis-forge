@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { createInitialWorkspaceState } from "../state/workspace";
 import type { WorkspaceState } from "../state/workspace";
@@ -214,6 +214,107 @@ describe("ReviewPanel", () => {
     expect(screen.getByText("处理流程")).toBeVisible();
     expect(screen.getByText("此内容无法在 Review 中显示")).toBeVisible();
     expect(container.textContent).not.toContain("future-node");
+  });
+
+  it("renders rich inline formatting, code blocks, and nested blockquotes", () => {
+    const state = stateWithBlocks([
+      {
+        selectionId: "format:paragraph",
+        semanticId: null,
+        kind: "paragraph",
+        line: 41,
+        state: "ready",
+        markers: [],
+        content: {
+          type: "text",
+          text: "粗斜体代码",
+          level: null,
+          runs: [
+            {
+              type: "text",
+              text: "粗斜体代码",
+              bold: true,
+              italic: true,
+              code: true,
+            },
+          ],
+        },
+      },
+      {
+        selectionId: "code:block",
+        semanticId: null,
+        kind: "code_block",
+        line: 42,
+        state: "ready",
+        markers: [],
+        content: {
+          type: "code-block",
+          language: "python",
+          code: "print(1)\n",
+        },
+      },
+      {
+        selectionId: "quote:block",
+        semanticId: null,
+        kind: "blockquote",
+        line: 43,
+        state: "ready",
+        markers: [],
+        content: {
+          type: "blockquote",
+          children: [
+            {
+              kind: "paragraph",
+              state: "ready",
+              content: {
+                type: "text",
+                text: "外层引用",
+                level: null,
+                runs: [{ type: "text", text: "外层引用", bold: true }],
+              },
+            },
+            {
+              kind: "blockquote",
+              state: "ready",
+              content: {
+                type: "blockquote",
+                children: [
+                  {
+                    kind: "paragraph",
+                    state: "unsupported",
+                    content: {
+                      type: "text",
+                      text: "内层引用",
+                      level: null,
+                      runs: [{ type: "text", text: "内层引用", italic: true }],
+                    },
+                  },
+                ],
+              },
+            },
+          ],
+        },
+      },
+    ]);
+    const { container } = render(
+      <ReviewPanel state={state} onActivated={() => undefined} />,
+    );
+
+    const formatted = screen.getByText("粗斜体代码");
+    expect(formatted.closest("strong")).not.toBeNull();
+    expect(formatted.closest("em")).not.toBeNull();
+    expect(formatted.closest("code")).toHaveClass("review-inline-code");
+    expect(screen.getByText("print(1)").closest("pre")).toHaveAttribute(
+      "data-language",
+      "python",
+    );
+    const quote = container.querySelector("blockquote.review-blockquote");
+    expect(quote).toBeInTheDocument();
+    expect(within(quote as HTMLElement).getByText("外层引用")).toBeVisible();
+    expect(quote?.querySelector("blockquote.review-blockquote")).toBeInTheDocument();
+    expect(
+      quote?.querySelector('[data-review-state="unsupported"]'),
+    ).toBeInTheDocument();
   });
 
   it("sanitizes rich DTO fields and accessibility attributes without changing code", () => {

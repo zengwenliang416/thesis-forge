@@ -7,7 +7,7 @@ import {
   RefreshCw,
   Upload,
 } from "lucide-react";
-import type { CSSProperties, KeyboardEvent } from "react";
+import type { CSSProperties, KeyboardEvent, ReactNode } from "react";
 import type {
   ContentSelection,
   OutlineItem,
@@ -112,11 +112,30 @@ export function OutlinePanel({ state, onActivated }: PreviewPanelProps) {
   );
 }
 
+function formattedTextRun(
+  run: Extract<SerializedPreviewRun, { type: "text" }>,
+): ReactNode {
+  let body: ReactNode = run.text;
+  if (run.code) {
+    body = <code className="preview-inline-code">{body}</code>;
+  }
+  if (run.italic) {
+    body = <em>{body}</em>;
+  }
+  if (run.bold) {
+    body = <strong>{body}</strong>;
+  }
+  return body;
+}
+
 function Runs({ runs }: { runs: SerializedPreviewRun[] }) {
   return (
     <>
       {runs.map((run, index) => {
         const key = `${run.type}:${index}`;
+        if (run.type === "text") {
+          return <span key={key}>{formattedTextRun(run)}</span>;
+        }
         if (run.type === "reference") {
           return (
             <span key={key} className="preview-reference" title={run.targetId}>
@@ -162,7 +181,7 @@ function Runs({ runs }: { runs: SerializedPreviewRun[] }) {
         if (run.type === "hard-break") {
           return <br key={key} className="preview-hard-break" />;
         }
-        return <span key={key}>{run.text}</span>;
+        return null;
       })}
     </>
   );
@@ -189,6 +208,32 @@ function Content({ content }: { content: SerializedPreviewContent }) {
       <div className="preview-toc">
         目录（H{content.minLevel}-H{content.maxLevel}）
       </div>
+    );
+  }
+  if (content.type === "code-block") {
+    return (
+      <pre
+        className="preview-code-block"
+        data-language={content.language ?? ""}
+      >
+        {content.code}
+      </pre>
+    );
+  }
+  if (content.type === "blockquote") {
+    return (
+      <blockquote className="preview-blockquote">
+        {content.children.map((child, index) => (
+          <div
+            key={`${child.kind}:${index}`}
+            className="preview-blockquote-child"
+            data-kind={child.kind}
+            data-preview-state={child.state}
+          >
+            <Content content={child.content} />
+          </div>
+        ))}
+      </blockquote>
     );
   }
   if (content.type === "text") {
@@ -315,6 +360,8 @@ function contentLabel(content: SerializedPreviewContent): string {
   if (content.type === "cover") return "论文封面";
   if (content.type === "section") return `分节 ${content.role}`;
   if (content.type === "toc") return "目录";
+  if (content.type === "code-block") return "代码块";
+  if (content.type === "blockquote") return "引用块";
   if (content.type === "list") return "列表";
   return content.originalKind;
 }

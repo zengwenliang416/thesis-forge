@@ -19,7 +19,9 @@ from .model import (
     Algorithm,
     BibliographyBlock,
     Block,
+    BlockQuote,
     Citation,
+    CodeBlock,
     CrossReference,
     Emphasis,
     Equation,
@@ -47,8 +49,10 @@ from .render_plan import (
     AlgorithmInstruction,
     BibliographyEntryInstruction,
     BibliographyInstruction,
+    BlockQuoteInstruction,
     CaptionRuns,
     CitationRun,
+    CodeBlockInstruction,
     CoverInstruction,
     EquationInstruction,
     FigureInstruction,
@@ -315,17 +319,19 @@ def _compile_inlines(
                 else:
                     runs.append(run)
         elif isinstance(inline, Emphasis):
-            runs.extend(
-                _compile_inlines(
-                    list(inline.children),
-                    resolved,
-                    citation_numbers,
-                    footnote_ids,
-                    bibliography_database,
-                    citation_formatter,
-                    retain_citation_raw=retain_citation_raw,
-                )
-            )
+            for run in _compile_inlines(
+                list(inline.children),
+                resolved,
+                citation_numbers,
+                footnote_ids,
+                bibliography_database,
+                citation_formatter,
+                retain_citation_raw=retain_citation_raw,
+            ):
+                if isinstance(run, TextRun):
+                    runs.append(replace(run, italic=True))
+                else:
+                    runs.append(run)
         elif isinstance(inline, Link):
             runs.append(HyperlinkRun(text=inline.label, destination=inline.destination))
         elif isinstance(inline, InlineMath):
@@ -685,6 +691,15 @@ def _compile_block(
             inlines=context.inlines(block.inlines),
             role=context.semantic.role_for(block) or "body",
         )
+    if isinstance(block, CodeBlock):
+        return CodeBlockInstruction(language=block.language, code=block.code)
+    if isinstance(block, BlockQuote):
+        children = tuple(
+            instruction
+            for child in block.children
+            if (instruction := _compile_block(child, context)) is not None
+        )
+        return BlockQuoteInstruction(children=children)
     if isinstance(block, ListBlock):
         return _compile_list(block, context)
     if isinstance(block, Figure):

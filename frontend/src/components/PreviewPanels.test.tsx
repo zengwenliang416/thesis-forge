@@ -65,7 +65,7 @@ describe("renderer-neutral preview panels", () => {
 
   it("renders every canonical inline run without exposing technical markers", () => {
     const runs: SerializedPreviewRun[] = [
-      { type: "text", text: "前" },
+      { type: "text", text: "前", bold: true, italic: true, code: true },
       { type: "reference", targetId: "fig:arch", text: "图 1-1" },
       {
         type: "hyperlink",
@@ -126,12 +126,100 @@ describe("renderer-neutral preview panels", () => {
     expect(container.querySelector("br.preview-hard-break")).toBeInTheDocument();
     expect(screen.getByText("图 1-1")).toHaveClass("preview-reference");
     expect(screen.getByText("[1]")).toHaveClass("preview-citation");
+    const formatted = screen.getByText("前");
+    expect(formatted.closest("strong")).not.toBeNull();
+    expect(formatted.closest("em")).not.toBeNull();
+    expect(formatted.closest("code")).toHaveClass("preview-inline-code");
     expect(screen.getByText("1", { selector: "sup" })).toHaveAttribute(
       "title",
       "note",
     );
     expect(container.textContent).not.toContain("fig:arch");
     expect(container.textContent).not.toContain("ref-1");
+  });
+
+  it("renders code blocks and recursively nested blockquotes", () => {
+    const richState: WorkspaceState = {
+      ...readyState,
+      preview: {
+        status: "ready",
+        message: null,
+        disclaimer: "结构预览不代表 Word 最终分页。",
+        blocks: [
+          {
+            selectionId: "code:block",
+            semanticId: null,
+            kind: "code_block",
+            line: 2,
+            state: "ready",
+            markers: [],
+            content: {
+              type: "code-block",
+              language: "python",
+              code: "print(1)\n",
+            },
+          },
+          {
+            selectionId: "quote:block",
+            semanticId: null,
+            kind: "blockquote",
+            line: 3,
+            state: "ready",
+            markers: [],
+            content: {
+              type: "blockquote",
+              children: [
+                {
+                  kind: "paragraph",
+                  state: "ready",
+                  content: {
+                    type: "text",
+                    text: "外层引用",
+                    level: null,
+                    runs: [{ type: "text", text: "外层引用", bold: true }],
+                  },
+                },
+                {
+                  kind: "blockquote",
+                  state: "ready",
+                  content: {
+                    type: "blockquote",
+                    children: [
+                      {
+                        kind: "paragraph",
+                        state: "unsupported",
+                        content: {
+                          type: "text",
+                          text: "内层引用",
+                          level: null,
+                          runs: [{ type: "text", text: "内层引用", italic: true }],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    };
+
+    const { container } = render(
+      <PaperPreview state={richState} onActivated={() => undefined} />,
+    );
+
+    expect(screen.getByText("print(1)").closest("pre")).toHaveAttribute(
+      "data-language",
+      "python",
+    );
+    const quote = container.querySelector("blockquote.preview-blockquote");
+    expect(quote).toBeInTheDocument();
+    expect(within(quote as HTMLElement).getByText("外层引用")).toBeVisible();
+    expect(quote?.querySelector("blockquote.preview-blockquote")).toBeInTheDocument();
+    expect(
+      quote?.querySelector('[data-preview-state="unsupported"]'),
+    ).toBeInTheDocument();
   });
 
   it("activates the same selection from outline and preview by keyboard or pointer", async () => {

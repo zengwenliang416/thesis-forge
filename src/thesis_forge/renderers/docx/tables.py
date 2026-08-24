@@ -151,6 +151,8 @@ def _append_cell_runs(
         run = paragraph.add_run(item.text)
         if item.bold:
             run.bold = True
+        if item.italic:
+            run.italic = True
         if item.code:
             code_runs.append(run)
 

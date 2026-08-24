@@ -9,7 +9,9 @@ from thesis_forge.presentation.review import (
     ReviewBibliographyContent,
     ReviewBibliographyEntry,
     ReviewBlock,
+    ReviewBlockQuoteContent,
     ReviewCitationRun,
+    ReviewCodeBlockContent,
     ReviewCoverContent,
     ReviewCoverField,
     ReviewDocument,
@@ -82,6 +84,8 @@ def test_serializes_all_review_content_and_keeps_source_map_out_of_markdown() ->
                     "正文",
                     (
                         ReviewTextRun("加粗", bold=True),
+                        ReviewTextRun("斜体", italic=True),
+                        ReviewTextRun("粗斜体", bold=True, italic=True),
                         ReviewTextRun("代码 @fig:literal", code=True),
                         ReviewReferenceRun("图 1-1"),
                         ReviewCitationRun("[1]"),
@@ -93,6 +97,22 @@ def test_serializes_all_review_content_and_keeps_source_map_out_of_markdown() ->
                     ),
                 ),
                 line=4,
+            ),
+            _block(
+                "blockquote",
+                ReviewBlockQuoteContent(
+                    (
+                        ReviewParagraphContent(
+                            "引用内容",
+                            (ReviewTextRun("引用内容", italic=True),),
+                        ),
+                        ReviewCodeBlockContent("text", "quoted literal"),
+                    )
+                ),
+            ),
+            _block(
+                "code_block",
+                ReviewCodeBlockContent("python", "print('plain')"),
             ),
             _block(
                 "list",
@@ -152,7 +172,12 @@ def test_serializes_all_review_content_and_keeps_source_map_out_of_markdown() ->
     assert "Source: `thesis.md`" in result.markdown
     assert "![图 1-1 架构图](assets/architecture.png)" in result.markdown
     assert "**加粗**" in result.markdown
+    assert "*斜体*" in result.markdown
+    assert "***粗斜体***" in result.markdown
     assert "`代码 @fig:literal`" in result.markdown
+    assert "> *引用内容*" in result.markdown
+    assert "> ```text" in result.markdown
+    assert "print('plain')" in result.markdown
     assert "\\(x^2\\)" in result.markdown
     assert "```python" in result.markdown
     assert "print('@fig:literal')" in result.markdown

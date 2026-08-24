@@ -10,6 +10,8 @@ from thesis_forge.core.model import (
     Algorithm,
     BibliographyBlock,
     Block,
+    BlockQuote,
+    CodeBlock,
     Equation,
     Figure,
     FootnoteDefinition,
@@ -24,7 +26,9 @@ from thesis_forge.core.model import (
 from thesis_forge.core.render_plan import (
     AlgorithmInstruction,
     BibliographyInstruction,
+    BlockQuoteInstruction,
     CitationRun,
+    CodeBlockInstruction,
     CoverInstruction,
     EquationInstruction,
     FigureInstruction,
@@ -104,7 +108,14 @@ def _inline_runs(runs: tuple[InlineRun, ...]) -> list[dict[str, Any]]:
     for value in runs:
         run = ensure_inline_run(value)
         if isinstance(run, TextRun):
-            serialized.append({"type": "text", "text": run.text})
+            item: dict[str, Any] = {"type": "text", "text": run.text}
+            if run.bold:
+                item["bold"] = True
+            if run.italic:
+                item["italic"] = True
+            if run.code:
+                item["code"] = True
+            serialized.append(item)
         elif isinstance(run, ReferenceRun):
             serialized.append(
                 {
@@ -192,6 +203,8 @@ class _SourceIndex:
         block_type = {
             HeadingInstruction: Heading,
             ParagraphInstruction: Paragraph,
+            CodeBlockInstruction: CodeBlock,
+            BlockQuoteInstruction: BlockQuote,
             ListInstruction: ListBlock,
             FigureInstruction: Figure,
             TableInstruction: Table,
@@ -265,6 +278,34 @@ def _content(instruction: object) -> tuple[str, str, dict[str, Any]]:
                 "text": instruction.text,
                 "level": None,
                 "runs": _inline_runs(instruction.inlines),
+            },
+        )
+    if isinstance(instruction, CodeBlockInstruction):
+        return (
+            "code_block",
+            "ready",
+            {
+                "type": "code-block",
+                "language": instruction.language,
+                "code": instruction.code,
+            },
+        )
+    if isinstance(instruction, BlockQuoteInstruction):
+        return (
+            "blockquote",
+            "ready",
+            {
+                "type": "blockquote",
+                "children": [
+                    {
+                        "kind": kind,
+                        "state": state,
+                        "content": content,
+                    }
+                    for kind, state, content in (
+                        _content(child) for child in instruction.children
+                    )
+                ],
             },
         )
     if isinstance(instruction, ListInstruction):

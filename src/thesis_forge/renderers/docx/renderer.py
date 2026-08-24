@@ -12,6 +12,8 @@ from thesis_forge.core.math import MathConversionError
 from thesis_forge.core.render_plan import (
     AlgorithmInstruction,
     BibliographyInstruction,
+    BlockQuoteInstruction,
+    CodeBlockInstruction,
     CoverInstruction,
     EquationInstruction,
     FigureInstruction,
@@ -108,6 +110,8 @@ def _add_text_run(paragraph, item: TextRun) -> None:
     run = paragraph.add_run(item.text)
     if item.bold:
         run.bold = True
+    if item.italic:
+        run.italic = True
     if item.code:
         properties = run._r.get_or_add_rPr()
         fonts = properties.get_or_add_rFonts()
@@ -142,6 +146,19 @@ def _add_preformatted_paragraph(
         properties.append(indentation)
     indentation.set(qn("w:firstLine"), "0")
     return paragraph
+
+
+def _indent_blockquote_paragraph(paragraph) -> None:
+    properties = paragraph._p.get_or_add_pPr()
+    indentation = properties.find(qn("w:ind"))
+    if indentation is None:
+        indentation = OxmlElement("w:ind")
+        properties.append(indentation)
+    for side in ("left", "right"):
+        attribute = qn(f"w:{side}")
+        current = int(indentation.get(attribute, "0"))
+        indentation.set(attribute, str(current + 360))
+    indentation.set(qn("w:firstLine"), "0")
 
 
 def _render_captioned_preformatted(
@@ -249,6 +266,14 @@ def _render_typed(
         style = _semantic_word_style(document, template, instruction.role)
         paragraph = document.add_paragraph(style=style)
         _add_runs(paragraph, instruction.inlines, footnotes, template)
+    elif isinstance(instruction, CodeBlockInstruction):
+        _add_preformatted_paragraph(document, instruction.code, template)
+    elif isinstance(instruction, BlockQuoteInstruction):
+        paragraph_count = len(document.paragraphs)
+        for child in instruction.children:
+            _render_typed(document, child, template, plan, footnotes)
+        for paragraph in document.paragraphs[paragraph_count:]:
+            _indent_blockquote_paragraph(paragraph)
     elif isinstance(instruction, ListInstruction):
         list_spec = template.list if template is not None else ListSpec()
         policy = (

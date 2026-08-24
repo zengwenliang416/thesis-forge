@@ -121,6 +121,22 @@ function safeImageSource(source: string): string | undefined {
     : undefined;
 }
 
+function formattedReviewTextRun(
+  run: Extract<SerializedPreviewRun, { type: "text" }>,
+): ReactNode {
+  let body: ReactNode = readerText(run.text);
+  if (run.code) {
+    body = <code className="review-inline-code">{body}</code>;
+  }
+  if (run.italic) {
+    body = <em>{body}</em>;
+  }
+  if (run.bold) {
+    body = <strong>{body}</strong>;
+  }
+  return body;
+}
+
 function citationText(run: Extract<SerializedPreviewRun, { type: "citation" }>) {
   const text = readerText(run.text);
   const includesCitationKey = run.keys.some(
@@ -200,7 +216,7 @@ function ReviewRuns({ runs }: { runs: SerializedPreviewRun[] }) {
           case "hard-break":
             return <br key={key} className="review-hard-break" />;
           case "text":
-            return <span key={key}>{readerText(run.text)}</span>;
+            return <span key={key}>{formattedReviewTextRun(run)}</span>;
           case "reference":
             return <span key={key}>{readerText(run.text) || "引用"}</span>;
           case "citation":
@@ -257,6 +273,10 @@ function contentLabel(content: SerializedPreviewContent): string {
       return sectionLabel(content.role);
     case "toc":
       return "目录";
+    case "code-block":
+      return "代码块";
+    case "blockquote":
+      return "引用块";
     case "unsupported":
       return "无法显示的内容";
   }
@@ -283,6 +303,30 @@ function ReviewContent({ content }: { content: SerializedPreviewContent }) {
       );
     case "toc":
       return <div className="review-toc">目录</div>;
+    case "code-block":
+      return (
+        <pre
+          className="review-code-block"
+          data-language={readerText(content.language ?? "")}
+        >
+          {content.code}
+        </pre>
+      );
+    case "blockquote":
+      return (
+        <blockquote className="review-blockquote">
+          {content.children.map((child, index) => (
+            <div
+              key={`${child.kind}:${index}`}
+              className="review-blockquote-child"
+              data-kind={child.kind}
+              data-review-state={child.state}
+            >
+              <ReviewContent content={child.content} />
+            </div>
+          ))}
+        </blockquote>
+      );
     case "text": {
       const body = textBody(content.text, content.runs);
       if (content.level === null) {

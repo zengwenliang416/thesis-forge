@@ -52,6 +52,8 @@ def _append_text_run(paragraph: Paragraph, item: TextRun) -> Run:
     run = paragraph.add_run(item.text)
     if item.bold:
         run.bold = True
+    if item.italic:
+        run.italic = True
     return run
 
 

@@ -22,12 +22,20 @@ from .inlines import (
 )
 
 
-def _text_run(text: str, *, bold: bool = False, code: bool = False):
+def _text_run(
+    text: str,
+    *,
+    bold: bool = False,
+    italic: bool = False,
+    code: bool = False,
+):
     run = OxmlElement("w:r")
-    if bold or code:
+    if bold or italic or code:
         properties = OxmlElement("w:rPr")
         if bold:
             properties.append(OxmlElement("w:b"))
+        if italic:
+            properties.append(OxmlElement("w:i"))
         if code:
             fonts = OxmlElement("w:rFonts")
             fonts.set(qn("w:ascii"), "Courier New")
@@ -116,7 +124,12 @@ class FootnoteManager:
             definition.inlines,
             InlineHandlers(
                 text=lambda item: paragraph.append(
-                    _text_run(item.text, bold=item.bold, code=item.code)
+                    _text_run(
+                        item.text,
+                        bold=item.bold,
+                        italic=item.italic,
+                        code=item.code,
+                    )
                 ),
                 reference=lambda item: paragraph.extend(reference_field_runs(item)),
                 citation=lambda item: paragraph.append(

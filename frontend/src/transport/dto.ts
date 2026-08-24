@@ -86,7 +86,13 @@ export interface SerializedOutlineItem {
 }
 
 export type SerializedPreviewRun =
-  | { type: "text"; text: string }
+  | {
+      type: "text";
+      text: string;
+      bold?: true;
+      italic?: true;
+      code?: true;
+    }
   | { type: "reference"; targetId: string; text: string }
   | {
       type: "citation";
@@ -119,6 +125,15 @@ export type SerializedPreviewContent =
       type: "toc";
       minLevel: number;
       maxLevel: number;
+    }
+  | {
+      type: "code-block";
+      language: string | null;
+      code: string;
+    }
+  | {
+      type: "blockquote";
+      children: SerializedPreviewChild[];
     }
   | {
       type: "text";
@@ -188,6 +203,12 @@ export type SerializedPreviewContent =
       type: "unsupported";
       originalKind: string;
     };
+
+export interface SerializedPreviewChild {
+  kind: string;
+  state: "ready" | "unsupported";
+  content: SerializedPreviewContent;
+}
 
 export interface SerializedPreviewBlock {
   selectionId: string;
@@ -278,6 +299,13 @@ function isLine(value: unknown): value is number | null {
   );
 }
 
+function hasOptionalTrue(
+  value: Record<string, unknown>,
+  key: string,
+): boolean {
+  return !(key in value) || value[key] === true;
+}
+
 function isPositiveInteger(value: unknown): value is number {
   return typeof value === "number" && Number.isInteger(value) && value >= 1;
 }
@@ -306,7 +334,11 @@ function isPreviewRun(value: unknown): value is SerializedPreviewRun {
   }
   if (value.type === "text") {
     return (
-      hasOnlyKeys(value, ["type", "text"]) && typeof value.text === "string"
+      hasOnlyKeys(value, ["type", "text", "bold", "italic", "code"]) &&
+      typeof value.text === "string" &&
+      hasOptionalTrue(value, "bold") &&
+      hasOptionalTrue(value, "italic") &&
+      hasOptionalTrue(value, "code")
     );
   }
   if (value.type === "reference") {
@@ -392,6 +424,20 @@ function isPreviewContent(value: unknown): value is SerializedPreviewContent {
       hasOnlyKeys(value, ["type", "minLevel", "maxLevel"]) &&
       isPositiveInteger(value.minLevel) &&
       isPositiveInteger(value.maxLevel)
+    );
+  }
+  if (value.type === "code-block") {
+    return (
+      hasOnlyKeys(value, ["type", "language", "code"]) &&
+      isNullableString(value.language) &&
+      typeof value.code === "string"
+    );
+  }
+  if (value.type === "blockquote") {
+    return (
+      hasOnlyKeys(value, ["type", "children"]) &&
+      Array.isArray(value.children) &&
+      value.children.every(isPreviewChild)
     );
   }
   if (value.type === "text") {
@@ -521,6 +567,17 @@ function isPreviewContent(value: unknown): value is SerializedPreviewContent {
     );
   }
   return false;
+}
+
+function isPreviewChild(value: unknown): value is SerializedPreviewChild {
+  return (
+    isObject(value) &&
+    hasOnlyKeys(value, ["kind", "state", "content"]) &&
+    typeof value.kind === "string" &&
+    value.kind.length > 0 &&
+    isStringEnum(value.state, ["ready", "unsupported"]) &&
+    isPreviewContent(value.content)
+  );
 }
 
 function isOutlineItem(value: unknown): value is SerializedOutlineItem {

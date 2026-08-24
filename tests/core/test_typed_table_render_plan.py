@@ -165,7 +165,7 @@ def test_compiler_builds_table_cells_from_authoritative_inline_runs() -> None:
         FootnoteReferenceRun,
     ]
     assert cell.inlines[1] == TextRun("strong", bold=True)
-    assert cell.inlines[2] == TextRun("emphasis")
+    assert cell.inlines[2] == TextRun("emphasis", italic=True)
     assert cell.inlines[3] == TextRun("code", code=True)
     assert cell.inlines[4] == HyperlinkRun("link", "https://example.test")
     assert cell.inlines[8].target_id == "sec:target"

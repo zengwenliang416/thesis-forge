@@ -20,6 +20,7 @@ class _Instruction:
 class TextRun:
     text: str
     bold: bool = False
+    italic: bool = False
     code: bool = False
 
 
@@ -185,6 +186,32 @@ class ParagraphInstruction(_Instruction):
     @property
     def payload(self) -> dict[str, Any]:
         return {"text": self.text, "role": self.role}
+
+
+@dataclass(frozen=True, slots=True)
+class CodeBlockInstruction(_Instruction):
+    kind: ClassVar[str] = "code_block"
+    language: str | None
+    code: str
+
+    @property
+    def payload(self) -> dict[str, Any]:
+        return {"language": self.language, "code": self.code}
+
+
+@dataclass(frozen=True, slots=True)
+class BlockQuoteInstruction(_Instruction):
+    kind: ClassVar[str] = "blockquote"
+    children: tuple[RenderInstruction, ...]
+
+    @property
+    def payload(self) -> dict[str, Any]:
+        return {
+            "children": [
+                {"kind": child.kind, "payload": child.payload}
+                for child in self.children
+            ]
+        }
 
 
 @dataclass(frozen=True, slots=True)
@@ -607,6 +634,8 @@ class SectionBreakInstruction(_Instruction):
 RenderInstruction: TypeAlias = (
     HeadingInstruction
     | ParagraphInstruction
+    | CodeBlockInstruction
+    | BlockQuoteInstruction
     | ListInstruction
     | FigureInstruction
     | TableInstruction

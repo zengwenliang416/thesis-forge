@@ -14,7 +14,9 @@ from thesis_forge.presentation.review import (
     ReviewBibliographyContent,
     ReviewBibliographyEntry,
     ReviewBlock,
+    ReviewBlockQuoteContent,
     ReviewCitationRun,
+    ReviewCodeBlockContent,
     ReviewCoverContent,
     ReviewCoverField,
     ReviewDocument,
@@ -76,6 +78,8 @@ _BLOCK_KINDS = frozenset(
         "toc",
         "heading",
         "paragraph",
+        "code_block",
+        "blockquote",
         "list",
         "figure",
         "table",
@@ -90,6 +94,8 @@ _BLOCK_KINDS = frozenset(
 _CONTENT_TYPES = (
     ReviewHeadingContent,
     ReviewParagraphContent,
+    ReviewCodeBlockContent,
+    ReviewBlockQuoteContent,
     ReviewListContent,
     ReviewFigureContent,
     ReviewTableContent,
@@ -157,6 +163,7 @@ def _validate_inline(inline: object) -> None:
     _require_text(inline.text, "ReviewInline.text")
     if type(inline) is ReviewTextRun:
         _require_bool(inline.bold, "ReviewTextRun.bold")
+        _require_bool(inline.italic, "ReviewTextRun.italic")
         _require_bool(inline.code, "ReviewTextRun.code")
     elif type(inline) is ReviewFootnoteReferenceRun:
         _require_int(inline.footnote_id, "ReviewFootnoteReferenceRun.footnote_id")
@@ -191,6 +198,19 @@ def _validate_list_content(content: object) -> None:
         _require_int(item.level, "ReviewListItem.level")
         _require_optional_int(item.ordinal, "ReviewListItem.ordinal")
         _validate_inline_tuple(item.runs, "ReviewListItem.runs")
+
+
+def _validate_code_block_content(content: object) -> None:
+    if content.language is not None:
+        _require_text(content.language, "ReviewCodeBlockContent.language")
+    _require_text(content.code, "ReviewCodeBlockContent.code")
+
+
+def _validate_blockquote_content(content: object) -> None:
+    if type(content.children) is not tuple:
+        raise TypeError("ReviewBlockQuoteContent.children must be tuple")
+    for child in content.children:
+        _validate_content(child)
 
 
 def _validate_figure_content(content: object) -> None:
@@ -286,6 +306,8 @@ def _validate_section_content(content: object) -> None:
 _CONTENT_VALIDATORS: dict[type[object], Callable[[object], None]] = {
     ReviewHeadingContent: _validate_text_content,
     ReviewParagraphContent: _validate_text_content,
+    ReviewCodeBlockContent: _validate_code_block_content,
+    ReviewBlockQuoteContent: _validate_blockquote_content,
     ReviewListContent: _validate_list_content,
     ReviewFigureContent: _validate_figure_content,
     ReviewTableContent: _validate_table_content,
@@ -365,7 +387,11 @@ def _render_inline(inline: ReviewInline) -> str:
     if type(inline) is ReviewTextRun:
         text = inline.text if inline.code else _sanitize_visible_text(inline.text)
         rendered = _safe_inline_code(text) if inline.code else _escape_markdown_text(text)
-        return f"**{rendered}**" if inline.bold else rendered
+        if inline.bold and inline.italic:
+            return f"***{rendered}***"
+        if inline.bold:
+            return f"**{rendered}**"
+        return f"*{rendered}*" if inline.italic else rendered
     if type(inline) is ReviewReferenceRun:
         text = _sanitize_visible_text(inline.text) or "引用"
         return _escape_markdown_text(text)
@@ -552,6 +578,28 @@ def _render_paragraph_content(
     return _render_inline_sequence(content.text, content.runs)
 
 
+def _render_code_block_content(
+    content: ReviewCodeBlockContent,
+    _asset_links: Mapping[str, str] | None,
+) -> list[str]:
+    return _render_code_block(content.code, content.language)
+
+
+def _render_blockquote_content(
+    content: ReviewBlockQuoteContent,
+    asset_links: Mapping[str, str] | None,
+) -> list[str]:
+    lines: list[str] = []
+    for child in content.children:
+        if lines:
+            lines.append("")
+        renderer = _CONTENT_RENDERERS.get(type(child))
+        if renderer is None:
+            raise TypeError(f"unsupported ReviewContent: {type(child).__name__}")
+        lines.extend(renderer(child, asset_links))
+    return [f"> {line}" if line else ">" for line in lines] or [">"]
+
+
 def _render_list_content(
     content: ReviewListContent,
     _asset_links: Mapping[str, str] | None,
@@ -686,6 +734,8 @@ _CONTENT_RENDERERS: dict[
 ] = {
     ReviewHeadingContent: _render_heading_content,
     ReviewParagraphContent: _render_paragraph_content,
+    ReviewCodeBlockContent: _render_code_block_content,
+    ReviewBlockQuoteContent: _render_blockquote_content,
     ReviewListContent: _render_list_content,
     ReviewFigureContent: _render_figure_content,
     ReviewTableContent: _render_table_content,

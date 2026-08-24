@@ -13,7 +13,9 @@ from thesis_forge.core.model import (
     Algorithm,
     BibliographyBlock,
     Block,
+    BlockQuote,
     BulletList,
+    CodeBlock,
     Equation,
     Figure,
     FootnoteDefinition,
@@ -28,7 +30,9 @@ from thesis_forge.core.model import (
 from thesis_forge.core.render_plan import (
     AlgorithmInstruction,
     BibliographyInstruction,
+    BlockQuoteInstruction,
     CitationRun,
+    CodeBlockInstruction,
     CoverInstruction,
     EquationInstruction,
     FigureInstruction,
@@ -62,7 +66,9 @@ __all__ = [
     "ReviewBibliographyContent",
     "ReviewBibliographyEntry",
     "ReviewBlock",
+    "ReviewBlockQuoteContent",
     "ReviewCitationRun",
+    "ReviewCodeBlockContent",
     "ReviewContent",
     "ReviewCoverContent",
     "ReviewCoverField",
@@ -114,6 +120,7 @@ class ReviewSource:
 class ReviewTextRun:
     text: str
     bold: bool = False
+    italic: bool = False
     code: bool = False
 
 
@@ -178,6 +185,17 @@ class ReviewHeadingContent:
 class ReviewParagraphContent:
     text: str
     runs: tuple[ReviewInline, ...] = ()
+
+
+@dataclass(frozen=True, slots=True)
+class ReviewCodeBlockContent:
+    language: str | None
+    code: str
+
+
+@dataclass(frozen=True, slots=True)
+class ReviewBlockQuoteContent:
+    children: tuple[ReviewContent, ...]
 
 
 @dataclass(frozen=True, slots=True)
@@ -298,6 +316,8 @@ class ReviewPageBreakContent:
 ReviewContent: TypeAlias = (
     ReviewHeadingContent
     | ReviewParagraphContent
+    | ReviewCodeBlockContent
+    | ReviewBlockQuoteContent
     | ReviewListContent
     | ReviewFigureContent
     | ReviewTableContent
@@ -365,7 +385,12 @@ def _inline_runs(runs: tuple[InlineRun, ...]) -> tuple[ReviewInline, ...]:
         if isinstance(run, TextRun):
             text = run.text if run.code else _safe_plain_text(run.text)
             projected.append(
-                ReviewTextRun(text=text, bold=run.bold, code=run.code)
+                ReviewTextRun(
+                    text=text,
+                    bold=run.bold,
+                    italic=run.italic,
+                    code=run.code,
+                )
             )
         elif isinstance(run, ReferenceRun):
             projected.append(
@@ -461,6 +486,10 @@ class _SourceIndex:
             block_types = (Heading,)
         elif isinstance(instruction, ParagraphInstruction):
             block_types = (Paragraph,)
+        elif isinstance(instruction, CodeBlockInstruction):
+            block_types = (CodeBlock,)
+        elif isinstance(instruction, BlockQuoteInstruction):
+            block_types = (BlockQuote,)
         elif isinstance(instruction, ListInstruction):
             block_types = (ListBlock, OrderedList, BulletList)
         elif isinstance(instruction, FigureInstruction):
@@ -497,6 +526,23 @@ def _project_paragraph(instruction: ParagraphInstruction) -> ReviewParagraphCont
     return ReviewParagraphContent(
         text=_visible_text(instruction.text, runs),
         runs=runs,
+    )
+
+
+def _project_code_block(
+    instruction: CodeBlockInstruction,
+) -> ReviewCodeBlockContent:
+    return ReviewCodeBlockContent(
+        language=instruction.language,
+        code=instruction.code,
+    )
+
+
+def _project_blockquote(
+    instruction: BlockQuoteInstruction,
+) -> ReviewBlockQuoteContent:
+    return ReviewBlockQuoteContent(
+        children=tuple(project_instruction(child) for child in instruction.children)
     )
 
 
@@ -652,6 +698,8 @@ ReviewProjector: TypeAlias = Callable[[object], ReviewContent]
 REVIEW_PROJECTION_REGISTRY: dict[type[object], ReviewProjector] = {
     HeadingInstruction: _project_heading,
     ParagraphInstruction: _project_paragraph,
+    CodeBlockInstruction: _project_code_block,
+    BlockQuoteInstruction: _project_blockquote,
     ListInstruction: _project_list,
     FigureInstruction: _project_figure,
     TableInstruction: _project_table,

@@ -26,7 +26,7 @@ describe("preview transport DTO", () => {
 
   it("accepts all canonical rich inline run variants", () => {
     const richRuns = [
-      { type: "text", text: "前" },
+      { type: "text", text: "前", bold: true, italic: true, code: true },
       { type: "reference", targetId: "fig:arch", text: "图 1-1" },
       {
         type: "hyperlink",
@@ -64,6 +64,78 @@ describe("preview transport DTO", () => {
             },
           },
           ...fixture.preview.blocks.slice(2),
+        ],
+      },
+    };
+
+    expect(
+      readSerializedPreviewResult(value as unknown as Record<string, unknown>, true),
+    ).toEqual(value);
+  });
+
+  it("accepts code blocks and recursively nested blockquotes", () => {
+    const nestedQuote = {
+      type: "blockquote",
+      children: [
+        {
+          kind: "paragraph",
+          state: "ready",
+          content: {
+            type: "text",
+            text: "内层引用",
+            level: null,
+            runs: [{ type: "text", text: "内层引用", italic: true }],
+          },
+        },
+      ],
+    };
+    const value = {
+      ...fixture,
+      preview: {
+        ...fixture.preview,
+        blocks: [
+          ...fixture.preview.blocks,
+          {
+            selectionId: "code:raw",
+            semanticId: null,
+            kind: "code_block",
+            line: 60,
+            state: "ready",
+            markers: [],
+            content: {
+              type: "code-block",
+              language: null,
+              code: "print(1)",
+            },
+          },
+          {
+            selectionId: "quote:raw",
+            semanticId: null,
+            kind: "blockquote",
+            line: 61,
+            state: "ready",
+            markers: [],
+            content: {
+              type: "blockquote",
+              children: [
+                {
+                  kind: "paragraph",
+                  state: "ready",
+                  content: {
+                    type: "text",
+                    text: "外层引用",
+                    level: null,
+                    runs: [{ type: "text", text: "外层引用", bold: true }],
+                  },
+                },
+                {
+                  kind: "blockquote",
+                  state: "ready",
+                  content: nestedQuote,
+                },
+              ],
+            },
+          },
         ],
       },
     };
@@ -164,6 +236,56 @@ describe("preview transport DTO", () => {
               },
             },
             ...fixture.preview.blocks.slice(2),
+          ],
+        },
+      },
+    },
+    {
+      name: "text formatting flag is not true",
+      value: {
+        ...fixture,
+        preview: {
+          ...fixture.preview,
+          blocks: [
+            ...fixture.preview.blocks.slice(0, 1),
+            {
+              ...paragraphBlock,
+              content: {
+                ...paragraphBlock.content,
+                runs: [{ type: "text", text: "不支持", bold: false }],
+              },
+            },
+            ...fixture.preview.blocks.slice(2),
+          ],
+        },
+      },
+    },
+    {
+      name: "blockquote child extra key",
+      value: {
+        ...fixture,
+        preview: {
+          ...fixture.preview,
+          blocks: [
+            {
+              ...fixture.preview.blocks[0],
+              content: {
+                type: "blockquote",
+                children: [
+                  {
+                    kind: "paragraph",
+                    state: "ready",
+                    content: {
+                      type: "text",
+                      text: "引用",
+                      level: null,
+                      runs: [],
+                    },
+                    payload: {},
+                  },
+                ],
+              },
+            },
           ],
         },
       },
