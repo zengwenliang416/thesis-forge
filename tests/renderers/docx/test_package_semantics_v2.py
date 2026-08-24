@@ -252,6 +252,23 @@ def test_valid_package_passes_semantic_postflight(tmp_path: Path) -> None:
         assert any(name.startswith("word/media/") for name in package.namelist())
 
 
+def test_package_declares_libreoffice_hyperlink_character_style(
+    tmp_path: Path,
+) -> None:
+    output = _semantic_package(tmp_path)
+
+    with ZipFile(output) as package:
+        styles = _xml(
+            {"word/styles.xml": package.read("word/styles.xml")},
+            "word/styles.xml",
+        )
+
+    assert styles.xpath(
+        ".//w:style[@w:type='character' and @w:styleId='Style']",
+        namespaces=NS,
+    )
+
+
 @pytest.mark.parametrize(
     ("name", "mutator", "expected_code"),
     [

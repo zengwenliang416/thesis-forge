@@ -97,6 +97,16 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Done
 
+- [REG-003] Declare the LibreOffice hyperlink character style
+  - Parent: REG-002 build verification; this fresh item repairs the DOCX finalizer contract uncovered after the canonical fixture became valid.
+  - Files: `src/thesis_forge/renderers/docx/styles.py`, `tests/renderers/docx/test_package_semantics_v2.py`, `LOOP.md`
+  - Behavior: the renderer declares the `Style` character style before LibreOffice refresh so refreshed DOCX packages retain a defined style reference.
+  - Verify: `tmp="$(mktemp -d)" && .venv/bin/python -m pytest tests/renderers/docx/test_package_semantics_v2.py && .venv/bin/python -m thesis_forge.cli build tests/fixtures/v2-project -o "$tmp/thesis.docx" --report-json "$tmp/build-report.json" && ./qa/tools/openxml_validate.py "$tmp/thesis.docx"`
+  - Acceptance: the focused XML test passes; canonical V2 build returns exit 0 with a successful BuildReport; production package validation and QA OpenXML validation accept the refreshed DOCX without weakening undefined-style detection.
+  - Verification-surface change: `no`
+  - Attempts: 1
+  - Attempt 1 (2026-08-24): Independent Checker PASS; exact Verify passed with 11 focused tests, successful canonical BuildReport through `preview`, and QA OpenXML `13/13`; target Ruff, `git diff --check`, and LOOP-LINT passed. The finalizer's refreshed `Style` reference was confirmed defined; the existing broader LO test gap for explicit `Style` assertion is recorded as residual risk, not a contract failure. Pre-existing dirty/untracked paths were preserved, no push.
+
 - [REG-002] Repair canonical V2 goal fixture
   - Parent: post-V2-539C goal-verifier regression; this fresh item repairs the canonical fixture contract without changing CLI behavior.
   - Files: `tests/fixtures/v2-project/thesisforge.yaml`, `tests/fixtures/v2-project/thesis.md`, `LOOP.md`
@@ -2275,5 +2285,7 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 - 2026-08-23 - V2-539C Checker PASS Attempt 1; V2-539C moved from Open to Done after exact Verify 4/4, related Review/CLI regression 61/61, target Ruff, `git diff --check`, LOOP-LINT, and independent ready/blocked/manifest/bare-input/long-path black-box checks passed; candidate scope was exactly `src/thesis_forge/cli.py`, `tests/cli/test_review_command.py`, and `LOOP.md`, all pre-existing dirty/untracked paths were preserved, one local commit, no push.
 
 - 2026-08-24 - REG-002 Checker PASS Attempt 1; exact goal verifier and direct canonical validate passed, target Ruff, `git diff --check`, and LOOP-LINT passed; fixture-only contract change was confirmed without CLI entry-rule or legacy-input changes, all pre-existing dirty/untracked paths were preserved, no push.
+
+- 2026-08-24 - REG-003 Checker PASS Attempt 1; exact focused DOCX test/build/QA command passed (`11` tests, BuildReport succeeded, OpenXML `13/13`), target Ruff, `git diff --check`, and LOOP-LINT passed; Style declaration remained scoped to the renderer and semantic package test, no push.
 
 ## Sync log

@@ -73,7 +73,7 @@ TOC_LEADERS = {
 # Character styles LibreOffice references when it writes TOC entries / footnote
 # marks during a headless refresh. Always defined so the refreshed package keeps
 # passing style-reference validation (ADR-0005 §5.3, spikes/phase0/fields §6).
-LO_REFRESH_CHARACTER_STYLE_NAMES = ("Index Link", "Footnote Characters")
+LO_REFRESH_CHARACTER_STYLE_NAMES = ("Index Link", "Footnote Characters", "Style")
 
 
 ParagraphTarget: TypeAlias = ParagraphStyle | Paragraph
