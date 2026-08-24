@@ -95,7 +95,35 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Open
 
+- [REG-007] Make migrated v2 fixture sources canonical
+  - Parent: full-suite regression showing `template migrate` emits a `fixtures/minimal/thesis.md` with rejected YAML Front Matter.
+  - Files: `src/thesis_forge/templates/v2/migrate.py`, `tests/test_template_v2_pack.py`, `LOOP.md`
+  - Behavior: migrated v2 packages contain front-matter-free V2 Markdown fixtures that pass package lint without `TF-SOURCE-LEGACY-001`.
+  - Verify: `.venv/bin/python -m pytest tests/test_template_v2_pack.py -k 'migrate_bachelor_ledger_and_lint or migrate_school_template_with_sections or cli_template_migrate_exit_codes'`
+  - Acceptance: the exact migration tests pass; generated fixture sources use the canonical V2 entry semantics and no legacy compatibility parser or dual metadata source is introduced.
+  - Verification-surface change: `no`
+  - Attempts: 0
+
+- [REG-008] Verify the installed distribution through a manifest-backed project entry
+  - Parent: full-suite distribution regression after bare Markdown became an invalid CLI entry.
+  - Files: `scripts/verify_distribution.py`, `tests/test_distribution.py`, `LOOP.md`
+  - Behavior: the hermetic installed-CLI verification creates and uses a temporary `thesisforge.yaml` project directory for inspect, validate and build instead of invoking bare `thesis.md`.
+  - Verify: `.venv/bin/python -m pytest tests/test_distribution.py -k 'distribution_builds_and_installed_cli_runs_offline'`
+  - Acceptance: the exact distribution test passes offline, the installed CLI still produces a valid DOCX, and the project-entry contract remains enforced for bare Markdown.
+  - Verification-surface change: `no`
+  - Attempts: 0
+
 ## Done
+
+- [REG-006] Restore the declared Word assets in the Phase 0 v2 sample package
+  - Parent: full-suite regression after the canonical V2 entry and package lint contracts became strict; the sample package manifest already declares both assets, but the tracked sample state does not contain them.
+  - Files: `spikes/phase0/docx-template/package-sample/reference.docx`, `spikes/phase0/docx-template/package-sample/shell.docx`, `LOOP.md`
+  - Behavior: the Phase 0 sample package contains valid deterministic `reference.docx` and `shell.docx` assets matching its manifest, so package loading and the full L1-L5 lint path can execute.
+  - Verify: `.venv/bin/python -m pytest tests/test_template_v2.py && .venv/bin/python qa/tools/openxml_validate.py spikes/phase0/docx-template/package-sample/reference.docx && .venv/bin/python qa/tools/openxml_validate.py spikes/phase0/docx-template/package-sample/shell.docx`
+  - Acceptance: the exact Verify passes; the sample package loads, CLI lint succeeds in normal/JSON/single-level modes, all declared lint levels run, and both generated DOCX packages pass the 13/13 OpenXML checks; no production compatibility path or source fallback is added.
+  - Verification-surface change: `no`
+  - Attempts: 1
+  - Attempt 1 (2026-08-24): Independent Checker PASS; existing `build_reference.py` and `build_shell.py` generated both declared assets, exact Verify passed 61/61 plus OpenXML 13/13 for each package, shell anchors `tf_toc`/`tf_body`, two sections, page-number formats and image relationships were validated, and repeated generation produced identical ZIP entry names/content bytes (only non-semantic ZIP timestamps differed); `git diff --check` passed, no production code or compatibility path changed, all pre-existing dirty/untracked paths were preserved, no push.
 
 - [REG-005] Make the V2 goal verifier project-entry aware
   - Parent: REG-002 through REG-004 canonical goal flow; this fresh verifier item repairs only the verifier's temporary-path reporting and legacy-input setup.
@@ -2311,5 +2339,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 - 2026-08-24 - REG-004 Checker PASS Attempt 1; exact focused DOCX test/build/QA command passed (`11` tests, BuildReport succeeded, OpenXML `13/13`), target Ruff, `git diff --check`, and LOOP-LINT passed; both separator node types and the real footnote negative remained covered, no push.
 
 - 2026-08-24 - REG-005 Checker PASS Attempt 1; exact goal verifier passed, both ordinary-body marker mutations were rejected, target Ruff, `git diff --check`, and LOOP-LINT passed; non-blocking C901 baseline debt was recorded, no push.
+- 2026-08-24 - REG-006 Checker PASS Attempt 1; restored the two declared Phase 0 v2 sample DOCX assets, exact package tests passed 61/61, both OpenXML packages passed 13/13, semantic regeneration was stable, and only REG-007/REG-008 remain Open; pre-existing dirty/untracked paths were preserved, no push.
 
 ## Sync log
