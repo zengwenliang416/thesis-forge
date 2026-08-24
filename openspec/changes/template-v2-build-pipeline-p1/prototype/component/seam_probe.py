@@ -21,10 +21,10 @@ from pathlib import Path
 REPO = Path(__file__).resolve().parents[5]
 sys.path.insert(0, str(REPO / "src"))
 
-from thesis_forge.templates.model import ThesisTemplate, TemplateLoadError  # noqa: E402
-from thesis_forge.templates.v2 import (  # noqa: E402
-    load_package,
+from thesis_forge.templates.model import ThesisTemplate
+from thesis_forge.templates.v2 import (
     lint_package,
+    load_package,
     merge_into_shell,
     migrate_template,
     pack_package,
@@ -60,9 +60,10 @@ def probe_sample_package() -> dict:
             "shell_after_unpack": reloaded.shell_docx.is_file() if reloaded.shell_docx else None,
         }
     # merge_into_shell 签名探针：以最小 compiled docx 验证锚点合并入口可调
-    from thesis_forge.renderers.docx import DocxRenderer  # noqa: E402
-    from thesis_forge.core.parser import parse_markdown_text  # noqa: E402
-    from thesis_forge.core.compiler import compile_document  # noqa: E402
+    from thesis_forge.core.parser import parse_markdown_text
+
+    from thesis_forge.core.compiler import compile_document
+    from thesis_forge.renderers.docx import DocxRenderer
 
     md = "# 摘要 {#chap:abstract-zh}\n\n正文段落。\n"
     doc = parse_markdown_text(md, source_path=Path("probe.md"))

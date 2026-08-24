@@ -97,6 +97,16 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Done
 
+- [REG-013] Restore the prototype seam probe's global Ruff gate
+  - Parent: full-suite `./stop-check.sh` regression after REG-012; all functional checks pass, but the existing read-only OpenSpec prototype has eight global Ruff errors that keep the stop condition red.
+  - Files: `openspec/changes/template-v2-build-pipeline-p1/prototype/component/seam_probe.py`, `LOOP.md`
+  - Behavior: the read-only seam probe passes the repository Ruff gate with sorted imports, no unused imports, and no invalid `noqa` directives while preserving its existing probe behavior and output.
+  - Verify: `.venv/bin/ruff check openspec/changes/template-v2-build-pipeline-p1/prototype/component/seam_probe.py`
+  - Acceptance: the exact target Ruff command passes; the probe still imports the same production APIs, performs the same sample-package and HUT mapping checks, and no production behavior, compatibility path, or OpenSpec prototype scope changes.
+  - Verification-surface change: `no`
+  - Attempts: 1
+  - Attempt 1 (2026-08-24): Independent Checker PASS; exact target Ruff, `git diff --check`, and `./lint-loop.sh` passed (`open=1 done=187 blocked=0` before this lifecycle update); the seam probe diff is limited to Ruff import ordering, removal of unused `TemplateLoadError`, and removal of invalid `noqa`, with non-import AST/control flow/output unchanged; no parser compatibility fix, production behavior, or OpenSpec prototype scope change, and all unrelated dirty/untracked paths plus historical `LOOP.md` hunks were preserved, no push.
+
 - [REG-012] Restore desktop distribution regression assertions to the current V2 contracts
   - Parent: full-suite `./stop-check.sh` regression after REG-011; the desktop distribution module has two stale expectations while the sidecar and Windows project-selection implementations already satisfy the current contracts.
   - Files: `tests/test_desktop_distribution.py`, `LOOP.md`
@@ -2390,5 +2400,7 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 - 2026-08-24 - REG-010 Checker PASS Attempt 2; exact Verify passed 35/35, target Ruff, `git diff --check`, and LOOP-LINT passed; canonical front-matter-free source and explicit package-safe editor snapshot were independently verified with DOCX merge and L3/L4/L5 assertions retained, no legacy fallback or silent degradation was introduced, unrelated dirty/untracked paths were preserved, no push.
 - 2026-08-24 - REG-011 Checker PASS Attempt 2; exact acceptance Verify passed 8/8 in 7.13s, target Ruff, `git diff --check`, and LOOP-LINT passed with `open=0 done=186 blocked=0`; independent AST/runtime/OpenXML audit confirmed manifest-backed temporary projects, asset-path-only RenderPlan normalization, retained DOCX/template/numbering/reference/field/bookmark/header-footer assertions, and no legacy or fallback path; REG-011 moved to Done, unrelated dirty/untracked paths were preserved, no push.
 - 2026-08-24 - REG-012 Checker PASS Attempt 1; exact Verify passed 22/22 in 0.11s, target Ruff, `git diff --check`, and LOOP-LINT passed; independent AST/runtime/static audit confirmed four `PACKAGE_DATA` template entries plus one explicit `docx/parts` `--add-data`, matching four wheel `force-include` entries, and the manifest-backed `打开 ThesisForge 项目` Windows native path with retained CDP/Tauri/save/validate/DOCX/ZIP/sensory/failure-evidence/process-snapshot assertions; REG-012 moved from Open to Done, no production behavior changed, unrelated dirty/untracked paths were preserved, one local commit, no push.
+
+- 2026-08-24 - REG-013 Checker PASS Attempt 1; exact target Ruff, `git diff --check`, and `./lint-loop.sh` passed; import-only seam-probe repair was independently scope-audited with unchanged non-import AST/control flow/output, REG-013 moved from Open to Done, historical `LOOP.md` hunks and all unrelated dirty/untracked paths were preserved, no parser compatibility fix, no push.
 
 ## Sync log
