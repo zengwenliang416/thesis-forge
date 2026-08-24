@@ -269,7 +269,7 @@ def _verify_installed_wheel(wheel: Path) -> dict[str, object]:
             env=base_env,
         )
 
-        source = ROOT / "examples" / "bachelor-thesis"
+        source = ROOT / "tests" / "fixtures" / "v2-project"
         workspace = temp / "workspace"
         shutil.copytree(source, workspace)
         launcher = _write_offline_launcher(temp, cli)
@@ -327,11 +327,11 @@ def _verify_installed_wheel(wheel: Path) -> dict[str, object]:
             )
 
         command = [sys.executable, "-S", str(launcher)]
-        _run([*command, "inspect", "thesis.md"], cwd=workspace, env=offline_env)
-        _run([*command, "validate", "thesis.md"], cwd=workspace, env=offline_env)
+        _run([*command, "inspect", str(workspace)], cwd=workspace, env=offline_env)
+        _run([*command, "validate", str(workspace)], cwd=workspace, env=offline_env)
         output = workspace / "output" / "thesis.docx"
         _run(
-            [*command, "build", "thesis.md", "-o", str(output)],
+            [*command, "build", str(workspace), "-o", str(output)],
             cwd=workspace,
             env=offline_env,
         )
