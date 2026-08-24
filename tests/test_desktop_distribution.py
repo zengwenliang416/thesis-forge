@@ -87,7 +87,7 @@ def test_sidecar_builder_embeds_package_data_without_wheel_runtime_leakage() -> 
     assert str(ROOT / "src") in command
     assert "--collect-data" in command
     assert "docx" in command
-    assert command.count("--add-data") == 4
+    assert command.count("--add-data") == 5
     assert any("docx/parts" in value for value in command)
     assert any("templates/base/bachelor.yaml" in value for value in command)
     assert any("templates/schools/example-university/2026.yaml" in value for value in command)
@@ -371,7 +371,7 @@ def test_windows_tauri_acceptance_uses_webview2_cdp_and_real_commands() -> None:
     assert "taskkill.exe" in acceptance
     assert "__TAURI_INTERNALS__" in acceptance
     assert 'internals.invoke = ' not in acceptance
-    assert "打开 Markdown 文稿" in acceptance
+    assert "打开 ThesisForge 项目" in acceptance
     assert "保存文稿" in acceptance
     assert "await save.isVisible()" in acceptance
     assert 'page.keyboard.press("Control+s")' in acceptance

@@ -97,6 +97,16 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Done
 
+- [REG-012] Restore desktop distribution regression assertions to the current V2 contracts
+  - Parent: full-suite `./stop-check.sh` regression after REG-011; the desktop distribution module has two stale expectations while the sidecar and Windows project-selection implementations already satisfy the current contracts.
+  - Files: `tests/test_desktop_distribution.py`, `LOOP.md`
+  - Behavior: desktop distribution tests assert all four packaged ThesisForge template resources plus the explicit `python-docx` `docx/parts` package-data entry, and assert the Windows native acceptance flow opens a manifest-backed ThesisForge project rather than a standalone Markdown file.
+  - Verify: `.venv/bin/python -m pytest tests/test_desktop_distribution.py`
+  - Acceptance: the complete desktop distribution test module passes; the assertions match `scripts/build_sidecar.py`, `pyproject.toml`, `frontend/e2e/tauri-windows.acceptance.ts`, and the V2 desktop contract without changing production behavior or weakening native acceptance coverage.
+  - Verification-surface change: `no`
+  - Attempts: 1
+  - Attempt 1 (2026-08-24): Independent Checker PASS; exact Verify passed 22/22 in 0.11s, target Ruff, `git diff --check`, and LOOP-LINT passed (`open=1 done=186 blocked=0` before this lifecycle update); independent AST/runtime/static audit confirmed `scripts/build_sidecar.py` has exactly four `PACKAGE_DATA` template entries plus one explicit `docx/parts` `--add-data` entry, `pyproject.toml` has the same four wheel `force-include` template entries, and `frontend/e2e/tauri-windows.acceptance.ts` uses the manifest-backed `打开 ThesisForge 项目` path while retaining native CDP, Tauri, save, validate, DOCX, ZIP, sensory, failure-evidence and process-snapshot assertions; no production file changed, all unrelated dirty/untracked paths were preserved, no push.
+
 - [REG-011] Migrate acceptance tests to manifest-backed canonical V2 projects
   - Parent: full-suite `make verify` regression after bare Markdown and YAML Front Matter became invalid; six `tests/test_acceptance.py` cases still invoke the old `examples/complete-thesis` source or temporary Front Matter.
   - Files: `tests/test_acceptance.py`, `LOOP.md`
@@ -2379,5 +2389,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 - 2026-08-24 - REG-009 Checker PASS Attempt 1; exact Verify passed 16/16, target Ruff and `git diff --check` passed; explicit manifest-backed project inputs, canonical syntax, structured `TF-SOURCE-LEGACY-001`, `--report-json` BuildReport reads, and absence of test-side auto-wrap/fallback or production compatibility changes were verified; pre-existing dirty/untracked paths were preserved, one local commit, no push.
 - 2026-08-24 - REG-010 Checker PASS Attempt 2; exact Verify passed 35/35, target Ruff, `git diff --check`, and LOOP-LINT passed; canonical front-matter-free source and explicit package-safe editor snapshot were independently verified with DOCX merge and L3/L4/L5 assertions retained, no legacy fallback or silent degradation was introduced, unrelated dirty/untracked paths were preserved, no push.
 - 2026-08-24 - REG-011 Checker PASS Attempt 2; exact acceptance Verify passed 8/8 in 7.13s, target Ruff, `git diff --check`, and LOOP-LINT passed with `open=0 done=186 blocked=0`; independent AST/runtime/OpenXML audit confirmed manifest-backed temporary projects, asset-path-only RenderPlan normalization, retained DOCX/template/numbering/reference/field/bookmark/header-footer assertions, and no legacy or fallback path; REG-011 moved to Done, unrelated dirty/untracked paths were preserved, no push.
+- 2026-08-24 - REG-012 Checker PASS Attempt 1; exact Verify passed 22/22 in 0.11s, target Ruff, `git diff --check`, and LOOP-LINT passed; independent AST/runtime/static audit confirmed four `PACKAGE_DATA` template entries plus one explicit `docx/parts` `--add-data`, matching four wheel `force-include` entries, and the manifest-backed `打开 ThesisForge 项目` Windows native path with retained CDP/Tauri/save/validate/DOCX/ZIP/sensory/failure-evidence/process-snapshot assertions; REG-012 moved from Open to Done, no production behavior changed, unrelated dirty/untracked paths were preserved, one local commit, no push.
 
 ## Sync log
