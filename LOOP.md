@@ -98,6 +98,15 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Done
 
+- [REG-016] Migrate remaining mocked frontend E2E to the manifest-backed V2 project entry
+  - Files: `frontend/e2e/acceptance.spec.ts`, `frontend/e2e/workbench.spec.ts`, `LOOP.md`
+  - Behavior: mocked browser E2E opens one manifest-backed project from exactly `thesisforge.yaml` and one Markdown source, receives the typed project identity/source response, and continues exercising loading, permission, save, preview, build, cancel, template, focus, and responsive assertions.
+  - Verify: `pnpm --dir frontend exec playwright test e2e/acceptance.spec.ts e2e/workbench.spec.ts`
+  - Acceptance: the exact two-file Playwright command passes; no selected test uploads a bare Markdown entry or mocks a source-only workspace response; all existing V2 UI and BuildReport assertions remain active; no production decoder compatibility path, frontend YAML parser, test-side fallback, or silent downgrade is introduced.
+  - Verification-surface change: `no`
+  - Attempts: 1
+  - Attempt 1 (2026-08-24): Independent Checker PASS; exact Verify exited 0 with `16 passed`, `20 skipped` (`36` total). Audit confirmed all `7/7` selected uploads use one `thesisforge.yaml` plus one `thesis.md`, all `7/7` `/api/v1/workspaces` mocks return complete `protocol`/`ok`/`project`/`source`/`text`, and no bare Markdown entry, source-only response, production `frontend/src` diff, decoder compatibility/fallback, frontend YAML parser, test-side fallback, or silent downgrade was introduced; unrelated dirty/untracked paths were preserved, no push.
+
 - [REG-015D-ATOM] Complete the real HTTP canonical V2 acceptance and strict build terminal contract
   - Parent: user-authorized atomic replacement for ordered child 4/4 `REG-015D`; the original REG-015D Behavior and Acceptance remain unchanged.
   - Files: `src/thesis_forge/adapters/runtime.py`, `tests/test_adapters.py`, `tests/test_sidecar.py`, `frontend/e2e/real-http.acceptance.ts`, `LOOP.md`, `lint-loop.sh`
@@ -2151,6 +2160,7 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Cycle log
 
+- 2026-08-24 - REG-016 Checker PASS Attempt 1; exact Playwright Verify passed `16/16` with `20` skipped (`36` total), the seven selected uploads and seven workspace mocks satisfied the manifest-backed V2 contract, no compatibility/fallback/YAML-parser/silent-downgrade path or production frontend diff was found, REG-016 moved from Open to Done, unrelated dirty/untracked paths were preserved and unstaged, one local commit, no push.
 - 2026-08-24 - REG-015D-ATOM Checker FAIL Attempt 1 then PASS Attempt 2; strict completed BuildReport, accurate stage lifecycle, TF-* diagnostic normalization, plain output-name boundary and canonical real-HTTP manifest/source acceptance are green; exact scope remained the six declared files, unrelated dirty paths were preserved and unstaged, no push.
 - 2026-08-23 - V2-525 Checker PASS Attempt 1; exact Verify passed 14/14, target Ruff, `git diff --check`, and `./lint-loop.sh` passed; independent AST/runtime/OpenXML audit confirmed canonical parser migration, the existing V2 fixture, real DOCX 13/13 OpenXML checks, unchanged exit-code/JSON/no-repair assertions, and no fallback/compatibility/dual-source/silent-degradation path; V2-525 moved from Open to Done, candidate scope remained exactly `LOOP.md` and `tests/test_qa_tools.py`, all pre-existing `openspec/**` changes were preserved and unstaged, no push.
 - 2026-08-23 - V2-524 Checker PASS Attempt 1; exact Verify passed 24/24, target Ruff, `git diff --check`, and `./lint-loop.sh` passed; independent AST/runtime audit confirmed canonical parser migration, typed Figure/caption Citation output, `RenderPlan.citation_order == ("container2026",)`, unchanged non-target compiler tests/assertions, and no fallback/compatibility/dual-source/silent-degradation path; V2-524 moved from Open to Done, candidate scope remained exactly `LOOP.md` and `tests/test_compiler.py`, all pre-existing `openspec/**` changes were preserved and unstaged, no push.

@@ -3,6 +3,19 @@ import { readFileSync } from "node:fs";
 import type { BuildReport } from "../src/transport/buildEvents";
 
 const workspaceId = "a".repeat(32);
+const sourceText = "# 绪论\n";
+const manifestText = `schema: thesisforge.project.v2
+project:
+  id: mocked-workbench
+  source: thesis.md
+template:
+  id: example-university-2026
+`;
+const projectIdentity = {
+  id: "mocked-workbench",
+  root: "/workspace/thesis",
+  manifestPath: "/workspace/thesis/thesisforge.yaml",
+};
 const previewFixture = JSON.parse(
   readFileSync(
     new URL("../../tests/fixtures/preview-workbench-v1.json", import.meta.url),
@@ -50,6 +63,35 @@ function completedBuildEvent(
     type: "completed",
     report,
   };
+}
+
+function openedProjectResponse() {
+  return {
+    protocol: "thesisforge.workbench.v1",
+    ok: true,
+    project: projectIdentity,
+    source: {
+      kind: "web-workspace",
+      workspaceId,
+      fileName: "thesis.md",
+    },
+    text: sourceText,
+  };
+}
+
+function projectFiles() {
+  return [
+    {
+      name: "thesisforge.yaml",
+      mimeType: "text/yaml",
+      buffer: Buffer.from(manifestText),
+    },
+    {
+      name: "thesis.md",
+      mimeType: "text/markdown",
+      buffer: Buffer.from(sourceText),
+    },
+  ];
 }
 
 test.beforeEach(async ({ page }) => {
@@ -121,7 +163,7 @@ test("launches the shared workbench with keyboard-visible controls", async (
 ) => {
   await page.goto("/");
 
-  await expect(page.getByText("ThesisForge")).toBeVisible();
+  await expect(page.getByText("ThesisForge", { exact: true })).toBeVisible();
   await expect(page.getByRole("button", { name: "打开 ThesisForge 项目" })).toBeVisible();
   await expect(page.getByRole("region", { name: "Markdown 编辑器" })).toBeVisible();
   if (testInfo.project.name !== "mobile-chromium") {
@@ -170,7 +212,7 @@ test("keeps the product identity and compact actions visible on mobile", async (
   test.skip(testInfo.project.name !== "mobile-chromium");
   await page.goto("/");
 
-  await expect(page.getByText("ThesisForge")).toBeVisible();
+  await expect(page.getByText("ThesisForge", { exact: true })).toBeVisible();
   const controls = [
     page.getByRole("button", { name: "打开 ThesisForge 项目" }),
     page.getByRole("button", { name: "构建 DOCX" }),
@@ -196,16 +238,7 @@ test("opens, edits, explicitly saves, refreshes, and builds through HTTP", async
     await route.fulfill({
       status: 201,
       contentType: "application/json",
-      body: JSON.stringify({
-        protocol: "thesisforge.workbench.v1",
-        ok: true,
-        source: {
-          kind: "web-workspace",
-          workspaceId,
-          fileName: "thesis.md",
-        },
-        text: "# 绪论\n",
-      }),
+      body: JSON.stringify(openedProjectResponse()),
     });
   });
   await page.route("**/api/v1/dispatch", async (route) => {
@@ -251,11 +284,7 @@ test("opens, edits, explicitly saves, refreshes, and builds through HTTP", async
   });
   await page.goto("/");
 
-  await page.locator('input[type="file"]').setInputFiles({
-    name: "thesis.md",
-    mimeType: "text/markdown",
-    buffer: Buffer.from("# 绪论\n"),
-  });
+  await page.locator('input[type="file"]').setInputFiles(projectFiles());
   const editor = page.getByRole("textbox", { name: "Markdown 文稿内容" });
   await expect(editor).toHaveValue("# 绪论\n");
   await page.getByRole("tab", { name: "结构" }).click();
@@ -332,16 +361,7 @@ test("loads and refreshes a complete automatic PDF after an edit", async ({
     await route.fulfill({
       status: 201,
       contentType: "application/json",
-      body: JSON.stringify({
-        protocol: "thesisforge.workbench.v1",
-        ok: true,
-        source: {
-          kind: "web-workspace",
-          workspaceId,
-          fileName: "thesis.md",
-        },
-        text: "# 绪论\n",
-      }),
+      body: JSON.stringify(openedProjectResponse()),
     });
   });
   await page.route("**/api/v1/dispatch", async (route) => {
@@ -419,11 +439,7 @@ test("loads and refreshes a complete automatic PDF after an edit", async ({
     },
   );
   await page.goto("/");
-  await page.locator('input[type="file"]').setInputFiles({
-    name: "thesis.md",
-    mimeType: "text/markdown",
-    buffer: Buffer.from("# 绪论\n"),
-  });
+  await page.locator('input[type="file"]').setInputFiles(projectFiles());
 
   await expect(page.getByText("LibreOffice PDF")).toBeVisible();
   await expect(page.getByText("当前实时预览")).toBeVisible();
@@ -507,24 +523,11 @@ test("cancels an active Web build and retries without losing prior output", asyn
     await route.fulfill({
       status: 201,
       contentType: "application/json",
-      body: JSON.stringify({
-        protocol: "thesisforge.workbench.v1",
-        ok: true,
-        source: {
-          kind: "web-workspace",
-          workspaceId,
-          fileName: "thesis.md",
-        },
-        text: "# 绪论\n",
-      }),
+      body: JSON.stringify(openedProjectResponse()),
     });
   });
   await page.goto("/");
-  await page.locator('input[type="file"]').setInputFiles({
-    name: "thesis.md",
-    mimeType: "text/markdown",
-    buffer: Buffer.from("# 绪论\n"),
-  });
+  await page.locator('input[type="file"]').setInputFiles(projectFiles());
 
   await page.getByRole("button", { name: "构建 DOCX" }).click();
   await expect(page.getByRole("button", { name: "取消构建" })).toBeVisible();
@@ -548,16 +551,7 @@ test("selects a template and blocks build on an activated fatal diagnostic", asy
     await route.fulfill({
       status: 201,
       contentType: "application/json",
-      body: JSON.stringify({
-        protocol: "thesisforge.workbench.v1",
-        ok: true,
-        source: {
-          kind: "web-workspace",
-          workspaceId,
-          fileName: "thesis.md",
-        },
-        text: "# 绪论\n",
-      }),
+      body: JSON.stringify(openedProjectResponse()),
     });
   });
   await page.route("**/api/v1/dispatch", async (route) => {
@@ -607,11 +601,7 @@ test("selects a template and blocks build on an activated fatal diagnostic", asy
   });
   await page.goto("/");
 
-  await page.locator('input[type="file"]').setInputFiles({
-    name: "thesis.md",
-    mimeType: "text/markdown",
-    buffer: Buffer.from("# 绪论\n"),
-  });
+  await page.locator('input[type="file"]').setInputFiles(projectFiles());
   await page
     .getByLabel("学校模板")
     .selectOption("example-university-2026");
