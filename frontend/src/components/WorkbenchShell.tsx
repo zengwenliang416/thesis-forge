@@ -43,7 +43,7 @@ interface WorkbenchShellProps {
   editorRef: RefObject<HTMLTextAreaElement | null>;
   fileInputRef: RefObject<HTMLInputElement | null>;
   onChooseSource(): void;
-  onFileSelected(file: File): void;
+  onFileSelected(files: File[]): void;
   onSave(): void;
   onValidate(): void;
   onBuild(): void;

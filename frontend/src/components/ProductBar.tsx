@@ -10,7 +10,7 @@ interface ProductBarProps {
   actions: WorkspaceActions;
   fileInputRef: RefObject<HTMLInputElement | null>;
   onChooseSource(): void;
-  onFileSelected(file: File): void;
+  onFileSelected(files: File[]): void;
   onSave(): void;
   onValidate(): void;
   onBuild(): void;
@@ -56,12 +56,13 @@ export function ProductBar({
           ref={fileInputRef}
           className="visually-hidden"
           type="file"
-          accept=".yaml,.yml,text/yaml"
+          accept=".yaml,.yml,.md,text/yaml,text/markdown"
+          multiple
           tabIndex={-1}
           onChange={(event) => {
-            const file = event.currentTarget.files?.[0];
-            if (file) {
-              onFileSelected(file);
+            const files = Array.from(event.currentTarget.files ?? []);
+            if (files.length > 0) {
+              onFileSelected(files);
             }
             event.currentTarget.value = "";
           }}

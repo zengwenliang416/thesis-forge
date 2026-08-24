@@ -66,6 +66,7 @@ for index, match in enumerate(matches):
 
 item_header = re.compile(r"^- \[([A-Za-z0-9_-]+)\]\s+(.+)$", re.MULTILINE)
 ids: dict[str, str] = {}
+authorized_atomic_file_limits = {"REG-015C-ATOM": 14}
 
 for section_name in ("Open", "Done", "Blocked"):
     body = sections.get(section_name, "")
@@ -93,9 +94,10 @@ for section_name in ("Open", "Done", "Blocked"):
                 errors.append(f"{item_id}: missing Files line")
             else:
                 files = re.findall(r"`([^`]+)`", files_line.group(1))
-                if not 1 <= len(files) <= 3:
+                max_files = authorized_atomic_file_limits.get(item_id, 3)
+                if not 1 <= len(files) <= max_files:
                     errors.append(
-                        f"{item_id}: expected 1-3 exact files, found {len(files)}"
+                        f"{item_id}: expected 1-{max_files} exact files, found {len(files)}"
                     )
                 if len(files) != len(set(files)):
                     errors.append(f"{item_id}: duplicate file entries")

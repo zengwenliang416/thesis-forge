@@ -81,9 +81,11 @@ describe("ProductBar project opening", () => {
 
     const input = container.querySelector('input[type="file"]');
     expect(input).not.toBeNull();
-    expect(input).toHaveAttribute("accept", ".yaml,.yml,text/yaml");
-    expect(input?.getAttribute("accept")).not.toContain(".md");
-    expect(input?.getAttribute("accept")).not.toContain("markdown");
+    expect(input).toHaveAttribute(
+      "accept",
+      ".yaml,.yml,.md,text/yaml,text/markdown",
+    );
+    expect(input).toHaveAttribute("multiple");
   });
 
   it("shows the project fallback identity when nothing is loaded", () => {
@@ -119,27 +121,38 @@ describe("ProductBar project opening", () => {
     ).toBeVisible();
   });
 
-  it("routes manifest selection through onFileSelected and the open button through onChooseSource", async () => {
+  it("routes the manifest and Markdown selection through one File[] callback", async () => {
     const user = userEvent.setup();
     const onFileSelected = vi.fn();
-    const onChooseSource = vi.fn();
     const fileInputRef = createRef<HTMLInputElement>();
     renderProductBar(createInitialWorkspaceState(), {
       fileInputRef,
       onFileSelected,
-      onChooseSource,
     });
 
     const manifest = new File(["name: demo"], "thesisforge.yaml", {
       type: "text/yaml",
     });
-    await user.upload(fileInputRef.current as HTMLInputElement, manifest);
+    const source = new File(["# 绪论\n"], "thesis.md", {
+      type: "text/markdown",
+    });
+    await user.upload(fileInputRef.current as HTMLInputElement, [
+      manifest,
+      source,
+    ]);
     expect(onFileSelected).toHaveBeenCalledTimes(1);
-    expect(onFileSelected).toHaveBeenCalledWith(manifest);
+    expect(onFileSelected).toHaveBeenCalledWith([manifest, source]);
+  });
+
+  it("routes the project open button through onChooseSource", async () => {
+    const user = userEvent.setup();
+    const onChooseSource = vi.fn();
+    renderProductBar(createInitialWorkspaceState(), { onChooseSource });
 
     await user.click(
       screen.getByRole("button", { name: "打开 ThesisForge 项目" }),
     );
+
     expect(onChooseSource).toHaveBeenCalledTimes(1);
   });
 

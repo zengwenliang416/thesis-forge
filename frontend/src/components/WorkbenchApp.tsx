@@ -46,7 +46,10 @@ interface WorkbenchAppProps {
 }
 
 const statusCopy = {
-  empty: ["当前工作区没有 Markdown 文稿", "选择一个 .md 文件开始论文编译。"],
+  empty: [
+    "当前工作区没有 Markdown 文稿",
+    "选择 thesisforge.yaml 和一个 Markdown 文件开始论文编译。",
+  ],
   loading: ["正在读取工作区", "正在同步保存快照和结构化结果。"],
   populated: ["文稿、模板与预览已同步", "右侧实时版式与当前编辑内容同步。"],
   dirty: [
@@ -700,20 +703,6 @@ export function WorkbenchApp({
     reference: source,
   });
 
-  const applyOpenedSource = async (
-    opened: Awaited<ReturnType<WorkbenchTransport["openSource"]>>,
-  ) => {
-    if (!opened) {
-      return;
-    }
-    dispatch({
-      type: "sourceOpened",
-      source: toWorkspaceSource(opened.source),
-      text: opened.text,
-    });
-    await refreshSource(opened.source, null, null);
-  };
-
   const applyOpenedProject = async (opened: OpenedProject) => {
     dispatch({
       type: "projectOpened",
@@ -731,16 +720,41 @@ export function WorkbenchApp({
     await refreshSource(opened.source, null, opened.project);
   };
 
-  const openFile = async (file: File) => {
+  const openFile = async (files: File[]) => {
     const operation = nextOperation("open");
     dispatch({ type: "operationStarted", operation });
     try {
-      await applyOpenedSource(
-        await transport.openSource({
-          fileName: file.name,
-          text: await file.text(),
-        }),
+      if (!transport.openProject) {
+        throw new Error("当前运行时不支持打开 ThesisForge 项目。");
+      }
+      const manifestFiles = files.filter(
+        (file) => file.name === "thesisforge.yaml",
       );
+      const sourceFiles = files.filter((file) =>
+        file.name.toLowerCase().endsWith(".md"),
+      );
+      if (
+        files.length !== 2 ||
+        manifestFiles.length !== 1 ||
+        sourceFiles.length !== 1
+      ) {
+        throw new Error("请选择一个 thesisforge.yaml 和一个 Markdown 文件。");
+      }
+      const opened = await transport.openProject({
+        manifest: {
+          fileName: manifestFiles[0].name,
+          text: await manifestFiles[0].text(),
+        },
+        source: {
+          fileName: sourceFiles[0].name,
+          text: await sourceFiles[0].text(),
+        },
+      });
+      if (!opened) {
+        dispatch({ type: "operationCanceled", operation });
+        return;
+      }
+      await applyOpenedProject(opened);
     } catch (error) {
       failOperation(operation, error);
     }
@@ -896,7 +910,7 @@ export function WorkbenchApp({
       editorRef={editorRef}
       fileInputRef={fileInputRef}
       onChooseSource={() => void chooseSource()}
-      onFileSelected={(file) => void openFile(file)}
+      onFileSelected={(files) => void openFile(files)}
       onSave={() => void saveSource()}
       onValidate={() => void runOperation("validate")}
       onBuild={() => void runOperation("build")}

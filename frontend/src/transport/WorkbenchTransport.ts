@@ -40,7 +40,6 @@ export interface ProjectFileSnapshot {
 }
 
 export interface OpenProjectInput {
-  project: ProjectIdentityRef;
   manifest: ProjectFileSnapshot;
   source: ProjectFileSnapshot;
 }
@@ -133,12 +132,11 @@ export function readProjectFileSnapshot(
 export function readOpenProjectInput(value: unknown): OpenProjectInput {
   if (
     !isObject(value) ||
-    !hasOnlyKeys(value, ["project", "manifest", "source"])
+    !hasOnlyKeys(value, ["manifest", "source"])
   ) {
     throw new Error("无效的 ThesisForge project 输入");
   }
   return {
-    project: readProjectIdentity(value.project),
     manifest: readProjectFileSnapshot(value.manifest, "manifest"),
     source: readProjectFileSnapshot(value.source, "source"),
   };

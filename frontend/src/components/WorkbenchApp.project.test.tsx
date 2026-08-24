@@ -37,6 +37,16 @@ const projectA: OpenedProject = {
   text: "# 绪论\n",
 };
 
+const webProject: OpenedProject = {
+  project: projectAIdentity,
+  source: {
+    kind: "web-workspace",
+    workspaceId: "b".repeat(32),
+    fileName: "thesis.md",
+  },
+  text: "# 网页文稿\n",
+};
+
 const projectB: OpenedProject = {
   project: projectBIdentity,
   source: {
@@ -524,9 +534,11 @@ describe("WorkbenchApp project flow", () => {
     }
   });
 
-  it("keeps web upload sessions source-only with no project key in payloads", async () => {
+  it("opens a manifest-backed Web project from exactly one manifest and Markdown file", async () => {
     const user = userEvent.setup();
     const dispatch = previewDispatch();
+    const openProject = vi.fn().mockResolvedValue(webProject);
+    const openSource = vi.fn().mockResolvedValue(null);
     const webTransport: WorkbenchTransport = {
       ...finalPreviewMethods,
       runtime: "web",
@@ -536,15 +548,80 @@ describe("WorkbenchApp project flow", () => {
         saveAs: false,
         download: true,
       },
-      openSource: async (input) => ({
-        source: {
-          kind: "web-upload",
-          uploadId: "u".repeat(32),
-          fileName: input?.fileName ?? "thesisforge.yaml",
-        },
-        text: input?.text ?? "",
-      }),
+      openSource,
+      openProject,
       dispatch,
+    };
+    const { container } = render(
+      <WorkbenchApp
+        transport={webTransport}
+        initialState={createInitialWorkspaceState()}
+      />,
+    );
+    const input = container.querySelector('input[type="file"]');
+    expect(input).not.toBeNull();
+
+    const manifest = new File(
+      ["schema: thesisforge.project.v2\n"],
+      "thesisforge.yaml",
+      { type: "text/yaml" },
+    );
+    const source = new File(["# 网页文稿\n"], "thesis.md", {
+      type: "text/markdown",
+    });
+    await user.upload(input as HTMLInputElement, [manifest, source]);
+
+    expect(await screen.findByText("文稿、模板与预览已同步")).toBeVisible();
+    expect(screen.getByText("thesis-alpha")).toBeVisible();
+    expect(
+      screen.getByText("活动源：thesis.md · 保存快照已同步"),
+    ).toBeVisible();
+    expect(openSource).not.toHaveBeenCalled();
+    expect(openProject).toHaveBeenCalledTimes(1);
+    expect(openProject).toHaveBeenCalledWith({
+      manifest: {
+        fileName: "thesisforge.yaml",
+        text: "schema: thesisforge.project.v2\n",
+      },
+      source: {
+        fileName: "thesis.md",
+        text: "# 网页文稿\n",
+      },
+    });
+    expect(dispatch).toHaveBeenCalledTimes(1);
+    expect(dispatch).toHaveBeenNthCalledWith(
+      1,
+      expect.objectContaining({
+        operation: "preview",
+        payload: {
+          source: {
+            kind: "web-workspace",
+            workspaceId: "b".repeat(32),
+            fileName: "thesis.md",
+          },
+          templateId: null,
+          project: projectAIdentity,
+        },
+      }),
+    );
+  });
+
+  it("rejects incomplete browser selections without an openSource fallback", async () => {
+    const user = userEvent.setup();
+    const openProject = vi.fn().mockResolvedValue(webProject);
+    const openSource = vi.fn().mockResolvedValue(null);
+    const webTransport: WorkbenchTransport = {
+      ...finalPreviewMethods,
+      runtime: "web",
+      capabilities: {
+        nativePaths: false,
+        saveWorkspace: true,
+        saveAs: false,
+        download: true,
+      },
+      openSource,
+      openProject,
+      dispatch: previewDispatch(),
     };
     const { container } = render(
       <WorkbenchApp
@@ -557,45 +634,13 @@ describe("WorkbenchApp project flow", () => {
 
     await user.upload(
       input as HTMLInputElement,
-      new File(["# 网页文稿\n"], "thesisforge.yaml", { type: "text/yaml" }),
+      new File(["# 独立文稿\n"], "thesis.md", { type: "text/markdown" }),
     );
 
-    expect(await screen.findByText("文稿、模板与预览已同步")).toBeVisible();
-    expect(screen.queryByText("尚未打开项目")).toBeNull();
-    expect(screen.queryByText(/活动源：/)).toBeNull();
-    expect(dispatch).toHaveBeenCalledTimes(1);
-    expect(dispatch).toHaveBeenNthCalledWith(
-      1,
-      expect.objectContaining({
-        operation: "preview",
-        payload: {
-          source: {
-            kind: "web-upload",
-            uploadId: "u".repeat(32),
-            fileName: "thesisforge.yaml",
-          },
-          templateId: null,
-        },
-      }),
-    );
-
-    await screen.findByText("文稿、模板与预览已同步");
-    await user.click(screen.getByRole("button", { name: "验证论文" }));
-
-    expect(dispatch).toHaveBeenCalledTimes(2);
-    expect(dispatch).toHaveBeenNthCalledWith(
-      2,
-      expect.objectContaining({
-        operation: "preview",
-        payload: {
-          source: {
-            kind: "web-upload",
-            uploadId: "u".repeat(32),
-            fileName: "thesisforge.yaml",
-          },
-          templateId: null,
-        },
-      }),
-    );
+    expect(
+      await screen.findByText("请选择一个 thesisforge.yaml 和一个 Markdown 文件。"),
+    ).toBeVisible();
+    expect(openProject).not.toHaveBeenCalled();
+    expect(openSource).not.toHaveBeenCalled();
   });
 });

@@ -524,11 +524,9 @@ class WebWorkspaceRuntime:
 
     def create_project_workspace(
         self,
-        project: object,
         manifest: object,
         source: object,
     ) -> dict:
-        requested = _project_identity_from_payload(project)
         if not isinstance(manifest, dict) or set(manifest) != {"fileName", "text"}:
             raise TypeError("manifest must contain only fileName and text")
         if not isinstance(source, dict) or set(source) != {"fileName", "text"}:
@@ -562,8 +560,6 @@ class WebWorkspaceRuntime:
                 raise ValueError(
                     "uploaded source does not match manifest document.source"
                 )
-            if loaded.manifest.project.id != requested.project_id:
-                raise ValueError("project identity does not match manifest project")
         except Exception:
             shutil.rmtree(workspace, ignore_errors=True)
             raise

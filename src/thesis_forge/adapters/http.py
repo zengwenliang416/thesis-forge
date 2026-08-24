@@ -15,7 +15,6 @@ class Dispatcher(Protocol):
 class WebRuntime(Protocol):
     def create_project_workspace(
         self,
-        project: object,
         manifest: object,
         source: object,
     ) -> dict: ...
@@ -107,12 +106,9 @@ class WorkbenchHttpApp:
                     payload = self._dispatcher.dispatch(request)
                     status = "200 OK"
                 elif path == "/api/v1/workspaces" and self._web_runtime is not None:
-                    if set(request) != {"project", "manifest", "source"}:
-                        raise ValueError(
-                            "project, manifest and source are required"
-                        )
+                    if set(request) != {"manifest", "source"}:
+                        raise ValueError("manifest and source are required")
                     opened = self._web_runtime.create_project_workspace(
-                        request["project"],
                         request["manifest"],
                         request["source"],
                     )

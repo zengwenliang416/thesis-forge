@@ -115,13 +115,13 @@ export class WebWorkbenchTransport implements WorkbenchTransport {
     if (!input) {
       throw new Error("Web project input is required");
     }
-    const projectInput = readOpenProjectInput(input);
+    const { manifest, source } = readOpenProjectInput(input);
     const response = await this.#fetch(`${this.#baseUrl}/api/v1/workspaces`, {
       method: "POST",
       headers: {
         "content-type": "application/json",
       },
-      body: JSON.stringify(projectInput),
+      body: JSON.stringify({ manifest, source }),
     });
     const body: unknown = await response.json();
     if (!response.ok) {

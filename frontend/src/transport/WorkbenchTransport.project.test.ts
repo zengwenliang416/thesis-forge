@@ -21,7 +21,6 @@ const manifestText =
   "schema: thesisforge.project.v2\nproject:\n  id: project-1\n";
 
 const input: OpenProjectInput = {
-  project,
   manifest: {
     fileName: "thesisforge.yaml",
     text: manifestText,
@@ -54,7 +53,7 @@ function jsonResponse(body: unknown, status = 201): Response {
 }
 
 describe("WebWorkbenchTransport.openProject", () => {
-  it("posts exactly one typed request carrying the full project identity and snapshot", async () => {
+  it("posts exactly one typed request carrying only the manifest and source snapshots", async () => {
     const calls: Array<{ url: string; init?: RequestInit }> = [];
     const transport = new WebWorkbenchTransport({
       baseUrl: "http://127.0.0.1:8765",
@@ -70,11 +69,6 @@ describe("WebWorkbenchTransport.openProject", () => {
     expect(calls[0].url).toBe("http://127.0.0.1:8765/api/v1/workspaces");
     expect(calls[0].init?.method).toBe("POST");
     expect(JSON.parse(String(calls[0].init?.body))).toEqual({
-      project: {
-        id: "project-1",
-        root: "/workspace/thesis",
-        manifestPath: "/workspace/thesis/thesisforge.yaml",
-      },
       manifest: {
         fileName: "thesisforge.yaml",
         text: manifestText,
@@ -129,27 +123,41 @@ describe("WebWorkbenchTransport.openProject", () => {
     );
   });
 
-  it("rejects a project identity with an empty id", async () => {
+  it("rejects an input without a manifest snapshot", async () => {
     const transport = new WebWorkbenchTransport({
       fetch: async () => jsonResponse(openedProjectBody),
     });
 
     await expect(
-      transport.openProject({ ...input, project: { ...project, id: "" } }),
-    ).rejects.toThrow("无效的 ThesisForge project 标识");
+      transport.openProject({ source: input.source } as OpenProjectInput),
+    ).rejects.toThrow("无效的 ThesisForge manifest 快照");
   });
 
-  it("rejects a project identity with an empty root", async () => {
+  it("rejects an input without a source snapshot", async () => {
     const transport = new WebWorkbenchTransport({
       fetch: async () => jsonResponse(openedProjectBody),
     });
 
     await expect(
-      transport.openProject({ ...input, project: { ...project, root: "" } }),
-    ).rejects.toThrow("无效的 ThesisForge project 标识");
+      transport.openProject({ manifest: input.manifest } as OpenProjectInput),
+    ).rejects.toThrow("无效的 ThesisForge source 快照");
   });
 
-  it("rejects a project identity with an empty manifestPath", async () => {
+  it("rejects an input carrying a client project identity", async () => {
+    const transport = new WebWorkbenchTransport({
+      fetch: async () => jsonResponse(openedProjectBody),
+    });
+    const invalid = {
+      ...input,
+      project,
+    };
+
+    await expect(
+      transport.openProject(invalid),
+    ).rejects.toThrow("无效的 ThesisForge project 输入");
+  });
+
+  it("rejects an input carrying duplicate metadata", async () => {
     const transport = new WebWorkbenchTransport({
       fetch: async () => jsonResponse(openedProjectBody),
     });
@@ -157,38 +165,9 @@ describe("WebWorkbenchTransport.openProject", () => {
     await expect(
       transport.openProject({
         ...input,
-        project: { ...project, manifestPath: "" },
-      }),
-    ).rejects.toThrow("无效的 ThesisForge project 标识");
-  });
-
-  it("rejects a project identity with a non-string field", async () => {
-    const transport = new WebWorkbenchTransport({
-      fetch: async () => jsonResponse(openedProjectBody),
-    });
-    const invalid = {
-      ...input,
-      project: { ...project, root: 42 },
-    } as unknown as OpenProjectInput;
-
-    await expect(transport.openProject(invalid)).rejects.toThrow(
-      "无效的 ThesisForge project 标识",
-    );
-  });
-
-  it("rejects a project identity with an extra key", async () => {
-    const transport = new WebWorkbenchTransport({
-      fetch: async () => jsonResponse(openedProjectBody),
-    });
-
-    const invalid = {
-      ...input,
-      project: { ...project, school: "example-university" },
-    };
-
-    await expect(
-      transport.openProject(invalid),
-    ).rejects.toThrow("无效的 ThesisForge project 标识");
+        fileName: "thesis.md",
+      } as unknown as OpenProjectInput),
+    ).rejects.toThrow("无效的 ThesisForge project 输入");
   });
 
   it("rejects when the input source snapshot fileName is empty", async () => {
@@ -618,16 +597,12 @@ describe("project transport readers", () => {
     ).toThrow("必须是 Markdown 文件");
   });
 
-  it("readOpenProjectInput rejects projectless and duplicate-metadata input", () => {
-    expect(() =>
-      readOpenProjectInput({
-        manifest: input.manifest,
-        source: input.source,
-      }),
-    ).toThrow("无效的 ThesisForge project 标识");
+  it("readOpenProjectInput accepts only manifest and source snapshots", () => {
+    expect(readOpenProjectInput(input)).toEqual(input);
     expect(() =>
       readOpenProjectInput({
         ...input,
+        project,
         fileName: "thesis.md",
       }),
     ).toThrow("无效的 ThesisForge project 输入");
