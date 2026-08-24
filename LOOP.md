@@ -95,15 +95,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 ## Open
 
-- [REG-007] Make migrated v2 fixture sources canonical
-  - Parent: full-suite regression showing `template migrate` emits a `fixtures/minimal/thesis.md` with rejected YAML Front Matter.
-  - Files: `src/thesis_forge/templates/v2/migrate.py`, `tests/test_template_v2_pack.py`, `LOOP.md`
-  - Behavior: migrated v2 packages contain front-matter-free V2 Markdown fixtures that pass package lint without `TF-SOURCE-LEGACY-001`.
-  - Verify: `.venv/bin/python -m pytest tests/test_template_v2_pack.py -k 'migrate_bachelor_ledger_and_lint or migrate_school_template_with_sections or cli_template_migrate_exit_codes'`
-  - Acceptance: the exact migration tests pass; generated fixture sources use the canonical V2 entry semantics and no legacy compatibility parser or dual metadata source is introduced.
-  - Verification-surface change: `no`
-  - Attempts: 0
-
 - [REG-008] Verify the installed distribution through a manifest-backed project entry
   - Parent: full-suite distribution regression after bare Markdown became an invalid CLI entry.
   - Files: `scripts/verify_distribution.py`, `tests/test_distribution.py`, `LOOP.md`
@@ -114,6 +105,16 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
   - Attempts: 0
 
 ## Done
+
+- [REG-007] Make migrated v2 fixture sources canonical
+  - Parent: full-suite regression showing `template migrate` emits a `fixtures/minimal/thesis.md` with rejected YAML Front Matter.
+  - Files: `src/thesis_forge/templates/v2/migrate.py`, `tests/test_template_v2_pack.py`, `LOOP.md`
+  - Behavior: migrated v2 packages contain front-matter-free V2 Markdown fixtures that pass package lint without `TF-SOURCE-LEGACY-001`.
+  - Verify: `.venv/bin/python -m pytest tests/test_template_v2_pack.py -k 'migrate_bachelor_ledger_and_lint or migrate_school_template_with_sections or cli_template_migrate_exit_codes'`
+  - Acceptance: the exact migration tests pass; generated fixture sources use the canonical V2 entry semantics and no legacy compatibility parser or dual metadata source is introduced.
+  - Verification-surface change: `no`
+  - Attempts: 1
+  - Attempt 1 (2026-08-24): Independent Checker PASS; exact Verify passed 3/3, the complete `tests/test_template_v2_pack.py` regression passed 24/24, target Ruff and `git diff --check` passed, generated migration fixtures are front-matter-free and reject legacy `:::` containers, and no compatibility parser or second metadata source was introduced; pre-existing dirty/untracked paths were preserved, no push.
 
 - [REG-006] Restore the declared Word assets in the Phase 0 v2 sample package
   - Parent: full-suite regression after the canonical V2 entry and package lint contracts became strict; the sample package manifest already declares both assets, but the tracked sample state does not contain them.
@@ -2340,5 +2341,6 @@ A regressed Done behavior returns as a new `REG-###` item with fresh evidence. N
 
 - 2026-08-24 - REG-005 Checker PASS Attempt 1; exact goal verifier passed, both ordinary-body marker mutations were rejected, target Ruff, `git diff --check`, and LOOP-LINT passed; non-blocking C901 baseline debt was recorded, no push.
 - 2026-08-24 - REG-006 Checker PASS Attempt 1; restored the two declared Phase 0 v2 sample DOCX assets, exact package tests passed 61/61, both OpenXML packages passed 13/13, semantic regeneration was stable, and only REG-007/REG-008 remain Open; pre-existing dirty/untracked paths were preserved, no push.
+- 2026-08-24 - REG-007 Checker PASS Attempt 1; migrated v2 fixtures now use canonical front-matter-free Markdown, exact migration Verify passed 3/3, full package/pack regression passed 24/24, target Ruff and `git diff --check` passed, and only REG-008 remains Open; pre-existing dirty/untracked paths were preserved, no push.
 
 ## Sync log

@@ -990,14 +990,7 @@ thesisforge template pack <本目录> -o dist/{package_id}-{version}.tftpl
 """
 
 
-_FIXTURE_MD = """---
-thesis:
-  title: 最小验证文档
-author:
-  name: 示例作者
----
-
-# 第一章 绪论 {#chap:intro}
+_FIXTURE_MD = """# 第一章 绪论 {#chap:intro}
 
 正文段落，用于 fixtures/minimal 冒烟。
 """

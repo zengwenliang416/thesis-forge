@@ -380,6 +380,12 @@ def test_migrate_bachelor_ledger_and_lint(tmp_path: Path) -> None:
     ):
         assert (out / name).is_file(), name
     assert any((out / "fixtures" / "minimal").iterdir())
+    fixture_source = (out / "fixtures" / "minimal" / "thesis.md").read_text(
+        encoding="utf-8"
+    )
+    assert fixture_source.startswith("# 第一章 绪论 {#chap:intro}\n")
+    assert not fixture_source.startswith("---")
+    assert ":::" not in fixture_source
     package = v2.load_package(out)
     assert package.template.id == "bachelor-base"
     assert package.template.version == "0.1.0"
