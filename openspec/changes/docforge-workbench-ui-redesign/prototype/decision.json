@@ -1,0 +1,9 @@
+{
+  "status": "approved",
+  "prototype_code": "required_present",
+  "prototype_type": "ui-html",
+  "approved_variant": "dual-canvas-docforge",
+  "promotion": "requires_development_gate",
+  "approval_evidence": "User selected the third ideation direction and explicitly required the visible product name to change; the approved prototype applies that feedback as DocForge.",
+  "blocked_reasons": []
+}

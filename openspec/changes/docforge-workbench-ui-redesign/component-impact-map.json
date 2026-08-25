@@ -1,0 +1,44 @@
+{
+  "new_components": [
+    "none required; new visual groups remain layout markup inside existing shell components"
+  ],
+  "reused_components": [
+    "WorkbenchApp",
+    "WorkbenchShell",
+    "ProductBar",
+    "StatusStrip",
+    "OutlinePanel",
+    "MarkdownEditor",
+    "DualPreviewPanel",
+    "DiagnosticsPanel",
+    "OutputFeedback",
+    "PanelHeader"
+  ],
+  "extraction_triggers": [
+    "extract only if the same command-bar group or status presentation is needed in a second screen"
+  ],
+  "forbidden_dependencies": [
+    "frontend components -> Python domain internals",
+    "frontend components -> OOXML objects",
+    "parser/domain/compiler -> frontend",
+    "UI layout -> direct HTTP or Tauri calls"
+  ],
+  "hooks": [
+    "reuse WorkbenchApp effects and workspace reducer; add no new transport hook"
+  ],
+  "utilities": [
+    "reuse diagnosticSummary, presentDiagnostics, preview selectors, workspace action selectors"
+  ],
+  "services": [
+    "reuse WorkbenchTransport dispatch, runBuild, resolveFinalPreview and Office PDF selection callbacks"
+  ],
+  "required_component_tests": [
+    "ProductBar DocForge branding and command availability",
+    "StatusStrip generic document status and Word template selection",
+    "WorkbenchShell desktop composition and mobile panel navigation",
+    "OutlinePanel generic document copy",
+    "DualPreviewPanel Microsoft Word copy and preview modes",
+    "DiagnosticsPanel contextual diagnostics placement"
+  ],
+  "unresolved_gaps": []
+}

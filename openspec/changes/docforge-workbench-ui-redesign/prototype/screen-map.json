@@ -1,0 +1,57 @@
+{
+  "screens": [
+    {
+      "id": "docforge-workbench",
+      "label": "DocForge 文档工坊",
+      "requirements": [
+        "requirements.md"
+      ],
+      "acceptance": [
+        "acceptance.md"
+      ],
+      "components": [
+        "ProductBar",
+        "StatusStrip",
+        "OutlinePanel",
+        "MarkdownEditor",
+        "DualPreviewPanel",
+        "DiagnosticsPanel",
+        "OutputFeedback"
+      ],
+      "visual_evidence": [
+        "visual-inventory.json#project_shell",
+        "../assets/docforge-workbench-reference.png"
+      ],
+      "data_flows": [
+        "FLOW-OPEN-SOURCE",
+        "FLOW-SAVE-SOURCE",
+        "preview",
+        "build",
+        "final-preview-resolution"
+      ],
+      "theme_modes": [
+        "light"
+      ],
+      "locales": [
+        "zh-CN"
+      ],
+      "implementation_files": [
+        "frontend/src/components/WorkbenchShell.tsx",
+        "frontend/src/components/ProductBar.tsx",
+        "frontend/src/components/StatusStrip.tsx",
+        "frontend/src/components/WorkbenchPanels.tsx",
+        "frontend/src/components/PreviewPanels.tsx",
+        "frontend/src/components/OutputFeedback.tsx",
+        "frontend/src/styles.css"
+      ]
+    }
+  ],
+  "variants": [
+    "populated",
+    "loading",
+    "empty",
+    "error",
+    "disabled",
+    "permission"
+  ]
+}

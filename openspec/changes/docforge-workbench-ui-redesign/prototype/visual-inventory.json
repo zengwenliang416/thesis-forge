@@ -1,0 +1,109 @@
+{
+  "schema": "specnav.prototype.visualInventory.v1",
+  "version": "1",
+  "discovery_status": "complete",
+  "source_project": "thesis-forge",
+  "evidence": {
+    "screenshots": [
+      "assets/docforge-workbench-reference.png",
+      "/tmp/thesisforge-current-ui-1440x1024.png"
+    ],
+    "routes": [
+      "frontend/src/main.tsx"
+    ],
+    "design_specs": [
+      "openspec/specs/ui-design/design.md"
+    ],
+    "component_sources": [
+      "frontend/src/components/WorkbenchShell.tsx",
+      "frontend/src/components/ProductBar.tsx",
+      "frontend/src/components/StatusStrip.tsx",
+      "frontend/src/components/WorkbenchPanels.tsx",
+      "frontend/src/components/PreviewPanels.tsx",
+      "frontend/src/components/OutputFeedback.tsx",
+      "openspec/changes/docforge-workbench-ui-redesign/component-impact-map.json"
+    ],
+    "codegraph_claims": [
+      "WorkbenchApp retains command orchestration",
+      "WorkbenchShell composes outline, editor, preview and diagnostics",
+      "ProductBar owns open, save, validate, cancel and build actions",
+      "StatusStrip owns workspace status and template selection"
+    ]
+  },
+  "project_shell": {
+    "source": "existing WorkbenchShell with selected DocForge redesign",
+    "required_elements": [
+      "DocForge brand",
+      "document identity and saved state",
+      "Word template selector",
+      "open/save/check/build actions",
+      "document outline",
+      "Markdown editor",
+      "Microsoft Word preview",
+      "contextual diagnostics",
+      "output readiness"
+    ],
+    "omitted_elements": [
+      "theme toggle",
+      "locale switcher",
+      "account menu",
+      "cloud collaboration"
+    ],
+    "theme_policy": "light-only; no theme control",
+    "i18n_policy": "zh-CN only; no locale control"
+  },
+  "business_surface": {
+    "screens": [
+      "docforge-workbench"
+    ],
+    "fields": [
+      "document name",
+      "saved or dirty state",
+      "Word template",
+      "outline selection",
+      "Markdown source",
+      "preview mode",
+      "diagnostic count",
+      "output readiness"
+    ],
+    "actions": [
+      "打开",
+      "保存",
+      "检查",
+      "取消构建",
+      "生成 DOCX",
+      "选择 Word PDF",
+      "切换预览模式",
+      "切换移动面板"
+    ],
+    "states": [
+      "loading",
+      "empty",
+      "error",
+      "disabled",
+      "permission",
+      "populated"
+    ]
+  },
+  "verification_matrix": {
+    "viewports": [
+      "1440x1024",
+      "390x844"
+    ],
+    "theme_modes": [
+      "light"
+    ],
+    "locales": [
+      "zh-CN"
+    ],
+    "states": [
+      "loading",
+      "empty",
+      "error",
+      "disabled",
+      "permission",
+      "populated"
+    ]
+  },
+  "unsupported_capabilities": []
+}

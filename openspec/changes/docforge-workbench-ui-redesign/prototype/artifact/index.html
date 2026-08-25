@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>DocForge 文档工坊原型</title>
+    <link rel="stylesheet" href="./styles.css">
+  </head>
+  <body>
+    <main
+      class="app-shell"
+      data-specnav-project-shell="docforge-workbench"
+      data-specnav-screen="docforge-workbench"
+      data-specnav-variant="dual-canvas"
+      data-specnav-state="populated"
+    >
+      <header class="product-bar" data-specnav-component="ProductBar">
+        <div class="brand">
+          <span class="brand-mark" aria-hidden="true">DF</span>
+          <strong>DocForge</strong>
+          <span>Markdown → Word 文档工坊</span>
+        </div>
+        <div class="document-identity">
+          <span class="identity-dot" aria-hidden="true"></span>
+          <strong>技术实施手册.md</strong>
+          <span class="saved-dot" aria-hidden="true"></span>
+          <span>已保存</span>
+        </div>
+        <label class="template-control">
+          <span>模板</span>
+          <select aria-label="Word 模板">
+            <option>技术文档（通用）</option>
+            <option>现代商务报告</option>
+            <option>学术论文</option>
+          </select>
+        </label>
+        <div class="commands" aria-label="文档操作">
+          <button>打开</button>
+          <button>保存</button>
+          <button>检查</button>
+          <button class="primary">生成 DOCX</button>
+        </div>
+      </header>
+
+      <nav class="mobile-tabs" aria-label="工作台面板">
+        <button data-panel="outline" aria-pressed="true">大纲</button>
+        <button data-panel="editor">编辑</button>
+        <button data-panel="preview">预览</button>
+        <button data-panel="diagnostics">诊断</button>
+      </nav>
+
+      <section class="workspace" data-specnav-component="WorkbenchShell">
+        <aside class="outline panel" data-specnav-component="OutlinePanel">
+          <div class="panel-title">
+            <span>文档大纲</span>
+            <button aria-label="收起大纲">×</button>
+          </div>
+          <label class="outline-search">
+            <span class="visually-hidden">搜索标题</span>
+            <input placeholder="搜索标题…">
+          </label>
+          <ol>
+            <li class="selected">1. 简介</li>
+            <li class="depth-2">1.1 目的</li>
+            <li class="depth-2">1.2 适用范围</li>
+            <li>2. 系统要求</li>
+            <li class="depth-2">2.1 硬件要求</li>
+            <li class="depth-2">2.2 软件要求</li>
+            <li>3. 快速开始</li>
+            <li class="depth-2">3.1 安装</li>
+            <li class="depth-2">3.2 配置</li>
+            <li class="depth-2">3.3 验证</li>
+            <li>4. 核心功能</li>
+            <li class="depth-2">4.1 用户管理</li>
+            <li class="depth-2">4.2 数据处理</li>
+            <li>5. 附录</li>
+          </ol>
+          <button class="new-section">＋ 新建章节</button>
+        </aside>
+
+        <section class="editor panel" data-specnav-component="MarkdownEditor">
+          <div class="tab-strip">
+            <strong>技术实施手册.md</strong>
+            <span>×</span>
+            <button aria-label="新建文档">＋</button>
+          </div>
+          <div class="editor-body">
+            <pre aria-label="Markdown 文稿内容"><code><b># 技术实施手册</b>
+
+<b>## 1. 简介</b>
+本手册用于指导工程师完成系统的部署与使用。
+
+<b>### 1.1 目的</b>
+说明系统的安装、配置与常见操作方法。
+
+<b>## 2. 系统要求</b>
+| 组件 | 最小配置 | 推荐配置 |
+| CPU | 4 核 | 8 核 |
+| 内存 | 8 GB | 16 GB |
+
+<b>## 3. 快速开始</b>
+1. 下载最新安装包。
+2. 以管理员身份运行安装程序。
+
+<b>### 3.2 配置</b>
+```json
+{ "Logging": { "Level": "Information" } }
+```
+
+<b>### 3.3 验证</b>
+运行以下命令检查服务状态：
+`dotnet run -- --check`
+
+<b>## 4. 核心功能</b>
+处理流程如图 1 所示。
+![数据处理流程](images/process.png){#fig-process}
+
+<b>## 5. 附录</b>
+用户默认处于禁用状态。[^1]</code></pre>
+          </div>
+          <footer class="editor-status">
+            <span>行 1，列 1</span>
+            <span>Markdown</span>
+            <span>1,246 字</span>
+            <span class="ready">变更已保存</span>
+          </footer>
+        </section>
+
+        <section class="preview panel" data-specnav-component="DualPreviewPanel">
+          <div class="preview-toolbar">
+            <span class="compatibility">✓ Microsoft Word 兼容</span>
+            <div class="preview-tabs" role="tablist">
+              <button data-preview="live" aria-pressed="true">实时版式</button>
+              <button data-preview="review">结构审阅</button>
+            </div>
+            <select aria-label="预览缩放"><option>100%</option></select>
+          </div>
+          <div class="page-stage">
+            <article class="word-page" data-specnav-state="populated">
+              <h1>1　简介</h1>
+              <p>本手册用于指导工程师完成系统的部署与使用。</p>
+              <h2>1.1　目的</h2>
+              <p>说明系统的安装、配置与常见操作方法。</p>
+              <h1>2　系统要求</h1>
+              <h2>2.1　硬件要求</h2>
+              <table>
+                <thead><tr><th>组件</th><th>最小配置</th><th>推荐配置</th></tr></thead>
+                <tbody>
+                  <tr><td>CPU</td><td>4 核</td><td>8 核</td></tr>
+                  <tr><td>内存</td><td>8 GB</td><td>16 GB</td></tr>
+                </tbody>
+              </table>
+              <h1>3　快速开始</h1>
+              <h2>3.1　安装</h2>
+              <ol><li>下载最新安装包。</li><li>以管理员身份运行安装程序。</li></ol>
+              <h2>3.2　配置</h2>
+              <pre>{ "Logging": { "Level": "Information" } }</pre>
+              <h2>3.3　验证</h2>
+              <p>运行以下命令检查服务状态：</p>
+              <pre>dotnet run -- --check</pre>
+              <p class="footnote">1　用户默认处于禁用状态，需由管理员启用。</p>
+              <span class="page-number">1</span>
+            </article>
+          </div>
+          <footer class="preview-status">
+            <span>第 1 页，共 8 页</span>
+            <span>1,246 字</span>
+            <span>页面设置：A4</span>
+          </footer>
+        </section>
+      </section>
+
+      <section
+        class="diagnostics"
+        data-specnav-component="DiagnosticsPanel"
+        data-specnav-state="populated"
+      >
+        <div class="diagnostic-tabs">
+          <button aria-pressed="true">诊断（3）</button>
+          <button>全部消息（3）</button>
+        </div>
+        <div class="diagnostic-row warning">
+          <span>△</span><code>行 53</code><strong>图片文件未找到：images/process.png</strong>
+          <span>请检查路径或添加图片。</span>
+        </div>
+        <div class="diagnostic-row warning">
+          <span>△</span><code>行 51</code><strong>标签 “fig-process” 存在，但未被引用</strong>
+          <span>可使用 [流程图](#fig-process) 进行引用。</span>
+        </div>
+        <div class="diagnostic-row info">
+          <span>○</span><code>行 61</code><strong>发现脚注定义</strong>
+          <span>脚注将在 Word 文档底部显示。</span>
+        </div>
+      </section>
+
+      <footer class="global-status" data-specnav-component="OutputFeedback">
+        <span class="ready">● 就绪</span>
+        <span>文档：技术实施手册.md</span>
+        <span>模式：实时版式</span>
+        <div class="state-switcher" aria-label="原型状态">
+          <button data-set-state="populated" aria-pressed="true">已载入</button>
+          <button data-set-state="loading">载入中</button>
+          <button data-set-state="empty">空文档</button>
+          <button data-set-state="error">错误</button>
+          <button data-set-state="disabled">构建禁用</button>
+          <button data-set-state="permission">无权限</button>
+        </div>
+      </footer>
+    </main>
+    <script src="./app.js"></script>
+  </body>
+</html>

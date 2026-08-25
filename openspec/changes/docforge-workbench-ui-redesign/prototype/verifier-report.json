@@ -1,0 +1,53 @@
+{
+  "schema": "specnav.prototype.verifier.v1",
+  "status": "green",
+  "checked_entry": "artifact/index.html",
+  "project_fidelity": {
+    "status": "green",
+    "inventory": "visual-inventory.json",
+    "shell_checked": true,
+    "generic_shell_detected": false,
+    "notes": [
+      "The prototype uses the current WorkbenchShell capabilities and selected DocForge dual-canvas hierarchy.",
+      "Visible labels, actions, template selection, preview modes and diagnostics are traceable to current frontend components.",
+      "No theme or locale controls were introduced."
+    ]
+  },
+  "visual_matrix": {
+    "viewports": [
+      "1440x1024",
+      "390x844"
+    ],
+    "theme_modes": [
+      "light"
+    ],
+    "locales": [
+      "zh-CN"
+    ],
+    "states": [
+      "populated",
+      "loading",
+      "empty",
+      "error",
+      "disabled",
+      "permission"
+    ]
+  },
+  "checks": [
+    "Opened artifact/index.html through a local HTTP server.",
+    "Confirmed data-specnav-screen and data-specnav-project-shell anchors.",
+    "Captured desktop and mobile screenshots at the declared viewports.",
+    "Exercised loading, empty, error, disabled, permission and populated state controls.",
+    "Exercised outline, editor, preview and diagnostics mobile panel controls.",
+    "Observed no browser console warnings or errors."
+  ],
+  "evidence": [
+    "desktop-1440x1024.png",
+    "mobile-390x844.png",
+    "visual-inventory.json",
+    "screen-map.json",
+    "browser state results: loading, empty, error, disabled, permission and populated",
+    "browser mobile panel results: outline, editor, preview and diagnostics"
+  ],
+  "blockers": []
+}

@@ -1,0 +1,60 @@
+{
+  "touched_specs": [
+    "ui-design",
+    "system-architecture",
+    "frontend-backend-data-flow",
+    "component-architecture"
+  ],
+  "ui_rules": [
+    "light-only",
+    "tokenized-colors",
+    "spacing-and-dividers-before-elevation",
+    "accessible-focus-states",
+    "desktop-three-column-workbench",
+    "mobile-semantic-panel-tabs",
+    "reference:assets/docforge-workbench-reference.png"
+  ],
+  "architecture_modules": [
+    "frontend React component tree",
+    "workspace state store",
+    "WorkbenchTransport adapters"
+  ],
+  "api_contracts": [
+    "workbench.v1 command DTO",
+    "preview",
+    "save",
+    "build",
+    "final preview descriptor"
+  ],
+  "database_entities": [
+    "none"
+  ],
+  "permissions": [
+    "existing browser workspace permissions",
+    "existing Tauri local filesystem permissions"
+  ],
+  "operational_constraints": [
+    "offline core remains functional",
+    "no new network dependency",
+    "browser and Tauri share the frontend",
+    "Microsoft Word is the final preview target"
+  ],
+  "data_flows": [
+    "FLOW-OPEN-SOURCE",
+    "FLOW-SAVE-SOURCE",
+    "preview",
+    "build",
+    "cancel",
+    "final-preview-resolution"
+  ],
+  "theme_modes": [
+    "light-only",
+    "theme-toggle:none"
+  ],
+  "locale_policy": [
+    "i18n:disabled",
+    "locales:zh-CN",
+    "default-locale:zh-CN"
+  ],
+  "unresolved_gaps": []
+}
