@@ -202,6 +202,43 @@ and Windows matrix jobs and uploads Web, Python, sidecar, and desktop artifacts
 separately. A workflow definition is not Windows execution evidence; only a
 successful Windows job may establish `.msi` / NSIS acceptance.
 
+The primary release orchestrator is Woodpecker:
+
+- `.woodpecker/quality.yml` runs the Linux quality gate for `v*` tags;
+- the Linux clone and quality images are pinned by digest, and Cargo validation
+  uses the committed lockfile;
+- `.woodpecker/release-macos.yml` waits for that gate, then selects a
+  `darwin/arm64` local agent with `purpose=thesisforge-release`;
+- the macOS workflow disables Woodpecker's automatic Local-backend clone and
+  fetches only `origin/main` plus the requested release tag from the fixed
+  GitHub repository before checking commit provenance;
+- the macOS workflow verifies version consistency, builds Web/Python/sidecar
+  outputs, creates the native `.app` and `.dmg`, validates the offline desktop
+  contract, then uploads the allowlisted assets with write-only staging
+  credentials; verifier and platform-security evidence is retained under a
+  separate staging prefix and is not published as a user download;
+- `.woodpecker/release-publish.yml` runs on the isolated Linux Docker agent,
+  downloads the staged assets with read-only credentials, verifies
+  the exact asset allowlist and `SHA256SUMS`, refuses to modify any existing
+  release for the tag, and creates a new GitHub Prerelease;
+- the repository secret `github_release_token` must be a dedicated
+  least-privilege token with GitHub repository contents write access, restricted
+  to the tag event and available only to `release-publish.yml`;
+- no Release tag may be pushed until the native agent and secret are confirmed.
+
+The local backend executes tag-controlled release code directly on the native
+host. It must run as a non-root user, must not be enabled for pull requests, and
+must use a repository-scoped agent label. Release tags must resolve to the
+checked-out commit and that commit must already be reachable from `origin/main`.
+The host must provide AWS CLI `2.36.30`; the workflow verifies this exact version
+and does not install release upload tooling from the network at runtime.
+The native builder must not receive the GitHub Release token. Its staging
+credentials must be limited to writing only the tag-specific release prefix;
+the Linux publisher uses a separate read-only identity. The staging bucket must
+be dedicated to ThesisForge rather than reusing another project's bucket.
+A future Windows workflow must use a native `windows/amd64` agent and attach
+`.msi` / NSIS assets to the same tag.
+
 ## Installation And Launch
 
 For local macOS acceptance, open the DMG and copy `ThesisForge.app` to
@@ -221,7 +258,10 @@ invalid signatures.
 
 ## Signing, Checksums, And Publication
 
-Current local and CI test artifacts are unsigned development distributions.
+Current local and CI test artifacts are development distributions. The macOS
+Prerelease workflow uses Tauri ad-hoc signing (`signingIdentity: "-"`) so the
+bundle has a structurally valid code signature, but it is not Developer ID
+signed or notarized.
 Production release requires all of the following external gates:
 
 - select a project license and complete third-party ownership review;
@@ -233,8 +273,8 @@ Production release requires all of the following external gates:
 - retain the successful native CI run and distribution verifier JSON as release
   evidence.
 
-Do not bypass operating-system security warnings or publish unsigned artifacts
-as production releases.
+Do not bypass operating-system security warnings or publish ad-hoc/unsigned
+artifacts as production releases.
 
 ## Troubleshooting
 
