@@ -46,6 +46,7 @@ function renderProductBar(
     onValidate: () => undefined,
     onBuild: () => undefined,
     onCancel: () => undefined,
+    onTemplateSelected: () => undefined,
     ...overrides,
   };
   render(<ProductBar {...props} />);
@@ -53,15 +54,17 @@ function renderProductBar(
 }
 
 describe("ProductBar project opening", () => {
-  it("exposes the open action under the project accessible name", () => {
+  it("presents the DocForge product and general document commands", () => {
     renderProductBar(createInitialWorkspaceState());
 
+    expect(screen.getByText("DocForge")).toBeVisible();
+    expect(screen.getByText("Markdown → Word 文档工坊")).toBeVisible();
     expect(
-      screen.getByRole("button", { name: "打开 ThesisForge 项目" }),
+      screen.getByRole("button", { name: "打开 Markdown 或 DocForge 项目" }),
     ).toBeEnabled();
-    expect(
-      screen.queryByRole("button", { name: "打开 Markdown 文稿" }),
-    ).toBeNull();
+    expect(screen.getByRole("button", { name: "检查文档" })).toBeDisabled();
+    expect(screen.getByRole("button", { name: "生成 DOCX" })).toBeDisabled();
+    expect(screen.getByLabelText("Word 模板")).toBeDisabled();
   });
 
   it("targets project manifests in the hidden file input", () => {
@@ -76,6 +79,7 @@ describe("ProductBar project opening", () => {
         onValidate={() => undefined}
         onBuild={() => undefined}
         onCancel={() => undefined}
+        onTemplateSelected={() => undefined}
       />,
     );
 
@@ -92,7 +96,7 @@ describe("ProductBar project opening", () => {
     renderProductBar(createInitialWorkspaceState());
 
     expect(screen.getByText("尚未打开项目")).toBeVisible();
-    expect(screen.getByText("保存快照已同步")).toBeVisible();
+    expect(screen.getByText("文档已保存")).toBeVisible();
   });
 
   it("shows the project display name and active source when a project is loaded", () => {
@@ -100,7 +104,7 @@ describe("ProductBar project opening", () => {
 
     expect(screen.getByText("毕业论文")).toBeVisible();
     expect(
-      screen.getByText("活动源：thesis.md · 保存快照已同步"),
+      screen.getByText("活动源：thesis.md · 文档已保存"),
     ).toBeVisible();
   });
 
@@ -108,7 +112,7 @@ describe("ProductBar project opening", () => {
     renderProductBar({ ...projectState, project: null });
 
     expect(screen.getByText("thesis.md")).toBeVisible();
-    expect(screen.getByText("保存快照已同步")).toBeVisible();
+    expect(screen.getByText("文档已保存")).toBeVisible();
     expect(screen.queryByText(/活动源：/)).toBeNull();
   });
 
@@ -150,17 +154,45 @@ describe("ProductBar project opening", () => {
     renderProductBar(createInitialWorkspaceState(), { onChooseSource });
 
     await user.click(
-      screen.getByRole("button", { name: "打开 ThesisForge 项目" }),
+      screen.getByRole("button", { name: "打开 Markdown 或 DocForge 项目" }),
     );
 
     expect(onChooseSource).toHaveBeenCalledTimes(1);
   });
 
-  it("keeps save/validate/build disabled when actions disallow them", () => {
+  it("keeps save/check/build disabled when actions disallow them", () => {
     renderProductBar(projectState);
 
-    expect(screen.getByRole("button", { name: "保存文稿" })).toBeDisabled();
-    expect(screen.getByRole("button", { name: "验证论文" })).toBeDisabled();
-    expect(screen.getByRole("button", { name: "构建 DOCX" })).toBeDisabled();
+    expect(screen.getByRole("button", { name: "保存文档" })).toBeDisabled();
+    expect(screen.getByRole("button", { name: "检查文档" })).toBeDisabled();
+    expect(screen.getByRole("button", { name: "生成 DOCX" })).toBeDisabled();
+  });
+
+  it("routes the existing template ID through the command bar callback", async () => {
+    const user = userEvent.setup();
+    const onTemplateSelected = vi.fn();
+    renderProductBar(
+      {
+        ...projectState,
+        source: {
+          ...projectState.source!,
+          reference: {
+            kind: "desktop",
+            path: "/home/alice/thesis/thesis.md",
+            fileName: "thesis.md",
+          },
+        },
+      },
+      { onTemplateSelected },
+    );
+
+    await user.selectOptions(
+      screen.getByLabelText("Word 模板"),
+      "example-university-2026",
+    );
+
+    expect(onTemplateSelected).toHaveBeenCalledWith(
+      "example-university-2026",
+    );
   });
 });

@@ -163,12 +163,14 @@ test("launches the shared workbench with keyboard-visible controls", async (
 ) => {
   await page.goto("/");
 
-  await expect(page.getByText("ThesisForge", { exact: true })).toBeVisible();
-  await expect(page.getByRole("button", { name: "打开 ThesisForge 项目" })).toBeVisible();
+  await expect(page.getByText("DocForge", { exact: true })).toBeVisible();
+  await expect(
+    page.getByRole("button", { name: "打开 Markdown 或 DocForge 项目" }),
+  ).toBeVisible();
   await expect(page.getByRole("region", { name: "Markdown 编辑器" })).toBeVisible();
   if (testInfo.project.name !== "mobile-chromium") {
     await expect(
-      page.getByRole("region", { name: "论文最终版式预览" }),
+      page.getByRole("region", { name: "Microsoft Word 版式预览" }),
     ).toBeVisible();
     await expect(page.getByRole("region", { name: "诊断结果" })).toBeVisible();
   } else {
@@ -179,7 +181,7 @@ test("launches the shared workbench with keyboard-visible controls", async (
   }
 
   await page.keyboard.press("Control+K");
-  await expect(page.getByRole("textbox", { name: "Markdown 文稿内容" })).toBeFocused();
+  await expect(page.getByRole("textbox", { name: "Markdown 文档内容" })).toBeFocused();
 });
 
 test("uses mobile panel navigation without horizontal overflow", async ({ page }, testInfo) => {
@@ -198,7 +200,7 @@ test("uses mobile panel navigation without horizontal overflow", async ({ page }
   await page.getByRole("tab", { name: "预览" }).click();
   await expect(page.getByRole("tab", { name: "实时版式" })).toBeVisible();
   await expect(
-    page.getByRole("region", { name: "论文最终版式预览" }),
+    page.getByRole("region", { name: "Microsoft Word 版式预览" }),
   ).toBeVisible();
   await expect(page.getByText("尚无最终版式")).toBeVisible();
   expect(
@@ -212,10 +214,10 @@ test("keeps the product identity and compact actions visible on mobile", async (
   test.skip(testInfo.project.name !== "mobile-chromium");
   await page.goto("/");
 
-  await expect(page.getByText("ThesisForge", { exact: true })).toBeVisible();
+  await expect(page.getByText("DocForge", { exact: true })).toBeVisible();
   const controls = [
-    page.getByRole("button", { name: "打开 ThesisForge 项目" }),
-    page.getByRole("button", { name: "构建 DOCX" }),
+    page.getByRole("button", { name: "打开 Markdown 或 DocForge 项目" }),
+    page.getByRole("button", { name: "生成 DOCX" }),
     page.getByRole("tab", { name: "诊断" }),
   ];
   for (const control of controls) {
@@ -285,23 +287,31 @@ test("opens, edits, explicitly saves, refreshes, and builds through HTTP", async
   await page.goto("/");
 
   await page.locator('input[type="file"]').setInputFiles(projectFiles());
-  const editor = page.getByRole("textbox", { name: "Markdown 文稿内容" });
+  const editor = page.getByRole("textbox", { name: "Markdown 文档内容" });
   await expect(editor).toHaveValue("# 绪论\n");
   await page.getByRole("tab", { name: "结构" }).click();
-  const outline = page.getByRole("complementary", { name: "论文大纲" });
+  const outline = page.getByRole("complementary", { name: "文档大纲" });
   const outlineHeading = outline.getByRole("button", {
     name: /绪论.*第 8 行/,
   });
   await expect(outlineHeading).toBeVisible();
   await expect(page.getByText("系统架构")).toBeVisible();
   await expect(page.getByText("结构预览不代表 Word 最终分页。")).toBeVisible();
+  const layout = await page.evaluate(() => ({
+    viewportHeight: window.innerHeight,
+    documentHeight: document.documentElement.scrollHeight,
+    shellHeight:
+      document.querySelector(".app-shell")?.getBoundingClientRect().height ?? 0,
+  }));
+  expect(layout.shellHeight).toBe(layout.viewportHeight);
+  expect(layout.documentHeight).toBeLessThanOrEqual(layout.viewportHeight);
   await outlineHeading.click();
   await expect(outlineHeading).toHaveAttribute("aria-pressed", "true");
   await editor.fill("# 绪论\n\n正文。\n");
-  await expect(page.getByRole("button", { name: "构建 DOCX" })).toBeDisabled();
-  await page.getByRole("button", { name: "保存文稿" }).click();
-  await expect(page.getByText("文稿、模板与预览已同步")).toBeVisible();
-  await page.getByRole("button", { name: "构建 DOCX" }).click();
+  await expect(page.getByRole("button", { name: "生成 DOCX" })).toBeDisabled();
+  await page.getByRole("button", { name: "保存文档" }).click();
+  await expect(page.getByText("文档、模板与预览已同步")).toBeVisible();
+  await page.getByRole("button", { name: "生成 DOCX" }).click();
 
   await expect
     .poll(
@@ -442,7 +452,7 @@ test("loads and refreshes a complete automatic PDF after an edit", async ({
   await page.locator('input[type="file"]').setInputFiles(projectFiles());
 
   await expect(page.getByText("LibreOffice PDF")).toBeVisible();
-  await expect(page.getByText("当前 Office 预览")).toBeVisible();
+  await expect(page.getByText("当前 Word 预览")).toBeVisible();
   await expect.poll(() => livePreviewBuilds).toBe(1);
   await expect.poll(() => livePreviewReads).toBe(1);
   await expect(page.getByTitle("最终版式 PDF")).toHaveAttribute(
@@ -451,12 +461,12 @@ test("loads and refreshes a complete automatic PDF after an edit", async ({
   );
 
   await page
-    .getByRole("textbox", { name: "Markdown 文稿内容" })
+    .getByRole("textbox", { name: "Markdown 文档内容" })
     .fill("# 绪论\n\n修改后的正文。\n");
   await expect(page.getByText("已过期", { exact: true })).toBeVisible();
   await expect.poll(() => livePreviewBuilds).toBe(2);
   await expect.poll(() => livePreviewReads).toBe(2);
-  await expect(page.getByText("当前 Office 预览")).toBeVisible();
+  await expect(page.getByText("当前 Word 预览")).toBeVisible();
   await expect(page.getByTitle("最终版式 PDF")).toBeVisible();
 });
 
@@ -529,15 +539,15 @@ test("cancels an active Web build and retries without losing prior output", asyn
   await page.goto("/");
   await page.locator('input[type="file"]').setInputFiles(projectFiles());
 
-  await page.getByRole("button", { name: "构建 DOCX" }).click();
+  await page.getByRole("button", { name: "生成 DOCX" }).click();
   await expect(page.getByRole("button", { name: "取消构建" })).toBeVisible();
   await page.getByRole("button", { name: "取消构建" }).click();
   await expect(page.getByText("操作已取消")).toBeVisible();
-  await expect(page.getByRole("button", { name: "构建 DOCX" })).toBeEnabled();
+  await expect(page.getByRole("button", { name: "生成 DOCX" })).toBeEnabled();
   pending.release?.();
   await expect.poll(() => cancelCount).toBe(1);
 
-  await page.getByRole("button", { name: "构建 DOCX" }).click();
+  await page.getByRole("button", { name: "生成 DOCX" }).click();
   await expect(page.getByText("retry.docx")).toBeVisible();
   await expect(page.getByText("构建完成")).toBeVisible();
 });
@@ -603,17 +613,17 @@ test("selects a template and blocks build on an activated fatal diagnostic", asy
 
   await page.locator('input[type="file"]').setInputFiles(projectFiles());
   await page
-    .getByLabel("学校模板")
+    .getByLabel("Word 模板")
     .selectOption("example-university-2026");
 
   await expect(page.getByText("模板未定义所需样式：heading.level1")).toBeVisible();
-  await expect(page.getByRole("button", { name: "构建 DOCX" })).toBeDisabled();
+  await expect(page.getByRole("button", { name: "生成 DOCX" })).toBeDisabled();
   await expect(page.getByText("存在 1 个错误诊断，构建已禁用。")).toBeVisible();
   const diagnostic = page.getByRole("button", { name: /第 1 行/ });
   await diagnostic.focus();
   await page.keyboard.press("Enter");
   await expect(
-    page.getByRole("textbox", { name: "Markdown 文稿内容" }),
+    page.getByRole("textbox", { name: "Markdown 文档内容" }),
   ).toBeFocused();
 
   expect(operations.at(-1)).toMatchObject({
@@ -632,7 +642,7 @@ test("preserves keyboard focus order and panel resizing at desktop widths", asyn
 
   await page.keyboard.press("Tab");
   await expect(
-    page.getByRole("button", { name: "打开 ThesisForge 项目" }),
+    page.getByRole("button", { name: "打开 Markdown 或 DocForge 项目" }),
   ).toBeFocused();
   const separator = page.getByRole("separator", { name: "调整大纲宽度" });
   await separator.focus();

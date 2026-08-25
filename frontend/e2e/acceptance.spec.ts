@@ -160,19 +160,21 @@ test("verifies empty, disabled, keyboard-focus, contrast, resize, and reduced mo
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/");
 
-  await expect(page.getByText("当前工作区没有 Markdown 文稿")).toBeVisible();
+  await expect(page.getByText("当前工作区没有 Markdown 文档")).toBeVisible();
   if (testInfo.project.name === "desktop-chromium") {
-    await expect(page.getByRole("button", { name: "保存文稿" })).toBeDisabled();
-    await expect(page.getByRole("button", { name: "验证论文" })).toBeDisabled();
+    await expect(page.getByRole("button", { name: "保存文档" })).toBeDisabled();
+    await expect(page.getByRole("button", { name: "检查文档" })).toBeDisabled();
   } else {
-    await expect(page.getByRole("button", { name: "保存文稿" })).toBeHidden();
-    await expect(page.getByRole("button", { name: "验证论文" })).toBeHidden();
+    await expect(page.getByRole("button", { name: "保存文档" })).toBeHidden();
+    await expect(page.getByRole("button", { name: "检查文档" })).toBeHidden();
   }
-  await expect(page.getByRole("button", { name: "构建 DOCX" })).toBeDisabled();
-  await expect(page.getByLabel("学校模板")).toBeDisabled();
+  await expect(page.getByRole("button", { name: "生成 DOCX" })).toBeDisabled();
+  await expect(page.getByLabel("Word 模板")).toBeDisabled();
 
   await page.keyboard.press("Tab");
-  const open = page.getByRole("button", { name: "打开 ThesisForge 项目" });
+  const open = page.getByRole("button", {
+    name: "打开 Markdown 或 DocForge 项目",
+  });
   await expect(open).toBeFocused();
   const focusStyle = await open.evaluate((element) => {
     const style = getComputedStyle(element);
@@ -237,14 +239,14 @@ test("saves with Ctrl+S when the minimum desktop toolbar hides secondary actions
   await page.goto("/");
   await page.locator('input[type="file"]').setInputFiles(projectFiles());
 
-  const editor = page.getByRole("textbox", { name: "Markdown 文稿内容" });
+  const editor = page.getByRole("textbox", { name: "Markdown 文档内容" });
   await page.keyboard.press("Control+k");
   await expect(editor).toBeFocused();
   const editedText = `${await editor.inputValue()}\n最小桌面宽度保存回归。\n`;
   await editor.fill(editedText);
   await expect(editor).toHaveValue(editedText);
-  await expect(page.getByText("文稿有未保存修改")).toBeVisible();
-  const save = page.locator('[aria-label="保存文稿"]');
+  await expect(page.getByText("文档有未保存修改")).toBeVisible();
+  const save = page.locator('[aria-label="保存文档"]');
   await expect(save).toHaveCount(1);
   await expect(save).toBeHidden();
   await expect(save).toBeEnabled();
@@ -252,7 +254,7 @@ test("saves with Ctrl+S when the minimum desktop toolbar hides secondary actions
   await page.keyboard.press("Control+s");
 
   await expect.poll(() => savedText).toBe(editedText);
-  await expect(page.getByText("文稿、模板与预览已同步")).toBeVisible();
+  await expect(page.getByText("文档、模板与预览已同步")).toBeVisible();
 });
 
 test("verifies loading and permission recovery without losing the opened source", async ({
@@ -289,15 +291,17 @@ test("verifies loading and permission recovery without losing the opened source"
   await page.goto("/");
 
   const upload = page.locator('input[type="file"]').setInputFiles(projectFiles());
-  await expect(page.getByText("正在读取工作区")).toBeVisible();
-  await expect(page.getByRole("button", { name: "打开 ThesisForge 项目" })).toBeDisabled();
+  await expect(page.getByText("正在读取文档")).toBeVisible();
+  await expect(
+    page.getByRole("button", { name: "打开 Markdown 或 DocForge 项目" }),
+  ).toBeDisabled();
   releaseWorkspace?.();
   await upload;
 
   await expect(page.getByText("目标位置不可写")).toBeVisible();
   await expect(page.getByText("目标目录没有写入权限")).toBeVisible();
   await expect(page.getByRole("button", { name: "恢复工作区" })).toBeVisible();
-  await expect(page.getByRole("textbox", { name: "Markdown 文稿内容" })).toHaveValue(
+  await expect(page.getByRole("textbox", { name: "Markdown 文档内容" })).toHaveValue(
     "# 绪论\n",
   );
 });
@@ -354,15 +358,15 @@ test("verifies populated, dirty, and successful output states with the complete 
   await page.goto("/");
   await page.locator('input[type="file"]').setInputFiles(projectFiles());
 
-  await expect(page.getByText("文稿、模板与预览已同步")).toBeVisible();
+  await expect(page.getByText("文档、模板与预览已同步")).toBeVisible();
   await page.getByRole("tab", { name: "结构" }).click();
   await expect(page.getByText("结构预览不代表 Word 最终分页。")).toBeVisible();
-  const editor = page.getByRole("textbox", { name: "Markdown 文稿内容" });
+  const editor = page.getByRole("textbox", { name: "Markdown 文档内容" });
   await editor.fill("# 绪论\n\n已修改。\n");
-  await expect(page.getByText("文稿有未保存修改")).toBeVisible();
-  await expect(page.getByRole("button", { name: "构建 DOCX" })).toBeDisabled();
-  await page.getByRole("button", { name: "保存文稿" }).click();
-  await page.getByRole("button", { name: "构建 DOCX" }).click();
+  await expect(page.getByText("文档有未保存修改")).toBeVisible();
+  await expect(page.getByRole("button", { name: "生成 DOCX" })).toBeDisabled();
+  await page.getByRole("button", { name: "保存文档" }).click();
+  await page.getByRole("button", { name: "生成 DOCX" }).click();
 
   await expect(page.getByText("构建完成")).toBeVisible();
   await expect(page.getByText("accepted.docx")).toBeVisible();

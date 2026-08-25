@@ -1,13 +1,19 @@
 import {
-  BookOpen,
+  CheckCircle2,
   FileText,
   FileWarning,
   LoaderCircle,
-  PanelRight,
   RefreshCw,
+  Search,
   Upload,
 } from "lucide-react";
-import type { CSSProperties, KeyboardEvent, ReactNode } from "react";
+import {
+  useMemo,
+  useState,
+  type CSSProperties,
+  type KeyboardEvent,
+  type ReactNode,
+} from "react";
 import type {
   ContentSelection,
   OutlineItem,
@@ -66,25 +72,47 @@ function selection(item: OutlineItem | SerializedPreviewBlock): ContentSelection
 }
 
 export function OutlinePanel({ state, onActivated }: PreviewPanelProps) {
+  const [query, setQuery] = useState("");
+  const visibleOutline = useMemo(() => {
+    const normalized = query.trim().toLocaleLowerCase();
+    if (!normalized) {
+      return state.outline;
+    }
+    return state.outline.filter((item) =>
+      `${item.text} ${item.semanticId ?? ""}`
+        .toLocaleLowerCase()
+        .includes(normalized),
+    );
+  }, [query, state.outline]);
+
   return (
     <aside
       className="panel outline-panel"
-      aria-label="论文大纲"
+      aria-label="文档大纲"
       data-mobile-active={state.mobilePanel === "outline"}
     >
-      <PanelHeader icon={<BookOpen />} kicker="THESIS DOCUMENT" title="论文大纲" />
+      <div className="outline-toolbar">
+        <strong>文档大纲</strong>
+        <span aria-hidden="true">×</span>
+      </div>
       <div className="outline-content">
-        <div className="outline-root">
-          <FileText aria-hidden="true" />
-          <span>{state.source?.name ?? "等待载入文稿"}</span>
-        </div>
+        <label className="outline-search">
+          <Search aria-hidden="true" />
+          <span className="visually-hidden">搜索标题</span>
+          <input
+            type="search"
+            value={query}
+            placeholder="搜索标题..."
+            onChange={(event) => setQuery(event.currentTarget.value)}
+          />
+        </label>
         {state.outline.length === 0 ? (
           <p className="outline-message">
-            打开并保存 Markdown 后，将显示带稳定语义 ID 的论文结构。
+            打开并保存 Markdown 后，将显示带稳定语义 ID 的文档结构。
           </p>
         ) : (
-          <nav className="outline-tree" aria-label="论文标题结构">
-            {state.outline.map((item) => (
+          <nav className="outline-tree" aria-label="文档标题结构">
+            {visibleOutline.map((item) => (
               <button
                 key={item.selectionId}
                 type="button"
@@ -103,10 +131,13 @@ export function OutlinePanel({ state, onActivated }: PreviewPanelProps) {
             ))}
           </nav>
         )}
+        {state.outline.length > 0 && visibleOutline.length === 0 ? (
+          <p className="outline-message">没有匹配的标题。</p>
+        ) : null}
       </div>
       <div className="panel-footer">
-        <span>协议</span>
-        <code>workbench.v1</code>
+        <span>共 {state.outline.length} 个标题</span>
+        <code>{state.source?.name ?? "未打开"}</code>
       </div>
     </aside>
   );
@@ -357,7 +388,7 @@ function contentLabel(content: SerializedPreviewContent): string {
   }
   if (content.type === "footnote") return `脚注 ${content.footnoteId}`;
   if (content.type === "bibliography") return "参考文献";
-  if (content.type === "cover") return "论文封面";
+  if (content.type === "cover") return "文档封面";
   if (content.type === "section") return `分节 ${content.role}`;
   if (content.type === "toc") return "目录";
   if (content.type === "code-block") return "代码块";
@@ -401,14 +432,10 @@ export function PaperPreview({ state, onActivated }: PreviewPanelProps) {
     <section
       className="panel preview-panel"
       role="region"
-      aria-label="论文结构预览"
+      aria-label="文档结构预览"
       data-mobile-active={state.mobilePanel === "preview"}
     >
-      <PanelHeader
-        icon={<PanelRight />}
-        kicker="RENDER PLAN"
-        title="论文结构预览"
-      />
+      <div className="preview-standalone-title">文档结构预览</div>
       <PaperPreviewBody state={state} onActivated={onActivated} />
     </section>
   );
@@ -419,14 +446,14 @@ function PaperPreviewBody({ state, onActivated }: PreviewPanelProps) {
   return (
     <div className="paper-stage">
       <article className="paper">
-        <span className="paper-running-head">本科毕业论文 · 结构预览</span>
+        <span className="paper-running-head">DocForge · 文档结构预览</span>
         <div className="structure-preview-warning" role="note">
           快速结构预览，不代表 Microsoft Word 最终排版与分页
         </div>
         {preview.status === "empty" ? (
           <div className="preview-message">
-            <h1>等待载入论文</h1>
-            <p>打开文稿后，预览与大纲将来自同一保存快照。</p>
+            <h1>等待载入文档</h1>
+            <p>打开文档后，预览与大纲将来自同一保存快照。</p>
           </div>
         ) : preview.status === "blocked" ? (
           <div className="preview-message preview-message-blocked">
@@ -522,36 +549,9 @@ export function FinalLayoutPreview({
   const objectUrl = usePdfObjectUrl(preview.bytes);
   const building =
     state.operation?.kind === "build" || preview.status === "building";
-  const descriptor = preview.descriptor;
-  const statusLabel = building
-    ? "实时更新中"
-    : preview.status === "ready"
-      ? "当前 Office 预览"
-      : preview.status === "stale"
-        ? "已过期"
-        : preview.status === "unavailable"
-          ? "不可用"
-          : preview.status === "failed"
-            ? "失败"
-            : "未生成";
 
   return (
     <div className="final-preview" data-preview-status={building ? "building" : preview.status}>
-      <div className="final-preview-toolbar">
-        <div className="final-preview-labels" aria-label="最终预览状态">
-          {descriptor ? <span className="engine-label">{descriptor.label}</span> : null}
-          <span className="freshness-label">{statusLabel}</span>
-        </div>
-        <button
-          type="button"
-          className="button secondary final-preview-picker"
-          onClick={onSelectOfficePdf}
-        >
-          <Upload aria-hidden="true" />
-          选择 Office PDF
-        </button>
-      </div>
-
       {preview.status === "stale" && objectUrl ? (
         <div className="final-preview-banner" role="status">
           <span>预览已过期。{preview.message}</span>
@@ -602,7 +602,7 @@ export function FinalLayoutPreview({
           </h3>
           <p>
             {preview.message ??
-              "桌面端使用 Microsoft Word 生成实时 PDF；也可选择由 Word 导出的 PDF。"}
+              "桌面端使用 Microsoft Word 生成实时 PDF；也可选择从 Word 导出的 PDF。"}
           </p>
           <FinalPreviewActions onBuild={onBuild} />
         </div>
@@ -624,26 +624,56 @@ export function DualPreviewPanel({
 }) {
   const finalLayout = state.previewMode === "final-layout";
   const reviewMode = state.previewMode === "review";
+  const preview = state.finalPreview;
+  const building =
+    state.operation?.kind === "build" || preview.status === "building";
+  const statusLabel = building
+    ? "实时更新中"
+    : preview.status === "ready"
+      ? "当前 Word 预览"
+      : preview.status === "stale"
+        ? "已过期"
+        : preview.status === "failed"
+          ? "失败"
+          : preview.status === "unavailable"
+            ? "不可用"
+            : "未生成";
   return (
     <section
       className="panel preview-panel dual-preview-panel"
       role="region"
       aria-label={
         finalLayout
-          ? "论文最终版式预览"
+          ? "Microsoft Word 版式预览"
           : reviewMode
-            ? "论文内容审阅"
-            : "论文结构预览"
+            ? "文档内容审阅"
+            : "文档结构预览"
       }
       data-mobile-active={state.mobilePanel === "preview"}
     >
       <div className="preview-panel-toolbar">
-        <PanelHeader
-          icon={<PanelRight />}
-          kicker="DOCUMENT PREVIEW"
-          title="论文预览"
-        />
-        <PreviewModeControl mode={state.previewMode} onChanged={onModeChanged} />
+        <div className="word-compatibility">
+          <CheckCircle2 aria-hidden="true" />
+          <strong>Microsoft Word 兼容</strong>
+          {preview.descriptor ? (
+            <span className="preview-engine-label">
+              {preview.descriptor.label}
+            </span>
+          ) : null}
+          <span>{statusLabel}</span>
+        </div>
+        <div className="preview-toolbar-actions">
+          <PreviewModeControl mode={state.previewMode} onChanged={onModeChanged} />
+          <button
+            type="button"
+            className="preview-pdf-action"
+            aria-label="选择 Word PDF"
+            onClick={onSelectOfficePdf}
+          >
+            <Upload aria-hidden="true" />
+            <span>选择 PDF</span>
+          </button>
+        </div>
       </div>
       {finalLayout ? (
         <FinalLayoutPreview

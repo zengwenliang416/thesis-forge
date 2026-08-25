@@ -63,7 +63,7 @@ describe("Workbench preview flow", () => {
         initialState={initialState}
       />,
     );
-    await user.click(screen.getByRole("button", { name: "验证论文" }));
+    await user.click(screen.getByRole("button", { name: "检查文档" }));
 
     expect(dispatch).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -75,7 +75,7 @@ describe("Workbench preview flow", () => {
       }),
     );
     const outline = await screen.findByRole("complementary", {
-      name: "论文大纲",
+      name: "文档大纲",
     });
     expect(
       within(outline).getByRole("button", { name: /绪论.*第 8 行/ }),
@@ -127,7 +127,7 @@ describe("Workbench preview flow", () => {
       />,
     );
     await user.selectOptions(
-      screen.getByLabelText("学校模板"),
+      screen.getByLabelText("Word 模板"),
       "example-university-2026",
     );
     expect(dispatch).toHaveBeenCalledWith(
@@ -142,7 +142,7 @@ describe("Workbench preview flow", () => {
     await user.click(screen.getByRole("tab", { name: "结构" }));
     await user.click(screen.getByRole("button", { name: /系统架构.*第 12 行/ }));
     const editor = screen.getByRole("textbox", {
-      name: "Markdown 文稿内容",
+      name: "Markdown 文档内容",
     }) as HTMLTextAreaElement;
     await waitFor(() => expect(editor).toHaveFocus());
     expect(editor.value.slice(editor.selectionStart, editor.selectionEnd)).toBe(

@@ -58,21 +58,23 @@ describe("WorkbenchApp", () => {
       />,
     );
 
-    expect(screen.getByText("ThesisForge")).toBeVisible();
-    expect(screen.getByRole("button", { name: "打开 ThesisForge 项目" })).toBeEnabled();
-    expect(screen.getByRole("button", { name: "保存文稿" })).toBeDisabled();
-    expect(screen.getByRole("button", { name: "验证论文" })).toBeDisabled();
-    expect(screen.getByRole("button", { name: "构建 DOCX" })).toBeDisabled();
-    expect(screen.getByRole("complementary", { name: "论文大纲" })).toBeVisible();
+    expect(screen.getByText("DocForge")).toBeVisible();
+    expect(
+      screen.getByRole("button", { name: "打开 Markdown 或 DocForge 项目" }),
+    ).toBeEnabled();
+    expect(screen.getByRole("button", { name: "保存文档" })).toBeDisabled();
+    expect(screen.getByRole("button", { name: "检查文档" })).toBeDisabled();
+    expect(screen.getByRole("button", { name: "生成 DOCX" })).toBeDisabled();
+    expect(screen.getByRole("complementary", { name: "文档大纲" })).toBeVisible();
     expect(screen.getByRole("region", { name: "Markdown 编辑器" })).toBeVisible();
     expect(
-      screen.getByRole("region", { name: "论文最终版式预览" }),
+      screen.getByRole("region", { name: "Microsoft Word 版式预览" }),
     ).toBeVisible();
     expect(screen.getByRole("region", { name: "诊断结果" })).toBeVisible();
-    expect(screen.getByLabelText("学校模板")).toBeDisabled();
+    expect(screen.getByLabelText("Word 模板")).toBeDisabled();
     expect(screen.getByRole("status", { name: "构建进度" })).toBeVisible();
     expect(screen.getByRole("status", { name: "输出结果" })).toBeVisible();
-    expect(screen.getByText("当前工作区没有 Markdown 文稿")).toBeVisible();
+    expect(screen.getByText("当前工作区没有 Markdown 文档")).toBeVisible();
   });
 
   it("supports focus shortcuts without calling a runtime adapter directly", async () => {
@@ -85,10 +87,10 @@ describe("WorkbenchApp", () => {
     );
 
     await user.keyboard("{Control>}k{/Control}");
-    expect(screen.getByRole("textbox", { name: "Markdown 文稿内容" })).toHaveFocus();
+    expect(screen.getByRole("textbox", { name: "Markdown 文档内容" })).toHaveFocus();
 
     await user.keyboard("{Control>}b{/Control}");
-    expect(screen.getByRole("button", { name: "构建 DOCX" })).toBeDisabled();
+    expect(screen.getByRole("button", { name: "生成 DOCX" })).toBeDisabled();
   });
 
   it("switches one visible panel at the mobile breakpoint", async () => {
@@ -132,10 +134,14 @@ describe("WorkbenchApp", () => {
       />,
     );
     const separator = screen.getByRole("separator", { name: "调整大纲宽度" });
+    const previewSeparator = screen.getByRole("separator", {
+      name: "调整预览宽度",
+    });
 
     separator.focus();
     expect(separator).toHaveFocus();
     expect(separator).toHaveAttribute("aria-valuenow", "260");
+    expect(previewSeparator).toHaveAttribute("aria-valuenow", "560");
     await user.keyboard("{ArrowRight}");
 
     expect(separator).toHaveAttribute("aria-valuenow", "276");
@@ -186,7 +192,7 @@ describe("WorkbenchApp", () => {
         initialState={initialState}
       />,
     );
-    await user.click(screen.getByRole("button", { name: "构建 DOCX" }));
+    await user.click(screen.getByRole("button", { name: "生成 DOCX" }));
 
     expect(dispatch).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -253,10 +259,10 @@ describe("WorkbenchApp", () => {
       />,
     );
     await user.type(
-      screen.getByRole("textbox", { name: "Markdown 文稿内容" }),
+      screen.getByRole("textbox", { name: "Markdown 文档内容" }),
       "新增内容",
     );
-    await user.click(screen.getByRole("button", { name: "保存文稿" }));
+    await user.click(screen.getByRole("button", { name: "保存文档" }));
 
     expect(dispatchCommand).toHaveBeenNthCalledWith(
       1,
@@ -272,8 +278,8 @@ describe("WorkbenchApp", () => {
       2,
       expect.objectContaining({ operation: "preview" }),
     );
-    expect(screen.getByText("文稿、模板与预览已同步")).toBeVisible();
-    expect(screen.getByRole("button", { name: "构建 DOCX" })).toBeEnabled();
+    expect(screen.getByText("文档、模板与预览已同步")).toBeVisible();
+    expect(screen.getByRole("button", { name: "生成 DOCX" })).toBeEnabled();
   });
 
   it("routes Ctrl+S through the same explicit save flow", async () => {
@@ -379,11 +385,11 @@ describe("WorkbenchApp", () => {
         initialState={initialState}
       />,
     );
-    await user.click(screen.getByRole("button", { name: "保存文稿" }));
+    await user.click(screen.getByRole("button", { name: "保存文档" }));
 
     expect(screen.getByText("目标文件不可写")).toBeVisible();
-    expect(screen.getByRole("button", { name: "保存文稿" })).toBeEnabled();
-    expect(screen.getByRole("textbox", { name: "Markdown 文稿内容" })).toHaveValue(
+    expect(screen.getByRole("button", { name: "保存文档" })).toBeEnabled();
+    expect(screen.getByRole("textbox", { name: "Markdown 文档内容" })).toHaveValue(
       "# Changed\n",
     );
   });
@@ -404,10 +410,10 @@ describe("WorkbenchApp", () => {
         initialState={createInitialWorkspaceState()}
       />,
     );
-    await user.click(screen.getByRole("button", { name: "打开 ThesisForge 项目" }));
+    await user.click(screen.getByRole("button", { name: "打开 Markdown 或 DocForge 项目" }));
 
     expect(screen.getByText("无法读取 Markdown 文稿")).toBeVisible();
-    expect(screen.getByRole("button", { name: "打开 ThesisForge 项目" })).toBeEnabled();
+    expect(screen.getByRole("button", { name: "打开 Markdown 或 DocForge 项目" })).toBeEnabled();
   });
 
   it("keeps Web build output inside the opaque workspace", async () => {
@@ -445,7 +451,7 @@ describe("WorkbenchApp", () => {
         initialState={initialState}
       />,
     );
-    await user.click(screen.getByRole("button", { name: "构建 DOCX" }));
+    await user.click(screen.getByRole("button", { name: "生成 DOCX" }));
 
     expect(dispatchCommand).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -520,9 +526,9 @@ describe("WorkbenchApp", () => {
         initialState={initialState}
       />,
     );
-    await user.click(screen.getByRole("button", { name: "保存文稿" }));
+    await user.click(screen.getByRole("button", { name: "保存文档" }));
     expect(await screen.findByText("inspection unavailable")).toBeVisible();
-    expect(screen.getByRole("button", { name: "构建 DOCX" })).toBeDisabled();
+    expect(screen.getByRole("button", { name: "生成 DOCX" })).toBeDisabled();
 
     await user.click(screen.getByRole("button", { name: "恢复工作区" }));
 
@@ -530,7 +536,7 @@ describe("WorkbenchApp", () => {
       3,
       expect.objectContaining({ operation: "preview" }),
     );
-    expect(screen.getByRole("button", { name: "构建 DOCX" })).toBeEnabled();
+    expect(screen.getByRole("button", { name: "生成 DOCX" })).toBeEnabled();
   });
 
   it("revalidates the saved source with the selected school template", async () => {
@@ -578,7 +584,7 @@ describe("WorkbenchApp", () => {
       />,
     );
     await user.selectOptions(
-      screen.getByLabelText("学校模板"),
+      screen.getByLabelText("Word 模板"),
       "example-university-2026",
     );
 
@@ -639,7 +645,7 @@ describe("WorkbenchApp", () => {
     expect(screen.getByRole("button", { name: "全部 2" })).toBeVisible();
     expect(screen.getByRole("button", { name: "错误 1" })).toBeVisible();
     expect(screen.getByRole("button", { name: "警告 1" })).toBeVisible();
-    expect(screen.getByRole("button", { name: "构建 DOCX" })).toBeDisabled();
+    expect(screen.getByRole("button", { name: "生成 DOCX" })).toBeDisabled();
     expect(screen.getByText("存在 1 个错误诊断，构建已禁用。")).toBeVisible();
 
     await user.click(screen.getByRole("button", { name: "警告 1" }));
@@ -650,7 +656,7 @@ describe("WorkbenchApp", () => {
     diagnostic.focus();
     await user.keyboard("{Enter}");
     const editor = screen.getByRole("textbox", {
-      name: "Markdown 文稿内容",
+      name: "Markdown 文档内容",
     }) as HTMLTextAreaElement;
     expect(editor).toHaveFocus();
     expect(editor.selectionStart).toBe(10);
@@ -691,7 +697,7 @@ describe("WorkbenchApp", () => {
     await user.click(screen.getByRole("button", { name: /第 3 行/ }));
 
     const editor = screen.getByRole("textbox", {
-      name: "Markdown 文稿内容",
+      name: "Markdown 文档内容",
     }) as HTMLTextAreaElement;
     expect(editor).toHaveFocus();
     expect(editor.selectionStart).toBe(10);
@@ -750,7 +756,7 @@ describe("WorkbenchApp", () => {
 
     expect(diagnostic).toHaveAttribute("aria-pressed", "true");
     expect(
-      screen.getByRole("textbox", { name: "Markdown 文稿内容" }),
+      screen.getByRole("textbox", { name: "Markdown 文档内容" }),
     ).not.toHaveFocus();
   });
 
@@ -813,7 +819,7 @@ describe("WorkbenchApp", () => {
         initialState={initialState}
       />,
     );
-    await user.click(screen.getByRole("button", { name: "打开 ThesisForge 项目" }));
+    await user.click(screen.getByRole("button", { name: "打开 Markdown 或 DocForge 项目" }));
 
     expect(dispatchCommand).toHaveBeenNthCalledWith(
       1,
@@ -834,6 +840,6 @@ describe("WorkbenchApp", () => {
         },
       }),
     );
-    expect(screen.getByLabelText("学校模板")).toHaveValue("");
+    expect(screen.getByLabelText("Word 模板")).toHaveValue("");
   });
 });

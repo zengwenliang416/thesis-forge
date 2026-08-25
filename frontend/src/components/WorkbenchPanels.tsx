@@ -1,7 +1,3 @@
-import {
-  AlertTriangle,
-  Braces,
-} from "lucide-react";
 import type { RefObject } from "react";
 import type {
   WorkspaceActions,
@@ -14,7 +10,6 @@ import {
   type DiagnosticPresentation,
 } from "../state/diagnostics";
 import type { RuntimeKind } from "../transport/dto";
-import { PanelHeader } from "./PanelHeader";
 
 interface MarkdownEditorProps {
   state: WorkspaceState;
@@ -38,17 +33,20 @@ export function MarkdownEditor({
       aria-label="Markdown 编辑器"
       data-mobile-active={state.mobilePanel === "editor"}
     >
-      <PanelHeader icon={<Braces />} kicker="SOURCE" title="Markdown 编辑器" />
       <div className="editor-tab">
-        <span>{state.source?.name ?? "未命名.md"}</span>
-        <span>{state.dirty ? "未保存" : "UTF-8 · LF"}</span>
+        <div>
+          <strong>{state.source?.name ?? "未命名.md"}</strong>
+          <span aria-hidden="true">×</span>
+          <span aria-hidden="true">＋</span>
+        </div>
+        <span>{state.dirty ? "未保存" : "已保存"}</span>
       </div>
       <textarea
         ref={editorRef}
-        aria-label="Markdown 文稿内容"
+        aria-label="Markdown 文档内容"
         value={state.editorText}
         readOnly={!actions.canEdit}
-        placeholder="打开 Markdown 文稿后在此编辑。"
+        placeholder="打开 Markdown 文档后在此编辑。"
         spellCheck={false}
         onChange={(event) =>
           actions.canEdit ? onEdit(event.currentTarget.value) : undefined
@@ -91,12 +89,11 @@ export function DiagnosticsPanel({
       aria-label="诊断结果"
       data-mobile-active={state.mobilePanel === "diagnostics"}
     >
-      <PanelHeader
-        icon={<AlertTriangle />}
-        kicker="VALIDATION"
-        title="诊断结果"
-      />
-      <div className="diagnostics-content">
+      <div className="diagnostics-toolbar">
+        <div className="diagnostics-tabs">
+          <strong>诊断 ({summary.all})</strong>
+          <span>全部消息 ({summary.all})</span>
+        </div>
         <div className="diagnostic-filters" aria-label="诊断筛选">
           {filterLabels.map(([filter, label]) => (
             <button
@@ -110,13 +107,12 @@ export function DiagnosticsPanel({
             </button>
           ))}
         </div>
+      </div>
+      <div className="diagnostics-content">
         {state.diagnostics.length === 0 ? (
           <div className="diagnostics-empty">
-            <span className="diagnostic-count">0</span>
-            <div>
-              <strong>尚无诊断</strong>
-              <p>保存文稿后运行验证，问题会显示 code、行号和 target。</p>
-            </div>
+            <strong>尚无诊断</strong>
+            <span>保存文档后运行检查，问题会显示 code、行号和 target。</span>
           </div>
         ) : (
           <div className="diagnostic-list">
@@ -141,12 +137,14 @@ export function DiagnosticsPanel({
                       ? "警告"
                       : "提示"}
                 </span>
-                <strong>{diagnostic.message}</strong>
-                <code>{diagnostic.code}</code>
-                <span>
+                <span className="diagnostic-location">
                   {diagnostic.line === null
                     ? "无行号"
-                    : `第 ${diagnostic.line} 行`}
+                    : `行 ${diagnostic.line}`}
+                </span>
+                <strong>{diagnostic.message}</strong>
+                <span className="diagnostic-detail">
+                  <code>{diagnostic.code}</code>
                   {diagnostic.target ? ` · ${diagnostic.target}` : ""}
                 </span>
               </button>

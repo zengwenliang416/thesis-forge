@@ -125,7 +125,7 @@ describe("Workbench build flow", () => {
       />,
     );
 
-    await user.click(screen.getByRole("button", { name: "构建 DOCX" }));
+    await user.click(screen.getByRole("button", { name: "生成 DOCX" }));
 
     expect(await screen.findByText("thesis.docx")).toBeVisible();
     expect(screen.getByText("构建完成")).toBeVisible();
@@ -157,14 +157,14 @@ describe("Workbench build flow", () => {
       />,
     );
 
-    await user.click(screen.getByRole("button", { name: "构建 DOCX" }));
+    await user.click(screen.getByRole("button", { name: "生成 DOCX" }));
     expect(screen.getByRole("button", { name: "取消构建" })).toBeEnabled();
     await user.click(screen.getByRole("button", { name: "取消构建" }));
 
     expect(pending.signal?.aborted).toBe(true);
     expect(screen.getByText("操作已取消")).toBeVisible();
     expect(screen.getByText("previous.docx")).toBeVisible();
-    expect(screen.getByRole("button", { name: "构建 DOCX" })).toBeEnabled();
+    expect(screen.getByRole("button", { name: "生成 DOCX" })).toBeEnabled();
     pending.resolve?.();
   });
 
@@ -199,7 +199,7 @@ describe("Workbench build flow", () => {
       />,
     );
 
-    await user.click(screen.getByRole("button", { name: "构建 DOCX" }));
+    await user.click(screen.getByRole("button", { name: "生成 DOCX" }));
     expect(await screen.findByText("LibreOffice PDF")).toBeVisible();
     expect(screen.getByTitle("最终版式 PDF")).toHaveAttribute(
       "src",
@@ -226,10 +226,10 @@ describe("Workbench build flow", () => {
       />,
     );
 
-    await user.click(screen.getByRole("button", { name: "选择 Office PDF" }));
+    await user.click(screen.getByRole("button", { name: "选择 Word PDF" }));
 
     expect(await screen.findByText("Microsoft Word PDF")).toBeVisible();
-    expect(screen.getByText("当前 Office 预览")).toBeVisible();
+    expect(screen.getByText("当前 Word 预览")).toBeVisible();
     expect(screen.getByTitle("最终版式 PDF")).toBeVisible();
     expect(pickFinalPreview).toHaveBeenCalledOnce();
   });
@@ -260,11 +260,11 @@ describe("Workbench build flow", () => {
       />,
     );
 
-    await user.click(screen.getByRole("button", { name: "选择 Office PDF" }));
+    await user.click(screen.getByRole("button", { name: "选择 Word PDF" }));
 
     expect(await screen.findByText(/选择新的 Office PDF 失败/)).toBeVisible();
     expect(screen.getByTitle("最终版式 PDF")).toBeVisible();
-    expect(screen.getByText("当前 Office 预览")).toBeVisible();
+    expect(screen.getByText("当前 Word 预览")).toBeVisible();
   });
 
   it("stores live-preview diagnostics and marks the previous PDF stale on failure", () => {
@@ -552,10 +552,10 @@ describe("Workbench build flow", () => {
         intent: "live-preview",
         text: "# 绪论\n",
       });
-      expect(screen.getByText("当前 Office 预览")).toBeVisible();
+      expect(screen.getByText("当前 Word 预览")).toBeVisible();
 
       fireEvent.change(
-        screen.getByRole("textbox", { name: "Markdown 文稿内容" }),
+        screen.getByRole("textbox", { name: "Markdown 文档内容" }),
         { target: { value: "# 绪论\n新增" } },
       );
       await act(async () => {

@@ -268,7 +268,7 @@ function contentLabel(content: SerializedPreviewContent): string {
     case "bibliography":
       return "参考文献";
     case "cover":
-      return "论文封面";
+      return "文档封面";
     case "section":
       return sectionLabel(content.role);
     case "toc":
@@ -504,15 +504,15 @@ export function ReviewPanel({ state, onActivated }: ReviewPanelProps) {
     <section
       className="panel review-panel"
       role="region"
-      aria-label="论文内容审阅"
+      aria-label="文档内容审阅"
       data-mobile-active={state.mobilePanel === "preview"}
     >
       <PanelHeader icon={<BookOpen />} kicker="REVIEW" title="内容审阅" />
       <div className="review-content">
         {review.status === "empty" ? (
           <div className="review-message">
-            <h1>等待载入论文</h1>
-            <p>打开文稿后，这里会显示不含技术标记的阅读内容。</p>
+            <h1>等待载入文档</h1>
+            <p>打开文档后，这里会显示不含技术标记的阅读内容。</p>
           </div>
         ) : review.status === "blocked" ? (
           <div className="review-message review-message-blocked" role="alert">

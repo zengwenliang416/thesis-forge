@@ -13,7 +13,7 @@
     "windows": [
       {
         "create": false,
-        "title": "ThesisForge - 学术论文编译工作台",
+        "title": "DocForge - Markdown → Word 文档工坊",
         "width": 1440,
         "height": 900,
         "minWidth": 1024,
@@ -31,7 +31,7 @@
     "icon": ["icons/icon.png", "icons/icon.ico"],
     "targets": ["app", "dmg", "msi", "nsis"],
     "category": "Productivity",
-    "shortDescription": "确定性学术论文编译工作台",
+    "shortDescription": "本地优先的 Markdown 转 Word 文档工坊",
     "macOS": {
       "infoPlist": "Info.plist",
       "entitlements": "entitlements.plist"

@@ -184,13 +184,13 @@ async function captureFailureEvidence(
     failure.pageAvailable = true;
     failure.page = await page.evaluate(() => {
       const save = document.querySelector(
-        '[aria-label="保存文稿"]',
+        '[aria-label="保存文档"]',
       ) as HTMLButtonElement | null;
       const validate = document.querySelector(
-        '[aria-label="验证论文"]',
+        '[aria-label="检查文档"]',
       ) as HTMLButtonElement | null;
       const editor = document.querySelector(
-        '[aria-label="Markdown 文稿内容"]',
+        '[aria-label="Markdown 文档内容"]',
       ) as HTMLTextAreaElement | null;
       const shell = document.querySelector(".app-shell");
       return {
@@ -290,16 +290,16 @@ async function main(): Promise<void> {
     const shell = page.locator(".app-shell");
     await shell.waitFor({ state: "visible" });
     assert.equal(await shell.getAttribute("data-runtime"), "tauri");
-    assert.match(await shell.innerText(), /本地桌面/);
+    assert.match(await shell.innerText(), /Microsoft Word 桌面/);
 
-    await page.getByRole("button", { name: "打开 ThesisForge 项目" }).click();
-    const editor = page.getByLabel("Markdown 文稿内容");
+    await page.getByRole("button", { name: "打开 Markdown 或 DocForge 项目" }).click();
+    const editor = page.getByLabel("Markdown 文档内容");
     await editor.waitFor({ state: "visible" });
     await page.waitForFunction(
       () =>
         (
           document.querySelector(
-            '[aria-label="Markdown 文稿内容"]',
+            '[aria-label="Markdown 文档内容"]',
           ) as HTMLTextAreaElement | null
         )?.value.includes("thesis:") === true,
     );
@@ -317,7 +317,7 @@ async function main(): Promise<void> {
       (expectedMarker) =>
         (
           document.querySelector(
-            '[aria-label="Markdown 文稿内容"]',
+            '[aria-label="Markdown 文档内容"]',
           ) as HTMLTextAreaElement | null
         )?.value.includes(expectedMarker) === true,
       marker,
@@ -326,7 +326,7 @@ async function main(): Promise<void> {
       () => document.querySelector(".app-shell")?.getAttribute("data-state") === "dirty",
     );
 
-    const save = page.locator('[aria-label="保存文稿"]');
+    const save = page.locator('[aria-label="保存文档"]');
     assert.equal(await save.count(), 1);
     const saveVisible = await save.isVisible();
     if (saveVisible) {
@@ -342,7 +342,7 @@ async function main(): Promise<void> {
         "populated",
     );
 
-    const validate = page.locator('[aria-label="验证论文"]');
+    const validate = page.locator('[aria-label="检查文档"]');
     assert.equal(await validate.count(), 1);
     const validateVisible = await validate.isVisible();
     if (validateVisible) {
@@ -356,7 +356,7 @@ async function main(): Promise<void> {
       );
     }
 
-    const build = page.getByRole("button", { name: "构建 DOCX" });
+    const build = page.getByRole("button", { name: "生成 DOCX" });
     assert.equal(await build.isEnabled(), true);
     await build.click();
     const progress = page.getByLabel("构建进度");

@@ -31,6 +31,7 @@ const savedText = sourceText.replace(
 test("runs the Web workbench through the real Python HTTP adapter", async ({
   page,
 }) => {
+  test.setTimeout(90_000);
   await page.goto("/");
 
   const workspaceResponsePromise = page.waitForResponse(
@@ -65,14 +66,14 @@ test("runs the Web workbench through the real Python HTTP adapter", async ({
   expect(workspacePayload.project.manifestPath).not.toContain(workspaceRoot);
   expect(workspacePayload.source.fileName).toBe("thesis.md");
 
-  const editor = page.getByRole("textbox", { name: "Markdown 文稿内容" });
+  const editor = page.getByRole("textbox", { name: "Markdown 文档内容" });
   await expect(editor).toHaveValue(sourceText);
   await page.getByRole("tab", { name: "结构" }).click();
   await expect(page.getByText("结构预览不代表 Word 最终分页。")).toBeVisible();
 
   await editor.fill(savedText);
-  await expect(page.getByRole("button", { name: "验证论文" })).toBeDisabled();
-  await expect(page.getByRole("button", { name: "构建 DOCX" })).toBeDisabled();
+  await expect(page.getByRole("button", { name: "检查文档" })).toBeDisabled();
+  await expect(page.getByRole("button", { name: "生成 DOCX" })).toBeDisabled();
 
   const saveResponsePromise = page.waitForResponse((response) => {
     if (!response.url().endsWith("/api/v1/dispatch")) {
@@ -80,10 +81,10 @@ test("runs the Web workbench through the real Python HTTP adapter", async ({
     }
     return response.request().postDataJSON().operation === "save";
   });
-  await page.getByRole("button", { name: "保存文稿" }).click();
+  await page.getByRole("button", { name: "保存文档" }).click();
   expect((await saveResponsePromise).status()).toBe(200);
-  await expect(page.getByText("文稿、模板与预览已同步")).toBeVisible();
-  await expect(page.getByRole("button", { name: "验证论文" })).toBeEnabled();
+  await expect(page.getByText("文档、模板与预览已同步")).toBeVisible();
+  await expect(page.getByRole("button", { name: "检查文档" })).toBeEnabled();
 
   const validateResponsePromise = page.waitForResponse((response) => {
     if (!response.url().endsWith("/api/v1/dispatch")) {
@@ -91,7 +92,7 @@ test("runs the Web workbench through the real Python HTTP adapter", async ({
     }
     return response.request().postDataJSON().operation === "preview";
   });
-  await page.getByRole("button", { name: "验证论文" }).click();
+  await page.getByRole("button", { name: "检查文档" }).click();
   const validatePayload = (await (
     await validateResponsePromise
   ).json()) as { ok: boolean };
@@ -106,7 +107,7 @@ test("runs the Web workbench through the real Python HTTP adapter", async ({
     };
     return request.payload?.intent === "publish";
   });
-  await page.getByRole("button", { name: "构建 DOCX" }).click();
+  await page.getByRole("button", { name: "生成 DOCX" }).click();
   expect((await buildResponsePromise).status()).toBe(200);
   await expect(page.getByText("构建完成")).toBeVisible({ timeout: 30_000 });
   await expect(page.getByText("thesis.docx")).toBeVisible({ timeout: 30_000 });

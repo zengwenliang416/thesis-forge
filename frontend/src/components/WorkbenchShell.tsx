@@ -103,6 +103,7 @@ export function WorkbenchShell({
       className="app-shell"
       data-runtime={runtime}
       data-state={state.status}
+      data-mobile-panel={state.mobilePanel}
       style={layoutStyle}
     >
       <ProductBar
@@ -115,15 +116,16 @@ export function WorkbenchShell({
         onValidate={onValidate}
         onBuild={onBuild}
         onCancel={onCancel}
-      />
-      <StatusStrip
-        state={state}
-        runtime={runtime}
-        title={statusTitle}
-        detail={statusDetail}
-        onRecover={onRecover}
         onTemplateSelected={onTemplateSelected}
-      />
+      >
+        <StatusStrip
+          state={state}
+          runtime={runtime}
+          title={statusTitle}
+          detail={statusDetail}
+          onRecover={onRecover}
+        />
+      </ProductBar>
       <nav className="mobile-tabs" role="tablist" aria-label="工作台面板">
         {panels.map((panel) => (
           <button
@@ -137,7 +139,7 @@ export function WorkbenchShell({
           </button>
         ))}
       </nav>
-      <main className="workbench">
+      <main className="workbench" aria-label="DocForge 文档工作台">
         <OutlinePanel state={state} onActivated={onContentActivated} />
         <PanelResizer
           side="outline"
@@ -158,27 +160,19 @@ export function WorkbenchShell({
           onPanelsResized={onPanelsResized}
           onResizePointer={onResizePointer}
         />
-        <section
-          className="right-rail"
-          data-mobile-active={
-            state.mobilePanel === "preview" ||
-            state.mobilePanel === "diagnostics"
-          }
-        >
-          <DualPreviewPanel
-            state={state}
-            onActivated={onContentActivated}
-            onModeChanged={onPreviewModeChanged}
-            onBuild={onRefreshFinalPreview}
-            onSelectOfficePdf={onSelectOfficePdf}
-          />
-          <DiagnosticsPanel
-            state={state}
-            onFilterChanged={onDiagnosticFilterChanged}
-            onActivated={onDiagnosticActivated}
-          />
-        </section>
+        <DualPreviewPanel
+          state={state}
+          onActivated={onContentActivated}
+          onModeChanged={onPreviewModeChanged}
+          onBuild={onRefreshFinalPreview}
+          onSelectOfficePdf={onSelectOfficePdf}
+        />
       </main>
+      <DiagnosticsPanel
+        state={state}
+        onFilterChanged={onDiagnosticFilterChanged}
+        onActivated={onDiagnosticActivated}
+      />
       <OutputFeedback
         runtime={runtime}
         capabilities={capabilities}

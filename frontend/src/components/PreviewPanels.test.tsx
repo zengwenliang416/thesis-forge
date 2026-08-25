@@ -50,7 +50,7 @@ describe("renderer-neutral preview panels", () => {
       </>,
     );
 
-    const outline = screen.getByRole("complementary", { name: "论文大纲" });
+    const outline = screen.getByRole("complementary", { name: "文档大纲" });
     expect(
       within(outline).getByRole("button", { name: /绪论.*第 8 行/ }),
     ).toBeVisible();
@@ -61,6 +61,31 @@ describe("renderer-neutral preview panels", () => {
     expect(screen.getByText("暂不支持此结构类型")).toBeVisible();
     expect(screen.getByText("结构预览不代表 Word 最终分页。")).toBeVisible();
     expect(screen.getAllByLabelText("warning heading-level-jump")).not.toHaveLength(0);
+  });
+
+  it("filters the outline locally without changing the document selection model", async () => {
+    const user = userEvent.setup();
+    render(<OutlinePanel state={readyState} onActivated={() => undefined} />);
+
+    const outline = screen.getByRole("complementary", { name: "文档大纲" });
+    const search = within(outline).getByRole("searchbox", {
+      name: "搜索标题",
+    });
+    await user.type(search, "绪论");
+
+    expect(
+      within(outline).getByRole("button", { name: /绪论.*第 8 行/ }),
+    ).toBeVisible();
+
+    await user.clear(search);
+    await user.type(search, "不存在");
+    expect(within(outline).queryAllByRole("button")).toHaveLength(0);
+    expect(within(outline).getByText("没有匹配的标题。")).toBeVisible();
+
+    await user.clear(search);
+    expect(
+      within(outline).getByRole("button", { name: /绪论.*第 8 行/ }),
+    ).toBeVisible();
   });
 
   it("renders every canonical inline run without exposing technical markers", () => {
@@ -233,7 +258,7 @@ describe("renderer-neutral preview panels", () => {
     );
 
     const outlineHeading = within(
-      screen.getByRole("complementary", { name: "论文大纲" }),
+      screen.getByRole("complementary", { name: "文档大纲" }),
     ).getByRole("button", { name: /绪论.*第 8 行/ });
     outlineHeading.focus();
     await user.keyboard("{Enter}");
@@ -256,7 +281,7 @@ describe("renderer-neutral preview panels", () => {
         onActivated={() => undefined}
       />,
     );
-    expect(screen.getByText("等待载入论文")).toBeVisible();
+    expect(screen.getByText("等待载入文档")).toBeVisible();
 
     rerender(
       <PaperPreview
@@ -308,7 +333,7 @@ describe("renderer-neutral preview panels", () => {
     );
 
     expect(screen.getByText("LibreOffice PDF")).toBeVisible();
-    expect(screen.getByText("当前 Office 预览")).toBeVisible();
+    expect(screen.getByText("当前 Word 预览")).toBeVisible();
     expect(screen.getByTitle("最终版式 PDF")).toHaveAttribute(
       "src",
       "blob:thesis-preview",

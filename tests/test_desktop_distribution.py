@@ -418,12 +418,12 @@ def test_windows_tauri_acceptance_uses_webview2_cdp_and_real_commands() -> None:
     assert "taskkill.exe" in acceptance
     assert "__TAURI_INTERNALS__" in acceptance
     assert 'internals.invoke = ' not in acceptance
-    assert "打开 ThesisForge 项目" in acceptance
-    assert "保存文稿" in acceptance
+    assert "打开 Markdown 或 DocForge 项目" in acceptance
+    assert "保存文档" in acceptance
     assert "await save.isVisible()" in acceptance
     assert 'page.keyboard.press("Control+s")' in acceptance
-    assert "构建 DOCX" in acceptance
-    assert "Markdown 文稿内容" in acceptance
+    assert "生成 DOCX" in acceptance
+    assert "Markdown 文档内容" in acceptance
     assert "构建完成" in acceptance
     assert "page.screenshot" in acceptance
     assert "windows-native-failure.png" in acceptance

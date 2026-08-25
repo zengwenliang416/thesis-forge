@@ -262,7 +262,7 @@ export function createInitialWorkspaceState(): WorkspaceState {
     },
     mobilePanel: "editor",
     outlineWidth: 260,
-    previewWidth: 430,
+    previewWidth: 560,
   };
 }
 

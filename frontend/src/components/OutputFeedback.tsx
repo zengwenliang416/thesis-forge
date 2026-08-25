@@ -18,13 +18,13 @@ export function OutputFeedback({
     <footer className="global-status">
       <span>
         <ChevronLeft aria-hidden="true" />
-        Markdown → ThesisDocument → Validation → Template → RenderPlan → DOCX
+        Markdown → Microsoft Word · 本地优先 · 模板驱动
       </span>
       <span role="status" aria-label="输出结果">
         {capabilities.download ? <Download aria-hidden="true" /> : null}
         {state.output
           ? state.output.name
-          : `尚无输出 · ${runtime === "tauri" ? "macOS / Windows" : "Browser"}`}
+          : `准备生成 DOCX · ${runtime === "tauri" ? "桌面" : "浏览器"}`}
       </span>
     </footer>
   );

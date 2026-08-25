@@ -161,12 +161,12 @@ describe("WorkbenchApp project flow", () => {
     );
 
     await user.click(
-      screen.getByRole("button", { name: "打开 ThesisForge 项目" }),
+      screen.getByRole("button", { name: "打开 Markdown 或 DocForge 项目" }),
     );
 
     expect(await screen.findByText("thesis-alpha")).toBeVisible();
     expect(
-      screen.getByText("活动源：thesis.md · 保存快照已同步"),
+      screen.getByText("活动源：thesis.md · 文档已保存"),
     ).toBeVisible();
     expect(dispatch).toHaveBeenCalledTimes(1);
     expect(dispatch).toHaveBeenCalledWith(
@@ -191,14 +191,14 @@ describe("WorkbenchApp project flow", () => {
     );
 
     await user.click(
-      screen.getByRole("button", { name: "打开 ThesisForge 项目" }),
+      screen.getByRole("button", { name: "打开 Markdown 或 DocForge 项目" }),
     );
 
     expect(await screen.findByText("操作已取消")).toBeVisible();
-    expect(screen.queryByText("工作台操作失败")).toBeNull();
+    expect(screen.queryByText("文档操作失败")).toBeNull();
     expect(screen.getByText("尚未打开项目")).toBeVisible();
     expect(
-      screen.getByRole("button", { name: "打开 ThesisForge 项目" }),
+      screen.getByRole("button", { name: "打开 Markdown 或 DocForge 项目" }),
     ).toBeEnabled();
   });
 
@@ -216,13 +216,13 @@ describe("WorkbenchApp project flow", () => {
     );
 
     await user.click(
-      screen.getByRole("button", { name: "打开 ThesisForge 项目" }),
+      screen.getByRole("button", { name: "打开 Markdown 或 DocForge 项目" }),
     );
 
     expect(await screen.findByText("无法读取 ThesisForge 项目")).toBeVisible();
-    expect(screen.getByText("工作台操作失败")).toBeVisible();
+    expect(screen.getByText("文档操作失败")).toBeVisible();
     expect(
-      screen.getByRole("button", { name: "打开 ThesisForge 项目" }),
+      screen.getByRole("button", { name: "打开 Markdown 或 DocForge 项目" }),
     ).toBeEnabled();
   });
 
@@ -236,14 +236,14 @@ describe("WorkbenchApp project flow", () => {
     );
 
     await user.click(
-      screen.getByRole("button", { name: "打开 ThesisForge 项目" }),
+      screen.getByRole("button", { name: "打开 Markdown 或 DocForge 项目" }),
     );
 
     expect(
-      await screen.findByText("当前运行时不支持打开 ThesisForge 项目。"),
+      await screen.findByText("当前运行时不支持打开 Markdown 或 DocForge 项目。"),
     ).toBeVisible();
     expect(
-      screen.getByRole("button", { name: "打开 ThesisForge 项目" }),
+      screen.getByRole("button", { name: "打开 Markdown 或 DocForge 项目" }),
     ).toBeEnabled();
   });
 
@@ -260,11 +260,11 @@ describe("WorkbenchApp project flow", () => {
       />,
     );
     await user.click(
-      screen.getByRole("button", { name: "打开 ThesisForge 项目" }),
+      screen.getByRole("button", { name: "打开 Markdown 或 DocForge 项目" }),
     );
-    await screen.findByText("文稿、模板与预览已同步");
+    await screen.findByText("文档、模板与预览已同步");
 
-    await user.click(screen.getByRole("button", { name: "验证论文" }));
+    await user.click(screen.getByRole("button", { name: "检查文档" }));
 
     expect(dispatch).toHaveBeenCalledTimes(2);
     expect(dispatch).toHaveBeenNthCalledWith(
@@ -297,11 +297,11 @@ describe("WorkbenchApp project flow", () => {
       />,
     );
     await user.click(
-      screen.getByRole("button", { name: "打开 ThesisForge 项目" }),
+      screen.getByRole("button", { name: "打开 Markdown 或 DocForge 项目" }),
     );
-    await screen.findByText("文稿、模板与预览已同步");
+    await screen.findByText("文档、模板与预览已同步");
 
-    await user.click(screen.getByRole("button", { name: "构建 DOCX" }));
+    await user.click(screen.getByRole("button", { name: "生成 DOCX" }));
 
     expect(requests).toHaveLength(1);
     expect(requests[0]?.operation).toBe("build");
@@ -350,15 +350,15 @@ describe("WorkbenchApp project flow", () => {
       />,
     );
     await user.click(
-      screen.getByRole("button", { name: "打开 ThesisForge 项目" }),
+      screen.getByRole("button", { name: "打开 Markdown 或 DocForge 项目" }),
     );
-    await screen.findByText("文稿、模板与预览已同步");
+    await screen.findByText("文档、模板与预览已同步");
 
     await user.type(
-      screen.getByRole("textbox", { name: "Markdown 文稿内容" }),
+      screen.getByRole("textbox", { name: "Markdown 文档内容" }),
       "新增内容",
     );
-    await user.click(screen.getByRole("button", { name: "保存文稿" }));
+    await user.click(screen.getByRole("button", { name: "保存文档" }));
 
     expect(dispatch).toHaveBeenCalledTimes(3);
     expect(dispatch).toHaveBeenNthCalledWith(
@@ -383,7 +383,7 @@ describe("WorkbenchApp project flow", () => {
         },
       }),
     );
-    expect(await screen.findByText("文稿、模板与预览已同步")).toBeVisible();
+    expect(await screen.findByText("文档、模板与预览已同步")).toBeVisible();
   });
 
   it("sends the project identity and editor snapshot with live-preview requests", async () => {
@@ -409,9 +409,9 @@ describe("WorkbenchApp project flow", () => {
       />,
     );
     await user.click(
-      screen.getByRole("button", { name: "打开 ThesisForge 项目" }),
+      screen.getByRole("button", { name: "打开 Markdown 或 DocForge 项目" }),
     );
-    await screen.findByText("文稿、模板与预览已同步");
+    await screen.findByText("文档、模板与预览已同步");
 
     await user.click(screen.getByRole("button", { name: "立即刷新预览" }));
 
@@ -494,32 +494,32 @@ describe("WorkbenchApp project flow", () => {
       );
 
       await user.click(
-        screen.getByRole("button", { name: "打开 ThesisForge 项目" }),
+        screen.getByRole("button", { name: "打开 Markdown 或 DocForge 项目" }),
       );
       expect(await screen.findByText("thesis-alpha")).toBeVisible();
       expect(await screen.findByText("标题层级从 H1 跳到 H3")).toBeVisible();
 
-      await user.click(screen.getByRole("button", { name: "构建 DOCX" }));
+      await user.click(screen.getByRole("button", { name: "生成 DOCX" }));
       expect(await screen.findByText("thesis.docx")).toBeVisible();
-      expect(await screen.findByText("当前 Office 预览")).toBeVisible();
+      expect(await screen.findByText("当前 Word 预览")).toBeVisible();
       expect(screen.getByText("LibreOffice PDF")).toBeVisible();
       expect(screen.getByText("标题层级从 H1 跳到 H3")).toBeVisible();
 
       await user.click(
-        screen.getByRole("button", { name: "打开 ThesisForge 项目" }),
+        screen.getByRole("button", { name: "打开 Markdown 或 DocForge 项目" }),
       );
 
       expect(await screen.findByText("thesis-beta")).toBeVisible();
       expect(
-        screen.getByText("活动源：draft.md · 保存快照已同步"),
+        screen.getByText("活动源：draft.md · 文档已保存"),
       ).toBeVisible();
       expect(screen.queryByText("thesis-alpha")).toBeNull();
       expect(screen.queryByText("标题层级从 H1 跳到 H3")).toBeNull();
       expect(screen.getByText("尚无诊断")).toBeVisible();
       expect(screen.queryByText("thesis.docx")).toBeNull();
-      expect(screen.getByText("尚无输出 · macOS / Windows")).toBeVisible();
+      expect(screen.getByText("准备生成 DOCX · 桌面")).toBeVisible();
       expect(screen.queryByText("LibreOffice PDF")).toBeNull();
-      expect(screen.queryByText("当前 Office 预览")).toBeNull();
+      expect(screen.queryByText("当前 Word 预览")).toBeNull();
       expect(screen.getByText("未生成")).toBeVisible();
       expect(dispatch).toHaveBeenLastCalledWith(
         expect.objectContaining({
@@ -573,10 +573,10 @@ describe("WorkbenchApp project flow", () => {
     });
     await user.upload(input as HTMLInputElement, [manifest, source]);
 
-    expect(await screen.findByText("文稿、模板与预览已同步")).toBeVisible();
+    expect(await screen.findByText("文档、模板与预览已同步")).toBeVisible();
     expect(screen.getByText("thesis-alpha")).toBeVisible();
     expect(
-      screen.getByText("活动源：thesis.md · 保存快照已同步"),
+      screen.getByText("活动源：thesis.md · 文档已保存"),
     ).toBeVisible();
     expect(openSource).not.toHaveBeenCalled();
     expect(openProject).toHaveBeenCalledTimes(1);

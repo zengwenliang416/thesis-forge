@@ -97,7 +97,7 @@ describe("ReviewPanel", () => {
       <ReviewPanel state={state} onActivated={() => undefined} />,
     );
 
-    expect(screen.getByRole("region", { name: "论文内容审阅" })).toBeVisible();
+    expect(screen.getByRole("region", { name: "文档内容审阅" })).toBeVisible();
     expect(screen.getAllByText("图 1-1")).toHaveLength(2);
     expect(screen.getByRole("link", { name: "项目主页" })).toHaveAttribute(
       "href",
@@ -598,7 +598,7 @@ describe("ReviewPanel", () => {
         onActivated={() => undefined}
       />,
     );
-    expect(screen.getByText("等待载入论文")).toBeVisible();
+    expect(screen.getByText("等待载入文档")).toBeVisible();
 
     rerender(
       <ReviewPanel

@@ -47,19 +47,19 @@ interface WorkbenchAppProps {
 
 const statusCopy = {
   empty: [
-    "当前工作区没有 Markdown 文稿",
-    "选择 thesisforge.yaml 和一个 Markdown 文件开始论文编译。",
+    "当前工作区没有 Markdown 文档",
+    "打开 Markdown 文件或 DocForge 项目开始制作 Word 文档。",
   ],
-  loading: ["正在读取工作区", "正在同步保存快照和结构化结果。"],
-  populated: ["文稿、模板与预览已同步", "右侧实时版式与当前编辑内容同步。"],
+  loading: ["正在读取文档", "正在同步保存快照、文档结构和 Word 版式。"],
+  populated: ["文档、模板与预览已同步", "Microsoft Word 版式与当前编辑内容同步。"],
   dirty: [
-    "文稿有未保存修改",
-    "实时版式会自动更新；正式验证或构建 DOCX 前请先保存。",
+    "文档有未保存修改",
+    "实时版式会自动更新；正式检查或生成 DOCX 前请先保存。",
   ],
-  error: ["工作台操作失败", "保留现有内容，可恢复后重试。"],
-  disabled: ["本机 DOCX 构建器尚未启用", "编辑器仍可使用。"],
+  error: ["文档操作失败", "现有内容已保留，可恢复后重试。"],
+  disabled: ["本机 Word 文档生成器尚未启用", "编辑和诊断仍可使用。"],
   permission: ["目标位置不可写", "请选择有权限的位置后重试。"],
-  canceled: ["操作已取消", "过期结果不会覆盖当前工作区。"],
+  canceled: ["操作已取消", "过期结果不会覆盖当前文档。"],
 } satisfies Record<WorkspaceState["status"], [string, string]>;
 
 function reportMessage(report: BuildReport): string {
@@ -725,7 +725,7 @@ export function WorkbenchApp({
     dispatch({ type: "operationStarted", operation });
     try {
       if (!transport.openProject) {
-        throw new Error("当前运行时不支持打开 ThesisForge 项目。");
+        throw new Error("当前运行时不支持打开 Markdown 或 DocForge 项目。");
       }
       const manifestFiles = files.filter(
         (file) => file.name === "thesisforge.yaml",
@@ -766,7 +766,7 @@ export function WorkbenchApp({
       dispatch({ type: "operationStarted", operation });
       try {
         if (!transport.openProject) {
-          throw new Error("当前运行时不支持打开 ThesisForge 项目。");
+          throw new Error("当前运行时不支持打开 Markdown 或 DocForge 项目。");
         }
         const opened = await transport.openProject();
         if (!opened) {
