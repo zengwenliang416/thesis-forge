@@ -195,7 +195,7 @@ inspect、validate、review 和 build。模板、图片、BibTeX 和源代码均
 - 不提供 DOCX 到 Markdown 的反向转换。
 - 不执行任意 TeX 宏或外部脚本。
 - 不保留旧 Front Matter、`:::` 容器或 `@fig:id` 兼容路径。
-- Word/WPS 的最终分页差异仍需在目标 Office 环境中人工验收。
+- Microsoft Word 的最终分页仍需在目标 Office 环境中人工验收。
 
 # 结论 {#chap:conclusion}
 

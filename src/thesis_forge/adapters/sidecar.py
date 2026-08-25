@@ -12,6 +12,7 @@ from thesis_forge.application.services import ProjectApplicationService
 from .runtime import (
     DesktopRuntime,
     WorkbenchCommandDispatcher,
+    desktop_application_dependencies,
     desktop_final_preview_build_service,
     iter_build_events,
 )
@@ -21,7 +22,9 @@ def create_dispatcher() -> WorkbenchCommandDispatcher:
     return WorkbenchCommandDispatcher(
         runtime=DesktopRuntime(),
         build=desktop_final_preview_build_service,
-        project_service=ProjectApplicationService(),
+        project_service=ProjectApplicationService(
+            dependencies=desktop_application_dependencies(),
+        ),
     )
 
 

@@ -799,13 +799,13 @@ citation:
       <section id="toc-update">
         <p class="eyebrow">08 · Office</p>
         <h2>更新自动目录和页码</h2>
-        <p>ThesisForge 生成真实 TOC 和 PAGE 字段。构建服务会尝试用本机 LibreOffice 预填目录；不可用时仍保留可在 Office 中更新的字段。桌面端最终版式预览优先由 Microsoft Word 生成 PDF，Word 不可用时降级到 LibreOffice；Web 自动预览使用 LibreOffice。</p>
+        <p>ThesisForge 生成真实 TOC 和 PAGE 字段。构建服务会尝试用本机 LibreOffice 预填目录；不可用时仍保留可在 Office 中更新的字段。桌面端最终版式预览只由 Microsoft Word 生成 PDF，不切换到其他排版引擎；Web 自动预览使用 LibreOffice。</p>
         <figure class="portrait">
           <img src="images/08-docx-toc-page.png" alt="自动目录与大写罗马页码">
           <figcaption>真实目录字段，前置页使用大写罗马页码 I、II、III。</figcaption>
         </figure>
 
-        <h3>Word / WPS</h3>
+        <h3>Microsoft Word</h3>
         <ol>
           <li>打开 DOCX。</li>
           <li>点击目录并右键。</li>
@@ -813,10 +813,6 @@ citation:
           <li>选择“更新整个目录”。</li>
         </ol>
 
-        <figure>
-          <img src="images/10-wps-toc-updated.png" alt="WPS 更新后的目录">
-          <figcaption>WPS 更新后的目录验收。</figcaption>
-        </figure>
       </section>
 
       <section id="platforms">
@@ -847,7 +843,7 @@ citation:
         </details>
         <details>
           <summary>目录为空或页码没有更新</summary>
-          <div><p>在 Word/WPS 中更新整个目录，或安装兼容的 LibreOffice 让构建服务自动刷新。</p></div>
+          <div><p>在 Microsoft Word 中更新整个目录；构建服务的字段预填仍可使用已配置的 LibreOffice 后台刷新器。</p></div>
         </details>
         <details>
           <summary>标题没有顶格、颜色不对</summary>

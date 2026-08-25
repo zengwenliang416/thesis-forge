@@ -23,20 +23,14 @@ describe("final preview descriptor", () => {
     ).toMatchObject({ engine: "libreoffice" });
     expect(
       readFinalPreviewDescriptor({
-        engine: "wps",
-        label: "WPS PDF",
-        fileName: "wps-export.pdf",
-        authorizationId: "b".repeat(32),
+        engine: "microsoft-word",
+        label: "Microsoft Word PDF",
+        fileName: "word-export.pdf",
       }),
-    ).toMatchObject({ engine: "wps" });
+    ).toMatchObject({ engine: "microsoft-word" });
   });
 
   it.each([
-    {
-      engine: "microsoft-word",
-      label: "Microsoft Word PDF",
-      fileName: "preview.pdf",
-    },
     {
       engine: "microsoft-word",
       label: "LibreOffice PDF",
@@ -54,13 +48,13 @@ describe("final preview descriptor", () => {
       fileName: "preview.pdf",
     },
     {
-      engine: "wps",
-      label: "WPS PDF",
+      engine: "microsoft-word",
+      label: "Microsoft Word PDF",
       fileName: "../preview.pdf",
     },
     {
-      engine: "wps",
-      label: "WPS PDF",
+      engine: "microsoft-word",
+      label: "Microsoft Word PDF",
       fileName: "preview.pdf",
       downloadId: "a".repeat(32),
     },
@@ -72,8 +66,8 @@ describe("final preview descriptor", () => {
       authorizationId: "b".repeat(32),
     },
     {
-      engine: "wps",
-      label: "WPS PDF",
+      engine: "microsoft-word",
+      label: "Microsoft Word PDF",
       fileName: "preview.pdf",
       authorizationId: "not-an-authorization",
     },

@@ -303,12 +303,12 @@ describe("renderer-neutral preview panels", () => {
         onActivated={() => undefined}
         onModeChanged={changed}
         onBuild={() => undefined}
-        onSelectWpsPdf={() => undefined}
+        onSelectOfficePdf={() => undefined}
       />,
     );
 
     expect(screen.getByText("LibreOffice PDF")).toBeVisible();
-    expect(screen.getByText("当前实时预览")).toBeVisible();
+    expect(screen.getByText("当前 Office 预览")).toBeVisible();
     expect(screen.getByTitle("最终版式 PDF")).toHaveAttribute(
       "src",
       "blob:thesis-preview",
@@ -329,8 +329,8 @@ describe("renderer-neutral preview panels", () => {
           finalPreview: {
             status: "stale",
             descriptor: {
-              engine: "wps",
-              label: "WPS PDF",
+              engine: "microsoft-word",
+              label: "Microsoft Word PDF",
               fileName: "thesis.pdf",
               authorizationId: "c".repeat(32),
             },
@@ -343,11 +343,11 @@ describe("renderer-neutral preview panels", () => {
         onActivated={() => undefined}
         onModeChanged={() => undefined}
         onBuild={() => undefined}
-        onSelectWpsPdf={() => undefined}
+        onSelectOfficePdf={() => undefined}
       />,
     );
 
-    expect(screen.getByText("WPS PDF")).toBeVisible();
+    expect(screen.getByText("Microsoft Word PDF")).toBeVisible();
     expect(screen.getByText("已过期")).toBeVisible();
     expect(screen.getByText(/预览已过期/)).toBeVisible();
     expect(screen.getByTitle("最终版式 PDF")).toBeVisible();

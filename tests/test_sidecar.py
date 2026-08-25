@@ -18,6 +18,7 @@ from thesis_forge.adapters.sidecar import (
 )
 from thesis_forge.application import BuildResult, BuildStage
 from thesis_forge.application.contracts import ProjectRequestIntent
+from thesis_forge.application.pdf_preview import MicrosoftWordPdfPreviewExporter
 
 
 def test_sidecar_forces_utf8_standard_streams(monkeypatch):
@@ -46,6 +47,15 @@ def test_sidecar_forces_utf8_standard_streams(monkeypatch):
         ("utf-8", "strict"),
     ]
     assert streams[1].write("绪论") == len("绪论".encode())
+
+
+def test_sidecar_project_builds_use_microsoft_word_pdf_preview():
+    dispatcher = create_dispatcher()
+
+    assert isinstance(
+        dispatcher._project_service.dependencies.pdf_preview_exporter,
+        MicrosoftWordPdfPreviewExporter,
+    )
 
 
 def test_sidecar_build_stream_uses_the_shared_event_contract(tmp_path: Path):

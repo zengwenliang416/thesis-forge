@@ -421,7 +421,7 @@ function PaperPreviewBody({ state, onActivated }: PreviewPanelProps) {
       <article className="paper">
         <span className="paper-running-head">本科毕业论文 · 结构预览</span>
         <div className="structure-preview-warning" role="note">
-          快速结构预览，不代表 Word/WPS 最终排版与分页
+          快速结构预览，不代表 Microsoft Word 最终排版与分页
         </div>
         {preview.status === "empty" ? (
           <div className="preview-message">
@@ -512,11 +512,11 @@ function FinalPreviewActions({
 export function FinalLayoutPreview({
   state,
   onBuild,
-  onSelectWpsPdf,
+  onSelectOfficePdf,
 }: {
   state: WorkspaceState;
   onBuild(): void;
-  onSelectWpsPdf(): void;
+  onSelectOfficePdf(): void;
 }) {
   const preview = state.finalPreview;
   const objectUrl = usePdfObjectUrl(preview.bytes);
@@ -526,9 +526,7 @@ export function FinalLayoutPreview({
   const statusLabel = building
     ? "实时更新中"
     : preview.status === "ready"
-      ? descriptor?.engine === "wps"
-        ? "WPS 对照稿"
-        : "当前实时预览"
+      ? "当前 Office 预览"
       : preview.status === "stale"
         ? "已过期"
         : preview.status === "unavailable"
@@ -547,10 +545,10 @@ export function FinalLayoutPreview({
         <button
           type="button"
           className="button secondary final-preview-picker"
-          onClick={onSelectWpsPdf}
+          onClick={onSelectOfficePdf}
         >
           <Upload aria-hidden="true" />
-          选择 WPS PDF
+          选择 Office PDF
         </button>
       </div>
 
@@ -571,7 +569,7 @@ export function FinalLayoutPreview({
       {preview.status === "ready" && objectUrl && preview.message ? (
         <div className="final-preview-banner" role="alert">
           <span>{preview.message}</span>
-          <button type="button" onClick={onSelectWpsPdf}>
+          <button type="button" onClick={onSelectOfficePdf}>
             重新选择
           </button>
         </div>
@@ -599,12 +597,12 @@ export function FinalLayoutPreview({
             {preview.status === "failed"
               ? "最终预览加载失败"
               : preview.status === "unavailable"
-                ? "自动 PDF 不可用"
+                ? "Microsoft Word PDF 未生成"
                 : "尚无最终版式"}
           </h3>
           <p>
             {preview.message ??
-              "桌面端优先使用 Microsoft Word 生成实时 PDF，Word 不可用时自动降级到 LibreOffice；也可选择由 WPS 导出的 PDF 进行对照。"}
+              "桌面端使用 Microsoft Word 生成实时 PDF；也可选择由 Word 导出的 PDF。"}
           </p>
           <FinalPreviewActions onBuild={onBuild} />
         </div>
@@ -618,11 +616,11 @@ export function DualPreviewPanel({
   onActivated,
   onModeChanged,
   onBuild,
-  onSelectWpsPdf,
+  onSelectOfficePdf,
 }: PreviewPanelProps & {
   onModeChanged(mode: PreviewMode): void;
   onBuild(): void;
-  onSelectWpsPdf(): void;
+  onSelectOfficePdf(): void;
 }) {
   const finalLayout = state.previewMode === "final-layout";
   const reviewMode = state.previewMode === "review";
@@ -651,7 +649,7 @@ export function DualPreviewPanel({
         <FinalLayoutPreview
           state={state}
           onBuild={onBuild}
-          onSelectWpsPdf={onSelectWpsPdf}
+          onSelectOfficePdf={onSelectOfficePdf}
         />
       ) : reviewMode ? (
         <ReviewPanel state={state} onActivated={onActivated} />

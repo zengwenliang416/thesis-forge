@@ -21,11 +21,11 @@ from thesis_forge.application import (
     BuildValidationError,
     InspectionResult,
     LibreOfficePdfPreviewExporter,
+    MicrosoftWordPdfPreviewExporter,
     PreviewResult,
     ValidationResult,
     build_service,
     inspect_service,
-    preferred_pdf_preview_exporter,
     preview_service,
     validation_service,
 )
@@ -96,6 +96,12 @@ def final_preview_build_service(
     )
 
 
+def desktop_application_dependencies() -> ApplicationDependencies:
+    return ApplicationDependencies(
+        pdf_preview_exporter=MicrosoftWordPdfPreviewExporter(),
+    )
+
+
 def desktop_final_preview_build_service(
     source: str | Path,
     output: str | Path,
@@ -104,9 +110,7 @@ def desktop_final_preview_build_service(
     return build_service(
         source,
         output,
-        dependencies=ApplicationDependencies(
-            pdf_preview_exporter=preferred_pdf_preview_exporter(),
-        ),
+        dependencies=desktop_application_dependencies(),
         **kwargs,
     )
 

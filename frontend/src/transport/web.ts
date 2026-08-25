@@ -274,8 +274,8 @@ export class WebWorkbenchTransport implements WorkbenchTransport {
       return null;
     }
     const descriptor = readFinalPreviewDescriptor({
-      engine: "wps",
-      label: "WPS PDF",
+      engine: "microsoft-word",
+      label: "Microsoft Word PDF",
       fileName: picked.fileName,
     });
     return {

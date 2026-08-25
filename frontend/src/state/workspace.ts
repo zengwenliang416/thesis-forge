@@ -286,7 +286,7 @@ function staleFinalPreview(
   return {
     ...preview,
     status: "stale",
-    message: "文稿或模板已改变，请重新构建或选择新的 WPS PDF。",
+    message: "文稿或模板已改变，请重新构建或选择新的 Office PDF。",
     requestKey: null,
   };
 }
@@ -487,7 +487,7 @@ export function reduceWorkspaceState(
                 descriptor: null,
                 bytes: null,
                 message:
-                  "DOCX 已生成，但自动 PDF 不可用。可重新构建或选择 WPS 导出的 PDF。",
+                  "DOCX 已生成，但 Microsoft Word 未生成 PDF 预览。请重新构建，或选择 Word 导出的 PDF。",
                 revision: state.contentRevision,
                 requestKey: null,
               },
@@ -553,7 +553,7 @@ export function reduceWorkspaceState(
                 ...state.finalPreview,
                 status: "stale",
                 message:
-                  "实时 PDF 暂不可用，仍显示上一次预览。请确认已安装 LibreOffice。",
+                  "Microsoft Word 实时 PDF 暂不可用，仍显示上一次预览。",
                 requestKey: null,
               }
             : {
@@ -561,7 +561,7 @@ export function reduceWorkspaceState(
                 descriptor: null,
                 bytes: null,
                 message:
-                  "实时 PDF 暂不可用。请安装 LibreOffice，或选择 WPS 导出的 PDF。",
+                  "Microsoft Word 未生成实时 PDF。请检查 macOS“自动化”权限后重试。",
                 revision: event.revision,
                 requestKey: null,
               },
@@ -707,8 +707,8 @@ export function reduceWorkspaceState(
             ...state.finalPreview,
             message:
               state.finalPreview.status === "stale"
-                ? `文稿或模板已改变；选择新的 WPS PDF 失败：${event.message}`
-                : `选择新的 WPS PDF 失败：${event.message}`,
+                ? `文稿或模板已改变；选择新的 Office PDF 失败：${event.message}`
+                : `选择新的 Office PDF 失败：${event.message}`,
             requestKey: null,
           },
         };

@@ -100,8 +100,8 @@ describe("workspace preview state", () => {
       finalPreview: {
         status: "ready" as const,
         descriptor: {
-          engine: "wps" as const,
-          label: "WPS PDF" as const,
+          engine: "microsoft-word" as const,
+          label: "Microsoft Word PDF" as const,
           fileName: "thesis.pdf",
           authorizationId: "a".repeat(32),
         },
@@ -132,7 +132,7 @@ describe("workspace preview state", () => {
     expect(state.finalPreview.bytes).toBeNull();
   });
 
-  it("accepts only the current WPS PDF selection request", () => {
+  it("accepts only the current Office PDF selection request", () => {
     let state = reduceWorkspaceState(
       {
         ...createInitialWorkspaceState(),
@@ -150,8 +150,8 @@ describe("workspace preview state", () => {
       type: "finalPreviewSelected",
       requestKey: "selection:1",
       descriptor: {
-        engine: "wps",
-        label: "WPS PDF",
+        engine: "microsoft-word",
+        label: "Microsoft Word PDF",
         fileName: "old.pdf",
         authorizationId: "b".repeat(32),
       },
@@ -163,8 +163,8 @@ describe("workspace preview state", () => {
       type: "finalPreviewSelected",
       requestKey: "selection:2",
       descriptor: {
-        engine: "wps",
-        label: "WPS PDF",
+        engine: "microsoft-word",
+        label: "Microsoft Word PDF",
         fileName: "current.pdf",
         authorizationId: "c".repeat(32),
       },
@@ -181,8 +181,8 @@ describe("workspace preview state", () => {
         finalPreview: {
           status: "ready",
           descriptor: {
-            engine: "wps",
-            label: "WPS PDF",
+            engine: "microsoft-word",
+            label: "Microsoft Word PDF",
             fileName: "current.pdf",
             authorizationId: "d".repeat(32),
           },

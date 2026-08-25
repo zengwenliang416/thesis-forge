@@ -243,19 +243,19 @@ describe("runtime transports", () => {
     ]);
   });
 
-  it("imports a browser-selected WPS PDF through the transport contract", async () => {
+  it("imports a browser-selected Office PDF through the transport contract", async () => {
     const transport = new WebWorkbenchTransport({
       pickPdf: async () => ({
-        fileName: "wps-export.pdf",
+        fileName: "word-export.pdf",
         bytes: new TextEncoder().encode("%PDF-1.7\n"),
       }),
     });
 
     const selected = await transport.pickFinalPreview();
     expect(selected?.descriptor).toEqual({
-      engine: "wps",
-      label: "WPS PDF",
-      fileName: "wps-export.pdf",
+      engine: "microsoft-word",
+      label: "Microsoft Word PDF",
+      fileName: "word-export.pdf",
     });
     expect(selected?.bytes).toBeInstanceOf(Uint8Array);
   });
@@ -263,9 +263,9 @@ describe("runtime transports", () => {
   it("uses Tauri picker authorization and raw PDF reader commands", async () => {
     const calls: Array<{ command: string; args?: Record<string, unknown> }> = [];
     const descriptor = {
-      engine: "wps" as const,
-      label: "WPS PDF" as const,
-      fileName: "wps-export.pdf",
+      engine: "microsoft-word" as const,
+      label: "Microsoft Word PDF" as const,
+      fileName: "word-export.pdf",
       authorizationId: "b".repeat(32),
     };
     const transport = new TauriWorkbenchTransport(async (command, args) => {
@@ -290,9 +290,9 @@ describe("runtime transports", () => {
 
   it("accepts PDF bytes serialized by the Tauri postMessage fallback", async () => {
     const descriptor = {
-      engine: "wps" as const,
-      label: "WPS PDF" as const,
-      fileName: "wps-export.pdf",
+      engine: "microsoft-word" as const,
+      label: "Microsoft Word PDF" as const,
+      fileName: "word-export.pdf",
       authorizationId: "b".repeat(32),
     };
     const serializedBytes = Array.from(

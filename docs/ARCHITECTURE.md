@@ -116,7 +116,8 @@ Parser、Validator、Compiler、编号和 DOCX Renderer 不得在前端复制。
 
 - 结构预览：由序列化 RenderPlan 驱动，快速且可与大纲、编辑器联动。
 - 实时版式：默认模式。打开文稿或编辑停止约 900ms 后，以当前未保存文本构建一次性
-  临时 DOCX，并显示其 LibreOffice PDF；也可显示用户明确选择的 WPS PDF。
+  临时 DOCX。桌面端只通过 Microsoft Word 生成 PDF，也可显示用户明确选择的
+  Microsoft Word PDF；Web 端使用其独立的 LibreOffice 自动预览路径。
 
 Web 通过 workspace-bound PDF route 读取自动产物；Tauri 只读取本次构建派生或用户
 选择并授权的 PDF。实时构建保留原 Markdown 路径解析相对资源，但不写回源文件，也不

@@ -14,13 +14,6 @@ export type FinalPreviewDescriptor =
       downloadId?: string;
       authorizationId?: string;
       livePreviewId?: string;
-    }
-  | {
-      engine: "wps";
-      label: "WPS PDF";
-      fileName: string;
-      downloadId?: never;
-      authorizationId?: string;
     };
 
 export interface ResolvedFinalPreview {
@@ -85,7 +78,8 @@ export function readFinalPreviewDescriptor(
     value.engine === "microsoft-word" &&
     value.label === "Microsoft Word PDF" &&
     value.downloadId === undefined &&
-    isAuthorizationId(value.authorizationId) &&
+    (value.authorizationId === undefined ||
+      isAuthorizationId(value.authorizationId)) &&
     value.livePreviewId === undefined
   ) {
     return value as FinalPreviewDescriptor;
@@ -101,14 +95,6 @@ export function readFinalPreviewDescriptor(
       value.livePreviewId !== undefined &&
       value.downloadId === undefined
     )
-  ) {
-    return value as FinalPreviewDescriptor;
-  }
-  if (
-    value.engine === "wps" &&
-    value.label === "WPS PDF" &&
-    value.downloadId === undefined &&
-    value.livePreviewId === undefined
   ) {
     return value as FinalPreviewDescriptor;
   }

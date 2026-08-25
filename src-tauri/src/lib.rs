@@ -80,8 +80,7 @@ pub fn validate_final_preview_descriptor(value: &Value) -> Result<FinalPreviewDe
     }
     match (descriptor.engine.as_str(), descriptor.label.as_str()) {
         ("microsoft-word", "Microsoft Word PDF")
-        | ("libreoffice", "LibreOffice PDF")
-        | ("wps", "WPS PDF") => {}
+        | ("libreoffice", "LibreOffice PDF") => {}
         _ => return Err("final preview engine and label do not match".to_string()),
     }
     if descriptor.download_id.is_some() {
@@ -1060,7 +1059,7 @@ async fn pick_pdf_preview(
     state: State<'_, PreviewAuthorizationState>,
 ) -> Result<Option<Value>, String> {
     let handle = rfd::AsyncFileDialog::new()
-        .set_title("选择 WPS 导出的 PDF")
+        .set_title("选择 Microsoft Word 导出的 PDF")
         .add_filter("PDF", &["pdf"])
         .pick_file()
         .await;
@@ -1075,8 +1074,8 @@ async fn pick_pdf_preview(
         .ok_or_else(|| "PDF preview file name is invalid".to_string())?
         .to_string();
     let descriptor = FinalPreviewDescriptor {
-        engine: "wps".to_string(),
-        label: "WPS PDF".to_string(),
+        engine: "microsoft-word".to_string(),
+        label: "Microsoft Word PDF".to_string(),
         file_name,
         download_id: None,
         authorization_id: None,

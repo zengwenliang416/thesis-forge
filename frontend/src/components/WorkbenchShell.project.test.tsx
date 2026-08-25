@@ -47,7 +47,7 @@ describe("WorkbenchShell project opening", () => {
         onContentActivated={() => undefined}
         onPreviewModeChanged={() => undefined}
         onRefreshFinalPreview={() => undefined}
-        onSelectWpsPdf={() => undefined}
+        onSelectOfficePdf={() => undefined}
         onEdit={() => undefined}
         onMobilePanelSelected={() => undefined}
         onPanelsResized={() => undefined}

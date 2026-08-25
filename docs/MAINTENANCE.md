@@ -130,7 +130,7 @@ workspace IDs, traversal, non-PDF names, workspace-escaping symlinks and invalid
 PDF signatures. Live-preview artifacts use a separate server-issued capability
 route and a runtime-owned `.thesisforge-live-previews/` directory; reads and
 explicit discard consume the capability, while startup/allocation sweeps remove
-expired files left by a process restart. User-selected WPS PDFs stay
+expired files left by a process restart. User-selected Office PDFs stay
 browser-local.
 
 ## Desktop Sidecar
@@ -246,12 +246,12 @@ as production releases.
   dirty and the prior file must remain unchanged.
 - Build cancellation or failure: retry from the workbench; the previous valid
   DOCX must remain intact.
-- Final preview is unavailable: confirm LibreOffice is installed for automatic
-  `LibreOffice PDF`, click the live-preview refresh action, or select a PDF
-  explicitly exported by WPS.
+- Desktop final preview is unavailable: confirm Microsoft Word is installed,
+  allow ThesisForge under the operating system's automation permissions, then
+  refresh or select a PDF explicitly exported by Microsoft Word.
 - Final preview is marked stale: the Markdown, template or workspace changed
   after the PDF was bound. Stop editing briefly for automatic refresh, click
-  refresh, or select a new WPS PDF.
+  refresh, or select a new Office PDF.
 - `Bundle contains AppleDouble files`: run `dot_clean -m` on the bundle root,
   then rerun the verifier and checksums.
 - Web actions cannot reach the compiler: configure and start the ThesisForge

@@ -442,7 +442,7 @@ test("loads and refreshes a complete automatic PDF after an edit", async ({
   await page.locator('input[type="file"]').setInputFiles(projectFiles());
 
   await expect(page.getByText("LibreOffice PDF")).toBeVisible();
-  await expect(page.getByText("当前实时预览")).toBeVisible();
+  await expect(page.getByText("当前 Office 预览")).toBeVisible();
   await expect.poll(() => livePreviewBuilds).toBe(1);
   await expect.poll(() => livePreviewReads).toBe(1);
   await expect(page.getByTitle("最终版式 PDF")).toHaveAttribute(
@@ -456,7 +456,7 @@ test("loads and refreshes a complete automatic PDF after an edit", async ({
   await expect(page.getByText("已过期", { exact: true })).toBeVisible();
   await expect.poll(() => livePreviewBuilds).toBe(2);
   await expect.poll(() => livePreviewReads).toBe(2);
-  await expect(page.getByText("当前实时预览")).toBeVisible();
+  await expect(page.getByText("当前 Office 预览")).toBeVisible();
   await expect(page.getByTitle("最终版式 PDF")).toBeVisible();
 });
 

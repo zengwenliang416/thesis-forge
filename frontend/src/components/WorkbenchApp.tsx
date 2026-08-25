@@ -782,7 +782,7 @@ export function WorkbenchApp({
     }
   };
 
-  const chooseWpsPdf = async () => {
+  const chooseOfficePdf = async () => {
     if (livePreviewDebounceRef.current) {
       clearTimeout(livePreviewDebounceRef.current);
       livePreviewDebounceRef.current = null;
@@ -796,7 +796,7 @@ export function WorkbenchApp({
       dispatch({
         type: "finalPreviewSelectionFailed",
         requestKey,
-        message: "当前运行时不支持选择本地 WPS PDF。",
+        message: "当前运行时不支持选择本地 Office PDF。",
       });
       return;
     }
@@ -817,7 +817,7 @@ export function WorkbenchApp({
         type: "finalPreviewSelectionFailed",
         requestKey,
         message:
-          error instanceof Error ? error.message : "WPS PDF 读取失败。",
+          error instanceof Error ? error.message : "Office PDF 读取失败。",
       });
     }
   };
@@ -926,7 +926,7 @@ export function WorkbenchApp({
         dispatch({ type: "previewModeSelected", mode })
       }
       onRefreshFinalPreview={refreshLivePreview}
-      onSelectWpsPdf={() => void chooseWpsPdf()}
+      onSelectOfficePdf={() => void chooseOfficePdf()}
       onEdit={(text) => dispatch({ type: "textEdited", text })}
       onMobilePanelSelected={(panel) =>
         dispatch({ type: "mobilePanelSelected", panel })

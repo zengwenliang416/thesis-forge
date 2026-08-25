@@ -88,11 +88,11 @@ make install
 顶部包含打开、保存、验证、构建 DOCX、构建进度和学校模板选择器。
 
 “结构预览”来自 RenderPlan，适合检查标题、图表、公式、引用和语义结构，不代表
-Word/WPS 最终分页。“最终版式”显示真实 PDF 页面：
+Microsoft Word 最终分页。“最终版式”显示真实 PDF 页面：
 
-- macOS/Windows 桌面端优先标记为 `Microsoft Word PDF`，Word 不可用时自动降级为 `LibreOffice PDF`。
+- macOS/Windows 桌面端只使用 Microsoft Word 生成实时预览，并标记为 `Microsoft Word PDF`。
 - Web 自动预览标记为 `LibreOffice PDF`。
-- 用户明确选择 WPS 导出的 PDF 时标记为 `WPS PDF`。
+- 用户手工选择由 Microsoft Word 导出的 PDF 时同样标记为 `Microsoft Word PDF`。
 - 修改 Markdown、切换模板或打开其他文稿后，旧 PDF 会显示“预览已过期”。
 
 ![完整工作台](user-manual/images/02-workbench-overview.png)
@@ -869,7 +869,7 @@ ThesisForge 先写同目录临时文件，校验 DOCX 包后再原子替换最�
 
 1. 点击右侧“最终版式”。
 2. 正常构建 DOCX。
-3. 桌面端优先调用本机 Microsoft Word 生成 PDF；Word 不可用或导出失败时，自动降级到 LibreOffice。
+3. 桌面端调用本机 Microsoft Word 生成 PDF，不切换到其他 Office 引擎。
 4. 构建完成后会读取同目录派生文件：
 
 ```text
@@ -877,31 +877,30 @@ ThesisForge 先写同目录临时文件，校验 DOCX 包后再原子替换最�
 /path/to/thesis.preview.pdf
 ```
 
-界面会按实际引擎显示 `Microsoft Word PDF` 或 `LibreOffice PDF`，并标记为“当前构建”。
-Web 自动预览仍只使用 LibreOffice。任何引擎的 PDF 都只代表该引擎的排版结果，不能
-称为 WPS 的逐像素等价结果。
+桌面界面显示 `Microsoft Word PDF` 并标记为“当前 Office 预览”。Web 自动预览仍只
+使用 LibreOffice；Web 预览只代表 Web 运行环境的排版结果。
 
 macOS 首次通过 ThesisForge 调用 Microsoft Word 时，系统可能要求一次“自动化”权限。
 允许 ThesisForge 控制 Microsoft Word 后，后续实时预览通常不再重复弹出文件授权。
 如果曾拒绝，可在“系统设置 → 隐私与安全性 → 自动化”中重新允许。
 
-如果自动 PDF 不可用，DOCX 仍然构建成功。可以点击“重新构建”，或点击
-“选择 WPS PDF”关联一个已由 WPS 导出的 `.pdf` 文件。
+如果 Microsoft Word 未生成 PDF，DOCX 仍然构建成功。请检查 macOS“自动化”权限后
+重新构建，或点击“选择 Office PDF”关联一个已由 Microsoft Word 导出的 `.pdf` 文件。
 
-### 8.6 WPS PDF 和过期状态
+### 8.6 Office PDF 和过期状态
 
-在 WPS 中打开最新 DOCX，完成目录更新和人工检查后导出 PDF，再在 ThesisForge
-“最终版式”中点击“选择 WPS PDF”。Web 使用浏览器文件选择器，macOS/Windows
-桌面端使用原生 PDF 选择器。
+在 Microsoft Word 中打开最新 DOCX，完成目录更新和人工检查后导出 PDF，再在
+ThesisForge“最终版式”中点击“选择 Office PDF”。Web 使用浏览器文件选择器，
+macOS/Windows 桌面端使用原生 PDF 选择器。
 
-只有显式选择的文件才标记为 `WPS PDF`。以下操作会让当前 PDF 显示“已过期”：
+手工选择的文件标记为 `Microsoft Word PDF`。以下操作会让当前 PDF 显示“已过期”：
 
 - 修改正文或 Front Matter。
 - 切换学校模板。
 - 打开另一份 Markdown。
 
 过期 PDF 仍可查看，但不能作为当前文稿的最新验收证据。重新构建后恢复为“当前构建”；
-重新选择 WPS PDF 后显示“当前预览”，避免把手工关联文件误写为本次构建产物。
+重新选择 Office PDF 后显示“当前 Office 预览”，避免把手工关联文件误写为本次构建产物。
 
 ## 9. 自动目录和页码
 
@@ -921,7 +920,7 @@ THESISFORGE_OFFICE_REFRESH=auto
 
 ### 9.2 手动更新目录
 
-在 Word 或 WPS 中：
+在 Microsoft Word 中：
 
 1. 打开 DOCX。
 2. 点击目录。
@@ -929,10 +928,6 @@ THESISFORGE_OFFICE_REFRESH=auto
 4. 选择“更新整个目录”。
 
 也可以全选文档后更新域；不同系统和软件版本的快捷键可能不同。
-
-在 LibreOffice Writer 中，使用“工具 / 更新 / 全部更新”或右键目录更新。
-
-![WPS 中更新后的目录](user-manual/images/10-wps-toc-updated.png)
 
 ## 10. Web、macOS、Windows 差异
 
@@ -944,8 +939,8 @@ THESISFORGE_OFFICE_REFRESH=auto
 | 任意模板路径 | UI 未提供，CLI 支持 | UI 未提供，CLI 支持 | UI 未提供，CLI 支持 |
 | DOCX 输出 | 服务端工作区 | Markdown 同目录 | Markdown 同目录 |
 | DOCX 直接下载 | 当前未接通 | 不需要下载 | 不需要下载 |
-| 自动最终预览 | 工作区 `LibreOffice PDF` | 本机优先 `Microsoft Word PDF`，降级 `LibreOffice PDF` | 本机优先 `Microsoft Word PDF`，降级 `LibreOffice PDF` |
-| 选择 WPS PDF | 浏览器文件选择 | 原生文件选择 | 原生文件选择 |
+| 自动最终预览 | 工作区 `LibreOffice PDF` | 本机 `Microsoft Word PDF` | 本机 `Microsoft Word PDF` |
+| 选择 Office PDF | 浏览器文件选择 | 原生文件选择 | 原生文件选择 |
 | 编译核心 | Python HTTP adapter | Tauri + 本地 sidecar | Tauri + 本地 sidecar |
 | 离线使用 | 取决于部署方式 | 支持 | 支持 |
 
@@ -961,10 +956,9 @@ THESISFORGE_OFFICE_REFRESH=auto
 
 ### 11.3 结构预览和 Word 分页不同
 
-这是正常现象。结构预览用于检查语义结构和模板角色，不执行 Word/WPS 的最终分页算法。
-需要检查真实页面时切换到“最终版式”。桌面端自动 PDF 反映 Microsoft Word 或
-LibreOffice 的实际布局，Web 自动 PDF 反映 LibreOffice 的布局；若提交目标是 WPS，
-请在 WPS 中导出 PDF 后选择该文件，并以 `WPS PDF` 标签的预览为准。
+这是正常现象。结构预览用于检查语义结构和模板角色，不执行 Microsoft Word 的最终
+分页算法。需要检查真实页面时切换到“最终版式”。桌面端自动 PDF 反映 Microsoft Word
+的实际布局，Web 自动 PDF 反映 Web 运行环境中 LibreOffice 的布局。
 
 ### 11.4 目录是空的或页码没有更新
 
@@ -1020,8 +1014,8 @@ line_spacing:
 7. 编辑后保存。
 8. 运行验证，清除所有错误。
 9. 构建 DOCX。
-10. 切换“最终版式”，检查实际标记的 `Microsoft Word PDF` 或 `LibreOffice PDF`；若目标是 WPS，选择 WPS 导出的 PDF。
-11. 在目标 Word/WPS/LibreOffice 中更新整个目录。
+10. 切换“最终版式”，桌面端检查标记为 `Microsoft Word PDF` 的真实页面。
+11. 在 Microsoft Word 中更新整个目录。
 12. 检查封面、摘要、目录、正文、图表、公式、参考文献、页眉页脚和页码。
 13. 最终提交前重新构建一次，并保留 Markdown、模板、BibTeX、图片、DOCX 和验收 PDF。
 

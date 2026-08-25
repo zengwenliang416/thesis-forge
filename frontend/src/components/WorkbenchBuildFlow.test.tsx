@@ -208,13 +208,13 @@ describe("Workbench build flow", () => {
     expect(resolveFinalPreview).toHaveBeenCalledWith(descriptor);
   });
 
-  it("imports a selected WPS PDF without calling a runtime API from the component", async () => {
+  it("imports a selected Office PDF without calling a runtime API from the component", async () => {
     const user = userEvent.setup();
     const pickFinalPreview = vi.fn().mockResolvedValue({
       descriptor: {
-        engine: "wps",
-        label: "WPS PDF",
-        fileName: "wps-export.pdf",
+        engine: "microsoft-word",
+        label: "Microsoft Word PDF",
+        fileName: "word-export.pdf",
         authorizationId: "c".repeat(32),
       },
       bytes: new TextEncoder().encode("%PDF-1.7\n"),
@@ -226,10 +226,10 @@ describe("Workbench build flow", () => {
       />,
     );
 
-    await user.click(screen.getByRole("button", { name: "选择 WPS PDF" }));
+    await user.click(screen.getByRole("button", { name: "选择 Office PDF" }));
 
-    expect(await screen.findByText("WPS PDF")).toBeVisible();
-    expect(screen.getByText("WPS 对照稿")).toBeVisible();
+    expect(await screen.findByText("Microsoft Word PDF")).toBeVisible();
+    expect(screen.getByText("当前 Office 预览")).toBeVisible();
     expect(screen.getByTitle("最终版式 PDF")).toBeVisible();
     expect(pickFinalPreview).toHaveBeenCalledOnce();
   });
@@ -246,8 +246,8 @@ describe("Workbench build flow", () => {
           finalPreview: {
             status: "ready",
             descriptor: {
-              engine: "wps",
-              label: "WPS PDF",
+              engine: "microsoft-word",
+              label: "Microsoft Word PDF",
               fileName: "existing.pdf",
               authorizationId: "d".repeat(32),
             },
@@ -260,11 +260,11 @@ describe("Workbench build flow", () => {
       />,
     );
 
-    await user.click(screen.getByRole("button", { name: "选择 WPS PDF" }));
+    await user.click(screen.getByRole("button", { name: "选择 Office PDF" }));
 
-    expect(await screen.findByText(/选择新的 WPS PDF 失败/)).toBeVisible();
+    expect(await screen.findByText(/选择新的 Office PDF 失败/)).toBeVisible();
     expect(screen.getByTitle("最终版式 PDF")).toBeVisible();
-    expect(screen.getByText("WPS 对照稿")).toBeVisible();
+    expect(screen.getByText("当前 Office 预览")).toBeVisible();
   });
 
   it("stores live-preview diagnostics and marks the previous PDF stale on failure", () => {
@@ -487,7 +487,7 @@ describe("Workbench build flow", () => {
     );
 
     expect(await screen.findByText("实时预览已取消。")).toBeVisible();
-    expect(screen.getByText("自动 PDF 不可用")).toBeVisible();
+    expect(screen.getByText("Microsoft Word PDF 未生成")).toBeVisible();
   });
 
   it("debounces editor snapshots into disposable live PDF builds", async () => {
@@ -552,7 +552,7 @@ describe("Workbench build flow", () => {
         intent: "live-preview",
         text: "# 绪论\n",
       });
-      expect(screen.getByText("当前实时预览")).toBeVisible();
+      expect(screen.getByText("当前 Office 预览")).toBeVisible();
 
       fireEvent.change(
         screen.getByRole("textbox", { name: "Markdown 文稿内容" }),

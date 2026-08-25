@@ -415,7 +415,9 @@ describe("WorkbenchApp project flow", () => {
 
     await user.click(screen.getByRole("button", { name: "立即刷新预览" }));
 
-    expect(await screen.findByText("自动 PDF 不可用")).toBeVisible();
+    expect(
+      await screen.findByText("Microsoft Word PDF 未生成"),
+    ).toBeVisible();
     expect(requests).toHaveLength(1);
     expect(requests[0]?.operation).toBe("build");
     expect(requests[0]?.payload).toEqual({
@@ -499,7 +501,7 @@ describe("WorkbenchApp project flow", () => {
 
       await user.click(screen.getByRole("button", { name: "构建 DOCX" }));
       expect(await screen.findByText("thesis.docx")).toBeVisible();
-      expect(await screen.findByText("当前实时预览")).toBeVisible();
+      expect(await screen.findByText("当前 Office 预览")).toBeVisible();
       expect(screen.getByText("LibreOffice PDF")).toBeVisible();
       expect(screen.getByText("标题层级从 H1 跳到 H3")).toBeVisible();
 
@@ -517,7 +519,7 @@ describe("WorkbenchApp project flow", () => {
       expect(screen.queryByText("thesis.docx")).toBeNull();
       expect(screen.getByText("尚无输出 · macOS / Windows")).toBeVisible();
       expect(screen.queryByText("LibreOffice PDF")).toBeNull();
-      expect(screen.queryByText("当前实时预览")).toBeNull();
+      expect(screen.queryByText("当前 Office 预览")).toBeNull();
       expect(screen.getByText("未生成")).toBeVisible();
       expect(dispatch).toHaveBeenLastCalledWith(
         expect.objectContaining({
