@@ -6,36 +6,36 @@
       "id": "A1",
       "statement": "The visible product brand is DocForge and the workbench is described as a general Markdown to Word document workshop.",
       "verify_via": "e2e",
-      "status": "pending",
-      "evidence_ref": null
+      "status": "passing",
+      "evidence_ref": "frontend component/E2E coverage plus verification/desktop-1440x1024.png and verification/installed-macos-word-preview.png"
     },
     {
       "id": "A2",
       "statement": "Open, save, validate, template selection, DOCX build, preview mode, Office PDF selection and cancellation retain their current transport behavior.",
       "verify_via": "unit",
-      "status": "pending",
-      "evidence_ref": null
+      "status": "passing",
+      "evidence_ref": "development/validation-log.jsonl: frontend unit, browser E2E, real HTTP E2E, and Rust protocol contract entries"
     },
     {
       "id": "A3",
       "statement": "At 1440x1024 the document outline, Markdown editor, Microsoft Word preview and contextual diagnostics match the selected reference hierarchy.",
       "verify_via": "sensory",
-      "status": "pending",
-      "evidence_ref": null
+      "status": "passing",
+      "evidence_ref": "design-qa.md and verification/desktop-1440x1024.png"
     },
     {
       "id": "A4",
       "statement": "The mobile breakpoint exposes outline, editor, preview and diagnostics without horizontal overflow.",
       "verify_via": "e2e",
-      "status": "pending",
-      "evidence_ref": null
+      "status": "passing",
+      "evidence_ref": "design-qa.md, verification/mobile-390x844.png, and mobile Playwright navigation coverage"
     },
     {
       "id": "A5",
       "statement": "No frontend UI change introduces a dependency into the parser, domain, compiler, RenderPlan or DOCX renderer.",
       "verify_via": "static",
-      "status": "pending",
-      "evidence_ref": null
+      "status": "passing",
+      "evidence_ref": "CodeGraph evidence ev-mt8ejd0i plus frontend-only production diff"
     }
   ]
 }

@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "owners": [
+    {
+      "path": "frontend/src/components",
+      "owner": "001-docforge-workbench-redesign"
+    },
+    {
+      "path": "frontend/src/styles.css",
+      "owner": "001-docforge-workbench-redesign"
+    },
+    {
+      "path": "frontend/e2e",
+      "owner": "001-docforge-workbench-redesign"
+    },
+    {
+      "path": "src-tauri",
+      "owner": "001-docforge-workbench-redesign"
+    },
+    {
+      "path": "docs",
+      "owner": "001-docforge-workbench-redesign"
+    },
+    {
+      "path": "design-qa.md",
+      "owner": "001-docforge-workbench-redesign"
+    },
+    {
+      "path": "openspec/changes/docforge-workbench-ui-redesign",
+      "owner": "001-docforge-workbench-redesign"
+    }
+  ]
+}

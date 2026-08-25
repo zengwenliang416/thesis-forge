@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "component_rules": [
+    "Keep command orchestration, reducer ownership, transport calls, preview resolution, and build cancellation in WorkbenchApp.",
+    "Move the existing Word template selector presentation into ProductBar through existing IDs and callbacks without duplicating state.",
+    "Keep WorkbenchShell responsible only for semantic layout composition, resizers, and mobile panel routing.",
+    "Reuse OutlinePanel, MarkdownEditor, DualPreviewPanel, DiagnosticsPanel, OutputFeedback, PanelHeader, diagnosticSummary, and presentDiagnostics.",
+    "Do not extract a second shell, state machine, transport hook, preview resolver, or design-system layer for this single screen.",
+    "Extract a visual group only if the same command or status presentation becomes duplicated in another production screen."
+  ]
+}

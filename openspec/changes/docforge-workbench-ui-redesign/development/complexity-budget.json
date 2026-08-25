@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "budgets": [
+    {
+      "area": "component cohesion",
+      "limit": "preserve the existing WorkbenchApp orchestration and panel component responsibilities"
+    },
+    {
+      "area": "coupling",
+      "limit": "no direct HTTP, Tauri, parser, compiler, RenderPlan, renderer, or OOXML dependency from layout components"
+    },
+    {
+      "area": "new abstractions",
+      "limit": "no new state layer, transport abstraction, editor dependency, icon package, or parallel workbench shell"
+    },
+    {
+      "area": "responsive layout",
+      "limit": "reuse the existing mobilePanel state and both existing desktop resizers"
+    }
+  ]
+}

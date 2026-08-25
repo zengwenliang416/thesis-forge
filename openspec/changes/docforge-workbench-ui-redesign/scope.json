@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "change_id": "docforge-workbench-ui-redesign",
+  "stage": "development",
+  "allowed_roots": [
+    "frontend/src",
+    "frontend/e2e",
+    "frontend/scripts",
+    "frontend/index.html",
+    ".woodpecker",
+    ".github/workflows/pr-gate.yml",
+    "qa/tools",
+    "spikes/phase0",
+    "tests/test_desktop_distribution.py",
+    "src-tauri",
+    "docs",
+    "README.md",
+    "design-qa.md",
+    "openspec/changes/docforge-workbench-ui-redesign"
+  ],
+  "denied_roots": [
+    ".git",
+    ".venv",
+    "node_modules",
+    "dist",
+    "build",
+    "coverage",
+    "src/thesis_forge/core",
+    "src/thesis_forge/compiler",
+    "src/thesis_forge/renderers",
+    "src/thesis_forge/parsers",
+    "openspec/changes/template-v2-build-pipeline-p1",
+    "openspec/changes/v2-rich-inline-renderplan-p1"
+  ],
+  "requires_review_on": [
+    "package.json",
+    "frontend/package.json",
+    "frontend/pnpm-lock.yaml",
+    "src-tauri/Cargo.toml",
+    "src-tauri/Cargo.lock",
+    "src-tauri/tauri.conf.json",
+    "src-tauri/tauri.release.conf.json",
+    "openspec/changes/docforge-workbench-ui-redesign/tasks.md"
+  ],
+  "allowed_operations": {
+    "create": true,
+    "modify": true,
+    "delete": false,
+    "rename": false
+  },
+  "prototype_sources": [
+    "openspec/changes/docforge-workbench-ui-redesign/prototype/artifact/index.html"
+  ],
+  "expires_when": "verification_started"
+}

@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "active_change": "docforge-workbench-ui-redesign",
+  "status": "ready",
+  "ok": true,
+  "checked_at": "2026-08-25T07:19:45Z",
+  "requirements_contract": "ok",
+  "prototype_contract": "ok",
+  "prototype_decision": "approved",
+  "approved_variant": "dual-canvas-docforge",
+  "tasks_baseline_commit": "f6fedf1f7b1d74c277fd1a3869bed87c1f41070a",
+  "scope_lock": "openspec/changes/docforge-workbench-ui-redesign/scope.json",
+  "blockers": []
+}

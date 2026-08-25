@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "promotion_policy": "reimplement_under_development_gate",
+  "allowed_to_copy": [
+    "Approved visible product copy: DocForge and Markdown → Word 文档工坊",
+    "Approved semantic hierarchy, spacing intent, color direction, and static labels from the prototype"
+  ],
+  "must_reimplement": [
+    "Production React markup in the existing component tree",
+    "Production CSS using repository tokens and responsive behavior",
+    "Template selection wiring, command availability, diagnostics, previews, persistence, and side effects through existing callbacks"
+  ],
+  "blocked_direct_copies": [
+    "Prototype-only fixtures, mock data, fake API handlers, inline scripts, hard-coded document content, and review-only layout glue"
+  ]
+}

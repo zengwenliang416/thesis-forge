@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-08-22T11:07:55.653Z",
-  "current_focus": "template-v2-build-pipeline-p1",
+  "generated_at": "2026-08-25T10:03:04.520Z",
+  "current_focus": "docforge-workbench-ui-redesign",
   "changes": [
     {
       "id": "automatic-docx-toc-refresh-p1",
@@ -30,6 +30,14 @@
       "last_active_at": "2026-07-31",
       "archive_path": "openspec/changes/archive/2026-07-31-build-thesisforge-v1-core",
       "archived_at": "2026-07-31T14:32:11.156Z"
+    },
+    {
+      "id": "docforge-workbench-ui-redesign",
+      "stage": "development",
+      "status": "active",
+      "branch": null,
+      "created_at": null,
+      "last_active_at": null
     },
     {
       "id": "illustrated-user-manual",

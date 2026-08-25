@@ -1,0 +1,89 @@
+{
+  "task_id": "001-docforge-workbench-redesign",
+  "task_items": [
+    "1.1",
+    "1.2",
+    "2.1",
+    "2.2",
+    "2.3",
+    "3.1",
+    "3.2",
+    "3.3",
+    "4.1",
+    "4.2",
+    "4.3",
+    "5.1",
+    "5.2",
+    "5.3"
+  ],
+  "acceptance_assertions": [
+    "A1",
+    "A2",
+    "A3",
+    "A4",
+    "A5"
+  ],
+  "goal": "Deliver the approved DocForge Markdown-to-Word workbench from visible UI through regression, visual QA, macOS packaging, installation, and Microsoft Word preview verification.",
+  "must_read": [
+    "openspec/changes/docforge-workbench-ui-redesign/development/tasks/001-docforge-workbench-redesign/brief.md",
+    "openspec/specs/ui-design/design.md",
+    "openspec/specs/system-architecture/design.md",
+    "openspec/specs/frontend-backend-data-flow/design.md",
+    "openspec/specs/component-architecture/design.md",
+    "openspec/changes/docforge-workbench-ui-redesign/requirements.md",
+    "openspec/changes/docforge-workbench-ui-redesign/acceptance.md",
+    "openspec/changes/docforge-workbench-ui-redesign/spec-map.json",
+    "openspec/changes/docforge-workbench-ui-redesign/component-impact-map.json",
+    "openspec/changes/docforge-workbench-ui-redesign/prototype/handoff.md",
+    "openspec/changes/docforge-workbench-ui-redesign/prototype/decision.json",
+    "openspec/changes/docforge-workbench-ui-redesign/prototype/artifact/index.html",
+    "frontend/src/components/WorkbenchApp.tsx",
+    "frontend/src/components/WorkbenchShell.tsx",
+    "frontend/src/components/ProductBar.tsx",
+    "frontend/src/components/StatusStrip.tsx",
+    "frontend/src/components/WorkbenchPanels.tsx",
+    "frontend/src/components/PreviewPanels.tsx",
+    "frontend/src/components/OutputFeedback.tsx",
+    "frontend/src/styles.css"
+  ],
+  "allowed_files": [
+    "frontend/src/components",
+    "frontend/src/styles.css",
+    "frontend/e2e",
+    "frontend/scripts",
+    "frontend/index.html",
+    "src-tauri",
+    "docs",
+    "README.md",
+    "design-qa.md",
+    "openspec/changes/docforge-workbench-ui-redesign"
+  ],
+  "test_paths": [
+    "pnpm frontend:test",
+    "pnpm frontend:typecheck",
+    "pnpm frontend:lint",
+    "pnpm frontend:build",
+    "pnpm frontend:e2e",
+    "cargo test --manifest-path src-tauri/Cargo.toml"
+  ],
+  "non_goals": [
+    "Do not rename the repository, Python package, CLI, Tauri bundle identifier, domain types, protocol, or template IDs.",
+    "Do not change Markdown parsing, domain, compiler, RenderPlan, DOCX renderer, OOXML, final preview generation, or transport DTO semantics.",
+    "Do not add AI, accounts, cloud sync, collaboration, analytics, a template marketplace, a new editor, a new icon package, dark mode, i18n, or WPS behavior."
+  ],
+  "expected_evidence": [
+    "Focused component and reducer regression tests",
+    "Frontend lint, typecheck, unit, build, browser E2E, and real HTTP E2E output",
+    "1440x1024 and 390x844 production screenshots plus design-qa.md",
+    "macOS release build and installed application evidence",
+    "Microsoft Word final preview path verification",
+    "Task report, spec review, quality review, and SpecNav verification evidence"
+  ],
+  "unsafe_assumptions": [
+    "Visible DocForge branding does not authorize internal ThesisForge identifier changes.",
+    "Moving the Word template selector must not change template IDs, reducer state, or transport callbacks.",
+    "A passing frontend build does not prove mobile navigation, installed app freshness, or Microsoft Word preview behavior.",
+    "Prototype fixtures and hard-coded content are not production implementation."
+  ],
+  "stop_condition": "Stop if implementation requires changing backend or document semantics, adding a new architecture decision, editing outside the allowlist, or cannot preserve existing transport and mobile/resizer behavior."
+}

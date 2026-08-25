@@ -1,0 +1,34 @@
+{
+  "schema": "specnav.codegraph.evidence_index.v1",
+  "generated_at": "2026-08-25T08:27:25.225Z",
+  "active_change": "docforge-workbench-ui-redesign",
+  "source_raw": "openspec/changes/docforge-workbench-ui-redesign/codegraph/evidence.jsonl",
+  "by_claim": {
+    "development:task-001-docforge-workbench-redesign": {
+      "status": "matched",
+      "evidence_ids": [
+        "ev-mt8ejd0i"
+      ],
+      "files": [
+        "frontend/src/components/WorkbenchApp.tsx",
+        "frontend/src/components/WorkbenchShell.tsx",
+        "frontend/src/components/ProductBar.tsx",
+        "frontend/src/components/PreviewPanels.tsx"
+      ],
+      "symbols": [],
+      "blockers": []
+    }
+  },
+  "by_stage": {
+    "development": {
+      "verified": 1,
+      "partial": 0,
+      "missing": 0,
+      "stale": 0,
+      "blocking": 0
+    }
+  },
+  "blockers": [],
+  "raw_exists": true,
+  "record_count": 1
+}
