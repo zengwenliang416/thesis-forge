@@ -344,6 +344,7 @@ def test_woodpecker_macos_release_is_tag_only_and_quality_gated() -> None:
         "platform": "darwin/arm64",
         "backend": "local",
         "purpose": "thesisforge-release",
+        "repo": "zengwenliang416/thesis-forge",
     }
     assert workflow["when"] == [{"event": "tag", "ref": "refs/tags/v*"}]
 
@@ -391,6 +392,9 @@ def test_woodpecker_macos_release_is_tag_only_and_quality_gated() -> None:
     assert upload["environment"]["AWS_ACCESS_KEY_ID"] == {
         "from_secret": "release_staging_write_access_key"
     }
+    assert upload["environment"]["RELEASE_STAGING_ENDPOINT"] == {
+        "from_secret": "release_staging_write_endpoint"
+    }
     assert "pip install" not in upload_commands
     assert "aws-cli/2.36.30" in upload_commands
     assert 's3 cp dist/release/' in upload_commands
@@ -424,6 +428,9 @@ def test_woodpecker_publish_downloads_verified_assets_on_linux() -> None:
     release_guard_commands = "\n".join(release_guard["commands"])
 
     assert download["image"].startswith("amazon/aws-cli:2.36.30@sha256:")
+    assert download["environment"]["RELEASE_STAGING_ENDPOINT"] == {
+        "from_secret": "release_staging_read_endpoint"
+    }
     assert 'test -f "ThesisForge_${version}_aarch64.dmg"' in download_commands
     assert "NR == 3" in download_commands
     assert "sha256sum -c SHA256SUMS" in download_commands
