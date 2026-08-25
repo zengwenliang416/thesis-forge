@@ -1,0 +1,57 @@
+clone:
+  git:
+    image: woodpeckerci/plugin-git:2.9.2
+    settings:
+      partial: false
+      depth: 0
+
+labels:
+  location: production-80
+
+when:
+  - event: pull_request
+  - event: push
+    branch: main
+  - event: manual
+
+concurrency:
+  limit: 1
+  group: thesis-forge-quality
+
+steps:
+  - name: python-quality
+    image: python:3.12-bookworm
+    environment:
+      PYTHONIOENCODING: utf-8
+      PYTHONUTF8: "1"
+      PIP_DISABLE_PIP_VERSION_CHECK: "1"
+    commands:
+      - python -m pip install -e ".[dev]"
+      - python -m ruff check .
+      - python -m pytest tests/ -q
+      - python qa/tools/parser_diff.py examples/v2-format-corpus/thesis.md
+      - python qa/tools/build_catalog.py
+      - python -m build --no-isolation --outdir dist/python
+      - python scripts/verify_distribution.py --dist-dir dist/python
+
+  - name: frontend-quality
+    image: node:24-bookworm
+    environment:
+      COREPACK_ENABLE_DOWNLOAD_PROMPT: "0"
+    commands:
+      - corepack enable
+      - corepack prepare pnpm@10.34.5 --activate
+      - pnpm --dir frontend install --frozen-lockfile
+      - pnpm --dir frontend lint
+      - pnpm --dir frontend typecheck
+      - pnpm --dir frontend test
+      - pnpm --dir frontend build
+
+  - name: rust-quality
+    image: rust:1.90-bookworm
+    commands:
+      - apt-get update
+      - apt-get install -y --no-install-recommends libwebkit2gtk-4.1-dev build-essential curl wget file libxdo-dev libssl-dev libayatana-appindicator3-dev librsvg2-dev
+      - cargo fmt --manifest-path src-tauri/Cargo.toml -- --check
+      - cargo test --manifest-path src-tauri/Cargo.toml
+      - cargo check --manifest-path src-tauri/Cargo.toml
