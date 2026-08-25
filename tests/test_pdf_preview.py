@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import errno
 import subprocess
 import zipfile
 from pathlib import Path
@@ -298,6 +299,43 @@ def test_microsoft_word_exporter_publishes_from_isolated_word_workspace(
     assert calls[0][2].parent == working_root
     assert not calls[0][2].exists()
     assert docx_path.read_bytes() == b"docx-source"
+
+
+def test_microsoft_word_exporter_publishes_across_filesystems(
+    tmp_path: Path,
+):
+    docx_path = tmp_path / "project" / "thesis.docx"
+    pdf_path = tmp_path / "project" / "thesis.preview.pdf"
+    working_root = tmp_path / "word-container"
+    automation = tmp_path / "osascript"
+    docx_path.parent.mkdir()
+    docx_path.write_bytes(b"docx-source")
+    replacements: list[tuple[Path, Path]] = []
+
+    def runner(_executable, document, output_directory, _timeout):
+        converted = output_directory / f"{document.stem}.pdf"
+        converted.write_bytes(b"%PDF-1.7\nword")
+        return converted
+
+    def cross_device_replace(source: Path, target: Path) -> None:
+        replacements.append((source, target))
+        if source.parent != target.parent:
+            raise OSError(errno.EXDEV, "Cross-device link")
+        source.replace(target)
+
+    artifact = MicrosoftWordPdfPreviewExporter(
+        automation_executable=automation,
+        runner=runner,
+        replace_file=cross_device_replace,
+        working_root=working_root,
+    ).export(docx_path, pdf_path)
+
+    assert artifact is not None
+    assert replacements[0][0].parent.parent == working_root
+    assert replacements[0][1] == pdf_path
+    assert replacements[1][0].parent == pdf_path.parent
+    assert replacements[1][1] == pdf_path
+    assert pdf_path.read_bytes() == b"%PDF-1.7\nword"
 
 
 @pytest.mark.parametrize(

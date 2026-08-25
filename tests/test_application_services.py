@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import errno
 import os
 import struct
 import subprocess
@@ -1546,6 +1547,34 @@ def test_replace_output_uses_injected_atomic_replacer(tmp_path: Path):
     assert calls == [(temporary, output)]
     assert output.read_bytes() == b"new-output"
     assert not temporary.exists()
+
+
+def test_replace_output_stages_cross_device_sources_in_target_directory(
+    tmp_path: Path,
+):
+    source_directory = tmp_path / "source"
+    target_directory = tmp_path / "target"
+    source_directory.mkdir()
+    target_directory.mkdir()
+    temporary = source_directory / "converted.pdf"
+    output = target_directory / "thesis.preview.pdf"
+    temporary.write_bytes(b"%PDF-1.7\npreview")
+    calls: list[tuple[Path, Path]] = []
+
+    def cross_device_replace(source: Path, target: Path) -> None:
+        calls.append((source, target))
+        if source == temporary:
+            raise OSError(errno.EXDEV, "Cross-device link")
+        source.replace(target)
+
+    replace_output(temporary, output, replace_file=cross_device_replace)
+
+    assert calls[0] == (temporary, output)
+    assert calls[1][0].parent == output.parent
+    assert calls[1][1] == output
+    assert output.read_bytes() == b"%PDF-1.7\npreview"
+    assert temporary.exists()
+    assert not calls[1][0].exists()
 
 
 @pytest.mark.parametrize(

@@ -1,6 +1,8 @@
 from __future__ import annotations
 
+import errno
 import os
+import shutil
 import tempfile
 from collections.abc import Callable, Iterator
 from contextlib import contextmanager
@@ -35,4 +37,25 @@ def replace_output(
     *,
     replace_file: ReplaceFile = os.replace,
 ) -> None:
-    replace_file(temporary_path, target_path)
+    try:
+        replace_file(temporary_path, target_path)
+        return
+    except OSError as error:
+        if error.errno != errno.EXDEV:
+            raise
+
+    descriptor, staged_name = tempfile.mkstemp(
+        prefix=f".{target_path.name}.",
+        suffix=".tmp",
+        dir=target_path.parent,
+    )
+    os.close(descriptor)
+    staged_path = Path(staged_name)
+    try:
+        shutil.copyfile(temporary_path, staged_path)
+        replace_file(staged_path, target_path)
+    finally:
+        try:
+            staged_path.unlink()
+        except FileNotFoundError:
+            pass
