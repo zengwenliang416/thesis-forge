@@ -3,6 +3,7 @@ from __future__ import annotations
 import importlib.util
 import json
 import os
+import sys
 import tomllib
 from pathlib import Path
 from types import SimpleNamespace
@@ -13,8 +14,12 @@ import yaml
 ROOT = Path(__file__).resolve().parents[1]
 BUILD_SIDECAR = ROOT / "scripts" / "build_sidecar.py"
 VERIFY_DESKTOP = ROOT / "scripts" / "verify_desktop_distribution.py"
+PREPARE_RELEASE = ROOT / "scripts" / "prepare_release.py"
 RELEASE_CONFIG = ROOT / "src-tauri" / "tauri.release.conf.json"
 WORKFLOW = ROOT / ".github" / "workflows" / "distribution.yml"
+WOODPECKER_QUALITY = ROOT / ".woodpecker" / "quality.yml"
+WOODPECKER_MACOS_RELEASE = ROOT / ".woodpecker" / "release-macos.yml"
+WOODPECKER_RELEASE_PUBLISH = ROOT / ".woodpecker" / "release-publish.yml"
 REAL_HTTP_CONFIG = ROOT / "frontend" / "e2e" / "real-http.playwright.config.ts"
 WINDOWS_TAURI_ACCEPTANCE = (
     ROOT / "frontend" / "e2e" / "tauri-windows.acceptance.ts"
@@ -39,6 +44,7 @@ def test_release_config_bundles_one_managed_sidecar() -> None:
     )
 
     assert config["bundle"]["externalBin"] == ["binaries/thesisforge-sidecar"]
+    assert config["bundle"]["macOS"]["signingIdentity"] == "-"
     assert "beforeBuildCommand" not in config.get("build", {})
     assert base_config["build"]["beforeDevCommand"] == "pnpm --dir frontend dev"
     assert base_config["build"]["beforeBuildCommand"] == "pnpm --dir frontend build"
@@ -299,6 +305,284 @@ def test_distribution_workflow_builds_native_macos_and_windows_artifacts() -> No
     assert 'ditto "$app_backup_dir" "$app_bundle_dir"' in dmg_step["run"]
 
 
+def test_woodpecker_quality_gate_runs_for_release_tags() -> None:
+    workflow = yaml.safe_load(WOODPECKER_QUALITY.read_text(encoding="utf-8"))
+
+    assert workflow["labels"] == {
+        "location": "production-80",
+        "platform": "linux/amd64",
+        "backend": "docker",
+    }
+    assert {
+        condition["event"]
+        for condition in workflow["when"]
+        if isinstance(condition, dict)
+    } >= {"pull_request", "push", "tag", "manual"}
+    tag_condition = next(
+        condition for condition in workflow["when"] if condition.get("event") == "tag"
+    )
+    assert tag_condition["ref"] == "refs/tags/v*"
+    assert workflow["clone"]["git"]["image"].startswith(
+        "woodpeckerci/plugin-git:2.9.2@sha256:"
+    )
+    assert all("@sha256:" in step["image"] for step in workflow["steps"])
+    rust_commands = "\n".join(
+        next(step for step in workflow["steps"] if step["name"] == "rust-quality")[
+            "commands"
+        ]
+    )
+    assert "cargo test --locked" in rust_commands
+    assert "cargo check --locked" in rust_commands
+
+
+def test_woodpecker_macos_release_is_tag_only_and_quality_gated() -> None:
+    workflow = yaml.safe_load(WOODPECKER_MACOS_RELEASE.read_text(encoding="utf-8"))
+
+    assert workflow["depends_on"] == ["quality"]
+    assert workflow["skip_clone"] is True
+    assert workflow["labels"] == {
+        "platform": "darwin/arm64",
+        "backend": "local",
+        "purpose": "thesisforge-release",
+    }
+    assert workflow["when"] == [{"event": "tag", "ref": "refs/tags/v*"}]
+
+    checkout = next(
+        step
+        for step in workflow["steps"]
+        if step["name"] == "checkout-release-source"
+    )
+    build = next(
+        step for step in workflow["steps"] if step["name"] == "build-and-verify"
+    )
+    upload = next(
+        step for step in workflow["steps"] if step["name"] == "upload-release-staging"
+    )
+    checkout_commands = "\n".join(checkout["commands"])
+    build_commands = "\n".join(build["commands"])
+    upload_commands = "\n".join(upload["commands"])
+
+    assert "scripts/prepare_release.py --tag" in build_commands
+    assert "/Users/" not in WOODPECKER_MACOS_RELEASE.read_text(encoding="utf-8")
+    assert 'test "$CI_REPO" = "zengwenliang416/thesis-forge"' in checkout_commands
+    assert 'git fetch --no-tags origin "+refs/heads/main:' in checkout_commands
+    assert 'git fetch --no-tags origin "+refs/tags/$CI_COMMIT_TAG:' in (
+        checkout_commands
+    )
+    assert 'git rev-list -n 1 "$CI_COMMIT_TAG"' in checkout_commands
+    assert 'git merge-base --is-ancestor "$CI_COMMIT_SHA" origin/main' in (
+        checkout_commands
+    )
+    assert 'git checkout --detach "$CI_COMMIT_SHA"' in checkout_commands
+    assert "--validate-only" in build_commands
+    assert "scripts/verify_distribution.py" in build_commands
+    assert "scripts/build_sidecar.py --target-triple aarch64-apple-darwin" in (
+        build_commands
+    )
+    assert "scripts/verify_desktop_distribution.py" in build_commands
+    assert "--bundles app,dmg" in build_commands
+    assert "find src-tauri/target" in build_commands
+    assert "codesign --verify --deep --strict" in build_commands
+    assert "spctl --assess" in build_commands
+    assert "hdiutil verify" in build_commands
+    assert build_commands.count("find src-tauri/target") == 2
+
+    assert "GH_TOKEN" not in WOODPECKER_MACOS_RELEASE.read_text(encoding="utf-8")
+    assert upload["environment"]["AWS_ACCESS_KEY_ID"] == {
+        "from_secret": "release_staging_write_access_key"
+    }
+    assert "pip install" not in upload_commands
+    assert "aws-cli/2.36.30" in upload_commands
+    assert 's3 cp dist/release/' in upload_commands
+    assert 's3 cp dist/release-evidence/' in upload_commands
+    assert "/evidence/macos/" in upload_commands
+
+
+def test_woodpecker_publish_downloads_verified_assets_on_linux() -> None:
+    workflow = yaml.safe_load(WOODPECKER_RELEASE_PUBLISH.read_text(encoding="utf-8"))
+
+    assert workflow["depends_on"] == ["release-macos"]
+    assert workflow["labels"] == {
+        "location": "production-80",
+        "platform": "linux/amd64",
+        "backend": "docker",
+    }
+    assert workflow["when"] == [{"event": "tag", "ref": "refs/tags/v*"}]
+
+    download = next(
+        step
+        for step in workflow["steps"]
+        if step["name"] == "download-and-verify-staging"
+    )
+    publish = next(
+        step for step in workflow["steps"] if step["name"] == "publish-prerelease"
+    )
+    release_guard = next(
+        step for step in workflow["steps"] if step["name"] == "reject-existing-release"
+    )
+    download_commands = "\n".join(download["commands"])
+    release_guard_commands = "\n".join(release_guard["commands"])
+
+    assert download["image"].startswith("amazon/aws-cli:2.36.30@sha256:")
+    assert 'test -f "ThesisForge_${version}_aarch64.dmg"' in download_commands
+    assert "NR == 3" in download_commands
+    assert "sha256sum -c SHA256SUMS" in download_commands
+    assert "find . -maxdepth 1 -type f" in download_commands
+    assert release_guard["image"].startswith("curlimages/curl:8.16.0@sha256:")
+    assert release_guard["environment"]["GH_TOKEN"] == {
+        "from_secret": "github_release_token"
+    }
+    assert "releases/tags/$CI_COMMIT_TAG" in release_guard_commands
+    assert '"$status" != "404"' in release_guard_commands
+    assert publish["image"].startswith(
+        "woodpeckerci/plugin-release:0.3.1@sha256:"
+    )
+    assert publish["settings"]["api_key"] == {
+        "from_secret": "github_release_token"
+    }
+    assert publish["settings"]["prerelease"] is True
+    assert publish["settings"]["file_exists"] == "fail"
+
+
+def test_release_preparer_requires_consistent_versions_and_collects_assets(
+    tmp_path: Path,
+) -> None:
+    preparer = _load_module(PREPARE_RELEASE, "prepare_release")
+
+    assert preparer.validate_release_tag("v0.1.0") == "0.1.0"
+    with pytest.raises(RuntimeError, match="must match"):
+        preparer.validate_release_tag("v0.2.0")
+
+    bundle_root = tmp_path / "bundle"
+    dmg = bundle_root / "dmg" / "ThesisForge_0.1.0_aarch64.dmg"
+    dmg.parent.mkdir(parents=True)
+    dmg.write_bytes(b"dmg")
+    python_dist = tmp_path / "python"
+    python_dist.mkdir()
+    wheel = python_dist / "thesis_forge-0.1.0-py3-none-any.whl"
+    source_dist = python_dist / "thesis_forge-0.1.0.tar.gz"
+    wheel.write_bytes(b"wheel")
+    source_dist.write_bytes(b"source")
+
+    output_dir = tmp_path / "release"
+    assets = preparer.prepare_macos_release(
+        tag="v0.1.0",
+        bundle_root=bundle_root,
+        python_dist=python_dist,
+        output_dir=output_dir,
+    )
+
+    assert {path.name for path in assets} == {
+        dmg.name,
+        wheel.name,
+        source_dist.name,
+        "SHA256SUMS",
+        "RELEASE_NOTES.md",
+    }
+    checksums = (output_dir / "SHA256SUMS").read_text(encoding="utf-8")
+    assert dmg.name in checksums
+    assert wheel.name in checksums
+    assert source_dist.name in checksums
+    assert "未公证预发布版本" in (
+        output_dir / "RELEASE_NOTES.md"
+    ).read_text(encoding="utf-8")
+
+
+def test_release_preparer_rejects_appledouble_metadata(tmp_path: Path) -> None:
+    preparer = _load_module(PREPARE_RELEASE, "prepare_release_pollution")
+    bundle_root = tmp_path / "bundle"
+    bundle_root.mkdir()
+    (bundle_root / "._ThesisForge.dmg").write_bytes(b"metadata")
+
+    with pytest.raises(RuntimeError, match="AppleDouble"):
+        preparer.prepare_macos_release(
+            tag="v0.1.0",
+            bundle_root=bundle_root,
+            python_dist=tmp_path / "python",
+            output_dir=tmp_path / "release",
+        )
+
+
+def test_release_preparer_rejects_wrong_names_symlinks_and_stale_output(
+    tmp_path: Path,
+) -> None:
+    preparer = _load_module(PREPARE_RELEASE, "prepare_release_hardening")
+    bundle_root = tmp_path / "bundle"
+    dmg_dir = bundle_root / "dmg"
+    dmg_dir.mkdir(parents=True)
+    (dmg_dir / "ThesisForge_9.9.9_x86_64.dmg").write_bytes(b"wrong")
+    python_dist = tmp_path / "python"
+    python_dist.mkdir()
+    (python_dist / "thesis_forge-0.1.0-py3-none-any.whl").write_bytes(b"wheel")
+    (python_dist / "thesis_forge-0.1.0.tar.gz").write_bytes(b"source")
+
+    with pytest.raises(RuntimeError, match="macOS DMG"):
+        preparer.prepare_macos_release(
+            tag="v0.1.0",
+            bundle_root=bundle_root,
+            python_dist=python_dist,
+            output_dir=tmp_path / "release-wrong-name",
+        )
+
+    wrong_dmg = dmg_dir / "ThesisForge_9.9.9_x86_64.dmg"
+    wrong_dmg.unlink()
+    outside = tmp_path / "outside.dmg"
+    outside.write_bytes(b"outside")
+    (dmg_dir / "ThesisForge_0.1.0_aarch64.dmg").symlink_to(outside)
+    with pytest.raises(RuntimeError, match="symbolic link"):
+        preparer.prepare_macos_release(
+            tag="v0.1.0",
+            bundle_root=bundle_root,
+            python_dist=python_dist,
+            output_dir=tmp_path / "release-symlink",
+        )
+
+    (dmg_dir / "ThesisForge_0.1.0_aarch64.dmg").unlink()
+    (dmg_dir / "ThesisForge_0.1.0_aarch64.dmg").write_bytes(b"dmg")
+    stale_output = tmp_path / "release-stale"
+    stale_output.mkdir()
+    (stale_output / "stale.dmg").write_bytes(b"stale")
+    with pytest.raises(RuntimeError, match="must be empty"):
+        preparer.prepare_macos_release(
+            tag="v0.1.0",
+            bundle_root=bundle_root,
+            python_dist=python_dist,
+            output_dir=stale_output,
+        )
+
+
+def test_release_preparer_cli_does_not_resolve_away_symlink_checks(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    preparer = _load_module(PREPARE_RELEASE, "prepare_release_cli_symlinks")
+    real_bundle = tmp_path / "real-bundle"
+    real_bundle.mkdir()
+    bundle_link = tmp_path / "bundle-link"
+    bundle_link.symlink_to(real_bundle, target_is_directory=True)
+
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        [
+            str(PREPARE_RELEASE),
+            "--tag",
+            "v0.1.0",
+            "--platform",
+            "macos",
+            "--bundle-root",
+            str(bundle_link),
+            "--python-dist",
+            str(tmp_path / "python"),
+            "--output-dir",
+            str(tmp_path / "release"),
+        ],
+    )
+
+    with pytest.raises(RuntimeError, match="root must not be a symbolic link"):
+        preparer.main()
+
+
 def test_windows_workflow_installs_and_drives_the_native_tauri_package() -> None:
     workflow = yaml.safe_load(WORKFLOW.read_text(encoding="utf-8"))
     steps = workflow["jobs"]["desktop"]["steps"]
@@ -503,7 +787,16 @@ def test_makefile_keeps_web_python_and_desktop_outputs_isolated() -> None:
 
 
 def test_release_files_do_not_embed_secrets_or_checkout_paths() -> None:
-    paths = [BUILD_SIDECAR, VERIFY_DESKTOP, RELEASE_CONFIG, WORKFLOW]
+    paths = [
+        BUILD_SIDECAR,
+        VERIFY_DESKTOP,
+        PREPARE_RELEASE,
+        RELEASE_CONFIG,
+        WORKFLOW,
+        WOODPECKER_QUALITY,
+        WOODPECKER_MACOS_RELEASE,
+        WOODPECKER_RELEASE_PUBLISH,
+    ]
     forbidden = (
         str(ROOT),
         "OPENAI_API_KEY",

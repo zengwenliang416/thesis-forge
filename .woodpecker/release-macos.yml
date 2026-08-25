@@ -1,0 +1,92 @@
+depends_on:
+  - quality
+
+skip_clone: true
+
+labels:
+  platform: darwin/arm64
+  backend: local
+  purpose: thesisforge-release
+
+when:
+  - event: tag
+    ref: refs/tags/v*
+
+concurrency:
+  limit: 1
+  group: thesis-forge-release-macos
+
+steps:
+  - name: checkout-release-source
+    image: /bin/bash
+    commands:
+      - set -euo pipefail
+      - test "$CI_REPO" = "zengwenliang416/thesis-forge"
+      - test -n "$CI_COMMIT_TAG"
+      - test -n "$CI_COMMIT_SHA"
+      - test ! -e .git
+      - git init .
+      - git remote add origin "https://github.com/$CI_REPO.git"
+      - git fetch --no-tags origin "+refs/heads/main:refs/remotes/origin/main"
+      - git fetch --no-tags origin "+refs/tags/$CI_COMMIT_TAG:refs/tags/$CI_COMMIT_TAG"
+      - test "$(git rev-list -n 1 "$CI_COMMIT_TAG")" = "$CI_COMMIT_SHA"
+      - git merge-base --is-ancestor "$CI_COMMIT_SHA" origin/main
+      - git checkout --detach "$CI_COMMIT_SHA"
+
+  - name: build-and-verify
+    image: /bin/bash
+    environment:
+      PYTHONIOENCODING: utf-8
+      PYTHONUTF8: "1"
+      TAURI_CLI_VERSION: "2.11.4"
+    commands:
+      - set -euo pipefail
+      - export PATH="/opt/homebrew/bin:$HOME/.nvm/versions/node/v22.19.0/bin:$HOME/.cargo/bin:/usr/bin:/bin:/usr/sbin:/sbin"
+      - python3.12 scripts/prepare_release.py --tag "$CI_COMMIT_TAG" --validate-only
+      - python3.12 -m venv --clear .venv-release
+      - .venv-release/bin/python -m pip install -e ".[dev]"
+      - pnpm --dir frontend install --frozen-lockfile
+      - pnpm --dir frontend exec tsc -b
+      - pnpm --dir frontend exec vite build --outDir ../dist/web --emptyOutDir
+      - .venv-release/bin/python -m build --no-isolation --outdir dist/python
+      - .venv-release/bin/python scripts/verify_distribution.py --dist-dir dist/python
+      - test "$(cargo tauri --version)" = "tauri-cli $TAURI_CLI_VERSION"
+      - .venv-release/bin/python scripts/build_sidecar.py --target-triple aarch64-apple-darwin
+      - .venv-release/bin/python scripts/verify_desktop_distribution.py --target-triple aarch64-apple-darwin --sidecar-only
+      - cargo tauri build --locked --config src-tauri/tauri.release.conf.json --target aarch64-apple-darwin --bundles app,dmg --ci -vv
+      - find src-tauri/target/aarch64-apple-darwin/release/bundle -name '._*' -delete
+      - mkdir -p dist/release-evidence
+      - .venv-release/bin/python scripts/verify_desktop_distribution.py --target-triple aarch64-apple-darwin --platform macos --web-dist dist/web --bundle-root src-tauri/target/aarch64-apple-darwin/release/bundle | tee dist/release-evidence/macos.json
+      - codesign --verify --deep --strict --verbose=2 src-tauri/target/aarch64-apple-darwin/release/bundle/macos/ThesisForge.app 2>&1 | tee dist/release-evidence/codesign.txt
+      - spctl --assess --type execute --verbose=4 src-tauri/target/aarch64-apple-darwin/release/bundle/macos/ThesisForge.app 2>&1 | tee dist/release-evidence/gatekeeper.txt || true
+      - hdiutil verify src-tauri/target/aarch64-apple-darwin/release/bundle/dmg/*.dmg
+      - find src-tauri/target/aarch64-apple-darwin/release/bundle -name '._*' -delete
+      - .venv-release/bin/python scripts/prepare_release.py --tag "$CI_COMMIT_TAG" --platform macos --bundle-root src-tauri/target/aarch64-apple-darwin/release/bundle --python-dist dist/python --output-dir dist/release
+
+  - name: upload-release-staging
+    image: /bin/bash
+    environment:
+      AWS_ACCESS_KEY_ID:
+        from_secret: release_staging_write_access_key
+      AWS_SECRET_ACCESS_KEY:
+        from_secret: release_staging_write_secret_key
+      RELEASE_STAGING_ENDPOINT:
+        from_secret: release_staging_endpoint
+      RELEASE_STAGING_BUCKET:
+        from_secret: release_staging_bucket
+      AWS_DEFAULT_REGION: us-east-1
+      AWS_EC2_METADATA_DISABLED: "true"
+    commands:
+      - set -euo pipefail
+      - export PATH="/opt/homebrew/bin:/usr/local/bin:$HOME/.cargo/bin:/usr/bin:/bin:/usr/sbin:/sbin"
+      - test -n "$AWS_ACCESS_KEY_ID"
+      - test -n "$AWS_SECRET_ACCESS_KEY"
+      - test -n "$RELEASE_STAGING_ENDPOINT"
+      - test -n "$RELEASE_STAGING_BUCKET"
+      - |
+        case "$(aws --version 2>&1)" in
+          aws-cli/2.36.30*) ;;
+          *) echo "aws-cli 2.36.30 is required on the release agent"; exit 1 ;;
+        esac
+      - aws --endpoint-url "$RELEASE_STAGING_ENDPOINT" s3 cp dist/release/ "s3://$RELEASE_STAGING_BUCKET/$CI_REPO/$CI_COMMIT_TAG/macos/" --recursive --only-show-errors
+      - aws --endpoint-url "$RELEASE_STAGING_ENDPOINT" s3 cp dist/release-evidence/ "s3://$RELEASE_STAGING_BUCKET/$CI_REPO/$CI_COMMIT_TAG/evidence/macos/" --recursive --only-show-errors

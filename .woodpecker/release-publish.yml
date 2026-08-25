@@ -1,0 +1,105 @@
+depends_on:
+  - release-macos
+
+clone:
+  git:
+    image: woodpeckerci/plugin-git:2.9.2
+    settings:
+      partial: false
+      depth: 1
+
+labels:
+  location: production-80
+  platform: linux/amd64
+  backend: docker
+
+when:
+  - event: tag
+    ref: refs/tags/v*
+
+concurrency:
+  limit: 1
+  group: thesis-forge-release-publish
+
+steps:
+  - name: download-and-verify-staging
+    image: amazon/aws-cli:2.36.30@sha256:da37c08f8e00a64c09acd46e8ce5c3dd30b291046029def45566aa9ccd7b398b
+    entrypoint: /bin/sh
+    environment:
+      AWS_ACCESS_KEY_ID:
+        from_secret: release_staging_read_access_key
+      AWS_SECRET_ACCESS_KEY:
+        from_secret: release_staging_read_secret_key
+      RELEASE_STAGING_ENDPOINT:
+        from_secret: release_staging_endpoint
+      RELEASE_STAGING_BUCKET:
+        from_secret: release_staging_bucket
+      AWS_DEFAULT_REGION: us-east-1
+      AWS_EC2_METADATA_DISABLED: "true"
+    commands:
+      - set -eu
+      - test -n "$AWS_ACCESS_KEY_ID"
+      - test -n "$AWS_SECRET_ACCESS_KEY"
+      - test -n "$RELEASE_STAGING_ENDPOINT"
+      - test -n "$RELEASE_STAGING_BUCKET"
+      - mkdir -p dist/release
+      - aws --endpoint-url "$RELEASE_STAGING_ENDPOINT" s3 cp "s3://$RELEASE_STAGING_BUCKET/$CI_REPO/$CI_COMMIT_TAG/macos/" dist/release/ --recursive --only-show-errors
+      - cd dist/release
+      - version="${CI_COMMIT_TAG#v}"
+      - test -f "ThesisForge_${version}_aarch64.dmg"
+      - test -f "thesis_forge-${version}-py3-none-any.whl"
+      - test -f "thesis_forge-${version}.tar.gz"
+      - test -f RELEASE_NOTES.md
+      - test -f SHA256SUMS
+      - test "$(find . -maxdepth 1 -type f | wc -l | tr -d ' ')" = "5"
+      - |
+        awk -v dmg="ThesisForge_${version}_aarch64.dmg" \
+            -v wheel="thesis_forge-${version}-py3-none-any.whl" \
+            -v source="thesis_forge-${version}.tar.gz" '
+          NF != 2 || $1 !~ /^[0-9a-f]{64}$/ { exit 1 }
+          $2 != dmg && $2 != wheel && $2 != source { exit 1 }
+          { seen[$2]++ }
+          END {
+            exit !(NR == 3 && seen[dmg] == 1 && seen[wheel] == 1 && seen[source] == 1)
+          }
+        ' SHA256SUMS
+      - sha256sum -c SHA256SUMS
+
+  - name: reject-existing-release
+    image: curlimages/curl:8.16.0@sha256:463eaf6072688fe96ac64fa623fe73e1dbe25d8ad6c34404a669ad3ce1f104b6
+    entrypoint: /bin/sh
+    environment:
+      GH_TOKEN:
+        from_secret: github_release_token
+    commands:
+      - set -eu
+      - test -n "$GH_TOKEN"
+      - |
+        status="$(
+          curl --silent --show-error \
+            --output /tmp/existing-release.json \
+            --write-out '%{http_code}' \
+            --header 'Accept: application/vnd.github+json' \
+            --header "Authorization: Bearer $GH_TOKEN" \
+            --header 'X-GitHub-Api-Version: 2022-11-28' \
+            "https://api.github.com/repos/$CI_REPO/releases/tags/$CI_COMMIT_TAG"
+        )"
+        if [ "$status" != "404" ]; then
+          echo "Refusing to modify an existing GitHub Release (HTTP $status)."
+          exit 1
+        fi
+
+  - name: publish-prerelease
+    image: woodpeckerci/plugin-release:0.3.1@sha256:3fa3a8de080151bbe5c9647b31793a46cc2cfc489741bf48835265edb85ca739
+    settings:
+      api_key:
+        from_secret: github_release_token
+      files:
+        - dist/release/*.dmg
+        - dist/release/*.whl
+        - dist/release/*.tar.gz
+        - dist/release/SHA256SUMS
+      file_exists: fail
+      prerelease: true
+      title: "ThesisForge ${CI_COMMIT_TAG}"
+      note: dist/release/RELEASE_NOTES.md
