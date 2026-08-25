@@ -500,13 +500,10 @@ equations:
   image_fallback: disabled
 ```
 
-`numbered_layout` 候选：
-
-- tab stop；
-- borderless table；
-- custom equation paragraph。
-
-具体选项由 Phase 0 实测确定并固定。
+当前 Word 渲染固定采用 `tab_stop`：居中制表位位于正文可用宽度的 50%，
+右对齐制表位位于 100%。公式与编号分别定位，编号宽度不会改变公式的页面几何
+中心。`borderless_table` 与 `custom_paragraph` 仍为保留枚举，不属于当前
+Renderer 的已实现布局。
 
 ## 15. Fields and references
 

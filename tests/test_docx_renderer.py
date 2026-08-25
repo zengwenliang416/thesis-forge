@@ -2241,11 +2241,40 @@ def test_docx_renderer_creates_real_math_fields_footnotes_and_page_structures(
         ".//w:p[.//w:bookmarkStart[@w:name='tf_eq_loss']]",
         namespaces=NS,
     )[0]
+    section = document_xml.xpath("(.//w:sectPr)[last()]", namespaces=NS)[0]
+    content_width = (
+        int(section.xpath("string(./w:pgSz/@w:w)", namespaces=NS))
+        - int(section.xpath("string(./w:pgMar/@w:left)", namespaces=NS))
+        - int(section.xpath("string(./w:pgMar/@w:right)", namespaces=NS))
+    )
+    assert equation_paragraph.xpath(
+        "./w:pPr/w:jc/@w:val",
+        namespaces=NS,
+    ) == ["left"]
+    assert equation_paragraph.xpath(
+        "./w:pPr/w:tabs/w:tab/@w:val",
+        namespaces=NS,
+    ) == ["center", "right"]
+    assert equation_paragraph.xpath(
+        "./w:pPr/w:tabs/w:tab/@w:pos",
+        namespaces=NS,
+    ) == [str(content_width // 2), str(content_width)]
+
     equation_children = list(equation_paragraph)
+    leading_tab = next(
+        index
+        for index, child in enumerate(equation_children)
+        if child.xpath("./w:tab", namespaces=NS)
+    )
     equation_math = next(
         index
         for index, child in enumerate(equation_children)
         if etree.QName(child).localname == "oMath"
+    )
+    number_tab = next(
+        index
+        for index, child in enumerate(equation_children)
+        if index > equation_math and child.xpath("./w:tab", namespaces=NS)
     )
     equation_start = next(
         index
@@ -2257,7 +2286,7 @@ def test_docx_renderer_creates_real_math_fields_footnotes_and_page_structures(
         for index, child in enumerate(equation_children)
         if etree.QName(child).localname == "bookmarkEnd"
     )
-    assert equation_math < equation_start < equation_end
+    assert leading_tab < equation_math < number_tab < equation_start < equation_end
     assert "".join(
         text
         for child in equation_children[equation_start + 1 : equation_end]

@@ -3,6 +3,7 @@ from __future__ import annotations
 from docx.document import Document as DocumentObject
 from docx.oxml import OxmlElement
 from docx.oxml.ns import qn
+from docx.shared import Emu
 
 from thesis_forge.core.math import (
     LatexMathConverter,
@@ -39,6 +40,47 @@ ACCENT_CHARACTERS = {
     "ddot": "¨",
     "tilde": "~",
 }
+
+
+def _content_width_twips(document: DocumentObject) -> int:
+    section = document.sections[-1]
+    content_width = (
+        int(section.page_width)
+        - int(section.left_margin)
+        - int(section.right_margin)
+    )
+    if content_width <= 0:
+        raise ValueError("equation tabs require positive content width")
+    return Emu(content_width).twips
+
+
+def _configure_numbered_equation_tabs(
+    document: DocumentObject,
+    paragraph,
+) -> None:
+    content_width = _content_width_twips(document)
+    paragraph.alignment = ALIGNMENTS["left"]
+    paragraph_properties = paragraph._p.get_or_add_pPr()
+    tabs = paragraph_properties.find(qn("w:tabs"))
+    if tabs is None:
+        tabs = OxmlElement("w:tabs")
+        paragraph_properties.insert_element_before(
+            tabs,
+            "w:spacing",
+            "w:ind",
+            "w:jc",
+            "w:outlineLvl",
+            "w:rPr",
+        )
+
+    for alignment, position in (
+        ("center", content_width // 2),
+        ("right", content_width),
+    ):
+        tab = OxmlElement("w:tab")
+        tab.set(qn("w:val"), alignment)
+        tab.set(qn("w:pos"), str(position))
+        tabs.append(tab)
 
 
 def _math_run(text: str, *, upright: bool = False, normal: bool = False):
@@ -303,7 +345,14 @@ def render_equation(
     """
 
     paragraph = document.add_paragraph()
-    paragraph.alignment = ALIGNMENTS[instruction.alignment]
+    numbered = instruction.sequence is not None or bool(instruction.label)
+    centered_numbered = numbered and instruction.alignment == "center"
+    if centered_numbered:
+        _configure_numbered_equation_tabs(document, paragraph)
+        paragraph.add_run("\t")
+    else:
+        paragraph.alignment = ALIGNMENTS[instruction.alignment]
+
     if omml_provider is not None:
         math = omml_provider.convert_to_omml(instruction.latex, display=True)
     else:
@@ -312,7 +361,7 @@ def render_equation(
         _append_math(math, expression.root)
     paragraph._p.append(math)
 
-    if instruction.sequence is not None or instruction.label:
+    if numbered:
         paragraph.add_run("\t")
     bookmark_id = start_bookmark(paragraph, instruction.bookmark)
     if instruction.sequence is not None:

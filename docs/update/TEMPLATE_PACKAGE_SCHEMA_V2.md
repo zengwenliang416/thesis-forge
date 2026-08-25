@@ -530,7 +530,7 @@ title page / 页面 override / columns / vertical alignment / footnote restart�
 | `converter` | str | `default` 或注册的转换后端名 | `default` | 可选 | 未注册后端 → error（R-008） |
 | `inline_style` / `block_style` | StyleTokenRef | — | `equation_inline`/`equation` | 可选 | `equation_inline` 为 character token，需在 `styles.character` 声明 |
 | `alignment` | enum | `left`/`center`/`right` | `center` | 可选 | — |
-| `numbered_layout` | enum | `tab_stop`/`borderless_table`/`custom_paragraph` | `tab_stop` | 可选 | SPEC_V2 §14 要求由 Phase 0 实测固定；SPIKE 未覆盖公式，默认值为暂定，OQ-1 |
+| `numbered_layout` | enum | `tab_stop`/`borderless_table`/`custom_paragraph` | `tab_stop` | 可选 | 当前 Word Renderer 已固定实现 `tab_stop`：50% 居中制表位 + 100% 右对齐制表位；其余值为保留枚举 |
 | `number_alignment` | enum | `left`/`center`/`right` | `right` | 可选 | — |
 | `unsupported_latex` | enum | `error`/`warning` | `error` | 可选 | 不得静默降级 |
 | `image_fallback` | enum | `disabled`/`explicit` | `disabled` | 可选 | **偏差记录 C-7a**：SPEC_V2 §14 写 `disabled` 语义不全；`explicit` 表示仅当文档显式请求时允许图片回退（R-008 退路「不得静默开启」的落地） |

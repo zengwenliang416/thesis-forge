@@ -686,8 +686,11 @@ equation:
 ```
 
 `alignment` 支持 `left`、`center`、`right`，默认 `center`。
-`numbering` 默认 `mode: chapter`、`separator: "-"`。公式的高级布局、公式
-制表位和右端编号不属于当前模板模型。
+`numbering` 默认 `mode: chapter`、`separator: "-"`。带编号且
+`alignment: center` 的公式使用 Word 原生制表位确定布局：公式前的居中制表位
+位于正文可用宽度的 50%，编号前的右对齐制表位位于正文可用宽度的 100%。
+公式和编号分别定位，因此编号宽度不会改变公式的页面几何中心；编号中的
+`SEQ` 字段和书签仍为真实 OOXML 对象。
 
 ### 9.4 编号短写
 

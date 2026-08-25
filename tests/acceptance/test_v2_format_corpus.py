@@ -342,6 +342,42 @@ def test_v2_format_corpus_renders_editable_docx_objects_and_manifest_widths(
     ) == ["single"]
 
     assert len(document_xml.xpath(".//m:oMath", namespaces=NS)) == 5
+    equation_paragraphs = document_xml.xpath(
+        ".//w:p[.//w:bookmarkStart[starts-with(@w:name, 'tf_eq_')]]",
+        namespaces=NS,
+    )
+    assert len(equation_paragraphs) == 4
+    for paragraph in equation_paragraphs:
+        assert paragraph.xpath(
+            "./w:pPr/w:jc/@w:val",
+            namespaces=NS,
+        ) == ["left"]
+        assert paragraph.xpath(
+            "./w:pPr/w:tabs/w:tab/@w:val",
+            namespaces=NS,
+        ) == ["center", "right"]
+        assert paragraph.xpath(
+            "./w:pPr/w:tabs/w:tab/@w:pos",
+            namespaces=NS,
+        ) == [str(content_width // 2), str(content_width)]
+        children = list(paragraph)
+        math_index = next(
+            index
+            for index, child in enumerate(children)
+            if etree.QName(child).localname == "oMath"
+        )
+        tab_indexes = [
+            index
+            for index, child in enumerate(children)
+            if child.xpath("./w:tab", namespaces=NS)
+        ]
+        bookmark_index = next(
+            index
+            for index, child in enumerate(children)
+            if etree.QName(child).localname == "bookmarkStart"
+        )
+        assert tab_indexes[0] < math_index < tab_indexes[1] < bookmark_index
+
     assert document_xml.xpath(
         ".//w:footnoteReference[@w:id='1']",
         namespaces=NS,
