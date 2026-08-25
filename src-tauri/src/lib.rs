@@ -79,8 +79,7 @@ pub fn validate_final_preview_descriptor(value: &Value) -> Result<FinalPreviewDe
         return Err("final preview fileName must be a plain PDF file name".to_string());
     }
     match (descriptor.engine.as_str(), descriptor.label.as_str()) {
-        ("microsoft-word", "Microsoft Word PDF")
-        | ("libreoffice", "LibreOffice PDF") => {}
+        ("microsoft-word", "Microsoft Word PDF") | ("libreoffice", "LibreOffice PDF") => {}
         _ => return Err("final preview engine and label do not match".to_string()),
     }
     if descriptor.download_id.is_some() {

@@ -199,8 +199,7 @@ fn authorization_handles_keep_same_named_pdfs_bound_to_their_selected_paths() {
     std::fs::write(&first_pdf, b"%PDF-1.7\nfirst").unwrap();
     std::fs::write(&second_pdf, b"%PDF-1.7\nsecond").unwrap();
     let state = PreviewAuthorizationState::default();
-    let descriptor =
-        preview_descriptor("microsoft-word", "Microsoft Word PDF", "export.pdf");
+    let descriptor = preview_descriptor("microsoft-word", "Microsoft Word PDF", "export.pdf");
 
     let first_authorized = state.authorize(&descriptor, first_pdf.clone()).unwrap();
     let second_authorized = state.authorize(&descriptor, second_pdf.clone()).unwrap();
@@ -229,8 +228,7 @@ fn authorization_rejects_descriptor_drift_and_revocation() {
     let pdf = directory.path().join("export.pdf");
     std::fs::write(&pdf, b"%PDF-1.7\npreview").unwrap();
     let state = PreviewAuthorizationState::default();
-    let descriptor =
-        preview_descriptor("microsoft-word", "Microsoft Word PDF", "export.pdf");
+    let descriptor = preview_descriptor("microsoft-word", "Microsoft Word PDF", "export.pdf");
     let authorized = state.authorize(&descriptor, pdf).unwrap();
     let mut drifted = authorized.clone();
     drifted.file_name = "other.pdf".to_string();
@@ -550,11 +548,7 @@ fn authorization_revalidates_symlinks_and_pdf_content_at_read_time() {
     let state = PreviewAuthorizationState::default();
     let descriptor = state
         .authorize(
-            &preview_descriptor(
-                "microsoft-word",
-                "Microsoft Word PDF",
-                "preview.pdf",
-            ),
+            &preview_descriptor("microsoft-word", "Microsoft Word PDF", "preview.pdf"),
             pdf.clone(),
         )
         .unwrap();
@@ -576,11 +570,7 @@ fn authorization_rejects_a_file_replaced_by_a_symlink_at_read_time() {
     let state = PreviewAuthorizationState::default();
     let descriptor = state
         .authorize(
-            &preview_descriptor(
-                "microsoft-word",
-                "Microsoft Word PDF",
-                "preview.pdf",
-            ),
+            &preview_descriptor("microsoft-word", "Microsoft Word PDF", "preview.pdf"),
             pdf.clone(),
         )
         .unwrap();
