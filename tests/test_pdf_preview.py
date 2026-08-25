@@ -139,7 +139,7 @@ def test_docx_font_adapter_rewrites_only_exact_ooxml_font_attributes(
     _adapt_docx_font_aliases(
         source,
         adapted,
-        preview_font_aliases("darwin"),
+        preview_font_aliases("darwin", {"Songti SC", "Heiti SC"}),
     )
 
     assert source.read_bytes() == source_bytes
@@ -667,6 +667,10 @@ def test_libreoffice_runner_uses_isolated_profile_and_process_cleanup(
     monkeypatch.setattr(
         "thesis_forge.application.pdf_preview._installed_font_families",
         lambda: frozenset({"Songti SC", "Heiti SC"}),
+    )
+    monkeypatch.setattr(
+        "thesis_forge.application.pdf_preview.sys.platform",
+        "darwin",
     )
     monkeypatch.setattr(
         "thesis_forge.application.pdf_preview.terminate_office_process_tree",
