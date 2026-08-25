@@ -10,6 +10,7 @@
     ".woodpecker",
     ".github/workflows/pr-gate.yml",
     "qa/tools",
+    "scripts",
     "spikes/phase0",
     "tests/test_desktop_distribution.py",
     "src-tauri",

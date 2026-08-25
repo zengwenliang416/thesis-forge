@@ -27,7 +27,7 @@ steps:
       PIP_DISABLE_PIP_VERSION_CHECK: "1"
     commands:
       - python -m pip install -e ".[dev]"
-      - python -m ruff check .
+      - python -m ruff check src tests qa spikes scripts
       - python -m pytest tests/ -q
       - python qa/tools/parser_diff.py examples/v2-format-corpus/thesis.md
       - python qa/tools/build_catalog.py
