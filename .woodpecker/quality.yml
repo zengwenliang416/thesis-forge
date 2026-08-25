@@ -26,13 +26,14 @@ steps:
       PYTHONUTF8: "1"
       PIP_DISABLE_PIP_VERSION_CHECK: "1"
     commands:
-      - python -m pip install -e ".[dev]"
-      - python -m ruff check src tests qa spikes scripts
-      - python -m pytest tests/ -q
-      - python qa/tools/parser_diff.py examples/v2-format-corpus/thesis.md
-      - python qa/tools/build_catalog.py
-      - python -m build --no-isolation --outdir dist/python
-      - python scripts/verify_distribution.py --dist-dir dist/python
+      - python -m venv --clear .venv
+      - .venv/bin/python -m pip install -e ".[dev]"
+      - .venv/bin/python -m ruff check src tests qa spikes scripts
+      - .venv/bin/python -m pytest tests/ -q
+      - .venv/bin/python qa/tools/parser_diff.py examples/v2-format-corpus/thesis.md
+      - .venv/bin/python qa/tools/build_catalog.py
+      - .venv/bin/python -m build --no-isolation --outdir dist/python
+      - .venv/bin/python scripts/verify_distribution.py --dist-dir dist/python
 
   - name: frontend-quality
     image: node:24-bookworm
