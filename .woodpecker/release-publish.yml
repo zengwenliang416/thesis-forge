@@ -31,7 +31,7 @@ steps:
       AWS_SECRET_ACCESS_KEY:
         from_secret: release_staging_read_secret_key
       RELEASE_STAGING_ENDPOINT:
-        from_secret: release_staging_endpoint
+        from_secret: release_staging_read_endpoint
       RELEASE_STAGING_BUCKET:
         from_secret: release_staging_bucket
       AWS_DEFAULT_REGION: us-east-1

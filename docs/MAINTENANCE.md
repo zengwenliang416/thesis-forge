@@ -208,7 +208,8 @@ The primary release orchestrator is Woodpecker:
 - the Linux clone and quality images are pinned by digest, and Cargo validation
   uses the committed lockfile;
 - `.woodpecker/release-macos.yml` waits for that gate, then selects a
-  `darwin/arm64` local agent with `purpose=thesisforge-release`;
+  `darwin/arm64` local agent with `purpose=thesisforge-release` and the
+  repository-specific `repo=zengwenliang416/thesis-forge` label;
 - the macOS workflow disables Woodpecker's automatic Local-backend clone and
   fetches only `origin/main` plus the requested release tag from the fixed
   GitHub repository before checking commit provenance;
@@ -235,7 +236,11 @@ and does not install release upload tooling from the network at runtime.
 The native builder must not receive the GitHub Release token. Its staging
 credentials must be limited to writing only the tag-specific release prefix;
 the Linux publisher uses a separate read-only identity. The staging bucket must
-be dedicated to ThesisForge rather than reusing another project's bucket.
+be dedicated to ThesisForge rather than reusing another project's bucket. Use
+separate `release_staging_write_endpoint` and
+`release_staging_read_endpoint` secrets because the native macOS agent reaches
+staging through a loopback SSH tunnel while the Linux publisher reaches the
+server-local endpoint.
 A future Windows workflow must use a native `windows/amd64` agent and attach
 `.msi` / NSIS assets to the same tag.
 
