@@ -1,0 +1,33 @@
+schema: docforge.project.v1
+
+project:
+  id: academic-fixture
+  language: zh-CN
+
+document:
+  type: academic
+
+metadata:
+  title:
+    zh: DocForge 学术文档
+  authors:
+    - name: 张三
+
+academic:
+  student:
+    name: 张三
+    id: "20260001"
+  institution:
+    name: 示例大学
+    department: 计算机学院
+  degree:
+    name: 工学硕士
+    major: 计算机科学与技术
+  advisor:
+    name: 李教授
+    title: 教授
+  completion:
+    date: "2026-05"
+
+render:
+  template_id: example-university-2026

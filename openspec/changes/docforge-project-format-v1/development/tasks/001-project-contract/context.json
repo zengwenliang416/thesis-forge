@@ -43,6 +43,7 @@
     "General and academic fixture load evidence",
     "Task report, spec review, and quality review"
   ],
+  "acceptance_primary": ["A5", "A6"],
   "unsafe_assumptions": [
     "Syntactically relative paths are not necessarily confined after symlink resolution.",
     "Academic metadata cannot remain the default common metadata shape.",

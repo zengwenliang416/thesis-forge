@@ -18,7 +18,9 @@ from thesis_forge.application.services import (
 from thesis_forge.core.model import ThesisDocument
 from thesis_forge.core.validator import ValidationContext
 
-PROJECT_ROOT = Path(__file__).resolve().parents[2] / "tests" / "fixtures" / "v2-project"
+FIXTURES = Path(__file__).resolve().parents[2] / "tests" / "fixtures"
+PROJECT_ROOT = FIXTURES / "docforge-general"
+ACADEMIC_PROJECT_ROOT = FIXTURES / "docforge-academic"
 
 
 def request(
@@ -29,9 +31,9 @@ def request(
 ) -> ProjectRequest:
     return ProjectRequest(
         project=ProjectIdentity(
-            project_id="goal-fixture",
+            project_id="general-fixture",
             project_root=PROJECT_ROOT.resolve(),
-            manifest_path=(PROJECT_ROOT / "thesisforge.yaml").resolve(),
+            manifest_path=(PROJECT_ROOT / "docforge.yaml").resolve(),
         ),
         intent=intent,
         output=ProjectOutput(output.resolve()) if output is not None else None,
@@ -79,10 +81,12 @@ def test_load_returns_manifest_identity_and_all_resolved_project_paths() -> None
     context = ProjectApplicationService().load(request(ProjectRequestIntent.INSPECT))
 
     assert isinstance(context, ProjectServiceContext)
-    assert context.project.manifest.project.id == "goal-fixture"
-    assert context.paths.source == (PROJECT_ROOT / "thesis.md").resolve()
+    assert context.project.manifest.project.id == "general-fixture"
+    assert context.project.manifest.academic is None
+    assert context.paths.source == (PROJECT_ROOT / "document.md").resolve()
+    assert context.paths.resources_root == PROJECT_ROOT.resolve()
     assert context.paths.assets == (PROJECT_ROOT / "assets").resolve()
-    assert context.paths.bibliography == (PROJECT_ROOT / "references.bib").resolve()
+    assert context.paths.bibliography is None
     assert context.paths.output_directory == (PROJECT_ROOT / "build").resolve()
 
 
@@ -91,7 +95,7 @@ def test_inspect_uses_manifest_source_before_parsing() -> None:
 
     service(calls).inspect(request(ProjectRequestIntent.INSPECT))
 
-    assert calls == [("file", (PROJECT_ROOT / "thesis.md").resolve())]
+    assert calls == [("file", (PROJECT_ROOT / "document.md").resolve())]
 
 
 def test_validate_and_preview_use_editor_snapshot_and_project_source() -> None:
@@ -106,12 +110,12 @@ def test_validate_and_preview_use_editor_snapshot_and_project_source() -> None:
     )
 
     assert calls == [
-        ("snapshot", (PROJECT_ROOT / "thesis.md").resolve()),
-        ("context", (PROJECT_ROOT / "thesis.md").resolve()),
-        ("validate", (PROJECT_ROOT / "thesis.md").resolve()),
-        ("snapshot", (PROJECT_ROOT / "thesis.md").resolve()),
-        ("context", (PROJECT_ROOT / "thesis.md").resolve()),
-        ("validate", (PROJECT_ROOT / "thesis.md").resolve()),
+        ("snapshot", (PROJECT_ROOT / "document.md").resolve()),
+        ("context", (PROJECT_ROOT / "document.md").resolve()),
+        ("validate", (PROJECT_ROOT / "document.md").resolve()),
+        ("snapshot", (PROJECT_ROOT / "document.md").resolve()),
+        ("context", (PROJECT_ROOT / "document.md").resolve()),
+        ("validate", (PROJECT_ROOT / "document.md").resolve()),
     ]
 
 
@@ -125,10 +129,28 @@ def test_project_identity_mismatch_is_rejected_before_parsing() -> None:
         project=ProjectIdentity(
             project_id="wrong-id",
             project_root=PROJECT_ROOT.resolve(),
-            manifest_path=(PROJECT_ROOT / "thesisforge.yaml").resolve(),
+            manifest_path=(PROJECT_ROOT / "docforge.yaml").resolve(),
         ),
         intent=ProjectRequestIntent.INSPECT,
     )
 
     with pytest.raises(ValueError, match="identity"):
         ProjectApplicationService().inspect(mismatched)
+
+
+def test_load_academic_fixture_uses_same_project_service_pipeline() -> None:
+    academic_request = ProjectRequest(
+        project=ProjectIdentity(
+            project_id="academic-fixture",
+            project_root=ACADEMIC_PROJECT_ROOT.resolve(),
+            manifest_path=(ACADEMIC_PROJECT_ROOT / "docforge.yaml").resolve(),
+        ),
+        intent=ProjectRequestIntent.INSPECT,
+    )
+
+    context = ProjectApplicationService().load(academic_request)
+
+    assert context.paths.source == (ACADEMIC_PROJECT_ROOT / "document.md").resolve()
+    assert context.project.manifest.document.type == "academic"
+    assert context.project.manifest.academic is not None
+    assert context.project.manifest.academic.student.id == "20260001"

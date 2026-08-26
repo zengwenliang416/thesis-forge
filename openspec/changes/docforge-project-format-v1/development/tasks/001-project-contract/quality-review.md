@@ -2,32 +2,54 @@
 
 ## Verdict
 
-blocked
+approved
 
 ## Separation Of Concerns
 
-- Replace this scaffold with direct review.
+- Project identity and neutral defaults are isolated in `constants.py`;
+  strict data validation remains in `model.py`, manifest loading in
+  `loader.py`, and canonical boundary enforcement in `paths.py`.
+- The project layer does not import parser, renderer, DOCX, UI, transport, or
+  AI implementation details.
 
 ## Component Cohesion / Coupling
 
-- Confirm high cohesion, low coupling, and required extraction.
+- `DocForgeProjectManifest` owns only project contract data. `LoadedProject`
+  retains normalized identity, while `ProjectPaths` exposes canonical paths.
+- Removing `LoadedProject.source_path` eliminates a second path-resolution
+  route and keeps application services coupled to the single confined resolver.
 
 ## Test Quality
 
-- Replace this scaffold with direct review.
+- The focused suite passes `121` tests. Defaults, strict unknown-field
+  rejection, generic and academic fixtures, entrypoint failures, and
+  application-service loading are directly asserted.
+- Symlink redteam coverage explicitly exercises `document.source`,
+  `resources.root`, assets, bibliography, output directory, output DOCX, and
+  all Review paths. The focused loader/path subset passes `31` tests.
 
 ## Error Handling
 
-- Replace this scaffold with direct review.
+- Loader failures retain stable codes and sanitized messages, including
+  duplicate keys, malformed YAML, obsolete contracts, invalid fields, missing
+  sources, and path-boundary failures.
+- Validation reports the first precise field location without exposing
+  Pydantic internals or silently falling back to an obsolete contract.
 
 ## Reuse / Duplication
 
-- Replace this scaffold with direct review.
+- Project identity and default filenames have one Python authority.
+- `_resolve_under` is reused for all source, resource, output, and Review
+  paths; no second compatibility loader or duplicate path policy was added.
 
 ## Complexity Delta
 
-- Replace this scaffold with direct review.
+- The change adds a small typed metadata/profile model and one explicit
+  resource-root step. Complexity remains localized and testable.
+- No speculative migration layer, alias, or document-type branching was
+  introduced.
 
 ## Required Fixes
 
-- Replace this scaffold with direct review.
+- None. The independent re-review approved the current checkout with no
+  residual finding.

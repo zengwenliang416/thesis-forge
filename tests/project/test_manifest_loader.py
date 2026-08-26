@@ -10,17 +10,18 @@ from thesis_forge.project.loader import ProjectLoadError, load_project
 
 def manifest_data() -> dict:
     return {
-        "schema": "thesisforge.project.v2",
+        "schema": "docforge.project.v1",
         "project": {"id": "loader-fixture", "language": "zh-CN"},
-        "document": {"source": "thesis.md"},
-        "render": {"template_id": "example-university-2026"},
+        "document": {},
+        "metadata": {"title": {"zh": "测试文档"}, "authors": [{"name": "张三"}]},
+        "render": {"template_id": "docforge-standard"},
     }
 
 
 def write_project(root: Path, manifest: dict | None = None) -> Path:
     root.mkdir(parents=True, exist_ok=True)
-    (root / "thesis.md").write_text("# 绪论\n", encoding="utf-8")
-    manifest_path = root / "thesisforge.yaml"
+    (root / "document.md").write_text("# 概述\n", encoding="utf-8")
+    manifest_path = root / "docforge.yaml"
     manifest_path.write_text(
         yaml.safe_dump(manifest or manifest_data(), allow_unicode=True, sort_keys=False),
         encoding="utf-8",
@@ -40,18 +41,19 @@ def test_load_project_directory_and_manifest_path_returns_normalized_paths(
         assert loaded.project_root == tmp_path.resolve()
         assert loaded.root == tmp_path.resolve()
         assert loaded.manifest_path == manifest_path.resolve()
-        assert loaded.source_path == (tmp_path / "thesis.md").resolve()
+        assert loaded.manifest.document.source.root == "document.md"
         assert loaded.manifest.project.id == "loader-fixture"
 
 
 def test_loader_rejects_bare_markdown_input(tmp_path: Path) -> None:
-    source = tmp_path / "thesis.md"
-    source.write_text("# 绪论\n", encoding="utf-8")
+    source = tmp_path / "document.md"
+    source.write_text("# 概述\n", encoding="utf-8")
 
     with pytest.raises(ProjectLoadError) as captured:
         load_project(source)
 
     assert captured.value.code == "TF-PROJECT-BARE-MARKDOWN"
+    assert "DocForge" in str(captured.value)
 
 
 def test_loader_rejects_missing_manifest(tmp_path: Path) -> None:
@@ -59,23 +61,58 @@ def test_loader_rejects_missing_manifest(tmp_path: Path) -> None:
         load_project(tmp_path)
 
     assert captured.value.code == "TF-PROJECT-MANIFEST-MISSING"
+    assert captured.value.path == tmp_path / "docforge.yaml"
+
+
+def test_loader_rejects_obsolete_manifest_path(tmp_path: Path) -> None:
+    obsolete = tmp_path / "thesisforge.yaml"
+    obsolete.write_text("schema: thesisforge.project.v2\n", encoding="utf-8")
+
+    with pytest.raises(ProjectLoadError) as captured:
+        load_project(obsolete)
+
+    assert captured.value.code == "TF-PROJECT-CONTRACT-OBSOLETE"
+    assert "docforge.yaml" in str(captured.value)
+
+
+def test_loader_rejects_obsolete_manifest_in_directory(tmp_path: Path) -> None:
+    (tmp_path / "thesisforge.yaml").write_text(
+        "schema: thesisforge.project.v2\n",
+        encoding="utf-8",
+    )
+
+    with pytest.raises(ProjectLoadError) as captured:
+        load_project(tmp_path)
+
+    assert captured.value.code == "TF-PROJECT-CONTRACT-OBSOLETE"
+
+
+def test_loader_rejects_obsolete_schema_in_docforge_manifest(tmp_path: Path) -> None:
+    payload = manifest_data()
+    payload["schema"] = "thesisforge.project.v2"
+    write_project(tmp_path, payload)
+
+    with pytest.raises(ProjectLoadError) as captured:
+        load_project(tmp_path)
+
+    assert captured.value.code == "TF-PROJECT-CONTRACT-OBSOLETE"
+    assert captured.value.field == "schema"
 
 
 def test_loader_rejects_duplicate_yaml_keys(tmp_path: Path) -> None:
-    (tmp_path / "thesis.md").write_text("# 绪论\n", encoding="utf-8")
-    (tmp_path / "thesisforge.yaml").write_text(
+    (tmp_path / "document.md").write_text("# 概述\n", encoding="utf-8")
+    (tmp_path / "docforge.yaml").write_text(
         """
-schema: thesisforge.project.v2
+schema: docforge.project.v1
 project:
   id: loader-fixture
   language: zh-CN
-document:
-  source: thesis.md
+document: {}
 project:
   id: duplicate
   language: zh-CN
 render:
-  template_id: example-university-2026
+  template_id: docforge-standard
 """.lstrip(),
         encoding="utf-8",
     )
@@ -87,21 +124,20 @@ render:
 
 
 def test_loader_rejects_nested_duplicate_yaml_keys(tmp_path: Path) -> None:
-    (tmp_path / "thesis.md").write_text("# 绪论\n", encoding="utf-8")
-    (tmp_path / "thesisforge.yaml").write_text(
+    (tmp_path / "document.md").write_text("# 概述\n", encoding="utf-8")
+    (tmp_path / "docforge.yaml").write_text(
         """
-schema: thesisforge.project.v2
+schema: docforge.project.v1
 project:
   id: loader-fixture
   language: zh-CN
-document:
-  source: thesis.md
+document: {}
 metadata:
   title:
     zh: first
     zh: second
 render:
-  template_id: example-university-2026
+  template_id: docforge-standard
 """.lstrip(),
         encoding="utf-8",
     )
@@ -122,23 +158,9 @@ def test_loader_rejects_existing_non_manifest_file(tmp_path: Path) -> None:
     assert captured.value.code == "TF-PROJECT-MANIFEST-REQUIRED"
 
 
-def test_loader_rejects_missing_source_declaration(tmp_path: Path) -> None:
-    manifest = manifest_data()
-    del manifest["document"]["source"]
-    write_project(tmp_path, manifest)
-
-    with pytest.raises(ProjectLoadError) as captured:
-        load_project(tmp_path)
-
-    assert captured.value.code == "TF-PROJECT-SOURCE-DECLARATION"
-
-
-def test_loader_rejects_missing_source_file(tmp_path: Path) -> None:
-    manifest = manifest_data()
-    manifest["document"]["source"] = "missing.md"
-    manifest_path = tmp_path / "thesisforge.yaml"
-    manifest_path.write_text(
-        yaml.safe_dump(manifest, sort_keys=False),
+def test_loader_rejects_missing_default_source_file(tmp_path: Path) -> None:
+    (tmp_path / "docforge.yaml").write_text(
+        yaml.safe_dump(manifest_data(), sort_keys=False),
         encoding="utf-8",
     )
 
@@ -146,22 +168,24 @@ def test_loader_rejects_missing_source_file(tmp_path: Path) -> None:
         load_project(tmp_path)
 
     assert captured.value.code == "TF-PROJECT-SOURCE-MISSING"
+    assert captured.value.path == tmp_path / "document.md"
 
 
-def test_loader_wraps_invalid_manifest_with_stable_code(tmp_path: Path) -> None:
+def test_loader_wraps_invalid_manifest_with_stable_field(tmp_path: Path) -> None:
     manifest = manifest_data()
-    manifest["unknown"] = True
+    manifest["metadata"]["university"] = "不属于通用元数据"
     write_project(tmp_path, manifest)
 
     with pytest.raises(ProjectLoadError) as captured:
         load_project(tmp_path)
 
     assert captured.value.code == "TF-PROJECT-MANIFEST-INVALID"
+    assert captured.value.field == "metadata.university"
 
 
 def test_loader_sanitizes_manifest_validation_details(tmp_path: Path) -> None:
     manifest = manifest_data()
-    manifest["document"]["source"] = "/Users/secret/thesis.md"
+    manifest["document"]["source"] = "/Users/secret/document.md"
     write_project(tmp_path, manifest)
 
     with pytest.raises(ProjectLoadError) as captured:
@@ -173,7 +197,7 @@ def test_loader_sanitizes_manifest_validation_details(tmp_path: Path) -> None:
 
 
 def test_loader_wraps_unhashable_yaml_mapping_keys(tmp_path: Path) -> None:
-    (tmp_path / "thesisforge.yaml").write_text(
+    (tmp_path / "docforge.yaml").write_text(
         """
 ? [unhashable]
 : value

@@ -1,4 +1,4 @@
-"""Load and validate a ThesisForge v2 project manifest."""
+"""Load and validate a strict DocForge v1 project manifest."""
 
 from __future__ import annotations
 
@@ -9,7 +9,12 @@ from typing import Any
 import yaml
 from pydantic import ValidationError
 
-from .model import ProjectManifestV2
+from .constants import MANIFEST_FILENAME, PROJECT_SCHEMA
+from .model import DocForgeProjectManifest
+from .paths import resolve_project_paths
+
+OBSOLETE_MANIFEST_FILENAME = "thesisforge.yaml"
+OBSOLETE_SCHEMA_PREFIX = "thesisforge.project."
 
 
 class ProjectLoadError(ValueError):
@@ -33,15 +38,11 @@ class ProjectLoadError(ValueError):
 class LoadedProject:
     project_root: Path
     manifest_path: Path
-    manifest: ProjectManifestV2
+    manifest: DocForgeProjectManifest
 
     @property
     def root(self) -> Path:
         return self.project_root
-
-    @property
-    def source_path(self) -> Path:
-        return self.project_root / self.manifest.document.source.root
 
 
 class _DuplicateKeyError(yaml.YAMLError):
@@ -68,34 +69,47 @@ class _UniqueKeyLoader(yaml.SafeLoader):
 
 def _resolve_manifest_input(input_path: str | Path) -> tuple[Path, Path]:
     candidate = Path(input_path).expanduser()
-    if candidate.suffix.lower() == ".md":
+    if candidate.suffix.lower() in {".md", ".markdown"}:
         raise ProjectLoadError(
             "TF-PROJECT-BARE-MARKDOWN",
-            "a project directory or thesisforge.yaml is required",
+            "a DocForge project directory or docforge.yaml is required",
             path=candidate,
         )
 
     if candidate.is_dir():
         project_root = candidate.resolve()
-        manifest_path = project_root / "thesisforge.yaml"
+        manifest_path = project_root / MANIFEST_FILENAME
         if not manifest_path.is_file():
+            obsolete_path = project_root / OBSOLETE_MANIFEST_FILENAME
+            if obsolete_path.is_file():
+                raise ProjectLoadError(
+                    "TF-PROJECT-CONTRACT-OBSOLETE",
+                    "thesisforge.yaml is obsolete; create a docforge.yaml project",
+                    path=obsolete_path,
+                )
             raise ProjectLoadError(
                 "TF-PROJECT-MANIFEST-MISSING",
-                "project directory does not contain thesisforge.yaml",
+                f"project directory does not contain {MANIFEST_FILENAME}",
                 path=manifest_path,
             )
         return project_root, manifest_path.resolve()
 
+    if candidate.name == OBSOLETE_MANIFEST_FILENAME:
+        raise ProjectLoadError(
+            "TF-PROJECT-CONTRACT-OBSOLETE",
+            "thesisforge.yaml is obsolete; use docforge.yaml",
+            path=candidate,
+        )
     if not candidate.exists():
         raise ProjectLoadError(
             "TF-PROJECT-INPUT-MISSING",
             "project input does not exist",
             path=candidate,
         )
-    if not candidate.is_file() or candidate.name != "thesisforge.yaml":
+    if not candidate.is_file() or candidate.name != MANIFEST_FILENAME:
         raise ProjectLoadError(
             "TF-PROJECT-MANIFEST-REQUIRED",
-            "project input must be a directory or thesisforge.yaml",
+            f"project input must be a directory or {MANIFEST_FILENAME}",
             path=candidate,
         )
 
@@ -144,21 +158,21 @@ def _read_manifest(path: Path) -> dict[str, Any]:
 
 
 def load_project(input_path: str | Path) -> LoadedProject:
-    """Load a project directory or explicit ``thesisforge.yaml`` path."""
+    """Load a project directory or explicit ``docforge.yaml`` path."""
 
     project_root, manifest_path = _resolve_manifest_input(input_path)
     raw = _read_manifest(manifest_path)
-    document = raw.get("document")
-    if not isinstance(document, dict) or not document.get("source"):
+    schema = raw.get("schema")
+    if isinstance(schema, str) and schema.startswith(OBSOLETE_SCHEMA_PREFIX):
         raise ProjectLoadError(
-            "TF-PROJECT-SOURCE-DECLARATION",
-            "manifest must declare document.source",
+            "TF-PROJECT-CONTRACT-OBSOLETE",
+            f"{schema} is obsolete; use {PROJECT_SCHEMA}",
             path=manifest_path,
-            field="document.source",
+            field="schema",
         )
 
     try:
-        manifest = ProjectManifestV2.model_validate(raw)
+        manifest = DocForgeProjectManifest.model_validate(raw)
     except ValidationError as error:
         first_error = error.errors()[0] if error.errors() else {}
         location = first_error.get("loc", ())
@@ -181,11 +195,12 @@ def load_project(input_path: str | Path) -> LoadedProject:
         manifest_path=manifest_path,
         manifest=manifest,
     )
-    if not loaded.source_path.is_file():
+    paths = resolve_project_paths(loaded)
+    if not paths.source.is_file():
         raise ProjectLoadError(
             "TF-PROJECT-SOURCE-MISSING",
             "declared document source does not exist",
-            path=loaded.source_path,
+            path=paths.source,
             field="document.source",
         )
     return loaded

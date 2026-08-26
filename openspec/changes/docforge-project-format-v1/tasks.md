@@ -4,11 +4,11 @@
 document defaults, generic metadata, optional academic data, and unchanged path
 security.
 
-- [ ] 1.1 Add failing manifest-model tests for `docforge.project.v1`, `document.md`, neutral output and Review defaults, generic metadata, optional academic profile, unknown fields, and obsolete contract rejection.
-- [ ] 1.2 Replace the project manifest model with the strict DocForge v1 schema and centralize Python project identity and default filename constants.
-- [ ] 1.3 Update project entrypoint discovery to accept only a directory or `docforge.yaml` and return stable diagnostics for bare Markdown and obsolete manifests.
-- [ ] 1.4 Preserve and extend project-relative path tests for absolute, remote, traversal, NUL, and symlink-escape rejection across source, resources, output, and Review paths.
-- [ ] 1.5 Create minimal general and academic DocForge project fixtures and pass the focused project model, loader, path, and application-service tests.
+- [x] 1.1 Add failing manifest-model tests for `docforge.project.v1`, `document.md`, neutral output and Review defaults, generic metadata, optional academic profile, unknown fields, and obsolete contract rejection.
+- [x] 1.2 Replace the project manifest model with the strict DocForge v1 schema and centralize Python project identity and default filename constants.
+- [x] 1.3 Update project entrypoint discovery to accept only a directory or `docforge.yaml` and return stable diagnostics for bare Markdown and obsolete manifests.
+- [x] 1.4 Preserve and extend project-relative path tests for absolute, remote, traversal, NUL, and symlink-escape rejection across source, resources, output, and Review paths.
+- [x] 1.5 Create minimal general and academic DocForge project fixtures and pass the focused project model, loader, path, and application-service tests.
 
 ## 2. Generic Document Domain
 

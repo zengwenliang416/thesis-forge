@@ -4,10 +4,13 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from pathlib import Path, PurePosixPath, PureWindowsPath
+from typing import TYPE_CHECKING
 from urllib.parse import urlsplit
 
-from .loader import LoadedProject
 from .model import ProjectRelativePath
+
+if TYPE_CHECKING:
+    from .loader import LoadedProject
 
 
 class ProjectPathError(ValueError):
@@ -23,6 +26,7 @@ class ProjectPathError(ValueError):
 class ProjectPaths:
     project_root: Path
     source: Path
+    resources_root: Path
     assets: Path
     bibliography: Path | None
     output_directory: Path
@@ -118,10 +122,19 @@ def resolve_project_paths(project: LoadedProject) -> ProjectPaths:
     root = _project_root(project.project_root)
     manifest = project.manifest
     source = _resolve_under(root, manifest.document.source, field="document.source")
-    assets = _resolve_under(root, manifest.resources.assets, field="resources.assets")
+    resources_root = _resolve_under(
+        root,
+        manifest.resources.root,
+        field="resources.root",
+    )
+    assets = _resolve_under(
+        resources_root,
+        manifest.resources.assets,
+        field="resources.assets",
+    )
     bibliography = (
         _resolve_under(
-            root,
+            resources_root,
             manifest.resources.bibliography,
             field="resources.bibliography",
         )
@@ -152,6 +165,7 @@ def resolve_project_paths(project: LoadedProject) -> ProjectPaths:
     return ProjectPaths(
         project_root=root,
         source=source,
+        resources_root=resources_root,
         assets=assets,
         bibliography=bibliography,
         output_directory=output_directory,
