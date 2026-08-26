@@ -26,7 +26,9 @@ from build_sidecar import (
 
 PROTOCOL_VERSION = "thesisforge.workbench.v1"
 BUILD_STAGES = ("parse", "validate", "compile", "render", "finalize")
-CANONICAL_PROJECT = ROOT / "tests" / "fixtures" / "v2-project"
+CANONICAL_PROJECT = ROOT / "tests" / "fixtures" / "docforge-academic"
+CANONICAL_SOURCE = "document.md"
+CANONICAL_OUTPUT = "document.docx"
 
 
 def required_bundle_suffixes(platform: str) -> tuple[str, ...]:
@@ -179,8 +181,8 @@ def verify_sidecar(sidecar: Path) -> dict[str, object]:
     with tempfile.TemporaryDirectory(prefix="thesisforge-desktop-") as raw_temp:
         workspace = Path(raw_temp) / "workspace"
         shutil.copytree(CANONICAL_PROJECT, workspace)
-        source = workspace / "thesis.md"
-        output = workspace / "output" / "thesis.docx"
+        source = workspace / CANONICAL_SOURCE
+        output = workspace / "output" / CANONICAL_OUTPUT
         output.parent.mkdir()
         environment = _offline_environment()
 

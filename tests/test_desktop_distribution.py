@@ -232,12 +232,16 @@ def test_desktop_verifier_decodes_sidecar_output_as_utf8(
     assert observed["encoding"] == "utf-8"
 
 
-def test_desktop_verifier_uses_canonical_v2_fixture_and_strict_build_reports() -> None:
+def test_desktop_verifier_uses_canonical_docforge_fixture_and_strict_build_reports() -> None:
     verifier = _load_module(VERIFY_DESKTOP, "verify_desktop_distribution_contract")
 
-    assert verifier.CANONICAL_PROJECT == ROOT / "tests" / "fixtures" / "v2-project"
-    assert (verifier.CANONICAL_PROJECT / "thesisforge.yaml").is_file()
-    assert (verifier.CANONICAL_PROJECT / "thesis.md").read_text(
+    assert verifier.CANONICAL_PROJECT == (
+        ROOT / "tests" / "fixtures" / "docforge-academic"
+    )
+    assert (verifier.CANONICAL_PROJECT / "docforge.yaml").is_file()
+    assert verifier.CANONICAL_SOURCE == "document.md"
+    assert verifier.CANONICAL_OUTPUT == "document.docx"
+    assert (verifier.CANONICAL_PROJECT / verifier.CANONICAL_SOURCE).read_text(
         encoding="utf-8"
     ).splitlines()[0] == "# 绪论 {#chap:introduction}"
 
@@ -277,6 +281,78 @@ def test_desktop_verifier_uses_canonical_v2_fixture_and_strict_build_reports() -
             outcome="succeeded",
             label="legacy",
         )
+
+
+def test_desktop_verifier_wires_canonical_docforge_source_and_output(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    verifier = _load_module(VERIFY_DESKTOP, "verify_desktop_distribution_wiring")
+    sidecar = tmp_path / "thesisforge-sidecar-aarch64-apple-darwin"
+    sidecar.write_bytes(b"sidecar")
+    requests: list[dict] = []
+
+    monkeypatch.setattr(verifier, "validate_sidecar_artifact", lambda _path: None)
+
+    def fake_run_sidecar(
+        _sidecar: Path,
+        request: dict,
+        *,
+        stream: bool,
+        cwd: Path,
+        environment: dict[str, str],
+    ) -> list[dict]:
+        del cwd, environment
+        requests.append(request)
+        if request["operation"] != "build":
+            return [{"ok": True}]
+        outcome = "succeeded" if len(requests) == 5 else "canceled"
+        if outcome == "succeeded":
+            output = Path(request["payload"]["output"]["path"])
+            with verifier.zipfile.ZipFile(output, "w") as archive:
+                archive.writestr("[Content_Types].xml", "<Types/>")
+            return [
+                *[
+                    {"type": "progress", "stage": stage}
+                    for stage in verifier.BUILD_STAGES
+                ],
+                {
+                    "type": "completed",
+                    "report": {
+                        "schemaVersion": "thesisforge.build-report.v2",
+                        "outcome": outcome,
+                    },
+                },
+            ]
+        assert stream is True
+        return [
+            {
+                "type": "completed",
+                "report": {
+                    "schemaVersion": "thesisforge.build-report.v2",
+                    "outcome": outcome,
+                },
+            }
+        ]
+
+    monkeypatch.setattr(verifier, "_run_sidecar", fake_run_sidecar)
+
+    evidence = verifier.verify_sidecar(sidecar)
+
+    assert evidence["buildStages"] == list(verifier.BUILD_STAGES)
+    assert all(
+        Path(request["payload"]["source"]["path"]).name == "document.md"
+        for request in requests
+    )
+    build_requests = [
+        request for request in requests if request["operation"] == "build"
+    ]
+    assert len(build_requests) == 2
+    assert all(
+        Path(request["payload"]["output"]["path"]).parts[-2:]
+        == ("output", "document.docx")
+        for request in build_requests
+    )
 
 
 def test_windows_bundle_verifier_finds_the_managed_sidecar_in_release_directory(
