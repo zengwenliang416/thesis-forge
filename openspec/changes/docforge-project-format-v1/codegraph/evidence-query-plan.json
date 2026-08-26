@@ -1,0 +1,127 @@
+{
+  "schema": "specnav.codegraph.evidence_query_plan.v1",
+  "generated_at": "2026-08-26T10:30:58.463Z",
+  "active_change": "docforge-project-format-v1",
+  "queries": [
+    {
+      "id": "development:task-001-project-contract:evidence",
+      "claim_id": "development:task-001-project-contract",
+      "stage": "development",
+      "task_id": "001-project-contract",
+      "status": "planned",
+      "query": "Find the files, symbols, components, routes, services, data flow, and tests that implement \"Implement one user-visible flow from UI entry through state, API/data boundary,\" in change \"docforge-project-format-v1\". Return concrete file paths, symbols, relationships, and any missing implementation evidence.",
+      "expected_evidence": [
+        "file paths",
+        "symbols",
+        "call relationships",
+        "tests or verification commands"
+      ],
+      "command": "node \"$SPECNAV_CODEGRAPH_ROOT/scripts/codegraph-context.js\" --stage development --claim development:task-001-project-contract --query \"<query>\" --write --json"
+    },
+    {
+      "id": "development:task-002-generic-document-domain:evidence",
+      "claim_id": "development:task-002-generic-document-domain",
+      "stage": "development",
+      "task_id": "002-generic-document-domain",
+      "status": "planned",
+      "query": "Find the files, symbols, components, routes, services, data flow, and tests that implement \"Implement one user-visible flow from UI entry through state, API/data boundary,\" in change \"docforge-project-format-v1\". Return concrete file paths, symbols, relationships, and any missing implementation evidence.",
+      "expected_evidence": [
+        "file paths",
+        "symbols",
+        "call relationships",
+        "tests or verification commands"
+      ],
+      "command": "node \"$SPECNAV_CODEGRAPH_ROOT/scripts/codegraph-context.js\" --stage development --claim development:task-002-generic-document-domain --query \"<query>\" --write --json"
+    },
+    {
+      "id": "development:task-003-python-package-cli:evidence",
+      "claim_id": "development:task-003-python-package-cli",
+      "stage": "development",
+      "task_id": "003-python-package-cli",
+      "status": "planned",
+      "query": "Find the files, symbols, components, routes, services, data flow, and tests that implement \"Implement one user-visible flow from UI entry through state, API/data boundary,\" in change \"docforge-project-format-v1\". Return concrete file paths, symbols, relationships, and any missing implementation evidence.",
+      "expected_evidence": [
+        "file paths",
+        "symbols",
+        "call relationships",
+        "tests or verification commands"
+      ],
+      "command": "node \"$SPECNAV_CODEGRAPH_ROOT/scripts/codegraph-context.js\" --stage development --claim development:task-003-python-package-cli --query \"<query>\" --write --json"
+    },
+    {
+      "id": "development:task-004-runtime-protocol:evidence",
+      "claim_id": "development:task-004-runtime-protocol",
+      "stage": "development",
+      "task_id": "004-runtime-protocol",
+      "status": "planned",
+      "query": "Find the files, symbols, components, routes, services, data flow, and tests that implement \"Implement one user-visible flow from UI entry through state, API/data boundary,\" in change \"docforge-project-format-v1\". Return concrete file paths, symbols, relationships, and any missing implementation evidence.",
+      "expected_evidence": [
+        "file paths",
+        "symbols",
+        "call relationships",
+        "tests or verification commands"
+      ],
+      "command": "node \"$SPECNAV_CODEGRAPH_ROOT/scripts/codegraph-context.js\" --stage development --claim development:task-004-runtime-protocol --query \"<query>\" --write --json"
+    },
+    {
+      "id": "development:task-005-template-profiles:evidence",
+      "claim_id": "development:task-005-template-profiles",
+      "stage": "development",
+      "task_id": "005-template-profiles",
+      "status": "planned",
+      "query": "Find the files, symbols, components, routes, services, data flow, and tests that implement \"Implement one user-visible flow from UI entry through state, API/data boundary,\" in change \"docforge-project-format-v1\". Return concrete file paths, symbols, relationships, and any missing implementation evidence.",
+      "expected_evidence": [
+        "file paths",
+        "symbols",
+        "call relationships",
+        "tests or verification commands"
+      ],
+      "command": "node \"$SPECNAV_CODEGRAPH_ROOT/scripts/codegraph-context.js\" --stage development --claim development:task-005-template-profiles --query \"<query>\" --write --json"
+    },
+    {
+      "id": "development:task-006-workbench-desktop:evidence",
+      "claim_id": "development:task-006-workbench-desktop",
+      "stage": "development",
+      "task_id": "006-workbench-desktop",
+      "status": "planned",
+      "query": "Find the files, symbols, components, routes, services, data flow, and tests that implement \"Implement one user-visible flow from UI entry through state, API/data boundary,\" in change \"docforge-project-format-v1\". Return concrete file paths, symbols, relationships, and any missing implementation evidence.",
+      "expected_evidence": [
+        "file paths",
+        "symbols",
+        "call relationships",
+        "tests or verification commands"
+      ],
+      "command": "node \"$SPECNAV_CODEGRAPH_ROOT/scripts/codegraph-context.js\" --stage development --claim development:task-006-workbench-desktop --query \"<query>\" --write --json"
+    },
+    {
+      "id": "development:task-007-repository-delivery:evidence",
+      "claim_id": "development:task-007-repository-delivery",
+      "stage": "development",
+      "task_id": "007-repository-delivery",
+      "status": "planned",
+      "query": "Find the files, symbols, components, routes, services, data flow, and tests that implement \"Implement one user-visible flow from UI entry through state, API/data boundary,\" in change \"docforge-project-format-v1\". Return concrete file paths, symbols, relationships, and any missing implementation evidence.",
+      "expected_evidence": [
+        "file paths",
+        "symbols",
+        "call relationships",
+        "tests or verification commands"
+      ],
+      "command": "node \"$SPECNAV_CODEGRAPH_ROOT/scripts/codegraph-context.js\" --stage development --claim development:task-007-repository-delivery --query \"<query>\" --write --json"
+    },
+    {
+      "id": "development:task-008-end-to-end-verification:evidence",
+      "claim_id": "development:task-008-end-to-end-verification",
+      "stage": "development",
+      "task_id": "008-end-to-end-verification",
+      "status": "planned",
+      "query": "Find the files, symbols, components, routes, services, data flow, and tests that implement \"Implement one user-visible flow from UI entry through state, API/data boundary,\" in change \"docforge-project-format-v1\". Return concrete file paths, symbols, relationships, and any missing implementation evidence.",
+      "expected_evidence": [
+        "file paths",
+        "symbols",
+        "call relationships",
+        "tests or verification commands"
+      ],
+      "command": "node \"$SPECNAV_CODEGRAPH_ROOT/scripts/codegraph-context.js\" --stage development --claim development:task-008-end-to-end-verification --query \"<query>\" --write --json"
+    }
+  ]
+}

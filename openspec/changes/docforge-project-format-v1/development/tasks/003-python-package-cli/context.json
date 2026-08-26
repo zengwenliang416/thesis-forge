@@ -1,0 +1,54 @@
+{
+  "task_id": "003-python-package-cli",
+  "task_items": ["3.1", "3.2", "3.3", "3.4", "3.5"],
+  "goal": "Move the Python distribution and imports to DocForge, expose only the docforge CLI, and prove clean offline installation.",
+  "must_read": [
+    "openspec/changes/docforge-project-format-v1/development/tasks/003-python-package-cli/brief.md",
+    "openspec/specs/ui-design/design.md",
+    "openspec/specs/system-architecture/design.md",
+    "openspec/specs/frontend-backend-data-flow/design.md",
+    "openspec/specs/component-architecture/design.md",
+    "openspec/changes/docforge-project-format-v1/requirements.md",
+    "openspec/changes/docforge-project-format-v1/acceptance.md",
+    "openspec/changes/docforge-project-format-v1/spec-map.json",
+    "openspec/changes/docforge-project-format-v1/component-impact-map.json",
+    "openspec/changes/docforge-project-format-v1/prototype/handoff.md",
+    "openspec/changes/docforge-project-format-v1/prototype/decision.json",
+    "openspec/changes/docforge-project-format-v1/prototype/component/component-map.md",
+    "openspec/changes/docforge-project-format-v1/design.md",
+    "openspec/changes/docforge-project-format-v1/specs/docforge-runtime-contract/spec.md",
+    "openspec/changes/docforge-project-format-v1/specs/offline-cli-pipeline/spec.md"
+  ],
+  "allowed_files": [
+    "src",
+    "tests",
+    "pyproject.toml",
+    "README.md",
+    "Makefile",
+    "scripts",
+    "openspec/changes/docforge-project-format-v1/development/tasks/003-python-package-cli",
+    "openspec/changes/docforge-project-format-v1/development"
+  ],
+  "test_paths": [
+    "tests/cli",
+    "tests/test_package_import.py",
+    "tests/test_desktop_distribution.py"
+  ],
+  "non_goals": [
+    "Do not migrate TypeScript, Rust, templates, examples, CI, or release workflows in this slice.",
+    "Do not retain old imports or commands as aliases.",
+    "Do not require network access or AI credentials for package verification."
+  ],
+  "expected_evidence": [
+    "Failing then passing package and CLI tests",
+    "Wheel build and content evidence",
+    "Clean-environment install and offline command evidence",
+    "Task report, spec review, and quality review"
+  ],
+  "unsafe_assumptions": [
+    "Editable imports can conceal missing packaged files.",
+    "Product identity occurs outside pyproject and source directory names.",
+    "Existing subprocess and sidecar callers are not part of this slice unless directly required for the Python CLI."
+  ],
+  "stop_condition": "Stop if the package move requires compatibility aliases, unapproved public API changes, credentials, network access, or files outside this packet."
+}

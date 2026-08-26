@@ -1,0 +1,62 @@
+{
+  "touched_specs": [
+    "ui-design",
+    "system-architecture",
+    "frontend-backend-data-flow",
+    "component-architecture"
+  ],
+  "ui_rules": [
+    "Preserve the approved DocForge workbench layout and light-theme visual language.",
+    "Replace thesis-specific project identity, labels, filenames, file filters, diagnostics, and help text with DocForge and document terminology.",
+    "Do not add a theme switcher, locale switcher, new screen, or redesigned layout.",
+    "Cover the existing desktop and mobile workbench in sensory verification after terminology changes."
+  ],
+  "architecture_modules": [
+    "Generic project manifest and path model for docforge.yaml and docforge.project.v1.",
+    "ForgeDocument core aggregate and generic metadata with an optional typed academic profile.",
+    "Parser, validator, template resolver, compiler, RenderPlan, bibliography, DOCX renderer, Review, and BuildReport pipeline.",
+    "DocForge CLI and Python distribution/import package.",
+    "Versioned HTTP, Tauri sidecar, and frontend workbench transport adapters.",
+    "Bundled docforge-standard template and repository-owned project fixtures."
+  ],
+  "api_contracts": [
+    "The public command is docforge and no thesisforge command alias remains.",
+    "Project open accepts a directory or docforge.yaml and rejects bare Markdown and obsolete manifests.",
+    "CLI, HTTP, Tauri, and frontend fixtures share one versioned DocForge workbench protocol.",
+    "The public core aggregate is ForgeDocument and ThesisDocument is not exported.",
+    "Inspect, validate, review, and build continue to use the same deterministic application services."
+  ],
+  "database_entities": [
+    "None; project state remains local files and in-memory domain objects."
+  ],
+  "permissions": [
+    "Read only explicitly selected project-relative source, template, bibliography, and asset paths.",
+    "Write only explicit or manifest-resolved review and build outputs inside the permitted workspace boundary.",
+    "Reject absolute paths, remote paths, traversal, and symlink escapes without elevating operating-system permissions."
+  ],
+  "operational_constraints": [
+    "Core inspect, validate, review, and build flows remain offline and require no AI service, API key, database, or network.",
+    "Failed builds preserve the previous successful output and never overwrite the source or manifest.",
+    "The parse, validate, resolve, compile, render, finalize, postflight, and preview stages remain ordered and deterministic.",
+    "The migration is a single breaking cutover with no dual loader, compatibility alias, or migration fallback.",
+    "Repository-owned examples, fixtures, tests, documentation, packaging, and CI move to the new contract in the same change."
+  ],
+  "data_flows": [
+    "docforge.yaml -> project loader -> safe project-relative paths -> document Markdown and resources.",
+    "Markdown -> ForgeDocument -> validation -> template resolution -> RenderPlan -> DOCX.",
+    "Generic metadata -> template bindings without academic requirements.",
+    "Optional academic profile -> academic template bindings without parser or renderer special casing.",
+    "CLI or workbench intent -> shared application service -> DocForge protocol response and progress events.",
+    "Build result -> build/document.docx plus review/document.review.md and review/document.review-map.json defaults."
+  ],
+  "theme_modes": [
+    "light-only",
+    "theme-toggle:none"
+  ],
+  "locale_policy": [
+    "i18n:disabled",
+    "locales:zh-CN",
+    "default-locale:zh-CN"
+  ],
+  "unresolved_gaps": []
+}

@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "change_id": "docforge-project-format-v1",
+  "stage": "development",
+  "allowed_roots": [
+    "src",
+    "tests",
+    "frontend",
+    "src-tauri",
+    "templates",
+    "protocol",
+    "examples",
+    "docs",
+    "qa",
+    "spec",
+    "scripts",
+    ".github",
+    ".woodpecker",
+    "pyproject.toml",
+    "package.json",
+    "README.md",
+    "Makefile",
+    "openspec/changes/docforge-project-format-v1"
+  ],
+  "denied_roots": [
+    ".git",
+    ".codegraph",
+    "node_modules",
+    "dist",
+    "coverage",
+    "openspec/changes/archive",
+    "openspec/changes/docforge-workbench-ui-redesign",
+    "openspec/changes/template-v2-build-pipeline-p1",
+    "openspec/changes/v2-rich-inline-renderplan-p1"
+  ],
+  "requires_review_on": [
+    "pyproject.toml",
+    "package.json",
+    "src-tauri/tauri.conf.json",
+    "src-tauri/Cargo.toml",
+    "protocol",
+    ".github",
+    ".woodpecker",
+    "scripts"
+  ],
+  "allowed_operations": {
+    "create": true,
+    "modify": true,
+    "delete": true,
+    "rename": true
+  },
+  "prototype_sources": [
+    "openspec/changes/docforge-project-format-v1/prototype/component/component-map.md"
+  ],
+  "expires_when": "verification_started"
+}

@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "owners": [
+    {
+      "path": "src",
+      "owner": "Python project, domain, application, compiler, renderer, and adapter slices"
+    },
+    {
+      "path": "frontend",
+      "owner": "TypeScript protocol and workbench slice"
+    },
+    {
+      "path": "src-tauri",
+      "owner": "Rust desktop protocol, sidecar, bundle, and preview slice"
+    },
+    {
+      "path": "templates",
+      "owner": "Generic and academic template slice"
+    },
+    {
+      "path": "protocol",
+      "owner": "Cross-runtime schema and fixture slice"
+    },
+    {
+      "path": "tests",
+      "owner": "Focused Python contract and regression tests"
+    },
+    {
+      "path": "openspec/changes/docforge-project-format-v1",
+      "owner": "SpecNav task packets, evidence, reviews, and verification handoff"
+    }
+  ]
+}

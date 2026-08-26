@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "promotion_policy": "reimplement_under_development_gate",
+  "allowed_to_copy": [
+    "Approved identifier values and default filenames from the component map",
+    "Approved component ownership, dependency direction, and rejection boundaries",
+    "Approved general, academic, obsolete contract, unsafe path, and old protocol case definitions"
+  ],
+  "must_reimplement": [
+    "Production project models, paths, parser types, application services, protocols, UI state, adapters, templates, packaging, and tests",
+    "All validation, cancellation, atomic output, finalization, postflight, preview, and Office behavior using repository production patterns"
+  ],
+  "blocked_direct_copies": [
+    "prototype/component/verify.mjs",
+    "prototype/component/contract-fixtures.json",
+    "Any prototype-only mock or simplified boundary evaluator"
+  ]
+}

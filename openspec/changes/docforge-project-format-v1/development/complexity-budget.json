@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "budgets": [
+    {
+      "area": "project models",
+      "limit": "one strict DocForge v1 model; no compatibility model or dual loader"
+    },
+    {
+      "area": "domain aggregates",
+      "limit": "one ForgeDocument aggregate; no translation layer beside it"
+    },
+    {
+      "area": "runtime protocols",
+      "limit": "one workbench and one BuildReport identifier with parity fixtures across Python, TypeScript, and Rust"
+    },
+    {
+      "area": "profile branching",
+      "limit": "zero document-type branches in parser and DOCX renderer"
+    },
+    {
+      "area": "identity constants",
+      "limit": "one authoritative module per language boundary"
+    },
+    {
+      "area": "new dependencies",
+      "limit": "no new production dependency unless existing dependencies cannot express a required contract"
+    }
+  ]
+}

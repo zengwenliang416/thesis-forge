@@ -1,0 +1,60 @@
+{
+  "task_id": "004-runtime-protocol",
+  "task_items": ["4.1", "4.2", "4.3", "4.4", "4.5", "4.6"],
+  "goal": "Deliver one DocForge workbench and BuildReport contract across Python, TypeScript, Rust, HTTP, sidecar, Tauri, cancellation, and preview authorization.",
+  "must_read": [
+    "openspec/changes/docforge-project-format-v1/development/tasks/004-runtime-protocol/brief.md",
+    "openspec/specs/ui-design/design.md",
+    "openspec/specs/system-architecture/design.md",
+    "openspec/specs/frontend-backend-data-flow/design.md",
+    "openspec/specs/component-architecture/design.md",
+    "openspec/changes/docforge-project-format-v1/requirements.md",
+    "openspec/changes/docforge-project-format-v1/acceptance.md",
+    "openspec/changes/docforge-project-format-v1/spec-map.json",
+    "openspec/changes/docforge-project-format-v1/component-impact-map.json",
+    "openspec/changes/docforge-project-format-v1/prototype/handoff.md",
+    "openspec/changes/docforge-project-format-v1/prototype/decision.json",
+    "openspec/changes/docforge-project-format-v1/prototype/component/component-map.md",
+    "openspec/changes/docforge-project-format-v1/design.md",
+    "openspec/changes/docforge-project-format-v1/specs/docforge-runtime-contract/spec.md",
+    "openspec/changes/docforge-project-format-v1/specs/desktop-workbench/spec.md"
+  ],
+  "allowed_files": [
+    "src",
+    "protocol",
+    "frontend/src/transport",
+    "frontend/src/state",
+    "frontend/e2e",
+    "src-tauri",
+    "tests/adapters",
+    "tests/application",
+    "tests/test_adapters.py",
+    "openspec/changes/docforge-project-format-v1/development/tasks/004-runtime-protocol",
+    "openspec/changes/docforge-project-format-v1/development"
+  ],
+  "test_paths": [
+    "tests/adapters",
+    "tests/application",
+    "tests/test_adapters.py",
+    "frontend/src/transport",
+    "src-tauri/src"
+  ],
+  "non_goals": [
+    "Do not redesign the workbench UI or change compiler and renderer semantics.",
+    "Do not add old protocol compatibility or a second adapter domain model.",
+    "Do not rename release assets or convert repository documentation in this slice."
+  ],
+  "expected_evidence": [
+    "Cross-language fixture parity output",
+    "Python adapter test output",
+    "TypeScript transport and build event test output",
+    "Rust Tauri protocol and preview authorization test output",
+    "Task report, spec review, and quality review"
+  ],
+  "unsafe_assumptions": [
+    "A renamed constant does not prove old identifiers are rejected.",
+    "HTTP and Tauri parity must include cancellation, stale results, and final preview authorization.",
+    "Runtime-specific file authorization fields are the only allowed transport difference."
+  ],
+  "stop_condition": "Stop if runtime contracts diverge, an adapter duplicates application behavior, an obsolete identifier remains accepted, or the task needs files outside this packet."
+}

@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "planning_status": "ready",
+  "nodes": [
+    {
+      "id": "001-project-contract",
+      "task_items": ["1.1", "1.2", "1.3", "1.4", "1.5"]
+    },
+    {
+      "id": "002-generic-document-domain",
+      "task_items": ["2.1", "2.2", "2.3", "2.4", "2.5"]
+    },
+    {
+      "id": "003-python-package-cli",
+      "task_items": ["3.1", "3.2", "3.3", "3.4", "3.5"]
+    },
+    {
+      "id": "004-runtime-protocol",
+      "task_items": ["4.1", "4.2", "4.3", "4.4", "4.5", "4.6"]
+    },
+    {
+      "id": "005-template-profiles",
+      "task_items": ["5.1", "5.2", "5.3", "5.4", "5.5"]
+    },
+    {
+      "id": "006-workbench-desktop",
+      "task_items": ["6.1", "6.2", "6.3", "6.4", "6.5"]
+    },
+    {
+      "id": "007-repository-delivery",
+      "task_items": ["7.1", "7.2", "7.3", "7.4", "7.5"]
+    },
+    {
+      "id": "008-end-to-end-verification",
+      "task_items": ["8.1", "8.2", "8.3", "8.4", "8.5", "8.6"]
+    }
+  ],
+  "edges": [
+    {"from": "001-project-contract", "to": "002-generic-document-domain"},
+    {"from": "002-generic-document-domain", "to": "003-python-package-cli"},
+    {"from": "003-python-package-cli", "to": "004-runtime-protocol"},
+    {"from": "004-runtime-protocol", "to": "005-template-profiles"},
+    {"from": "005-template-profiles", "to": "006-workbench-desktop"},
+    {"from": "006-workbench-desktop", "to": "007-repository-delivery"},
+    {"from": "007-repository-delivery", "to": "008-end-to-end-verification"}
+  ]
+}

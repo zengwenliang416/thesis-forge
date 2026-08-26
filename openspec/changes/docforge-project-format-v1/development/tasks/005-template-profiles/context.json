@@ -1,0 +1,57 @@
+{
+  "task_id": "005-template-profiles",
+  "task_items": ["5.1", "5.2", "5.3", "5.4", "5.5"],
+  "goal": "Package docforge-standard, resolve typed generic and academic metadata before RenderPlan, and prove no renderer profile branching or fabricated academic content.",
+  "must_read": [
+    "openspec/changes/docforge-project-format-v1/development/tasks/005-template-profiles/brief.md",
+    "openspec/specs/ui-design/design.md",
+    "openspec/specs/system-architecture/design.md",
+    "openspec/specs/frontend-backend-data-flow/design.md",
+    "openspec/specs/component-architecture/design.md",
+    "openspec/changes/docforge-project-format-v1/requirements.md",
+    "openspec/changes/docforge-project-format-v1/acceptance.md",
+    "openspec/changes/docforge-project-format-v1/spec-map.json",
+    "openspec/changes/docforge-project-format-v1/component-impact-map.json",
+    "openspec/changes/docforge-project-format-v1/prototype/handoff.md",
+    "openspec/changes/docforge-project-format-v1/prototype/decision.json",
+    "openspec/changes/docforge-project-format-v1/prototype/component/component-map.md",
+    "openspec/changes/docforge-project-format-v1/design.md",
+    "openspec/changes/docforge-project-format-v1/specs/generic-document-template/spec.md",
+    "openspec/changes/docforge-project-format-v1/specs/validation-template-resolution/spec.md"
+  ],
+  "allowed_files": [
+    "src/docforge/templates",
+    "src/docforge/compiler",
+    "src/docforge/project",
+    "templates",
+    "tests/templates",
+    "tests/compiler",
+    "tests/project",
+    "tests/fixtures",
+    "examples",
+    "openspec/changes/docforge-project-format-v1/development/tasks/005-template-profiles",
+    "openspec/changes/docforge-project-format-v1/development"
+  ],
+  "test_paths": [
+    "tests/templates",
+    "tests/compiler",
+    "tests/project"
+  ],
+  "non_goals": [
+    "Do not change Markdown syntax, numbering, citation style, OOXML field semantics, or workbench layout.",
+    "Do not add profile branches to parser or renderer.",
+    "Do not preserve academic metadata as required common metadata."
+  ],
+  "expected_evidence": [
+    "Template binding and package validation tests",
+    "General and academic RenderPlan comparisons",
+    "Visible output check for absent fabricated academic content",
+    "Task report, spec review, and quality review"
+  ],
+  "unsafe_assumptions": [
+    "A generic template must not infer missing academic values.",
+    "Template success does not prove renderer independence without architecture evidence.",
+    "Academic templates may require profile values only through declared typed rules."
+  ],
+  "stop_condition": "Stop if template behavior requires parser or renderer branching, fabricated metadata, an undocumented schema field, or files outside this packet."
+}

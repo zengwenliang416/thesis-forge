@@ -1,0 +1,30 @@
+{
+  "schema": "specnav.codegraph.claims_report.v1",
+  "generated_at": "2026-08-26T10:40:51.844Z",
+  "active_change": "docforge-project-format-v1",
+  "claims_file": "openspec/changes/docforge-project-format-v1/codegraph/claims-map.json",
+  "evidence_index": "openspec/changes/docforge-project-format-v1/codegraph/evidence-index.json",
+  "claims_count": 8,
+  "verified_claims": [],
+  "unverified_claims": [
+    "development:task-001-project-contract",
+    "development:task-002-generic-document-domain",
+    "development:task-003-python-package-cli",
+    "development:task-004-runtime-protocol",
+    "development:task-005-template-profiles",
+    "development:task-006-workbench-desktop",
+    "development:task-007-repository-delivery",
+    "development:task-008-end-to-end-verification"
+  ],
+  "blockers": [],
+  "warnings": [
+    "codegraph:claim-unverified:development:task-001-project-contract",
+    "codegraph:claim-unverified:development:task-002-generic-document-domain",
+    "codegraph:claim-unverified:development:task-003-python-package-cli",
+    "codegraph:claim-unverified:development:task-004-runtime-protocol",
+    "codegraph:claim-unverified:development:task-005-template-profiles",
+    "codegraph:claim-unverified:development:task-006-workbench-desktop",
+    "codegraph:claim-unverified:development:task-007-repository-delivery",
+    "codegraph:claim-unverified:development:task-008-end-to-end-verification"
+  ]
+}

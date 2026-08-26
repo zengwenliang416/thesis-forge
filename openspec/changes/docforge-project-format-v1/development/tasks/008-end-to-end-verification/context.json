@@ -1,0 +1,57 @@
+{
+  "task_id": "008-end-to-end-verification",
+  "task_items": ["8.1", "8.2", "8.3", "8.4", "8.5", "8.6"],
+  "goal": "Produce direct six-domain, OOXML, installed Office, facticity, acceptance, and SpecNav evidence for the complete DocForge migration.",
+  "must_read": [
+    "openspec/changes/docforge-project-format-v1/development/tasks/008-end-to-end-verification/brief.md",
+    "openspec/specs/ui-design/design.md",
+    "openspec/specs/system-architecture/design.md",
+    "openspec/specs/frontend-backend-data-flow/design.md",
+    "openspec/specs/component-architecture/design.md",
+    "openspec/changes/docforge-project-format-v1/requirements.md",
+    "openspec/changes/docforge-project-format-v1/acceptance.md",
+    "openspec/changes/docforge-project-format-v1/spec-map.json",
+    "openspec/changes/docforge-project-format-v1/component-impact-map.json",
+    "openspec/changes/docforge-project-format-v1/prototype/handoff.md",
+    "openspec/changes/docforge-project-format-v1/prototype/decision.json",
+    "openspec/changes/docforge-project-format-v1/prototype/component/component-map.md",
+    "openspec/changes/docforge-project-format-v1/design.md",
+    "openspec/changes/docforge-project-format-v1/acceptance.json",
+    "openspec/changes/docforge-project-format-v1/tasks.md"
+  ],
+  "allowed_files": [
+    "tests",
+    "frontend",
+    "src-tauri",
+    "qa",
+    "scripts",
+    "examples",
+    "openspec/changes/docforge-project-format-v1"
+  ],
+  "test_paths": [
+    "tests",
+    "frontend",
+    "src-tauri",
+    "qa"
+  ],
+  "non_goals": [
+    "Do not implement new product behavior solely to make verification pass without a repair task.",
+    "Do not publish or deploy externally without separate authorization.",
+    "Do not start arbitrary Markdown importing or the npm Agent Skill."
+  ],
+  "expected_evidence": [
+    "System-executed Python, frontend, Rust, E2E, and OpenSpec receipts",
+    "OOXML and deterministic comparison evidence",
+    "Installed macOS and Microsoft Word sensory evidence",
+    "Factual obsolete-identity classification",
+    "Acceptance A1 through A10 evidence",
+    "Task report, independent spec review, and independent quality review"
+  ],
+  "unsafe_assumptions": [
+    "A prior green run is not current evidence.",
+    "File existence is not sufficient OOXML verification.",
+    "Browser or mock transport evidence is not installed desktop evidence.",
+    "Every old term found by scan is not necessarily an active contract defect."
+  ],
+  "stop_condition": "Stop on any unadjudicated executed failure, missing acceptance evidence, unresolved active obsolete identifier, unavailable required Office check, or scope expansion into the importer skill."
+}

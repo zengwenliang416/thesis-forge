@@ -1,0 +1,21 @@
+{
+  "schema": "specnav.prototype.verifier.v1",
+  "status": "green",
+  "checked_entry": "component/component-map.md",
+  "checks": [
+    "Inspected the component map and confirmed one-way adapter to application to project/core/template/compiler to RenderPlan to renderer dependencies.",
+    "Inspected the component tree and confirmed project identity, generic metadata, academic profile, semantic document, application orchestration, transport, and renderer ownership are separated.",
+    "Executed node prototype/component/verify.mjs and confirmed all identity constants match the approved DocForge contracts.",
+    "Executed the general and academic fixture cases and confirmed both use the accepted shared pipeline.",
+    "Executed obsolete manifest, unsafe path, and old protocol cases and confirmed rejection occurs before downstream dispatch.",
+    "Confirmed the prototype imports no production module, touches no real project data, and proposes no compatibility loader or renderer profile branch."
+  ],
+  "evidence": [
+    "prototype/component/component-map.md",
+    "prototype/component-tree.md",
+    "prototype/component/contract-fixtures.json",
+    "prototype/component/verify.mjs",
+    "node prototype/component/verify.mjs -> status green; checkedCases general, academic, obsolete-manifest, unsafe-path, old-protocol"
+  ],
+  "blockers": []
+}

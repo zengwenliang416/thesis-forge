@@ -1,0 +1,58 @@
+{
+  "new_components": [
+    "ForgeDocument generic core aggregate.",
+    "Typed generic document metadata and optional academic profile models.",
+    "DocForge project manifest model and loader for docforge.project.v1.",
+    "Bundled docforge-standard template.",
+    "DocForge protocol identity and matching transport contract fixtures."
+  ],
+  "reused_components": [
+    "Markdown parser and semantic block and inline models.",
+    "Validation issue model and validator pipeline.",
+    "Template resolver and template-driven compiler.",
+    "Renderer-neutral RenderPlan and DOCX renderer.",
+    "Bibliography, Review, BuildReport, cancellation, atomic output, postflight, and preview services.",
+    "Existing React workbench component tree and WorkbenchTransport abstraction.",
+    "Existing HTTP and Tauri adapters over shared application services."
+  ],
+  "extraction_triggers": [
+    "Centralize manifest name, schema identifier, default source, output, and review filenames per language boundary.",
+    "Centralize public product identity and DocForge protocol version instead of repeating literals in Python, TypeScript, Rust, tests, scripts, and packaging.",
+    "Use shared cross-language contract fixtures when CLI, HTTP, Tauri, and frontend repeat project or protocol payloads.",
+    "Keep academic metadata mapping in typed profile and template layers if a second consumer would otherwise branch on document type."
+  ],
+  "forbidden_dependencies": [
+    "Parser or core domain importing python-docx, lxml, renderer, UI, transport, or AI code.",
+    "DOCX renderer parsing Markdown or branching on general versus academic document type.",
+    "HTTP, Tauri, frontend, or CLI adapters defining a second project or document domain model.",
+    "Generic project loading requiring academic metadata or an academic template.",
+    "Compatibility loaders, aliases, fallbacks, or migrations for thesisforge.yaml, thesisforge.project.v2, the thesisforge command, or the old protocol."
+  ],
+  "hooks": [
+    "Reuse existing frontend workspace and operation progress hooks; update their shared DTO identity rather than creating DocForge-specific duplicates.",
+    "Preserve existing cancellation and stale-result handling hooks across the renamed protocol."
+  ],
+  "utilities": [
+    "Safe project-relative path resolution and symlink-boundary checks.",
+    "Per-language DocForge project identity and default filename constants.",
+    "Shared diagnostic and protocol serialization helpers.",
+    "Cross-language contract fixtures for project metadata, commands, progress, and build results."
+  ],
+  "services": [
+    "DocForge project open and manifest loading service.",
+    "Shared inspect, validate, review, and build application services.",
+    "Generic and academic template resolution service.",
+    "Existing deterministic compiler, renderer, finalization, postflight, and preview services under DocForge contracts."
+  ],
+  "required_component_tests": [
+    "Project loader accepts docforge.yaml and docforge.project.v1 and rejects obsolete manifests, schemas, bare Markdown, and unknown fields.",
+    "Path tests reject absolute, remote, traversal, and symlink-escape paths while accepting safe project-relative resources.",
+    "ForgeDocument and generic metadata tests require no academic fields; academic profile tests validate typed optional fields.",
+    "docforge-standard builds a general document without fabricated academic metadata.",
+    "CLI, HTTP, Tauri, and frontend contract fixtures agree on one DocForge protocol and neutral default filenames.",
+    "Parser, validator, compiler, RenderPlan, renderer, Review, BuildReport, cancellation, atomic output, postflight, and preview regression tests remain deterministic.",
+    "Architecture tests ensure parser and core imports remain free of Word, renderer, transport, UI, and AI dependencies.",
+    "Workbench component tests and sensory checks verify neutral DocForge terminology without layout, theme, or locale regressions."
+  ],
+  "unresolved_gaps": []
+}

@@ -1,0 +1,76 @@
+{
+  "schema_version": 1,
+  "change_id": "docforge-project-format-v1",
+  "assertions": [
+    {
+      "id": "A1",
+      "statement": "A directory containing docforge.yaml with schema docforge.project.v1 opens through the CLI and desktop workbench.",
+      "verify_via": "e2e",
+      "status": "failing",
+      "evidence_ref": null
+    },
+    {
+      "id": "A2",
+      "statement": "A general project using document.md and docforge-standard completes inspect, validate, review, and build without academic metadata.",
+      "verify_via": "e2e",
+      "status": "failing",
+      "evidence_ref": null
+    },
+    {
+      "id": "A3",
+      "statement": "An academic project supplies a typed optional academic profile and builds with an academic template without imposing those fields on general projects.",
+      "verify_via": "e2e",
+      "status": "failing",
+      "evidence_ref": null
+    },
+    {
+      "id": "A4",
+      "statement": "thesisforge.yaml, thesisforge.project.v2, the thesisforge command, ThesisDocument exports, and the old workbench protocol are absent or rejected without compatibility aliases.",
+      "verify_via": "facticity",
+      "status": "failing",
+      "evidence_ref": null
+    },
+    {
+      "id": "A5",
+      "statement": "Default source, build, and review paths are document.md, build/document.docx, review/document.review.md, and review/document.review-map.json.",
+      "verify_via": "unit",
+      "status": "failing",
+      "evidence_ref": null
+    },
+    {
+      "id": "A6",
+      "statement": "Project paths reject absolute, remote, traversal, and symlink-escape inputs while accepting safe project-relative resources.",
+      "verify_via": "redteam",
+      "status": "failing",
+      "evidence_ref": null
+    },
+    {
+      "id": "A7",
+      "statement": "The deterministic Markdown to ForgeDocument to validation to template to RenderPlan to DOCX pipeline preserves ordered stages, renderer boundaries, cancellation, and atomic output behavior.",
+      "verify_via": "e2e",
+      "status": "failing",
+      "evidence_ref": null
+    },
+    {
+      "id": "A8",
+      "statement": "CLI, HTTP, Tauri, and frontend fixtures use one versioned DocForge protocol and return matching project, source, output, progress, diagnostic, and build-result identities.",
+      "verify_via": "static",
+      "status": "failing",
+      "evidence_ref": null
+    },
+    {
+      "id": "A9",
+      "statement": "The installed macOS workbench uses neutral DocForge and document terminology for project identity, filenames, diagnostics, help, and Word preview.",
+      "verify_via": "sensory",
+      "status": "failing",
+      "evidence_ref": null
+    },
+    {
+      "id": "A10",
+      "statement": "Repository-owned examples, fixtures, active documentation, packaging, and CI use the DocForge project contract and neutral filenames.",
+      "verify_via": "facticity",
+      "status": "failing",
+      "evidence_ref": null
+    }
+  ]
+}

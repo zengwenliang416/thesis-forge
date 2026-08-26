@@ -1,0 +1,104 @@
+{
+  "schema": "specnav.codegraph.status.v1",
+  "ok": true,
+  "generated_at": "2026-08-26T10:40:51.842Z",
+  "project_root": "/Volumes/zwl/open_sources/thesis-forge",
+  "active_change": "docforge-project-format-v1",
+  "policy": {
+    "enabled": true,
+    "profile": "active_dev",
+    "mode": "advisory",
+    "stage": "development",
+    "required_for_stage": false,
+    "disabled_reason": null
+  },
+  "execution_surface": "cli",
+  "decision": {
+    "stage": "development",
+    "result": "pass",
+    "reason": "CodeGraph policy satisfied for development."
+  },
+  "cli": {
+    "available": true,
+    "version": "1.3.1",
+    "path": "/Users/wenliang_zeng/.local/bin/codegraph",
+    "unsupported": false,
+    "error": null
+  },
+  "mcp": {
+    "configured": true,
+    "visible_in_current_session": false,
+    "restart_required": true,
+    "config_files": [
+      "/Users/wenliang_zeng/.claude.json",
+      "/Users/wenliang_zeng/.codex/config.toml"
+    ]
+  },
+  "index": {
+    "initialized": true,
+    "projectPath": "/Volumes/zwl/open_sources/thesis-forge",
+    "indexPath": "/Volumes/zwl/open_sources/thesis-forge/.codegraph",
+    "lastIndexed": "2026-08-26T10:01:41.999Z",
+    "fileCount": 322,
+    "nodeCount": 6581,
+    "edgeCount": 20594,
+    "pendingChanges": {
+      "added": 0,
+      "modified": 0,
+      "removed": 0
+    },
+    "reindexRecommended": false,
+    "worktreeMismatch": null
+  },
+  "blockers": [],
+  "warnings": [],
+  "raw_codegraph_status": {
+    "initialized": true,
+    "version": "1.3.1",
+    "projectPath": "/Volumes/zwl/open_sources/thesis-forge",
+    "indexPath": "/Volumes/zwl/open_sources/thesis-forge/.codegraph",
+    "lastIndexed": "2026-08-26T10:01:41.999Z",
+    "fileCount": 322,
+    "nodeCount": 6581,
+    "edgeCount": 20594,
+    "dbSizeBytes": 159522816,
+    "backend": "node-sqlite",
+    "journalMode": "wal",
+    "nodesByKind": {
+      "class": 499,
+      "constant": 115,
+      "file": 280,
+      "function": 2344,
+      "import": 1773,
+      "interface": 53,
+      "method": 685,
+      "property": 9,
+      "struct": 5,
+      "type_alias": 30,
+      "variable": 788
+    },
+    "languages": [
+      "javascript",
+      "python",
+      "rust",
+      "tsx",
+      "typescript",
+      "xml",
+      "yaml"
+    ],
+    "pendingChanges": {
+      "added": 0,
+      "modified": 0,
+      "removed": 0
+    },
+    "worktreeMismatch": null,
+    "index": {
+      "builtWithVersion": "1.3.1",
+      "builtWithExtractionVersion": 24,
+      "currentExtractionVersion": 24,
+      "reindexRecommended": false,
+      "state": "complete",
+      "pendingRefs": 0
+    }
+  }
+}

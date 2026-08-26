@@ -1,0 +1,207 @@
+{
+  "schema": "specnav.codegraph.claims.v1",
+  "generated_at": "2026-08-26T10:30:58.463Z",
+  "active_change": "docforge-project-format-v1",
+  "claims": [
+    {
+      "id": "development:task-001-project-contract",
+      "kind": "development-task",
+      "stage": "development",
+      "task_id": "001-project-contract",
+      "text": "Implement one user-visible flow from UI entry through state, API/data boundary,",
+      "required": true,
+      "source": "specnav-codegraph-plan",
+      "source_paths": [
+        "openspec/changes/docforge-project-format-v1/development/tasks/001-project-contract/brief.md",
+        "openspec/changes/docforge-project-format-v1/development/tasks/001-project-contract/context.json"
+      ],
+      "expected_evidence": [
+        "Focused tests or command output",
+        "Task report",
+        "Spec review",
+        "Quality review"
+      ],
+      "allowed_files": [
+        "src"
+      ],
+      "query_ids": [
+        "development:task-001-project-contract:evidence"
+      ]
+    },
+    {
+      "id": "development:task-002-generic-document-domain",
+      "kind": "development-task",
+      "stage": "development",
+      "task_id": "002-generic-document-domain",
+      "text": "Implement one user-visible flow from UI entry through state, API/data boundary,",
+      "required": true,
+      "source": "specnav-codegraph-plan",
+      "source_paths": [
+        "openspec/changes/docforge-project-format-v1/development/tasks/002-generic-document-domain/brief.md",
+        "openspec/changes/docforge-project-format-v1/development/tasks/002-generic-document-domain/context.json"
+      ],
+      "expected_evidence": [
+        "Focused tests or command output",
+        "Task report",
+        "Spec review",
+        "Quality review"
+      ],
+      "allowed_files": [
+        "src"
+      ],
+      "query_ids": [
+        "development:task-002-generic-document-domain:evidence"
+      ]
+    },
+    {
+      "id": "development:task-003-python-package-cli",
+      "kind": "development-task",
+      "stage": "development",
+      "task_id": "003-python-package-cli",
+      "text": "Implement one user-visible flow from UI entry through state, API/data boundary,",
+      "required": true,
+      "source": "specnav-codegraph-plan",
+      "source_paths": [
+        "openspec/changes/docforge-project-format-v1/development/tasks/003-python-package-cli/brief.md",
+        "openspec/changes/docforge-project-format-v1/development/tasks/003-python-package-cli/context.json"
+      ],
+      "expected_evidence": [
+        "Focused tests or command output",
+        "Task report",
+        "Spec review",
+        "Quality review"
+      ],
+      "allowed_files": [
+        "src"
+      ],
+      "query_ids": [
+        "development:task-003-python-package-cli:evidence"
+      ]
+    },
+    {
+      "id": "development:task-004-runtime-protocol",
+      "kind": "development-task",
+      "stage": "development",
+      "task_id": "004-runtime-protocol",
+      "text": "Implement one user-visible flow from UI entry through state, API/data boundary,",
+      "required": true,
+      "source": "specnav-codegraph-plan",
+      "source_paths": [
+        "openspec/changes/docforge-project-format-v1/development/tasks/004-runtime-protocol/brief.md",
+        "openspec/changes/docforge-project-format-v1/development/tasks/004-runtime-protocol/context.json"
+      ],
+      "expected_evidence": [
+        "Focused tests or command output",
+        "Task report",
+        "Spec review",
+        "Quality review"
+      ],
+      "allowed_files": [
+        "src"
+      ],
+      "query_ids": [
+        "development:task-004-runtime-protocol:evidence"
+      ]
+    },
+    {
+      "id": "development:task-005-template-profiles",
+      "kind": "development-task",
+      "stage": "development",
+      "task_id": "005-template-profiles",
+      "text": "Implement one user-visible flow from UI entry through state, API/data boundary,",
+      "required": true,
+      "source": "specnav-codegraph-plan",
+      "source_paths": [
+        "openspec/changes/docforge-project-format-v1/development/tasks/005-template-profiles/brief.md",
+        "openspec/changes/docforge-project-format-v1/development/tasks/005-template-profiles/context.json"
+      ],
+      "expected_evidence": [
+        "Focused tests or command output",
+        "Task report",
+        "Spec review",
+        "Quality review"
+      ],
+      "allowed_files": [
+        "src"
+      ],
+      "query_ids": [
+        "development:task-005-template-profiles:evidence"
+      ]
+    },
+    {
+      "id": "development:task-006-workbench-desktop",
+      "kind": "development-task",
+      "stage": "development",
+      "task_id": "006-workbench-desktop",
+      "text": "Implement one user-visible flow from UI entry through state, API/data boundary,",
+      "required": true,
+      "source": "specnav-codegraph-plan",
+      "source_paths": [
+        "openspec/changes/docforge-project-format-v1/development/tasks/006-workbench-desktop/brief.md",
+        "openspec/changes/docforge-project-format-v1/development/tasks/006-workbench-desktop/context.json"
+      ],
+      "expected_evidence": [
+        "Focused tests or command output",
+        "Task report",
+        "Spec review",
+        "Quality review"
+      ],
+      "allowed_files": [
+        "src"
+      ],
+      "query_ids": [
+        "development:task-006-workbench-desktop:evidence"
+      ]
+    },
+    {
+      "id": "development:task-007-repository-delivery",
+      "kind": "development-task",
+      "stage": "development",
+      "task_id": "007-repository-delivery",
+      "text": "Implement one user-visible flow from UI entry through state, API/data boundary,",
+      "required": true,
+      "source": "specnav-codegraph-plan",
+      "source_paths": [
+        "openspec/changes/docforge-project-format-v1/development/tasks/007-repository-delivery/brief.md",
+        "openspec/changes/docforge-project-format-v1/development/tasks/007-repository-delivery/context.json"
+      ],
+      "expected_evidence": [
+        "Focused tests or command output",
+        "Task report",
+        "Spec review",
+        "Quality review"
+      ],
+      "allowed_files": [
+        "src"
+      ],
+      "query_ids": [
+        "development:task-007-repository-delivery:evidence"
+      ]
+    },
+    {
+      "id": "development:task-008-end-to-end-verification",
+      "kind": "development-task",
+      "stage": "development",
+      "task_id": "008-end-to-end-verification",
+      "text": "Implement one user-visible flow from UI entry through state, API/data boundary,",
+      "required": true,
+      "source": "specnav-codegraph-plan",
+      "source_paths": [
+        "openspec/changes/docforge-project-format-v1/development/tasks/008-end-to-end-verification/brief.md",
+        "openspec/changes/docforge-project-format-v1/development/tasks/008-end-to-end-verification/context.json"
+      ],
+      "expected_evidence": [
+        "Focused tests or command output",
+        "Task report",
+        "Spec review",
+        "Quality review"
+      ],
+      "allowed_files": [
+        "src"
+      ],
+      "query_ids": [
+        "development:task-008-end-to-end-verification:evidence"
+      ]
+    }
+  ]
+}

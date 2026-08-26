@@ -1,0 +1,126 @@
+{
+  "identity": {
+    "manifest": "docforge.yaml",
+    "projectSchema": "docforge.project.v1",
+    "source": "document.md",
+    "docx": "build/document.docx",
+    "reviewMarkdown": "review/document.review.md",
+    "reviewMap": "review/document.review-map.json",
+    "workbenchProtocol": "docforge.workbench.v1",
+    "buildReportSchema": "docforge.build-report.v2"
+  },
+  "components": {
+    "projectLoader": {
+      "owns": [
+        "manifest validation",
+        "generic metadata",
+        "optional academic profile",
+        "safe project-relative paths"
+      ],
+      "forbiddenDependencies": [
+        "MarkdownParser",
+        "Compiler",
+        "DocxRenderer",
+        "WorkbenchTransport"
+      ]
+    },
+    "forgeDocument": {
+      "owns": [
+        "semantic blocks",
+        "semantic inlines",
+        "source locations",
+        "stable IDs",
+        "references",
+        "citations"
+      ],
+      "forbiddenDependencies": [
+        "TemplateModel",
+        "DocxRenderer",
+        "WorkbenchTransport",
+        "AIProvider"
+      ]
+    },
+    "renderer": {
+      "owns": [
+        "DOCX package",
+        "OOXML fields",
+        "bookmarks",
+        "OMML",
+        "sections",
+        "headers",
+        "footers"
+      ],
+      "forbiddenDependencies": [
+        "DocForgeProjectManifest",
+        "MarkdownParser",
+        "DocumentProfile",
+        "WorkbenchTransport"
+      ]
+    },
+    "runtimeAdapter": {
+      "owns": [
+        "DTO validation",
+        "application dispatch",
+        "result serialization",
+        "cancellation forwarding"
+      ],
+      "forbiddenDependencies": [
+        "MarkdownParser",
+        "Compiler",
+        "DocxRenderer"
+      ]
+    }
+  },
+  "cases": [
+    {
+      "id": "general",
+      "manifest": "docforge.yaml",
+      "schema": "docforge.project.v1",
+      "documentType": "general",
+      "academicProfile": false,
+      "protocol": "docforge.workbench.v1",
+      "path": "assets/figure.png",
+      "expected": "accepted"
+    },
+    {
+      "id": "academic",
+      "manifest": "docforge.yaml",
+      "schema": "docforge.project.v1",
+      "documentType": "academic",
+      "academicProfile": true,
+      "protocol": "docforge.workbench.v1",
+      "path": "assets/figure.png",
+      "expected": "accepted"
+    },
+    {
+      "id": "obsolete-manifest",
+      "manifest": "thesisforge.yaml",
+      "schema": "thesisforge.project.v2",
+      "documentType": "academic",
+      "academicProfile": true,
+      "protocol": "docforge.workbench.v1",
+      "path": "assets/figure.png",
+      "expected": "rejected-project"
+    },
+    {
+      "id": "unsafe-path",
+      "manifest": "docforge.yaml",
+      "schema": "docforge.project.v1",
+      "documentType": "general",
+      "academicProfile": false,
+      "protocol": "docforge.workbench.v1",
+      "path": "../outside.png",
+      "expected": "rejected-path"
+    },
+    {
+      "id": "old-protocol",
+      "manifest": "docforge.yaml",
+      "schema": "docforge.project.v1",
+      "documentType": "general",
+      "academicProfile": false,
+      "protocol": "thesisforge.workbench.v1",
+      "path": "assets/figure.png",
+      "expected": "rejected-protocol"
+    }
+  ]
+}

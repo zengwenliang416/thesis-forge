@@ -1,0 +1,61 @@
+{
+  "task_id": "002-generic-document-domain",
+  "task_items": ["2.1", "2.2", "2.3", "2.4", "2.5"],
+  "goal": "Replace ThesisDocument with ForgeDocument across the renderer-neutral semantic pipeline while preserving deterministic behavior and architecture boundaries.",
+  "must_read": [
+    "openspec/changes/docforge-project-format-v1/development/tasks/002-generic-document-domain/brief.md",
+    "openspec/specs/ui-design/design.md",
+    "openspec/specs/system-architecture/design.md",
+    "openspec/specs/frontend-backend-data-flow/design.md",
+    "openspec/specs/component-architecture/design.md",
+    "openspec/changes/docforge-project-format-v1/requirements.md",
+    "openspec/changes/docforge-project-format-v1/acceptance.md",
+    "openspec/changes/docforge-project-format-v1/spec-map.json",
+    "openspec/changes/docforge-project-format-v1/component-impact-map.json",
+    "openspec/changes/docforge-project-format-v1/prototype/handoff.md",
+    "openspec/changes/docforge-project-format-v1/prototype/decision.json",
+    "openspec/changes/docforge-project-format-v1/prototype/component/component-map.md",
+    "openspec/changes/docforge-project-format-v1/design.md",
+    "openspec/changes/docforge-project-format-v1/specs/document-markdown-model/spec.md"
+  ],
+  "allowed_files": [
+    "src/thesis_forge/core",
+    "src/thesis_forge/application",
+    "src/thesis_forge/compiler",
+    "src/thesis_forge/bibliography",
+    "src/thesis_forge/review",
+    "tests/core",
+    "tests/application",
+    "tests/compiler",
+    "tests/bibliography",
+    "tests/review",
+    "tests/test_architecture.py",
+    "openspec/changes/docforge-project-format-v1/development/tasks/002-generic-document-domain",
+    "openspec/changes/docforge-project-format-v1/development"
+  ],
+  "test_paths": [
+    "tests/core",
+    "tests/application",
+    "tests/compiler",
+    "tests/bibliography",
+    "tests/review",
+    "tests/test_architecture.py"
+  ],
+  "non_goals": [
+    "Do not rename the Python distribution, CLI, protocol, frontend, Tauri package, or templates in this slice.",
+    "Do not change Markdown syntax, numbering, bibliography policy, RenderPlan shape, or OOXML behavior.",
+    "Do not preserve ThesisDocument as an alias."
+  ],
+  "expected_evidence": [
+    "Public model import tests",
+    "Parser and downstream focused regression output",
+    "Architecture dependency test output",
+    "Task report, spec review, and quality review"
+  ],
+  "unsafe_assumptions": [
+    "A passing parser smoke test does not prove all downstream type consumers migrated.",
+    "General and academic projects must produce equivalent semantic structures for identical Markdown.",
+    "Core purity must be inspected through tests and imports, not naming alone."
+  ],
+  "stop_condition": "Stop if the slice creates a second domain model, adds compatibility exports, changes semantic behavior without specification, or crosses a forbidden dependency boundary."
+}

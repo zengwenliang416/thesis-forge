@@ -1,0 +1,65 @@
+{
+  "task_id": "007-repository-delivery",
+  "task_items": ["7.1", "7.2", "7.3", "7.4", "7.5"],
+  "goal": "Convert active repository projects and delivery surfaces to DocForge and prove release-grade macOS artifact identity without performing external publication.",
+  "must_read": [
+    "openspec/changes/docforge-project-format-v1/development/tasks/007-repository-delivery/brief.md",
+    "openspec/specs/ui-design/design.md",
+    "openspec/specs/system-architecture/design.md",
+    "openspec/specs/frontend-backend-data-flow/design.md",
+    "openspec/specs/component-architecture/design.md",
+    "openspec/changes/docforge-project-format-v1/requirements.md",
+    "openspec/changes/docforge-project-format-v1/acceptance.md",
+    "openspec/changes/docforge-project-format-v1/spec-map.json",
+    "openspec/changes/docforge-project-format-v1/component-impact-map.json",
+    "openspec/changes/docforge-project-format-v1/prototype/handoff.md",
+    "openspec/changes/docforge-project-format-v1/prototype/decision.json",
+    "openspec/changes/docforge-project-format-v1/prototype/component/component-map.md",
+    "openspec/changes/docforge-project-format-v1/design.md",
+    "openspec/changes/docforge-project-format-v1/specs/docforge-runtime-contract/spec.md",
+    "openspec/changes/docforge-project-format-v1/specs/offline-cli-pipeline/spec.md"
+  ],
+  "allowed_files": [
+    "examples",
+    "tests/fixtures",
+    "docs",
+    "protocol",
+    "qa",
+    "scripts",
+    ".github",
+    ".woodpecker",
+    "templates",
+    "pyproject.toml",
+    "package.json",
+    "README.md",
+    "Makefile",
+    "tests/test_desktop_distribution.py",
+    "openspec/changes/docforge-project-format-v1/development/tasks/007-repository-delivery",
+    "openspec/changes/docforge-project-format-v1/development"
+  ],
+  "test_paths": [
+    "tests/test_desktop_distribution.py",
+    "tests/cli",
+    "tests/project",
+    "frontend",
+    "src-tauri"
+  ],
+  "non_goals": [
+    "Do not push, publish, tag, upload a release, deploy, or mutate external CI state in this task without separate authorization.",
+    "Do not rewrite archived OpenSpec evidence or valid academic content merely because it contains thesis terminology.",
+    "Do not overwrite unrelated existing CI and release edits."
+  ],
+  "expected_evidence": [
+    "Converted example and fixture validation",
+    "Obsolete active identity facticity report",
+    "Local CI and packaging command output",
+    "macOS artifact content, metadata, checksum, and filename evidence",
+    "Task report, spec review, and quality review"
+  ],
+  "unsafe_assumptions": [
+    "Local packaging does not prove GitHub Release publication.",
+    "Existing dirty Woodpecker edits may belong to another task and must be preserved.",
+    "Historical references and active runtime identifiers require different treatment."
+  ],
+  "stop_condition": "Stop before any external publication or when a required edit conflicts with unrelated dirty work, historical evidence, or files outside this packet."
+}
