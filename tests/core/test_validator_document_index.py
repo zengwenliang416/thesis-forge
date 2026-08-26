@@ -9,21 +9,21 @@ from thesis_forge.core.model import (
     Citation,
     CrossReference,
     Figure,
+    ForgeDocument,
     SourceLocation,
     Table,
     TableCell,
     TableRow,
     Text,
-    ThesisDocument,
 )
 from thesis_forge.core.validator import ValidationContext, validate_document
 
 
-def _document(*blocks) -> ThesisDocument:
-    return ThesisDocument(source_path=Path("thesis.md"), blocks=list(blocks))
+def _document(*blocks) -> ForgeDocument:
+    return ForgeDocument(source_path=Path("thesis.md"), blocks=list(blocks))
 
 
-def _issues(document: ThesisDocument):
+def _issues(document: ForgeDocument):
     return validate_document(document, ValidationContext.from_document(document))
 
 

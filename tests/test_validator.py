@@ -11,10 +11,10 @@ from thesis_forge.core.model import (
     BibliographyConfig,
     BlockQuote,
     Figure,
+    ForgeDocument,
     Heading,
     SourceLocation,
     Text,
-    ThesisDocument,
     ValidationIssue,
 )
 from thesis_forge.core.parser_backend import create_parser_backend
@@ -24,7 +24,7 @@ from thesis_forge.templates import load_template
 PARSER = create_parser_backend()
 
 
-def _parse(source: str, path: Path) -> ThesisDocument:
+def _parse(source: str, path: Path) -> ForgeDocument:
     return PARSER.parse_text(source, source_path=path)
 
 
@@ -69,7 +69,7 @@ def test_duplicate_id_validation_uses_nested_document_index(tmp_path: Path):
             source_file="thesis.md",
         ),
     )
-    document = ThesisDocument(
+    document = ForgeDocument(
         source_path=tmp_path / "thesis.md",
         blocks=[first, BlockQuote(children=(nested_duplicate,))],
     )
@@ -142,7 +142,7 @@ def test_duplicate_id_build_report_preserves_canonical_locations(tmp_path: Path)
 def test_locationless_duplicate_build_report_keeps_unique_ids_and_file_ranges(
     tmp_path: Path,
 ):
-    document = ThesisDocument(
+    document = ForgeDocument(
         source_path=tmp_path / "thesis.md",
         blocks=[
             Heading(id="sec:duplicate"),

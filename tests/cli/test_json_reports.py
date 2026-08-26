@@ -12,7 +12,7 @@ from thesis_forge.application import (
 )
 from thesis_forge.application.contracts import BuildStage
 from thesis_forge.cli import app
-from thesis_forge.core.model import ThesisDocument, ValidationIssue
+from thesis_forge.core.model import ForgeDocument, ValidationIssue
 from thesis_forge.core.validator import ValidationContext
 
 PROJECT = Path(__file__).resolve().parents[1] / "fixtures" / "v2-project"
@@ -40,7 +40,7 @@ class ReportService:
 
     def validate(self, request):
         return ValidationResult(
-            document=ThesisDocument(source_path=PROJECT / "thesis.md"),
+            document=ForgeDocument(source_path=PROJECT / "thesis.md"),
             context=ValidationContext(),
             issues=(),
         )

@@ -14,10 +14,10 @@ from .model import (
     Block,
     Equation,
     Figure,
+    ForgeDocument,
     Heading,
     Listing,
     Table,
-    ThesisDocument,
     inline_plain_text,
 )
 
@@ -77,7 +77,7 @@ class SymbolTable:
     @classmethod
     def from_document(
         cls,
-        document: ThesisDocument,
+        document: ForgeDocument,
         template: ThesisTemplate | None = None,
     ) -> SymbolTable:
         entries: dict[str, SymbolEntry] = {}

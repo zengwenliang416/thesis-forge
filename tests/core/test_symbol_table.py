@@ -8,12 +8,12 @@ from thesis_forge.core.model import (
     CrossReference,
     Equation,
     Figure,
+    ForgeDocument,
     Heading,
     Listing,
     Paragraph,
     Table,
     Text,
-    ThesisDocument,
 )
 from thesis_forge.core.render_plan import ParagraphInstruction, ReferenceRun
 from thesis_forge.core.symbols import (
@@ -30,7 +30,7 @@ def _text(value: str) -> list[Text]:
 
 
 def test_symbol_table_centralizes_identity_labels_numbering_and_bookmarks() -> None:
-    document = ThesisDocument(
+    document = ForgeDocument(
         source_path=Path("/tmp/thesis.md"),
         blocks=[
             Heading(id="chap:intro", level=1, inlines=_text("绪论")),
@@ -88,7 +88,7 @@ def test_symbol_table_centralizes_identity_labels_numbering_and_bookmarks() -> N
 
 
 def test_compile_document_consumes_symbol_table_for_cross_references() -> None:
-    document = ThesisDocument(
+    document = ForgeDocument(
         source_path=Path("/tmp/thesis.md"),
         blocks=[
             Paragraph(inlines=[CrossReference(target="fig:model")]),
@@ -139,7 +139,7 @@ def test_symbol_table_rejects_identity_collisions(
     blocks: list[object],
     error_type: type[ValueError],
 ) -> None:
-    document = ThesisDocument(
+    document = ForgeDocument(
         source_path=Path("/tmp/thesis.md"),
         blocks=blocks,  # type: ignore[arg-type]
     )
@@ -149,7 +149,7 @@ def test_symbol_table_rejects_identity_collisions(
 
 
 def test_compile_document_rejects_collisions_before_rendering() -> None:
-    document = ThesisDocument(
+    document = ForgeDocument(
         source_path=Path("/tmp/thesis.md"),
         blocks=[
             Figure(id="fig:a-b", src="a.png"),

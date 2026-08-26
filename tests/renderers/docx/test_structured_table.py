@@ -10,6 +10,7 @@ from thesis_forge.core.model import (
     Emphasis,
     FootnoteDefinition,
     FootnoteReference,
+    ForgeDocument,
     HardBreak,
     Heading,
     InlineCode,
@@ -21,7 +22,6 @@ from thesis_forge.core.model import (
     TableCell,
     TableRow,
     Text,
-    ThesisDocument,
 )
 from thesis_forge.renderers.docx import DocxRenderer
 from thesis_forge.templates import load_template
@@ -44,7 +44,7 @@ def test_docx_structured_table_renders_typed_cells_and_capability_evidence(
 ) -> None:
     template = load_template("templates/base/bachelor.yaml")
     template.table.caption.alignment = "right"
-    document = ThesisDocument(
+    document = ForgeDocument(
         source_path=tmp_path / "thesis.md",
         blocks=[
             Heading(id="sec:target", level=1, inlines=[Text(value="Target")]),

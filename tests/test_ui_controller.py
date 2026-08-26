@@ -14,7 +14,7 @@ from thesis_forge.application import (
     ValidationResult,
 )
 from thesis_forge.application.contracts import ProjectRequestIntent
-from thesis_forge.core.model import ThesisDocument, ValidationIssue
+from thesis_forge.core.model import ForgeDocument, ValidationIssue
 from thesis_forge.core.validator import ValidationContext
 
 
@@ -110,7 +110,7 @@ class _WebPersistence:
 
 
 def _inspection(path: Path) -> InspectionResult:
-    return InspectionResult(document=ThesisDocument(source_path=path))
+    return InspectionResult(document=ForgeDocument(source_path=path))
 
 
 def _validation(
@@ -118,7 +118,7 @@ def _validation(
     issues: tuple[ValidationIssue, ...] = (),
 ) -> ValidationResult:
     return ValidationResult(
-        document=ThesisDocument(source_path=path),
+        document=ForgeDocument(source_path=path),
         context=ValidationContext(),
         issues=issues,
     )

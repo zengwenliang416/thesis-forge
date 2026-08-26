@@ -8,7 +8,7 @@ from enum import StrEnum
 from pathlib import Path
 from typing import ClassVar
 
-from thesis_forge.core.model import ThesisDocument, ValidationIssue
+from thesis_forge.core.model import ForgeDocument, ValidationIssue
 from thesis_forge.core.render_plan import RenderPlan
 from thesis_forge.core.validator import ValidationContext
 
@@ -706,12 +706,12 @@ class BuildReport:
 
 @dataclass(frozen=True, slots=True)
 class InspectionResult:
-    document: ThesisDocument
+    document: ForgeDocument
 
 
 @dataclass(frozen=True, slots=True)
 class ValidationResult:
-    document: ThesisDocument
+    document: ForgeDocument
     context: ValidationContext
     issues: tuple[ValidationIssue, ...]
 
@@ -729,7 +729,7 @@ class BuildResult:
 
 @dataclass(frozen=True, slots=True)
 class PreviewResult:
-    document: ThesisDocument
+    document: ForgeDocument
     context: ValidationContext
     issues: tuple[ValidationIssue, ...]
     plan: RenderPlan | None

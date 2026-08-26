@@ -7,7 +7,7 @@ from pathlib import Path
 from typing import Protocol
 
 from thesis_forge.core.compiler import compile_document
-from thesis_forge.core.model import ThesisDocument, ValidationIssue
+from thesis_forge.core.model import ForgeDocument, ValidationIssue
 from thesis_forge.core.parser_backend import ParserBackend, create_parser_backend
 from thesis_forge.core.render_plan import RenderPlan
 from thesis_forge.core.validator import ValidationContext, validate_document
@@ -42,10 +42,10 @@ from .pdf_preview import (
     derived_pdf_preview_path,
 )
 
-Parser = Callable[[str | Path], ThesisDocument]
-SnapshotParser = Callable[..., ThesisDocument]
-ContextFactory = Callable[[ThesisDocument, str | Path | None], ValidationContext]
-Validator = Callable[[ThesisDocument, ValidationContext], list[ValidationIssue]]
+Parser = Callable[[str | Path], ForgeDocument]
+SnapshotParser = Callable[..., ForgeDocument]
+ContextFactory = Callable[[ForgeDocument, str | Path | None], ValidationContext]
+Validator = Callable[[ForgeDocument, ValidationContext], list[ValidationIssue]]
 Compiler = Callable[..., RenderPlan]
 PackageValidator = Callable[[str | Path], None]
 ProgressCallback = Callable[[BuildStage], None]
@@ -188,7 +188,7 @@ class BuildStageLifecycle:
 
 
 def _create_validation_context(
-    document: ThesisDocument,
+    document: ForgeDocument,
     template_path: str | Path | None,
 ) -> ValidationContext:
     return ValidationContext.from_document(document, template_path=template_path)

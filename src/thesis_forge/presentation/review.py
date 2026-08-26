@@ -19,13 +19,13 @@ from thesis_forge.core.model import (
     Equation,
     Figure,
     FootnoteDefinition,
+    ForgeDocument,
     Heading,
     ListBlock,
     Listing,
     OrderedList,
     Paragraph,
     Table,
-    ThesisDocument,
 )
 from thesis_forge.core.render_plan import (
     AlgorithmInstruction,
@@ -455,7 +455,7 @@ class _SourceIndex:
     bibliography: deque[BibliographyBlock]
 
     @classmethod
-    def from_document(cls, document: ThesisDocument) -> _SourceIndex:
+    def from_document(cls, document: ForgeDocument) -> _SourceIndex:
         anonymous: dict[type[Block], deque[Block]] = defaultdict(deque)
         footnotes: dict[str, FootnoteDefinition] = {}
         bibliography: deque[BibliographyBlock] = deque()

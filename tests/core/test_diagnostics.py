@@ -14,10 +14,10 @@ from thesis_forge.application.contracts import (
 from thesis_forge.core.index import DocumentIndex
 from thesis_forge.core.model import (
     BlockQuote,
+    ForgeDocument,
     Heading,
     SourceLocation,
     Text,
-    ThesisDocument,
     ValidationIssue,
 )
 from thesis_forge.presentation.diagnostics import (
@@ -28,8 +28,8 @@ from thesis_forge.presentation.diagnostics import (
 )
 
 
-def _document(*blocks: object) -> ThesisDocument:
-    return ThesisDocument(source_path=Path("thesis.md"), blocks=list(blocks))
+def _document(*blocks: object) -> ForgeDocument:
+    return ForgeDocument(source_path=Path("thesis.md"), blocks=list(blocks))
 
 
 def test_legacy_validation_issue_messages_use_the_formatter_registry() -> None:

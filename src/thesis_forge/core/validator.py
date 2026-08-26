@@ -37,17 +37,17 @@ from .model import (
     Figure,
     FootnoteDefinition,
     FootnoteReference,
+    ForgeDocument,
     Heading,
     InlineMath,
     Listing,
     Strong,
     Table,
-    ThesisDocument,
     ValidationIssue,
 )
 
 ValidationRule: TypeAlias = Callable[
-    [ThesisDocument, "ValidationContext"],
+    [ForgeDocument, "ValidationContext"],
     Iterable[ValidationIssue],
 ]
 
@@ -74,7 +74,7 @@ class ValidationContext:
     @classmethod
     def from_document(
         cls,
-        document: ThesisDocument,
+        document: ForgeDocument,
         *,
         template_path: str | Path | None = None,
         template_roots: Iterable[Path] | None = None,
@@ -228,7 +228,7 @@ def _manifest_metadata(project) -> dict[str, dict[str, str]]:
     return normalized
 
 
-def _metadata_value(document: ThesisDocument, dotted_path: str) -> object | None:
+def _metadata_value(document: ForgeDocument, dotted_path: str) -> object | None:
     value: object = document.metadata
     for part in dotted_path.split("."):
         if not isinstance(value, dict) or part not in value:
@@ -238,7 +238,7 @@ def _metadata_value(document: ThesisDocument, dotted_path: str) -> object | None
 
 
 def _validate_project_error(
-    _document: ThesisDocument,
+    _document: ForgeDocument,
     context: ValidationContext,
 ) -> Iterable[ValidationIssue]:
     if context.project_error is None:
@@ -270,7 +270,7 @@ def _expected_id_prefixes(block: object) -> tuple[str, ...] | None:
 
 
 def _validate_required_metadata(
-    document: ThesisDocument,
+    document: ForgeDocument,
     context: ValidationContext,
 ) -> Iterable[ValidationIssue]:
     for dotted_path in context.required_metadata:
@@ -286,7 +286,7 @@ def _validate_required_metadata(
 
 
 def _validate_empty_document(
-    document: ThesisDocument,
+    document: ForgeDocument,
     _context: ValidationContext,
 ) -> Iterable[ValidationIssue]:
     if not document.blocks:
@@ -313,7 +313,7 @@ def _location_details(location: object, prefix: str) -> dict[str, str | int]:
 
 
 def _validate_ids(
-    document: ThesisDocument,
+    document: ForgeDocument,
     _context: ValidationContext,
 ) -> Iterable[ValidationIssue]:
     for block in document.blocks:
@@ -355,7 +355,7 @@ def _validate_ids(
 
 
 def _validate_cross_references(
-    document: ThesisDocument,
+    document: ForgeDocument,
     _context: ValidationContext,
 ) -> Iterable[ValidationIssue]:
     doc_index = DocumentIndex.from_document(document)
@@ -382,7 +382,7 @@ def _nested_footnote_references(
 
 
 def _validate_footnotes(
-    document: ThesisDocument,
+    document: ForgeDocument,
     _context: ValidationContext,
 ) -> Iterable[ValidationIssue]:
     definitions: dict[str, FootnoteDefinition] = {}
@@ -437,7 +437,7 @@ def _validate_footnotes(
 
 
 def _validate_math_preflight(
-    document: ThesisDocument,
+    document: ForgeDocument,
     _context: ValidationContext,
 ) -> Iterable[ValidationIssue]:
     index = DocumentIndex.from_document(document)
@@ -487,7 +487,7 @@ def _validate_math_preflight(
 
 
 def _validate_heading_hierarchy(
-    document: ThesisDocument,
+    document: ForgeDocument,
     _context: ValidationContext,
 ) -> Iterable[ValidationIssue]:
     previous_level: int | None = None
@@ -510,7 +510,7 @@ def _validate_heading_hierarchy(
 
 
 def _active_resource_roots(
-    document: ThesisDocument,
+    document: ForgeDocument,
     context: ValidationContext,
 ) -> tuple[Path, ...]:
     if context.resource_roots:
@@ -519,7 +519,7 @@ def _active_resource_roots(
 
 
 def _resolve_local_resource(
-    document: ThesisDocument,
+    document: ForgeDocument,
     context: ValidationContext,
     value: str | Path,
 ) -> tuple[Path, bool]:
@@ -536,7 +536,7 @@ def _resolve_local_resource(
 
 
 def _validate_images(
-    document: ThesisDocument,
+    document: ForgeDocument,
     context: ValidationContext,
 ) -> Iterable[ValidationIssue]:
     for block in document.blocks:
@@ -568,7 +568,7 @@ def _validate_images(
 
 
 def _validate_bibliography(
-    document: ThesisDocument,
+    document: ForgeDocument,
     context: ValidationContext,
 ) -> Iterable[ValidationIssue]:
     context.bibliography_database = None
@@ -715,7 +715,7 @@ def _template_error_issue(
 
 
 def _validate_template(
-    document: ThesisDocument,
+    document: ForgeDocument,
     context: ValidationContext,
 ) -> Iterable[ValidationIssue]:
     if context.template_error is not None:
@@ -757,7 +757,7 @@ def _validate_template(
 
 
 def _validate_layout_overrides(
-    document: ThesisDocument,
+    document: ForgeDocument,
     context: ValidationContext,
 ) -> Iterable[ValidationIssue]:
     if not context.manifest_layout_objects:
@@ -813,7 +813,7 @@ def validation_issue_sort_key(issue: ValidationIssue) -> tuple[object, ...]:
 
 
 def validate_document(
-    document: ThesisDocument,
+    document: ForgeDocument,
     context: ValidationContext | None = None,
 ) -> list[ValidationIssue]:
     active_context = context or ValidationContext.from_document(document)

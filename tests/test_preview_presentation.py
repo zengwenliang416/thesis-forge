@@ -14,6 +14,7 @@ from thesis_forge.core.model import (
     Equation,
     Figure,
     FootnoteDefinition,
+    ForgeDocument,
     Heading,
     ListBlock,
     Listing,
@@ -21,7 +22,6 @@ from thesis_forge.core.model import (
     SourceLocation,
     Table,
     Text,
-    ThesisDocument,
     ValidationIssue,
 )
 from thesis_forge.core.render_plan import (
@@ -186,7 +186,7 @@ def test_preview_mapper_matches_versioned_golden_contract(tmp_path: Path):
     image = tmp_path / "images" / "arch.png"
     image.parent.mkdir()
     image.write_bytes(b"preview-fixture")
-    document = ThesisDocument(
+    document = ForgeDocument(
         source_path=source,
         blocks=[
             Heading(
@@ -323,7 +323,7 @@ def test_preview_serializes_all_inline_run_variants(tmp_path: Path):
 
     result = map_preview_result(
         PreviewResult(
-            document=ThesisDocument(source_path=tmp_path / "thesis.md", blocks=[]),
+            document=ForgeDocument(source_path=tmp_path / "thesis.md", blocks=[]),
             context=ValidationContext(),
             issues=(),
             plan=RenderPlan(nodes=(ParagraphInstruction("正文", runs),)),
@@ -368,7 +368,7 @@ def test_preview_serializes_all_inline_run_variants(tmp_path: Path):
     with pytest.raises(TypeError, match=r"unsupported InlineRun: ForeignInline"):
         map_preview_result(
             PreviewResult(
-                document=ThesisDocument(
+                document=ForgeDocument(
                     source_path=tmp_path / "unknown.md",
                     blocks=[],
                 ),
@@ -470,7 +470,7 @@ def test_preview_mapper_covers_every_typed_instruction_and_unknown_fallback(
     )
     result = map_preview_result(
         PreviewResult(
-            document=ThesisDocument(source_path=tmp_path / "thesis.md", blocks=blocks),
+            document=ForgeDocument(source_path=tmp_path / "thesis.md", blocks=blocks),
             context=ValidationContext(),
             issues=(),
             plan=plan,
@@ -510,7 +510,7 @@ def test_preview_mapper_preserves_outline_when_validation_blocks_compile(
     PreviewResult, map_preview_result = _preview_api()
     result = map_preview_result(
         PreviewResult(
-            document=ThesisDocument(
+            document=ForgeDocument(
                 source_path=tmp_path / "invalid.md",
                 blocks=[
                     Heading(
@@ -547,7 +547,7 @@ def test_preview_outline_uses_inline_text_as_authority(tmp_path: Path):
     _, map_preview_result = _preview_api()
     result = map_preview_result(
         application.PreviewResult(
-            document=ThesisDocument(
+            document=ForgeDocument(
                 source_path=tmp_path / "thesis.md",
                 blocks=[
                     Heading(

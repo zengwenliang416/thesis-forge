@@ -257,7 +257,7 @@ class BibliographyConfig:
 
 
 @dataclass(slots=True)
-class ThesisDocument:
+class ForgeDocument:
     source_path: Path
     metadata: dict[str, Any] = field(default_factory=dict)
     blocks: list[Block] = field(default_factory=list)

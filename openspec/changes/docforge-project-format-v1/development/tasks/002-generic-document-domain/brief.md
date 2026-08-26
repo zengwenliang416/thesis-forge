@@ -25,13 +25,9 @@ pipeline regressions for both project profiles.
 - `src/thesis_forge/application`
 - `src/thesis_forge/compiler`
 - `src/thesis_forge/bibliography`
-- `src/thesis_forge/review`
-- `tests/core`
-- `tests/application`
-- `tests/compiler`
-- `tests/bibliography`
-- `tests/review`
-- `tests/test_architecture.py`
+- `src/thesis_forge/presentation`
+- `qa/tools/parser_diff.py`
+- `tests`
 - `openspec/changes/docforge-project-format-v1/development/tasks/002-generic-document-domain`
 - `openspec/changes/docforge-project-format-v1/development`
 
@@ -52,7 +48,7 @@ pipeline regressions for both project profiles.
 
 ## Verification Commands
 
-- `PYTHONPATH=src .venv/bin/python -m pytest tests/core tests/application tests/compiler tests/bibliography tests/review tests/test_architecture.py`
+- `PYTHONPATH=src .venv/bin/python -m pytest tests/core tests/application tests/presentation tests/cli tests/contracts tests/renderers/docx tests/test_acceptance.py tests/test_adapters.py tests/test_compiler.py tests/test_docx_renderer.py tests/test_frontend_contract.py tests/test_preview_presentation.py tests/test_ui_controller.py tests/test_validator.py tests/test_architecture.py`
 - `.venv/bin/ruff check src/thesis_forge/core src/thesis_forge/application src/thesis_forge/compiler src/thesis_forge/bibliography src/thesis_forge/review tests`
 
 ## Stop Conditions

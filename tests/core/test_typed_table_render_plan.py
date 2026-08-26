@@ -10,6 +10,7 @@ from thesis_forge.core.model import (
     Emphasis,
     FootnoteDefinition,
     FootnoteReference,
+    ForgeDocument,
     HardBreak,
     Heading,
     InlineCode,
@@ -21,7 +22,6 @@ from thesis_forge.core.model import (
     TableCell,
     TableRow,
     Text,
-    ThesisDocument,
 )
 from thesis_forge.core.render_plan import (
     CitationRun,
@@ -110,7 +110,7 @@ def test_table_constructors_use_typed_runs_without_raw_fixture_arguments() -> No
 
 
 def test_compiler_builds_table_cells_from_authoritative_inline_runs() -> None:
-    document = ThesisDocument(
+    document = ForgeDocument(
         source_path=Path("/tmp/thesis.md"),
         blocks=[
             Heading(id="sec:target", level=1, inlines=[Text(value="Target")]),

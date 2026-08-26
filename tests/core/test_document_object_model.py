@@ -1,4 +1,4 @@
-"""Focused tests for rich thesis-object model primitives."""
+"""Focused tests for rich document-object model primitives."""
 
 from __future__ import annotations
 

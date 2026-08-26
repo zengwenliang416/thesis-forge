@@ -14,6 +14,7 @@ from thesis_forge.core.model import (
     Equation,
     Figure,
     FootnoteDefinition,
+    ForgeDocument,
     Heading,
     ListBlock,
     Listing,
@@ -21,7 +22,6 @@ from thesis_forge.core.model import (
     SourceLocation,
     Table,
     Text,
-    ThesisDocument,
 )
 from thesis_forge.core.render_plan import (
     AlgorithmInstruction,
@@ -77,8 +77,8 @@ from thesis_forge.presentation.review import (
 )
 
 
-def _source_document(source_path: Path) -> ThesisDocument:
-    return ThesisDocument(
+def _source_document(source_path: Path) -> ForgeDocument:
+    return ForgeDocument(
         source_path=source_path,
         blocks=[
             Heading(

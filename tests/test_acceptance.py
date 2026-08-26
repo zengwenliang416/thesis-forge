@@ -80,7 +80,7 @@ Keywords: Markdown; thesis compiler; OOXML; deterministic build
 
 ## 编译流水线 {#sec:pipeline}
 
-系统采用 Markdown -> ThesisDocument -> Validation -> Template -> RenderPlan -> DOCX 的单向编译链路，其抽象关系见[式](#eq:pipeline)。
+系统采用 Markdown -> ForgeDocument -> Validation -> Template -> RenderPlan -> DOCX 的单向编译链路，其抽象关系见[式](#eq:pipeline)。
 
 $$
 D_{docx} = R(C(V(P(D_{md}))))

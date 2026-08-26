@@ -8,7 +8,7 @@ from pathlib import Path
 
 from thesis_forge import ui
 from thesis_forge.application import InspectionResult, ValidationResult
-from thesis_forge.core.model import ThesisDocument
+from thesis_forge.core.model import ForgeDocument
 from thesis_forge.core.validator import ValidationContext
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -60,9 +60,9 @@ def test_workspace_fixture_matches_python_reference_controller(tmp_path: Path):
     source.write_text("# Saved\n", encoding="utf-8")
     runner = _DeferredTaskRunner()
     controller = ui.WorkspaceController(
-        inspect=lambda path: InspectionResult(ThesisDocument(Path(path))),
+        inspect=lambda path: InspectionResult(ForgeDocument(Path(path))),
         validate=lambda path, **_kwargs: ValidationResult(
-            ThesisDocument(Path(path)),
+            ForgeDocument(Path(path)),
             ValidationContext(),
             (),
         ),

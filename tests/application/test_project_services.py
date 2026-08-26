@@ -15,7 +15,8 @@ from thesis_forge.application.services import (
     ProjectApplicationService,
     ProjectServiceContext,
 )
-from thesis_forge.core.model import ThesisDocument
+from thesis_forge.core.index import DocumentIndex
+from thesis_forge.core.model import ForgeDocument
 from thesis_forge.core.validator import ValidationContext
 
 FIXTURES = Path(__file__).resolve().parents[2] / "tests" / "fixtures"
@@ -28,12 +29,14 @@ def request(
     *,
     editor_snapshot: str | None = None,
     output: Path | None = None,
+    project_root: Path = PROJECT_ROOT,
+    project_id: str = "general-fixture",
 ) -> ProjectRequest:
     return ProjectRequest(
         project=ProjectIdentity(
-            project_id="general-fixture",
-            project_root=PROJECT_ROOT.resolve(),
-            manifest_path=(PROJECT_ROOT / "docforge.yaml").resolve(),
+            project_id=project_id,
+            project_root=project_root.resolve(),
+            manifest_path=(project_root / "docforge.yaml").resolve(),
         ),
         intent=intent,
         output=ProjectOutput(output.resolve()) if output is not None else None,
@@ -42,25 +45,25 @@ def request(
 
 
 def service(calls: list[tuple[str, Path]]) -> ProjectApplicationService:
-    def parse_file(path: str | Path) -> ThesisDocument:
+    def parse_file(path: str | Path) -> ForgeDocument:
         source = Path(path)
         calls.append(("file", source))
-        return ThesisDocument(source_path=source)
+        return ForgeDocument(source_path=source)
 
-    def parse_text(text: str, *, source_path: str | Path) -> ThesisDocument:
+    def parse_text(text: str, *, source_path: str | Path) -> ForgeDocument:
         source = Path(source_path)
         calls.append(("snapshot", source))
-        return ThesisDocument(source_path=source)
+        return ForgeDocument(source_path=source)
 
     def context_factory(
-        document: ThesisDocument,
+        document: ForgeDocument,
         _template_path: str | Path | None,
     ) -> ValidationContext:
         calls.append(("context", document.source_path))
         return ValidationContext(template=object())
 
     def validator(
-        document: ThesisDocument,
+        document: ForgeDocument,
         _context: ValidationContext,
     ) -> list:
         calls.append(("validate", document.source_path))
@@ -139,13 +142,10 @@ def test_project_identity_mismatch_is_rejected_before_parsing() -> None:
 
 
 def test_load_academic_fixture_uses_same_project_service_pipeline() -> None:
-    academic_request = ProjectRequest(
-        project=ProjectIdentity(
-            project_id="academic-fixture",
-            project_root=ACADEMIC_PROJECT_ROOT.resolve(),
-            manifest_path=(ACADEMIC_PROJECT_ROOT / "docforge.yaml").resolve(),
-        ),
-        intent=ProjectRequestIntent.INSPECT,
+    academic_request = request(
+        ProjectRequestIntent.INSPECT,
+        project_root=ACADEMIC_PROJECT_ROOT,
+        project_id="academic-fixture",
     )
 
     context = ProjectApplicationService().load(academic_request)
@@ -154,3 +154,29 @@ def test_load_academic_fixture_uses_same_project_service_pipeline() -> None:
     assert context.project.manifest.document.type == "academic"
     assert context.project.manifest.academic is not None
     assert context.project.manifest.academic.student.id == "20260001"
+
+
+def test_general_and_academic_projects_parse_identical_markdown_semantics() -> None:
+    source = """# 概述 {#chap:overview}
+
+正文参见 [概述](#chap:overview)。
+"""
+    project_service = ProjectApplicationService()
+
+    general = project_service.inspect(
+        request(ProjectRequestIntent.INSPECT, editor_snapshot=source)
+    ).document
+    academic = project_service.inspect(
+        request(
+            ProjectRequestIntent.INSPECT,
+            editor_snapshot=source,
+            project_root=ACADEMIC_PROJECT_ROOT,
+            project_id="academic-fixture",
+        )
+    ).document
+
+    assert general.metadata == academic.metadata
+    assert general.blocks == academic.blocks
+    assert general.bibliography == academic.bibliography
+    assert general.index_by_id() == academic.index_by_id()
+    assert DocumentIndex.from_document(general) == DocumentIndex.from_document(academic)

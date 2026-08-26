@@ -31,7 +31,7 @@ if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
 from thesis_forge.core.index import DocumentIndex
-from thesis_forge.core.model import ThesisDocument
+from thesis_forge.core.model import ForgeDocument
 from thesis_forge.core.parser_backend import create_parser_backend
 
 MAX_DIFF_ENTRIES = 100
@@ -61,8 +61,8 @@ def _jsonable(value: Any) -> Any:
     return str(value)
 
 
-def normalize_document(document: ThesisDocument) -> dict[str, Any]:
-    """把 ThesisDocument 归一化为确定性 JSON 结构。
+def normalize_document(document: ForgeDocument) -> dict[str, Any]:
+    """把 ForgeDocument 归一化为确定性 JSON 结构。
 
     每个节点带 ``kind``（类名）+ dataclass 字段（含 id、location
     行列号、inlines 递归；``compare=False`` 的逐实例身份字段除外）；文档级带
@@ -177,13 +177,13 @@ def parse_allow_spec(spec: str) -> AllowRule:
     return AllowRule(pattern=pattern.strip(), reason=reason.strip())
 
 
-def _parse_canonical(source: Path) -> ThesisDocument:
+def _parse_canonical(source: Path) -> ForgeDocument:
     return create_parser_backend().parse_file(source)
 
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
-        description="canonical parser ThesisDocument 确定性 diff 门禁（ADR-0001）",
+        description="canonical parser ForgeDocument 确定性 diff 门禁（ADR-0001）",
     )
     parser.add_argument("source", type=Path, help="Markdown 输入文件")
     parser.add_argument(

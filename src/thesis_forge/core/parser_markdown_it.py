@@ -53,6 +53,7 @@ from .model import (
     Figure,
     FootnoteDefinition,
     FootnoteReference,
+    ForgeDocument,
     HardBreak,
     Heading,
     Inline,
@@ -70,7 +71,6 @@ from .model import (
     TableCell,
     TableRow,
     Text,
-    ThesisDocument,
     inline_plain_text,
 )
 from .parser_support import (
@@ -941,15 +941,15 @@ class MarkdownItParserBackend:
     def __init__(self) -> None:
         self._md = _build_markdown_it()
 
-    def parse_file(self, path: str | Path) -> ThesisDocument:
+    def parse_file(self, path: str | Path) -> ForgeDocument:
         source_path = Path(path).resolve()
         return self.parse_text(source_path.read_text(encoding="utf-8"), source_path=source_path)
 
-    def parse_text(self, text: str, *, source_path: str | Path) -> ThesisDocument:
+    def parse_text(self, text: str, *, source_path: str | Path) -> ForgeDocument:
         lines = text.splitlines()
         _reject_legacy_source(lines)
         metadata, start = parse_front_matter(lines)
-        doc = ThesisDocument(
+        doc = ForgeDocument(
             source_path=Path(source_path).resolve(),
             metadata=metadata,
             bibliography=bibliography_config(metadata),
@@ -967,7 +967,7 @@ class MarkdownItParserBackend:
 
     def _walk(
         self,
-        doc: ThesisDocument,
+        doc: ForgeDocument,
         tokens: list[Token],
         lines: list[str],
         offset: int,
@@ -1054,7 +1054,7 @@ class MarkdownItParserBackend:
 
     def _emit_heading(
         self,
-        doc: ThesisDocument,
+        doc: ForgeDocument,
         open_token: Token,
         inline_token: Token,
         offset: int,
@@ -1081,7 +1081,7 @@ class MarkdownItParserBackend:
             )
         )
 
-    def _emit_paragraph(self, doc: ThesisDocument, inline_token: Token, offset: int) -> None:
+    def _emit_paragraph(self, doc: ForgeDocument, inline_token: Token, offset: int) -> None:
         # mdit 段落 content = 原始行拼接后整体 strip，与 legacy 段落缓冲语义一致
         text = inline_token.content
         if not text:
@@ -1105,7 +1105,7 @@ class MarkdownItParserBackend:
 
     def _emit_blockquote(
         self,
-        doc: ThesisDocument,
+        doc: ForgeDocument,
         tokens: list[Token],
         idx: int,
         lines: list[str],
@@ -1114,7 +1114,7 @@ class MarkdownItParserBackend:
         open_token = tokens[idx]
         close_idx = _find_close(tokens, idx, "blockquote_open", "blockquote_close")
         assert open_token.map is not None
-        child_doc = ThesisDocument(
+        child_doc = ForgeDocument(
             source_path=doc.source_path,
             metadata=doc.metadata,
             bibliography=doc.bibliography,
@@ -1130,7 +1130,7 @@ class MarkdownItParserBackend:
 
     def _emit_fence(
         self,
-        doc: ThesisDocument,
+        doc: ForgeDocument,
         tokens: list[Token],
         idx: int,
         lines: list[str],
@@ -1202,7 +1202,7 @@ class MarkdownItParserBackend:
 
     def _emit_table(
         self,
-        doc: ThesisDocument,
+        doc: ForgeDocument,
         tokens: list[Token],
         idx: int,
         lines: list[str],
@@ -1358,7 +1358,7 @@ class MarkdownItParserBackend:
 
     def _emit_raw_paragraph(
         self,
-        doc: ThesisDocument,
+        doc: ForgeDocument,
         lines: list[str],
         start0: int,
         end0: int,
@@ -1376,7 +1376,7 @@ class MarkdownItParserBackend:
 
     def _emit_container(
         self,
-        doc: ThesisDocument,
+        doc: ForgeDocument,
         tokens: list[Token],
         idx: int,
         lines: list[str],
@@ -1398,7 +1398,7 @@ class MarkdownItParserBackend:
 
     def _emit_footnote_definition(
         self,
-        doc: ThesisDocument,
+        doc: ForgeDocument,
         tokens: list[Token],
         idx: int,
         lines: list[str],
@@ -1445,7 +1445,7 @@ class MarkdownItParserBackend:
 
     def _emit_standard_figure(
         self,
-        doc: ThesisDocument,
+        doc: ForgeDocument,
         inline_token: Token,
         offset: int,
     ) -> None:
@@ -1500,7 +1500,7 @@ class MarkdownItParserBackend:
 
     def _scan_list(
         self,
-        doc: ThesisDocument,
+        doc: ForgeDocument,
         lines: list[str],
         i: int,
         offset: int,

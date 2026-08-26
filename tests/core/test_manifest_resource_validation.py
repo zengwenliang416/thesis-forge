@@ -10,9 +10,9 @@ from thesis_forge.core.model import (
     BibliographyConfig,
     Citation,
     Figure,
+    ForgeDocument,
     Paragraph,
     Text,
-    ThesisDocument,
 )
 from thesis_forge.core.parser_backend import create_parser_backend
 from thesis_forge.core.render_plan import CoverInstruction
@@ -88,7 +88,7 @@ def test_project_manifest_controls_template_and_resource_roots(
 ) -> None:
     project_root = write_project(tmp_path)
     citation = Citation(keys=["smith2025"])
-    document = ThesisDocument(
+    document = ForgeDocument(
         source_path=(project_root / "thesis.md").resolve(),
         blocks=[
             Paragraph(inlines=[citation]),
@@ -177,7 +177,7 @@ def test_manifest_bibliography_overrides_document_front_matter_path(
 ) -> None:
     project_root = write_project(tmp_path)
     citation = Citation(keys=["smith2025"])
-    document = ThesisDocument(
+    document = ForgeDocument(
         source_path=(project_root / "thesis.md").resolve(),
         bibliography=BibliographyConfig(
             path="does-not-exist.bib",
@@ -210,7 +210,7 @@ def test_manifest_path_escape_becomes_structured_validation_issue(
     except OSError as error:
         pytest.skip(f"symlinks unavailable: {error}")
 
-    document = ThesisDocument(source_path=(project_root / "thesis.md").resolve())
+    document = ForgeDocument(source_path=(project_root / "thesis.md").resolve())
     context = ValidationContext.from_document(document)
     issues = validate_document(document, context)
 
@@ -230,7 +230,7 @@ def test_invalid_manifest_bibliography_details_do_not_leak_absolute_path(
         bibliography="@article{broken,\n  title={missing brace}\n",
     )
     citation = Citation(keys=["broken"])
-    document = ThesisDocument(
+    document = ForgeDocument(
         source_path=(project_root / "thesis.md").resolve(),
         blocks=[Paragraph(inlines=[citation])],
     )

@@ -5,21 +5,21 @@ from thesis_forge.core.model import (
     Emphasis,
     FootnoteDefinition,
     FootnoteReference,
+    ForgeDocument,
     Paragraph,
     SourceLocation,
     Strong,
     Text,
-    ThesisDocument,
 )
 from thesis_forge.core.render_plan import FootnoteReferenceRun, ParagraphInstruction
 from thesis_forge.core.validator import validate_document
 
 
-def _document(*blocks: object) -> ThesisDocument:
-    return ThesisDocument(source_path=Path("thesis.md"), blocks=list(blocks))
+def _document(*blocks: object) -> ForgeDocument:
+    return ForgeDocument(source_path=Path("thesis.md"), blocks=list(blocks))
 
 
-def _footnote_issues(document: ThesisDocument):
+def _footnote_issues(document: ForgeDocument):
     return [
         issue
         for issue in validate_document(document)

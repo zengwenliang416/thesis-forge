@@ -23,6 +23,7 @@ from thesis_forge.core.model import (
     Figure,
     FootnoteDefinition,
     FootnoteReference,
+    ForgeDocument,
     Heading,
     ListBlock,
     Listing,
@@ -32,7 +33,6 @@ from thesis_forge.core.model import (
     TableCell,
     TableRow,
     Text,
-    ThesisDocument,
 )
 from thesis_forge.core.parser_backend import create_parser_backend
 from thesis_forge.core.render_plan import (
@@ -144,7 +144,7 @@ def _numbering_definition_for_paragraph(numbering_xml, paragraph):
 
 
 def test_docx_renderer_applies_template_page_body_and_heading_xml(tmp_path: Path):
-    document = ThesisDocument(
+    document = ForgeDocument(
         source_path=tmp_path / "thesis.md",
         blocks=[
             Heading(id="chap:intro", level=1, inlines=[Text(value="绪论")]),
@@ -251,7 +251,7 @@ def test_docx_renderer_translates_complete_body_and_heading_policy_xml(
     heading.outline_level = 0
     heading.snap_to_grid = True
 
-    document = ThesisDocument(
+    document = ForgeDocument(
         source_path=tmp_path / "thesis.md",
         blocks=[
             Heading(
@@ -353,7 +353,7 @@ def test_heading_em_size_and_indent_resolve_from_body_font_size(tmp_path: Path):
     template.body.size = LengthSpec.model_validate("10pt")
     template.heading.level1.size = LengthSpec.model_validate("1.5em")
     template.heading.level1.left_indent = LengthSpec.model_validate("1em")
-    document = ThesisDocument(
+    document = ForgeDocument(
         source_path=tmp_path / "thesis.md",
         blocks=[
             Heading(
@@ -379,7 +379,7 @@ def test_heading_em_size_and_indent_resolve_from_body_font_size(tmp_path: Path):
 def test_single_line_spacing_writes_quantized_word_xml(tmp_path: Path):
     template = load_template("templates/base/bachelor.yaml")
     template.body.line_spacing = LineSpacingSpec(type="single")
-    document = ThesisDocument(
+    document = ForgeDocument(
         source_path=tmp_path / "thesis.md",
         blocks=[Paragraph(inlines=[Text(value="正文")])],
     )
@@ -781,8 +781,8 @@ def test_template_without_toc_policy_defines_toc_styles_with_deterministic_defau
     ] == ['TOC \\o "1-3" \\h \\z \\u']
 
 
-def _toc_document(tmp_path: Path) -> ThesisDocument:
-    return ThesisDocument(
+def _toc_document(tmp_path: Path) -> ForgeDocument:
+    return ForgeDocument(
         source_path=tmp_path / "thesis.md",
         blocks=[
             Heading(
@@ -981,7 +981,7 @@ def test_partial_semantic_title_inherits_heading_style_and_overrides_false(
             page_break_before=False,
         )
     )
-    document = ThesisDocument(
+    document = ForgeDocument(
         source_path=tmp_path / "thesis.md",
         blocks=[
             Heading(
@@ -1036,7 +1036,7 @@ def test_partial_semantic_body_uses_inherited_size_for_em_lengths(
             line_spacing={"type": "fixed", "value": "1.5em"},
         )
     )
-    document = ThesisDocument(
+    document = ForgeDocument(
         source_path=tmp_path / "thesis.md",
         blocks=[
             Heading(
@@ -1178,7 +1178,7 @@ def test_heading_levels_one_through_three_use_shared_translator(tmp_path: Path):
         heading.outline_level = level - 1
         heading.keep_with_next = True
         heading.snap_to_grid = False
-    document = ThesisDocument(
+    document = ForgeDocument(
         source_path=tmp_path / "thesis.md",
         blocks=[
             Heading(
@@ -1222,7 +1222,7 @@ def test_heading_levels_one_through_three_use_shared_translator(tmp_path: Path):
 def test_two_templates_change_styles_without_changing_document_semantics(
     tmp_path: Path,
 ):
-    document = ThesisDocument(
+    document = ForgeDocument(
         source_path=tmp_path / "thesis.md",
         blocks=[
             Heading(
@@ -1277,7 +1277,7 @@ def test_two_templates_change_styles_without_changing_document_semantics(
 def test_docx_renderer_applies_landscape_orientation(tmp_path: Path):
     template = load_template("templates/base/bachelor.yaml")
     template.page.orientation = "landscape"
-    document = ThesisDocument(
+    document = ForgeDocument(
         source_path=tmp_path / "thesis.md",
         blocks=[Paragraph(inlines=[Text(value="正文")])],
     )
@@ -1295,7 +1295,7 @@ def test_docx_renderer_applies_landscape_orientation(tmp_path: Path):
 
 def test_docx_renderer_writes_metadata_cover_before_front_matter(tmp_path: Path):
     template = load_template("templates/schools/example-university/2026.yaml")
-    document = ThesisDocument(
+    document = ForgeDocument(
         source_path=tmp_path / "thesis.md",
         metadata={
             "university": {"name": "XX大学", "college": "计算机学院"},
@@ -1404,7 +1404,7 @@ def test_docx_renderer_uses_template_cover_order_content_and_style(tmp_path: Pat
             ]
         }
     )
-    document = ThesisDocument(
+    document = ForgeDocument(
         source_path=tmp_path / "thesis.md",
         metadata={
             "thesis": {"title": "参数化封面"},
@@ -1448,7 +1448,7 @@ def test_docx_renderer_uses_template_cover_order_content_and_style(tmp_path: Pat
 
 
 def test_docx_renderer_bookmarks_listing_and_algorithm_objects(tmp_path: Path):
-    document = ThesisDocument(
+    document = ForgeDocument(
         source_path=tmp_path / "thesis.md",
         blocks=[
             Listing(
@@ -1509,7 +1509,7 @@ def test_docx_renderer_bookmarks_listing_and_algorithm_objects(tmp_path: Path):
 
 
 def test_docx_renderer_preserves_list_start_and_nesting_xml(tmp_path: Path):
-    document = ThesisDocument(
+    document = ForgeDocument(
         source_path=tmp_path / "thesis.md",
         blocks=[
             ListBlock(
@@ -1636,7 +1636,7 @@ def test_docx_renderer_applies_independent_template_list_policies_and_styles(
             )
         ),
     )
-    document = ThesisDocument(
+    document = ForgeDocument(
         source_path=tmp_path / "thesis.md",
         blocks=[
             ListBlock(
@@ -1807,7 +1807,7 @@ def test_docx_renderer_creates_real_figures_captions_bookmarks_and_three_line_ta
     template.figure.caption.font = FontSpec(east_asia="黑体", latin="Arial")
     template.figure.caption.size = LengthSpec.model_validate("10pt")
     template.table.caption.alignment = "right"
-    document = ThesisDocument(
+    document = ForgeDocument(
         source_path=tmp_path / "thesis.md",
         blocks=[
             Heading(id="chap:intro", level=1, inlines=[Text(value="绪论")]),
@@ -1936,7 +1936,7 @@ def test_docx_renderer_honors_configured_three_line_table_widths(tmp_path: Path)
     template.table.three_line.top_width = LengthSpec.model_validate("2pt")
     template.table.three_line.header_width = LengthSpec.model_validate("0.5pt")
     template.table.three_line.bottom_width = LengthSpec.model_validate("1pt")
-    document = ThesisDocument(
+    document = ForgeDocument(
         source_path=tmp_path / "thesis.md",
         blocks=[
             _structured_table(
@@ -1980,7 +1980,7 @@ def test_docx_renderer_supports_word_border_width_limits(
 ):
     template = load_template("templates/base/bachelor.yaml")
     template.table.three_line.top_width = LengthSpec.model_validate(width)
-    document = ThesisDocument(
+    document = ForgeDocument(
         source_path=tmp_path / "thesis.md",
         blocks=[
             _structured_table(
@@ -2011,7 +2011,7 @@ def test_docx_renderer_honors_non_default_caption_positions(tmp_path: Path):
     template = load_template("templates/base/bachelor.yaml")
     template.figure.caption.position = "top"
     template.table.caption.position = "bottom"
-    document = ThesisDocument(
+    document = ForgeDocument(
         source_path=tmp_path / "thesis.md",
         blocks=[
             Figure(
@@ -2060,7 +2060,7 @@ def test_docx_renderer_preserves_intrinsic_image_size_without_width_policy(
     image.write_bytes(PNG_1X1)
     template = load_template("templates/base/bachelor.yaml")
     template.figure.default_width = None
-    document = ThesisDocument(
+    document = ForgeDocument(
         source_path=tmp_path / "thesis.md",
         blocks=[
             Figure(
@@ -2092,7 +2092,7 @@ def test_docx_renderer_applies_non_three_line_table_border_policies(
 ):
     template = load_template("templates/base/bachelor.yaml")
     template.table.style = style
-    document = ThesisDocument(
+    document = ForgeDocument(
         source_path=tmp_path / "thesis.md",
         blocks=[
             _structured_table(
@@ -2121,7 +2121,7 @@ def test_docx_renderer_applies_non_three_line_table_border_policies(
 
 def test_docx_renderer_does_not_create_fake_table_for_empty_rows(tmp_path: Path):
     template = load_template("templates/base/bachelor.yaml")
-    document = ThesisDocument(
+    document = ForgeDocument(
         source_path=tmp_path / "thesis.md",
         blocks=[_structured_table("tbl:empty", "空表", [])],
     )
@@ -2168,7 +2168,7 @@ def test_docx_renderer_creates_real_math_fields_footnotes_and_page_structures(
             },
         }
     )
-    document = ThesisDocument(
+    document = ForgeDocument(
         source_path=tmp_path / "thesis.md",
         blocks=[
             Heading(
@@ -2436,7 +2436,7 @@ def test_docx_renderer_omits_page_fields_when_page_number_format_is_none(
             }
         }
     )
-    document = ThesisDocument(
+    document = ForgeDocument(
         source_path=tmp_path / "thesis.md",
         blocks=[
             Heading(
@@ -2479,7 +2479,7 @@ def test_docx_renderer_prevents_disabled_section_header_footer_inheritance(
             },
         }
     )
-    document = ThesisDocument(
+    document = ForgeDocument(
         source_path=tmp_path / "thesis.md",
         blocks=[
             Heading(
@@ -2598,7 +2598,7 @@ def test_docx_renderer_writes_page_geometry_and_all_header_footer_variants(
             }
         }
     )
-    document = ThesisDocument(
+    document = ForgeDocument(
         source_path=tmp_path / "thesis.md",
         blocks=[
             Heading(
@@ -2767,7 +2767,7 @@ def test_docx_renderer_clears_disabled_variants_in_added_section(
             },
         }
     )
-    document = ThesisDocument(
+    document = ForgeDocument(
         source_path=tmp_path / "thesis.md",
         blocks=[
             Heading(
@@ -2850,7 +2850,7 @@ def test_docx_renderer_uses_current_default_when_even_variant_is_omitted(
             },
         }
     )
-    document = ThesisDocument(
+    document = ForgeDocument(
         source_path=tmp_path / "thesis.md",
         blocks=[
             Heading(
@@ -2918,7 +2918,7 @@ def test_docx_renderer_uses_current_default_when_first_variant_is_omitted(
             },
         }
     )
-    document = ThesisDocument(
+    document = ForgeDocument(
         source_path=tmp_path / "thesis.md",
         blocks=[
             Heading(
@@ -3039,7 +3039,7 @@ def test_docx_renderer_materializes_initial_first_fallback_with_default_policy(
             }
         }
     )
-    document = ThesisDocument(
+    document = ForgeDocument(
         source_path=tmp_path / "thesis.md",
         blocks=[
             Heading(
@@ -3129,7 +3129,7 @@ def test_docx_renderer_materializes_disabled_default_as_blank_first_fallback(
             },
         }
     )
-    document = ThesisDocument(
+    document = ForgeDocument(
         source_path=tmp_path / "thesis.md",
         blocks=[
             Heading(
@@ -3422,7 +3422,7 @@ def test_docx_renderer_writes_resolved_body_footnote_and_bibliography_text(
         raw="[@doe2024; @smith2025]",
     )
     footnote_citation = Citation(keys=["smith2025"], raw="[@smith2025]")
-    document = ThesisDocument(
+    document = ForgeDocument(
         source_path=tmp_path / "thesis.md",
         blocks=[
             Paragraph(
@@ -3550,7 +3550,7 @@ def test_docx_renderer_applies_superscript_to_body_and_footnote_citations(
     database = LocalBibTeXLoader().load(fixture)
     body_citation = Citation(keys=["doe2024"], raw="[@doe2024]")
     footnote_citation = Citation(keys=["smith2025"], raw="[@smith2025]")
-    document = ThesisDocument(
+    document = ForgeDocument(
         source_path=tmp_path / "thesis.md",
         blocks=[
             Paragraph(
@@ -3604,7 +3604,7 @@ def test_docx_renderer_applies_bibliography_title_and_entry_policy_xml(
         locator="p. 12",
         raw="[@doe2024; @smith2025, p. 12]",
     )
-    document = ThesisDocument(
+    document = ForgeDocument(
         source_path=tmp_path / "thesis.md",
         blocks=[
             Paragraph(inlines=[Text(value="引用"), citation]),
@@ -3714,7 +3714,7 @@ def test_docx_renderer_wraps_private_api_failures_with_capability_context(
     monkeypatch,
     error_type,
 ):
-    document = ThesisDocument(
+    document = ForgeDocument(
         source_path=tmp_path / "thesis.md",
         blocks=[Equation(id="eq:broken", latex="x", display=True)],
     )
@@ -3737,7 +3737,7 @@ def test_docx_renderer_wraps_private_api_failures_with_capability_context(
 
 def _render_equation_document_xml(tmp_path: Path, equation_id: str, latex: str):
     template = load_template("templates/base/bachelor.yaml")
-    document = ThesisDocument(
+    document = ForgeDocument(
         source_path=tmp_path / "thesis.md",
         blocks=[
             Heading(

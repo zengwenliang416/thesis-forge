@@ -23,6 +23,7 @@ from thesis_forge.core.model import (
     Figure,
     FootnoteDefinition,
     FootnoteReference,
+    ForgeDocument,
     Heading,
     ListBlock,
     Listing,
@@ -32,7 +33,6 @@ from thesis_forge.core.model import (
     TableCell,
     TableRow,
     Text,
-    ThesisDocument,
 )
 from thesis_forge.core.parser_backend import create_parser_backend
 from thesis_forge.core.render_plan import (
@@ -98,7 +98,7 @@ def test_compile_document_resolves_typed_instructions_and_global_semantics():
         Citation(keys=["smith2025", "doe2024"], raw="[@smith2025; @doe2024]"),
         Citation(keys=["smith2025"], raw="[@smith2025]"),
     ]
-    document = ThesisDocument(
+    document = ForgeDocument(
         source_path=Path("/tmp/thesis.md"),
         blocks=[
             Heading(id="chap:intro", level=1, inlines=[Text(value="绪论")]),
@@ -195,7 +195,7 @@ def test_compile_document_formats_citations_and_marker_bibliography_from_databas
         raw="[@doe2024; @smith2025, p. 12]",
     )
     repeated = Citation(keys=["smith2025"], raw="[@smith2025]")
-    document = ThesisDocument(
+    document = ForgeDocument(
         source_path=Path("/tmp/thesis.md"),
         blocks=[
             Paragraph(
@@ -236,7 +236,7 @@ def test_compile_document_appends_bibliography_when_marker_is_absent():
     fixture = Path(__file__).parent / "fixtures" / "bibliography" / "gbt7714-v1.bib"
     database = LocalBibTeXLoader().load(fixture)
     citation = Citation(keys=["smith2025"], raw="[@smith2025]")
-    document = ThesisDocument(
+    document = ForgeDocument(
         source_path=Path("/tmp/thesis.md"),
         blocks=[Paragraph(inlines=[citation])],
     )
@@ -256,7 +256,7 @@ def test_compile_document_orders_footnote_citation_at_reference_position():
     database = LocalBibTeXLoader().load(fixture)
     body_citation = Citation(keys=["doe2024"], raw="[@doe2024]")
     footnote_citation = Citation(keys=["smith2025"], raw="[@smith2025]")
-    document = ThesisDocument(
+    document = ForgeDocument(
         source_path=Path("/tmp/thesis.md"),
         blocks=[
             Paragraph(
@@ -297,7 +297,7 @@ def test_compile_document_orders_footnote_citation_at_reference_position():
 
 
 def test_compile_document_reports_bookmark_name_collisions():
-    document = ThesisDocument(
+    document = ForgeDocument(
         source_path=Path("/tmp/thesis.md"),
         blocks=[
             Figure(
@@ -326,7 +326,7 @@ def test_compile_document_resolves_figure_assets_widths_and_structured_table_row
     source_path = tmp_path / "chapter" / "thesis.md"
     template = load_template("templates/base/bachelor.yaml")
     template.figure.default_width = LengthSpec.model_validate("120mm")
-    document = ThesisDocument(
+    document = ForgeDocument(
         source_path=source_path,
         blocks=[
             Figure(
@@ -386,7 +386,7 @@ def test_compile_document_resolves_figure_assets_widths_and_structured_table_row
 
 
 def test_compile_document_rejects_malformed_markdown_table():
-    document = ThesisDocument(
+    document = ForgeDocument(
         source_path=Path("/tmp/thesis.md"),
         blocks=[
             Table(
@@ -414,7 +414,7 @@ def test_compile_document_rejects_malformed_markdown_table():
 
 
 def test_compile_document_preserves_equation_display_state():
-    document = ThesisDocument(
+    document = ForgeDocument(
         source_path=Path("/tmp/thesis.md"),
         blocks=[Equation(id="eq:inline", latex="x", display=False)],
     )
@@ -426,7 +426,7 @@ def test_compile_document_preserves_equation_display_state():
 
 
 def test_compile_document_resolves_sequence_fields_and_footnote_ids():
-    document = ThesisDocument(
+    document = ForgeDocument(
         source_path=Path("/tmp/thesis.md"),
         blocks=[
             Heading(
@@ -512,7 +512,7 @@ def test_compile_document_emits_toc_and_explicit_section_transitions():
             },
         }
     )
-    document = ThesisDocument(
+    document = ForgeDocument(
         source_path=Path("/tmp/thesis.md"),
         blocks=[
             Heading(
@@ -576,7 +576,7 @@ def test_compile_document_transitions_directly_from_cover_to_main():
             },
         }
     )
-    document = ThesisDocument(
+    document = ForgeDocument(
         source_path=Path("/tmp/thesis.md"),
         blocks=[
             Heading(
@@ -597,7 +597,7 @@ def test_compile_document_transitions_directly_from_cover_to_main():
 
 def test_compile_document_emits_renderer_neutral_cover_from_front_matter():
     template = load_template("templates/schools/example-university/2026.yaml")
-    document = ThesisDocument(
+    document = ForgeDocument(
         source_path=Path("/tmp/thesis.md"),
         metadata={
             "university": {"name": "XX大学", "college": "计算机学院"},
@@ -640,7 +640,7 @@ def test_compile_document_emits_renderer_neutral_cover_from_front_matter():
 
 
 def test_compile_document_resolves_semantic_heading_and_paragraph_roles():
-    document = ThesisDocument(
+    document = ForgeDocument(
         source_path=Path("/tmp/thesis.md"),
         blocks=[
             Heading(
@@ -734,7 +734,7 @@ def test_compile_document_resolves_semantic_heading_and_paragraph_roles():
 
 
 def test_compile_document_uses_inlines_as_the_authoritative_block_text():
-    document = ThesisDocument(
+    document = ForgeDocument(
         source_path=Path("/tmp/thesis.md"),
         blocks=[
             Heading(
@@ -796,7 +796,7 @@ def test_compile_document_uses_inlines_as_the_authoritative_block_text():
 
 
 def test_compile_document_preserves_abstract_context_across_nested_headings():
-    document = ThesisDocument(
+    document = ForgeDocument(
         source_path=Path("/tmp/thesis.md"),
         blocks=[
             Heading(
@@ -878,7 +878,7 @@ def test_compile_document_avoids_keyword_false_positives(
     heading_id: str | None,
     paragraph_text: str,
 ):
-    document = ThesisDocument(
+    document = ForgeDocument(
         source_path=Path("/tmp/thesis.md"),
         blocks=[
             Heading(
@@ -905,7 +905,7 @@ def test_compile_document_selects_provider_from_citation_style():
     fixture = Path(__file__).parent / "fixtures" / "bibliography" / "gbt7714-v1.bib"
     database = LocalBibTeXLoader().load(fixture)
     citation = Citation(keys=["smith2025"], raw="[@smith2025]")
-    document = ThesisDocument(
+    document = ForgeDocument(
         source_path=Path("/tmp/thesis.md"),
         blocks=[Paragraph(inlines=[citation])],
         bibliography=BibliographyConfig(
@@ -927,7 +927,7 @@ def test_compile_document_rejects_unsupported_citation_style():
     fixture = Path(__file__).parent / "fixtures" / "bibliography" / "gbt7714-v1.bib"
     database = LocalBibTeXLoader().load(fixture)
     citation = Citation(keys=["smith2025"], raw="[@smith2025]")
-    document = ThesisDocument(
+    document = ForgeDocument(
         source_path=Path("/tmp/thesis.md"),
         blocks=[Paragraph(inlines=[citation])],
         bibliography=BibliographyConfig(

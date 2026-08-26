@@ -5,7 +5,7 @@ from dataclasses import asdict
 from pathlib import Path
 
 from thesis_forge.application.contracts import PreviewResult
-from thesis_forge.core.model import Algorithm, Listing, SourceLocation, ThesisDocument
+from thesis_forge.core.model import Algorithm, ForgeDocument, Listing, SourceLocation
 from thesis_forge.core.render_plan import (
     AlgorithmInstruction,
     ListingInstruction,
@@ -23,7 +23,7 @@ def test_review_projects_listing_and_algorithm_content_with_source_navigation(
     tmp_path: Path,
 ) -> None:
     listing_code = "print('@fig:inside')\n# [@literal] {#code-id} /tmp/keep"
-    document = ThesisDocument(
+    document = ForgeDocument(
         source_path=tmp_path / "thesis.md",
         blocks=[
             Listing(
@@ -98,7 +98,7 @@ def test_review_projects_listing_and_algorithm_content_with_source_navigation(
 def test_review_hides_technical_markers_from_algorithm_body_and_caption() -> None:
     content = map_review_result(
         PreviewResult(
-            document=ThesisDocument(source_path=Path("thesis.md")),
+            document=ForgeDocument(source_path=Path("thesis.md")),
             context=ValidationContext(),
             issues=(),
             plan=RenderPlan(

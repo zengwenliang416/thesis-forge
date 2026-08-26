@@ -28,6 +28,7 @@ from .model import (
     Figure,
     FootnoteDefinition,
     FootnoteReference,
+    ForgeDocument,
     Heading,
     Inline,
     ListBlock,
@@ -37,7 +38,6 @@ from .model import (
     SourceLocation,
     Table,
     Text,
-    ThesisDocument,
     ValidationIssue,
 )
 from .parser_backend import (
@@ -70,6 +70,7 @@ __all__ = [
     "FigureWidthCompilationError",
     "FootnoteDefinition",
     "FootnoteReference",
+    "ForgeDocument",
     "Heading",
     "Inline",
     "LatexMathConverter",
@@ -89,7 +90,6 @@ __all__ = [
     "Table",
     "TableCompilationError",
     "Text",
-    "ThesisDocument",
     "UnresolvedCitationError",
     "UnresolvedFootnoteError",
     "UnresolvedReferenceError",

@@ -1,4 +1,4 @@
-"""Derived semantic indexes over the immutable ThesisDocument.
+"""Derived semantic indexes over the immutable ForgeDocument.
 
 The parser never maintains synchronized duplicate caches; ID, citation,
 cross-reference and footnote indexes are derived by traversal
@@ -26,6 +26,7 @@ from .model import (
     Figure,
     FootnoteDefinition,
     FootnoteReference,
+    ForgeDocument,
     HardBreak,
     Heading,
     Inline,
@@ -41,7 +42,6 @@ from .model import (
     Strong,
     Table,
     Text,
-    ThesisDocument,
 )
 
 __all__ = [
@@ -86,7 +86,7 @@ class DocumentIndex:
     inlines: tuple[Inline, ...]
 
     @classmethod
-    def from_document(cls, document: ThesisDocument) -> DocumentIndex:
+    def from_document(cls, document: ForgeDocument) -> DocumentIndex:
         by_id: dict[str, Block] = {}
         conflicts: list[DuplicateIdConflict] = []
         citations: list[Citation] = []

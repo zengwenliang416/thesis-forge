@@ -28,6 +28,7 @@ from .model import (
     Figure,
     FootnoteDefinition,
     FootnoteReference,
+    ForgeDocument,
     HardBreak,
     Heading,
     Inline,
@@ -42,7 +43,6 @@ from .model import (
     Table,
     TableRow,
     Text,
-    ThesisDocument,
     inline_plain_text,
 )
 from .render_plan import (
@@ -417,7 +417,7 @@ def _metadata_text(metadata: dict, *path: str) -> str:
     return str(value).strip()
 
 
-def _compile_cover(document: ThesisDocument) -> CoverInstruction | None:
+def _compile_cover(document: ForgeDocument) -> CoverInstruction | None:
     metadata = document.metadata
     instruction = CoverInstruction(
         university=_metadata_text(metadata, "university", "name"),
@@ -506,7 +506,7 @@ class _SemanticContext:
 
 @dataclass(slots=True)
 class _CompilationContext:
-    document: ThesisDocument
+    document: ForgeDocument
     template: ThesisTemplate | None
     symbols: SymbolTable
     figure_width_overrides: Mapping[str, str]
@@ -565,7 +565,7 @@ class _CompilationContext:
         )
 
 
-def _initial_citation_numbers(document: ThesisDocument) -> dict[str, int]:
+def _initial_citation_numbers(document: ForgeDocument) -> dict[str, int]:
     index = DocumentIndex.from_document(document)
     definitions = {
         block.label: block
@@ -628,7 +628,7 @@ def _initial_citation_numbers(document: ThesisDocument) -> dict[str, int]:
     return numbers
 
 
-def _footnote_ids(document: ThesisDocument) -> dict[str, int]:
+def _footnote_ids(document: ForgeDocument) -> dict[str, int]:
     return {
         block.label: index
         for index, block in enumerate(
@@ -852,7 +852,7 @@ def _attach_toc_entries(
 
 
 def _effective_citation_style(
-    document: ThesisDocument,
+    document: ForgeDocument,
     template: ThesisTemplate | None,
 ) -> str | None:
     """D-07：文档 render.citation_style 优先，模板 citation.style 兜底。"""
@@ -865,7 +865,7 @@ def _effective_citation_style(
 
 
 def compile_document(
-    document: ThesisDocument,
+    document: ForgeDocument,
     template: ThesisTemplate | None = None,
     template_path: str | Path | None = None,
     bibliography_database: BibliographyDatabase | None = None,

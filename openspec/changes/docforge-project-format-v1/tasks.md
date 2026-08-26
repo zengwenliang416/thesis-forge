@@ -16,11 +16,11 @@ security.
 without exposing Word, template, transport, or academic-only implementation
 details in the parser and core.
 
-- [ ] 2.1 Add failing public-model tests for `ForgeDocument`, stable semantic IDs, source locations, deterministic parsing, and absence of the `ThesisDocument` export.
-- [ ] 2.2 Rename the core aggregate to `ForgeDocument` and update parser backends and parser results without changing Markdown syntax or semantic block and inline types.
-- [ ] 2.3 Update validator, application-service, compiler, bibliography, Review, preview, and BuildReport type boundaries to consume `ForgeDocument`.
-- [ ] 2.4 Add architecture tests that keep parser and core imports free of DOCX, OOXML, renderer, transport, UI, template-profile branching, and AI dependencies.
-- [ ] 2.5 Pass focused parser, validator, compiler, bibliography, Review, preview, and domain-model regressions for both general and academic fixtures.
+- [x] 2.1 Add failing public-model tests for `ForgeDocument`, stable semantic IDs, source locations, deterministic parsing, and absence of the `ThesisDocument` export.
+- [x] 2.2 Rename the core aggregate to `ForgeDocument` and update parser backends and parser results without changing Markdown syntax or semantic block and inline types.
+- [x] 2.3 Update validator, application-service, compiler, bibliography, Review, preview, and BuildReport type boundaries to consume `ForgeDocument`.
+- [x] 2.4 Add architecture tests that keep parser and core imports free of DOCX, OOXML, renderer, transport, UI, template-profile branching, and AI dependencies.
+- [x] 2.5 Pass focused parser, validator, compiler, bibliography, Review, preview, and domain-model regressions for both general and academic fixtures.
 
 ## 3. DocForge Python Package And CLI
 

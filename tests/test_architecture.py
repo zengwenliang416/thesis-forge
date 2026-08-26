@@ -15,6 +15,7 @@ import thesis_forge.core.compiler as compiler_module
 import thesis_forge.core.math as math_module
 import thesis_forge.core.model as model_module
 import thesis_forge.core.parser_backend as parser_backend_module
+import thesis_forge.core.parser_markdown_it as parser_markdown_it_module
 import thesis_forge.core.render_plan as render_plan_module
 import thesis_forge.presentation as presentation_module
 import thesis_forge.renderers.docx.renderer as docx_renderer_module
@@ -56,8 +57,23 @@ def _typescript_import_sources(module_path: Path) -> set[str]:
     }
 
 
+def _python_branch_expressions(module_path: Path) -> tuple[str, ...]:
+    tree = ast.parse(module_path.read_text(encoding="utf-8"))
+    expressions: list[str] = []
+    for node in ast.walk(tree):
+        if isinstance(node, (ast.If, ast.IfExp, ast.While)):
+            expressions.append(ast.unparse(node.test))
+        elif isinstance(node, ast.Match):
+            expressions.append(ast.unparse(node.subject))
+    return tuple(expressions)
+
+
 def test_domain_and_parser_backend_do_not_import_forbidden_layers():
-    for module in (model_module, parser_backend_module):
+    for module in (
+        model_module,
+        parser_backend_module,
+        parser_markdown_it_module,
+    ):
         imports = _import_names(Path(module.__file__))
         forbidden = {
             name
@@ -65,6 +81,16 @@ def test_domain_and_parser_backend_do_not_import_forbidden_layers():
             if any(name == prefix or name.startswith(f"{prefix}.") for prefix in FORBIDDEN_IMPORT_PREFIXES)
         }
         assert forbidden == set()
+
+
+def test_parser_does_not_branch_on_project_profiles_or_templates():
+    for module in (parser_backend_module, parser_markdown_it_module):
+        branches = "\n".join(
+            _python_branch_expressions(Path(module.__file__))
+        ).lower()
+        assert "document.type" not in branches
+        assert "academic" not in branches
+        assert "template_id" not in branches
 
 
 def test_render_plan_is_renderer_neutral_and_docx_renderer_does_not_import_parser():

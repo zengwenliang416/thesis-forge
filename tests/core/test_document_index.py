@@ -20,6 +20,7 @@ from thesis_forge.core.model import (
     Figure,
     FootnoteDefinition,
     FootnoteReference,
+    ForgeDocument,
     Heading,
     Inline,
     ListBlock,
@@ -33,12 +34,11 @@ from thesis_forge.core.model import (
     TableCell,
     TableRow,
     Text,
-    ThesisDocument,
 )
 
 
-def _document(*blocks: Block) -> ThesisDocument:
-    return ThesisDocument(source_path=Path("thesis.md"), blocks=list(blocks))
+def _document(*blocks: Block) -> ForgeDocument:
+    return ForgeDocument(source_path=Path("thesis.md"), blocks=list(blocks))
 
 
 def test_empty_document_yields_empty_index() -> None:

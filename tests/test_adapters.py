@@ -27,7 +27,7 @@ from thesis_forge.application import (
     ValidationResult,
 )
 from thesis_forge.application.contracts import ProjectRequestIntent
-from thesis_forge.core.model import Heading, Text, ThesisDocument, ValidationIssue
+from thesis_forge.core.model import ForgeDocument, Heading, Text, ValidationIssue
 from thesis_forge.core.parser_backend import create_parser_backend
 from thesis_forge.core.validator import ValidationContext
 
@@ -37,7 +37,7 @@ def _text_inlines(value: str) -> list[Text]:
 
 
 def _canonical_context(
-    document: ThesisDocument,
+    document: ForgeDocument,
     template_path: str | Path | None,
 ) -> ValidationContext:
     return ValidationContext.from_document(
@@ -87,7 +87,7 @@ def _dispatcher(tmp_path: Path):
         source_path = Path(path)
         calls.append(("inspect", source_path))
         return InspectionResult(
-            ThesisDocument(
+            ForgeDocument(
                 source_path=source_path,
                 metadata={"thesis": {"title": "共享工作台"}},
                 blocks=[
@@ -102,7 +102,7 @@ def _dispatcher(tmp_path: Path):
     def validate(path, **_kwargs):
         source_path = Path(path)
         calls.append(("validate", source_path))
-        document = ThesisDocument(source_path=source_path)
+        document = ForgeDocument(source_path=source_path)
         return ValidationResult(
             document=document,
             context=ValidationContext(),
@@ -197,8 +197,8 @@ class _RecordingProjectService:
         self.requests = []
 
     @staticmethod
-    def _document(request) -> ThesisDocument:
-        return ThesisDocument(
+    def _document(request) -> ForgeDocument:
+        return ForgeDocument(
             source_path=request.project.project_root / "thesis.md",
             metadata={"project": request.project.project_id},
             blocks=[
@@ -546,7 +546,7 @@ def test_web_runtime_resolves_opaque_workspace_without_serializing_service_path(
     def inspect(path):
         source_path = Path(path)
         calls.append(source_path)
-        return InspectionResult(ThesisDocument(source_path=source_path))
+        return InspectionResult(ForgeDocument(source_path=source_path))
 
     dispatcher = WorkbenchCommandDispatcher(runtime=runtime, inspect=inspect)
     request = {

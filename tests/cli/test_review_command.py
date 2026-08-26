@@ -11,10 +11,10 @@ from thesis_forge.application.contracts import (
 )
 from thesis_forge.cli import app
 from thesis_forge.core.model import (
+    ForgeDocument,
     Heading,
     SourceLocation,
     Text,
-    ThesisDocument,
     ValidationIssue,
 )
 from thesis_forge.core.render_plan import (
@@ -29,7 +29,7 @@ PROJECT = Path(__file__).resolve().parents[1] / "fixtures" / "v2-project"
 
 
 def _preview(*, blocked: bool = False) -> PreviewResult:
-    document = ThesisDocument(
+    document = ForgeDocument(
         source_path=PROJECT / "thesis.md",
         blocks=[
             Heading(

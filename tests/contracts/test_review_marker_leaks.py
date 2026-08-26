@@ -12,10 +12,10 @@ from thesis_forge.core.model import (
     Citation,
     CrossReference,
     Figure,
+    ForgeDocument,
     Listing,
     Paragraph,
     SourceLocation,
-    ThesisDocument,
 )
 from thesis_forge.core.parser_backend import create_parser_backend
 from thesis_forge.core.parser_support import ParseError
@@ -213,7 +213,7 @@ def test_canonical_parser_rejects_non_review_source_markers(
 
 
 def test_review_sanitizes_dirty_reference_display_and_citation_text() -> None:
-    document = ThesisDocument(
+    document = ForgeDocument(
         source_path=Path("thesis.md"),
         blocks=[Paragraph(location=SourceLocation(line=1))],
     )

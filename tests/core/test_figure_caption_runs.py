@@ -10,6 +10,7 @@ from thesis_forge.core.model import (
     Figure,
     FootnoteDefinition,
     FootnoteReference,
+    ForgeDocument,
     HardBreak,
     Heading,
     Inline,
@@ -20,7 +21,6 @@ from thesis_forge.core.model import (
     SoftBreak,
     Strong,
     Text,
-    ThesisDocument,
 )
 from thesis_forge.core.render_plan import (
     CaptionRuns,
@@ -45,8 +45,8 @@ class UnknownInline(Inline):
     pass
 
 
-def _rich_document() -> ThesisDocument:
-    return ThesisDocument(
+def _rich_document() -> ForgeDocument:
+    return ForgeDocument(
         source_path=Path("/tmp/thesis/thesis.md"),
         blocks=[
             Heading(id="chap:intro", level=1, inlines=[Text(value="绪论")]),
@@ -86,8 +86,8 @@ def _rich_document() -> ThesisDocument:
     )
 
 
-def _marker_document() -> ThesisDocument:
-    return ThesisDocument(
+def _marker_document() -> ForgeDocument:
+    return ForgeDocument(
         source_path=Path("/tmp/thesis/thesis.md"),
         blocks=[
             Figure(

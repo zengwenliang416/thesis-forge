@@ -11,12 +11,12 @@ from thesis_forge.core.model import (
     Citation,
     Emphasis,
     FootnoteReference,
+    ForgeDocument,
     Heading,
     Inline,
     Paragraph,
     Strong,
     Text,
-    ThesisDocument,
 )
 from thesis_forge.core.parser_backend import create_parser_backend
 
@@ -53,7 +53,7 @@ def test_document_index_exposes_full_preorder_inline_sequence() -> None:
     nested_citation = Citation(keys=["k"], raw="[@k]")
     nested = Strong(children=(Text(value="粗体"), Emphasis(children=(nested_citation,))))
     paragraph = Paragraph(inlines=[nested, FootnoteReference(label="n")])
-    document = ThesisDocument(
+    document = ForgeDocument(
         source_path=Path("thesis.md"), blocks=[Heading(level=1), paragraph]
     )
     index = DocumentIndex.from_document(document)
@@ -71,7 +71,7 @@ def test_document_index_exposes_full_preorder_inline_sequence() -> None:
 def test_thesis_document_has_no_manual_caches() -> None:
     document = BACKEND.parse_text(SOURCE, source_path=Path("thesis.md"))
     for member in REMOVED_MEMBERS:
-        assert not hasattr(document, member), f"ThesisDocument still exposes {member}"
+        assert not hasattr(document, member), f"ForgeDocument still exposes {member}"
     index = DocumentIndex.from_document(document)
     assert [citation.keys for citation in index.citations] == [
         ["k1"],

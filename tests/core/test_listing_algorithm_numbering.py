@@ -3,7 +3,7 @@ from pathlib import Path
 import pytest
 from pydantic import ValidationError
 
-from thesis_forge.core.model import Algorithm, Heading, Listing, Text, ThesisDocument
+from thesis_forge.core.model import Algorithm, ForgeDocument, Heading, Listing, Text
 from thesis_forge.core.symbols import NumberingInputs, SymbolTable
 from thesis_forge.templates import load_template
 from thesis_forge.templates.model import (
@@ -39,8 +39,8 @@ def _template(
     )
 
 
-def _document() -> ThesisDocument:
-    return ThesisDocument(
+def _document() -> ForgeDocument:
+    return ForgeDocument(
         source_path=Path("/tmp/thesis.md"),
         blocks=[
             Heading(id="chap:first", level=1, inlines=_text("第一章")),
