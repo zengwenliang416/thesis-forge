@@ -31,7 +31,9 @@ steps:
       PIP_DISABLE_PIP_VERSION_CHECK: "1"
     commands:
       - python -m venv --clear .venv
-      - .venv/bin/python -m pip install -e ".[dev]"
+      - .venv/bin/python -m pip install --require-hashes -r requirements/ci-python312.txt
+      - .venv/bin/python -m pip install --no-deps --no-build-isolation -e .
+      - .venv/bin/python -m pip check
       - .venv/bin/python -m ruff check src tests qa spikes scripts
       - .venv/bin/python -m pytest tests/ -q
       - .venv/bin/python qa/tools/parser_diff.py examples/v2-format-corpus/thesis.md

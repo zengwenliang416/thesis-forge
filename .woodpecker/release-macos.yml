@@ -45,7 +45,9 @@ steps:
       - export PATH="/opt/homebrew/bin:$HOME/.nvm/versions/node/v22.19.0/bin:$HOME/.cargo/bin:/usr/bin:/bin:/usr/sbin:/sbin"
       - python3.12 scripts/prepare_release.py --tag "$CI_COMMIT_TAG" --validate-only
       - python3.12 -m venv --clear .venv-release
-      - .venv-release/bin/python -m pip install -e ".[dev]"
+      - .venv-release/bin/python -m pip install --require-hashes -r requirements/ci-python312.txt
+      - .venv-release/bin/python -m pip install --no-deps --no-build-isolation -e .
+      - .venv-release/bin/python -m pip check
       - pnpm --dir frontend install --frozen-lockfile
       - pnpm --dir frontend exec tsc -b
       - pnpm --dir frontend exec vite build --outDir ../dist/web --emptyOutDir

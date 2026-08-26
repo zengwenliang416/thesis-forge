@@ -3,6 +3,7 @@ from __future__ import annotations
 import importlib.util
 import json
 import os
+import re
 import sys
 import tomllib
 from pathlib import Path
@@ -10,6 +11,9 @@ from types import SimpleNamespace
 
 import pytest
 import yaml
+from packaging.requirements import Requirement
+from packaging.utils import canonicalize_name
+from packaging.version import Version
 
 ROOT = Path(__file__).resolve().parents[1]
 BUILD_SIDECAR = ROOT / "scripts" / "build_sidecar.py"
@@ -20,6 +24,8 @@ WORKFLOW = ROOT / ".github" / "workflows" / "distribution.yml"
 WOODPECKER_QUALITY = ROOT / ".woodpecker" / "quality.yml"
 WOODPECKER_MACOS_RELEASE = ROOT / ".woodpecker" / "release-macos.yml"
 WOODPECKER_RELEASE_PUBLISH = ROOT / ".woodpecker" / "release-publish.yml"
+PYTHON_CI_LOCK = ROOT / "requirements" / "ci-python312.txt"
+PYTHON_CI_INPUT = ROOT / "scripts" / "ci-python312.in"
 REAL_HTTP_CONFIG = ROOT / "frontend" / "e2e" / "real-http.playwright.config.ts"
 WINDOWS_TAURI_ACCEPTANCE = (
     ROOT / "frontend" / "e2e" / "tauri-windows.acceptance.ts"
@@ -126,6 +132,36 @@ def test_sidecar_builder_embeds_package_data_without_wheel_runtime_leakage() -> 
         "thesis_forge/template_data/schools/"
         "hunan-university-of-technology/master-2026.yaml"
     )
+
+
+def test_sidecar_builder_keeps_pyinstaller_work_outside_checkout(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    builder = _load_module(BUILD_SIDECAR, "build_sidecar_temp_root")
+    observed: dict[str, Path] = {}
+
+    def fake_run(command, **_kwargs):
+        for option in ("--distpath", "--workpath", "--specpath"):
+            path = Path(command[command.index(option) + 1])
+            observed[option] = path
+            assert not path.is_relative_to(ROOT)
+        dist_path = observed["--distpath"]
+        dist_path.mkdir(parents=True)
+        (dist_path / "thesisforge-sidecar").write_bytes(b"sidecar")
+        return SimpleNamespace(returncode=0, stdout="", stderr="")
+
+    monkeypatch.setattr(builder, "host_target_triple", lambda: "aarch64-apple-darwin")
+    monkeypatch.setattr(builder.subprocess, "run", fake_run)
+
+    sidecar = builder.build_sidecar(
+        target_triple="aarch64-apple-darwin",
+        output_directory=tmp_path / "binaries",
+        python=Path("/tmp/python"),
+    )
+
+    assert sidecar.read_bytes() == b"sidecar"
+    assert set(observed) == {"--distpath", "--workpath", "--specpath"}
 
 
 def test_desktop_verifier_maps_native_bundle_artifacts() -> None:
@@ -326,6 +362,21 @@ def test_woodpecker_quality_gate_runs_for_release_tags() -> None:
         "woodpeckerci/plugin-git:2.9.2@sha256:"
     )
     assert all("@sha256:" in step["image"] for step in workflow["steps"])
+    python_commands = "\n".join(
+        next(step for step in workflow["steps"] if step["name"] == "python-quality")[
+            "commands"
+        ]
+    )
+    assert (
+        "python -m pip install --require-hashes -r requirements/ci-python312.txt"
+        in python_commands
+    )
+    assert (
+        "python -m pip install --no-deps --no-build-isolation -e ."
+        in python_commands
+    )
+    assert "python -m pip check" in python_commands
+    assert 'pip install -e ".[dev]"' not in python_commands
     rust_commands = "\n".join(
         next(step for step in workflow["steps"] if step["name"] == "rust-quality")[
             "commands"
@@ -381,6 +432,16 @@ def test_woodpecker_macos_release_is_tag_only_and_quality_gated() -> None:
     )
     assert 'git checkout --detach "$CI_COMMIT_SHA"' in checkout_commands
     assert "--validate-only" in build_commands
+    assert (
+        "python -m pip install --require-hashes -r requirements/ci-python312.txt"
+        in build_commands
+    )
+    assert (
+        "python -m pip install --no-deps --no-build-isolation -e ."
+        in build_commands
+    )
+    assert "python -m pip check" in build_commands
+    assert 'pip install -e ".[dev]"' not in build_commands
     assert "scripts/verify_distribution.py" in build_commands
     assert "scripts/build_sidecar.py --target-triple aarch64-apple-darwin" in (
         build_commands
@@ -411,8 +472,11 @@ def test_woodpecker_macos_release_is_tag_only_and_quality_gated() -> None:
 
 def test_woodpecker_publish_downloads_verified_assets_on_linux() -> None:
     workflow = yaml.safe_load(WOODPECKER_RELEASE_PUBLISH.read_text(encoding="utf-8"))
+    quality = yaml.safe_load(WOODPECKER_QUALITY.read_text(encoding="utf-8"))
 
     assert workflow["depends_on"] == ["release-macos"]
+    assert workflow["clone"]["git"]["image"] == quality["clone"]["git"]["image"]
+    assert "@sha256:" in workflow["clone"]["git"]["image"]
     assert workflow["labels"] == {
         "location": "production-80",
         "platform": "linux/amd64",
@@ -456,6 +520,53 @@ def test_woodpecker_publish_downloads_verified_assets_on_linux() -> None:
     }
     assert publish["settings"]["prerelease"] is True
     assert publish["settings"]["file_exists"] == "fail"
+
+
+def test_python_ci_lock_is_hashed_universal_and_covers_declared_dependencies() -> None:
+    lock_text = PYTHON_CI_LOCK.read_text(encoding="utf-8")
+    pyproject = tomllib.loads((ROOT / "pyproject.toml").read_text(encoding="utf-8"))
+
+    assert "--generate-hashes" in lock_text
+    assert "--python-version 3.12" in lock_text
+    assert "--universal" in lock_text
+    assert "scripts/ci-python312.in" in lock_text
+    assert "--hash=sha256:" in lock_text
+
+    ci_requirements = [
+        line
+        for line in PYTHON_CI_INPUT.read_text(encoding="utf-8").splitlines()
+        if line and not line.startswith("#")
+    ]
+    declared = [
+        *pyproject["project"]["dependencies"],
+        *pyproject["project"]["optional-dependencies"]["dev"],
+        *pyproject["build-system"]["requires"],
+        *ci_requirements,
+    ]
+    locked_matches = list(
+        re.finditer(r"(?m)^([A-Za-z0-9_.-]+)==([^\s;\\]+)", lock_text)
+    )
+    locked_versions = {
+        canonicalize_name(match.group(1)): Version(match.group(2))
+        for match in locked_matches
+    }
+
+    for requirement_text in declared:
+        requirement = Requirement(requirement_text)
+        locked_version = locked_versions[canonicalize_name(requirement.name)]
+        assert locked_version in requirement.specifier
+    for index, match in enumerate(locked_matches):
+        end = (
+            locked_matches[index + 1].start()
+            if index + 1 < len(locked_matches)
+            else len(lock_text)
+        )
+        assert "--hash=sha256:" in lock_text[match.start() : end]
+    assert not re.search(r"(?m)^\s*-e\s+", lock_text)
+    assert "@ file:" not in lock_text
+    assert "file://" not in lock_text
+    assert "/Users/" not in lock_text
+    assert "/Volumes/" not in lock_text
 
 
 def test_release_preparer_requires_consistent_versions_and_collects_assets(
@@ -810,9 +921,13 @@ def test_release_files_do_not_embed_secrets_or_checkout_paths() -> None:
         WOODPECKER_QUALITY,
         WOODPECKER_MACOS_RELEASE,
         WOODPECKER_RELEASE_PUBLISH,
+        PYTHON_CI_LOCK,
+        PYTHON_CI_INPUT,
     ]
     forbidden = (
         str(ROOT),
+        "/Users/",
+        "/Volumes/",
         "OPENAI_API_KEY",
         "ANTHROPIC_API_KEY",
         "sk-",

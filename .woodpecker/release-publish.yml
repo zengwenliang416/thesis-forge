@@ -3,7 +3,7 @@ depends_on:
 
 clone:
   git:
-    image: woodpeckerci/plugin-git:2.9.2
+    image: woodpeckerci/plugin-git:2.9.2@sha256:a36586dfe77e9c5d9b5bff3ad37f18158eb12036aa9e9908e2e813ee6029573e
     settings:
       partial: false
       depth: 1

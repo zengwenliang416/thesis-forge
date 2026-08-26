@@ -143,12 +143,7 @@ def build_sidecar(
             raise RuntimeError(f"Required sidecar package data is missing: {source}")
 
     output_directory.mkdir(parents=True, exist_ok=True)
-    build_root = ROOT / "build"
-    build_root.mkdir(parents=True, exist_ok=True)
-    with tempfile.TemporaryDirectory(
-        prefix="thesisforge-sidecar-",
-        dir=build_root,
-    ) as raw_temp:
+    with tempfile.TemporaryDirectory(prefix="thesisforge-sidecar-") as raw_temp:
         temp = Path(raw_temp)
         entrypoint = temp / "sidecar_entry.py"
         entrypoint.write_text(_entrypoint_text(), encoding="utf-8")

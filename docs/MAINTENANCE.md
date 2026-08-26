@@ -28,6 +28,29 @@ tests, linting, distribution verification or OpenSpec validation. Packaged
 desktop applications must not require separately installed Python, Node.js,
 Rust, an HTTP service, an account, telemetry, or external sockets.
 
+Linux quality CI and the macOS release builder use the same Python 3.12
+universal hash lock at `requirements/ci-python312.txt`. Refresh it only when
+project, development, or build dependencies intentionally change:
+
+```bash
+uv pip compile pyproject.toml scripts/ci-python312.in \
+  --extra dev \
+  --python-version 3.12 \
+  --universal \
+  --generate-hashes \
+  --output-file requirements/ci-python312.txt
+```
+
+The CI-only input pins the backend support needed for editable installs without
+adding that implementation detail to the product's development extra. CI
+installs the compiled lock with pip `--require-hashes`, then installs
+ThesisForge editable from the checkout with `--no-deps --no-build-isolation`.
+Build isolation stays disabled so the editable build reuses the locked
+Hatchling and Editables versions instead of resolving build dependencies in a
+new isolated environment. Editable mode preserves source-tree resource lookup
+during the test and release verification suites. Both jobs run `pip check`
+before building or testing.
+
 ## Daily Checks
 
 Run the complete source, Web, and sidecar maintainer gate:
@@ -144,6 +167,8 @@ make verify-desktop-dist
 The builder:
 
 - rejects a target triple different from the native host;
+- keeps PyInstaller work in the system temporary directory so it cannot shadow
+  the Python `build` package from a checkout-level `build/` directory;
 - packages `thesis_forge.adapters.sidecar` with required templates and
   python-docx data;
 - writes `src-tauri/binaries/thesisforge-sidecar-<target>`;
@@ -205,8 +230,9 @@ successful Windows job may establish `.msi` / NSIS acceptance.
 The primary release orchestrator is Woodpecker:
 
 - `.woodpecker/quality.yml` runs the Linux quality gate for `v*` tags;
-- the Linux clone and quality images are pinned by digest, and Cargo validation
-  uses the committed lockfile;
+- the Linux clone, quality, and publisher clone images are pinned by digest;
+- Linux quality and macOS release jobs install the shared Python 3.12 hash lock,
+  while Cargo validation uses the committed Rust lockfile;
 - `.woodpecker/release-macos.yml` waits for that gate, then selects a
   `darwin/arm64` local agent with `purpose=thesisforge-release` and the
   repository-specific `repo=zengwenliang416/thesis-forge` label;
