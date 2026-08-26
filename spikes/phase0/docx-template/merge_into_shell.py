@@ -47,8 +47,8 @@ from spike_common import (
     summarize_validation,
 )
 
-from thesis_forge.application import preview_service
-from thesis_forge.renderers.docx import DocxRenderer
+from docforge.application import preview_service
+from docforge.renderers.docx import DocxRenderer
 
 SOURCE = REPO_ROOT / "examples" / "complete-thesis" / "thesis.md"
 HUT_YAML = (

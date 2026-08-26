@@ -34,13 +34,13 @@ from spike_common import (
     summarize_validation,
 )
 
-from thesis_forge.renderers.docx.document import configure_section_geometry
-from thesis_forge.renderers.docx.styles import (
+from docforge.renderers.docx.document import configure_section_geometry
+from docforge.renderers.docx.styles import (
     apply_paragraph_style,
     configure_styles,
 )
-from thesis_forge.templates import load_template
-from thesis_forge.templates.model import ParagraphStyleSpec
+from docforge.templates import load_template
+from docforge.templates.model import ParagraphStyleSpec
 
 HUT_YAML = (
     REPO_ROOT / "templates" / "schools" / "hunan-university-of-technology" / "master-2026.yaml"
