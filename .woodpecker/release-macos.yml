@@ -54,7 +54,7 @@ steps:
       - test "$(cargo tauri --version)" = "tauri-cli $TAURI_CLI_VERSION"
       - .venv-release/bin/python scripts/build_sidecar.py --target-triple aarch64-apple-darwin
       - .venv-release/bin/python scripts/verify_desktop_distribution.py --target-triple aarch64-apple-darwin --sidecar-only
-      - cargo tauri build --locked --config src-tauri/tauri.release.conf.json --target aarch64-apple-darwin --bundles app,dmg --ci -vv
+      - cargo tauri build --config src-tauri/tauri.release.conf.json --target aarch64-apple-darwin --bundles app,dmg --ci -vv -- --locked
       - find src-tauri/target/aarch64-apple-darwin/release/bundle -name '._*' -delete
       - mkdir -p dist/release-evidence
       - .venv-release/bin/python scripts/verify_desktop_distribution.py --target-triple aarch64-apple-darwin --platform macos --web-dist dist/web --bundle-root src-tauri/target/aarch64-apple-darwin/release/bundle | tee dist/release-evidence/macos.json

@@ -362,6 +362,11 @@ def test_woodpecker_macos_release_is_tag_only_and_quality_gated() -> None:
     checkout_commands = "\n".join(checkout["commands"])
     build_commands = "\n".join(build["commands"])
     upload_commands = "\n".join(upload["commands"])
+    tauri_build_command = next(
+        command
+        for command in build["commands"]
+        if command.startswith("cargo tauri build ")
+    )
 
     assert "scripts/prepare_release.py --tag" in build_commands
     assert "/Users/" not in WOODPECKER_MACOS_RELEASE.read_text(encoding="utf-8")
@@ -382,6 +387,8 @@ def test_woodpecker_macos_release_is_tag_only_and_quality_gated() -> None:
     )
     assert "scripts/verify_desktop_distribution.py" in build_commands
     assert "--bundles app,dmg" in build_commands
+    assert "cargo tauri build --locked" not in tauri_build_command
+    assert tauri_build_command.endswith(" -- --locked")
     assert "find src-tauri/target" in build_commands
     assert "codesign --verify --deep --strict" in build_commands
     assert "spctl --assess" in build_commands
