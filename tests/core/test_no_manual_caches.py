@@ -4,10 +4,10 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from thesis_forge.core import compiler as compiler_module
-from thesis_forge.core import model as model_module
-from thesis_forge.core.index import DocumentIndex
-from thesis_forge.core.model import (
+from docforge.core import compiler as compiler_module
+from docforge.core import model as model_module
+from docforge.core.index import DocumentIndex
+from docforge.core.model import (
     Citation,
     Emphasis,
     FootnoteReference,
@@ -18,7 +18,7 @@ from thesis_forge.core.model import (
     Strong,
     Text,
 )
-from thesis_forge.core.parser_backend import create_parser_backend
+from docforge.core.parser_backend import create_parser_backend
 
 BACKEND = create_parser_backend()
 

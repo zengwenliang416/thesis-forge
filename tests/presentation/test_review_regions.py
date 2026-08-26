@@ -7,8 +7,8 @@ from typing import get_args
 
 import pytest
 
-from thesis_forge.application.contracts import PreviewResult
-from thesis_forge.core.model import (
+from docforge.application.contracts import PreviewResult
+from docforge.core.model import (
     Algorithm,
     BibliographyBlock,
     Equation,
@@ -23,7 +23,7 @@ from thesis_forge.core.model import (
     Table,
     Text,
 )
-from thesis_forge.core.render_plan import (
+from docforge.core.render_plan import (
     AlgorithmInstruction,
     BibliographyEntryInstruction,
     BibliographyInstruction,
@@ -55,8 +55,8 @@ from thesis_forge.core.render_plan import (
     TocEntryInstruction,
     TocInstruction,
 )
-from thesis_forge.core.validator import ValidationContext
-from thesis_forge.presentation.review import (
+from docforge.core.validator import ValidationContext
+from docforge.presentation.review import (
     REVIEW_PROJECTION_REGISTRY,
     ReviewAlgorithmContent,
     ReviewBibliographyContent,

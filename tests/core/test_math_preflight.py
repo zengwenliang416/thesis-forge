@@ -2,9 +2,9 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from thesis_forge.core.math import preflight_latex
-from thesis_forge.core.parser_markdown_it import MarkdownItParserBackend
-from thesis_forge.core.validator import ValidationContext, validate_document
+from docforge.core.math import preflight_latex
+from docforge.core.parser_markdown_it import MarkdownItParserBackend
+from docforge.core.validator import ValidationContext, validate_document
 
 ROOT = Path(__file__).resolve().parents[2]
 TEMPLATE = ROOT / "templates" / "base" / "bachelor.yaml"

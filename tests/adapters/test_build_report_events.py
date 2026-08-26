@@ -4,15 +4,15 @@ from pathlib import Path
 
 import pytest
 
-from thesis_forge import application
-from thesis_forge.adapters import (
+from docforge import application
+from docforge.adapters import (
     PROTOCOL_VERSION,
     DesktopRuntime,
     WorkbenchCommandDispatcher,
 )
-from thesis_forge.adapters.runtime import _serialize_build_report
-from thesis_forge.application import BuildStage
-from thesis_forge.application.contracts import (
+from docforge.adapters.runtime import _serialize_build_report
+from docforge.application import BuildStage
+from docforge.application.contracts import (
     BuildIntent,
     BuildOutcome,
     BuildReport,
@@ -20,7 +20,7 @@ from thesis_forge.application.contracts import (
     BuildStageState,
     BuildStageStatus,
 )
-from thesis_forge.core.model import ValidationIssue
+from docforge.core.model import ValidationIssue
 
 
 def _request(source: Path, output: Path) -> dict:

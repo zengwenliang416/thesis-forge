@@ -7,22 +7,22 @@ from zipfile import ZipFile
 import yaml
 from typer.testing import CliRunner
 
-from thesis_forge.cli import app
+from docforge.cli import app
 
 ROOT = Path(__file__).resolve().parents[1]
-PROJECT = ROOT / "tests" / "fixtures" / "v2-project"
+PROJECT = ROOT / "tests" / "fixtures" / "docforge-academic"
 
 
 def _write_project(
     root: Path,
     *,
-    source: str = "thesis.md",
+    source: str = "document.md",
     template_id: str = "example-university-2026",
     bibliography: str | None = None,
     metadata: bool = True,
 ) -> Path:
     manifest = {
-        "schema": "thesisforge.project.v2",
+        "schema": "docforge.project.v1",
         "project": {"id": "cli-test-project", "language": "zh-CN"},
         "document": {"source": source},
         "resources": {
@@ -33,16 +33,16 @@ def _write_project(
             "template_id": template_id,
             "citation_style": "GB-T-7714-2025",
         },
-        "output": {"directory": "output", "docx": "thesis.docx"},
+        "output": {"directory": "build", "docx": "document.docx"},
     }
     if bibliography is not None:
         manifest["resources"]["bibliography"] = bibliography
     if metadata:
         manifest["metadata"] = {
             "title": {"zh": "测试论文"},
-            "author": {"name": "测试作者"},
+            "authors": [{"name": "测试作者"}],
         }
-    (root / "thesisforge.yaml").write_text(
+    (root / "docforge.yaml").write_text(
         yaml.safe_dump(manifest, allow_unicode=True, sort_keys=False),
         encoding="utf-8",
     )
@@ -53,7 +53,7 @@ runner = CliRunner()
 
 
 def test_inspect_reports_semantics_without_writing_files(tmp_path: Path):
-    source = tmp_path / "thesis.md"
+    source = tmp_path / "document.md"
     source.write_text(
         """# 绪论 {#chap:intro}
 
@@ -252,7 +252,7 @@ def test_build_uses_resolved_template_and_writes_editable_docx(tmp_path: Path):
 def test_build_reports_invalid_image_without_traceback(tmp_path: Path):
     image = tmp_path / "broken.png"
     image.write_bytes(b"not-a-real-png")
-    source = tmp_path / "thesis.md"
+    source = tmp_path / "document.md"
     source.write_text(
         """# 绪论 {#chap:intro}
 
@@ -279,7 +279,7 @@ def test_build_reports_invalid_image_without_traceback(tmp_path: Path):
 
 
 def test_build_reports_unsupported_latex_without_traceback(tmp_path: Path):
-    source = tmp_path / "thesis.md"
+    source = tmp_path / "document.md"
     source.write_text(
         """# 绪论 {#chap:intro}
 
@@ -358,7 +358,7 @@ def test_validate_and_build_local_bibliography_offline(tmp_path: Path):
 """,
         encoding="utf-8",
     )
-    source = tmp_path / "thesis.md"
+    source = tmp_path / "document.md"
     source.write_text(
         """# 绪论 {#chap:intro}
 
@@ -401,7 +401,7 @@ def test_validate_reports_unknown_local_citation_without_traceback(tmp_path: Pat
 """,
         encoding="utf-8",
     )
-    source = tmp_path / "thesis.md"
+    source = tmp_path / "document.md"
     source.write_text(
         """# 绪论 {#chap:intro}
 

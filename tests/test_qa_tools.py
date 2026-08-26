@@ -17,10 +17,10 @@ from zipfile import ZipFile
 
 import pytest
 
-from thesis_forge.core.compiler import compile_document
-from thesis_forge.core.parser_backend import create_parser_backend
-from thesis_forge.renderers.docx import DocxRenderer
-from thesis_forge.templates import load_template
+from docforge.core.compiler import compile_document
+from docforge.core.parser_backend import create_parser_backend
+from docforge.renderers.docx import DocxRenderer
+from docforge.templates import load_template
 
 ROOT = Path(__file__).resolve().parents[1]
 TOOLS_DIR = ROOT / "qa" / "tools"

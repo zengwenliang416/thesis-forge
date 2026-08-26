@@ -4,15 +4,15 @@ import json
 from dataclasses import asdict
 from pathlib import Path
 
-from thesis_forge.application.contracts import PreviewResult
-from thesis_forge.core.model import Algorithm, ForgeDocument, Listing, SourceLocation
-from thesis_forge.core.render_plan import (
+from docforge.application.contracts import PreviewResult
+from docforge.core.model import Algorithm, ForgeDocument, Listing, SourceLocation
+from docforge.core.render_plan import (
     AlgorithmInstruction,
     ListingInstruction,
     RenderPlan,
 )
-from thesis_forge.core.validator import ValidationContext
-from thesis_forge.presentation.review import (
+from docforge.core.validator import ValidationContext
+from docforge.presentation.review import (
     ReviewAlgorithmContent,
     ReviewListingContent,
     map_review_result,

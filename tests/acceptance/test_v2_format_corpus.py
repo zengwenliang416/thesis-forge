@@ -11,8 +11,8 @@ from zipfile import ZipFile
 from docx.shared import Mm
 from lxml import etree
 
-from thesis_forge.application import preview_service, validation_service
-from thesis_forge.core.render_plan import (
+from docforge.application import preview_service, validation_service
+from docforge.core.render_plan import (
     CitationRun,
     FigureInstruction,
     FootnoteReferenceRun,
@@ -28,13 +28,13 @@ from thesis_forge.core.render_plan import (
     TextRun,
     TocInstruction,
 )
-from thesis_forge.presentation.review import (
+from docforge.presentation.review import (
     ReviewTextRun,
     map_review_result,
 )
-from thesis_forge.presentation.review_markdown import render_review_markdown
-from thesis_forge.renderers.docx import DocxRenderer
-from thesis_forge.renderers.docx.package import validate_docx_package
+from docforge.presentation.review_markdown import render_review_markdown
+from docforge.renderers.docx import DocxRenderer
+from docforge.renderers.docx.package import validate_docx_package
 
 ROOT = Path(__file__).resolve().parents[2]
 CORPUS = ROOT / "examples" / "v2-format-corpus"

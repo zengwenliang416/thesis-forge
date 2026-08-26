@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import pytest
 
-from thesis_forge.core.model import (
+from docforge.core.model import (
     Algorithm,
     Citation,
     CodeBlock,
@@ -10,8 +10,8 @@ from thesis_forge.core.model import (
     Strong,
     inline_plain_text,
 )
-from thesis_forge.core.parser_markdown_it import MarkdownItParserBackend
-from thesis_forge.core.parser_support import ParseError
+from docforge.core.parser_markdown_it import MarkdownItParserBackend
+from docforge.core.parser_support import ParseError
 
 BACKEND = MarkdownItParserBackend()
 

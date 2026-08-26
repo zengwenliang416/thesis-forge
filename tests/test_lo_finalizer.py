@@ -22,14 +22,14 @@ from zipfile import ZipFile
 
 import pytest
 
-from thesis_forge.application.contracts import (
+from docforge.application.contracts import (
     ApplicationStageError,
     ProjectIdentity,
     ProjectOutput,
     ProjectRequest,
     ProjectRequestIntent,
 )
-from thesis_forge.application.office_refresh import (
+from docforge.application.office_refresh import (
     LibreOfficeDocumentRefresher,
     _capture_field_instructions,
     _field_instruction_kind,
@@ -40,12 +40,12 @@ from thesis_forge.application.office_refresh import (
     discover_libreoffice_python,
     refresh_document_safely,
 )
-from thesis_forge.application.services import (
+from docforge.application.services import (
     ApplicationDependencies,
     ProjectApplicationService,
 )
-from thesis_forge.renderers.docx import DocxRenderer
-from thesis_forge.renderers.docx.package import (
+from docforge.renderers.docx import DocxRenderer
+from docforge.renderers.docx.package import (
     DocxPackageValidationError,
     validate_docx_package,
 )

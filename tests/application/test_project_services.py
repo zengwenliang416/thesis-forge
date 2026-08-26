@@ -4,20 +4,20 @@ from pathlib import Path
 
 import pytest
 
-from thesis_forge.application.contracts import (
+from docforge.application.contracts import (
     ProjectIdentity,
     ProjectOutput,
     ProjectRequest,
     ProjectRequestIntent,
 )
-from thesis_forge.application.services import (
+from docforge.application.services import (
     ApplicationDependencies,
     ProjectApplicationService,
     ProjectServiceContext,
 )
-from thesis_forge.core.index import DocumentIndex
-from thesis_forge.core.model import ForgeDocument
-from thesis_forge.core.validator import ValidationContext
+from docforge.core.index import DocumentIndex
+from docforge.core.model import ForgeDocument
+from docforge.core.validator import ValidationContext
 
 FIXTURES = Path(__file__).resolve().parents[2] / "tests" / "fixtures"
 PROJECT_ROOT = FIXTURES / "docforge-general"

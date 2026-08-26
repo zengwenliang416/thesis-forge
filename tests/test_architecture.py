@@ -7,31 +7,31 @@ import sys
 import tomllib
 from pathlib import Path
 
-import thesis_forge.bibliography.bibtex as bibliography_bibtex_module
-import thesis_forge.bibliography.engine as bibliography_engine_module
-import thesis_forge.bibliography.formatter as bibliography_formatter_module
-import thesis_forge.cli as cli_module
-import thesis_forge.core.compiler as compiler_module
-import thesis_forge.core.math as math_module
-import thesis_forge.core.model as model_module
-import thesis_forge.core.parser_backend as parser_backend_module
-import thesis_forge.core.parser_markdown_it as parser_markdown_it_module
-import thesis_forge.core.render_plan as render_plan_module
-import thesis_forge.presentation as presentation_module
-import thesis_forge.renderers.docx.renderer as docx_renderer_module
-import thesis_forge.templates.model as template_model_module
-import thesis_forge.ui.controller as ui_controller_module
-import thesis_forge.ui.filesystem as ui_filesystem_module
-import thesis_forge.ui.models as ui_models_module
-import thesis_forge.ui.tasks as ui_tasks_module
+import docforge.bibliography.bibtex as bibliography_bibtex_module
+import docforge.bibliography.engine as bibliography_engine_module
+import docforge.bibliography.formatter as bibliography_formatter_module
+import docforge.cli as cli_module
+import docforge.core.compiler as compiler_module
+import docforge.core.math as math_module
+import docforge.core.model as model_module
+import docforge.core.parser_backend as parser_backend_module
+import docforge.core.parser_markdown_it as parser_markdown_it_module
+import docforge.core.render_plan as render_plan_module
+import docforge.presentation as presentation_module
+import docforge.renderers.docx.renderer as docx_renderer_module
+import docforge.templates.model as template_model_module
+import docforge.ui.controller as ui_controller_module
+import docforge.ui.filesystem as ui_filesystem_module
+import docforge.ui.models as ui_models_module
+import docforge.ui.tasks as ui_tasks_module
 
 FORBIDDEN_IMPORT_PREFIXES = (
     "docx",
     "lxml",
-    "thesis_forge.ai",
-    "thesis_forge.renderers",
-    "thesis_forge.templates",
-    "thesis_forge.ui",
+    "docforge.ai",
+    "docforge.renderers",
+    "docforge.templates",
+    "docforge.ui",
 )
 
 
@@ -98,13 +98,13 @@ def test_render_plan_is_renderer_neutral_and_docx_renderer_does_not_import_parse
         imports = _import_names(Path(module.__file__))
         assert not {"docx", "lxml"} & imports
         assert not any(
-            name == "thesis_forge.renderers"
-            or name.startswith("thesis_forge.renderers.")
+            name == "docforge.renderers"
+            or name.startswith("docforge.renderers.")
             for name in imports
         )
 
     renderer_imports = _import_names(Path(docx_renderer_module.__file__))
-    assert "thesis_forge.core.parser" not in renderer_imports
+    assert "docforge.core.parser" not in renderer_imports
 
     render_plan_source = Path(render_plan_module.__file__).read_text(encoding="utf-8")
     assert "TFAbstract" not in render_plan_source
@@ -117,7 +117,7 @@ def test_template_model_is_renderer_neutral():
         name
         for name in imports
         if name in {"docx", "lxml"}
-        or name.startswith(("docx.", "lxml.", "thesis_forge.renderers."))
+        or name.startswith(("docx.", "lxml.", "docforge.renderers."))
     }
     assert forbidden == set()
 
@@ -133,7 +133,7 @@ def test_bibliography_subsystem_does_not_import_docx_xml_or_renderer_layers():
             name
             for name in imports
             if name in {"docx", "lxml"}
-            or name.startswith(("docx.", "lxml.", "thesis_forge.renderers."))
+            or name.startswith(("docx.", "lxml.", "docforge.renderers."))
         }
         assert forbidden == set()
 
@@ -141,12 +141,12 @@ def test_bibliography_subsystem_does_not_import_docx_xml_or_renderer_layers():
 def test_cli_delegates_core_flows_to_application_services():
     imports = _import_names(Path(cli_module.__file__))
 
-    assert "thesis_forge.application" in imports
+    assert "docforge.application" in imports
     assert not {
-        "thesis_forge.core.compiler",
-        "thesis_forge.core.parser",
-        "thesis_forge.core.validator",
-        "thesis_forge.renderers.docx",
+        "docforge.core.compiler",
+        "docforge.core.parser",
+        "docforge.core.validator",
+        "docforge.renderers.docx",
     } & imports
 
 
@@ -195,15 +195,15 @@ def test_importing_headless_ui_does_not_load_application_or_rendering_stack():
 import json
 import sys
 
-import thesis_forge.ui
+import docforge.ui
 
 forbidden = {
     "docx",
     "lxml",
-    "thesis_forge.application.services",
-    "thesis_forge.core.compiler",
-    "thesis_forge.core.parser",
-    "thesis_forge.renderers.docx",
+    "docforge.application.services",
+    "docforge.core.compiler",
+    "docforge.core.parser",
+    "docforge.renderers.docx",
 }
 loaded = sorted(name for name in forbidden if name in sys.modules)
 print(json.dumps(loaded))
@@ -227,8 +227,8 @@ def test_preview_presentation_and_frontend_modules_do_not_import_renderers():
     assert not {
         "docx",
         "lxml",
-        "thesis_forge.renderers",
-        "thesis_forge.renderers.docx",
+        "docforge.renderers",
+        "docforge.renderers.docx",
     } & python_imports
 
     project_root = Path(__file__).resolve().parents[1]
@@ -239,10 +239,10 @@ def test_preview_presentation_and_frontend_modules_do_not_import_renderers():
     forbidden_prefixes = (
         "docx",
         "lxml",
-        "thesis_forge.renderers",
-        "thesis_forge.core.compiler",
-        "thesis_forge.core.parser",
-        "thesis_forge.core.validator",
+        "docforge.renderers",
+        "docforge.core.compiler",
+        "docforge.core.parser",
+        "docforge.core.validator",
         "@tauri-apps",
         "../transport/web",
         "../transport/tauri",

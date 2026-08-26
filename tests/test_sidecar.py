@@ -5,20 +5,20 @@ import sys
 from pathlib import Path
 from types import SimpleNamespace
 
-from thesis_forge import application
-from thesis_forge.adapters import (
+from docforge import application
+from docforge.adapters import (
     PROTOCOL_VERSION,
     DesktopRuntime,
     WorkbenchCommandDispatcher,
     stream_json_lines,
 )
-from thesis_forge.adapters.sidecar import (
+from docforge.adapters.sidecar import (
     _configure_standard_streams,
     create_dispatcher,
 )
-from thesis_forge.application import BuildResult, BuildStage
-from thesis_forge.application.contracts import ProjectRequestIntent
-from thesis_forge.application.pdf_preview import MicrosoftWordPdfPreviewExporter
+from docforge.application import BuildResult, BuildStage
+from docforge.application.contracts import ProjectRequestIntent
+from docforge.application.pdf_preview import MicrosoftWordPdfPreviewExporter
 
 
 def test_sidecar_forces_utf8_standard_streams(monkeypatch):

@@ -5,8 +5,8 @@ from __future__ import annotations
 import dataclasses
 from pathlib import Path
 
-from thesis_forge.core.index import DocumentIndex
-from thesis_forge.core.model import (
+from docforge.core.index import DocumentIndex
+from docforge.core.model import (
     Citation,
     GeneratedOrigin,
     SourceLocation,
@@ -16,7 +16,7 @@ from thesis_forge.core.model import (
     Text,
     inline_plain_text,
 )
-from thesis_forge.core.parser_backend import create_parser_backend
+from docforge.core.parser_backend import create_parser_backend
 
 BACKEND = create_parser_backend()
 

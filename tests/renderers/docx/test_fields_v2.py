@@ -6,7 +6,7 @@ from zipfile import ZipFile
 from docx import Document
 from lxml import etree
 
-from thesis_forge.core.render_plan import (
+from docforge.core.render_plan import (
     CaptionRuns,
     ReferenceRun,
     SequenceInstruction,
@@ -14,15 +14,15 @@ from thesis_forge.core.render_plan import (
     TocEntryInstruction,
     TocInstruction,
 )
-from thesis_forge.renderers.docx.bookmarks import wrap_paragraph_in_bookmark
-from thesis_forge.renderers.docx.captions import add_caption
-from thesis_forge.renderers.docx.fields import (
+from docforge.renderers.docx.bookmarks import wrap_paragraph_in_bookmark
+from docforge.renderers.docx.captions import add_caption
+from docforge.renderers.docx.fields import (
     add_complex_field,
     add_reference_field,
     set_update_fields,
 )
-from thesis_forge.renderers.docx.package import validate_docx_package
-from thesis_forge.renderers.docx.toc import add_toc_field
+from docforge.renderers.docx.package import validate_docx_package
+from docforge.renderers.docx.toc import add_toc_field
 
 ROOT = Path(__file__).resolve().parents[3]
 W_NS = "http://schemas.openxmlformats.org/wordprocessingml/2006/main"
@@ -203,7 +203,7 @@ def test_word_field_families_preserve_typed_inputs_and_docx_structure(
     )
 
     render_plan_source = (
-        ROOT / "src" / "thesis_forge" / "core" / "render_plan.py"
+        ROOT / "src" / "docforge" / "core" / "render_plan.py"
     ).read_text(encoding="utf-8")
     assert "from docx" not in render_plan_source
     assert "from lxml" not in render_plan_source

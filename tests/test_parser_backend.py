@@ -7,11 +7,11 @@ from pathlib import Path
 
 import pytest
 
-from thesis_forge.core.parser_backend import (
+from docforge.core.parser_backend import (
     ParserBackend,
     create_parser_backend,
 )
-from thesis_forge.core.parser_markdown_it import MarkdownItParserBackend
+from docforge.core.parser_markdown_it import MarkdownItParserBackend
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 PARSER_DIFF_PATH = REPO_ROOT / "qa" / "tools" / "parser_diff.py"

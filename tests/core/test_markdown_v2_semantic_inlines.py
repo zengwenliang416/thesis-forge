@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from thesis_forge.core.model import (
+from docforge.core.model import (
     Citation,
     CrossReference,
     FootnoteDefinition,
@@ -10,7 +10,7 @@ from thesis_forge.core.model import (
     Link,
     Paragraph,
 )
-from thesis_forge.core.parser_markdown_it import MarkdownItParserBackend
+from docforge.core.parser_markdown_it import MarkdownItParserBackend
 
 
 def _document(source: str):

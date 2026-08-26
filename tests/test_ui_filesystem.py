@@ -4,7 +4,7 @@ from pathlib import Path
 
 import pytest
 
-from thesis_forge.ui import LocalWorkspaceFileSystem
+from docforge.ui import LocalWorkspaceFileSystem
 
 
 def _temporary_sources(path: Path) -> list[Path]:

@@ -4,7 +4,7 @@ from zipfile import ZipFile
 
 from lxml import etree
 
-from thesis_forge.core.render_plan import (
+from docforge.core.render_plan import (
     CaptionRuns,
     CitationRun,
     FigureInstruction,
@@ -19,9 +19,9 @@ from thesis_forge.core.render_plan import (
     SoftBreakRun,
     TextRun,
 )
-from thesis_forge.renderers.docx import DocxRenderer
-from thesis_forge.templates import load_template
-from thesis_forge.templates.model import FontSpec, LengthSpec
+from docforge.renderers.docx import DocxRenderer
+from docforge.templates import load_template
+from docforge.templates.model import FontSpec, LengthSpec
 
 NS = {
     "m": "http://schemas.openxmlformats.org/officeDocument/2006/math",

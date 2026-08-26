@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from thesis_forge.core.model import (
+from docforge.core.model import (
     Algorithm,
     Citation,
     CrossReference,
@@ -16,7 +16,7 @@ from thesis_forge.core.model import (
     TableRow,
     Text,
 )
-from thesis_forge.core.validator import ValidationContext, validate_document
+from docforge.core.validator import ValidationContext, validate_document
 
 
 def _document(*blocks) -> ForgeDocument:

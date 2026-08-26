@@ -18,15 +18,15 @@ SIDECAR_DIRECTORY = ROOT / "src-tauri" / "binaries"
 PACKAGE_DATA = (
     (
         ROOT / "templates" / "base" / "bachelor.yaml",
-        "thesis_forge/template_data/base",
+        "docforge/template_data/base",
     ),
     (
         ROOT / "templates" / "schools" / "example-university" / "2026.yaml",
-        "thesis_forge/template_data/schools/example-university",
+        "docforge/template_data/schools/example-university",
     ),
     (
         ROOT / "templates" / "schools" / "project-proposal" / "2026.yaml",
-        "thesis_forge/template_data/schools/project-proposal",
+        "docforge/template_data/schools/project-proposal",
     ),
     (
         ROOT
@@ -34,7 +34,7 @@ PACKAGE_DATA = (
         / "schools"
         / "hunan-university-of-technology"
         / "master-2026.yaml",
-        "thesis_forge/template_data/schools/hunan-university-of-technology",
+        "docforge/template_data/schools/hunan-university-of-technology",
     ),
 )
 
@@ -125,7 +125,7 @@ def _entrypoint_text() -> str:
         "    socket.create_connection = blocked\n"
         "    socket.socket.connect = blocked\n"
         "    socket.socket.connect_ex = blocked\n"
-        "from thesis_forge.adapters.sidecar import main\n"
+        "from docforge.adapters.sidecar import main\n"
         "raise SystemExit(main())\n"
     )
 

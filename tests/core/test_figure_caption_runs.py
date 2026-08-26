@@ -2,8 +2,8 @@ from pathlib import Path
 
 import pytest
 
-from thesis_forge.core.compiler import _compile_inlines, compile_document
-from thesis_forge.core.model import (
+from docforge.core.compiler import _compile_inlines, compile_document
+from docforge.core.model import (
     Citation,
     CrossReference,
     Emphasis,
@@ -22,7 +22,7 @@ from thesis_forge.core.model import (
     Strong,
     Text,
 )
-from thesis_forge.core.render_plan import (
+from docforge.core.render_plan import (
     CaptionRuns,
     CitationRun,
     FigureInstruction,
@@ -36,9 +36,9 @@ from thesis_forge.core.render_plan import (
     SoftBreakRun,
     TextRun,
 )
-from thesis_forge.renderers.docx.errors import DocxRenderError
-from thesis_forge.renderers.docx.inlines import InlineHandlers, render_inline_runs
-from thesis_forge.templates import load_template
+from docforge.renderers.docx.errors import DocxRenderError
+from docforge.renderers.docx.inlines import InlineHandlers, render_inline_runs
+from docforge.templates import load_template
 
 
 class UnknownInline(Inline):

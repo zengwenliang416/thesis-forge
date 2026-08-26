@@ -1,16 +1,16 @@
-# ThesisForge
+# DocForge
 
-> 结构化学术论文编写、校验与排版系统  
-> **Markdown 写论文，一键生成学校标准 Word。**
+> 本地优先、确定性、模板驱动的 Markdown 文档编译器
+> **用结构化 Markdown 生成可编辑、可验证的 Word 文档。**
 
-ThesisForge 的核心目标不是做一个“Markdown 转 Word 小工具”，而是建立一个可长期演进的**学术论文编译器**：
+DocForge 将 Markdown 项目编译为可编辑 DOCX。通用文档与学术文档共享同一条语义解析、校验、模板和渲染流水线：
 
 ```text
-thesis.md
+docforge.yaml + document.md
    ↓
 Parser
    ↓
-Thesis AST / Document Model
+ForgeDocument
    ↓
 Validator
    ↓
@@ -20,14 +20,14 @@ Compiler
    ↓
 DOCX Renderer
    ↓
-thesis.docx
+   build/document.docx
 ```
 
 ## 1. 产品原则
 
 1. **离线优先**：基础排版、结构解析、模板应用、校验、DOCX 生成必须完全离线可用。
 2. **AI 可选**：AI 只做润色、摘要、结构建议、改写等辅助能力，不进入排版核心链路。
-3. **结构与样式分离**：`thesis.md` 描述论文内容与语义；学校 YAML 模板描述 Word 版式。
+3. **结构与样式分离**：`document.md` 描述内容与语义；模板 YAML 描述 Word 版式。
 4. **先语义模型，后渲染**：禁止直接将 Markdown 节点“边解析边写进 Word”。
 5. **Word 对象是真对象**：目录、公式、题注、交叉引用、脚注、页码等尽量生成真实 OOXML/Word 对象，而不是视觉模拟。
 6. **模板可替换**：同一份论文源文件可以套不同学校模板生成不同 DOCX。
@@ -68,7 +68,7 @@ thesis-forge/
 ├── AGENTS.md
 ├── README.md
 ├── pyproject.toml
-├── src/thesis_forge/
+├── src/docforge/
 │   ├── core/            # Parser / AST / Validator / Compiler
 │   ├── renderers/docx/  # DOCX + OOXML 渲染
 │   ├── bibliography/    # BibTeX / CSL / 引文
@@ -89,12 +89,12 @@ thesis-forge/
 
 ```text
                     ┌───────────────┐
-                    │   thesis.md   │
+                    │  document.md  │
                     └───────┬───────┘
                             ↓
                     Markdown Parser
                             ↓
-                    ThesisDocument
+                     ForgeDocument
                             ↓
               ┌─────────────┼─────────────┐
               ↓             ↓             ↓
@@ -107,14 +107,14 @@ thesis-forge/
                             ↓
                       DOCX Renderer
                             ↓
-                     output/thesis.docx
+                    build/document.docx
 ```
 
 `RenderPlan` 再把论文语义和 Word 实现细节隔开，避免 AST 直接依赖 OOXML。
 
 ## 5. 快速开始
 
-当前仓库已完成 ThesisForge V1 核心编译链。`inspect`、`validate` 和 `build`
+当前仓库已完成 DocForge 核心编译链。`inspect`、`validate`、`review` 和 `build`
 均可在无网络、无 AI API Key 的环境中运行；完整示例覆盖本地图、三线表、可编辑
 OMML 公式、Word 字段、交叉引用、脚注、多 Section、页眉页脚、BibTeX 引用和参考文献。
 
@@ -131,27 +131,42 @@ make build-example
 也可以直接使用安装后的命令：
 
 ```bash
-.venv/bin/thesisforge inspect examples/bachelor-thesis/thesis.md
-.venv/bin/thesisforge validate examples/bachelor-thesis/thesis.md
-.venv/bin/thesisforge build examples/bachelor-thesis/thesis.md -o output/thesis.docx
+.venv/bin/docforge inspect tests/fixtures/docforge-academic
+.venv/bin/docforge validate tests/fixtures/docforge-academic
+.venv/bin/docforge review tests/fixtures/docforge-academic --output-dir review
+.venv/bin/docforge build tests/fixtures/docforge-academic
 ```
 
-学校模板可通过 Front Matter 的 `render.template_id` 选择，也可使用
-`--template path/to/template.yaml` 显式覆盖。
+模板由项目入口 `docforge.yaml` 的 `render.template_id` 选择。
 
-## 6. Markdown 示例
+## 6. 项目示例
+
+`docforge.yaml`：
+
+```yaml
+schema: docforge.project.v1
+project:
+  id: example-document
+  language: zh-CN
+document:
+  source: document.md
+  type: academic
+metadata:
+  title:
+    zh: 我的文档
+  authors:
+    - name: 张三
+academic:
+  student:
+    name: 张三
+    id: "20260001"
+render:
+  template_id: example-university-2026
+```
+
+`document.md`：
 
 ```markdown
----
-thesis:
-  title: "我的本科毕业论文"
-author:
-  name: "张三"
-render:
-  template_id: "example-university-2026"
-  bibliography: "./references.bib"
----
-
 # 绪论 {#chap:introduction}
 
 ## 研究背景 {#sec:background}
@@ -173,7 +188,7 @@ $$
 :::
 ```
 
-完整模板见 `examples/bachelor-thesis/thesis.md`。
+可执行项目见 `tests/fixtures/docforge-academic/`。
 
 ## 7. 学校模板
 
@@ -183,7 +198,7 @@ $$
 templates/schools/<school>/<year>.yaml
 ```
 
-同一份 `thesis.md` 可以切换不同学校模板重新编译。
+同一份 `document.md` 可以切换不同模板重新编译。
 
 ## 8. GitHub 参考仓库
 
@@ -267,7 +282,7 @@ checkout 中的 `src/`、`templates/` 或父开发环境 `site-packages`。详�
 
 三个产品入口共用同一套 React + TypeScript + Vite 工作台，但运行能力不同：
 
-- Web：`dist/web/` 是静态资源，必须显式配置并连接 ThesisForge HTTP 服务。
+- Web：`dist/web/` 是静态资源，必须显式配置并连接 DocForge HTTP 服务。
   浏览器没有本地路径权限，使用 workspace 上传、显式保存和下载语义。
 - macOS：Tauri `.app` / `.dmg` 内置目标平台的冻结 Python sidecar，正常运行不
   需要另外安装 Python、Node.js、Rust、API Key、账号或网络服务。
@@ -304,7 +319,7 @@ src-tauri/target/<target>/release/bundle/
 
 桌面工作台支持 `Cmd/Ctrl+K` 聚焦编辑器、`Cmd/Ctrl+S` 显式保存、
 `Cmd/Ctrl+B` 构建 DOCX。打开源文件仅接受 `.md` 或 `.markdown`；构建结果默认
-写入源文件同目录的 `thesis.docx`，并保留临时包校验与原子替换行为。
+写入项目的 `build/document.docx`，并保留临时包校验与原子替换行为。
 
 当前本地产物未做 Apple Developer ID / Microsoft Authenticode 生产签名，也未做
 Apple notarization。它们用于本地验收和 CI 产物验证，不应直接作为公开发行包。

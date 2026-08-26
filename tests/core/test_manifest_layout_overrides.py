@@ -6,13 +6,13 @@ from zipfile import ZipFile
 
 from lxml import etree
 
-from thesis_forge.application.services import preview_service
-from thesis_forge.core.render_plan import (
+from docforge.application.services import preview_service
+from docforge.core.render_plan import (
     FigureInstruction,
     FigureWidthInstruction,
     RenderPlan,
 )
-from thesis_forge.renderers.docx.renderer import DocxRenderer
+from docforge.renderers.docx.renderer import DocxRenderer
 
 ROOT = Path(__file__).resolve().parents[2]
 PROJECT = ROOT / "tests" / "fixtures" / "v2-project"

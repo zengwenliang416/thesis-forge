@@ -5,8 +5,8 @@ from pathlib import Path
 
 import pytest
 
-from thesis_forge.core.compiler import compile_document
-from thesis_forge.core.model import (
+from docforge.core.compiler import compile_document
+from docforge.core.model import (
     BibliographyConfig,
     Citation,
     Figure,
@@ -14,9 +14,9 @@ from thesis_forge.core.model import (
     Paragraph,
     Text,
 )
-from thesis_forge.core.parser_backend import create_parser_backend
-from thesis_forge.core.render_plan import CoverInstruction
-from thesis_forge.core.validator import ValidationContext, validate_document
+from docforge.core.parser_backend import create_parser_backend
+from docforge.core.render_plan import CoverInstruction
+from docforge.core.validator import ValidationContext, validate_document
 
 REFERENCE = (
     Path(__file__).resolve().parents[1] / "fixtures" / "v2-project" / "references.bib"

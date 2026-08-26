@@ -30,9 +30,9 @@ SRC = REPO_ROOT / "src"
 if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
-from thesis_forge.core.index import DocumentIndex
-from thesis_forge.core.model import ForgeDocument
-from thesis_forge.core.parser_backend import create_parser_backend
+from docforge.core.index import DocumentIndex
+from docforge.core.model import ForgeDocument
+from docforge.core.parser_backend import create_parser_backend
 
 MAX_DIFF_ENTRIES = 100
 

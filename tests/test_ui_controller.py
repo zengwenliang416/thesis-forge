@@ -6,16 +6,16 @@ from pathlib import Path
 
 import pytest
 
-from thesis_forge import ui
-from thesis_forge.application import (
+from docforge import ui
+from docforge.application import (
     BuildResult,
     BuildStage,
     InspectionResult,
     ValidationResult,
 )
-from thesis_forge.application.contracts import ProjectRequestIntent
-from thesis_forge.core.model import ForgeDocument, ValidationIssue
-from thesis_forge.core.validator import ValidationContext
+from docforge.application.contracts import ProjectRequestIntent
+from docforge.core.model import ForgeDocument, ValidationIssue
+from docforge.core.validator import ValidationContext
 
 
 @dataclass(slots=True)

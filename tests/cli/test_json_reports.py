@@ -5,17 +5,17 @@ from pathlib import Path
 
 from typer.testing import CliRunner
 
-from thesis_forge.application import (
+from docforge.application import (
     BuildResult,
     BuildValidationError,
     ValidationResult,
 )
-from thesis_forge.application.contracts import BuildStage
-from thesis_forge.cli import app
-from thesis_forge.core.model import ForgeDocument, ValidationIssue
-from thesis_forge.core.validator import ValidationContext
+from docforge.application.contracts import BuildStage
+from docforge.cli import app
+from docforge.core.model import ForgeDocument, ValidationIssue
+from docforge.core.validator import ValidationContext
 
-PROJECT = Path(__file__).resolve().parents[1] / "fixtures" / "v2-project"
+PROJECT = Path(__file__).resolve().parents[1] / "fixtures" / "docforge-academic"
 
 
 class ReportService:
@@ -40,7 +40,7 @@ class ReportService:
 
     def validate(self, request):
         return ValidationResult(
-            document=ForgeDocument(source_path=PROJECT / "thesis.md"),
+            document=ForgeDocument(source_path=PROJECT / "document.md"),
             context=ValidationContext(),
             issues=(),
         )
@@ -48,7 +48,7 @@ class ReportService:
 
 def test_validate_json_is_deterministic(monkeypatch) -> None:
     monkeypatch.setattr(
-        "thesis_forge.cli.ProjectApplicationService",
+        "docforge.cli.ProjectApplicationService",
         lambda: ReportService(),
     )
     runner = CliRunner()
@@ -66,7 +66,7 @@ def test_build_success_writes_deterministic_typed_report(
     tmp_path: Path,
 ) -> None:
     monkeypatch.setattr(
-        "thesis_forge.cli.ProjectApplicationService",
+        "docforge.cli.ProjectApplicationService",
         lambda: ReportService(),
     )
     runner = CliRunner()
@@ -95,7 +95,7 @@ def test_build_failure_writes_complete_typed_report(
     tmp_path: Path,
 ) -> None:
     monkeypatch.setattr(
-        "thesis_forge.cli.ProjectApplicationService",
+        "docforge.cli.ProjectApplicationService",
         lambda: ReportService(failure=True),
     )
     runner = CliRunner()

@@ -3,8 +3,8 @@ from typing import get_args, get_type_hints
 
 import pytest
 
-from thesis_forge.core import render_plan
-from thesis_forge.core.render_plan import (
+from docforge.core import render_plan
+from docforge.core.render_plan import (
     CitationRun,
     FigureInstruction,
     FootnoteReferenceRun,

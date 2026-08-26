@@ -3,17 +3,17 @@ from pathlib import Path
 
 import pytest
 
-from thesis_forge.bibliography import (
+from docforge.bibliography import (
     Gbt7714Formatter,
     LocalBibTeXLoader,
     UnsupportedCitationStyleError,
 )
-from thesis_forge.core.compiler import (
+from docforge.core.compiler import (
     BookmarkCollisionError,
     TableCompilationError,
     compile_document,
 )
-from thesis_forge.core.model import (
+from docforge.core.model import (
     Algorithm,
     BibliographyBlock,
     BibliographyConfig,
@@ -34,8 +34,8 @@ from thesis_forge.core.model import (
     TableRow,
     Text,
 )
-from thesis_forge.core.parser_backend import create_parser_backend
-from thesis_forge.core.render_plan import (
+from docforge.core.parser_backend import create_parser_backend
+from docforge.core.render_plan import (
     AlgorithmInstruction,
     BibliographyInstruction,
     CitationRun,
@@ -58,7 +58,7 @@ from thesis_forge.core.render_plan import (
     TocEntryInstruction,
     TocInstruction,
 )
-from thesis_forge.templates import LengthSpec, SectionsSpec, load_template
+from docforge.templates import LengthSpec, SectionsSpec, load_template
 
 PARSER = create_parser_backend()
 

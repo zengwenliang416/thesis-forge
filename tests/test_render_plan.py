@@ -3,7 +3,7 @@ from typing import get_args
 
 import pytest
 
-from thesis_forge.core.render_plan import (
+from docforge.core.render_plan import (
     BibliographyEntryInstruction,
     BibliographyInstruction,
     CaptionRuns,

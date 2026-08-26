@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import argparse
+import configparser
 import hashlib
 import json
 import os
@@ -21,19 +22,26 @@ from packaging.requirements import Requirement
 
 ROOT = Path(__file__).resolve().parents[1]
 REQUIRED_WHEEL_FILES = {
-    "thesis_forge/template_data/base/bachelor.yaml",
-    "thesis_forge/template_data/schools/example-university/2026.yaml",
+    "docforge/template_data/base/bachelor.yaml",
+    "docforge/template_data/schools/hunan-university-of-technology/master-2026.yaml",
+    "docforge/template_data/schools/example-university/2026.yaml",
+    "docforge/template_data/schools/project-proposal/2026.yaml",
+}
+EXPECTED_ENTRY_POINTS = {
+    "console_scripts": {
+        "docforge": "docforge.cli:app",
+    },
 }
 REQUIRED_SDIST_FILES = {
     "README.md",
     "pyproject.toml",
-    "src/thesis_forge/cli.py",
+    "src/docforge/cli.py",
     "templates/base/bachelor.yaml",
     "templates/schools/example-university/2026.yaml",
     "scripts/verify_distribution.py",
 }
 PROVENANCE_MODULES = (
-    "thesis_forge",
+    "docforge",
     "docx",
     "lxml",
     "pydantic",
@@ -58,8 +66,8 @@ def _project_version() -> str:
 
 def _distribution_paths(dist_dir: Path) -> tuple[Path, Path]:
     version = _project_version()
-    wheel = dist_dir / f"thesis_forge-{version}-py3-none-any.whl"
-    sdist = dist_dir / f"thesis_forge-{version}.tar.gz"
+    wheel = dist_dir / f"docforge-{version}-py3-none-any.whl"
+    sdist = dist_dir / f"docforge-{version}.tar.gz"
     missing = [str(path) for path in (wheel, sdist) if not path.is_file()]
     if missing:
         raise RuntimeError(f"Missing distribution artifacts: {', '.join(missing)}")
@@ -86,8 +94,17 @@ def _inspect_wheel(wheel: Path) -> dict[str, object]:
         if len(entry_points) != 1:
             raise RuntimeError(f"{wheel.name} has invalid entry point metadata")
         text = archive.read(entry_points[0]).decode("utf-8")
-        if "thesisforge = thesis_forge.cli:app" not in text:
-            raise RuntimeError(f"{wheel.name} misses the thesisforge console entry point")
+        parser = configparser.ConfigParser(interpolation=None)
+        parser.read_string(text)
+        actual_entry_points = {
+            section: dict(parser.items(section, raw=True))
+            for section in parser.sections()
+        }
+        if actual_entry_points != EXPECTED_ENTRY_POINTS:
+            raise RuntimeError(
+                f"{wheel.name} has unexpected console entry points: "
+                f"{actual_entry_points}"
+            )
 
     return {
         "path": str(wheel),
@@ -229,6 +246,7 @@ def _write_offline_launcher(directory: Path, cli: Path) -> Path:
         "    raise RuntimeError('network access blocked by distribution verification')\n"
         "socket.create_connection = blocked\n"
         "socket.socket.connect = blocked\n"
+        "socket.socket.connect_ex = blocked\n"
         f"sys.argv = [{str(cli)!r}, *sys.argv[1:]]\n"
         f"runpy.run_path({str(cli)!r}, run_name='__main__')\n",
         encoding="utf-8",
@@ -237,7 +255,7 @@ def _write_offline_launcher(directory: Path, cli: Path) -> Path:
 
 
 def _verify_installed_wheel(wheel: Path) -> dict[str, object]:
-    with tempfile.TemporaryDirectory(prefix="thesisforge-dist-") as raw_temp:
+    with tempfile.TemporaryDirectory(prefix="docforge-dist-") as raw_temp:
         temp = Path(raw_temp)
         install_root = temp / "install"
         scheme_vars = {
@@ -247,7 +265,7 @@ def _verify_installed_wheel(wheel: Path) -> dict[str, object]:
         installed_site = Path(sysconfig.get_path("purelib", vars=scheme_vars))
         scripts_dir = Path(sysconfig.get_path("scripts", vars=scheme_vars))
         suffix = ".exe" if os.name == "nt" else ""
-        cli = scripts_dir / f"thesisforge{suffix}"
+        cli = scripts_dir / f"docforge{suffix}"
         dependencies = _copy_runtime_dependencies(installed_site)
 
         base_env = _verification_environment()
@@ -269,7 +287,7 @@ def _verify_installed_wheel(wheel: Path) -> dict[str, object]:
             env=base_env,
         )
 
-        source = ROOT / "tests" / "fixtures" / "v2-project"
+        source = ROOT / "tests" / "fixtures" / "docforge-academic"
         workspace = temp / "workspace"
         shutil.copytree(source, workspace)
         launcher = _write_offline_launcher(temp, cli)
@@ -288,7 +306,7 @@ def _verify_installed_wheel(wheel: Path) -> dict[str, object]:
                     "print(json.dumps({"
                     "'imports': {name: modules[name].__file__ for name in names}, "
                     "'sys_path': sys.path, "
-                    "'templates': str(resources.files('thesis_forge') / 'template_data')"
+                    "'templates': str(resources.files('docforge') / 'template_data')"
                     "}))"
                 ),
             ],
@@ -329,12 +347,14 @@ def _verify_installed_wheel(wheel: Path) -> dict[str, object]:
         command = [sys.executable, "-S", str(launcher)]
         _run([*command, "inspect", str(workspace)], cwd=workspace, env=offline_env)
         _run([*command, "validate", str(workspace)], cwd=workspace, env=offline_env)
-        output = workspace / "output" / "thesis.docx"
-        _run(
-            [*command, "build", str(workspace), "-o", str(output)],
-            cwd=workspace,
-            env=offline_env,
-        )
+        _run([*command, "review", str(workspace)], cwd=workspace, env=offline_env)
+        review_dir = workspace / "review"
+        review_markdown = review_dir / "document.review.md"
+        review_map = review_dir / "document.review-map.json"
+        if not review_markdown.is_file() or not review_map.is_file():
+            raise RuntimeError("Installed CLI did not produce DocForge Review artifacts")
+        _run([*command, "build", str(workspace)], cwd=workspace, env=offline_env)
+        output = workspace / "build" / "document.docx"
         if not output.is_file() or not zipfile.is_zipfile(output):
             raise RuntimeError("Installed CLI did not produce a valid DOCX ZIP package")
 
@@ -344,6 +364,8 @@ def _verify_installed_wheel(wheel: Path) -> dict[str, object]:
             "imports": {name: str(path) for name, path in import_paths.items()},
             "sys_path": installed["sys_path"],
             "templates": installed["templates"],
+            "review_markdown_bytes": review_markdown.stat().st_size,
+            "review_map_bytes": review_map.stat().st_size,
             "docx_bytes": output.stat().st_size,
             "docx_sha256": _sha256(output),
         }
@@ -351,7 +373,7 @@ def _verify_installed_wheel(wheel: Path) -> dict[str, object]:
 
 def main() -> int:
     parser = argparse.ArgumentParser(
-        description="Inspect ThesisForge distributions and verify the installed wheel offline."
+        description="Inspect DocForge distributions and verify the installed wheel offline."
     )
     parser.add_argument("--dist-dir", type=Path, default=ROOT / "dist")
     args = parser.parse_args()

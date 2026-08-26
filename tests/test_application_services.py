@@ -12,8 +12,8 @@ from zipfile import ZIP_DEFLATED, ZIP_STORED, ZipFile
 import pytest
 from lxml import etree
 
-from thesis_forge import application
-from thesis_forge.application import (
+from docforge import application
+from docforge.application import (
     ApplicationDependencies,
     ApplicationStageError,
     BuildStage,
@@ -23,12 +23,12 @@ from thesis_forge.application import (
     inspect_service,
     validation_service,
 )
-from thesis_forge.application.contracts import (
+from docforge.application.contracts import (
     ProjectIdentity,
     ProjectRequest,
     ProjectRequestIntent,
 )
-from thesis_forge.application.office_refresh import (
+from docforge.application.office_refresh import (
     _CREATE_NEW_PROCESS_GROUP,
     _CREATE_NO_WINDOW,
     _CREATE_SUSPENDED,
@@ -44,11 +44,11 @@ from thesis_forge.application.office_refresh import (
     discover_libreoffice_python,
     refresh_document_safely,
 )
-from thesis_forge.application.output import replace_output, temporary_output_path
-from thesis_forge.application.services import ProjectApplicationService
-from thesis_forge.core.parser_backend import create_parser_backend
-from thesis_forge.core.validator import ValidationContext
-from thesis_forge.renderers.docx.package import (
+from docforge.application.output import replace_output, temporary_output_path
+from docforge.application.services import ProjectApplicationService
+from docforge.core.parser_backend import create_parser_backend
+from docforge.core.validator import ValidationContext
+from docforge.renderers.docx.package import (
     DocxPackageValidationError,
     validate_docx_package,
 )
@@ -82,7 +82,7 @@ def _canonical_dependencies(**overrides):
 @pytest.fixture(autouse=True)
 def _disable_default_pdf_preview(monkeypatch):
     monkeypatch.setattr(
-        "thesis_forge.application.pdf_preview.discover_libreoffice_executable",
+        "docforge.application.pdf_preview.discover_libreoffice_executable",
         lambda: None,
     )
 
@@ -464,7 +464,7 @@ def test_libreoffice_runner_uses_headless_unique_process_state_and_cleans_profil
     monkeypatch.setattr(subprocess, "Popen", fake_popen)
     monkeypatch.setattr(subprocess, "run", fake_run)
     monkeypatch.setattr(
-        "thesis_forge.application.office_refresh._terminate_process_tree",
+        "docforge.application.office_refresh._terminate_process_tree",
         record_termination,
     )
 
@@ -496,10 +496,10 @@ def test_libreoffice_temporary_root_prefers_short_macos_root(
     monkeypatch,
 ):
     monkeypatch.setattr(
-        "thesis_forge.application.office_refresh.sys.platform", "darwin"
+        "docforge.application.office_refresh.sys.platform", "darwin"
     )
     monkeypatch.setattr(
-        "thesis_forge.application.office_refresh._MACOS_TEMPORARY_ROOT",
+        "docforge.application.office_refresh._MACOS_TEMPORARY_ROOT",
         str(tmp_path),
     )
 
@@ -511,10 +511,10 @@ def test_libreoffice_temporary_root_falls_back_when_macos_root_missing(
     monkeypatch,
 ):
     monkeypatch.setattr(
-        "thesis_forge.application.office_refresh.sys.platform", "darwin"
+        "docforge.application.office_refresh.sys.platform", "darwin"
     )
     monkeypatch.setattr(
-        "thesis_forge.application.office_refresh._MACOS_TEMPORARY_ROOT",
+        "docforge.application.office_refresh._MACOS_TEMPORARY_ROOT",
         str(tmp_path / "missing"),
     )
 
@@ -531,10 +531,10 @@ def test_libreoffice_temporary_root_falls_back_when_macos_root_not_writable(
     if os.access(read_only, os.W_OK):
         pytest.skip("non-writable check requires a non-root user")
     monkeypatch.setattr(
-        "thesis_forge.application.office_refresh.sys.platform", "darwin"
+        "docforge.application.office_refresh.sys.platform", "darwin"
     )
     monkeypatch.setattr(
-        "thesis_forge.application.office_refresh._MACOS_TEMPORARY_ROOT",
+        "docforge.application.office_refresh._MACOS_TEMPORARY_ROOT",
         str(read_only),
     )
 
@@ -543,7 +543,7 @@ def test_libreoffice_temporary_root_falls_back_when_macos_root_not_writable(
 
 def test_libreoffice_temporary_root_uses_default_off_macos(monkeypatch):
     monkeypatch.setattr(
-        "thesis_forge.application.office_refresh.sys.platform", "linux"
+        "docforge.application.office_refresh.sys.platform", "linux"
     )
 
     assert _libreoffice_temporary_root() is None
@@ -577,16 +577,16 @@ def test_libreoffice_runner_falls_back_to_default_temporary_root(
         return subprocess.CompletedProcess(command, 0, "", "")
 
     monkeypatch.setattr(
-        "thesis_forge.application.office_refresh.sys.platform", "darwin"
+        "docforge.application.office_refresh.sys.platform", "darwin"
     )
     monkeypatch.setattr(
-        "thesis_forge.application.office_refresh._MACOS_TEMPORARY_ROOT",
+        "docforge.application.office_refresh._MACOS_TEMPORARY_ROOT",
         str(missing_root),
     )
     monkeypatch.setattr(subprocess, "Popen", fake_popen)
     monkeypatch.setattr(subprocess, "run", fake_run)
     monkeypatch.setattr(
-        "thesis_forge.application.office_refresh._terminate_process_tree",
+        "docforge.application.office_refresh._terminate_process_tree",
         lambda _process, *, windows_job=None: None,
     )
 
@@ -626,7 +626,7 @@ def test_windows_process_tree_cleanup_falls_back_when_taskkill_fails(monkeypatch
         raise subprocess.CalledProcessError(1, command)
 
     process = FakeProcess()
-    monkeypatch.setattr("thesis_forge.application.office_refresh.os.name", "nt")
+    monkeypatch.setattr("docforge.application.office_refresh.os.name", "nt")
     monkeypatch.setattr(subprocess, "run", failing_taskkill)
 
     _terminate_process_tree(process)

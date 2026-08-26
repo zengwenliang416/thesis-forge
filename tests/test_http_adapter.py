@@ -7,14 +7,14 @@ from pathlib import Path
 
 import pytest
 
-from thesis_forge.adapters import (
+from docforge.adapters import (
     PROTOCOL_VERSION,
     DesktopRuntime,
     WebWorkspaceRuntime,
     WorkbenchCommandDispatcher,
     WorkbenchHttpApp,
 )
-from thesis_forge.application import BuildCanceledError, BuildResult, BuildStage
+from docforge.application import BuildCanceledError, BuildResult, BuildStage
 
 
 def _request(source: Path, output: Path) -> dict:

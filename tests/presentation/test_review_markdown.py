@@ -4,7 +4,7 @@ from pathlib import Path
 
 import pytest
 
-from thesis_forge.presentation.review import (
+from docforge.presentation.review import (
     ReviewAlgorithmContent,
     ReviewBibliographyContent,
     ReviewBibliographyEntry,
@@ -39,7 +39,7 @@ from thesis_forge.presentation.review import (
     ReviewTocContent,
     ReviewTocEntry,
 )
-from thesis_forge.presentation.review_markdown import (
+from docforge.presentation.review_markdown import (
     render_review_markdown,
     serialize_review_markdown,
 )

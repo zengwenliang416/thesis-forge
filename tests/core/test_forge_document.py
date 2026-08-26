@@ -2,10 +2,10 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from thesis_forge import core
-from thesis_forge.core import model
-from thesis_forge.core.index import DocumentIndex
-from thesis_forge.core.parser_backend import create_parser_backend
+from docforge import core
+from docforge.core import model
+from docforge.core.index import DocumentIndex
+from docforge.core.parser_backend import create_parser_backend
 
 SOURCE = """# 概述 {#chap:overview}
 

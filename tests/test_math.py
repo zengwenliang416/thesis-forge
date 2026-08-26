@@ -1,6 +1,6 @@
 import pytest
 
-from thesis_forge.core.math import (
+from docforge.core.math import (
     LatexMathConverter,
     MathAccent,
     MathBinomial,

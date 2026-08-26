@@ -5,21 +5,21 @@ import importlib
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-PRODUCTION = ROOT / "src" / "thesis_forge"
+PRODUCTION = ROOT / "src" / "docforge"
 LEGACY_IMPLEMENTATION = PRODUCTION / "core" / "parser.py"
 
 
 def _imports_legacy_parser(node: ast.AST) -> bool:
     if isinstance(node, ast.Import):
         return any(
-            alias.name in {"core.parser", "thesis_forge.core.parser"}
+            alias.name in {"core.parser", "docforge.core.parser"}
             for alias in node.names
         )
     if not isinstance(node, ast.ImportFrom):
         return False
     if node.level and node.module == "parser":
         return True
-    return node.module in {"core.parser", "thesis_forge.core.parser"}
+    return node.module in {"core.parser", "docforge.core.parser"}
 
 
 def test_production_modules_do_not_import_legacy_parser() -> None:
@@ -35,10 +35,10 @@ def test_production_modules_do_not_import_legacy_parser() -> None:
 
 
 def test_core_public_surface_exposes_only_canonical_parser_entry() -> None:
-    core = importlib.import_module("thesis_forge.core")
+    core = importlib.import_module("docforge.core")
 
     assert not hasattr(core, "parse_markdown")
     assert not hasattr(core, "parse_markdown_text")
-    assert core.ParseError.__module__ == "thesis_forge.core.parser_support"
+    assert core.ParseError.__module__ == "docforge.core.parser_support"
     backend = core.create_parser_backend()
     assert type(backend) is core.MarkdownItParserBackend

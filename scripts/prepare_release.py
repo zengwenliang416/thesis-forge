@@ -94,12 +94,12 @@ def prepare_macos_release(
     )
     wheel = _single_artifact(
         python_dist,
-        f"thesis_forge-{version}-py3-none-any.whl",
+        f"docforge-{version}-py3-none-any.whl",
         "Python wheel",
     )
     source_dist = _single_artifact(
         python_dist,
-        f"thesis_forge-{version}.tar.gz",
+        f"docforge-{version}.tar.gz",
         "Python source",
     )
 
@@ -123,8 +123,8 @@ def prepare_macos_release(
                 "## 下载",
                 "",
                 f"- `ThesisForge_{version}_aarch64.dmg`: macOS Apple Silicon 安装包。",
-                f"- `thesis_forge-{version}-py3-none-any.whl`: Python wheel。",
-                f"- `thesis_forge-{version}.tar.gz`: Python 源码分发包。",
+                f"- `docforge-{version}-py3-none-any.whl`: Python wheel。",
+                f"- `docforge-{version}.tar.gz`: Python 源码分发包。",
                 "",
                 "## 安全提示",
                 "",

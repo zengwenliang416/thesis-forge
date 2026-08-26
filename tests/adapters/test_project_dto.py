@@ -4,7 +4,7 @@ from pathlib import Path
 
 import pytest
 
-from thesis_forge.adapters.dto import (
+from docforge.adapters.dto import (
     ProjectRequestPayload,
     read_project_request_payload,
 )

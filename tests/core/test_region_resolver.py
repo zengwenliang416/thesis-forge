@@ -7,24 +7,24 @@ import pytest
 from lxml import etree
 from pydantic import ValidationError
 
-from thesis_forge.application.contracts import PreviewResult
-from thesis_forge.core.compiler import compile_document
-from thesis_forge.core.parser_backend import create_parser_backend
-from thesis_forge.core.render_plan import (
+from docforge.application.contracts import PreviewResult
+from docforge.core.compiler import compile_document
+from docforge.core.parser_backend import create_parser_backend
+from docforge.core.render_plan import (
     PageBreakInstruction,
     SectionBreakInstruction,
     TocEntryInstruction,
     TocInstruction,
 )
-from thesis_forge.core.validator import ValidationContext
-from thesis_forge.presentation.review import (
+from docforge.core.validator import ValidationContext
+from docforge.presentation.review import (
     ReviewSectionContent,
     ReviewTocContent,
     map_review_result,
 )
-from thesis_forge.renderers.docx.package import validate_docx_package
-from thesis_forge.renderers.docx.renderer import DocxRenderer
-from thesis_forge.templates.v2.schema import RegionsSpec
+from docforge.renderers.docx.package import validate_docx_package
+from docforge.renderers.docx.renderer import DocxRenderer
+from docforge.templates.v2.schema import RegionsSpec
 
 ROOT = Path(__file__).resolve().parents[2]
 TEMPLATE_ROOT = ROOT / "templates"

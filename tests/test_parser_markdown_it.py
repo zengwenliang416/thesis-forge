@@ -14,8 +14,8 @@ from pathlib import Path
 import pytest
 from markdown_it import MarkdownIt
 
-from thesis_forge.core.index import DocumentIndex
-from thesis_forge.core.model import (
+from docforge.core.index import DocumentIndex
+from docforge.core.model import (
     BlockQuote,
     CodeBlock,
     Heading,
@@ -25,12 +25,12 @@ from thesis_forge.core.model import (
     Table,
     inline_plain_text,
 )
-from thesis_forge.core.parser_backend import (
+from docforge.core.parser_backend import (
     ParserBackend,
     create_parser_backend,
 )
-from thesis_forge.core.parser_markdown_it import MarkdownItParserBackend
-from thesis_forge.core.parser_support import ParseError
+from docforge.core.parser_markdown_it import MarkdownItParserBackend
+from docforge.core.parser_support import ParseError
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 PARSER_DIFF_PATH = REPO_ROOT / "qa" / "tools" / "parser_diff.py"
@@ -215,7 +215,7 @@ def test_legacy_container_error_is_explicit() -> None:
 def test_front_matter_is_rejected_with_replacement(text: str) -> None:
     with pytest.raises(ParseError, match="TF-SOURCE-LEGACY-001") as captured:
         canonical.parse_text(text, source_path="err.md")
-    assert "thesisforge.yaml" in str(captured.value)
+    assert "docforge.yaml" in str(captured.value)
 
 
 @pytest.mark.parametrize(

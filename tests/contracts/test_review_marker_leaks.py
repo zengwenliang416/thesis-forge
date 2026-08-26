@@ -6,9 +6,9 @@ from pathlib import Path
 
 import pytest
 
-from thesis_forge.application.contracts import PreviewResult
-from thesis_forge.core.compiler import compile_document
-from thesis_forge.core.model import (
+from docforge.application.contracts import PreviewResult
+from docforge.core.compiler import compile_document
+from docforge.core.model import (
     Citation,
     CrossReference,
     Figure,
@@ -17,9 +17,9 @@ from thesis_forge.core.model import (
     Paragraph,
     SourceLocation,
 )
-from thesis_forge.core.parser_backend import create_parser_backend
-from thesis_forge.core.parser_support import ParseError
-from thesis_forge.core.render_plan import (
+from docforge.core.parser_backend import create_parser_backend
+from docforge.core.parser_support import ParseError
+from docforge.core.render_plan import (
     CitationRun,
     FigureInstruction,
     ListingInstruction,
@@ -27,8 +27,8 @@ from thesis_forge.core.render_plan import (
     ReferenceRun,
     RenderPlan,
 )
-from thesis_forge.core.validator import ValidationContext
-from thesis_forge.presentation.review import (
+from docforge.core.validator import ValidationContext
+from docforge.presentation.review import (
     ReviewAlgorithmContent,
     ReviewListingContent,
     ReviewParagraphContent,

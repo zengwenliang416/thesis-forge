@@ -3,10 +3,10 @@ from pathlib import Path
 import pytest
 from pydantic import ValidationError
 
-from thesis_forge.core.model import Algorithm, ForgeDocument, Heading, Listing, Text
-from thesis_forge.core.symbols import NumberingInputs, SymbolTable
-from thesis_forge.templates import load_template
-from thesis_forge.templates.model import (
+from docforge.core.model import Algorithm, ForgeDocument, Heading, Listing, Text
+from docforge.core.symbols import NumberingInputs, SymbolTable
+from docforge.templates import load_template
+from docforge.templates.model import (
     AlgorithmSpec,
     CaptionSpec,
     ListingSpec,

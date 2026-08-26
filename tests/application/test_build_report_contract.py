@@ -4,7 +4,7 @@ from pathlib import Path
 
 import pytest
 
-from thesis_forge.application.contracts import (
+from docforge.application.contracts import (
     ApplicationStageError,
     BuildDiagnostic,
     BuildDiagnosticCategory,
@@ -23,7 +23,7 @@ from thesis_forge.application.contracts import (
     BuildStageStatus,
     BuildValidationError,
 )
-from thesis_forge.core.model import ValidationIssue
+from docforge.core.model import ValidationIssue
 
 
 def _issue(
@@ -274,7 +274,7 @@ def test_diagnostic_contract_preserves_valid_related_locations() -> None:
         ),
         (
             __import__(
-                "thesis_forge.application.contracts",
+                "docforge.application.contracts",
                 fromlist=["BuildCanceledError"],
             ).BuildCanceledError(BuildStage.COMPILE),
             BuildOutcome.CANCELED,

@@ -5,7 +5,7 @@ from copy import deepcopy
 import pytest
 from pydantic import ValidationError
 
-from thesis_forge.project import (
+from docforge.project import (
     DEFAULT_DOCX_PATH,
     DEFAULT_REVIEW_MAP_PATH,
     DEFAULT_REVIEW_MARKDOWN_PATH,

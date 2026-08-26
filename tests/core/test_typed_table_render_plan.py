@@ -3,8 +3,8 @@ from pathlib import Path
 
 import pytest
 
-from thesis_forge.core.compiler import compile_document
-from thesis_forge.core.model import (
+from docforge.core.compiler import compile_document
+from docforge.core.model import (
     Citation,
     CrossReference,
     Emphasis,
@@ -23,7 +23,7 @@ from thesis_forge.core.model import (
     TableRow,
     Text,
 )
-from thesis_forge.core.render_plan import (
+from docforge.core.render_plan import (
     CitationRun,
     FootnoteReferenceRun,
     HardBreakRun,

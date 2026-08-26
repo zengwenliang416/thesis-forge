@@ -4,7 +4,7 @@ from pathlib import Path
 
 import pytest
 
-from thesis_forge.core.model import (
+from docforge.core.model import (
     Emphasis,
     HardBreak,
     InlineCode,
@@ -15,8 +15,8 @@ from thesis_forge.core.model import (
     Strong,
     Text,
 )
-from thesis_forge.core.parser_markdown_it import MarkdownItParserBackend
-from thesis_forge.core.parser_support import ParseError
+from docforge.core.parser_markdown_it import MarkdownItParserBackend
+from docforge.core.parser_support import ParseError
 
 
 def _paragraph(source: str) -> Paragraph:

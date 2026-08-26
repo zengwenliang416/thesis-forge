@@ -8,13 +8,13 @@ from docx import Document
 from docx.shared import Inches
 from lxml import etree
 
-import thesis_forge.renderers.docx.fields as fields_module
-import thesis_forge.renderers.docx.renderer as renderer_module
-import thesis_forge.renderers.docx.sections as sections_module
-from thesis_forge.bibliography import Gbt7714Formatter, LocalBibTeXLoader
-from thesis_forge.core.compiler import compile_document
-from thesis_forge.core.math import MathSyntaxError
-from thesis_forge.core.model import (
+import docforge.renderers.docx.fields as fields_module
+import docforge.renderers.docx.renderer as renderer_module
+import docforge.renderers.docx.sections as sections_module
+from docforge.bibliography import Gbt7714Formatter, LocalBibTeXLoader
+from docforge.core.compiler import compile_document
+from docforge.core.math import MathSyntaxError
+from docforge.core.model import (
     Algorithm,
     BibliographyBlock,
     Citation,
@@ -34,8 +34,8 @@ from thesis_forge.core.model import (
     TableRow,
     Text,
 )
-from thesis_forge.core.parser_backend import create_parser_backend
-from thesis_forge.core.render_plan import (
+from docforge.core.parser_backend import create_parser_backend
+from docforge.core.render_plan import (
     CitationRun,
     FootnoteDefinitionInstruction,
     FootnoteReferenceRun,
@@ -53,15 +53,15 @@ from thesis_forge.core.render_plan import (
     TocEntryInstruction,
     TocInstruction,
 )
-from thesis_forge.renderers.docx import DocxRenderer
-from thesis_forge.renderers.docx.errors import DocxRenderError
-from thesis_forge.renderers.docx.package import list_package_parts, read_package_part
-from thesis_forge.renderers.docx.styles import (
+from docforge.renderers.docx import DocxRenderer
+from docforge.renderers.docx.errors import DocxRenderError
+from docforge.renderers.docx.package import list_package_parts, read_package_part
+from docforge.renderers.docx.styles import (
     apply_paragraph_style,
     ensure_paragraph_style,
     resolve_paragraph_style,
 )
-from thesis_forge.templates import (
+from docforge.templates import (
     AbstractStyleSpec,
     BibliographySpec,
     CoverSpec,

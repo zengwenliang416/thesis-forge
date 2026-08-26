@@ -54,10 +54,10 @@ verify: test lint dependency-check verify-dist frontend-verify tauri-verify veri
 	git diff --check
 
 inspect:
-	$(PYTHON) -m thesis_forge.cli inspect examples/bachelor-thesis/thesis.md
+	$(PYTHON) -m docforge.cli inspect tests/fixtures/docforge-academic
 
 validate:
-	$(PYTHON) -m thesis_forge.cli validate examples/bachelor-thesis/thesis.md
+	$(PYTHON) -m docforge.cli validate tests/fixtures/docforge-academic
 
 build-example:
-	$(PYTHON) -m thesis_forge.cli build examples/bachelor-thesis/thesis.md -o output/thesis.docx
+	$(PYTHON) -m docforge.cli build tests/fixtures/docforge-academic

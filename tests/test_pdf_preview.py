@@ -7,7 +7,7 @@ from pathlib import Path
 
 import pytest
 
-from thesis_forge.application.pdf_preview import (
+from docforge.application.pdf_preview import (
     FallbackPdfPreviewExporter,
     LibreOfficePdfPreviewExporter,
     MicrosoftWordPdfPreviewExporter,
@@ -105,7 +105,7 @@ def test_installed_font_probe_safely_returns_empty_on_failure(
         return subprocess.CompletedProcess([], returncode, stdout="", stderr="")
 
     monkeypatch.setattr(
-        "thesis_forge.application.pdf_preview.subprocess.run",
+        "docforge.application.pdf_preview.subprocess.run",
         fake_run,
     )
 
@@ -114,7 +114,7 @@ def test_installed_font_probe_safely_returns_empty_on_failure(
 
 def test_installed_font_probe_splits_localized_family_aliases(monkeypatch):
     monkeypatch.setattr(
-        "thesis_forge.application.pdf_preview.subprocess.run",
+        "docforge.application.pdf_preview.subprocess.run",
         lambda *_args, **_kwargs: subprocess.CompletedProcess(
             [],
             0,
@@ -232,11 +232,11 @@ def test_microsoft_word_discovery_requires_word_and_platform_automation(
     osascript = tmp_path / "osascript"
     osascript.write_text("#!/bin/sh\n", encoding="utf-8")
     monkeypatch.setattr(
-        "thesis_forge.application.pdf_preview._MACOS_WORD_APP_PATHS",
+        "docforge.application.pdf_preview._MACOS_WORD_APP_PATHS",
         (word_app,),
     )
     monkeypatch.setattr(
-        "thesis_forge.application.pdf_preview.Path",
+        "docforge.application.pdf_preview.Path",
         lambda value: osascript if value == "/usr/bin/osascript" else Path(value),
     )
 
@@ -381,15 +381,15 @@ def test_microsoft_word_runner_uses_noninteractive_macos_script(
         return subprocess.CompletedProcess(command, 0, "", "")
 
     monkeypatch.setattr(
-        "thesis_forge.application.pdf_preview.sys.platform",
+        "docforge.application.pdf_preview.sys.platform",
         "darwin",
     )
     monkeypatch.setattr(
-        "thesis_forge.application.pdf_preview.subprocess.run",
+        "docforge.application.pdf_preview.subprocess.run",
         fake_run,
     )
     monkeypatch.setattr(
-        "thesis_forge.application.pdf_preview._macos_word_process_ids",
+        "docforge.application.pdf_preview._macos_word_process_ids",
         lambda: frozenset(),
     )
 
@@ -466,11 +466,11 @@ def test_preferred_exporter_skips_all_engines_after_cancellation(
     cancel_file.write_text("cancel", encoding="utf-8")
     monkeypatch.setenv("THESISFORGE_CANCEL_FILE", str(cancel_file))
     monkeypatch.setattr(
-        "thesis_forge.application.pdf_preview.discover_microsoft_word_automation",
+        "docforge.application.pdf_preview.discover_microsoft_word_automation",
         lambda: (_ for _ in ()).throw(AssertionError("Word discovery must not run")),
     )
     monkeypatch.setattr(
-        "thesis_forge.application.pdf_preview.discover_libreoffice_executable",
+        "docforge.application.pdf_preview.discover_libreoffice_executable",
         lambda: (_ for _ in ()).throw(
             AssertionError("LibreOffice discovery must not run")
         ),
@@ -532,7 +532,7 @@ def test_libreoffice_exporter_returns_none_when_runtime_is_missing(
         raise AssertionError("runner must not execute")
 
     monkeypatch.setattr(
-        "thesis_forge.application.pdf_preview.discover_libreoffice_executable",
+        "docforge.application.pdf_preview.discover_libreoffice_executable",
         lambda: None,
     )
 
@@ -661,19 +661,19 @@ def test_libreoffice_runner_uses_isolated_profile_and_process_cleanup(
         terminated.append((active_process, windows_job))
 
     monkeypatch.setattr(
-        "thesis_forge.application.pdf_preview.start_office_process",
+        "docforge.application.pdf_preview.start_office_process",
         fake_start,
     )
     monkeypatch.setattr(
-        "thesis_forge.application.pdf_preview._installed_font_families",
+        "docforge.application.pdf_preview._installed_font_families",
         lambda: frozenset({"Songti SC", "Heiti SC"}),
     )
     monkeypatch.setattr(
-        "thesis_forge.application.pdf_preview.sys.platform",
+        "docforge.application.pdf_preview.sys.platform",
         "darwin",
     )
     monkeypatch.setattr(
-        "thesis_forge.application.pdf_preview.terminate_office_process_tree",
+        "docforge.application.pdf_preview.terminate_office_process_tree",
         fake_terminate,
     )
 
@@ -731,15 +731,15 @@ def test_libreoffice_runner_uses_source_docx_when_font_probe_has_no_candidate(
         return FakeProcess(), None
 
     monkeypatch.setattr(
-        "thesis_forge.application.pdf_preview._installed_font_families",
+        "docforge.application.pdf_preview._installed_font_families",
         lambda: frozenset(),
     )
     monkeypatch.setattr(
-        "thesis_forge.application.pdf_preview.start_office_process",
+        "docforge.application.pdf_preview.start_office_process",
         fake_start,
     )
     monkeypatch.setattr(
-        "thesis_forge.application.pdf_preview.terminate_office_process_tree",
+        "docforge.application.pdf_preview.terminate_office_process_tree",
         lambda _process, *, windows_job=None: None,
     )
 
@@ -779,15 +779,15 @@ def test_libreoffice_runner_uses_source_docx_without_macos_aliases(
         return FakeProcess(), None
 
     monkeypatch.setattr(
-        "thesis_forge.application.pdf_preview.sys.platform",
+        "docforge.application.pdf_preview.sys.platform",
         platform,
     )
     monkeypatch.setattr(
-        "thesis_forge.application.pdf_preview.start_office_process",
+        "docforge.application.pdf_preview.start_office_process",
         fake_start,
     )
     monkeypatch.setattr(
-        "thesis_forge.application.pdf_preview.terminate_office_process_tree",
+        "docforge.application.pdf_preview.terminate_office_process_tree",
         lambda _process, *, windows_job=None: None,
     )
 
@@ -822,11 +822,11 @@ def test_libreoffice_runner_cleans_process_tree_after_timeout(
     job = object()
 
     monkeypatch.setattr(
-        "thesis_forge.application.pdf_preview.start_office_process",
+        "docforge.application.pdf_preview.start_office_process",
         lambda _command: (process, job),
     )
     monkeypatch.setattr(
-        "thesis_forge.application.pdf_preview.terminate_office_process_tree",
+        "docforge.application.pdf_preview.terminate_office_process_tree",
         lambda active_process, *, windows_job=None: terminated.append(
             (active_process, windows_job)
         ),
@@ -872,22 +872,22 @@ def test_libreoffice_runner_falls_back_to_default_temporary_root(
         return FakeProcess(), None
 
     monkeypatch.setattr(
-        "thesis_forge.application.pdf_preview.sys.platform", "darwin"
+        "docforge.application.pdf_preview.sys.platform", "darwin"
     )
     monkeypatch.setattr(
-        "thesis_forge.application.office_refresh._MACOS_TEMPORARY_ROOT",
+        "docforge.application.office_refresh._MACOS_TEMPORARY_ROOT",
         str(missing_root),
     )
     monkeypatch.setattr(
-        "thesis_forge.application.pdf_preview._installed_font_families",
+        "docforge.application.pdf_preview._installed_font_families",
         lambda: frozenset(),
     )
     monkeypatch.setattr(
-        "thesis_forge.application.pdf_preview.start_office_process",
+        "docforge.application.pdf_preview.start_office_process",
         fake_start,
     )
     monkeypatch.setattr(
-        "thesis_forge.application.pdf_preview.terminate_office_process_tree",
+        "docforge.application.pdf_preview.terminate_office_process_tree",
         lambda _process, *, windows_job=None: None,
     )
 

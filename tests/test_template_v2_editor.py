@@ -25,11 +25,11 @@ import pytest
 import yaml
 from lxml import etree
 
-from thesis_forge.application import preview_service
-from thesis_forge.renderers.docx import DocxRenderer
-from thesis_forge.templates import v2
-from thesis_forge.templates.v2 import lint as lint_mod
-from thesis_forge.templates.v2.package_editor import (
+from docforge.application import preview_service
+from docforge.renderers.docx import DocxRenderer
+from docforge.templates import v2
+from docforge.templates.v2 import lint as lint_mod
+from docforge.templates.v2.package_editor import (
     PackageEditor,
     PackageMergeError,
     PackageView,
@@ -839,7 +839,7 @@ def test_lint_l5_expected_manifest_checked(package_copy: Path) -> None:
 def test_cli_template_lint_level_l5() -> None:
     from typer.testing import CliRunner
 
-    from thesis_forge.cli import app
+    from docforge.cli import app
 
     result = CliRunner().invoke(
         app, ["template", "lint", str(SAMPLE_PACKAGE), "--level", "L5", "--json"]

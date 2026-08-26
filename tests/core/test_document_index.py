@@ -7,8 +7,8 @@ from pathlib import Path
 
 import pytest
 
-from thesis_forge.core.index import DocumentIndex, DuplicateIdConflict
-from thesis_forge.core.model import (
+from docforge.core.index import DocumentIndex, DuplicateIdConflict
+from docforge.core.model import (
     Algorithm,
     Block,
     BlockQuote,

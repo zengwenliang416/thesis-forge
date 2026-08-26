@@ -5,15 +5,15 @@ from zipfile import ZipFile
 
 from lxml import etree
 
-from thesis_forge.core.compiler import compile_document
-from thesis_forge.core.parser_markdown_it import MarkdownItParserBackend
-from thesis_forge.core.render_plan import (
+from docforge.core.compiler import compile_document
+from docforge.core.parser_markdown_it import MarkdownItParserBackend
+from docforge.core.render_plan import (
     BlockQuoteInstruction,
     CodeBlockInstruction,
     ParagraphInstruction,
     TextRun,
 )
-from thesis_forge.renderers.docx import DocxRenderer
+from docforge.renderers.docx import DocxRenderer
 
 NS = {
     "w": "http://schemas.openxmlformats.org/wordprocessingml/2006/main",

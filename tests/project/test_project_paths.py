@@ -6,8 +6,8 @@ from pathlib import Path
 import pytest
 import yaml
 
-from thesis_forge.project.loader import load_project
-from thesis_forge.project.paths import (
+from docforge.project.loader import load_project
+from docforge.project.paths import (
     ProjectPathError,
     resolve_project_path,
     resolve_project_paths,

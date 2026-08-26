@@ -1,36 +1,37 @@
 from __future__ import annotations
 
 import json
+import shutil
 from pathlib import Path
 
 from typer.testing import CliRunner
 
-from thesis_forge.application.contracts import (
+from docforge.application.contracts import (
     PreviewResult,
     ProjectRequestIntent,
 )
-from thesis_forge.cli import app
-from thesis_forge.core.model import (
+from docforge.cli import app
+from docforge.core.model import (
     ForgeDocument,
     Heading,
     SourceLocation,
     Text,
     ValidationIssue,
 )
-from thesis_forge.core.render_plan import (
+from docforge.core.render_plan import (
     HeadingInstruction,
     ParagraphInstruction,
     RenderPlan,
     TextRun,
 )
-from thesis_forge.core.validator import ValidationContext
+from docforge.core.validator import ValidationContext
 
-PROJECT = Path(__file__).resolve().parents[1] / "fixtures" / "v2-project"
+PROJECT = Path(__file__).resolve().parents[1] / "fixtures" / "docforge-academic"
 
 
 def _preview(*, blocked: bool = False) -> PreviewResult:
     document = ForgeDocument(
-        source_path=PROJECT / "thesis.md",
+        source_path=PROJECT / "document.md",
         blocks=[
             Heading(
                 id="chap:introduction",
@@ -91,7 +92,7 @@ def test_review_exports_markdown_and_source_map(
 ) -> None:
     service = RecordingReviewService()
     monkeypatch.setattr(
-        "thesis_forge.cli.ProjectApplicationService",
+        "docforge.cli.ProjectApplicationService",
         lambda: service,
     )
     output_dir = tmp_path / "review-export"
@@ -102,8 +103,8 @@ def test_review_exports_markdown_and_source_map(
     )
 
     assert result.exit_code == 0, result.stdout
-    markdown_path = output_dir / "thesis.review.md"
-    source_map_path = output_dir / "thesis.review-map.json"
+    markdown_path = output_dir / "document.review.md"
+    source_map_path = output_dir / "document.review-map.json"
     assert markdown_path.is_file()
     assert source_map_path.is_file()
     markdown = markdown_path.read_text(encoding="utf-8")
@@ -123,10 +124,34 @@ def test_review_exports_markdown_and_source_map(
     assert payload["issues"] == []
 
 
+def test_review_uses_manifest_paths_when_output_dir_is_omitted(
+    monkeypatch,
+    tmp_path: Path,
+) -> None:
+    service = RecordingReviewService()
+    monkeypatch.setattr(
+        "docforge.cli.ProjectApplicationService",
+        lambda: service,
+    )
+    project = tmp_path / "project"
+    shutil.copytree(PROJECT, project)
+
+    result = CliRunner().invoke(app, ["review", str(project)])
+
+    assert result.exit_code == 0, result.stdout
+    markdown_path = project / "review" / "document.review.md"
+    source_map_path = project / "review" / "document.review-map.json"
+    assert markdown_path.is_file()
+    assert source_map_path.is_file()
+    payload = json.loads(result.stdout)
+    assert payload["markdown"] == str(markdown_path.resolve())
+    assert payload["sourceMap"] == str(source_map_path.resolve())
+
+
 def test_review_accepts_manifest_path(monkeypatch, tmp_path: Path) -> None:
     service = RecordingReviewService()
     monkeypatch.setattr(
-        "thesis_forge.cli.ProjectApplicationService",
+        "docforge.cli.ProjectApplicationService",
         lambda: service,
     )
 
@@ -134,7 +159,7 @@ def test_review_accepts_manifest_path(monkeypatch, tmp_path: Path) -> None:
         app,
         [
             "review",
-            str(PROJECT / "thesisforge.yaml"),
+            str(PROJECT / "docforge.yaml"),
             "--output-dir",
             str(tmp_path),
         ],
@@ -142,7 +167,7 @@ def test_review_accepts_manifest_path(monkeypatch, tmp_path: Path) -> None:
 
     assert result.exit_code == 0, result.stdout
     assert service.requests[0].project.manifest_path == (
-        PROJECT / "thesisforge.yaml"
+        PROJECT / "docforge.yaml"
     ).resolve()
 
 
@@ -151,7 +176,7 @@ def test_review_rejects_bare_markdown_with_structured_error(tmp_path: Path) -> N
         app,
         [
             "review",
-            str(PROJECT / "thesis.md"),
+            str(PROJECT / "document.md"),
             "--output-dir",
             str(tmp_path),
         ],
@@ -160,7 +185,7 @@ def test_review_rejects_bare_markdown_with_structured_error(tmp_path: Path) -> N
     assert result.exit_code == 2
     payload = json.loads(result.stdout)
     assert payload["error"]["code"] == "TF-PROJECT-ENTRY-REQUIRED"
-    assert not (tmp_path / "thesis.review.md").exists()
+    assert not (tmp_path / "document.review.md").exists()
     assert "Traceback" not in result.stdout
 
 
@@ -170,7 +195,7 @@ def test_review_writes_blocked_artifacts_and_returns_diagnostic(
 ) -> None:
     service = RecordingReviewService(blocked=True)
     monkeypatch.setattr(
-        "thesis_forge.cli.ProjectApplicationService",
+        "docforge.cli.ProjectApplicationService",
         lambda: service,
     )
     output_dir = tmp_path / "blocked-review"
@@ -181,9 +206,9 @@ def test_review_writes_blocked_artifacts_and_returns_diagnostic(
     )
 
     assert result.exit_code == 1, result.stdout
-    markdown = (output_dir / "thesis.review.md").read_text(encoding="utf-8")
+    markdown = (output_dir / "document.review.md").read_text(encoding="utf-8")
     source_map = json.loads(
-        (output_dir / "thesis.review-map.json").read_text(encoding="utf-8")
+        (output_dir / "document.review-map.json").read_text(encoding="utf-8")
     )
     payload = json.loads(result.stdout)
     assert payload["status"] == "blocked"

@@ -5,7 +5,7 @@ from typing import get_type_hints
 
 import pytest
 
-from thesis_forge.application.contracts import (
+from docforge.application.contracts import (
     ProjectIdentity,
     ProjectOutput,
     ProjectRequest,

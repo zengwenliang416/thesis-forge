@@ -4,14 +4,14 @@ import json
 
 import pytest
 
-from thesis_forge.presentation.review import (
+from docforge.presentation.review import (
     ReviewBlock,
     ReviewDocument,
     ReviewHeadingContent,
     ReviewParagraphContent,
     ReviewSource,
 )
-from thesis_forge.presentation.review_markdown import (
+from docforge.presentation.review_markdown import (
     ReviewMarkdownBlock,
     ReviewMarkdownResult,
     render_review_markdown,

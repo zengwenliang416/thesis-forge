@@ -1,13 +1,13 @@
 from pathlib import Path
 
-from thesis_forge.application.contracts import (
+from docforge.application.contracts import (
     BuildDiagnosticCategory,
     BuildIntent,
     BuildReportStage,
     BuildSourceRange,
     BuildValidationError,
 )
-from thesis_forge.core.model import (
+from docforge.core.model import (
     BibliographyConfig,
     BlockQuote,
     Figure,
@@ -17,9 +17,9 @@ from thesis_forge.core.model import (
     Text,
     ValidationIssue,
 )
-from thesis_forge.core.parser_backend import create_parser_backend
-from thesis_forge.core.validator import ValidationContext, validate_document
-from thesis_forge.templates import load_template
+from docforge.core.parser_backend import create_parser_backend
+from docforge.core.validator import ValidationContext, validate_document
+from docforge.templates import load_template
 
 PARSER = create_parser_backend()
 

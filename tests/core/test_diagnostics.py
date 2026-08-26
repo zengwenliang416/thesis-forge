@@ -4,15 +4,15 @@ import subprocess
 import sys
 from pathlib import Path
 
-from thesis_forge.application.contracts import (
+from docforge.application.contracts import (
     BuildDiagnostic,
     BuildDiagnosticCategory,
     BuildDiagnosticSeverity,
     BuildReportStage,
     BuildSourceRange,
 )
-from thesis_forge.core.index import DocumentIndex
-from thesis_forge.core.model import (
+from docforge.core.index import DocumentIndex
+from docforge.core.model import (
     BlockQuote,
     ForgeDocument,
     Heading,
@@ -20,7 +20,7 @@ from thesis_forge.core.model import (
     Text,
     ValidationIssue,
 )
-from thesis_forge.presentation.diagnostics import (
+from docforge.presentation.diagnostics import (
     duplicate_id_diagnostics,
     format_diagnostic,
     localized_build_diagnostic_message,
@@ -155,15 +155,15 @@ def test_headless_ui_import_does_not_eagerly_load_application_or_rendering() -> 
 import json
 import sys
 
-import thesis_forge.ui
+import docforge.ui
 
 forbidden = {
     "docx",
     "lxml",
-    "thesis_forge.application.services",
-    "thesis_forge.core.compiler",
-    "thesis_forge.core.parser",
-    "thesis_forge.renderers.docx",
+    "docforge.application.services",
+    "docforge.core.compiler",
+    "docforge.core.parser",
+    "docforge.renderers.docx",
 }
 print(json.dumps(sorted(name for name in forbidden if name in sys.modules)))
 raise SystemExit(bool(any(name in sys.modules for name in forbidden)))

@@ -129,7 +129,7 @@ def test_sidecar_builder_embeds_package_data_without_wheel_runtime_leakage() -> 
     assert force_include[
         "templates/schools/hunan-university-of-technology/master-2026.yaml"
     ] == (
-        "thesis_forge/template_data/schools/"
+        "docforge/template_data/schools/"
         "hunan-university-of-technology/master-2026.yaml"
     )
 
@@ -584,8 +584,8 @@ def test_release_preparer_requires_consistent_versions_and_collects_assets(
     dmg.write_bytes(b"dmg")
     python_dist = tmp_path / "python"
     python_dist.mkdir()
-    wheel = python_dist / "thesis_forge-0.1.0-py3-none-any.whl"
-    source_dist = python_dist / "thesis_forge-0.1.0.tar.gz"
+    wheel = python_dist / "docforge-0.1.0-py3-none-any.whl"
+    source_dist = python_dist / "docforge-0.1.0.tar.gz"
     wheel.write_bytes(b"wheel")
     source_dist.write_bytes(b"source")
 
@@ -638,8 +638,8 @@ def test_release_preparer_rejects_wrong_names_symlinks_and_stale_output(
     (dmg_dir / "ThesisForge_9.9.9_x86_64.dmg").write_bytes(b"wrong")
     python_dist = tmp_path / "python"
     python_dist.mkdir()
-    (python_dist / "thesis_forge-0.1.0-py3-none-any.whl").write_bytes(b"wheel")
-    (python_dist / "thesis_forge-0.1.0.tar.gz").write_bytes(b"source")
+    (python_dist / "docforge-0.1.0-py3-none-any.whl").write_bytes(b"wheel")
+    (python_dist / "docforge-0.1.0.tar.gz").write_bytes(b"source")
 
     with pytest.raises(RuntimeError, match="macOS DMG"):
         preparer.prepare_macos_release(

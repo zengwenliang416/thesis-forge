@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from thesis_forge.core.model import (
+from docforge.core.model import (
     BlockQuote,
     CodeBlock,
     Heading,
@@ -8,7 +8,7 @@ from thesis_forge.core.model import (
     Paragraph,
     inline_plain_text,
 )
-from thesis_forge.core.parser_markdown_it import MarkdownItParserBackend
+from docforge.core.parser_markdown_it import MarkdownItParserBackend
 
 BACKEND = MarkdownItParserBackend()
 

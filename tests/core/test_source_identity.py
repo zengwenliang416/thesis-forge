@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from thesis_forge.core.model import (
+from docforge.core.model import (
     Algorithm,
     BibliographyBlock,
     Block,

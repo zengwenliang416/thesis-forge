@@ -3,7 +3,7 @@
   "source": {
     "corpus_bib": "gbt7714-2025-corpus.bib（复制自 spikes/phase0/citation/corpus/gbt7714-corpus.bib）",
     "spike_golden": "spikes/phase0/citation/golden/gbt7714-golden-v1.json（pandoc 3.8.2.1 + 官方 2025 CSL，CSL SHA256 3b5ab624...95faf）",
-    "engine": "thesis_forge 内建手写 GB/T 7714-2025 引擎（BuiltinGbt7714Provider）",
+    "engine": "docforge 内建手写 GB/T 7714-2025 引擎（BuiltinGbt7714Provider）",
     "generated_by": "tests/fixtures/bibliography/ 一次性生成脚本（ADR-0004 实施）"
   },
   "policy": "passed-machine-check 19 条以 text 字段逐字节锁定为内建引擎回归基线；pending-human-review 9 条仅校验 must_contain 结构完整性（candidate_text 为当前实现的候选输出），GA 前人工定稿后转为逐字节。golden 更新必须人工审查（ADR-0004 §2.6 / ADR-0006）。",

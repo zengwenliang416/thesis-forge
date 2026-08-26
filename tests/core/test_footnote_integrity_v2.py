@@ -1,7 +1,7 @@
 from pathlib import Path
 
-from thesis_forge.core.compiler import compile_document
-from thesis_forge.core.model import (
+from docforge.core.compiler import compile_document
+from docforge.core.model import (
     Emphasis,
     FootnoteDefinition,
     FootnoteReference,
@@ -11,8 +11,8 @@ from thesis_forge.core.model import (
     Strong,
     Text,
 )
-from thesis_forge.core.render_plan import FootnoteReferenceRun, ParagraphInstruction
-from thesis_forge.core.validator import validate_document
+from docforge.core.render_plan import FootnoteReferenceRun, ParagraphInstruction
+from docforge.core.validator import validate_document
 
 
 def _document(*blocks: object) -> ForgeDocument:

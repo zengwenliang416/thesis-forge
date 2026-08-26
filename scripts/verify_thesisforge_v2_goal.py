@@ -99,7 +99,7 @@ def run_cli(*args: str, expect: int = 0) -> subprocess.CompletedProcess[str]:
         if not env.get("PYTHONPATH")
         else source_path + os.pathsep + env["PYTHONPATH"]
     )
-    command = [python_executable(), "-m", "thesis_forge.cli", *args]
+    command = [python_executable(), "-m", "docforge.cli", *args]
     completed = subprocess.run(
         command,
         cwd=ROOT,
@@ -515,7 +515,7 @@ def validate_docx(path: Path) -> None:
 
 
 def validate_static_architecture() -> None:
-    production = ROOT / "src" / "thesis_forge"
+    production = ROOT / "src" / "docforge"
     text_by_path: dict[Path, str] = {}
     for path in production.rglob("*.py"):
         text_by_path[path] = path.read_text(encoding="utf-8")

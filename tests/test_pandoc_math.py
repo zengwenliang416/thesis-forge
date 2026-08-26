@@ -15,9 +15,9 @@ import pytest
 import yaml
 from lxml import etree
 
-from thesis_forge.core.render_plan import EquationInstruction
-from thesis_forge.renderers.docx.equations import render_equation
-from thesis_forge.renderers.docx.math_provider import (
+from docforge.core.render_plan import EquationInstruction
+from docforge.renderers.docx.equations import render_equation
+from docforge.renderers.docx.math_provider import (
     MATH_NS,
     PandocMathConversionError,
     PandocMathProvider,

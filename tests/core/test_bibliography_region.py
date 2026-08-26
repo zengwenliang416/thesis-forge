@@ -5,19 +5,19 @@ from zipfile import ZipFile
 
 from lxml import etree
 
-from thesis_forge.application.contracts import PreviewResult
-from thesis_forge.bibliography import resolve_citation_provider
-from thesis_forge.core.compiler import compile_document
-from thesis_forge.core.parser_backend import create_parser_backend
-from thesis_forge.core.render_plan import BibliographyInstruction, HeadingInstruction
-from thesis_forge.core.validator import ValidationContext, validate_document
-from thesis_forge.presentation.review import (
+from docforge.application.contracts import PreviewResult
+from docforge.bibliography import resolve_citation_provider
+from docforge.core.compiler import compile_document
+from docforge.core.parser_backend import create_parser_backend
+from docforge.core.render_plan import BibliographyInstruction, HeadingInstruction
+from docforge.core.validator import ValidationContext, validate_document
+from docforge.presentation.review import (
     ReviewBibliographyContent,
     ReviewHeadingContent,
     map_review_result,
 )
-from thesis_forge.renderers.docx.package import validate_docx_package
-from thesis_forge.renderers.docx.renderer import DocxRenderer
+from docforge.renderers.docx.package import validate_docx_package
+from docforge.renderers.docx.renderer import DocxRenderer
 
 ROOT = Path(__file__).resolve().parents[2]
 TEMPLATE_ROOT = ROOT / "templates"

@@ -3,9 +3,9 @@ requires = ["hatchling>=1.25"]
 build-backend = "hatchling.build"
 
 [project]
-name = "thesis-forge"
+name = "docforge"
 version = "0.1.0"
-description = "Offline-first, template-driven academic thesis compiler"
+description = "Offline-first, template-driven Markdown document compiler"
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
@@ -32,17 +32,17 @@ dev = [
 ]
 
 [project.scripts]
-thesisforge = "thesis_forge.cli:app"
+docforge = "docforge.cli:app"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/thesis_forge"]
+packages = ["src/docforge"]
 exclude = ["**/._*"]
 
 [tool.hatch.build.targets.wheel.force-include]
-"templates/base/bachelor.yaml" = "thesis_forge/template_data/base/bachelor.yaml"
-"templates/schools/example-university/2026.yaml" = "thesis_forge/template_data/schools/example-university/2026.yaml"
-"templates/schools/project-proposal/2026.yaml" = "thesis_forge/template_data/schools/project-proposal/2026.yaml"
-"templates/schools/hunan-university-of-technology/master-2026.yaml" = "thesis_forge/template_data/schools/hunan-university-of-technology/master-2026.yaml"
+"templates/base/bachelor.yaml" = "docforge/template_data/base/bachelor.yaml"
+"templates/schools/example-university/2026.yaml" = "docforge/template_data/schools/example-university/2026.yaml"
+"templates/schools/project-proposal/2026.yaml" = "docforge/template_data/schools/project-proposal/2026.yaml"
+"templates/schools/hunan-university-of-technology/master-2026.yaml" = "docforge/template_data/schools/hunan-university-of-technology/master-2026.yaml"
 
 [tool.hatch.build.targets.sdist]
 include = [

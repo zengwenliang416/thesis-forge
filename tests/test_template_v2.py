@@ -16,11 +16,11 @@ import pytest
 import yaml
 from typer.testing import CliRunner
 
-from thesis_forge.cli import app
-from thesis_forge.templates import v2
-from thesis_forge.templates.v2 import units
-from thesis_forge.templates.v2.package import MAX_INHERITANCE_DEPTH
-from thesis_forge.templates.v2.units import (
+from docforge.cli import app
+from docforge.templates import v2
+from docforge.templates.v2 import units
+from docforge.templates.v2.package import MAX_INHERITANCE_DEPTH
+from docforge.templates.v2.units import (
     CTX_BORDER_WIDTH,
     CTX_FONT_SIZE,
     CTX_INDENT,

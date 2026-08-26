@@ -17,9 +17,9 @@ import pytest
 import yaml
 from typer.testing import CliRunner
 
-from thesis_forge.cli import app
-from thesis_forge.templates import v2
-from thesis_forge.templates.v2.migrate import (
+from docforge.cli import app
+from docforge.templates import v2
+from docforge.templates.v2.migrate import (
     DROPPED,
     MANUAL_REQUIRED,
     MIGRATED,

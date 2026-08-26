@@ -5,7 +5,7 @@ from pathlib import Path
 import pytest
 import yaml
 
-from thesis_forge.project.loader import ProjectLoadError, load_project
+from docforge.project.loader import ProjectLoadError, load_project
 
 
 def manifest_data() -> dict:

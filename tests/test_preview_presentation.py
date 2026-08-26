@@ -5,8 +5,8 @@ from pathlib import Path
 
 import pytest
 
-from thesis_forge import application, presentation
-from thesis_forge.core.model import (
+from docforge import application, presentation
+from docforge.core.model import (
     Algorithm,
     BibliographyBlock,
     BlockQuote,
@@ -24,7 +24,7 @@ from thesis_forge.core.model import (
     Text,
     ValidationIssue,
 )
-from thesis_forge.core.render_plan import (
+from docforge.core.render_plan import (
     AlgorithmInstruction,
     BibliographyEntryInstruction,
     BibliographyInstruction,
@@ -55,7 +55,7 @@ from thesis_forge.core.render_plan import (
     TextRun,
     TocInstruction,
 )
-from thesis_forge.core.validator import ValidationContext
+from docforge.core.validator import ValidationContext
 
 ROOT = Path(__file__).resolve().parents[1]
 FIXTURE = ROOT / "tests" / "fixtures" / "preview-workbench-v1.json"

@@ -6,10 +6,10 @@ import subprocess
 import sys
 from pathlib import Path
 
-from thesis_forge import ui
-from thesis_forge.application import InspectionResult, ValidationResult
-from thesis_forge.core.model import ForgeDocument
-from thesis_forge.core.validator import ValidationContext
+from docforge import ui
+from docforge.application import InspectionResult, ValidationResult
+from docforge.core.model import ForgeDocument
+from docforge.core.validator import ValidationContext
 
 ROOT = Path(__file__).resolve().parents[1]
 FIXTURE = ROOT / "tests" / "fixtures" / "workspace-state-v1.json"
@@ -92,7 +92,7 @@ import socket
 socket.socket = lambda *args, **kwargs: (_ for _ in ()).throw(
     AssertionError("network must not be used")
 )
-import thesis_forge.cli
+import docforge.cli
 print("ok")
 """
 
@@ -116,7 +116,7 @@ def test_frontend_and_tauri_boundaries_exist_without_entering_python_core():
     assert (ROOT / "src-tauri" / "tauri.conf.json").is_file()
 
     forbidden = ("react", "vite", "tauri", "fastapi", "flask")
-    for path in (ROOT / "src" / "thesis_forge" / "core").glob("*.py"):
+    for path in (ROOT / "src" / "docforge" / "core").glob("*.py"):
         if path.name.startswith("._"):
             continue
         content = path.read_text(encoding="utf-8").lower()

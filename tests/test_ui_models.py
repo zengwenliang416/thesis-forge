@@ -5,8 +5,8 @@ from pathlib import Path
 
 import pytest
 
-from thesis_forge import ui
-from thesis_forge.core.model import ValidationIssue
+from docforge import ui
+from docforge.core.model import ValidationIssue
 
 FIXTURE = Path(__file__).parent / "fixtures" / "diagnostics-zh-cn-v1.json"
 

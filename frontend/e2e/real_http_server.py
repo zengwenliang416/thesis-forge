@@ -6,7 +6,7 @@ from pathlib import Path
 from socketserver import ThreadingMixIn
 from wsgiref.simple_server import WSGIServer, make_server
 
-from thesis_forge.adapters import (
+from docforge.adapters import (
     WebWorkspaceRuntime,
     WorkbenchCommandDispatcher,
     WorkbenchHttpApp,

@@ -27,11 +27,11 @@ details in the parser and core.
 **User outcome:** Users install and invoke DocForge through the `docforge`
 package and command, with no active `thesisforge` import or command alias.
 
-- [ ] 3.1 Add failing distribution, import, CLI help, and console-entrypoint tests for the DocForge package and `docforge` command.
-- [ ] 3.2 Move the Python import package from `thesis_forge` to `docforge` and update internal imports, package discovery, typed resources, and test imports in bounded batches.
-- [ ] 3.3 Expose `docforge inspect`, `validate`, `review`, and `build` over shared project application services with neutral filenames and DocForge diagnostics.
-- [ ] 3.4 Remove obsolete Python package and `thesisforge` CLI entrypoints rather than retaining aliases, shims, loaders, or fallback imports.
-- [ ] 3.5 Pass package build, wheel-content, clean-environment install, import, CLI, and offline execution tests.
+- [x] 3.1 Add failing distribution, import, CLI help, and console-entrypoint tests for the DocForge package and `docforge` command.
+- [x] 3.2 Move the Python import package from `thesis_forge` to `docforge` and update internal imports, package discovery, typed resources, and test imports in bounded batches.
+- [x] 3.3 Expose `docforge inspect`, `validate`, `review`, and `build` over shared project application services with neutral filenames and DocForge diagnostics.
+- [x] 3.4 Remove obsolete Python package and `thesisforge` CLI entrypoints rather than retaining aliases, shims, loaders, or fallback imports.
+- [x] 3.5 Pass package build, wheel-content, clean-environment install, import, CLI, and offline execution tests.
 
 ## 4. Shared Runtime Protocol
 

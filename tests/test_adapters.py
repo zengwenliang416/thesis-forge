@@ -9,8 +9,8 @@ from types import SimpleNamespace
 
 import pytest
 
-from thesis_forge import application
-from thesis_forge.adapters import (
+from docforge import application
+from docforge.adapters import (
     PROTOCOL_VERSION,
     DesktopRuntime,
     WebWorkspaceRuntime,
@@ -18,7 +18,7 @@ from thesis_forge.adapters import (
     WorkbenchHttpApp,
     dispatch_json_line,
 )
-from thesis_forge.application import (
+from docforge.application import (
     ApplicationDependencies,
     BuildResult,
     BuildStage,
@@ -26,10 +26,10 @@ from thesis_forge.application import (
     PreviewResult,
     ValidationResult,
 )
-from thesis_forge.application.contracts import ProjectRequestIntent
-from thesis_forge.core.model import ForgeDocument, Heading, Text, ValidationIssue
-from thesis_forge.core.parser_backend import create_parser_backend
-from thesis_forge.core.validator import ValidationContext
+from docforge.application.contracts import ProjectRequestIntent
+from docforge.core.model import ForgeDocument, Heading, Text, ValidationIssue
+from docforge.core.parser_backend import create_parser_backend
+from docforge.core.validator import ValidationContext
 
 
 def _text_inlines(value: str) -> list[Text]:

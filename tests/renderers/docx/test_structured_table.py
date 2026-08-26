@@ -3,8 +3,8 @@ from zipfile import ZipFile
 
 from lxml import etree
 
-from thesis_forge.core.compiler import compile_document
-from thesis_forge.core.model import (
+from docforge.core.compiler import compile_document
+from docforge.core.model import (
     Citation,
     CrossReference,
     Emphasis,
@@ -23,8 +23,8 @@ from thesis_forge.core.model import (
     TableRow,
     Text,
 )
-from thesis_forge.renderers.docx import DocxRenderer
-from thesis_forge.templates import load_template
+from docforge.renderers.docx import DocxRenderer
+from docforge.templates import load_template
 
 NS = {
     "pr": "http://schemas.openxmlformats.org/package/2006/relationships",

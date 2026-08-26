@@ -6,7 +6,7 @@ import dataclasses
 
 import pytest
 
-from thesis_forge.core.model import (
+from docforge.core.model import (
     Block,
     BlockQuote,
     BulletList,

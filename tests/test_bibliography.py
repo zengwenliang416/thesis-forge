@@ -5,7 +5,7 @@ from pathlib import Path
 
 import pytest
 
-from thesis_forge.bibliography import (
+from docforge.bibliography import (
     DEFAULT_CITATION_STYLE,
     BibliographyParseError,
     BuiltinGbt7714Provider,

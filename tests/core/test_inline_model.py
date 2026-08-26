@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import dataclasses
 
-from thesis_forge.core.model import (
+from docforge.core.model import (
     CrossReference,
     Emphasis,
     HardBreak,

@@ -11,15 +11,15 @@ from zipfile import ZipFile
 import yaml
 from lxml import etree
 
-from thesis_forge.application import (
+from docforge.application import (
     ApplicationDependencies,
     preview_service,
     validation_service,
 )
-from thesis_forge.core.parser_backend import create_parser_backend
-from thesis_forge.core.validator import ValidationContext
-from thesis_forge.renderers.docx.package import validate_docx_package
-from thesis_forge.templates import load_template
+from docforge.core.parser_backend import create_parser_backend
+from docforge.core.validator import ValidationContext
+from docforge.renderers.docx.package import validate_docx_package
+from docforge.templates import load_template
 
 ROOT = Path(__file__).resolve().parents[1]
 CANONICAL_ASSET = ROOT / "tests" / "fixtures" / "v2-project" / "assets" / "model.png"
@@ -1311,7 +1311,7 @@ def test_hut_template_contains_school_values_without_renderer_hardcoding():
 
     renderer_text = "\n".join(
         path.read_text(encoding="utf-8")
-        for path in sorted((ROOT / "src/thesis_forge/renderers/docx").rglob("*.py"))
+        for path in sorted((ROOT / "src/docforge/renderers/docx").rglob("*.py"))
         if not path.name.startswith("._")
     )
     for school_value in (

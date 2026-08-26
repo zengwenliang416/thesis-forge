@@ -2,8 +2,8 @@ from pathlib import Path
 
 import pytest
 
-from thesis_forge.core.compiler import compile_document
-from thesis_forge.core.model import (
+from docforge.core.compiler import compile_document
+from docforge.core.model import (
     Algorithm,
     CrossReference,
     Equation,
@@ -15,14 +15,14 @@ from thesis_forge.core.model import (
     Table,
     Text,
 )
-from thesis_forge.core.render_plan import ParagraphInstruction, ReferenceRun
-from thesis_forge.core.symbols import (
+from docforge.core.render_plan import ParagraphInstruction, ReferenceRun
+from docforge.core.symbols import (
     BookmarkCollisionError,
     DuplicateSymbolError,
     NumberingInputs,
     SymbolTable,
 )
-from thesis_forge.templates import load_template
+from docforge.templates import load_template
 
 
 def _text(value: str) -> list[Text]:

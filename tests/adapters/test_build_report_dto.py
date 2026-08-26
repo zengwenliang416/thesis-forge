@@ -7,8 +7,8 @@ from pathlib import Path
 
 import pytest
 
-from thesis_forge.adapters.dto import serialize_build_report
-from thesis_forge.application.contracts import (
+from docforge.adapters.dto import serialize_build_report
+from docforge.application.contracts import (
     BuildDiagnostic,
     BuildDiagnosticCategory,
     BuildDiagnosticSeverity,

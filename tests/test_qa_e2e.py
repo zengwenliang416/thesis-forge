@@ -19,16 +19,16 @@ from zipfile import ZipFile
 
 from lxml import etree
 
-from thesis_forge.bibliography import resolve_citation_provider
-from thesis_forge.core.compiler import compile_document
-from thesis_forge.core.index import DocumentIndex
-from thesis_forge.core.parser_backend import create_parser_backend
-from thesis_forge.core.render_plan import (
+from docforge.bibliography import resolve_citation_provider
+from docforge.core.compiler import compile_document
+from docforge.core.index import DocumentIndex
+from docforge.core.parser_backend import create_parser_backend
+from docforge.core.render_plan import (
     BibliographyInstruction,
     FootnoteDefinitionInstruction,
 )
-from thesis_forge.core.validator import ValidationContext, validate_document
-from thesis_forge.renderers.docx import DocxRenderer
+from docforge.core.validator import ValidationContext, validate_document
+from docforge.renderers.docx import DocxRenderer
 
 ROOT = Path(__file__).resolve().parents[1]
 OPENXML_VALIDATE = ROOT / "qa" / "tools" / "openxml_validate.py"

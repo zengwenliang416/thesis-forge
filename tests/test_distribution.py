@@ -4,8 +4,11 @@ import importlib.util
 import json
 import subprocess
 import sys
+import zipfile
 from pathlib import Path
 from types import SimpleNamespace
+
+import pytest
 
 ROOT = Path(__file__).resolve().parents[1]
 VERIFY_DISTRIBUTION = ROOT / "scripts" / "verify_distribution.py"
@@ -24,7 +27,7 @@ def _installed_module_path() -> str:
         [
             sys.executable,
             "-c",
-            "import pathlib, thesis_forge; print(pathlib.Path(thesis_forge.__file__).resolve())",
+            "import pathlib, docforge; print(pathlib.Path(docforge.__file__).resolve())",
         ],
         cwd=ROOT,
         text=True,
@@ -32,6 +35,54 @@ def _installed_module_path() -> str:
         check=True,
     )
     return result.stdout.strip()
+
+
+def _write_test_wheel(
+    path: Path,
+    verifier,
+    *,
+    entry_points: str = "[console_scripts]\ndocforge = docforge.cli:app\n",
+    omitted_file: str | None = None,
+) -> None:
+    with zipfile.ZipFile(path, "w") as archive:
+        for name in verifier.REQUIRED_WHEEL_FILES:
+            if name != omitted_file:
+                archive.writestr(name, "")
+        archive.writestr("docforge-0.1.0.dist-info/entry_points.txt", entry_points)
+
+
+def test_distribution_verifier_rejects_missing_bundled_template(
+    tmp_path: Path,
+) -> None:
+    verifier = _load_module(VERIFY_DISTRIBUTION, "verify_distribution_templates")
+    wheel = tmp_path / "docforge-0.1.0-py3-none-any.whl"
+    missing = (
+        "docforge/template_data/schools/"
+        "hunan-university-of-technology/master-2026.yaml"
+    )
+    _write_test_wheel(wheel, verifier, omitted_file=missing)
+
+    with pytest.raises(RuntimeError, match="misses package data"):
+        verifier._inspect_wheel(wheel)
+
+
+def test_distribution_verifier_rejects_extra_console_alias(
+    tmp_path: Path,
+) -> None:
+    verifier = _load_module(VERIFY_DISTRIBUTION, "verify_distribution_entrypoints")
+    wheel = tmp_path / "docforge-0.1.0-py3-none-any.whl"
+    _write_test_wheel(
+        wheel,
+        verifier,
+        entry_points=(
+            "[console_scripts]\n"
+            "docforge = docforge.cli:app\n"
+            "thesisforge = docforge.cli:app\n"
+        ),
+    )
+
+    with pytest.raises(RuntimeError, match="unexpected console entry points"):
+        verifier._inspect_wheel(wheel)
 
 
 def test_distribution_verifier_forces_utf8_for_isolated_cli(
@@ -62,9 +113,31 @@ def test_distribution_verifier_decodes_subprocess_output_as_utf8(
 
     monkeypatch.setattr(verifier.subprocess, "run", fake_run)
 
-    verifier._run(["thesisforge", "inspect"], cwd=tmp_path, env={})
+    verifier._run(["docforge", "inspect"], cwd=tmp_path, env={})
 
     assert observed["encoding"] == "utf-8"
+
+
+def test_distribution_offline_launcher_blocks_connect_ex(tmp_path: Path) -> None:
+    verifier = _load_module(VERIFY_DISTRIBUTION, "verify_distribution_network")
+    cli = tmp_path / "probe_cli.py"
+    cli.write_text(
+        "import socket\n"
+        "socket.socket().connect_ex(('127.0.0.1', 9))\n",
+        encoding="utf-8",
+    )
+    launcher = verifier._write_offline_launcher(tmp_path, cli)
+
+    result = subprocess.run(
+        [sys.executable, str(launcher)],
+        cwd=tmp_path,
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+
+    assert result.returncode != 0
+    assert "network access blocked by distribution verification" in result.stderr
 
 
 def test_distribution_builds_and_installed_cli_runs_offline(tmp_path: Path) -> None:
@@ -116,6 +189,6 @@ def test_distribution_builds_and_installed_cli_runs_offline(tmp_path: Path) -> N
         "typer",
     } <= distributions
     assert not {"build", "hatchling", "packaging", "pytest", "ruff"} & distributions
-    assert all("/thesisforge-dist-" in path for path in installed["imports"].values())
+    assert all("/docforge-dist-" in path for path in installed["imports"].values())
     assert not any(str(ROOT) in path for path in installed["sys_path"])
     assert _installed_module_path() == module_before

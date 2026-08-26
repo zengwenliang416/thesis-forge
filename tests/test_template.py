@@ -2,7 +2,7 @@ from pathlib import Path
 
 import pytest
 
-from thesis_forge.templates import (
+from docforge.templates import (
     BodySpec,
     CoverItemSpec,
     CoverSpec,

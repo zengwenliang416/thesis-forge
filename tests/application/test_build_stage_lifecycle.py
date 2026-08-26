@@ -2,12 +2,12 @@ from __future__ import annotations
 
 import pytest
 
-from thesis_forge.application.contracts import (
+from docforge.application.contracts import (
     BuildReportStage,
     BuildStage,
     BuildStageStatus,
 )
-from thesis_forge.application.services import BuildStageLifecycle
+from docforge.application.services import BuildStageLifecycle
 
 
 def test_validation_failure_keeps_started_stage_running_then_skips_downstream() -> None:

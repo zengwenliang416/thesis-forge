@@ -4,9 +4,9 @@ from pathlib import Path
 
 import pytest
 
-from thesis_forge.core.model import CodeBlock
-from thesis_forge.core.parser_markdown_it import MarkdownItParserBackend
-from thesis_forge.core.parser_support import ParseError
+from docforge.core.model import CodeBlock
+from docforge.core.parser_markdown_it import MarkdownItParserBackend
+from docforge.core.parser_support import ParseError
 
 BACKEND = MarkdownItParserBackend()
 

@@ -2,9 +2,9 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from thesis_forge.core.model import ValidationIssue
-from thesis_forge.core.parser_backend import create_parser_backend
-from thesis_forge.core.validator import validate_document
+from docforge.core.model import ValidationIssue
+from docforge.core.parser_backend import create_parser_backend
+from docforge.core.validator import validate_document
 
 OVERRIDE_CODES = {"orphan-layout-override", "layout-override-type-mismatch"}
 PARSER = create_parser_backend()

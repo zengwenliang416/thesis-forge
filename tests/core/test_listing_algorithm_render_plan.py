@@ -1,10 +1,10 @@
 from pathlib import Path
 
-from thesis_forge.core.compiler import compile_document
-from thesis_forge.core.parser_markdown_it import MarkdownItParserBackend
-from thesis_forge.core.render_plan import AlgorithmInstruction, ListingInstruction
-from thesis_forge.templates import load_template
-from thesis_forge.templates.model import (
+from docforge.core.compiler import compile_document
+from docforge.core.parser_markdown_it import MarkdownItParserBackend
+from docforge.core.render_plan import AlgorithmInstruction, ListingInstruction
+from docforge.templates import load_template
+from docforge.templates.model import (
     AlgorithmSpec,
     CaptionSpec,
     ListingSpec,

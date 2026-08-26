@@ -7,19 +7,19 @@ from pathlib import Path
 import pytest
 from typer.testing import CliRunner
 
-from thesis_forge.application import (
+from docforge.application import (
     BuildResult,
     BuildStage,
     BuildValidationError,
     InspectionResult,
     ValidationResult,
 )
-from thesis_forge.application.contracts import ProjectRequestIntent
-from thesis_forge.cli import app
-from thesis_forge.core.model import ForgeDocument, Heading, Text, ValidationIssue
-from thesis_forge.core.validator import ValidationContext
+from docforge.application.contracts import ProjectRequestIntent
+from docforge.cli import app
+from docforge.core.model import ForgeDocument, Heading, Text, ValidationIssue
+from docforge.core.validator import ValidationContext
 
-PROJECT = Path(__file__).resolve().parents[1] / "fixtures" / "v2-project"
+PROJECT = Path(__file__).resolve().parents[1] / "fixtures" / "docforge-academic"
 
 
 class RecordingProjectService:
@@ -30,7 +30,7 @@ class RecordingProjectService:
         self.requests.append(request)
         return InspectionResult(
             ForgeDocument(
-                source_path=PROJECT / "thesis.md",
+                source_path=PROJECT / "document.md",
                 blocks=[Heading(level=1, inlines=[Text(value="项目论文")])],
             )
         )
@@ -38,7 +38,7 @@ class RecordingProjectService:
     def validate(self, request):
         self.requests.append(request)
         return ValidationResult(
-            document=ForgeDocument(source_path=PROJECT / "thesis.md"),
+            document=ForgeDocument(source_path=PROJECT / "document.md"),
             context=ValidationContext(),
             issues=(),
         )
@@ -52,7 +52,7 @@ class RecordingProjectService:
 def test_project_commands_construct_typed_requests(monkeypatch, tmp_path: Path) -> None:
     service = RecordingProjectService()
     monkeypatch.setattr(
-        "thesis_forge.cli.ProjectApplicationService",
+        "docforge.cli.ProjectApplicationService",
         lambda: service,
     )
     runner = CliRunner()
@@ -74,7 +74,9 @@ def test_project_commands_construct_typed_requests(monkeypatch, tmp_path: Path) 
         ProjectRequestIntent.VALIDATE,
         ProjectRequestIntent.BUILD,
     ]
-    assert all(request.project.project_id == "goal-fixture" for request in service.requests)
+    assert all(
+        request.project.project_id == "academic-fixture" for request in service.requests
+    )
     assert service.requests[-1].output is not None
     assert service.requests[-1].output.path == output
 
@@ -82,19 +84,19 @@ def test_project_commands_construct_typed_requests(monkeypatch, tmp_path: Path) 
 def test_project_manifest_path_is_accepted(tmp_path: Path, monkeypatch) -> None:
     service = RecordingProjectService()
     monkeypatch.setattr(
-        "thesis_forge.cli.ProjectApplicationService",
+        "docforge.cli.ProjectApplicationService",
         lambda: service,
     )
     runner = CliRunner()
 
     result = runner.invoke(
         app,
-        ["inspect", str(PROJECT / "thesisforge.yaml")],
+        ["inspect", str(PROJECT / "docforge.yaml")],
     )
 
     assert result.exit_code == 0, result.stdout
     assert service.requests[0].project.manifest_path == (
-        PROJECT / "thesisforge.yaml"
+        PROJECT / "docforge.yaml"
     ).resolve()
 
 
@@ -103,15 +105,15 @@ def test_project_path_boundary_error_is_structured(tmp_path: Path) -> None:
     outside = tmp_path / "outside"
     project.mkdir()
     outside.mkdir()
-    (project / "thesis.md").write_text("# 绪论\n", encoding="utf-8")
-    (project / "thesisforge.yaml").write_text(
+    (project / "document.md").write_text("# 绪论\n", encoding="utf-8")
+    (project / "docforge.yaml").write_text(
         """
-schema: thesisforge.project.v2
+schema: docforge.project.v1
 project:
   id: symlink-fixture
   language: zh-CN
 document:
-  source: thesis.md
+  source: document.md
 resources:
   assets: assets
 render:
@@ -149,7 +151,7 @@ def test_project_build_validation_failure_emits_typed_report(monkeypatch) -> Non
 
     service = FailingProjectService()
     monkeypatch.setattr(
-        "thesis_forge.cli.ProjectApplicationService",
+        "docforge.cli.ProjectApplicationService",
         lambda: service,
     )
     result = CliRunner().invoke(app, ["build", str(PROJECT)])

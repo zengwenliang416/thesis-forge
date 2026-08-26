@@ -14,7 +14,7 @@ from pathlib import Path
 
 import pytest
 
-from thesis_forge.bibliography import (
+from docforge.bibliography import (
     BuiltinGbt7714Provider,
     LocalBibTeXLoader,
     PandocCiteprocProvider,
@@ -22,8 +22,8 @@ from thesis_forge.bibliography import (
     UnsupportedCitationStyleError,
     resolve_citation_provider,
 )
-from thesis_forge.bibliography.engine import BibliographyRecord
-from thesis_forge.bibliography.pandoc_provider import record_to_csl_item
+from docforge.bibliography.engine import BibliographyRecord
+from docforge.bibliography.pandoc_provider import record_to_csl_item
 
 FIXTURES = Path(__file__).parent / "fixtures" / "bibliography"
 CORPUS_BIB = FIXTURES / "gbt7714-2025-corpus.bib"

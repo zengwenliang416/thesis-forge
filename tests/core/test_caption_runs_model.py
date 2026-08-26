@@ -1,6 +1,6 @@
 import pytest
 
-from thesis_forge.core.render_plan import (
+from docforge.core.render_plan import (
     CaptionRuns,
     CitationRun,
     FootnoteReferenceRun,

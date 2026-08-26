@@ -7,26 +7,26 @@ from zipfile import ZipFile
 import pytest
 from lxml import etree
 
-from thesis_forge.application.contracts import PreviewResult
-from thesis_forge.core.compiler import compile_document
-from thesis_forge.core.model import Algorithm, Listing
-from thesis_forge.core.parser_markdown_it import MarkdownItParserBackend
-from thesis_forge.core.render_plan import (
+from docforge.application.contracts import PreviewResult
+from docforge.core.compiler import compile_document
+from docforge.core.model import Algorithm, Listing
+from docforge.core.parser_markdown_it import MarkdownItParserBackend
+from docforge.core.render_plan import (
     AlgorithmInstruction,
     ListingInstruction,
     RenderPlan,
     SequenceInstruction,
 )
-from thesis_forge.core.validator import ValidationContext
-from thesis_forge.presentation.review import (
+from docforge.core.validator import ValidationContext
+from docforge.presentation.review import (
     ReviewAlgorithmContent,
     ReviewListingContent,
     map_review_result,
 )
-from thesis_forge.renderers.docx import DocxRenderer
-from thesis_forge.renderers.docx.errors import DocxRenderError
-from thesis_forge.templates import load_template
-from thesis_forge.templates.model import (
+from docforge.renderers.docx import DocxRenderer
+from docforge.renderers.docx.errors import DocxRenderError
+from docforge.templates import load_template
+from docforge.templates.model import (
     AlgorithmSpec,
     CaptionSpec,
     FontSpec,

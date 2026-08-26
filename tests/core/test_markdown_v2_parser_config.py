@@ -3,12 +3,12 @@ from __future__ import annotations
 import ast
 from pathlib import Path
 
-from thesis_forge.core.parser_markdown_it import _build_markdown_it
+from docforge.core.parser_markdown_it import _build_markdown_it
 
 PARSER_SUPPORT_PATH = (
     Path(__file__).resolve().parents[2]
     / "src"
-    / "thesis_forge"
+    / "docforge"
     / "core"
     / "parser_support.py"
 )

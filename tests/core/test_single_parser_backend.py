@@ -2,13 +2,13 @@ from __future__ import annotations
 
 import inspect
 
-from thesis_forge.core import parser_backend
-from thesis_forge.core.model import Heading
-from thesis_forge.core.parser_backend import (
+from docforge.core import parser_backend
+from docforge.core.model import Heading
+from docforge.core.parser_backend import (
     ParserBackend,
     create_parser_backend,
 )
-from thesis_forge.core.parser_markdown_it import MarkdownItParserBackend
+from docforge.core.parser_markdown_it import MarkdownItParserBackend
 
 
 def test_create_parser_backend_returns_the_canonical_v2_type() -> None:
