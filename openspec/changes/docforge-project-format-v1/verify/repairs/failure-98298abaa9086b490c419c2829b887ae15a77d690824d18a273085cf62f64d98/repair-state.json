@@ -1,0 +1,208 @@
+{
+  "ok": true,
+  "status": "closure_ready",
+  "label": "pass_after_fix",
+  "history": [
+    {
+      "kind": "initial",
+      "attempt_id": "attempt-20260827064432-f7b0f5e993e8efdd",
+      "case_id": "case-a10-repository-delivery",
+      "label": "FAILED",
+      "verdict": "fail",
+      "integrity": "intact",
+      "freshness": "fresh",
+      "evidence_ids": [
+        "evidence-a98dea631fd0be3c6d337666501d1aeec730d47125d8c1b5a783ecf318ce7f24"
+      ],
+      "recorded_at": "2026-08-27T06:44:38.486Z"
+    },
+    {
+      "kind": "repair",
+      "repair_link_id": "repair-superseded-ec500d939b9e9f1ce94f7169d93554af44765ddacb0290f2e51c7b9946c43e54",
+      "label": "REPAIR COMPLETED",
+      "recorded_at": "2026-08-27T13:58:30.183Z"
+    },
+    {
+      "kind": "retest",
+      "attempt_id": "attempt-20260827150110-50cf8f0cf0500ad5",
+      "case_id": "case-a10-repository-delivery",
+      "label": "PASS AFTER FIX",
+      "verdict": "pass",
+      "integrity": "intact",
+      "freshness": "fresh",
+      "evidence_ids": [
+        "evidence-2f07c9bdb6077b853443f0c8d79a30655db9afa1910f5ad0c771fda512e89a1a",
+        "evidence-59dba3de9a77c4bf7b95a46844364b04c053cc4565d38f9ce137507a9001f897"
+      ],
+      "recorded_at": "2026-08-27T15:01:35.345Z"
+    },
+    {
+      "kind": "regression",
+      "attempt_id": "attempt-20260827182047-39312b02e7655e7e",
+      "case_id": "case-a1-project-open",
+      "label": "PASS",
+      "verdict": "pass",
+      "integrity": "intact",
+      "freshness": "fresh",
+      "evidence_ids": [
+        "evidence-24468df56f896e9c1231bc9fef14366381e5bf94c9f235f50f655453ed156dbc",
+        "evidence-4521f57006ef862e7f663597c4191b4773db722bdb1b0e728c828b20f7cd915d"
+      ],
+      "recorded_at": "2026-08-27T18:20:48.743Z"
+    },
+    {
+      "kind": "regression",
+      "attempt_id": "attempt-20260827182225-3807ecb6717019a5",
+      "case_id": "case-a2-general-project",
+      "label": "PASS",
+      "verdict": "pass",
+      "integrity": "intact",
+      "freshness": "fresh",
+      "evidence_ids": [
+        "evidence-4300d53e3fad58eb70147087649d300f430ba6a441a7f2c62b8a602aad96e24c",
+        "evidence-5909148bab89d33371f30a58fcf67179fdeb8fe06569aeb810061f17d9e9714a"
+      ],
+      "recorded_at": "2026-08-27T18:22:28.344Z"
+    },
+    {
+      "kind": "regression",
+      "attempt_id": "attempt-20260827182405-d982b2f693705291",
+      "case_id": "case-a3-academic-profile",
+      "label": "PASS",
+      "verdict": "pass",
+      "integrity": "intact",
+      "freshness": "fresh",
+      "evidence_ids": [
+        "evidence-4d0a0ab514af77545486b3facc5237c4d633640ead550ed3a6afb8efc178751c",
+        "evidence-9ef1bb7506629a76d14ac981c0ff30bb96f62b33b64ecb6fc57d70e31cca83f0"
+      ],
+      "recorded_at": "2026-08-27T18:24:29.664Z"
+    },
+    {
+      "kind": "regression",
+      "attempt_id": "attempt-20260827182606-39fc5b6f90150751",
+      "case_id": "case-a4-obsolete-contracts",
+      "label": "PASS",
+      "verdict": "pass",
+      "integrity": "intact",
+      "freshness": "fresh",
+      "evidence_ids": [
+        "evidence-019970c7e1ad6d207b4d37feb1d51396dea09f68b41d1857177e5b1be07483d9",
+        "evidence-4f90bb50f889fcda41dfbfd06be89e829ecc700af00591c211d009d0057756eb"
+      ],
+      "recorded_at": "2026-08-27T18:26:14.771Z"
+    },
+    {
+      "kind": "regression",
+      "attempt_id": "attempt-20260827182752-f309b45bc6f79c4f",
+      "case_id": "case-a5-neutral-default-paths",
+      "label": "PASS",
+      "verdict": "pass",
+      "integrity": "intact",
+      "freshness": "fresh",
+      "evidence_ids": [
+        "evidence-42b6759a36cf0dd6a265c906ae5eb6c106d16b7cd072969fbeff89d9ab0b579a",
+        "evidence-6a7bf77dd46ca91431077aec89f5bde5cad307518f18723e708e4cbb4b4a697e"
+      ],
+      "recorded_at": "2026-08-27T18:27:55.416Z"
+    },
+    {
+      "kind": "regression",
+      "attempt_id": "attempt-20260827182932-1579e8f95d04fd0b",
+      "case_id": "case-a6-path-security",
+      "label": "PASS",
+      "verdict": "pass",
+      "integrity": "intact",
+      "freshness": "fresh",
+      "evidence_ids": [
+        "evidence-a0dcc8d50093bbd5614109b243fe9ed9e9d8bd40e8eb83f4314d4a7047c81902",
+        "evidence-dd5d9b77fc828ed70503e2e8297069f5f8a3e3523a1585e71e3c85f1cbb9ab96"
+      ],
+      "recorded_at": "2026-08-27T18:30:38.965Z"
+    },
+    {
+      "kind": "regression",
+      "attempt_id": "attempt-20260827183218-46aea56bf0619712",
+      "case_id": "case-a7-deterministic-docx",
+      "label": "PASS",
+      "verdict": "pass",
+      "integrity": "intact",
+      "freshness": "fresh",
+      "evidence_ids": [
+        "evidence-a9fe3dd9e2d2bcee775a4e7cf5b8cca9766d098d9d8cc8eb785c3e4de25a845f",
+        "evidence-f4a2c009cb06765036ad7026a85792fc277182b9c88646e598c4c8550eca6717"
+      ],
+      "recorded_at": "2026-08-27T18:32:33.701Z"
+    },
+    {
+      "kind": "regression",
+      "attempt_id": "attempt-20260827183412-8a25defa8b38765d",
+      "case_id": "case-a8-runtime-parity",
+      "label": "PASS",
+      "verdict": "pass",
+      "integrity": "intact",
+      "freshness": "fresh",
+      "evidence_ids": [
+        "evidence-59b60839921220c2edf74b03af54e335e5311eb3ecc4747932593abf328cd942",
+        "evidence-e9eafa06a954d2ddd45c343e14057c344ad5d274a124778603559fbec3cc7a41"
+      ],
+      "recorded_at": "2026-08-27T18:35:30.602Z"
+    },
+    {
+      "kind": "regression",
+      "attempt_id": "attempt-20260827183709-c4e5cedcc4ad2a7a",
+      "case_id": "case-a9-installed-office",
+      "label": "PASS",
+      "verdict": "pass",
+      "integrity": "intact",
+      "freshness": "fresh",
+      "evidence_ids": [
+        "evidence-137fb35f1534be919649e40137552c6d84274951c1c4ef605e43d642d15e0092",
+        "evidence-a1a3210c2c1ea39170d99331821034ae2b5a551563396a2ad8b20a38d9cd302d"
+      ],
+      "recorded_at": "2026-08-27T18:37:09.732Z"
+    }
+  ],
+  "transition_proposal": {
+    "schema": "specnav.verification.transition-proposal.v1",
+    "failure_id": "failure-98298abaa9086b490c419c2829b887ae15a77d690824d18a273085cf62f64d98",
+    "change_id": "docforge-project-format-v1",
+    "action": "close_failure",
+    "owner": "core",
+    "from_state": "closure_ready",
+    "target_state": "closed",
+    "case_ids": [
+      "case-a1-project-open",
+      "case-a10-repository-delivery",
+      "case-a2-general-project",
+      "case-a3-academic-profile",
+      "case-a4-obsolete-contracts",
+      "case-a5-neutral-default-paths",
+      "case-a6-path-security",
+      "case-a7-deterministic-docx",
+      "case-a8-runtime-parity",
+      "case-a9-installed-office"
+    ],
+    "attempt_ids": [
+      "attempt-20260827064432-f7b0f5e993e8efdd",
+      "attempt-20260827150110-50cf8f0cf0500ad5",
+      "attempt-20260827182047-39312b02e7655e7e",
+      "attempt-20260827182225-3807ecb6717019a5",
+      "attempt-20260827182405-d982b2f693705291",
+      "attempt-20260827182606-39fc5b6f90150751",
+      "attempt-20260827182752-f309b45bc6f79c4f",
+      "attempt-20260827182932-1579e8f95d04fd0b",
+      "attempt-20260827183218-46aea56bf0619712",
+      "attempt-20260827183412-8a25defa8b38765d",
+      "attempt-20260827183709-c4e5cedcc4ad2a7a"
+    ],
+    "reason_ids": [
+      "required-regression-passed"
+    ],
+    "repair_link_id": "repair-superseded-ec500d939b9e9f1ce94f7169d93554af44765ddacb0290f2e51c7b9946c43e54",
+    "scope_digest": "566e080a68498da9f26f11305e45bcf7dd343c9ffa2f6f0175b2271d5d6a808e",
+    "proposed_at": "2026-08-27T18:37:09.732Z",
+    "id": "transition-dbc407a17fa27901a8bf08c0b67cc4174c6b1fa4fa51d3beb077120b7aa0cfa8"
+  },
+  "blockers": []
+}
