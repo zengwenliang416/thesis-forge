@@ -1,0 +1,38 @@
+{
+  "schema": "specnav.verification.trusted-fact-envelope.v1",
+  "id": "trusted-fact-095917ceff7e42213b30bbad16e4625985e33f626e7ffee710172325656cff80",
+  "kind": "repair_baseline",
+  "producer": "specnav-repair-baseline-recorder",
+  "payload": {
+    "schema": "specnav.verification.repair-baseline.v1",
+    "id": "repair-baseline-d61fa66fd37c2d8038f4e9868a658de04c86ab12cee154412ce82af8e2c4fc32",
+    "failure_id": "failure-046667276b7162f8e5ff3393bf25487fc05b2ab68270ff9e12f6f1a9c8656ee5",
+    "change_id": "docforge-project-format-v1",
+    "repair_link_id": "repair-7a6b0cb3e74f5753efe0cd60058931d01adc1a070412fe9a4834fe9246f174bd",
+    "repair_link_digest": "265e349e71d441ffb7732d17519682c4645638d09fdd898e59477ab1ddc5ed8c",
+    "before_identity": {
+      "case_snapshot_hash": "e34e5e74c6ac469ee8bce2be6d0b6ce1e772d4e773710b8bc782cc99da337c85",
+      "code_sha": "60274f4c7bd0541d0a6346753e68eb7f5f2ae6a6",
+      "test_sha": "8898bb578306334a0f3e9e5723ac9a186ccfb90845268c19e0677fb7df12a193",
+      "environment_hash": "e70d297a62bab25e39bb4323fd1636081aac76eff129f315f3d3dbe56c04a1eb",
+      "runtime_version": "2.0.0-alpha.2",
+      "kernel_version": "2.0.0-alpha.2"
+    },
+    "git_revision": "16b07b3b2e8b9fdc9f50096609b1c30bf8469444",
+    "recorded_at": "2026-08-27T07:54:10.083Z"
+  },
+  "payload_digest": "0e04fc20e7d00c882c7971e395cca5ac72eb2055c106d0c8431774c1c4e9f9fd",
+  "issued_at": "2026-08-27T07:54:10.084Z",
+  "bindings": {
+    "failure_id": "failure-046667276b7162f8e5ff3393bf25487fc05b2ab68270ff9e12f6f1a9c8656ee5",
+    "change_id": "docforge-project-format-v1",
+    "run_id": "run-20260827064531-285da31c798070fb",
+    "case_id": "case-a6-path-security"
+  },
+  "claims": [
+    "repair-baseline:identity-bound",
+    "repair-baseline:git-revision-bound"
+  ],
+  "signature_algorithm": "hmac-sha256",
+  "signature": "5f041f10ca71c10b57e313fd7dce63e10a4ac09b821968fc39f0380921d3f8e2"
+}
