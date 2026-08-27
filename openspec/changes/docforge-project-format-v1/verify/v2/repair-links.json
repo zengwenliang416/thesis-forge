@@ -297,7 +297,7 @@
     "change_id": "docforge-project-format-v1",
     "development_task_id": "900-verification-repair-5ca18240a90dc46f",
     "repair_kind": "test_code",
-    "status": "in_progress",
+    "status": "completed",
     "requested_at": "2026-08-27T07:42:50.621Z",
     "before_identity": {
       "case_snapshot_hash": "e34e5e74c6ac469ee8bce2be6d0b6ce1e772d4e773710b8bc782cc99da337c85",
@@ -308,7 +308,20 @@
       "kernel_version": "2.0.0-alpha.2"
     },
     "scope_digest": "74af54e1d41c2bbda9e678995ea4551f50af47b540fe9800f081a280e0e45080",
-    "id": "repair-superseded-8e47e75b20a47ec6a5a89d4c1ba26636ae31530d968cf85f2ede6676fdd590cd"
+    "id": "repair-superseded-8e47e75b20a47ec6a5a89d4c1ba26636ae31530d968cf85f2ede6676fdd590cd",
+    "completed_at": "2026-08-27T13:51:35.993Z",
+    "after_identity": {
+      "case_snapshot_hash": "350e6482b5745502bf4c6d6af7af26ba568208117ba5699863f8c80861a204de",
+      "code_sha": "60274f4c7bd0541d0a6346753e68eb7f5f2ae6a6",
+      "test_sha": "b84991f223678bcfa385d82ef08148d57456f2f4c68ce945559a4313550059ec",
+      "environment_hash": "e70d297a62bab25e39bb4323fd1636081aac76eff129f315f3d3dbe56c04a1eb",
+      "runtime_version": "2.0.0-alpha.2",
+      "kernel_version": "2.0.0-alpha.2"
+    },
+    "review_evidence_ids": [
+      "human-review-fujiawei-quality-20260827-5ca18240a90dc46f",
+      "human-review-lijie-spec-20260827-5ca18240a90dc46f"
+    ]
   },
   {
     "schema": "specnav.verification.repair-link.v1",
