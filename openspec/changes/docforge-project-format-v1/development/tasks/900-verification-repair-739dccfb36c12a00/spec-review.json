@@ -1,0 +1,16 @@
+{
+  "schema": "specnav.verification.repair-review.v1",
+  "id": "repair-review-spec-lijie-739dccfb36c12a00",
+  "kind": "spec-review",
+  "verdict": "approved",
+  "reviewer_id": "lijie",
+  "reviewer_kind": "human",
+  "reviewed_at": "2026-08-27T12:54:41Z",
+  "evidence_id": "human-review-lijie-spec-20260827-739dccfb36c12a00",
+  "task_id": "900-verification-repair-739dccfb36c12a00",
+  "failure_id": "failure-f814ed028e5b2dc94e5db0219d237ceaa8e22ce664031ea163ba1fc267c95791",
+  "repair_link_id": "repair-superseded-df9507399edba46cfe43e010d3639996f291ad784a9e382af84ec571b8ad3332",
+  "repair_link_digest": "98bfeabeb284157332f438a45f9dde737ba14d538bde93125e831fd56116da19",
+  "scope_digest": "74af54e1d41c2bbda9e678995ea4551f50af47b540fe9800f081a280e0e45080",
+  "after_identity_digest": "1bac24e7224378fcef89b96ba39a00ef9c2eac243a08f001f176ca87e8b294db"
+}
