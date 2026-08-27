@@ -1,0 +1,149 @@
+{
+  "ok": true,
+  "full_rerun": false,
+  "required_cases": [
+    "case-a1-project-open",
+    "case-a10-repository-delivery",
+    "case-a2-general-project",
+    "case-a3-academic-profile",
+    "case-a4-obsolete-contracts",
+    "case-a5-neutral-default-paths",
+    "case-a6-path-security",
+    "case-a7-deterministic-docx",
+    "case-a8-runtime-parity",
+    "case-a9-installed-office"
+  ],
+  "baseline_cases": [
+    "case-a1-project-open",
+    "case-a10-repository-delivery",
+    "case-a2-general-project",
+    "case-a3-academic-profile",
+    "case-a4-obsolete-contracts",
+    "case-a5-neutral-default-paths",
+    "case-a6-path-security",
+    "case-a7-deterministic-docx",
+    "case-a8-runtime-parity",
+    "case-a9-installed-office"
+  ],
+  "repaired_cases": [
+    "case-a9-installed-office"
+  ],
+  "impacted_cases": [],
+  "stale_cases": [],
+  "cases_to_rerun": [
+    {
+      "case_id": "case-a1-project-open",
+      "reasons": [
+        "policy-baseline"
+      ]
+    },
+    {
+      "case_id": "case-a10-repository-delivery",
+      "reasons": [
+        "policy-baseline"
+      ]
+    },
+    {
+      "case_id": "case-a2-general-project",
+      "reasons": [
+        "policy-baseline"
+      ]
+    },
+    {
+      "case_id": "case-a3-academic-profile",
+      "reasons": [
+        "policy-baseline"
+      ]
+    },
+    {
+      "case_id": "case-a4-obsolete-contracts",
+      "reasons": [
+        "policy-baseline"
+      ]
+    },
+    {
+      "case_id": "case-a5-neutral-default-paths",
+      "reasons": [
+        "policy-baseline"
+      ]
+    },
+    {
+      "case_id": "case-a6-path-security",
+      "reasons": [
+        "policy-baseline"
+      ]
+    },
+    {
+      "case_id": "case-a7-deterministic-docx",
+      "reasons": [
+        "policy-baseline"
+      ]
+    },
+    {
+      "case_id": "case-a8-runtime-parity",
+      "reasons": [
+        "policy-baseline"
+      ]
+    },
+    {
+      "case_id": "case-a9-installed-office",
+      "reasons": [
+        "policy-baseline",
+        "repaired-case"
+      ]
+    }
+  ],
+  "reasons_by_case": {
+    "case-a1-project-open": [
+      "policy-baseline"
+    ],
+    "case-a10-repository-delivery": [
+      "policy-baseline"
+    ],
+    "case-a2-general-project": [
+      "policy-baseline"
+    ],
+    "case-a3-academic-profile": [
+      "policy-baseline"
+    ],
+    "case-a4-obsolete-contracts": [
+      "policy-baseline"
+    ],
+    "case-a5-neutral-default-paths": [
+      "policy-baseline"
+    ],
+    "case-a6-path-security": [
+      "policy-baseline"
+    ],
+    "case-a7-deterministic-docx": [
+      "policy-baseline"
+    ],
+    "case-a8-runtime-parity": [
+      "policy-baseline"
+    ],
+    "case-a9-installed-office": [
+      "policy-baseline",
+      "repaired-case"
+    ]
+  },
+  "changed_files": [],
+  "unmapped_changes": [],
+  "domains_to_rerun": [
+    "facticity",
+    "static",
+    "unit",
+    "redteam",
+    "e2e",
+    "sensory"
+  ],
+  "codegraph_refs": [],
+  "policy_refs": [
+    "openspec/changes/docforge-project-format-v1/development/handoff-to-verify.md",
+    "openspec/changes/docforge-project-format-v1/tasks.md"
+  ],
+  "warnings": [],
+  "blockers": [],
+  "change": "docforge-project-format-v1",
+  "invalidated_entries": [],
+  "blocker_ids": []
+}
