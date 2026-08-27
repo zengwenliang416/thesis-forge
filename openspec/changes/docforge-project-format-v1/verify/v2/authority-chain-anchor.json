@@ -1,0 +1,31 @@
+{
+  "schema": "specnav.verification.authority-chain-anchor.v1",
+  "change_id": "docforge-project-format-v1",
+  "logs": {
+    "transition_proposals": {
+      "kind": "transition_proposal",
+      "path": "v2/transition-proposals.jsonl",
+      "sequence": 0,
+      "latest_digest": null,
+      "terminal_envelope_id": null
+    },
+    "transition_receipts": {
+      "kind": "transition_application",
+      "path": "v2/transition-receipts.jsonl",
+      "sequence": 0,
+      "latest_digest": null,
+      "terminal_envelope_id": null
+    },
+    "attempt_facts": {
+      "kind": "attempt_fact",
+      "path": "v2/attempt-facts.jsonl",
+      "sequence": 0,
+      "latest_digest": null,
+      "terminal_envelope_id": null
+    }
+  },
+  "anchored_at": "2026-08-27T14:10:07.203Z",
+  "id": "authority-chain-anchor-2214f24b2a2d34321f4539fcd2d75b9061f04312ca6d967d14c7cf104b07a0c2",
+  "signature_algorithm": "hmac-sha256",
+  "signature": "d58c0b0e1a6b1f1e32337119ed88150632c7ca55db35ce27b80a8f0497350979"
+}
