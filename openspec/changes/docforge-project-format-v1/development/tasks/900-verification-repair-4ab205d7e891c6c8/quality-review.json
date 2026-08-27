@@ -1,0 +1,16 @@
+{
+  "schema": "specnav.verification.repair-review.v1",
+  "id": "repair-review-quality-fujiawei-4ab205d7e891c6c8",
+  "kind": "quality-review",
+  "verdict": "approved",
+  "reviewer_id": "fujiawei",
+  "reviewer_kind": "human",
+  "reviewed_at": "2026-08-27T13:04:14Z",
+  "evidence_id": "human-review-fujiawei-quality-20260827-4ab205d7e891c6c8",
+  "task_id": "900-verification-repair-4ab205d7e891c6c8",
+  "failure_id": "failure-0b7b1bb8ae4396daaf850b9954df7a2cf108ddf9b482e412e7e118bd0f2b05bd",
+  "repair_link_id": "repair-superseded-169560652569db2fe753636f6c7edf84a2312dd167a274c7d648dd13c7e80916",
+  "repair_link_digest": "a1f2f975dae4ce6923f450cfa1ac6760c4e955c1debb4b3ed666364a79fb733e",
+  "scope_digest": "74af54e1d41c2bbda9e678995ea4551f50af47b540fe9800f081a280e0e45080",
+  "after_identity_digest": "1bac24e7224378fcef89b96ba39a00ef9c2eac243a08f001f176ca87e8b294db"
+}
