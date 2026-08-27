@@ -163,13 +163,33 @@ function matchesAny(file, patterns) {
   return patterns.some((pattern) => globPattern(pattern).test(file));
 }
 
-function lifecycleRepairPath(changeId, failureId, taskId, file) {
-  return file.startsWith(
-    `openspec/changes/${changeId}/verify/repairs/${failureId}/`
-  )
-    || file.startsWith(
-      `openspec/changes/${changeId}/development/tasks/${taskId}/`
+function validLifecycleId(value) {
+  return typeof value === 'string'
+    && /^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$/.test(value);
+}
+
+function lifecycleRepairPath(
+  changeId,
+  failureId,
+  taskId,
+  file,
+  authorizedRepairs = []
+) {
+  const repairs = [
+    { failure_id: failureId, task_id: taskId },
+    ...authorizedRepairs
+  ].filter((repair) => (
+    validLifecycleId(repair?.failure_id)
+    && validLifecycleId(repair?.task_id)
+  ));
+  return repairs.some((repair) => (
+    file.startsWith(
+      `openspec/changes/${changeId}/verify/repairs/${repair.failure_id}/`
     )
+    || file.startsWith(
+      `openspec/changes/${changeId}/development/tasks/${repair.task_id}/`
+    )
+  ))
     || file === (
       `openspec/changes/${changeId}/verify/v2/repair-links.json`
     )
@@ -440,7 +460,8 @@ function validateRepairDiff({
   beforeIdentity,
   afterIdentity,
   beforeRevision = beforeIdentity?.code_sha,
-  afterRevision = afterIdentity?.code_sha
+  afterRevision = afterIdentity?.code_sha,
+  authorizedRepairs = []
 }) {
   if (
     !task
@@ -475,7 +496,8 @@ function validateRepairDiff({
     changeId,
     failureId,
     task.id,
-    change.file
+    change.file,
+    authorizedRepairs
   ));
   if (sourceChanges.length === 0) {
     return blocked(
@@ -2974,6 +2996,39 @@ async function run(args = process.argv.slice(2), dependencies = {}) {
           currentLink.development_task_id
         );
       }
+      const authorizedRepairs = [];
+      for (const candidateFailure of root.failures) {
+        const history = authorityLog.validate(
+          paths(context, candidateFailure.id).repairScopeSupersessions,
+          'repair_scope_supersession'
+        );
+        if (!history.ok) {
+          return {
+            ...history,
+            fallback_used: false
+          };
+        }
+        for (const envelope of history.value) {
+          const link = envelope.payload?.superseded_repair_link;
+          if (
+            envelope.payload?.failure_id !== candidateFailure.id
+            || envelope.payload?.change_id !== context.changeId
+            || envelope.bindings?.failure_id !== candidateFailure.id
+            || link?.failure_id !== candidateFailure.id
+            || link?.change_id !== context.changeId
+            || !validLifecycleId(link?.development_task_id)
+          ) {
+            return blocked(
+              'verification-repair:scope-supersession-lineage-invalid',
+              candidateFailure.id
+            );
+          }
+          authorizedRepairs.push({
+            failure_id: candidateFailure.id,
+            task_id: link.development_task_id
+          });
+        }
+      }
       const diffValidation = (
         dependencies.validateRepairDiff || validateRepairDiff
       )({
@@ -2984,7 +3039,8 @@ async function run(args = process.argv.slice(2), dependencies = {}) {
         beforeIdentity: currentLink.before_identity,
         afterIdentity: after,
         beforeRevision: baselineEnvelope.payload.git_revision,
-        afterRevision
+        afterRevision,
+        authorizedRepairs
       });
       if (!diffValidation.ok) return diffValidation;
       const reviews = [

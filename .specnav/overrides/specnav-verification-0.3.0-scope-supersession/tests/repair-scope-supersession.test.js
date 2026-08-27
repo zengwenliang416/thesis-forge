@@ -456,6 +456,10 @@ test('scope supersession rejects project-file symlink escapes', async (t) => {
 
 test('lifecycle exclusions are limited to the active failure and task', () => {
   const taskId = '900-verification-repair-active';
+  const authorizedRepairs = [{
+    failure_id: 'failure-signed-sibling',
+    task_id: '900-verification-repair-signed-sibling'
+  }];
   assert.equal(
     lifecycleRepairPath(
       changeId,
@@ -488,7 +492,38 @@ test('lifecycle exclusions are limited to the active failure and task', () => {
       changeId,
       failureId,
       taskId,
-      `openspec/changes/${changeId}/development/tasks/900-other/report.md`
+      `openspec/changes/${changeId}/development/tasks/900-other/report.md`,
+      authorizedRepairs
+    ),
+    false
+  );
+  assert.equal(
+    lifecycleRepairPath(
+      changeId,
+      failureId,
+      taskId,
+      `openspec/changes/${changeId}/verify/repairs/failure-signed-sibling/receipt.json`,
+      authorizedRepairs
+    ),
+    true
+  );
+  assert.equal(
+    lifecycleRepairPath(
+      changeId,
+      failureId,
+      taskId,
+      `openspec/changes/${changeId}/development/tasks/900-verification-repair-signed-sibling/report.md`,
+      authorizedRepairs
+    ),
+    true
+  );
+  assert.equal(
+    lifecycleRepairPath(
+      changeId,
+      failureId,
+      taskId,
+      `openspec/changes/${changeId}/verify/repairs/failure-unsigned-sibling/receipt.json`,
+      authorizedRepairs
     ),
     false
   );
