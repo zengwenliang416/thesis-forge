@@ -1,0 +1,40 @@
+{
+  "schema": "specnav.verification.trusted-fact-envelope.v1",
+  "id": "trusted-fact-475d74faa48dcf430cee5b6d439b62d477c56dc7962502a1a72379c94ee5500c",
+  "kind": "repair_link",
+  "producer": "specnav-development-repair-bridge",
+  "payload": {
+    "schema": "specnav.verification.repair-link.v1",
+    "failure_id": "failure-0b7b1bb8ae4396daaf850b9954df7a2cf108ddf9b482e412e7e118bd0f2b05bd",
+    "change_id": "docforge-project-format-v1",
+    "development_task_id": "900-verification-repair-2dc73b7ad78de0d8",
+    "repair_kind": "test_code",
+    "status": "in_progress",
+    "requested_at": "2026-08-27T07:34:37.965Z",
+    "before_identity": {
+      "case_snapshot_hash": "e34e5e74c6ac469ee8bce2be6d0b6ce1e772d4e773710b8bc782cc99da337c85",
+      "code_sha": "60274f4c7bd0541d0a6346753e68eb7f5f2ae6a6",
+      "test_sha": "8898bb578306334a0f3e9e5723ac9a186ccfb90845268c19e0677fb7df12a193",
+      "environment_hash": "e70d297a62bab25e39bb4323fd1636081aac76eff129f315f3d3dbe56c04a1eb",
+      "runtime_version": "2.0.0-alpha.2",
+      "kernel_version": "2.0.0-alpha.2"
+    },
+    "scope_digest": "97de42eb572bacc046cabcec7e89d0bd7042184892d0584d4ce91eb2cc2afeda",
+    "id": "repair-515cca933df87a9700515e8fbd0e79aac1278f460e5adcbff429ae8962a7ce46"
+  },
+  "payload_digest": "b6ffe786923da6d7602d28a7d95718456036361f24793fc65a6d846812a595c7",
+  "issued_at": "2026-08-27T07:56:47.693Z",
+  "bindings": {
+    "failure_id": "failure-0b7b1bb8ae4396daaf850b9954df7a2cf108ddf9b482e412e7e118bd0f2b05bd",
+    "change_id": "docforge-project-format-v1",
+    "run_id": "run-20260827064738-bcbe02a786beafa0",
+    "case_id": "case-a9-installed-office"
+  },
+  "claims": [
+    "repair-review:spec-approved",
+    "repair-review:quality-approved",
+    "repair-evidence:verified"
+  ],
+  "signature_algorithm": "hmac-sha256",
+  "signature": "825f27cde0ada69dcb9f8da861e6c749152f7aceb64cbca5b7c9f694392462ba"
+}
