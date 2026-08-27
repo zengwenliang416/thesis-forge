@@ -6,113 +6,121 @@ DONE
 
 ## Files Changed
 
-- `src/thesis_forge/` moved to `src/docforge/`, with imports updated across
-  Python source, tests, QA, the real HTTP acceptance server, and packaging
-  helpers.
-- `pyproject.toml`, `scripts/build_sidecar.py`, `scripts/prepare_release.py`,
-  `scripts/verify_distribution.py`, `scripts/verify_thesisforge_v2_goal.py`,
-  `README.md`, and `Makefile`.
-- CLI and distribution coverage in `tests/cli/`, `tests/test_cli.py`,
-  `tests/test_package_import.py`, `tests/test_distribution.py`,
-  `tests/test_desktop_distribution.py`, and the direct Python consumers whose
-  imports changed with the package move.
+- Python distribution and import package under `src/docforge/`.
+- Package metadata and the sole `docforge` console entry point in
+  `pyproject.toml`.
+- CLI behavior and Review output transaction handling in `src/docforge/cli.py`.
+- Distribution inspection and isolated-install verification in
+  `scripts/verify_distribution.py`.
+- Package, CLI, Review, wheel, sdist, and desktop-distribution tests.
+- Active package and CLI documentation in `README.md` and `Makefile`.
 
 ## What Changed
 
-- Renamed the Python distribution, import package, packaged resource namespace,
-  and sole console script to `docforge`.
-- Removed the active `thesis_forge` package and `thesisforge` command without
-  adding an alias, shim, fallback loader, or compatibility package.
+- Renamed the active Python distribution, import package, resources, and
+  console command to `docforge` without a `thesis_forge` compatibility package
+  or `thesisforge` command alias.
 - Kept `inspect`, `validate`, `review`, and `build` on the shared typed project
-  application services, accepting only a project directory or `docforge.yaml`.
-- Made `review` use the manifest-resolved project paths by default, while
-  preserving `--output-dir` as an explicit export-root override.
-- Updated CLI help and parser diagnostics to DocForge terminology, removed the
-  ineffective per-command template override, and made the default build path
-  `build/document.docx`.
-- Restored validation against the strict DocForge manifest by discovering
-  `docforge.yaml` and mapping generic and optional academic metadata into the
-  existing template-facing metadata groups.
-- Extended the distribution verifier to build and inspect DocForge artifacts,
-  install the wheel into an isolated prefix, block network access, prove import
-  provenance, and execute `inspect`, `validate`, default-path `review`, and
-  `build`.
-- Tightened wheel inspection to require all four bundled template YAMLs and
-  exactly one console script, `docforge = docforge.cli:app`, rejecting an
-  additional obsolete alias.
-- Closed the offline-launcher socket bypass by blocking `connect_ex` alongside
-  `create_connection` and `connect`, with a subprocess regression that proves
-  the bypass raises before network I/O.
+  application services.
+- Made `review --output-dir` optional. When omitted, Review uses the manifest
+  paths under the project root.
+- Made the Review Markdown and source-map pair failure-safe:
+  - both payloads are serialized to same-directory temporary files;
+  - both staged files are read back before replacement begins;
+  - existing targets are backed up;
+  - a failure during either final replacement restores the previous pair or
+    removes newly created partial output;
+  - temporary files are removed on success and failure.
+- Kept the neutral default build path `build/document.docx`.
+- Hardened artifact inspection:
+  - all four bundled template YAML files are required;
+  - console entry-point metadata must contain only
+    `docforge = docforge.cli:app`;
+  - active wheel `Requires-Dist` names must match the eight declared runtime
+    distributions;
+  - wheel and sdist contents reject obsolete `thesis_forge/` package paths.
+- Replaced host `site-packages` copying with a clean installation flow:
+  - requirements are read from the built wheel `METADATA`;
+  - active direct and transitive requirements are resolved against installed
+    distribution metadata and version constraints;
+  - those validated distributions are materialized as a temporary local
+    wheelhouse;
+  - a new virtual environment installs DocForge and dependencies with
+    `pip --isolated --no-index`, followed by an isolated `pip check`;
+  - inherited `PIP_*` settings are removed and `PIP_CONFIG_FILE` is forced to
+    the platform null device;
+  - every verifier subprocess has a 180-second hard timeout;
+  - import provenance must stay inside the new virtual environment;
+  - the platform-native generated `docforge` launcher is executed directly,
+    including the `docforge.exe` path on Windows.
+- Narrowed the runtime network claim to its tested boundary. The verification
+  guard blocks Python DNS, connect, send, and UDP socket APIs; it does not claim
+  an OS-level network sandbox.
 
 ## TDD Evidence
 
-- `tests/test_package_import.py` initially produced three failures for the old
-  distribution name, missing `docforge` import package, and thesis-specific CLI
-  help.
-- The first integrated run then exposed the omitted QA import in
-  `qa/tools/parser_diff.py`; the next run exposed the stale
-  `LoadedProject.source_path` validator dependency. Both were corrected without
-  introducing compatibility behavior.
-- Final task-focused and extended CLI/distribution suites pass with the real
-  renamed package and clean wheel installation.
+- Review fault injection initially reproduced partial output: failure during
+  the source-map replacement left or overwrote Review Markdown.
+- The final tests cover both pre-existing output rollback and the no-existing-
+  output case, including temporary-file cleanup.
+- Wheel fixtures cover missing runtime metadata and obsolete package paths in
+  both wheel and sdist artifacts.
+- Network probes cover `connect_ex`, UDP `sendto`, and DNS `getaddrinfo`.
+- Pip isolation tests cover inherited find-links, index, and config settings,
+  the `--isolated` command path, and subprocess timeout reporting.
+- The platform-path test proves Windows selects `Scripts/docforge.exe` and
+  POSIX selects `bin/docforge`; the verifier no longer passes a Windows
+  executable to `runpy`.
 
 ## Verification Commands
 
-- `PYTHONPATH=src .venv/bin/python -m pytest tests/cli tests/test_package_import.py tests/test_desktop_distribution.py -q`
-  -> `47 passed`.
-- `PYTHONPATH=src .venv/bin/python -m pytest tests/cli tests/test_cli.py tests/test_package_import.py tests/test_distribution.py tests/test_desktop_distribution.py -q`
-  -> `69 passed`.
+- `PYTHONPATH=src .venv/bin/python -m pytest tests/test_distribution.py tests/cli/test_review_command.py -q`
+  -> `21 passed in 17.92s`.
 - `PYTHONPATH=src .venv/bin/python -m pytest tests/test_package_import.py tests/cli tests/test_cli.py tests/test_parser_markdown_it.py tests/test_distribution.py tests/test_desktop_distribution.py -q`
-  -> `104 passed`.
-- `PYTHONPATH=src .venv/bin/python -m pytest --collect-only -q`
-  -> `1331 tests collected`.
-- `.venv/bin/ruff check src tests`
+  -> `115 passed in 12.01s`.
+- `.venv/bin/ruff check src tests qa spikes scripts`
   -> `All checks passed`.
-- `.venv/bin/python -m build --no-isolation --outdir /tmp/docforge-task003-final.Y0JrcS`
+- `.venv/bin/python -m build --no-isolation --outdir /tmp/docforge-task003-r2.qbHmz5`
   -> built `docforge-0.1.0-py3-none-any.whl` and
   `docforge-0.1.0.tar.gz`.
-- `.venv/bin/python scripts/verify_distribution.py --dist-dir /tmp/docforge-task003-final.Y0JrcS`
-  -> `ok: true`; hermetic imports and offline `inspect`, `validate`, `review`,
-  and `build` passed, producing Review artifacts and a valid DOCX ZIP package.
-- `PYTHONPATH=src .venv/bin/python -m pytest tests/test_distribution.py tests/cli/test_review_command.py -q`
-  -> `11 passed`, including a subprocess proof that `connect_ex` is blocked.
-- `.venv/bin/docforge review --help`
-  -> `--output-dir` is optional.
-- `PYTHONPATH=src .venv/bin/python -m docforge.cli review <copied-docforge-academic-project>`
-  -> `status: ready`; wrote `review/document.review.md` and
-  `review/document.review-map.json` without an output option.
-- `OPENSPEC_TELEMETRY=0 openspec validate docforge-project-format-v1 --strict --no-interactive --json`
-  -> `1 passed; 0 failed`.
+- `PIP_FIND_LINKS=http://127.0.0.1:1/ PIP_INDEX_URL=https://example.invalid/simple PIP_CONFIG_FILE=/tmp/untrusted-pip.conf .venv/bin/python scripts/verify_distribution.py --dist-dir /tmp/docforge-task003-r2.qbHmz5`
+  -> `ok: true`; exact wheel metadata, obsolete-path rejection, 16 dependency
+  wheels, sanitized pip configuration, isolated `pip --no-index`
+  installation, `pip check`, import provenance, platform console launcher,
+  Python socket guard, default Review outputs, and valid DOCX output passed.
+- `git diff --check -- scripts/verify_distribution.py tests/test_distribution.py src/docforge/cli.py tests/cli/test_review_command.py`
+  -> passed.
 - `SPECNAV_CHANGE=docforge-project-format-v1 node development-contract.js --mode entry --json`
-  -> `ok: true`.
+  -> `ok: true`; no blockers.
 
 ## Concerns
 
-- The full repository run currently reports `1261 passed, 38 failed, 32
-  errors`. The sampled failures are obsolete repository-owned
-  `thesisforge.yaml` / `thesis.md` project and template fixtures rejected by the
-  strict Task 001 contract. Their conversion is explicitly owned by Task 007;
-  no failure is caused by a missing `docforge` import, console script, packaged
-  resource, or Task 003 CLI path.
+- The temporary dependency wheelhouse is reconstructed from distributions
+  already installed in the verifier's host interpreter. This proves that the
+  wheel metadata is complete enough for pip dependency resolution and a clean
+  target installation without copying host packages into the target. It does
+  not prove that every dependency wheel is available from an external package
+  index.
+- The runtime network guard is intentionally reported as
+  `python-socket-apis`. It blocks the Python network paths covered by tests but
+  is not an OS-level sandbox for arbitrary native child processes.
+- The last recorded repository-wide run before this review round reported
+  `1261 passed, 38 failed, 32 errors`, primarily from obsolete repository-owned
+  projects and templates assigned to Task 007. It was not rerun in this fix
+  round and is not represented as current green evidence.
 
 ## Scope Deviations
 
-- `frontend/e2e/real_http_server.py` and `qa/tools/parser_diff.py` required
-  direct import updates because removal of `thesis_forge` otherwise breaks
-  active Python acceptance and QA entrypoints.
-- Desktop sidecar names, workbench and BuildReport protocol identifiers,
-  template compatibility fields, application bundle identity, examples, CI,
-  and release asset identity remain deferred to Tasks 004 through 007.
+- `frontend/e2e/real_http_server.py`, `qa/tools/parser_diff.py`, and two phase-0
+  spike imports required direct import migration because removing
+  `thesis_forge` otherwise broke active Python consumers.
+- Runtime protocol, desktop transport, templates, examples, release identity,
+  and remaining repository delivery surfaces remain assigned to Tasks 004
+  through 007.
 
 ## Follow-up Needed
 
 - Task 004 must migrate runtime and BuildReport protocol identities.
-- Task 005 must add `docforge-standard` and typed template bindings.
-- Tasks 006 and 007 must migrate desktop identity and repository-owned
-  examples, fixtures, CI, and release surfaces before the full suite can pass.
-
-## Adjudication
-
-The full-suite failures are assigned to their declared downstream task and do
-not overturn the executed Task 003 package, CLI, build, and hermetic
-distribution evidence.
+- Task 005 must add the neutral standard template profile.
+- Tasks 006 and 007 must migrate desktop and repository delivery surfaces
+  before the complete change can pass end to end.

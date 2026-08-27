@@ -1,6 +1,7 @@
 {
   "task_id": "007-repository-delivery",
   "task_items": ["7.1", "7.2", "7.3", "7.4", "7.5"],
+  "acceptance_primary": ["A4", "A10"],
   "goal": "Convert active repository projects and delivery surfaces to DocForge and prove release-grade macOS artifact identity without performing external publication.",
   "must_read": [
     "openspec/changes/docforge-project-format-v1/development/tasks/007-repository-delivery/brief.md",
@@ -38,11 +39,12 @@
     "openspec/changes/docforge-project-format-v1/development"
   ],
   "test_paths": [
-    "tests/test_desktop_distribution.py",
-    "tests/cli",
-    "tests/project",
-    "frontend",
-    "src-tauri"
+    "PYTHONPATH=src .venv/bin/python -m pytest tests/test_desktop_distribution.py tests/cli tests/project -q",
+    ".venv/bin/ruff check scripts tests/test_desktop_distribution.py",
+    "PYTHONPATH=src .venv/bin/python scripts/check_facticity.py --json /tmp/docforge-facticity.json --markdown /tmp/docforge-facticity.md",
+    "pnpm --dir frontend build",
+    "cargo check --manifest-path src-tauri/Cargo.toml",
+    "PYTHONPATH=src .venv/bin/python scripts/verify_desktop_distribution.py --platform macos --bundle-root src-tauri/target/release/bundle"
   ],
   "non_goals": [
     "Do not push, publish, tag, upload a release, deploy, or mutate external CI state in this task without separate authorization.",

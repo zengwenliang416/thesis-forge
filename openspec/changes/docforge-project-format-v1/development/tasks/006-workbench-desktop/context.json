@@ -1,6 +1,7 @@
 {
   "task_id": "006-workbench-desktop",
   "task_items": ["6.1", "6.2", "6.3", "6.4", "6.5"],
+  "acceptance_primary": ["A1", "A2", "A4", "A5", "A9"],
   "goal": "Open DocForge projects and present neutral document and desktop identity while preserving the approved workbench and Microsoft Word preview behavior.",
   "must_read": [
     "openspec/changes/docforge-project-format-v1/development/tasks/006-workbench-desktop/brief.md",
@@ -31,11 +32,11 @@
     "openspec/changes/docforge-project-format-v1/development"
   ],
   "test_paths": [
-    "frontend/src",
-    "frontend/e2e",
-    "src-tauri/src",
-    "tests/adapters",
-    "tests/test_desktop_distribution.py"
+    "pnpm --dir frontend typecheck && pnpm --dir frontend lint && pnpm --dir frontend test && pnpm --dir frontend build",
+    "pnpm --dir frontend exec playwright test --config e2e/real-http.playwright.config.ts",
+    "cargo fmt --check --manifest-path src-tauri/Cargo.toml && cargo check --manifest-path src-tauri/Cargo.toml && cargo test --manifest-path src-tauri/Cargo.toml",
+    "PYTHONPATH=src .venv/bin/python -m pytest tests/adapters tests/test_desktop_distribution.py -q",
+    "PYTHONPATH=src .venv/bin/python scripts/verify_desktop_distribution.py --platform macos --bundle-root src-tauri/target/release/bundle"
   ],
   "non_goals": [
     "Do not redesign the three-pane layout or introduce a new screen.",

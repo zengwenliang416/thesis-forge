@@ -1,0 +1,116 @@
+{
+  "status": "passed",
+  "ok": true,
+  "checkedAt": "2026-08-27T02:03:24Z",
+  "platform": "macos",
+  "operatingSystemVersion": "26.5.2",
+  "app": {
+    "bundleId": "com.docforge.workbench",
+    "displayName": "DocForge",
+    "executable": "docforge-desktop",
+    "installedBundlePath": "/Applications/DocForge.app",
+    "bundlePath": "src-tauri/target/release/bundle/macos/DocForge.app",
+    "dmgPath": "src-tauri/target/release/bundle/dmg/DocForge_0.1.0_aarch64.dmg",
+    "executableSha256": "1a10d81eac0b00d39f70d33f29c80e5a6dbabdaf94483022b2ce3055eb8d80e7",
+    "dmgSha256": "7bb22e1270bfce7041c63e868cfc7568ff4b364a9e35b03654bddfb697fd48b7"
+  },
+  "runtime": {
+    "pid": 75158,
+    "windowTitle": "DocForge - Markdown \u2192 Word \u6587\u6863\u5de5\u574a",
+    "layout": "three-pane",
+    "projectId": "general-fixture",
+    "manifest": "docforge.yaml",
+    "source": "document.md",
+    "sourcePath": "/tmp/docforge-sensory-20260827-006/document.md",
+    "diagnostics": {
+      "errors": 0,
+      "warnings": 0,
+      "info": 0
+    },
+    "accessibilityLabels": [
+      "Markdown \u6587\u6863\u5185\u5bb9",
+      "\u6587\u6863\u5927\u7eb2",
+      "\u6784\u5efa\u8fdb\u5ea6",
+      "\u8f93\u51fa\u7ed3\u679c",
+      "\u6253\u5f00 Markdown \u6216 DocForge \u9879\u76ee",
+      "\u4fdd\u5b58\u6587\u6863",
+      "\u68c0\u67e5\u6587\u6863",
+      "\u751f\u6210 DOCX",
+      "\u9009\u62e9 Word PDF"
+    ]
+  },
+  "build": {
+    "interaction": "native picker -> \u751f\u6210 DOCX",
+    "progress": "\u6784\u5efa\u5b8c\u6210",
+    "output": "document.docx",
+    "outputPath": "/tmp/docforge-sensory-20260827-006/document.docx",
+    "outputBytes": 38520,
+    "outputSha256": "f475bfc557dbfa0ef83d53a6a3af6b08804013a71fffb667026c9414b01b1948"
+  },
+  "wordPreview": {
+    "engine": "microsoft-word",
+    "microsoftWordVersion": "16.112",
+    "status": "available",
+    "heading": "Microsoft Word PDF \u5f53\u524d Word \u9884\u89c8",
+    "pdfGenerated": true,
+    "pdfPath": "/tmp/docforge-sensory-20260827-006/document.preview.pdf",
+    "pdfBytes": 67545,
+    "pdfSha256": "d903b8a0dbf9c883d8bef686947fb6ddb0cb6ffded169d684340a06d33ea0cd7",
+    "pdfSignature": "%PDF-",
+    "visibleContent": [
+      "DocForge \u901a\u7528\u6587\u6863",
+      "\u7ec4\u7ec7\uff1a\u793a\u4f8b\u79d1\u6280\u6709\u9650\u516c\u53f8",
+      "\u4f5c\u8005\uff1a\u5f20\u4e09",
+      "\u9879\u76ee\u6982\u8ff0",
+      "\u8fd9\u662f\u4e00\u4e2a\u6700\u5c0f\u7684\u901a\u7528 DocForge \u6587\u6863\u9879\u76ee\u3002"
+    ]
+  },
+  "authorization": {
+    "appleEventsDialogObservedDuringPassingRun": false,
+    "target": "Microsoft Word",
+    "tccClient": "com.docforge.workbench",
+    "tccAuthValue": 2,
+    "result": "DocForge successfully controlled Microsoft Word and generated the PDF preview"
+  },
+  "bundleVerification": {
+    "command": "PYTHONPATH=src .venv/bin/python scripts/verify_desktop_distribution.py --platform macos --bundle-root src-tauri/target/release/bundle",
+    "ok": true,
+    "target": "aarch64-apple-darwin",
+    "sidecar": {
+      "path": "src-tauri/binaries/docforge-sidecar-aarch64-apple-darwin",
+      "bytes": 20775840,
+      "sha256": "07b92b5a13a95507fbb04142bd9ce2a28d2cb4908d1faeed6b9e3e968c0401b8",
+      "operations": [
+        "inspect",
+        "preview",
+        "validate"
+      ],
+      "canceled": true,
+      "buildStages": [
+        "parse",
+        "validate",
+        "compile",
+        "render",
+        "finalize"
+      ],
+      "docxBytes": 27703,
+      "reopened": true,
+      "offline": true
+    },
+    "bundles": [
+      "src-tauri/target/release/bundle/macos/DocForge.app",
+      "src-tauri/target/release/bundle/dmg/DocForge_0.1.0_aarch64.dmg"
+    ]
+  },
+  "evidence": {
+    "screenshot": "macos-native-acceptance.png",
+    "screenshotSha256": "ed55ca62082d1ff992fe4b808a2395d1756631a0db5b170d79f877eb772dca50",
+    "screenshotDimensions": {
+      "width": 2880,
+      "height": 1800
+    }
+  },
+  "remainingPlatformEvidence": {
+    "windowsWebView2": "not available on this macOS host; must be produced by the Windows CI acceptance job"
+  }
+}

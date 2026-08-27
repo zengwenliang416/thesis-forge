@@ -1,6 +1,7 @@
 {
   "task_id": "005-template-profiles",
   "task_items": ["5.1", "5.2", "5.3", "5.4", "5.5"],
+  "acceptance_primary": ["A2", "A3", "A7"],
   "goal": "Package docforge-standard, resolve typed generic and academic metadata before RenderPlan, and prove no renderer profile branching or fabricated academic content.",
   "must_read": [
     "openspec/changes/docforge-project-format-v1/development/tasks/005-template-profiles/brief.md",
@@ -33,9 +34,9 @@
     "openspec/changes/docforge-project-format-v1/development"
   ],
   "test_paths": [
-    "tests/templates",
-    "tests/compiler",
-    "tests/project"
+    "PYTHONPATH=src .venv/bin/python -m pytest tests/templates tests/compiler tests/project tests/core/test_manifest_resource_validation.py tests/test_distribution.py -q",
+    ".venv/bin/ruff check src/docforge/templates src/docforge/core/compiler.py src/docforge/core/validator.py src/docforge/core/render_plan.py src/docforge/project tests/templates tests/compiler tests/project tests/core/test_manifest_resource_validation.py tests/test_distribution.py scripts/verify_distribution.py",
+    "tmp_dir=$(mktemp -d /tmp/docforge-task005.XXXXXX) && .venv/bin/python -m build --no-isolation --outdir \"$tmp_dir\" && PYTHONPATH=src .venv/bin/python scripts/verify_distribution.py --dist-dir \"$tmp_dir\""
   ],
   "non_goals": [
     "Do not change Markdown syntax, numbering, citation style, OOXML field semantics, or workbench layout.",

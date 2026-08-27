@@ -1,6 +1,7 @@
 {
   "task_id": "008-end-to-end-verification",
   "task_items": ["8.1", "8.2", "8.3", "8.4", "8.5", "8.6"],
+  "acceptance_primary": ["A1", "A2", "A3", "A4", "A5", "A6", "A7", "A8", "A9", "A10"],
   "goal": "Produce direct six-domain, OOXML, installed Office, facticity, acceptance, and SpecNav evidence for the complete DocForge migration.",
   "must_read": [
     "openspec/changes/docforge-project-format-v1/development/tasks/008-end-to-end-verification/brief.md",
@@ -29,10 +30,14 @@
     "openspec/changes/docforge-project-format-v1"
   ],
   "test_paths": [
-    "tests",
-    "frontend",
-    "src-tauri",
-    "qa"
+    "PYTHONPATH=src .venv/bin/python -m pytest -q",
+    ".venv/bin/ruff check src tests scripts qa",
+    "pnpm --dir frontend typecheck && pnpm --dir frontend lint && pnpm --dir frontend test && pnpm --dir frontend build",
+    "pnpm --dir frontend exec playwright test --config e2e/real-http.playwright.config.ts",
+    "cargo fmt --check --manifest-path src-tauri/Cargo.toml && cargo check --manifest-path src-tauri/Cargo.toml && cargo test --manifest-path src-tauri/Cargo.toml",
+    "PYTHONPATH=src .venv/bin/python scripts/check_facticity.py --json /tmp/docforge-facticity.json --markdown /tmp/docforge-facticity.md",
+    "PYTHONPATH=src .venv/bin/python scripts/verify_desktop_distribution.py --platform macos --bundle-root src-tauri/target/release/bundle",
+    "OPENSPEC_TELEMETRY=0 openspec validate docforge-project-format-v1 --strict --no-interactive --json"
   ],
   "non_goals": [
     "Do not implement new product behavior solely to make verification pass without a repair task.",

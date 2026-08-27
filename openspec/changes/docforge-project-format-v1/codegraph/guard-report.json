@@ -1,6 +1,6 @@
 {
   "schema": "specnav.codegraph.guard_report.v1",
-  "generated_at": "2026-08-26T10:40:51.844Z",
+  "generated_at": "2026-08-27T02:59:55.756Z",
   "active_change": "docforge-project-format-v1",
   "stage": "development",
   "ok": true,
@@ -34,13 +34,13 @@
       "initialized": true,
       "projectPath": "/Volumes/zwl/open_sources/thesis-forge",
       "indexPath": "/Volumes/zwl/open_sources/thesis-forge/.codegraph",
-      "lastIndexed": "2026-08-26T10:01:41.999Z",
-      "fileCount": 322,
-      "nodeCount": 6581,
-      "edgeCount": 20594,
+      "lastIndexed": "2026-08-26T17:23:33.479Z",
+      "fileCount": 334,
+      "nodeCount": 6864,
+      "edgeCount": 21289,
       "pendingChanges": {
-        "added": 0,
-        "modified": 0,
+        "added": 4,
+        "modified": 53,
         "removed": 0
       },
       "reindexRecommended": false,
@@ -54,14 +54,16 @@
     "effective_mode": "advisory",
     "required_for_stage": false,
     "execution_surface": "cli",
-    "result": "pass",
+    "result": "warn",
     "blockers": [],
-    "warnings": [],
-    "explanation": "CodeGraph policy satisfied for development."
+    "warnings": [
+      "codegraph:index-stale"
+    ],
+    "explanation": "CodeGraph policy has advisory warnings for development."
   },
   "evidence_index": {
     "schema": "specnav.codegraph.evidence_index.v1",
-    "generated_at": "2026-08-26T10:40:51.842Z",
+    "generated_at": "2026-08-27T02:59:55.754Z",
     "active_change": "docforge-project-format-v1",
     "source_raw": "openspec/changes/docforge-project-format-v1/codegraph/evidence.jsonl",
     "by_claim": {},
@@ -72,7 +74,7 @@
   },
   "claims_report": {
     "schema": "specnav.codegraph.claims_report.v1",
-    "generated_at": "2026-08-26T10:40:51.844Z",
+    "generated_at": "2026-08-27T02:59:55.756Z",
     "active_change": "docforge-project-format-v1",
     "claims_file": "openspec/changes/docforge-project-format-v1/codegraph/claims-map.json",
     "evidence_index": "openspec/changes/docforge-project-format-v1/codegraph/evidence-index.json",
@@ -108,6 +110,7 @@
   },
   "blockers": [],
   "warnings": [
+    "codegraph:index-stale",
     "codegraph:claim-unverified:development:task-001-project-contract",
     "codegraph:claim-unverified:development:task-002-generic-document-domain",
     "codegraph:claim-unverified:development:task-003-python-package-cli",

@@ -1,6 +1,7 @@
 {
   "task_id": "004-runtime-protocol",
   "task_items": ["4.1", "4.2", "4.3", "4.4", "4.5", "4.6"],
+  "acceptance_primary": ["A4", "A5", "A8"],
   "goal": "Deliver one DocForge workbench and BuildReport contract across Python, TypeScript, Rust, HTTP, sidecar, Tauri, cancellation, and preview authorization.",
   "must_read": [
     "openspec/changes/docforge-project-format-v1/development/tasks/004-runtime-protocol/brief.md",
@@ -33,11 +34,10 @@
     "openspec/changes/docforge-project-format-v1/development"
   ],
   "test_paths": [
-    "tests/adapters",
-    "tests/application",
-    "tests/test_adapters.py",
-    "frontend/src/transport",
-    "src-tauri/src"
+    "PYTHONPATH=src .venv/bin/python -m pytest tests/adapters tests/application tests/test_adapters.py -q",
+    ".venv/bin/ruff check src/docforge/adapters src/docforge/application/contracts.py tests/adapters tests/application tests/test_adapters.py",
+    "pnpm --dir frontend typecheck && pnpm --dir frontend lint && pnpm --dir frontend test && pnpm --dir frontend build",
+    "cargo fmt --check --manifest-path src-tauri/Cargo.toml && cargo check --manifest-path src-tauri/Cargo.toml && cargo test --manifest-path src-tauri/Cargo.toml"
   ],
   "non_goals": [
     "Do not redesign the workbench UI or change compiler and renderer semantics.",
