@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "change_id": "docforge-project-format-v1",
+  "status": "green",
+  "snapshot_id": "snapshot-e34e5e74c6ac469ee8bce2be",
+  "runtime_version": "2.0.0-alpha.2",
+  "runtime_scope": "project",
+  "fallback_used": false,
+  "surfaces": [
+    {
+      "surface": "runtime",
+      "required": true,
+      "status": "pass",
+      "command": "SpecNav verification runtime doctor plus current-HEAD Python, frontend, Rust, facticity, distribution, and strict OpenSpec receipts",
+      "evidence_refs": [
+        "verify/v2/runtime-status.json",
+        "development/evidence/053-008-end-to-end-verification.log",
+        "development/evidence/054-008-end-to-end-verification.log",
+        "development/evidence/055-008-end-to-end-verification.log",
+        "development/evidence/057-008-end-to-end-verification.log",
+        "development/evidence/058-008-end-to-end-verification.log",
+        "development/evidence/059-008-end-to-end-verification.log",
+        "development/evidence/060-008-end-to-end-verification.log"
+      ],
+      "notes": [
+        "Runtime doctor reports readiness=ready and fallback_used=false; product receipts are bound to the current verification HEAD."
+      ]
+    },
+    {
+      "surface": "browser",
+      "required": true,
+      "status": "pass",
+      "command": "pnpm --dir frontend exec playwright test --config e2e/real-http.playwright.config.ts plus installed DocForge/Microsoft Word acceptance",
+      "evidence_refs": [
+        "development/evidence/056-008-end-to-end-verification.log",
+        "development/tasks/006-workbench-desktop/evidence/macos-native-acceptance.json"
+      ],
+      "artifact_refs": [
+        "development/tasks/006-workbench-desktop/evidence/macos-native-acceptance.png"
+      ],
+      "screenshot_refs": [
+        "development/tasks/006-workbench-desktop/evidence/macos-native-acceptance.png"
+      ],
+      "notes": [
+        "Real HTTP Playwright passed; installed DocForge.app produced a Microsoft Word 16.112 PDF preview with a content-addressed screenshot."
+      ]
+    }
+  ]
+}

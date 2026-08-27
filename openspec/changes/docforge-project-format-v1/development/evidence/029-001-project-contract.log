@@ -1,0 +1,10 @@
+# command: .venv/bin/ruff check src/docforge/project tests/project tests/application/test_project_services.py
+# exit_status: 0
+# duration_ms: 41
+
+## stdout
+All checks passed!
+
+
+## stderr
+(empty)

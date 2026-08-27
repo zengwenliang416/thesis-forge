@@ -1,0 +1,10 @@
+# command: .venv/bin/ruff check src/docforge/cli.py tests/cli tests/test_package_import.py tests/test_desktop_distribution.py
+# exit_status: 0
+# duration_ms: 16
+
+## stdout
+All checks passed!
+
+
+## stderr
+(empty)

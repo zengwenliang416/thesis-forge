@@ -1,0 +1,55 @@
+{
+  "schema": "specnav.verification.trusted-fact-envelope.v1",
+  "id": "trusted-fact-8ba7b936fbc8252b55b951506777cb46c782162cd6837d67f227033e67cc4614",
+  "kind": "classification_result",
+  "producer": "specnav-failure-classifier",
+  "payload": {
+    "ok": true,
+    "status": "classified",
+    "packet": {
+      "schema": "specnav.verification.failure-packet.v1",
+      "change_id": "docforge-project-format-v1",
+      "run_id": "run-20260827064518-8097b5c25829a2d4",
+      "case_id": "case-a4-obsolete-contracts",
+      "attempt_id": "attempt-20260827064518-8097b5c25829a2d4",
+      "reading_ids": [
+        "reading-375cedfdee24cd7cf47b328c01544ba5ab665eb9bcf30688b4d22d01f864adca",
+        "reading-46a058348ef675855f84309842365e95bcc044d974837d9d076cd24a61f8c5e7",
+        "reading-4a8ef384169ac740564420e0c7c68db53d21693ab3ea29091452dd15af2090a4",
+        "reading-58e9c645339fd9a37f710749c29874aacdbc2f0e7534490d86cb0952214c8fe5",
+        "reading-7dcbf913ade776a39023ffdf7f3338225d841ce84eec7a73cac3f8a1343716cf",
+        "reading-aeae2b58971df794600053c4ea0a5cb5dea6249f61bd176613ed62a7118338fa"
+      ],
+      "evidence_ids": [
+        "evidence-311016a8c0a2a6d5ee2d9c3fd4c5165468acac882ae5c8d44200c298c149374d"
+      ],
+      "classification": "test_defect",
+      "status": "repair_required",
+      "next_action": "repair_required",
+      "summary": "The approved command runner omitted the assertion protocol required to produce structured assertion_result evidence.",
+      "root_cause": "The case contract declared env_keys=[], so the Runtime did not inject SPECNAV_VERIFICATION_ASSERTION_IDS or SPECNAV_VERIFICATION_ASSERTION_RESULT_FILE and no authoritative oracle result was emitted.",
+      "failed_assertion_ids": [
+        "a4-no-obsolete-contract"
+      ],
+      "owner": "development",
+      "created_at": "2026-08-27T06:45:25.342Z",
+      "frozen_at": "2026-08-27T06:45:25.342Z",
+      "id": "failure-1cf04e4a2349690194b0df450d9215c4eb41407919e34e6ed4caca28a4496546"
+    },
+    "signals": [],
+    "blockers": []
+  },
+  "payload_digest": "353c24589e9c8412a91b66ba934ab0e89067505b0f40c9ce449655bc073539a0",
+  "issued_at": "2026-08-27T07:13:59.019Z",
+  "bindings": {
+    "failure_id": "failure-1cf04e4a2349690194b0df450d9215c4eb41407919e34e6ed4caca28a4496546",
+    "change_id": "docforge-project-format-v1",
+    "run_id": "run-20260827064518-8097b5c25829a2d4",
+    "case_id": "case-a4-obsolete-contracts"
+  },
+  "claims": [
+    "failure-classification:verified"
+  ],
+  "signature_algorithm": "hmac-sha256",
+  "signature": "ad1eff498462cd8087a22991e655c029998c53b5522a168230fe2c4c15b8fa71"
+}

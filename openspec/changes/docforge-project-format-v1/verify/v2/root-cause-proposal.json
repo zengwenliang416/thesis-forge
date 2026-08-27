@@ -1,0 +1,101 @@
+{
+  "schema": "docforge.verification.root-cause-proposal.v1",
+  "change_id": "docforge-project-format-v1",
+  "generation_id": "generation-3aec0b8644c6c59b7f56111e",
+  "classification": "test_defect",
+  "reviewer_id": "zengwenliang416",
+  "failures": [
+    {
+      "failure_id": "failure-460a6bec826047df8fb5695d9f35761718afb7180740ec3edfaba7ca8b7c9c71",
+      "case_id": "case-a1-project-open",
+      "failed_assertion_ids": [
+        "a1-project-open"
+      ],
+      "summary": "The approved command runner omitted the assertion protocol required to produce structured assertion_result evidence.",
+      "root_cause": "The case contract declared env_keys=[], so the Runtime did not inject SPECNAV_VERIFICATION_ASSERTION_IDS or SPECNAV_VERIFICATION_ASSERTION_RESULT_FILE and no authoritative oracle result was emitted."
+    },
+    {
+      "failure_id": "failure-98298abaa9086b490c419c2829b887ae15a77d690824d18a273085cf62f64d98",
+      "case_id": "case-a10-repository-delivery",
+      "failed_assertion_ids": [
+        "a10-repository-clean"
+      ],
+      "summary": "The approved command runner omitted the assertion protocol and did not expose the required toolchain PATH.",
+      "root_cause": "The case contract declared env_keys=[] and relied on ambient PATH, so the Runtime could neither inject SPECNAV assertion output variables nor consistently locate Rust/Node toolchains."
+    },
+    {
+      "failure_id": "failure-aea586ad3f508740227d90a29b096d0b54461caa5a1c78f1eb0bfc4871d1b02e",
+      "case_id": "case-a2-general-project",
+      "failed_assertion_ids": [
+        "a2-general-flow"
+      ],
+      "summary": "The approved command runner omitted the assertion protocol required to produce structured assertion_result evidence.",
+      "root_cause": "The case contract declared env_keys=[], so the Runtime did not inject SPECNAV_VERIFICATION_ASSERTION_IDS or SPECNAV_VERIFICATION_ASSERTION_RESULT_FILE and no authoritative oracle result was emitted."
+    },
+    {
+      "failure_id": "failure-1ade668829948cfb896aba9e1ff2afce6c7f0604978a8b5a7cadfca7a657f7df",
+      "case_id": "case-a3-academic-profile",
+      "failed_assertion_ids": [
+        "a3-profile-isolation"
+      ],
+      "summary": "The approved command runner omitted the assertion protocol required to produce structured assertion_result evidence.",
+      "root_cause": "The case contract declared env_keys=[], so the Runtime did not inject SPECNAV_VERIFICATION_ASSERTION_IDS or SPECNAV_VERIFICATION_ASSERTION_RESULT_FILE and no authoritative oracle result was emitted."
+    },
+    {
+      "failure_id": "failure-1cf04e4a2349690194b0df450d9215c4eb41407919e34e6ed4caca28a4496546",
+      "case_id": "case-a4-obsolete-contracts",
+      "failed_assertion_ids": [
+        "a4-no-obsolete-contract"
+      ],
+      "summary": "The approved command runner omitted the assertion protocol required to produce structured assertion_result evidence.",
+      "root_cause": "The case contract declared env_keys=[], so the Runtime did not inject SPECNAV_VERIFICATION_ASSERTION_IDS or SPECNAV_VERIFICATION_ASSERTION_RESULT_FILE and no authoritative oracle result was emitted."
+    },
+    {
+      "failure_id": "failure-73f8288bda2544be90b77e2d59f451a19bf1da787426f2bc7fffd960c7e7403a",
+      "case_id": "case-a5-neutral-default-paths",
+      "failed_assertion_ids": [
+        "a5-default-paths"
+      ],
+      "summary": "The approved command runner omitted the assertion protocol required to produce structured assertion_result evidence.",
+      "root_cause": "The case contract declared env_keys=[], so the Runtime did not inject SPECNAV_VERIFICATION_ASSERTION_IDS or SPECNAV_VERIFICATION_ASSERTION_RESULT_FILE and no authoritative oracle result was emitted."
+    },
+    {
+      "failure_id": "failure-046667276b7162f8e5ff3393bf25487fc05b2ab68270ff9e12f6f1a9c8656ee5",
+      "case_id": "case-a6-path-security",
+      "failed_assertion_ids": [
+        "a6-secure-paths"
+      ],
+      "summary": "The approved command runner omitted the assertion protocol and did not expose the required toolchain PATH.",
+      "root_cause": "The case contract declared env_keys=[] and relied on ambient PATH, so the Runtime could neither inject SPECNAV assertion output variables nor consistently locate Rust/Node toolchains."
+    },
+    {
+      "failure_id": "failure-93a392e01847eefeb57f51d044868cce536d5d29237404cc6e8729fe6847e8d5",
+      "case_id": "case-a7-deterministic-docx",
+      "failed_assertion_ids": [
+        "a7-deterministic-pipeline"
+      ],
+      "summary": "The approved command runner omitted the assertion protocol required to produce structured assertion_result evidence.",
+      "root_cause": "The case contract declared env_keys=[], so the Runtime did not inject SPECNAV_VERIFICATION_ASSERTION_IDS or SPECNAV_VERIFICATION_ASSERTION_RESULT_FILE and no authoritative oracle result was emitted."
+    },
+    {
+      "failure_id": "failure-f814ed028e5b2dc94e5db0219d237ceaa8e22ce664031ea163ba1fc267c95791",
+      "case_id": "case-a8-runtime-parity",
+      "failed_assertion_ids": [
+        "a8-protocol-parity"
+      ],
+      "summary": "The approved command runner omitted the assertion protocol and did not expose the required toolchain PATH.",
+      "root_cause": "The case contract declared env_keys=[] and relied on ambient PATH, so the Runtime could neither inject SPECNAV assertion output variables nor consistently locate Rust/Node toolchains."
+    },
+    {
+      "failure_id": "failure-0b7b1bb8ae4396daaf850b9954df7a2cf108ddf9b482e412e7e118bd0f2b05bd",
+      "case_id": "case-a9-installed-office",
+      "failed_assertion_ids": [
+        "a9-installed-word-preview"
+      ],
+      "summary": "The approved command runner omitted the assertion protocol required to produce structured assertion_result evidence.",
+      "root_cause": "The case contract declared env_keys=[], so the Runtime did not inject SPECNAV_VERIFICATION_ASSERTION_IDS or SPECNAV_VERIFICATION_ASSERTION_RESULT_FILE and no authoritative oracle result was emitted."
+    }
+  ],
+  "proposed_at": "2026-08-27T06:51:30.894Z",
+  "proposal_sha256": "8fb88062c3d0738fe9c0d453ce2b4aeb21ae9758ef3482318a50cc95d5f13e44"
+}

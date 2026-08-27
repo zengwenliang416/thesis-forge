@@ -1,0 +1,43 @@
+# command: pnpm --dir frontend typecheck && pnpm --dir frontend lint && pnpm --dir frontend test && pnpm --dir frontend build
+# exit_status: 0
+# duration_ms: 7076
+
+## stdout
+
+> @docforge/workbench@0.1.0 typecheck /Volumes/ThesisForgeCI/workspaces/thesis-forge-docforge-verify/frontend
+> tsc -b --pretty false
+
+
+> @docforge/workbench@0.1.0 lint /Volumes/ThesisForgeCI/workspaces/thesis-forge-docforge-verify/frontend
+> node scripts/lint.mjs
+
+
+> @docforge/workbench@0.1.0 test /Volumes/ThesisForgeCI/workspaces/thesis-forge-docforge-verify/frontend
+> vitest run
+
+
+ RUN  v4.1.10 /Volumes/ThesisForgeCI/workspaces/thesis-forge-docforge-verify/frontend
+
+
+ Test Files  20 passed (20)
+      Tests  245 passed (245)
+   Start at  12:26:58
+   Duration  4.89s (transform 1.34s, setup 1.97s, import 5.73s, tests 5.66s, environment 15.90s)
+
+
+> @docforge/workbench@0.1.0 build /Volumes/ThesisForgeCI/workspaces/thesis-forge-docforge-verify/frontend
+> tsc -b && vite build
+
+vite v8.2.0 building client environment for production...
+[2Ktransforming...✓ 1806 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.58 kB │ gzip:  0.36 kB
+dist/assets/index-C8Sf9Qpd.css   21.20 kB │ gzip:  5.07 kB
+dist/assets/index-l4RSGFh1.js   275.26 kB │ gzip: 83.12 kB
+
+✓ built in 219ms
+
+
+## stderr
+(empty)

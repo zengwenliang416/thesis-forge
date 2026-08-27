@@ -1,0 +1,22 @@
+{
+  "schema": "specnav.verification.root-cause-review.v1",
+  "id": "root-cause-review-93a392e01847eefeb57f51d0",
+  "failure_id": "failure-93a392e01847eefeb57f51d044868cce536d5d29237404cc6e8729fe6847e8d5",
+  "root_failure_digest": "17c1e4faa16762beb8973e2678bf2acad18075be5e466d4ef6cba890e797d670",
+  "change_id": "docforge-project-format-v1",
+  "run_id": "run-20260827064704-d0c88d2a76efe074",
+  "case_id": "case-a7-deterministic-docx",
+  "attempt_id": "attempt-20260827064704-d0c88d2a76efe074",
+  "classification": "test_defect",
+  "summary": "The approved command runner omitted the assertion protocol required to produce structured assertion_result evidence.",
+  "root_cause": "The case contract declared env_keys=[], so the Runtime did not inject SPECNAV_VERIFICATION_ASSERTION_IDS or SPECNAV_VERIFICATION_ASSERTION_RESULT_FILE and no authoritative oracle result was emitted.",
+  "failed_assertion_ids": [
+    "a7-deterministic-pipeline"
+  ],
+  "reviewer": {
+    "id": "zengwenliang416",
+    "kind": "human"
+  },
+  "decision": "approved",
+  "reviewed_at": "2026-08-27T07:03:32.989Z"
+}

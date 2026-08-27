@@ -1,0 +1,635 @@
+{
+  "changeId": "docforge-project-format-v1",
+  "createdAt": "2026-08-27T04:53:47Z",
+  "createdBy": {
+    "id": "zengwenliang416",
+    "kind": "human",
+    "display_name": "zengwenliang416"
+  },
+  "requirements": [
+    {
+      "id": "R1",
+      "statement": "DocForge projects open only from a directory or docforge.yaml using schema docforge.project.v1."
+    },
+    {
+      "id": "R2",
+      "statement": "General documents use document.md and docforge-standard without academic metadata."
+    },
+    {
+      "id": "R3",
+      "statement": "Academic metadata is a typed optional profile selected by academic templates."
+    },
+    {
+      "id": "R4",
+      "statement": "Obsolete ThesisForge public contracts are absent or rejected without compatibility aliases."
+    },
+    {
+      "id": "R5",
+      "statement": "Default source, build, and Review paths use neutral document filenames."
+    },
+    {
+      "id": "R6",
+      "statement": "Project resources remain project-relative and reject unsafe path classes."
+    },
+    {
+      "id": "R7",
+      "statement": "The deterministic semantic and DOCX pipeline preserves renderer boundaries, cancellation, and atomic output."
+    },
+    {
+      "id": "R8",
+      "statement": "CLI, HTTP, Tauri, and frontend use one versioned DocForge runtime and BuildReport contract."
+    },
+    {
+      "id": "R9",
+      "statement": "The installed macOS workbench and Microsoft Word preview use neutral DocForge terminology and valid outputs."
+    },
+    {
+      "id": "R10",
+      "statement": "Repository examples, fixtures, documentation, packaging, CI, and release configuration use DocForge contracts."
+    }
+  ],
+  "acceptance": [
+    {
+      "id": "A1",
+      "statement": "A directory containing docforge.yaml with schema docforge.project.v1 opens through the CLI and desktop workbench."
+    },
+    {
+      "id": "A2",
+      "statement": "A general project using document.md and docforge-standard completes inspect, validate, review, and build without academic metadata."
+    },
+    {
+      "id": "A3",
+      "statement": "An academic project supplies a typed optional academic profile and builds without imposing those fields on general projects."
+    },
+    {
+      "id": "A4",
+      "statement": "Obsolete manifest, command, aggregate, package, BuildReport, and workbench protocol identities are absent or rejected."
+    },
+    {
+      "id": "A5",
+      "statement": "Default source, build, and Review paths use document.md and neutral document output names."
+    },
+    {
+      "id": "A6",
+      "statement": "Project paths reject absolute, remote, traversal, and symlink-escape inputs while accepting safe relative resources."
+    },
+    {
+      "id": "A7",
+      "statement": "The Markdown to ForgeDocument to RenderPlan to DOCX pipeline is deterministic, ordered, cancelable, and atomic."
+    },
+    {
+      "id": "A8",
+      "statement": "CLI, HTTP, Tauri, and frontend fixtures use one versioned DocForge protocol with matching identities."
+    },
+    {
+      "id": "A9",
+      "statement": "The installed macOS workbench uses neutral DocForge terminology and produces a valid Microsoft Word final preview."
+    },
+    {
+      "id": "A10",
+      "statement": "Repository-owned examples, fixtures, active documentation, packaging, and CI use DocForge contracts and neutral filenames."
+    }
+  ],
+  "cases": [
+    {
+      "schema": "specnav.verification.test-case.v1",
+      "id": "case-a1-project-open",
+      "change_id": "docforge-project-format-v1",
+      "requirement_ids": ["R1"],
+      "acceptance_ids": ["A1"],
+      "title": "Open a canonical DocForge project",
+      "goal": "Prove directory and manifest project entry use the strict DocForge v1 contract.",
+      "actor": "document-author",
+      "priority": "P0",
+      "preconditions": ["The repository test fixtures and Python environment are available."],
+      "steps": [
+        {
+          "id": "a1-step-open",
+          "action": "Run project model, loader, and application project service tests.",
+          "expected": "Canonical directories and docforge.yaml open while bare Markdown and obsolete manifests are rejected.",
+          "assertion_ids": ["a1-project-open"]
+        }
+      ],
+      "assertions": [
+        {
+          "id": "a1-project-open",
+          "statement": "The strict DocForge project entry contract passes.",
+          "expected": true,
+          "oracle": {"type": "structured_comparison", "human_signoff_allowed": false},
+          "evidence_kinds": ["command_output", "assertion_result"]
+        }
+      ],
+      "domains": {
+        "facticity": {"mode": "required", "assertion_ids": ["a1-project-open"], "runner": "command"},
+        "static": {"mode": "required", "assertion_ids": ["a1-project-open"], "runner": "command"},
+        "unit": {"mode": "required", "assertion_ids": ["a1-project-open"], "runner": "command"},
+        "redteam": {"mode": "required", "assertion_ids": ["a1-project-open"], "runner": "command"},
+        "e2e": {"mode": "required", "assertion_ids": ["a1-project-open"], "runner": "command"},
+        "sensory": {"mode": "required", "assertion_ids": ["a1-project-open"], "runner": "command"}
+      },
+      "runner": {
+        "kind": "command",
+        "timeout_ms": 300000,
+        "entrypoint": "/bin/sh",
+        "args": ["-c", "PYTHONPATH=src .venv/bin/python -m pytest tests/project tests/application/test_project_services.py -q"],
+        "cwd": ".",
+        "env_keys": [],
+        "requires_midscene": false
+      },
+      "evidence_policy": {
+        "allowed_kinds": ["command_output", "assertion_result"],
+        "required_kinds": ["command_output", "assertion_result"],
+        "retain_on_failure": true,
+        "content_addressed": true
+      },
+      "status": "ready",
+      "created_at": "2026-08-27T04:53:47Z"
+    },
+    {
+      "schema": "specnav.verification.test-case.v1",
+      "id": "case-a2-general-project",
+      "change_id": "docforge-project-format-v1",
+      "requirement_ids": ["R2"],
+      "acceptance_ids": ["A2"],
+      "title": "Build a general DocForge project",
+      "goal": "Prove a neutral general project completes inspect, validate, review, and build without academic metadata.",
+      "actor": "general-document-author",
+      "priority": "P0",
+      "preconditions": ["The docforge-general fixture and Python environment are available."],
+      "steps": [
+        {
+          "id": "a2-step-build",
+          "action": "Copy the general fixture to an isolated directory and run all four CLI operations.",
+          "expected": "All operations succeed and create neutral Review and DOCX outputs.",
+          "assertion_ids": ["a2-general-flow"]
+        }
+      ],
+      "assertions": [
+        {
+          "id": "a2-general-flow",
+          "statement": "The general project completes the neutral offline flow without academic requirements.",
+          "expected": true,
+          "oracle": {"type": "structured_comparison", "human_signoff_allowed": false},
+          "evidence_kinds": ["command_output", "assertion_result"]
+        }
+      ],
+      "domains": {
+        "facticity": {"mode": "required", "assertion_ids": ["a2-general-flow"], "runner": "command"},
+        "static": {"mode": "required", "assertion_ids": ["a2-general-flow"], "runner": "command"},
+        "unit": {"mode": "required", "assertion_ids": ["a2-general-flow"], "runner": "command"},
+        "redteam": {"mode": "required", "assertion_ids": ["a2-general-flow"], "runner": "command"},
+        "e2e": {"mode": "required", "assertion_ids": ["a2-general-flow"], "runner": "command"},
+        "sensory": {"mode": "required", "assertion_ids": ["a2-general-flow"], "runner": "command"}
+      },
+      "runner": {
+        "kind": "command",
+        "timeout_ms": 300000,
+        "entrypoint": "/bin/sh",
+        "args": ["-c", "set -eu; tmp=$(mktemp -d /tmp/docforge-a2.XXXXXX); trap 'rm -rf \"$tmp\"' EXIT; cp -R tests/fixtures/docforge-general \"$tmp/project\"; PYTHONPATH=src .venv/bin/python -m docforge.cli inspect \"$tmp/project\" >/dev/null; PYTHONPATH=src .venv/bin/python -m docforge.cli validate \"$tmp/project\" >/dev/null; PYTHONPATH=src .venv/bin/python -m docforge.cli review \"$tmp/project\" >/dev/null; PYTHONPATH=src .venv/bin/python -m docforge.cli build \"$tmp/project\" >/dev/null; test -s \"$tmp/project/review/document.review.md\"; test -s \"$tmp/project/review/document.review-map.json\"; test -s \"$tmp/project/build/document.docx\""],
+        "cwd": ".",
+        "env_keys": [],
+        "requires_midscene": false
+      },
+      "evidence_policy": {
+        "allowed_kinds": ["command_output", "assertion_result"],
+        "required_kinds": ["command_output", "assertion_result"],
+        "retain_on_failure": true,
+        "content_addressed": true
+      },
+      "status": "ready",
+      "created_at": "2026-08-27T04:53:47Z"
+    },
+    {
+      "schema": "specnav.verification.test-case.v1",
+      "id": "case-a3-academic-profile",
+      "change_id": "docforge-project-format-v1",
+      "requirement_ids": ["R3"],
+      "acceptance_ids": ["A3"],
+      "title": "Build an academic profile without global leakage",
+      "goal": "Prove academic fields are typed and template-scoped while general documents remain valid.",
+      "actor": "academic-author",
+      "priority": "P0",
+      "preconditions": ["The academic and general fixtures are available."],
+      "steps": [
+        {
+          "id": "a3-step-profiles",
+          "action": "Run template, compiler, project, and distribution profile tests.",
+          "expected": "Academic builds pass and general builds remain free of academic requirements.",
+          "assertion_ids": ["a3-profile-isolation"]
+        }
+      ],
+      "assertions": [
+        {
+          "id": "a3-profile-isolation",
+          "statement": "Academic profile requirements do not leak into general projects.",
+          "expected": true,
+          "oracle": {"type": "structured_comparison", "human_signoff_allowed": false},
+          "evidence_kinds": ["command_output", "assertion_result"]
+        }
+      ],
+      "domains": {
+        "facticity": {"mode": "required", "assertion_ids": ["a3-profile-isolation"], "runner": "command"},
+        "static": {"mode": "required", "assertion_ids": ["a3-profile-isolation"], "runner": "command"},
+        "unit": {"mode": "required", "assertion_ids": ["a3-profile-isolation"], "runner": "command"},
+        "redteam": {"mode": "required", "assertion_ids": ["a3-profile-isolation"], "runner": "command"},
+        "e2e": {"mode": "required", "assertion_ids": ["a3-profile-isolation"], "runner": "command"},
+        "sensory": {"mode": "required", "assertion_ids": ["a3-profile-isolation"], "runner": "command"}
+      },
+      "runner": {
+        "kind": "command",
+        "timeout_ms": 300000,
+        "entrypoint": "/bin/sh",
+        "args": ["-c", "PYTHONPATH=src .venv/bin/python -m pytest tests/templates tests/compiler tests/project tests/test_distribution.py -q"],
+        "cwd": ".",
+        "env_keys": [],
+        "requires_midscene": false
+      },
+      "evidence_policy": {
+        "allowed_kinds": ["command_output", "assertion_result"],
+        "required_kinds": ["command_output", "assertion_result"],
+        "retain_on_failure": true,
+        "content_addressed": true
+      },
+      "status": "ready",
+      "created_at": "2026-08-27T04:53:47Z"
+    },
+    {
+      "schema": "specnav.verification.test-case.v1",
+      "id": "case-a4-obsolete-contracts",
+      "change_id": "docforge-project-format-v1",
+      "requirement_ids": ["R4"],
+      "acceptance_ids": ["A4"],
+      "title": "Reject obsolete ThesisForge contracts",
+      "goal": "Prove obsolete active identities are absent or rejected without aliases.",
+      "actor": "maintainer",
+      "priority": "P0",
+      "preconditions": ["Repository facticity rules and obsolete-input tests are available."],
+      "steps": [
+        {
+          "id": "a4-step-scan",
+          "action": "Run obsolete-domain tests and the repository facticity scan.",
+          "expected": "All negative contracts are rejected and active finding count is zero.",
+          "assertion_ids": ["a4-no-obsolete-contract"]
+        }
+      ],
+      "assertions": [
+        {
+          "id": "a4-no-obsolete-contract",
+          "statement": "No obsolete ThesisForge contract remains active.",
+          "expected": true,
+          "oracle": {"type": "structured_comparison", "human_signoff_allowed": false},
+          "evidence_kinds": ["command_output", "assertion_result"]
+        }
+      ],
+      "domains": {
+        "facticity": {"mode": "required", "assertion_ids": ["a4-no-obsolete-contract"], "runner": "command"},
+        "static": {"mode": "required", "assertion_ids": ["a4-no-obsolete-contract"], "runner": "command"},
+        "unit": {"mode": "required", "assertion_ids": ["a4-no-obsolete-contract"], "runner": "command"},
+        "redteam": {"mode": "required", "assertion_ids": ["a4-no-obsolete-contract"], "runner": "command"},
+        "e2e": {"mode": "required", "assertion_ids": ["a4-no-obsolete-contract"], "runner": "command"},
+        "sensory": {"mode": "required", "assertion_ids": ["a4-no-obsolete-contract"], "runner": "command"}
+      },
+      "runner": {
+        "kind": "command",
+        "timeout_ms": 300000,
+        "entrypoint": "/bin/sh",
+        "args": ["-c", "set -eu; PYTHONPATH=src .venv/bin/python -m pytest tests/test_facticity.py tests/core/test_forge_document.py tests/project -q; PYTHONPATH=src .venv/bin/python scripts/check_facticity.py --json /tmp/docforge-case-a4.json --markdown /tmp/docforge-case-a4.md"],
+        "cwd": ".",
+        "env_keys": [],
+        "requires_midscene": false
+      },
+      "evidence_policy": {
+        "allowed_kinds": ["command_output", "assertion_result"],
+        "required_kinds": ["command_output", "assertion_result"],
+        "retain_on_failure": true,
+        "content_addressed": true
+      },
+      "status": "ready",
+      "created_at": "2026-08-27T04:53:47Z"
+    },
+    {
+      "schema": "specnav.verification.test-case.v1",
+      "id": "case-a5-neutral-default-paths",
+      "change_id": "docforge-project-format-v1",
+      "requirement_ids": ["R5"],
+      "acceptance_ids": ["A5"],
+      "title": "Use neutral source, build, and Review defaults",
+      "goal": "Prove canonical filenames match across project, CLI, runtime, and desktop contracts.",
+      "actor": "document-author",
+      "priority": "P0",
+      "preconditions": ["CLI, project, protocol, and distribution tests are available."],
+      "steps": [
+        {
+          "id": "a5-step-defaults",
+          "action": "Run project, CLI, contract, and desktop distribution default-path tests.",
+          "expected": "All layers use document.md and neutral document output paths.",
+          "assertion_ids": ["a5-default-paths"]
+        }
+      ],
+      "assertions": [
+        {
+          "id": "a5-default-paths",
+          "statement": "Canonical neutral default paths match across all product layers.",
+          "expected": true,
+          "oracle": {"type": "structured_comparison", "human_signoff_allowed": false},
+          "evidence_kinds": ["command_output", "assertion_result"]
+        }
+      ],
+      "domains": {
+        "facticity": {"mode": "required", "assertion_ids": ["a5-default-paths"], "runner": "command"},
+        "static": {"mode": "required", "assertion_ids": ["a5-default-paths"], "runner": "command"},
+        "unit": {"mode": "required", "assertion_ids": ["a5-default-paths"], "runner": "command"},
+        "redteam": {"mode": "required", "assertion_ids": ["a5-default-paths"], "runner": "command"},
+        "e2e": {"mode": "required", "assertion_ids": ["a5-default-paths"], "runner": "command"},
+        "sensory": {"mode": "required", "assertion_ids": ["a5-default-paths"], "runner": "command"}
+      },
+      "runner": {
+        "kind": "command",
+        "timeout_ms": 300000,
+        "entrypoint": "/bin/sh",
+        "args": ["-c", "PYTHONPATH=src .venv/bin/python -m pytest tests/project tests/cli tests/contracts tests/test_desktop_distribution.py -q"],
+        "cwd": ".",
+        "env_keys": [],
+        "requires_midscene": false
+      },
+      "evidence_policy": {
+        "allowed_kinds": ["command_output", "assertion_result"],
+        "required_kinds": ["command_output", "assertion_result"],
+        "retain_on_failure": true,
+        "content_addressed": true
+      },
+      "status": "ready",
+      "created_at": "2026-08-27T04:53:47Z"
+    },
+    {
+      "schema": "specnav.verification.test-case.v1",
+      "id": "case-a6-path-security",
+      "change_id": "docforge-project-format-v1",
+      "requirement_ids": ["R6"],
+      "acceptance_ids": ["A6"],
+      "title": "Enforce project path security",
+      "goal": "Prove safe project-relative resources are accepted and unsafe path classes are rejected.",
+      "actor": "security-reviewer",
+      "priority": "P0",
+      "preconditions": ["Project loader and application path-security tests are available."],
+      "steps": [
+        {
+          "id": "a6-step-redteam",
+          "action": "Run project path and application service redteam tests.",
+          "expected": "Absolute, remote, traversal, and symlink-escape paths fail with stable diagnostics.",
+          "assertion_ids": ["a6-secure-paths"]
+        }
+      ],
+      "assertions": [
+        {
+          "id": "a6-secure-paths",
+          "statement": "All unsafe project path classes are rejected without weakening safe relative paths.",
+          "expected": true,
+          "oracle": {"type": "structured_comparison", "human_signoff_allowed": false},
+          "evidence_kinds": ["command_output", "assertion_result"]
+        }
+      ],
+      "domains": {
+        "facticity": {"mode": "required", "assertion_ids": ["a6-secure-paths"], "runner": "command"},
+        "static": {"mode": "required", "assertion_ids": ["a6-secure-paths"], "runner": "command"},
+        "unit": {"mode": "required", "assertion_ids": ["a6-secure-paths"], "runner": "command"},
+        "redteam": {"mode": "required", "assertion_ids": ["a6-secure-paths"], "runner": "command"},
+        "e2e": {"mode": "required", "assertion_ids": ["a6-secure-paths"], "runner": "command"},
+        "sensory": {"mode": "required", "assertion_ids": ["a6-secure-paths"], "runner": "command"}
+      },
+      "runner": {
+        "kind": "command",
+        "timeout_ms": 300000,
+        "entrypoint": "/bin/sh",
+        "args": ["-c", "set -eu; PYTHONPATH=src .venv/bin/python -m pytest tests/project tests/application/test_project_services.py -q; /Users/wenliang_zeng/.cargo/bin/cargo test --manifest-path src-tauri/Cargo.toml project_tests"],
+        "cwd": ".",
+        "env_keys": [],
+        "requires_midscene": false
+      },
+      "evidence_policy": {
+        "allowed_kinds": ["command_output", "assertion_result"],
+        "required_kinds": ["command_output", "assertion_result"],
+        "retain_on_failure": true,
+        "content_addressed": true
+      },
+      "status": "ready",
+      "created_at": "2026-08-27T04:53:47Z"
+    },
+    {
+      "schema": "specnav.verification.test-case.v1",
+      "id": "case-a7-deterministic-docx",
+      "change_id": "docforge-project-format-v1",
+      "requirement_ids": ["R7"],
+      "acceptance_ids": ["A7"],
+      "title": "Preserve the deterministic DOCX pipeline",
+      "goal": "Prove semantic ordering, renderer boundaries, OOXML structures, cancellation, deterministic output, and atomic replacement.",
+      "actor": "document-compiler-maintainer",
+      "priority": "P0",
+      "preconditions": ["Core, compiler, renderer, application, and deterministic-output tests are available."],
+      "steps": [
+        {
+          "id": "a7-step-pipeline",
+          "action": "Run core, compiler, DOCX renderer, acceptance, and build lifecycle tests.",
+          "expected": "The ordered deterministic pipeline and real OOXML structures pass.",
+          "assertion_ids": ["a7-deterministic-pipeline"]
+        }
+      ],
+      "assertions": [
+        {
+          "id": "a7-deterministic-pipeline",
+          "statement": "The semantic-to-DOCX pipeline remains deterministic, ordered, cancelable, and atomic.",
+          "expected": true,
+          "oracle": {"type": "structured_comparison", "human_signoff_allowed": false},
+          "evidence_kinds": ["command_output", "assertion_result"]
+        }
+      ],
+      "domains": {
+        "facticity": {"mode": "required", "assertion_ids": ["a7-deterministic-pipeline"], "runner": "command"},
+        "static": {"mode": "required", "assertion_ids": ["a7-deterministic-pipeline"], "runner": "command"},
+        "unit": {"mode": "required", "assertion_ids": ["a7-deterministic-pipeline"], "runner": "command"},
+        "redteam": {"mode": "required", "assertion_ids": ["a7-deterministic-pipeline"], "runner": "command"},
+        "e2e": {"mode": "required", "assertion_ids": ["a7-deterministic-pipeline"], "runner": "command"},
+        "sensory": {"mode": "required", "assertion_ids": ["a7-deterministic-pipeline"], "runner": "command"}
+      },
+      "runner": {
+        "kind": "command",
+        "timeout_ms": 600000,
+        "entrypoint": "/bin/sh",
+        "args": ["-c", "PYTHONPATH=src .venv/bin/python -m pytest tests/core tests/compiler tests/renderers/docx tests/application tests/test_acceptance.py tests/test_compiler.py tests/test_docx_renderer.py -q"],
+        "cwd": ".",
+        "env_keys": [],
+        "requires_midscene": false
+      },
+      "evidence_policy": {
+        "allowed_kinds": ["command_output", "assertion_result"],
+        "required_kinds": ["command_output", "assertion_result"],
+        "retain_on_failure": true,
+        "content_addressed": true
+      },
+      "status": "ready",
+      "created_at": "2026-08-27T04:53:47Z"
+    },
+    {
+      "schema": "specnav.verification.test-case.v1",
+      "id": "case-a8-runtime-parity",
+      "change_id": "docforge-project-format-v1",
+      "requirement_ids": ["R8"],
+      "acceptance_ids": ["A8"],
+      "title": "Keep Python, TypeScript, Rust, HTTP, and Tauri protocol parity",
+      "goal": "Prove all runtime boundaries use one strict versioned DocForge protocol and BuildReport identity.",
+      "actor": "runtime-maintainer",
+      "priority": "P0",
+      "preconditions": ["Python, frontend, and Rust dependencies are installed in the verification worktree."],
+      "steps": [
+        {
+          "id": "a8-step-parity",
+          "action": "Run focused Python adapters, frontend transport tests, real HTTP acceptance, and Rust protocol tests.",
+          "expected": "All runtimes accept canonical identities and reject obsolete or malformed protocol data.",
+          "assertion_ids": ["a8-protocol-parity"]
+        }
+      ],
+      "assertions": [
+        {
+          "id": "a8-protocol-parity",
+          "statement": "The versioned DocForge runtime and BuildReport contract is consistent across all boundaries.",
+          "expected": true,
+          "oracle": {"type": "structured_comparison", "human_signoff_allowed": false},
+          "evidence_kinds": ["command_output", "assertion_result"]
+        }
+      ],
+      "domains": {
+        "facticity": {"mode": "required", "assertion_ids": ["a8-protocol-parity"], "runner": "command"},
+        "static": {"mode": "required", "assertion_ids": ["a8-protocol-parity"], "runner": "command"},
+        "unit": {"mode": "required", "assertion_ids": ["a8-protocol-parity"], "runner": "command"},
+        "redteam": {"mode": "required", "assertion_ids": ["a8-protocol-parity"], "runner": "command"},
+        "e2e": {"mode": "required", "assertion_ids": ["a8-protocol-parity"], "runner": "command"},
+        "sensory": {"mode": "required", "assertion_ids": ["a8-protocol-parity"], "runner": "command"}
+      },
+      "runner": {
+        "kind": "command",
+        "timeout_ms": 900000,
+        "entrypoint": "/bin/sh",
+        "args": ["-c", "set -eu; PYTHONPATH=src .venv/bin/python -m pytest tests/adapters tests/application/test_build_report_contract.py tests/application/test_build_stage_lifecycle.py -q; /Users/wenliang_zeng/.nvm/versions/node/v22.19.0/bin/pnpm --dir frontend test; /Users/wenliang_zeng/.cargo/bin/cargo test --manifest-path src-tauri/Cargo.toml"],
+        "cwd": ".",
+        "env_keys": [],
+        "requires_midscene": false
+      },
+      "evidence_policy": {
+        "allowed_kinds": ["command_output", "assertion_result"],
+        "required_kinds": ["command_output", "assertion_result"],
+        "retain_on_failure": true,
+        "content_addressed": true
+      },
+      "status": "ready",
+      "created_at": "2026-08-27T04:53:47Z"
+    },
+    {
+      "schema": "specnav.verification.test-case.v1",
+      "id": "case-a9-installed-office",
+      "change_id": "docforge-project-format-v1",
+      "requirement_ids": ["R9"],
+      "acceptance_ids": ["A9"],
+      "title": "Verify installed DocForge and Microsoft Word preview evidence",
+      "goal": "Prove the installed macOS workbench uses neutral terminology and generated a valid Word PDF preview.",
+      "actor": "desktop-document-author",
+      "priority": "P0",
+      "preconditions": ["The content-addressed installed acceptance receipt and screenshot are present."],
+      "steps": [
+        {
+          "id": "a9-step-receipt",
+          "action": "Validate the installed app receipt, Microsoft Word result, accessibility labels, and screenshot SHA-256.",
+          "expected": "The receipt is passed, Word preview is available, and the screenshot matches its recorded hash.",
+          "assertion_ids": ["a9-installed-word-preview"]
+        }
+      ],
+      "assertions": [
+        {
+          "id": "a9-installed-word-preview",
+          "statement": "Installed DocForge.app and Microsoft Word final preview evidence is internally consistent and content-addressed.",
+          "expected": true,
+          "oracle": {"type": "structured_comparison", "human_signoff_allowed": true},
+          "evidence_kinds": ["command_output", "assertion_result"]
+        }
+      ],
+      "domains": {
+        "facticity": {"mode": "required", "assertion_ids": ["a9-installed-word-preview"], "runner": "command"},
+        "static": {"mode": "required", "assertion_ids": ["a9-installed-word-preview"], "runner": "command"},
+        "unit": {"mode": "required", "assertion_ids": ["a9-installed-word-preview"], "runner": "command"},
+        "redteam": {"mode": "required", "assertion_ids": ["a9-installed-word-preview"], "runner": "command"},
+        "e2e": {"mode": "required", "assertion_ids": ["a9-installed-word-preview"], "runner": "command"},
+        "sensory": {"mode": "required", "assertion_ids": ["a9-installed-word-preview"], "runner": "command"}
+      },
+      "runner": {
+        "kind": "command",
+        "timeout_ms": 120000,
+        "entrypoint": "/bin/sh",
+        "args": ["-c", "PYTHONPATH=src .venv/bin/python -c 'import hashlib,json,pathlib; root=pathlib.Path(\"openspec/changes/docforge-project-format-v1/development/tasks/006-workbench-desktop/evidence\"); r=json.loads((root/\"macos-native-acceptance.json\").read_text()); p=root/r[\"evidence\"][\"screenshot\"]; assert r[\"ok\"] is True and r[\"status\"]==\"passed\"; assert r[\"app\"][\"displayName\"]==\"DocForge\" and r[\"runtime\"][\"manifest\"]==\"docforge.yaml\" and r[\"runtime\"][\"source\"]==\"document.md\"; assert r[\"build\"][\"output\"]==\"document.docx\" and r[\"wordPreview\"][\"engine\"]==\"microsoft-word\" and r[\"wordPreview\"][\"status\"]==\"available\" and r[\"wordPreview\"][\"pdfGenerated\"] is True; assert hashlib.sha256(p.read_bytes()).hexdigest()==r[\"evidence\"][\"screenshotSha256\"]; assert r[\"bundleVerification\"][\"ok\"] is True; print(json.dumps({\"ok\":True,\"word\":r[\"wordPreview\"][\"microsoftWordVersion\"],\"screenshotSha256\":r[\"evidence\"][\"screenshotSha256\"]}))'"],
+        "cwd": ".",
+        "env_keys": [],
+        "requires_midscene": false
+      },
+      "evidence_policy": {
+        "allowed_kinds": ["command_output", "assertion_result"],
+        "required_kinds": ["command_output", "assertion_result"],
+        "retain_on_failure": true,
+        "content_addressed": true
+      },
+      "status": "ready",
+      "created_at": "2026-08-27T04:53:47Z"
+    },
+    {
+      "schema": "specnav.verification.test-case.v1",
+      "id": "case-a10-repository-delivery",
+      "change_id": "docforge-project-format-v1",
+      "requirement_ids": ["R10"],
+      "acceptance_ids": ["A10"],
+      "title": "Verify repository and release delivery contracts",
+      "goal": "Prove active repository surfaces and local release artifacts use DocForge identities and neutral filenames.",
+      "actor": "release-maintainer",
+      "priority": "P0",
+      "preconditions": ["Repository facticity, distribution, and local release artifacts are available."],
+      "steps": [
+        {
+          "id": "a10-step-delivery",
+          "action": "Run facticity, desktop distribution, and release metadata validation.",
+          "expected": "Active findings remain zero and local release artifacts satisfy DocForge naming and integrity rules.",
+          "assertion_ids": ["a10-repository-clean"]
+        }
+      ],
+      "assertions": [
+        {
+          "id": "a10-repository-clean",
+          "statement": "Repository-owned and local release surfaces use the DocForge delivery contract.",
+          "expected": true,
+          "oracle": {"type": "structured_comparison", "human_signoff_allowed": false},
+          "evidence_kinds": ["command_output", "assertion_result"]
+        }
+      ],
+      "domains": {
+        "facticity": {"mode": "required", "assertion_ids": ["a10-repository-clean"], "runner": "command"},
+        "static": {"mode": "required", "assertion_ids": ["a10-repository-clean"], "runner": "command"},
+        "unit": {"mode": "required", "assertion_ids": ["a10-repository-clean"], "runner": "command"},
+        "redteam": {"mode": "required", "assertion_ids": ["a10-repository-clean"], "runner": "command"},
+        "e2e": {"mode": "required", "assertion_ids": ["a10-repository-clean"], "runner": "command"},
+        "sensory": {"mode": "required", "assertion_ids": ["a10-repository-clean"], "runner": "command"}
+      },
+      "runner": {
+        "kind": "command",
+        "timeout_ms": 600000,
+        "entrypoint": "/bin/sh",
+        "args": ["-c", "set -eu; PYTHONPATH=src .venv/bin/python scripts/check_facticity.py --json /tmp/docforge-case-a10.json --markdown /tmp/docforge-case-a10.md; PYTHONPATH=src .venv/bin/python scripts/verify_desktop_distribution.py --platform macos --bundle-root src-tauri/target/release/bundle; PYTHONPATH=src .venv/bin/python scripts/prepare_release.py --tag v0.1.0 --validate-only"],
+        "cwd": ".",
+        "env_keys": [],
+        "requires_midscene": false
+      },
+      "evidence_policy": {
+        "allowed_kinds": ["command_output", "assertion_result"],
+        "required_kinds": ["command_output", "assertion_result"],
+        "retain_on_failure": true,
+        "content_addressed": true
+      },
+      "status": "ready",
+      "created_at": "2026-08-27T04:53:47Z"
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+# command: PYTHONPATH=src .venv/bin/python -m pytest tests/test_desktop_distribution.py tests/cli tests/project -q
+# exit_status: 0
+# duration_ms: 1063
+
+## stdout
+........................................................................ [ 43%]
+........................................................................ [ 87%]
+.....................                                                    [100%]
+165 passed in 0.81s
+
+
+## stderr
+(empty)

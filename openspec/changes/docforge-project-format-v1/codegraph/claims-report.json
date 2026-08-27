@@ -1,10 +1,10 @@
 {
   "schema": "specnav.codegraph.claims_report.v1",
-  "generated_at": "2026-08-27T02:59:55.756Z",
+  "generated_at": "2026-08-27T06:36:06.629Z",
   "active_change": "docforge-project-format-v1",
   "claims_file": "openspec/changes/docforge-project-format-v1/codegraph/claims-map.json",
   "evidence_index": "openspec/changes/docforge-project-format-v1/codegraph/evidence-index.json",
-  "claims_count": 8,
+  "claims_count": 16,
   "verified_claims": [],
   "unverified_claims": [
     "development:task-001-project-contract",
@@ -14,7 +14,15 @@
     "development:task-005-template-profiles",
     "development:task-006-workbench-desktop",
     "development:task-007-repository-delivery",
-    "development:task-008-end-to-end-verification"
+    "development:task-008-end-to-end-verification",
+    "verification:task-001-project-contract",
+    "verification:task-002-generic-document-domain",
+    "verification:task-003-python-package-cli",
+    "verification:task-004-runtime-protocol",
+    "verification:task-005-template-profiles",
+    "verification:task-006-workbench-desktop",
+    "verification:task-007-repository-delivery",
+    "verification:task-008-end-to-end-verification"
   ],
   "blockers": [],
   "warnings": [
@@ -25,6 +33,14 @@
     "codegraph:claim-unverified:development:task-005-template-profiles",
     "codegraph:claim-unverified:development:task-006-workbench-desktop",
     "codegraph:claim-unverified:development:task-007-repository-delivery",
-    "codegraph:claim-unverified:development:task-008-end-to-end-verification"
+    "codegraph:claim-unverified:development:task-008-end-to-end-verification",
+    "codegraph:claim-unverified:verification:task-001-project-contract",
+    "codegraph:claim-unverified:verification:task-002-generic-document-domain",
+    "codegraph:claim-unverified:verification:task-003-python-package-cli",
+    "codegraph:claim-unverified:verification:task-004-runtime-protocol",
+    "codegraph:claim-unverified:verification:task-005-template-profiles",
+    "codegraph:claim-unverified:verification:task-006-workbench-desktop",
+    "codegraph:claim-unverified:verification:task-007-repository-delivery",
+    "codegraph:claim-unverified:verification:task-008-end-to-end-verification"
   ]
 }

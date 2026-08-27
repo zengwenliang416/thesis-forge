@@ -1,0 +1,1086 @@
+{
+  "schema": "specnav.task-acceptance-evidence.v2",
+  "generated_by": "specnav-development/task-acceptance-evidence",
+  "task_id": "007-repository-delivery",
+  "generated_at": "2026-08-27T04:49:42.706Z",
+  "recorded_at": "2026-08-27T04:34:08.844Z",
+  "status": "approved",
+  "reviewed_git_head": "26344ca4489d60715550f14b774b22ddc4cc491b",
+  "reviewed_git_tree": "2cb10ec125ef48701d0afd41378c1a7bf6770cc9",
+  "implementation_scope": {
+    "included_patterns": [
+      ".github/**",
+      ".woodpecker/**",
+      "Makefile",
+      "README.md",
+      "docs/**",
+      "examples/**",
+      "openspec/changes/docforge-project-format-v1/development",
+      "package.json",
+      "protocol/**",
+      "pyproject.toml",
+      "qa/**",
+      "scripts/**",
+      "templates/**",
+      "tests/fixtures/**",
+      "tests/test_desktop_distribution.py"
+    ],
+    "entries": [
+      {
+        "path": ".github/workflows/distribution.yml",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "7ce3cd4475176d187cbf52a717d8dd4f4b4212d2"
+      },
+      {
+        "path": ".github/workflows/pr-gate.yml",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "badc1face214117185feac134f5d5a50a5d448a3"
+      },
+      {
+        "path": ".woodpecker/quality.yml",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "e55ca9725f221e66bbfa8a327d7aa1f6b09057ab"
+      },
+      {
+        "path": ".woodpecker/release-macos.yml",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "ff21838870fc15d125ca981921d8ea65e02dd4d4"
+      },
+      {
+        "path": ".woodpecker/release-publish.yml",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "42c1b9a214a991659232b15c06066b2f7bbe8402"
+      },
+      {
+        "path": "docs/ARCHITECTURE.md",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "b654c5742b8add875751b88e4e8abf68915e9efd"
+      },
+      {
+        "path": "docs/BIBLIOGRAPHY_SPEC.md",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "9d79d228f7993a32ebaf7ac9e2c05d315a843c8e"
+      },
+      {
+        "path": "docs/MAINTENANCE.md",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "ffb9809c9b4b46023cb6c040bafb2f1dca4a96d9"
+      },
+      {
+        "path": "docs/MARKDOWN_SPEC.md",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "406f1555402d41cb249e61f55bca138872ac4fa1"
+      },
+      {
+        "path": "docs/MATH_SPEC.md",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "ddf46d885b1ab386f6e966381fe1d9d5f3e0021f"
+      },
+      {
+        "path": "docs/REFERENCES.md",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "c05324ae1f14937742d91b4e7c6435f285ab2488"
+      },
+      {
+        "path": "docs/TEMPLATE_SPEC.md",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "c9963c97b00d7135aa37e18e331819e543dc5348"
+      },
+      {
+        "path": "docs/THESISFORGE_V2_IMPLEMENTATION_PLAN.md",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "bd5472916f8aa9f5971e27d083921f36a640ecbc"
+      },
+      {
+        "path": "docs/THESISFORGE_V2_PRODUCT_SPEC.md",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "2b65268aad4592390b9fe2d455686bac3d72e5d7"
+      },
+      {
+        "path": "docs/THIRD_PARTY_NOTES.md",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "8bf126f624815d2808f0b7e8afee99961585e1d2"
+      },
+      {
+        "path": "docs/update/adr/ADR-0001.md",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "6ee48cb1e1ac88941a53dd87491f9e02117c8620"
+      },
+      {
+        "path": "docs/update/adr/ADR-0002.md",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "2f7c1c236529330da03106728eceed2ffe582e84"
+      },
+      {
+        "path": "docs/update/adr/ADR-0003.md",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "b9d0ab55a39d1834bfa8679b96a6799c37b1641b"
+      },
+      {
+        "path": "docs/update/adr/ADR-0004.md",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "84ae86ada21a282a87a8b5cf22d8608c56045685"
+      },
+      {
+        "path": "docs/update/adr/ADR-0005.md",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "5ed5db2cd856b9dffff8ddf062225fe364a350d9"
+      },
+      {
+        "path": "docs/update/adr/ADR-0006.md",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "1f119a1717ed51033ac744c2361b8134eb1d42e1"
+      },
+      {
+        "path": "docs/update/adr/README.md",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "44335f9d635abc6ca12311f3499ecaada0712d8e"
+      },
+      {
+        "path": "docs/update/ALPHA_GATE.md",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "adc08cd4bd3b5f7be454a9270b24239419697615"
+      },
+      {
+        "path": "docs/update/COMPATIBILITY_MATRIX.md",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "b5cb739d119af46cb70605ba4d2dbc7c39ed6b1e"
+      },
+      {
+        "path": "docs/update/CURRENT_STATE_AUDIT.md",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "07432567ae16bf847079ef08b3fbccbc4c81d6fc"
+      },
+      {
+        "path": "docs/update/GOAL.md",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "48cdf6576568b80e19cbed7c949dc25e25442505"
+      },
+      {
+        "path": "docs/update/IR_MODEL_DESIGN.md",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "9a8b60b148c708e8c29c8e5f29121ca0446fec41"
+      },
+      {
+        "path": "docs/update/PHASE0_GATE.md",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "2eec8b6282f6e3d99648d756174e750b718d4455"
+      },
+      {
+        "path": "docs/update/PRODUCT_SCOPE.md",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "60df6b2c3c7f6f5910576d861cdbc6a610c93d03"
+      },
+      {
+        "path": "docs/update/QUALITY_STRATEGY.md",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "b7031854a07292233e0c3a2f0825f6cb8b6a5823"
+      },
+      {
+        "path": "docs/update/RISK_REGISTER.md",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "2725c1c5b3c745468d7fe5269adf348a07b6b04e"
+      },
+      {
+        "path": "docs/update/TEMPLATE_PACKAGE_SCHEMA_V2.md",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "e23f4489864ba5f9307ac2bc0d601ab23a9d1e9d"
+      },
+      {
+        "path": "docs/update/TEMPLATE_PACKAGE_SPEC_V2.md",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "f486f4857efd30903d33451b7441218ecd1819f5"
+      },
+      {
+        "path": "docs/update/ThesisForge_优化计划_执行摘要.md",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "d8d78a2faf09d496c6f5c62c48678da69b6925b5"
+      },
+      {
+        "path": "docs/USER_MANUAL.md",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "85edf16949119be24a1f1f67819bdbe34a383929"
+      },
+      {
+        "path": "docs/user-manual/images/01-empty-workspace.png",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "6b0e05d9d04cf8379f546775cf93d2858ba7eed3"
+      },
+      {
+        "path": "docs/user-manual/images/02-workbench-overview.png",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "140fa905c6ac2bba1a81736bbc9594b0650d2a84"
+      },
+      {
+        "path": "docs/user-manual/images/03-template-selector.png",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "ff8b346322f06232a8e249429e6fcab5b472b967"
+      },
+      {
+        "path": "docs/user-manual/images/04-build-progress.png",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "ca358c79c93e4b872b7cf2c1ced7c1e26336b80c"
+      },
+      {
+        "path": "docs/user-manual/images/05-build-complete.png",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "097686220217f0bdc2378f259e92dbc17a185ace"
+      },
+      {
+        "path": "docs/user-manual/images/06-diagnostics.png",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "553b87cad6fae76d3ebf5c74caeb9f9a179847f1"
+      },
+      {
+        "path": "docs/user-manual/images/08-docx-toc-page.png",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "98a62261f1214477fe4186d0584f156af9ef5cdb"
+      },
+      {
+        "path": "docs/user-manual/images/10-wps-toc-updated.png",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "ae78055ef1920fc9ad7cd6c54936a023ed43b1ba"
+      },
+      {
+        "path": "docs/user-manual/index.html",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "537e3c40fbdcabeed4fe2e1b60240bf1c0838c51"
+      },
+      {
+        "path": "docs/V1_PLAN.md",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "5a07baeb4c6de080277599552b66603ab1c9d787"
+      },
+      {
+        "path": "examples/bachelor-thesis/docforge.yaml",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "212e11c478d9c004c97b09daab9b607a62cd8f74"
+      },
+      {
+        "path": "examples/bachelor-thesis/document.md",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "df949267b01a29239c67b7e34f4720e637aec532"
+      },
+      {
+        "path": "examples/bachelor-thesis/images/.gitkeep",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+      },
+      {
+        "path": "examples/bachelor-thesis/images/acceptance-architecture.png",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "92f0a3d44591504481b0bb7c5356d111e551678f"
+      },
+      {
+        "path": "examples/bachelor-thesis/images/acceptance-architecture.svg",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "2027eceaf0d7f4cbeb6d2390b11af9c644382bc7"
+      },
+      {
+        "path": "examples/bachelor-thesis/references.bib",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "ee28c2c237b362193b976f12da7f0e7d2ab537d8"
+      },
+      {
+        "path": "examples/bachelor-thesis/thesis-full-template.md",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "76bca6a5fa36d6571db8a4f51f3e8fa18285a890"
+      },
+      {
+        "path": "examples/complete-thesis/docforge.yaml",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "80b0b2b0319dc7cd80db7796e68f92a02bad614f"
+      },
+      {
+        "path": "examples/complete-thesis/document.md",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "3caf92825c4da4a3da06c0cac255983680c228bf"
+      },
+      {
+        "path": "examples/complete-thesis/images/acceptance-architecture.png",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "92f0a3d44591504481b0bb7c5356d111e551678f"
+      },
+      {
+        "path": "examples/complete-thesis/references.bib",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "ee28c2c237b362193b976f12da7f0e7d2ab537d8"
+      },
+      {
+        "path": "examples/v2-complete-thesis.zip",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "44790630af16bafcab91e161633727e740ff4984"
+      },
+      {
+        "path": "examples/v2-complete-thesis/assets/architecture.png",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "92f0a3d44591504481b0bb7c5356d111e551678f"
+      },
+      {
+        "path": "examples/v2-complete-thesis/docforge.yaml",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "38648775f5d2d8b658b3f4c337b20d988e641bfc"
+      },
+      {
+        "path": "examples/v2-complete-thesis/document.md",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "d570b3b1132639c22cd1a5c705d8e25dc3f3308c"
+      },
+      {
+        "path": "examples/v2-complete-thesis/README.md",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "e7d97dcca95d1392fb21b0911247e5b8d5feacf1"
+      },
+      {
+        "path": "examples/v2-complete-thesis/references.bib",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "92ac4b4251a45668c89910d0c098d16c3d6267e9"
+      },
+      {
+        "path": "examples/v2-complete-thesis/review/document.review-map.json",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "4866632b52bdd0eb365a991548747746d41a6764"
+      },
+      {
+        "path": "examples/v2-complete-thesis/review/document.review.md",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "21aedcda6ef6abe50c2c48398137489a7f087bfc"
+      },
+      {
+        "path": "examples/v2-complete-thesis/templates/schools/example-university/2026.yaml",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "8eb87908c74bd2c17a44fb27a268a20588007d2a"
+      },
+      {
+        "path": "examples/v2-format-corpus/assets/architecture.png",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "92f0a3d44591504481b0bb7c5356d111e551678f"
+      },
+      {
+        "path": "examples/v2-format-corpus/assets/model.png",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "b486911e54c253c0d216b7b1fac3347147738266"
+      },
+      {
+        "path": "examples/v2-format-corpus/coverage-matrix.md",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "12e8d83f3b992243d3159550e9dcf97e13b9e8d9"
+      },
+      {
+        "path": "examples/v2-format-corpus/docforge.yaml",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "96cbecde808e22a6efac98fb35c682ad5481029a"
+      },
+      {
+        "path": "examples/v2-format-corpus/document.md",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "296b57d34d2e39027a4f38460b76e2054ec525ff"
+      },
+      {
+        "path": "examples/v2-format-corpus/README.md",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "256a10b489c4a5f2bfeadef313ed5bee04aeb5fd"
+      },
+      {
+        "path": "examples/v2-format-corpus/references.bib",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "e9e34671534b4389ece4df33e7b19ee86ab9e1e1"
+      },
+      {
+        "path": "Makefile",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "ee6f6a709f0b3543c18eddb9fec3e3c6f68afefc"
+      },
+      {
+        "path": "package.json",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "1da40082e58814ebe2d5d82e20886df9412ba2b8"
+      },
+      {
+        "path": "protocol/build-report.v2.schema.json",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "0a6dde517c950a29266debfe5a7eda5b5ea3a52c"
+      },
+      {
+        "path": "protocol/examples/build-failed-render.json",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "8ebfb0b963c6b0dcb8f6bd4c5c9460e86277c9a0"
+      },
+      {
+        "path": "protocol/examples/build-failed-validation.json",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "0aafd9af9fc5df6e35aa9f15a82c445811023aed"
+      },
+      {
+        "path": "protocol/examples/build-success.json",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "e4d8e73660812031aa5346225d0a78af2824a416"
+      },
+      {
+        "path": "protocol/runtime-contract.v1.json",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "6c5e609e230615f14e4be5ccb4a4dd344b802fc1"
+      },
+      {
+        "path": "pyproject.toml",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "ec0d86e4036a49d0632e5fefe240df08402fa2a6"
+      },
+      {
+        "path": "qa/baselines/.gitkeep",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+      },
+      {
+        "path": "qa/baselines/citations/.gitkeep",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+      },
+      {
+        "path": "qa/baselines/visual/.gitkeep",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+      },
+      {
+        "path": "qa/baselines/visual/complete-thesis-hut/manifest.json",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "a6ae13f936c66bad183824ec8f5eb2b337d25558"
+      },
+      {
+        "path": "qa/baselines/xml/.gitkeep",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+      },
+      {
+        "path": "qa/catalog/.gitkeep",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+      },
+      {
+        "path": "qa/catalog/cases/.gitkeep",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+      },
+      {
+        "path": "qa/catalog/cases/TF-D1-SYN-001.yaml",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "e6c080171fa42ab55a9a25197540eb616a4a3f74"
+      },
+      {
+        "path": "qa/catalog/cases/TF-D2-ID-001.yaml",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "28897997c8a876a60884561eb37b9d5cdcf93198"
+      },
+      {
+        "path": "qa/catalog/cases/TF-D2-REF-004.yaml",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "0468a290f3a3f6ebbcf1e65149aa1de67413b893"
+      },
+      {
+        "path": "qa/catalog/cases/TF-D3-TPL-001.yaml",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "470122fb7c6f1d2517eb8fe337e869bcf8ee8add"
+      },
+      {
+        "path": "qa/catalog/cases/TF-D4-CIT-026.yaml",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "04b8c1d614f4f727354925d7d5fd2ae021329b00"
+      },
+      {
+        "path": "qa/catalog/cases/TF-D4-REF-001.yaml",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "79c381def216ef4aa1b8962b72cbb3c41860d6a0"
+      },
+      {
+        "path": "qa/catalog/cases/TF-D5-WRD-001.yaml",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "31428f013ed31db72db78457719d626d7d59ffd0"
+      },
+      {
+        "path": "qa/catalog/cases/TF-D6-REP-004.yaml",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "55bf1c94eee3fe41d7dde42cf4272df084293f56"
+      },
+      {
+        "path": "qa/catalog/index.json",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "bc5256cc147db891788fc42f17f87eda9d140639"
+      },
+      {
+        "path": "qa/catalog/requirements.yaml",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "70d30c2926ef88f40ce3f909a44558f28a370de4"
+      },
+      {
+        "path": "qa/catalog/suites.yaml",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "a9ff3148bc060c3e6c37566d4f81836722747af2"
+      },
+      {
+        "path": "qa/fixtures/.gitkeep",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+      },
+      {
+        "path": "qa/fixtures/e2e/.gitkeep",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+      },
+      {
+        "path": "qa/fixtures/e2e/figure-reference/docforge.yaml",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "48a0748a560073c4153befc2688fea3540c05647"
+      },
+      {
+        "path": "qa/fixtures/e2e/figure-reference/document.md",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "433fd32022c6a72bcb02b1037397db392487367a"
+      },
+      {
+        "path": "qa/fixtures/e2e/figure-reference/images/dashboard.png",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "55c2f79c603c4987907eedbfd712c920ce0ed8f5"
+      },
+      {
+        "path": "qa/fixtures/e2e/figure-reference/images/pipeline.png",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "1ce362b72781f9b1204136de2fefd9b76dc4fe38"
+      },
+      {
+        "path": "qa/fixtures/e2e/figure-reference/README.md",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "8430428f09a5f03285d90836a028ccbe6bc04adc"
+      },
+      {
+        "path": "qa/fixtures/e2e/figure-reference/references.bib",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "0612440a5079040878124da32abe1cb5f58a13e7"
+      },
+      {
+        "path": "qa/fixtures/parser/.gitkeep",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+      },
+      {
+        "path": "qa/fixtures/parser/duplicate-id.md",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "a9cbc874d5001d399b1b787c73c7c863a4b54631"
+      },
+      {
+        "path": "qa/fixtures/parser/full-syntax.md",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "508ae8a70c82624a0f50881054264d4e89de6c77"
+      },
+      {
+        "path": "qa/fixtures/parser/missing-reference.md",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "007870c50be888a0b6ad8a50bf11f13701166ace"
+      },
+      {
+        "path": "qa/fixtures/stress/.gitkeep",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+      },
+      {
+        "path": "qa/fixtures/templates/.gitkeep",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+      },
+      {
+        "path": "qa/README.md",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "fe324bb3273d0b64901eccebcf97476ff2f8e15e"
+      },
+      {
+        "path": "qa/results/.gitkeep",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+      },
+      {
+        "path": "qa/tools/.gitkeep",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+      },
+      {
+        "path": "qa/tools/build_catalog.py",
+        "mode": "100755",
+        "type": "blob",
+        "object_id": "a4a899437a688c9ee862b7485cbdd7ec3652db03"
+      },
+      {
+        "path": "qa/tools/no_repair_open.py",
+        "mode": "100755",
+        "type": "blob",
+        "object_id": "c43a9b64d8485ba477fd0c81babefa61b8cf5a8d"
+      },
+      {
+        "path": "qa/tools/openxml_validate.py",
+        "mode": "100755",
+        "type": "blob",
+        "object_id": "2fcb0bc6054adc0d667f25b67b5abc723c5d4212"
+      },
+      {
+        "path": "qa/tools/parser_diff.py",
+        "mode": "100755",
+        "type": "blob",
+        "object_id": "09a3f74e79a5ea2db1f6affc2b7c4438834afaee"
+      },
+      {
+        "path": "qa/tools/visual_diff.py",
+        "mode": "100755",
+        "type": "blob",
+        "object_id": "205a371285f44ddc60b28d98421ce40c7011b4ce"
+      },
+      {
+        "path": "README.md",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "462fbb29ec0022c4bda24be8045ff39274e9e251"
+      },
+      {
+        "path": "scripts/build_sidecar.py",
+        "mode": "100755",
+        "type": "blob",
+        "object_id": "f2155faa97b7ffd0016965d1192144111226483e"
+      },
+      {
+        "path": "scripts/check_facticity.py",
+        "mode": "100755",
+        "type": "blob",
+        "object_id": "52bdfb275f84df00d3c6c7a7c9fc465103aae580"
+      },
+      {
+        "path": "scripts/ci-python312.in",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "f54af47dac8e3f8dc23d8c825f8f8263ecd3d2c3"
+      },
+      {
+        "path": "scripts/clone_references.sh",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "70bef87407714458b57719a784f9492118666892"
+      },
+      {
+        "path": "scripts/prepare_release.py",
+        "mode": "100755",
+        "type": "blob",
+        "object_id": "0e1254be1248b20f543ce455aec9ebcad49234eb"
+      },
+      {
+        "path": "scripts/verify_desktop_distribution.py",
+        "mode": "100755",
+        "type": "blob",
+        "object_id": "f57896758b01207d2797400b25042a08c9040d04"
+      },
+      {
+        "path": "scripts/verify_distribution.py",
+        "mode": "100755",
+        "type": "blob",
+        "object_id": "eac9127e8080ee15dc993ca8e8541e44d58a1049"
+      },
+      {
+        "path": "scripts/verify_thesisforge_v2_goal.py",
+        "mode": "100755",
+        "type": "blob",
+        "object_id": "53802114fec2f008dbf852011f5d410903cb0938"
+      },
+      {
+        "path": "templates/base/bachelor.yaml",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "f06a50d5e035ab4a7639fdc276a75b5796cecda9"
+      },
+      {
+        "path": "templates/base/docforge-standard.yaml",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "8d50f93653bd344935b45f7231921ba41a775464"
+      },
+      {
+        "path": "templates/schools/example-university/2026.yaml",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "91040f3a740f6899d7d615730f58c976eb6941ff"
+      },
+      {
+        "path": "templates/schools/hunan-university-of-technology/master-2026.yaml",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "7ba09a2460d986d644fc33dcacb0e78fa5f763d0"
+      },
+      {
+        "path": "templates/schools/project-proposal/2026.yaml",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "d175fc51a54ecb63ca58e44fd7f507af81c6b43d"
+      },
+      {
+        "path": "tests/fixtures/bibliography/gbt7714-2025-corpus.bib",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "d957fa01ba66ca0680d1310c4eb8f7719e18e38c"
+      },
+      {
+        "path": "tests/fixtures/bibliography/gbt7714-2025-corpus.json",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "44d20f178b4459abb7c028d8fb1980d891f418e7"
+      },
+      {
+        "path": "tests/fixtures/bibliography/gbt7714-v1.bib",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "371038509de88db307d2c8a418790c8a6bfa2867"
+      },
+      {
+        "path": "tests/fixtures/bibliography/gbt7714-v1.json",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "6fcf2b0bbf98b2972e674b854a1262d6971b1606"
+      },
+      {
+        "path": "tests/fixtures/diagnostics-zh-cn-v1.json",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "ec2fd8ecaa2d0cce63c489f9422f36c660c5965f"
+      },
+      {
+        "path": "tests/fixtures/docforge-academic/docforge.yaml",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "27802316d8d28a46bf57cee92759d4169d57fed0"
+      },
+      {
+        "path": "tests/fixtures/docforge-academic/document.md",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "5e2a3a4a3024296605118e099c024dfd47c01211"
+      },
+      {
+        "path": "tests/fixtures/docforge-general/docforge.yaml",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "e251e436ff148db6006b17309b32fe7208a16437"
+      },
+      {
+        "path": "tests/fixtures/docforge-general/document.md",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "9d6c971b0f8b26c1d596f149f8881ea0a4400005"
+      },
+      {
+        "path": "tests/fixtures/legacy-project/thesis.md",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "9fcc81af3f104555a5c61f7ffcef63fde4008611"
+      },
+      {
+        "path": "tests/fixtures/preview-workbench-v1.json",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "1363502f5f9d68a83bc78699452c02243962bbff"
+      },
+      {
+        "path": "tests/fixtures/v2-project/assets/model.png",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "b486911e54c253c0d216b7b1fac3347147738266"
+      },
+      {
+        "path": "tests/fixtures/v2-project/docforge.yaml",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "121e81ec03b081e479b83d4d898dfdeb8f88d8df"
+      },
+      {
+        "path": "tests/fixtures/v2-project/document.md",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "32286cc51dda05dfac39409ee0cefdc330ac1854"
+      },
+      {
+        "path": "tests/fixtures/v2-project/references.bib",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "92ac4b4251a45668c89910d0c098d16c3d6267e9"
+      },
+      {
+        "path": "tests/fixtures/workspace-state-v1.json",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "102796dc0b7bf029e12342279a2c43a059ebf883"
+      },
+      {
+        "path": "tests/test_desktop_distribution.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "27663646b6fe1cb0fee75a14e4f384c46f0d2260"
+      }
+    ],
+    "sha256": "60b2399ca705fed25355f0b5d9396cc728372629199013ac36c66e6b575bfc31"
+  },
+  "artifacts": {
+    "context": {
+      "path": "development/tasks/007-repository-delivery/context.json",
+      "sha256": "541e711914b2af72fa9453a8d906602e8ae2902041a350efba48720afa48ebd4"
+    },
+    "report": {
+      "path": "development/tasks/007-repository-delivery/report.md",
+      "sha256": "f743e86d4495c3b2b84acaeddd0b3e07b54ba4028d253cd7be914e131df6baac",
+      "status": "DONE"
+    },
+    "spec_review": {
+      "path": "development/tasks/007-repository-delivery/spec-review.md",
+      "sha256": "f6ab7291add0ecdddf9fad1d13f6e1d3abf08773588a9cc1d78cafe05455ccdf",
+      "verdict": "approved"
+    },
+    "quality_review": {
+      "path": "development/tasks/007-repository-delivery/quality-review.md",
+      "sha256": "ebcf0947d06c285e7ff300b70943132e82e21c9f2003cd523d06d5db6853ec7e",
+      "verdict": "approved"
+    }
+  },
+  "test_runs": [
+    {
+      "id": "receipt-54b77cdf4d882610220e833094b32136968efca83ecb983be7ce406c388e46c6",
+      "command": "PYTHONPATH=src .venv/bin/python -m pytest tests/test_desktop_distribution.py tests/cli tests/project -q",
+      "assertion_ids": [
+        "A4",
+        "A10"
+      ],
+      "recorded_at": "2026-08-27T04:31:41.718Z",
+      "validation_receipt_sha256": "115a82d40cb6f1057f304519d2c03ca168abafa57579868b1b04a676b40de865",
+      "evidence_log": {
+        "path": "development/evidence/047-007-repository-delivery.log",
+        "sha256": "494b539aa722b249154f44223510ce336b1002cd5917a2ec3aa78ca5e892005f",
+        "size": 443
+      }
+    },
+    {
+      "id": "receipt-88c02d70ce9da9117dc5ca1bc25463cdf2222a1ec04e0282a644822adc49a968",
+      "command": ".venv/bin/ruff check scripts tests/test_desktop_distribution.py",
+      "assertion_ids": [
+        "A4",
+        "A10"
+      ],
+      "recorded_at": "2026-08-27T04:33:37.937Z",
+      "validation_receipt_sha256": "3ffeb1ff8a56d7035492d9f1fce78d606930ddd4b56890f5c85bc822605d43fb",
+      "evidence_log": {
+        "path": "development/evidence/048-007-repository-delivery.log",
+        "sha256": "2f96481d5067da5d635618d5f7226e116293a0e684d734e681029b6ddb5c73e1",
+        "size": 161
+      }
+    },
+    {
+      "id": "receipt-9383434f535def03f71c4d08702124faa9de3709e6d00225c1734a3caa687cca",
+      "command": "PYTHONPATH=src .venv/bin/python scripts/verify_desktop_distribution.py --platform macos --bundle-root src-tauri/target/release/bundle",
+      "assertion_ids": [
+        "A4",
+        "A10"
+      ],
+      "recorded_at": "2026-08-27T04:34:08.844Z",
+      "validation_receipt_sha256": "4f635b7ce35d6d6ff2c7b8ead21c735e6dc6fafa663ad1623c7350c829c408b4",
+      "evidence_log": {
+        "path": "development/evidence/052-007-repository-delivery.log",
+        "sha256": "4cb065f03642ea4fd126e23aa809c37cd4976b08d0fcd9f006b451780521454b",
+        "size": 1742
+      }
+    },
+    {
+      "id": "receipt-9a54da261da7a3b9834dbce83ff819a5a25fdb076ee9844ba5accfd36a23f53b",
+      "command": "cargo check --manifest-path src-tauri/Cargo.toml",
+      "assertion_ids": [
+        "A4",
+        "A10"
+      ],
+      "recorded_at": "2026-08-27T04:33:57.804Z",
+      "validation_receipt_sha256": "d382a783ec0c8623df4de92c4fa44dc316c762bd0bd914869449bd25dfc2ec9c",
+      "evidence_log": {
+        "path": "development/evidence/051-007-repository-delivery.log",
+        "sha256": "195e775d21cdbd509d546bc019a33f3ce5b7d26b1c6efa24c7194b2a238bab3a",
+        "size": 314
+      }
+    },
+    {
+      "id": "receipt-ad2a5ee54d603c92d3c3e284172917e380200e2f727674ad9a0fd76b81bfc1ef",
+      "command": "PYTHONPATH=src .venv/bin/python scripts/check_facticity.py --json /tmp/docforge-facticity.json --markdown /tmp/docforge-facticity.md",
+      "assertion_ids": [
+        "A4",
+        "A10"
+      ],
+      "recorded_at": "2026-08-27T04:33:42.229Z",
+      "validation_receipt_sha256": "929c9756293539b4190ae1aefde7d3378ff2517de4bcac29a6ed3e905c0251f6",
+      "evidence_log": {
+        "path": "development/evidence/049-007-repository-delivery.log",
+        "sha256": "19e8fd733edf44cace8e57a5d8a7800e0294a9b017974dcf862ec0e5a9fb6987",
+        "size": 219
+      }
+    },
+    {
+      "id": "receipt-e51da20493c683ded399b04bf314106dbe553a5041efea5bb1327cc2bc8b0c1f",
+      "command": "pnpm --dir frontend build",
+      "assertion_ids": [
+        "A4",
+        "A10"
+      ],
+      "recorded_at": "2026-08-27T04:33:43.328Z",
+      "validation_receipt_sha256": "1c0ae14df506f6bb6d2199bf1b5254e7ea84ee9560b427c68ffbace088c2eca8",
+      "evidence_log": {
+        "path": "development/evidence/050-007-repository-delivery.log",
+        "sha256": "eda179543e8616c39f18acdbc412f08512fcbb41c1423ab5184bb51364d7ce8f",
+        "size": 589
+      }
+    }
+  ],
+  "assertions": [
+    {
+      "id": "A4",
+      "parent_id": "A4",
+      "status": "passing",
+      "test_run_ids": [
+        "receipt-54b77cdf4d882610220e833094b32136968efca83ecb983be7ce406c388e46c6",
+        "receipt-88c02d70ce9da9117dc5ca1bc25463cdf2222a1ec04e0282a644822adc49a968",
+        "receipt-9383434f535def03f71c4d08702124faa9de3709e6d00225c1734a3caa687cca",
+        "receipt-9a54da261da7a3b9834dbce83ff819a5a25fdb076ee9844ba5accfd36a23f53b",
+        "receipt-ad2a5ee54d603c92d3c3e284172917e380200e2f727674ad9a0fd76b81bfc1ef",
+        "receipt-e51da20493c683ded399b04bf314106dbe553a5041efea5bb1327cc2bc8b0c1f"
+      ],
+      "direct_evidence": [],
+      "reused_evidence": [],
+      "claim": "thesisforge.yaml, thesisforge.project.v2, the thesisforge command, ThesisDocument exports, and the old workbench protocol are absent or rejected without compatibility aliases."
+    },
+    {
+      "id": "A10",
+      "parent_id": "A10",
+      "status": "passing",
+      "test_run_ids": [
+        "receipt-54b77cdf4d882610220e833094b32136968efca83ecb983be7ce406c388e46c6",
+        "receipt-88c02d70ce9da9117dc5ca1bc25463cdf2222a1ec04e0282a644822adc49a968",
+        "receipt-9383434f535def03f71c4d08702124faa9de3709e6d00225c1734a3caa687cca",
+        "receipt-9a54da261da7a3b9834dbce83ff819a5a25fdb076ee9844ba5accfd36a23f53b",
+        "receipt-ad2a5ee54d603c92d3c3e284172917e380200e2f727674ad9a0fd76b81bfc1ef",
+        "receipt-e51da20493c683ded399b04bf314106dbe553a5041efea5bb1327cc2bc8b0c1f"
+      ],
+      "direct_evidence": [],
+      "reused_evidence": [],
+      "claim": "Repository-owned examples, fixtures, active documentation, packaging, and CI use the DocForge project contract and neutral filenames."
+    }
+  ],
+  "fallback_used": false
+}

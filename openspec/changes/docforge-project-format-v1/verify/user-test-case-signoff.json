@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "change_id": "docforge-project-format-v1",
+  "status": "approved",
+  "user_decision": "approved snapshot-e34e5e74c6ac469ee8bce2be",
+  "approved_case_ids": [
+    "case-a1-project-open",
+    "case-a10-repository-delivery",
+    "case-a2-general-project",
+    "case-a3-academic-profile",
+    "case-a4-obsolete-contracts",
+    "case-a5-neutral-default-paths",
+    "case-a6-path-security",
+    "case-a7-deterministic-docx",
+    "case-a8-runtime-parity",
+    "case-a9-installed-office"
+  ],
+  "rejected_case_ids": [],
+  "reviewer": {
+    "id": "zengwenliang416",
+    "kind": "human",
+    "display_name": "zengwenliang416"
+  },
+  "decided_at": "2026-08-27T06:27:15Z",
+  "snapshot_id": "snapshot-e34e5e74c6ac469ee8bce2be",
+  "snapshot_hash": "e34e5e74c6ac469ee8bce2be6d0b6ce1e772d4e773710b8bc782cc99da337c85",
+  "approval_id": "approval-e34e5e74c6ac469ee8bce2be",
+  "notes": [
+    "The user explicitly approved the immutable A1-A10 case snapshot before generation preparation."
+  ]
+}

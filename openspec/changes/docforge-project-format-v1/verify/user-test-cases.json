@@ -1,0 +1,300 @@
+{
+  "schema_version": 1,
+  "change_id": "docforge-project-format-v1",
+  "status": "approved",
+  "source": "immutable-case-snapshot",
+  "snapshot_id": "snapshot-e34e5e74c6ac469ee8bce2be",
+  "snapshot_hash": "e34e5e74c6ac469ee8bce2be6d0b6ce1e772d4e773710b8bc782cc99da337c85",
+  "cases": [
+    {
+      "id": "case-a1-project-open",
+      "title": "Open a canonical DocForge project",
+      "actor": "document-author",
+      "user_goal": "Prove directory and manifest project entry use the strict DocForge v1 contract.",
+      "preconditions": [
+        "The repository test fixtures and Python environment are available."
+      ],
+      "steps": [
+        "Run project model, loader, and application project service tests. Expected: Canonical directories and docforge.yaml open while bare Markdown and obsolete manifests are rejected."
+      ],
+      "expected_results": [
+        "The strict DocForge project entry contract passes."
+      ],
+      "boundary_cases": [
+        "Preserve failure evidence if case-a1-project-open does not satisfy its deterministic oracle."
+      ],
+      "acceptance_refs": [
+        "A1"
+      ],
+      "source_refs": [
+        "R1",
+        "requirements.md",
+        "acceptance.md",
+        "prototype/handoff.md",
+        "development/handoff-to-verify.md"
+      ],
+      "snapshot_case_id": "case-a1-project-open"
+    },
+    {
+      "id": "case-a10-repository-delivery",
+      "title": "Verify repository and release delivery contracts",
+      "actor": "release-maintainer",
+      "user_goal": "Prove active repository surfaces and local release artifacts use DocForge identities and neutral filenames.",
+      "preconditions": [
+        "Repository facticity, distribution, and local release artifacts are available."
+      ],
+      "steps": [
+        "Run facticity, desktop distribution, and release metadata validation. Expected: Active findings remain zero and local release artifacts satisfy DocForge naming and integrity rules."
+      ],
+      "expected_results": [
+        "Repository-owned and local release surfaces use the DocForge delivery contract."
+      ],
+      "boundary_cases": [
+        "Preserve failure evidence if case-a10-repository-delivery does not satisfy its deterministic oracle."
+      ],
+      "acceptance_refs": [
+        "A10"
+      ],
+      "source_refs": [
+        "R10",
+        "requirements.md",
+        "acceptance.md",
+        "prototype/handoff.md",
+        "development/handoff-to-verify.md"
+      ],
+      "snapshot_case_id": "case-a10-repository-delivery"
+    },
+    {
+      "id": "case-a2-general-project",
+      "title": "Build a general DocForge project",
+      "actor": "general-document-author",
+      "user_goal": "Prove a neutral general project completes inspect, validate, review, and build without academic metadata.",
+      "preconditions": [
+        "The docforge-general fixture and Python environment are available."
+      ],
+      "steps": [
+        "Copy the general fixture to an isolated directory and run all four CLI operations. Expected: All operations succeed and create neutral Review and DOCX outputs."
+      ],
+      "expected_results": [
+        "The general project completes the neutral offline flow without academic requirements."
+      ],
+      "boundary_cases": [
+        "Preserve failure evidence if case-a2-general-project does not satisfy its deterministic oracle."
+      ],
+      "acceptance_refs": [
+        "A2"
+      ],
+      "source_refs": [
+        "R2",
+        "requirements.md",
+        "acceptance.md",
+        "prototype/handoff.md",
+        "development/handoff-to-verify.md"
+      ],
+      "snapshot_case_id": "case-a2-general-project"
+    },
+    {
+      "id": "case-a3-academic-profile",
+      "title": "Build an academic profile without global leakage",
+      "actor": "academic-author",
+      "user_goal": "Prove academic fields are typed and template-scoped while general documents remain valid.",
+      "preconditions": [
+        "The academic and general fixtures are available."
+      ],
+      "steps": [
+        "Run template, compiler, project, and distribution profile tests. Expected: Academic builds pass and general builds remain free of academic requirements."
+      ],
+      "expected_results": [
+        "Academic profile requirements do not leak into general projects."
+      ],
+      "boundary_cases": [
+        "Preserve failure evidence if case-a3-academic-profile does not satisfy its deterministic oracle."
+      ],
+      "acceptance_refs": [
+        "A3"
+      ],
+      "source_refs": [
+        "R3",
+        "requirements.md",
+        "acceptance.md",
+        "prototype/handoff.md",
+        "development/handoff-to-verify.md"
+      ],
+      "snapshot_case_id": "case-a3-academic-profile"
+    },
+    {
+      "id": "case-a4-obsolete-contracts",
+      "title": "Reject obsolete ThesisForge contracts",
+      "actor": "maintainer",
+      "user_goal": "Prove obsolete active identities are absent or rejected without aliases.",
+      "preconditions": [
+        "Repository facticity rules and obsolete-input tests are available."
+      ],
+      "steps": [
+        "Run obsolete-domain tests and the repository facticity scan. Expected: All negative contracts are rejected and active finding count is zero."
+      ],
+      "expected_results": [
+        "No obsolete ThesisForge contract remains active."
+      ],
+      "boundary_cases": [
+        "Preserve failure evidence if case-a4-obsolete-contracts does not satisfy its deterministic oracle."
+      ],
+      "acceptance_refs": [
+        "A4"
+      ],
+      "source_refs": [
+        "R4",
+        "requirements.md",
+        "acceptance.md",
+        "prototype/handoff.md",
+        "development/handoff-to-verify.md"
+      ],
+      "snapshot_case_id": "case-a4-obsolete-contracts"
+    },
+    {
+      "id": "case-a5-neutral-default-paths",
+      "title": "Use neutral source, build, and Review defaults",
+      "actor": "document-author",
+      "user_goal": "Prove canonical filenames match across project, CLI, runtime, and desktop contracts.",
+      "preconditions": [
+        "CLI, project, protocol, and distribution tests are available."
+      ],
+      "steps": [
+        "Run project, CLI, contract, and desktop distribution default-path tests. Expected: All layers use document.md and neutral document output paths."
+      ],
+      "expected_results": [
+        "Canonical neutral default paths match across all product layers."
+      ],
+      "boundary_cases": [
+        "Preserve failure evidence if case-a5-neutral-default-paths does not satisfy its deterministic oracle."
+      ],
+      "acceptance_refs": [
+        "A5"
+      ],
+      "source_refs": [
+        "R5",
+        "requirements.md",
+        "acceptance.md",
+        "prototype/handoff.md",
+        "development/handoff-to-verify.md"
+      ],
+      "snapshot_case_id": "case-a5-neutral-default-paths"
+    },
+    {
+      "id": "case-a6-path-security",
+      "title": "Enforce project path security",
+      "actor": "security-reviewer",
+      "user_goal": "Prove safe project-relative resources are accepted and unsafe path classes are rejected.",
+      "preconditions": [
+        "Project loader and application path-security tests are available."
+      ],
+      "steps": [
+        "Run project path and application service redteam tests. Expected: Absolute, remote, traversal, and symlink-escape paths fail with stable diagnostics."
+      ],
+      "expected_results": [
+        "All unsafe project path classes are rejected without weakening safe relative paths."
+      ],
+      "boundary_cases": [
+        "Preserve failure evidence if case-a6-path-security does not satisfy its deterministic oracle."
+      ],
+      "acceptance_refs": [
+        "A6"
+      ],
+      "source_refs": [
+        "R6",
+        "requirements.md",
+        "acceptance.md",
+        "prototype/handoff.md",
+        "development/handoff-to-verify.md"
+      ],
+      "snapshot_case_id": "case-a6-path-security"
+    },
+    {
+      "id": "case-a7-deterministic-docx",
+      "title": "Preserve the deterministic DOCX pipeline",
+      "actor": "document-compiler-maintainer",
+      "user_goal": "Prove semantic ordering, renderer boundaries, OOXML structures, cancellation, deterministic output, and atomic replacement.",
+      "preconditions": [
+        "Core, compiler, renderer, application, and deterministic-output tests are available."
+      ],
+      "steps": [
+        "Run core, compiler, DOCX renderer, acceptance, and build lifecycle tests. Expected: The ordered deterministic pipeline and real OOXML structures pass."
+      ],
+      "expected_results": [
+        "The semantic-to-DOCX pipeline remains deterministic, ordered, cancelable, and atomic."
+      ],
+      "boundary_cases": [
+        "Preserve failure evidence if case-a7-deterministic-docx does not satisfy its deterministic oracle."
+      ],
+      "acceptance_refs": [
+        "A7"
+      ],
+      "source_refs": [
+        "R7",
+        "requirements.md",
+        "acceptance.md",
+        "prototype/handoff.md",
+        "development/handoff-to-verify.md"
+      ],
+      "snapshot_case_id": "case-a7-deterministic-docx"
+    },
+    {
+      "id": "case-a8-runtime-parity",
+      "title": "Keep Python, TypeScript, Rust, HTTP, and Tauri protocol parity",
+      "actor": "runtime-maintainer",
+      "user_goal": "Prove all runtime boundaries use one strict versioned DocForge protocol and BuildReport identity.",
+      "preconditions": [
+        "Python, frontend, and Rust dependencies are installed in the verification worktree."
+      ],
+      "steps": [
+        "Run focused Python adapters, frontend transport tests, real HTTP acceptance, and Rust protocol tests. Expected: All runtimes accept canonical identities and reject obsolete or malformed protocol data."
+      ],
+      "expected_results": [
+        "The versioned DocForge runtime and BuildReport contract is consistent across all boundaries."
+      ],
+      "boundary_cases": [
+        "Preserve failure evidence if case-a8-runtime-parity does not satisfy its deterministic oracle."
+      ],
+      "acceptance_refs": [
+        "A8"
+      ],
+      "source_refs": [
+        "R8",
+        "requirements.md",
+        "acceptance.md",
+        "prototype/handoff.md",
+        "development/handoff-to-verify.md"
+      ],
+      "snapshot_case_id": "case-a8-runtime-parity"
+    },
+    {
+      "id": "case-a9-installed-office",
+      "title": "Verify installed DocForge and Microsoft Word preview evidence",
+      "actor": "desktop-document-author",
+      "user_goal": "Prove the installed macOS workbench uses neutral terminology and generated a valid Word PDF preview.",
+      "preconditions": [
+        "The content-addressed installed acceptance receipt and screenshot are present."
+      ],
+      "steps": [
+        "Validate the installed app receipt, Microsoft Word result, accessibility labels, and screenshot SHA-256. Expected: The receipt is passed, Word preview is available, and the screenshot matches its recorded hash."
+      ],
+      "expected_results": [
+        "Installed DocForge.app and Microsoft Word final preview evidence is internally consistent and content-addressed."
+      ],
+      "boundary_cases": [
+        "Preserve failure evidence if case-a9-installed-office does not satisfy its deterministic oracle."
+      ],
+      "acceptance_refs": [
+        "A9"
+      ],
+      "source_refs": [
+        "R9",
+        "requirements.md",
+        "acceptance.md",
+        "prototype/handoff.md",
+        "development/handoff-to-verify.md"
+      ],
+      "snapshot_case_id": "case-a9-installed-office"
+    }
+  ]
+}

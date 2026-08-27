@@ -1,0 +1,19 @@
+{
+  "schema": "specnav.verification.repair-link.v1",
+  "failure_id": "failure-98298abaa9086b490c419c2829b887ae15a77d690824d18a273085cf62f64d98",
+  "change_id": "docforge-project-format-v1",
+  "development_task_id": "900-verification-repair-ef95f9719163589d",
+  "repair_kind": "test_code",
+  "status": "requested",
+  "requested_at": "2026-08-27T07:47:08.283Z",
+  "before_identity": {
+    "case_snapshot_hash": "e34e5e74c6ac469ee8bce2be6d0b6ce1e772d4e773710b8bc782cc99da337c85",
+    "code_sha": "60274f4c7bd0541d0a6346753e68eb7f5f2ae6a6",
+    "test_sha": "8898bb578306334a0f3e9e5723ac9a186ccfb90845268c19e0677fb7df12a193",
+    "environment_hash": "e70d297a62bab25e39bb4323fd1636081aac76eff129f315f3d3dbe56c04a1eb",
+    "runtime_version": "2.0.0-alpha.2",
+    "kernel_version": "2.0.0-alpha.2"
+  },
+  "scope_digest": "97de42eb572bacc046cabcec7e89d0bd7042184892d0584d4ce91eb2cc2afeda",
+  "id": "repair-a8c7b56a9b0d1d5c82753df5589283ad448c156838bf3f7829b517f37f5f5f6b"
+}

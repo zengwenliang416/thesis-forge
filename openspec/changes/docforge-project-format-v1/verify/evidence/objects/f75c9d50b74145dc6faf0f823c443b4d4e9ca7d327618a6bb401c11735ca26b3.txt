@@ -1,0 +1,9 @@
+status=failed
+exit_status=127
+--- stdout ---
+........................................................................ [ 97%]
+..                                                                       [100%]
+74 passed in 1.00s
+
+--- stderr ---
+env: node: No such file or directory

@@ -103,3 +103,11 @@ approved
 - Task 006 should complete the UI picker and remaining product-owned desktop
   terminology migration; Task 008 should rerun the real HTTP and installed
   desktop flows afterward.
+
+## Acceptance Assertions Verified
+
+- `A4`: obsolete runtime and BuildReport identities are rejected.
+- `A5`: canonical source, output, Review, and preview paths match across
+  Python, TypeScript, and Rust.
+- `A8`: versioned protocol parity, cancellation, stale-result handling, output
+  authorization, and final-preview authorization pass.

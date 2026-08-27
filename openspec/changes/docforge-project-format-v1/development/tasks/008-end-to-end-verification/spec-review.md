@@ -2,18 +2,17 @@
 
 ## Verdict
 
-blocked
+approved
 
 ## Missing Requirements
 
-- No implementation or acceptance-scope requirement is missing for items 8.1
-  through 8.5. The full Python, frontend, Rust, E2E, OOXML, distribution,
+- None for Task 008 items 8.1 through 8.6.
+- The full Python, frontend, Rust, E2E, OOXML, distribution,
   deterministic-output, facticity, installed macOS, and Microsoft Word
   evidence is present.
-- Item 8.6 remains open because the locked project-scoped SpecNav Verification
-  Runtime `2.0.0-alpha.2` is not installed. The project configuration requires
-  `runtime_scope: project`, and no fallback runtime receipt may substitute for
-  it.
+- The locked project-scoped SpecNav Verification Runtime `2.0.0-alpha.2` is
+  installed and ready with `fallback_used=false`; all `33` task commands have
+  current-HEAD signed receipts.
 
 ## Extra Behavior
 
@@ -26,11 +25,11 @@ blocked
 
 ## Misunderstood Requirements
 
-- The system-executed and sensory results below are pre-Runtime supporting
-  evidence. They do not close the change-level acceptance ledger by themselves.
-- `acceptance.json` still contains `failing` statuses with null evidence
-  references. This review does not edit that ledger or claim authoritative
-  A1-A10 closure.
+- The system-executed and sensory results below close the Task 008 development
+  slice. Official task acceptance files and the later six-domain gate remain
+  machine-generated lifecycle artifacts rather than prose claims.
+- An unknown case snapshot or successor generation still requires explicit
+  approval of its exact id and SHA-256.
 - The browser matrix used isolated port `4174` because an unrelated process
   occupied `4173`; the isolated run completed with intentional viewport skips
   and no failures. This is an environment caveat, not a product requirement
@@ -38,26 +37,20 @@ blocked
 
 ## Cannot Verify From Diff
 
-- The locked SpecNav Verification Runtime and its project-scoped six-domain
-  receipts are absent from `.specnav/runtime/verification/2.0.0-alpha.2`.
-  Installation requires separate explicit approval.
-- Fresh authoritative receipts cannot be bound to the final committed HEAD
-  while the implementation remains an uncommitted working-tree state. The
-  pre-Runtime evidence is still useful for review, but it is not a substitute
-  for clean-HEAD receipt binding.
 - The current macOS host does not provide a native Windows WebView2 installed
   receipt. The required sensory gate for this change is the installed macOS
   workbench and Microsoft Word flow; Windows remains broader platform evidence.
+- External GitHub release publication, signing, and notarization were not
+  executed and are not claimed by this review.
 
-## Acceptance Assertions Verified (Pre-Runtime Evidence)
+## Acceptance Assertions Verified
 
 - `A1`: The real Python HTTP acceptance passed through DocForge workspace
   creation and build dispatch, and
   `development/tasks/006-workbench-desktop/evidence/macos-native-acceptance.json`
   records the installed `DocForge.app` opening a project containing
   `docforge.yaml` and `document.md`. Rust project tests also cover directory
-  and explicit-manifest opening. These are supporting receipts, not final
-  change-level closure.
+  and explicit-manifest opening.
 - `A2`: The isolated distribution verifier completed `inspect`, `validate`,
   `review`, and `build` for `docforge-general`; visible DOCX checks found the
   common metadata and no academic-only labels. The real HTTP and CLI flows
@@ -101,9 +94,7 @@ blocked
 
 ## Required Fixes
 
-- One blocker remains: obtain explicit approval, install the locked
-  project-scoped SpecNav Verification Runtime `2.0.0-alpha.2`, then rerun the
-  development, six-domain verification, installation, promotion, and archive
-  contracts with `fallback_used: false` and bind fresh A1-A10 receipts to the
-  final committed HEAD. Preserve existing failed receipts append-only; do not
-  fabricate or manually promote pre-Runtime evidence.
+- None for the Task 008 development slice.
+- Continue through official task acceptance, immutable case approval,
+  generation approval, six-domain execution, promotion, and archive. Preserve
+  all historical failures append-only.

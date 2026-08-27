@@ -1,0 +1,9 @@
+# command: PYTHONPATH=src .venv/bin/python scripts/check_facticity.py --json /tmp/docforge-facticity.json --markdown /tmp/docforge-facticity.md
+# exit_status: 0
+# duration_ms: 3498
+
+## stdout
+(empty)
+
+## stderr
+(empty)

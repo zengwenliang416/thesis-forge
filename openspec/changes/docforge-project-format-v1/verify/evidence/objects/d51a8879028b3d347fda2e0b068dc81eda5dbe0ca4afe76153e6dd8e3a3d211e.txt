@@ -1,0 +1,6 @@
+status=passed
+exit_status=0
+--- stdout ---
+{"ok": true, "word": "16.112", "screenshotSha256": "ed55ca62082d1ff992fe4b808a2395d1756631a0db5b170d79f877eb772dca50"}
+
+--- stderr ---

@@ -1,0 +1,25 @@
+{
+  "ok": true,
+  "facts": {
+    "summary": {
+      "evidence_count": 1,
+      "integrity": "intact",
+      "freshness": "fresh"
+    },
+    "evidence": [
+      {
+        "evidence_id": "evidence-5867f238b67d55c85f7ceb4f3b0f27997e2ea31c5e19cc153e4c974b54f11cfb",
+        "integrity": "intact",
+        "freshness": "fresh",
+        "exists": true,
+        "hash_match": true,
+        "size_match": true,
+        "producer_recognized": true,
+        "store_record_match": true,
+        "binding_match": true,
+        "path_safe": true
+      }
+    ]
+  },
+  "blockers": []
+}

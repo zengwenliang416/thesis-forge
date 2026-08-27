@@ -2,13 +2,12 @@
 
 ## Verdict
 
-blocked
+approved
 
-This independent review covers the quality of items 8.1 through 8.5 on
-August 27, 2026. Those verification slices have current passing evidence; the
-change cannot be marked complete because the locked project-scoped SpecNav
-Verification Runtime `2.0.0-alpha.2` is not installed and no trusted receipt
-set exists yet.
+This independent review covers the quality of items 8.1 through 8.6 on
+August 27, 2026. The locked project-scoped SpecNav Verification Runtime
+`2.0.0-alpha.2` is ready, all `33` task commands have signed current-HEAD
+receipts, and no task-local quality blocker remains.
 
 ## Separation Of Concerns
 
@@ -59,8 +58,8 @@ set exists yet.
   project opening, zero diagnostics, `document.docx`, Microsoft Word 16.112
   PDF generation/display, and content hashes.
 - Facticity reports `activeFindingCount=0`; strict OpenSpec validation passes.
-  These are strong pre-Runtime results, but they are not authoritative
-  change-level acceptance receipts.
+  Each Task 008 command is recorded by the managed receipt authority with
+  current HEAD/tree bindings, content-addressed logs, and HMAC signatures.
 
 ## Error Handling
 
@@ -104,12 +103,23 @@ set exists yet.
 
 ## Required Fixes
 
-- One blocker remains: obtain explicit approval, install the locked
-  project-scoped SpecNav Verification Runtime `2.0.0-alpha.2`, and rerun the
-  development, six-domain verification, installation, promotion, and archive
-  contracts with `fallback_used: false`. Bind trusted A1-A10 receipts to the
-  final committed HEAD, preserve prior failures append-only, and do not
-  fabricate receipts or manually promote the pre-Runtime evidence.
+- None for the Task 008 development slice.
+- Continue with official task acceptance and the separately approved immutable
+  case snapshot and successor generation. Do not manually promote prose or
+  rewrite historical failures.
+
+## Acceptance Assertions Verified
+
+- `A1`: canonical project opening passes across Python, Rust, HTTP, and macOS.
+- `A2`: generic projects build without academic-only metadata or labels.
+- `A3`: optional academic profiles and templates pass.
+- `A4`: obsolete active identities are rejected without aliases.
+- `A5`: canonical neutral paths match across all runtimes and delivery layers.
+- `A6`: unsafe project-relative resource paths are rejected.
+- `A7`: deterministic semantic and DOCX pipelines pass direct structure tests.
+- `A8`: runtime parity, cancellation, stale-result, and authorization pass.
+- `A9`: installed DocForge.app and Microsoft Word final preview pass.
+- `A10`: active repository surfaces pass facticity and delivery checks.
 
 ## Non-Blocking Notes
 
@@ -119,5 +129,5 @@ set exists yet.
   macOS host. The required sensory evidence for this change is the installed
   macOS workbench and Microsoft Word flow; Windows remains broader platform
   coverage.
-- `acceptance.json` remains unchanged with its current failing/null receipt
-  state until the trusted verification lifecycle is run.
+- Official task acceptance and change-level six-domain outputs remain governed
+  by their generators and gates; this quality review does not hand-edit them.

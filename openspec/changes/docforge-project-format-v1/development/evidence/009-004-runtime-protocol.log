@@ -1,0 +1,10 @@
+# command: .venv/bin/ruff check src/docforge/adapters src/docforge/application/contracts.py tests/adapters tests/application tests/test_adapters.py
+# exit_status: 0
+# duration_ms: 158
+
+## stdout
+All checks passed!
+
+
+## stderr
+(empty)

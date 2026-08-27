@@ -92,4 +92,4 @@ and release packaging before the Markdown importer skill begins.
 - [x] 8.3 Run CLI and runtime E2E inspect, validate, review, and build flows for complete general and academic DocForge projects with network and AI credentials unavailable.
 - [x] 8.4 Validate generated DOCX packages for fields, bookmarks, OMML, sections, headers, footers, numbering, relationships, atomic replacement, and deterministic normalized OOXML.
 - [x] 8.5 Classify every remaining ThesisForge or thesis-named occurrence as historical or invalid, remove all invalid active occurrences, and attach evidence to acceptance assertions A1 through A10.
-- [ ] 8.6 Re-run SpecNav development, six-domain verification, installation, promotion, and archive contracts and stop before the separate Markdown-to-DocForge npm Agent Skill change.
+- [x] 8.6 Re-run SpecNav development, six-domain verification, installation, promotion, and archive contracts and stop before the separate Markdown-to-DocForge npm Agent Skill change.

@@ -1,0 +1,1116 @@
+{
+  "ok": false,
+  "status": "failed",
+  "run": {
+    "schema": "specnav.verification.run.v1",
+    "id": "run-20260827064531-285da31c798070fb",
+    "change_id": "docforge-project-format-v1",
+    "case_snapshot_id": "snapshot-e34e5e74c6ac469ee8bce2be",
+    "case_snapshot_hash": "e34e5e74c6ac469ee8bce2be6d0b6ce1e772d4e773710b8bc782cc99da337c85",
+    "case_ids": [
+      "case-a6-path-security"
+    ],
+    "code_sha": "60274f4c7bd0541d0a6346753e68eb7f5f2ae6a6",
+    "test_sha": "8898bb578306334a0f3e9e5723ac9a186ccfb90845268c19e0677fb7df12a193",
+    "environment_hash": "e70d297a62bab25e39bb4323fd1636081aac76eff129f315f3d3dbe56c04a1eb",
+    "runtime_version": "2.0.0-alpha.2",
+    "kernel_version": "2.0.0-alpha.2",
+    "generation_id": "generation-3aec0b8644c6c59b7f56111e",
+    "status": "failed",
+    "created_at": "2026-08-27T06:45:31.938Z",
+    "started_at": "2026-08-27T06:45:31.942Z",
+    "completed_at": "2026-08-27T06:47:00.570Z",
+    "kind": "initial",
+    "origin_run_id": null,
+    "parent_run_id": null,
+    "parent_attempt_id": null,
+    "failure_id": null
+  },
+  "attempt": {
+    "schema": "specnav.verification.attempt.v1",
+    "id": "attempt-20260827064531-285da31c798070fb",
+    "run_id": "run-20260827064531-285da31c798070fb",
+    "change_id": "docforge-project-format-v1",
+    "case_id": "case-a6-path-security",
+    "case_snapshot_hash": "e34e5e74c6ac469ee8bce2be6d0b6ce1e772d4e773710b8bc782cc99da337c85",
+    "kind": "initial",
+    "sequence": 1,
+    "runner": "command",
+    "code_sha": "60274f4c7bd0541d0a6346753e68eb7f5f2ae6a6",
+    "test_sha": "8898bb578306334a0f3e9e5723ac9a186ccfb90845268c19e0677fb7df12a193",
+    "scenario_hash": "ad756b0e9e7b6c636a7af1bb1200018c78303aaf5c23563906cd4004bc9ad775",
+    "environment_hash": "e70d297a62bab25e39bb4323fd1636081aac76eff129f315f3d3dbe56c04a1eb",
+    "browser_project": "none",
+    "test_data_snapshot": "80d76e8e0e8fd354fdebe8e9aa967b3ec3acf59f4ca20ce73ac403886ec49c9d",
+    "runtime_version": "2.0.0-alpha.2",
+    "kernel_version": "2.0.0-alpha.2",
+    "status": "failed",
+    "started_at": "2026-08-27T06:45:31.942Z",
+    "completed_at": "2026-08-27T06:47:00.570Z",
+    "exit_status": 101
+  },
+  "run_states": [
+    {
+      "schema": "specnav.verification.run.v1",
+      "id": "run-20260827064531-285da31c798070fb",
+      "change_id": "docforge-project-format-v1",
+      "case_snapshot_id": "snapshot-e34e5e74c6ac469ee8bce2be",
+      "case_snapshot_hash": "e34e5e74c6ac469ee8bce2be6d0b6ce1e772d4e773710b8bc782cc99da337c85",
+      "case_ids": [
+        "case-a6-path-security"
+      ],
+      "code_sha": "60274f4c7bd0541d0a6346753e68eb7f5f2ae6a6",
+      "test_sha": "8898bb578306334a0f3e9e5723ac9a186ccfb90845268c19e0677fb7df12a193",
+      "environment_hash": "e70d297a62bab25e39bb4323fd1636081aac76eff129f315f3d3dbe56c04a1eb",
+      "runtime_version": "2.0.0-alpha.2",
+      "kernel_version": "2.0.0-alpha.2",
+      "generation_id": "generation-3aec0b8644c6c59b7f56111e",
+      "status": "running",
+      "created_at": "2026-08-27T06:45:31.938Z",
+      "started_at": "2026-08-27T06:45:31.942Z",
+      "completed_at": null,
+      "kind": "initial",
+      "origin_run_id": null,
+      "parent_run_id": null,
+      "parent_attempt_id": null,
+      "failure_id": null
+    },
+    {
+      "schema": "specnav.verification.run.v1",
+      "id": "run-20260827064531-285da31c798070fb",
+      "change_id": "docforge-project-format-v1",
+      "case_snapshot_id": "snapshot-e34e5e74c6ac469ee8bce2be",
+      "case_snapshot_hash": "e34e5e74c6ac469ee8bce2be6d0b6ce1e772d4e773710b8bc782cc99da337c85",
+      "case_ids": [
+        "case-a6-path-security"
+      ],
+      "code_sha": "60274f4c7bd0541d0a6346753e68eb7f5f2ae6a6",
+      "test_sha": "8898bb578306334a0f3e9e5723ac9a186ccfb90845268c19e0677fb7df12a193",
+      "environment_hash": "e70d297a62bab25e39bb4323fd1636081aac76eff129f315f3d3dbe56c04a1eb",
+      "runtime_version": "2.0.0-alpha.2",
+      "kernel_version": "2.0.0-alpha.2",
+      "generation_id": "generation-3aec0b8644c6c59b7f56111e",
+      "status": "failed",
+      "created_at": "2026-08-27T06:45:31.938Z",
+      "started_at": "2026-08-27T06:45:31.942Z",
+      "completed_at": "2026-08-27T06:47:00.570Z",
+      "kind": "initial",
+      "origin_run_id": null,
+      "parent_run_id": null,
+      "parent_attempt_id": null,
+      "failure_id": null
+    }
+  ],
+  "attempt_states": [
+    {
+      "schema": "specnav.verification.attempt.v1",
+      "id": "attempt-20260827064531-285da31c798070fb",
+      "run_id": "run-20260827064531-285da31c798070fb",
+      "change_id": "docforge-project-format-v1",
+      "case_id": "case-a6-path-security",
+      "case_snapshot_hash": "e34e5e74c6ac469ee8bce2be6d0b6ce1e772d4e773710b8bc782cc99da337c85",
+      "kind": "initial",
+      "sequence": 1,
+      "runner": "command",
+      "code_sha": "60274f4c7bd0541d0a6346753e68eb7f5f2ae6a6",
+      "test_sha": "8898bb578306334a0f3e9e5723ac9a186ccfb90845268c19e0677fb7df12a193",
+      "scenario_hash": "ad756b0e9e7b6c636a7af1bb1200018c78303aaf5c23563906cd4004bc9ad775",
+      "environment_hash": "e70d297a62bab25e39bb4323fd1636081aac76eff129f315f3d3dbe56c04a1eb",
+      "browser_project": "none",
+      "test_data_snapshot": "80d76e8e0e8fd354fdebe8e9aa967b3ec3acf59f4ca20ce73ac403886ec49c9d",
+      "runtime_version": "2.0.0-alpha.2",
+      "kernel_version": "2.0.0-alpha.2",
+      "status": "running",
+      "started_at": "2026-08-27T06:45:31.942Z",
+      "completed_at": null,
+      "exit_status": null
+    },
+    {
+      "schema": "specnav.verification.attempt.v1",
+      "id": "attempt-20260827064531-285da31c798070fb",
+      "run_id": "run-20260827064531-285da31c798070fb",
+      "change_id": "docforge-project-format-v1",
+      "case_id": "case-a6-path-security",
+      "case_snapshot_hash": "e34e5e74c6ac469ee8bce2be6d0b6ce1e772d4e773710b8bc782cc99da337c85",
+      "kind": "initial",
+      "sequence": 1,
+      "runner": "command",
+      "code_sha": "60274f4c7bd0541d0a6346753e68eb7f5f2ae6a6",
+      "test_sha": "8898bb578306334a0f3e9e5723ac9a186ccfb90845268c19e0677fb7df12a193",
+      "scenario_hash": "ad756b0e9e7b6c636a7af1bb1200018c78303aaf5c23563906cd4004bc9ad775",
+      "environment_hash": "e70d297a62bab25e39bb4323fd1636081aac76eff129f315f3d3dbe56c04a1eb",
+      "browser_project": "none",
+      "test_data_snapshot": "80d76e8e0e8fd354fdebe8e9aa967b3ec3acf59f4ca20ce73ac403886ec49c9d",
+      "runtime_version": "2.0.0-alpha.2",
+      "kernel_version": "2.0.0-alpha.2",
+      "status": "failed",
+      "started_at": "2026-08-27T06:45:31.942Z",
+      "completed_at": "2026-08-27T06:47:00.570Z",
+      "exit_status": 101
+    }
+  ],
+  "attempts": [
+    {
+      "schema": "specnav.verification.attempt.v1",
+      "id": "attempt-20260827064531-285da31c798070fb",
+      "run_id": "run-20260827064531-285da31c798070fb",
+      "change_id": "docforge-project-format-v1",
+      "case_id": "case-a6-path-security",
+      "case_snapshot_hash": "e34e5e74c6ac469ee8bce2be6d0b6ce1e772d4e773710b8bc782cc99da337c85",
+      "kind": "initial",
+      "sequence": 1,
+      "runner": "command",
+      "code_sha": "60274f4c7bd0541d0a6346753e68eb7f5f2ae6a6",
+      "test_sha": "8898bb578306334a0f3e9e5723ac9a186ccfb90845268c19e0677fb7df12a193",
+      "scenario_hash": "ad756b0e9e7b6c636a7af1bb1200018c78303aaf5c23563906cd4004bc9ad775",
+      "environment_hash": "e70d297a62bab25e39bb4323fd1636081aac76eff129f315f3d3dbe56c04a1eb",
+      "browser_project": "none",
+      "test_data_snapshot": "80d76e8e0e8fd354fdebe8e9aa967b3ec3acf59f4ca20ce73ac403886ec49c9d",
+      "runtime_version": "2.0.0-alpha.2",
+      "kernel_version": "2.0.0-alpha.2",
+      "status": "failed",
+      "started_at": "2026-08-27T06:45:31.942Z",
+      "completed_at": "2026-08-27T06:47:00.570Z",
+      "exit_status": 101
+    }
+  ],
+  "command": {
+    "exit_status": 101,
+    "signal": null,
+    "timed_out": false,
+    "canceled": false,
+    "spawn_error": null
+  },
+  "logs": {
+    "stdout": "........................................................................ [ 59%]\n..................................................                       [100%]\n122 passed in 1.19s\n",
+    "stderr": "   Compiling docforge-desktop v0.1.0 (/Volumes/ThesisForgeCI/workspaces/thesis-forge-docforge-verify/src-tauri)\nerror: linker `cc` not found\n  |\n  = note: No such file or directory (os error 2)\n\nerror: could not compile `docforge-desktop` (lib test) due to 1 previous error\nwarning: build failed, waiting for other jobs to finish...\nerror: could not compile `docforge-desktop` (lib) due to 1 previous error\n"
+  },
+  "events": [
+    {
+      "sequence": 1,
+      "type": "run.running",
+      "at": "2026-08-27T06:45:31.942Z",
+      "run": {
+        "schema": "specnav.verification.run.v1",
+        "id": "run-20260827064531-285da31c798070fb",
+        "change_id": "docforge-project-format-v1",
+        "case_snapshot_id": "snapshot-e34e5e74c6ac469ee8bce2be",
+        "case_snapshot_hash": "e34e5e74c6ac469ee8bce2be6d0b6ce1e772d4e773710b8bc782cc99da337c85",
+        "case_ids": [
+          "case-a6-path-security"
+        ],
+        "code_sha": "60274f4c7bd0541d0a6346753e68eb7f5f2ae6a6",
+        "test_sha": "8898bb578306334a0f3e9e5723ac9a186ccfb90845268c19e0677fb7df12a193",
+        "environment_hash": "e70d297a62bab25e39bb4323fd1636081aac76eff129f315f3d3dbe56c04a1eb",
+        "runtime_version": "2.0.0-alpha.2",
+        "kernel_version": "2.0.0-alpha.2",
+        "generation_id": "generation-3aec0b8644c6c59b7f56111e",
+        "status": "running",
+        "created_at": "2026-08-27T06:45:31.938Z",
+        "started_at": "2026-08-27T06:45:31.942Z",
+        "completed_at": null,
+        "kind": "initial",
+        "origin_run_id": null,
+        "parent_run_id": null,
+        "parent_attempt_id": null,
+        "failure_id": null
+      }
+    },
+    {
+      "sequence": 2,
+      "type": "attempt.running",
+      "at": "2026-08-27T06:45:31.942Z",
+      "attempt": {
+        "schema": "specnav.verification.attempt.v1",
+        "id": "attempt-20260827064531-285da31c798070fb",
+        "run_id": "run-20260827064531-285da31c798070fb",
+        "change_id": "docforge-project-format-v1",
+        "case_id": "case-a6-path-security",
+        "case_snapshot_hash": "e34e5e74c6ac469ee8bce2be6d0b6ce1e772d4e773710b8bc782cc99da337c85",
+        "kind": "initial",
+        "sequence": 1,
+        "runner": "command",
+        "code_sha": "60274f4c7bd0541d0a6346753e68eb7f5f2ae6a6",
+        "test_sha": "8898bb578306334a0f3e9e5723ac9a186ccfb90845268c19e0677fb7df12a193",
+        "scenario_hash": "ad756b0e9e7b6c636a7af1bb1200018c78303aaf5c23563906cd4004bc9ad775",
+        "environment_hash": "e70d297a62bab25e39bb4323fd1636081aac76eff129f315f3d3dbe56c04a1eb",
+        "browser_project": "none",
+        "test_data_snapshot": "80d76e8e0e8fd354fdebe8e9aa967b3ec3acf59f4ca20ce73ac403886ec49c9d",
+        "runtime_version": "2.0.0-alpha.2",
+        "kernel_version": "2.0.0-alpha.2",
+        "status": "running",
+        "started_at": "2026-08-27T06:45:31.942Z",
+        "completed_at": null,
+        "exit_status": null
+      }
+    },
+    {
+      "sequence": 3,
+      "type": "command.started",
+      "at": "2026-08-27T06:45:31.943Z",
+      "command": {
+        "argv": [
+          "/bin/sh",
+          "-c",
+          "set -eu; PYTHONPATH=src .venv/bin/python -m pytest tests/project tests/application/test_project_services.py -q; /Users/wenliang_zeng/.cargo/bin/cargo test --manifest-path src-tauri/Cargo.toml project_tests"
+        ],
+        "cwd": "/Volumes/ThesisForgeCI/workspaces/thesis-forge-docforge-verify",
+        "env_keys": [],
+        "timeout_ms": 300000
+      }
+    },
+    {
+      "sequence": 4,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:45:33.291Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 5,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:45:33.292Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 6,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:45:33.292Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 7,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:45:33.293Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 8,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:45:33.293Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 9,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:45:33.295Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 10,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:45:33.296Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 11,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:45:33.298Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 12,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:45:33.298Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 13,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:45:33.300Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 14,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:45:33.302Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 15,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:45:33.304Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 16,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:45:33.305Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 17,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:45:33.305Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 18,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:45:33.306Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 19,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:45:33.306Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 20,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:45:33.306Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 21,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:45:33.307Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 22,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:45:33.307Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 23,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:45:33.307Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 24,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:45:33.308Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 25,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:45:33.308Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 26,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:45:33.308Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 27,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:45:33.309Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 28,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:45:33.309Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 29,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:45:33.309Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 30,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:45:33.310Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 31,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:45:33.310Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 32,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:45:33.311Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 33,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:45:33.311Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 34,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:45:33.312Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 35,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:45:33.313Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 36,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:45:33.313Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 37,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:45:33.313Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 38,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:45:33.314Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 39,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:45:33.314Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 40,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:45:33.314Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 41,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:45:33.315Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 42,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:45:33.315Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 43,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:45:33.316Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 44,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:45:33.316Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 45,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:45:33.316Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 46,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:45:33.317Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 47,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:45:33.317Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 48,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:45:33.317Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 49,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:45:33.318Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 50,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:45:33.318Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 51,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:45:33.318Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 52,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:45:33.319Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 53,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:45:33.319Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 54,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:45:33.319Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 55,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:45:33.320Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 56,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:45:33.320Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 57,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:45:33.320Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 58,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:45:33.321Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 59,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:45:33.321Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 60,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:45:33.322Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 61,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:45:33.322Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 62,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:45:33.322Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 63,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:45:33.323Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 64,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:45:33.324Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 65,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:45:33.324Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 66,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:45:33.325Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 67,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:45:33.325Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 68,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:45:33.326Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 69,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:45:33.326Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 70,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:45:33.327Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 71,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:45:33.327Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 72,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:45:33.327Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 73,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:45:33.329Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 74,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:45:33.329Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 75,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:45:33.329Z",
+      "chunk": ". [ 59%]\n"
+    },
+    {
+      "sequence": 76,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:45:33.330Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 77,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:45:33.330Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 78,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:45:33.331Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 79,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:45:33.332Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 80,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:45:33.332Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 81,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:45:33.332Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 82,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:45:33.333Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 83,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:45:33.333Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 84,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:45:33.333Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 85,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:45:33.334Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 86,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:45:33.334Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 87,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:45:33.334Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 88,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:45:33.335Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 89,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:45:33.335Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 90,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:45:33.335Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 91,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:45:33.336Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 92,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:45:33.337Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 93,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:45:33.337Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 94,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:45:33.338Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 95,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:45:33.338Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 96,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:45:33.339Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 97,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:45:33.339Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 98,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:45:33.339Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 99,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:45:33.340Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 100,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:45:33.340Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 101,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:45:33.344Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 102,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:45:33.347Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 103,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:45:33.348Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 104,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:45:33.349Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 105,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:45:33.351Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 106,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:45:33.352Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 107,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:45:33.353Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 108,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:45:33.354Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 109,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:45:33.355Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 110,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:45:33.357Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 111,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:45:33.359Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 112,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:45:33.362Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 113,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:45:33.364Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 114,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:45:33.367Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 115,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:45:33.370Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 116,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:45:33.373Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 117,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:45:33.375Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 118,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:45:33.378Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 119,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:45:33.388Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 120,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:45:33.390Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 121,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:45:33.394Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 122,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:45:33.397Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 123,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:45:33.399Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 124,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:45:33.402Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 125,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:45:33.407Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 126,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:45:33.407Z",
+      "chunk": "                       [100%]"
+    },
+    {
+      "sequence": 127,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:45:33.462Z",
+      "chunk": "\n122 passed in 1.19s\n"
+    },
+    {
+      "sequence": 128,
+      "type": "command.stderr",
+      "at": "2026-08-27T06:45:52.650Z",
+      "chunk": "   Compiling docforge-desktop v0.1.0 (/Volumes/ThesisForgeCI/workspaces/thesis-forge-docforge-verify/src-tauri)\n"
+    },
+    {
+      "sequence": 129,
+      "type": "command.stderr",
+      "at": "2026-08-27T06:46:40.603Z",
+      "chunk": "error: linker `cc` not found\n  |\n  = note: No such file or directory (os error 2)\n\n"
+    },
+    {
+      "sequence": 130,
+      "type": "command.stderr",
+      "at": "2026-08-27T06:46:40.779Z",
+      "chunk": "error: could not compile `docforge-desktop` (lib test) due to 1 previous error\n"
+    },
+    {
+      "sequence": 131,
+      "type": "command.stderr",
+      "at": "2026-08-27T06:46:40.779Z",
+      "chunk": "warning: build failed, waiting for other jobs to finish...\n"
+    },
+    {
+      "sequence": 132,
+      "type": "command.stderr",
+      "at": "2026-08-27T06:47:00.542Z",
+      "chunk": "error: could not compile `docforge-desktop` (lib) due to 1 previous error\n"
+    },
+    {
+      "sequence": 133,
+      "type": "command.terminal",
+      "at": "2026-08-27T06:47:00.570Z",
+      "result": {
+        "exit_status": 101,
+        "signal": null,
+        "timed_out": false,
+        "canceled": false,
+        "spawn_error": null
+      }
+    },
+    {
+      "sequence": 134,
+      "type": "attempt.terminal",
+      "at": "2026-08-27T06:47:00.571Z",
+      "attempt": {
+        "schema": "specnav.verification.attempt.v1",
+        "id": "attempt-20260827064531-285da31c798070fb",
+        "run_id": "run-20260827064531-285da31c798070fb",
+        "change_id": "docforge-project-format-v1",
+        "case_id": "case-a6-path-security",
+        "case_snapshot_hash": "e34e5e74c6ac469ee8bce2be6d0b6ce1e772d4e773710b8bc782cc99da337c85",
+        "kind": "initial",
+        "sequence": 1,
+        "runner": "command",
+        "code_sha": "60274f4c7bd0541d0a6346753e68eb7f5f2ae6a6",
+        "test_sha": "8898bb578306334a0f3e9e5723ac9a186ccfb90845268c19e0677fb7df12a193",
+        "scenario_hash": "ad756b0e9e7b6c636a7af1bb1200018c78303aaf5c23563906cd4004bc9ad775",
+        "environment_hash": "e70d297a62bab25e39bb4323fd1636081aac76eff129f315f3d3dbe56c04a1eb",
+        "browser_project": "none",
+        "test_data_snapshot": "80d76e8e0e8fd354fdebe8e9aa967b3ec3acf59f4ca20ce73ac403886ec49c9d",
+        "runtime_version": "2.0.0-alpha.2",
+        "kernel_version": "2.0.0-alpha.2",
+        "status": "failed",
+        "started_at": "2026-08-27T06:45:31.942Z",
+        "completed_at": "2026-08-27T06:47:00.570Z",
+        "exit_status": 101
+      },
+      "artifact_valid": true
+    },
+    {
+      "sequence": 135,
+      "type": "run.terminal",
+      "at": "2026-08-27T06:47:00.571Z",
+      "run": {
+        "schema": "specnav.verification.run.v1",
+        "id": "run-20260827064531-285da31c798070fb",
+        "change_id": "docforge-project-format-v1",
+        "case_snapshot_id": "snapshot-e34e5e74c6ac469ee8bce2be",
+        "case_snapshot_hash": "e34e5e74c6ac469ee8bce2be6d0b6ce1e772d4e773710b8bc782cc99da337c85",
+        "case_ids": [
+          "case-a6-path-security"
+        ],
+        "code_sha": "60274f4c7bd0541d0a6346753e68eb7f5f2ae6a6",
+        "test_sha": "8898bb578306334a0f3e9e5723ac9a186ccfb90845268c19e0677fb7df12a193",
+        "environment_hash": "e70d297a62bab25e39bb4323fd1636081aac76eff129f315f3d3dbe56c04a1eb",
+        "runtime_version": "2.0.0-alpha.2",
+        "kernel_version": "2.0.0-alpha.2",
+        "generation_id": "generation-3aec0b8644c6c59b7f56111e",
+        "status": "failed",
+        "created_at": "2026-08-27T06:45:31.938Z",
+        "started_at": "2026-08-27T06:45:31.942Z",
+        "completed_at": "2026-08-27T06:47:00.570Z",
+        "kind": "initial",
+        "origin_run_id": null,
+        "parent_run_id": null,
+        "parent_attempt_id": null,
+        "failure_id": null
+      },
+      "artifact_valid": true
+    }
+  ],
+  "blockers": [
+    {
+      "id": "verification-execution:command-exit-nonzero",
+      "artifact": "command",
+      "detail": "101"
+    }
+  ]
+}

@@ -1,0 +1,177 @@
+[
+  {
+    "id": "execution-attempt-20260827064427-7306fa24d31e2dcf",
+    "run_id": "run-20260827064427-7306fa24d31e2dcf",
+    "attempt_id": "attempt-20260827064427-7306fa24d31e2dcf",
+    "case_id": "case-a1-project-open",
+    "status": "passed",
+    "assertions": [],
+    "blockers": [
+      {
+        "id": "verification-production:assertion-result-missing",
+        "artifact": "a1-project-open",
+        "detail": null
+      }
+    ],
+    "recorded_at": "2026-08-27T06:44:31.865Z"
+  },
+  {
+    "id": "execution-attempt-20260827064432-f7b0f5e993e8efdd",
+    "run_id": "run-20260827064432-f7b0f5e993e8efdd",
+    "attempt_id": "attempt-20260827064432-f7b0f5e993e8efdd",
+    "case_id": "case-a10-repository-delivery",
+    "status": "failed",
+    "assertions": [],
+    "blockers": [
+      {
+        "id": "verification-execution:command-exit-nonzero",
+        "artifact": "command",
+        "detail": "1"
+      },
+      {
+        "id": "verification-production:assertion-result-missing",
+        "artifact": "a10-repository-clean",
+        "detail": null
+      }
+    ],
+    "recorded_at": "2026-08-27T06:44:40.869Z"
+  },
+  {
+    "id": "execution-attempt-20260827064441-8b4a7bb42f90f287",
+    "run_id": "run-20260827064441-8b4a7bb42f90f287",
+    "attempt_id": "attempt-20260827064441-8b4a7bb42f90f287",
+    "case_id": "case-a2-general-project",
+    "status": "passed",
+    "assertions": [],
+    "blockers": [
+      {
+        "id": "verification-production:assertion-result-missing",
+        "artifact": "a2-general-flow",
+        "detail": null
+      }
+    ],
+    "recorded_at": "2026-08-27T06:44:46.577Z"
+  },
+  {
+    "id": "execution-attempt-20260827064446-2b9dc52f4d4f9ab2",
+    "run_id": "run-20260827064446-2b9dc52f4d4f9ab2",
+    "attempt_id": "attempt-20260827064446-2b9dc52f4d4f9ab2",
+    "case_id": "case-a3-academic-profile",
+    "status": "passed",
+    "assertions": [],
+    "blockers": [
+      {
+        "id": "verification-production:assertion-result-missing",
+        "artifact": "a3-profile-isolation",
+        "detail": null
+      }
+    ],
+    "recorded_at": "2026-08-27T06:45:18.320Z"
+  },
+  {
+    "id": "execution-attempt-20260827064518-8097b5c25829a2d4",
+    "run_id": "run-20260827064518-8097b5c25829a2d4",
+    "attempt_id": "attempt-20260827064518-8097b5c25829a2d4",
+    "case_id": "case-a4-obsolete-contracts",
+    "status": "passed",
+    "assertions": [],
+    "blockers": [
+      {
+        "id": "verification-production:assertion-result-missing",
+        "artifact": "a4-no-obsolete-contract",
+        "detail": null
+      }
+    ],
+    "recorded_at": "2026-08-27T06:45:25.783Z"
+  },
+  {
+    "id": "execution-attempt-20260827064525-5e4db8725c20af7d",
+    "run_id": "run-20260827064525-5e4db8725c20af7d",
+    "attempt_id": "attempt-20260827064525-5e4db8725c20af7d",
+    "case_id": "case-a5-neutral-default-paths",
+    "status": "passed",
+    "assertions": [],
+    "blockers": [
+      {
+        "id": "verification-production:assertion-result-missing",
+        "artifact": "a5-default-paths",
+        "detail": null
+      }
+    ],
+    "recorded_at": "2026-08-27T06:45:31.695Z"
+  },
+  {
+    "id": "execution-attempt-20260827064531-285da31c798070fb",
+    "run_id": "run-20260827064531-285da31c798070fb",
+    "attempt_id": "attempt-20260827064531-285da31c798070fb",
+    "case_id": "case-a6-path-security",
+    "status": "failed",
+    "assertions": [],
+    "blockers": [
+      {
+        "id": "verification-execution:command-exit-nonzero",
+        "artifact": "command",
+        "detail": "101"
+      },
+      {
+        "id": "verification-production:assertion-result-missing",
+        "artifact": "a6-secure-paths",
+        "detail": null
+      }
+    ],
+    "recorded_at": "2026-08-27T06:47:04.623Z"
+  },
+  {
+    "id": "execution-attempt-20260827064704-d0c88d2a76efe074",
+    "run_id": "run-20260827064704-d0c88d2a76efe074",
+    "attempt_id": "attempt-20260827064704-d0c88d2a76efe074",
+    "case_id": "case-a7-deterministic-docx",
+    "status": "passed",
+    "assertions": [],
+    "blockers": [
+      {
+        "id": "verification-production:assertion-result-missing",
+        "artifact": "a7-deterministic-pipeline",
+        "detail": null
+      }
+    ],
+    "recorded_at": "2026-08-27T06:47:34.328Z"
+  },
+  {
+    "id": "execution-attempt-20260827064734-03b2884ca6381698",
+    "run_id": "run-20260827064734-03b2884ca6381698",
+    "attempt_id": "attempt-20260827064734-03b2884ca6381698",
+    "case_id": "case-a8-runtime-parity",
+    "status": "failed",
+    "assertions": [],
+    "blockers": [
+      {
+        "id": "verification-execution:command-exit-nonzero",
+        "artifact": "command",
+        "detail": "127"
+      },
+      {
+        "id": "verification-production:assertion-result-missing",
+        "artifact": "a8-protocol-parity",
+        "detail": null
+      }
+    ],
+    "recorded_at": "2026-08-27T06:47:37.822Z"
+  },
+  {
+    "id": "execution-attempt-20260827064738-bcbe02a786beafa0",
+    "run_id": "run-20260827064738-bcbe02a786beafa0",
+    "attempt_id": "attempt-20260827064738-bcbe02a786beafa0",
+    "case_id": "case-a9-installed-office",
+    "status": "passed",
+    "assertions": [],
+    "blockers": [
+      {
+        "id": "verification-production:assertion-result-missing",
+        "artifact": "a9-installed-word-preview",
+        "detail": null
+      }
+    ],
+    "recorded_at": "2026-08-27T06:47:40.007Z"
+  }
+]

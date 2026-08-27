@@ -2,7 +2,7 @@
 
 ## Verdict
 
-approved_with_notes
+approved
 
 ## Separation Of Concerns
 
@@ -71,6 +71,14 @@ approved_with_notes
 ## Required Fixes
 
 - None for the Task 006 quality slice.
+
+## Acceptance Assertions Verified
+
+- `A1`: the workbench opens canonical project directories and manifests.
+- `A2`: the generic template option and neutral UI flow pass.
+- `A4`: obsolete project, protocol, and product identities are rejected.
+- `A5`: canonical neutral filenames and paths are presented consistently.
+- `A9`: installed DocForge.app and Microsoft Word final preview pass.
 
 ## Non-Blocking Notes
 

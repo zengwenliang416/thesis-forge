@@ -21,12 +21,12 @@
     "openspec/changes/docforge-project-format-v1/specs/docforge-runtime-contract/spec.md"
   ],
   "allowed_files": [
-    "frontend",
-    "src-tauri",
-    "src/docforge",
-    "tests/adapters",
+    "frontend/**",
+    "src-tauri/**",
+    "src/docforge/**",
+    "tests/adapters/**",
     "tests/test_desktop_distribution.py",
-    "scripts",
+    "scripts/**",
     "package.json",
     "openspec/changes/docforge-project-format-v1/development/tasks/006-workbench-desktop",
     "openspec/changes/docforge-project-format-v1/development"

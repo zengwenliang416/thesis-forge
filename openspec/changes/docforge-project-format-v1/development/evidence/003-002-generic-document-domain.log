@@ -1,0 +1,19 @@
+# command: PYTHONPATH=src .venv/bin/python -m pytest tests/core tests/application tests/presentation tests/cli tests/contracts tests/renderers/docx tests/test_acceptance.py tests/test_adapters.py tests/test_compiler.py tests/test_docx_renderer.py tests/test_frontend_contract.py tests/test_preview_presentation.py tests/test_ui_controller.py tests/test_validator.py tests/test_architecture.py -q
+# exit_status: 0
+# duration_ms: 17218
+
+## stdout
+........................................................................ [ 11%]
+........................................................................ [ 23%]
+........................................................................ [ 35%]
+........................................................................ [ 47%]
+........................................................................ [ 59%]
+........................................................................ [ 70%]
+........................................................................ [ 82%]
+........................................................................ [ 94%]
+..................................                                       [100%]
+610 passed in 16.78s
+
+
+## stderr
+(empty)

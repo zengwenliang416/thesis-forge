@@ -95,3 +95,8 @@ approved
 ## Required Fixes
 
 - None for Task 003. QR-001 through QR-006 are resolved.
+
+## Acceptance Assertions Verified
+
+- `A4`: the wheel, import surface, and console metadata expose only DocForge.
+- `A5`: CLI Review and build defaults use the canonical neutral project paths.

@@ -1,6 +1,6 @@
 {
   "schema": "specnav.codegraph.claims.v1",
-  "generated_at": "2026-08-26T10:30:58.463Z",
+  "generated_at": "2026-08-27T04:50:55.167Z",
   "active_change": "docforge-project-format-v1",
   "claims": [
     {
@@ -201,6 +201,281 @@
       ],
       "query_ids": [
         "development:task-008-end-to-end-verification:evidence"
+      ]
+    },
+    {
+      "id": "verification:task-001-project-contract",
+      "kind": "verification-task-traceability",
+      "stage": "verification",
+      "task_id": "001-project-contract",
+      "text": "Add contract-first tests, implement the project model and entrypoint loader,",
+      "required": true,
+      "source": "specnav-codegraph-plan",
+      "source_paths": [
+        "openspec/changes/docforge-project-format-v1/development/tasks/001-project-contract/brief.md",
+        "openspec/changes/docforge-project-format-v1/development/tasks/001-project-contract/context.json"
+      ],
+      "expected_evidence": [
+        "Failing then passing focused project contract tests",
+        "Path redteam test output",
+        "General and academic fixture load evidence",
+        "Task report, spec review, and quality review"
+      ],
+      "allowed_files": [
+        "src/docforge/project/**",
+        "src/docforge/application/**",
+        "tests/project/**",
+        "tests/application/**",
+        "tests/fixtures/**",
+        "examples/**",
+        "openspec/changes/docforge-project-format-v1/development/tasks/001-project-contract",
+        "openspec/changes/docforge-project-format-v1/development"
+      ],
+      "query_ids": [
+        "verification:task-001-project-contract:evidence"
+      ]
+    },
+    {
+      "id": "verification:task-002-generic-document-domain",
+      "kind": "verification-task-traceability",
+      "stage": "verification",
+      "task_id": "002-generic-document-domain",
+      "text": "Introduce failing public-domain tests, rename the aggregate, migrate parser and",
+      "required": true,
+      "source": "specnav-codegraph-plan",
+      "source_paths": [
+        "openspec/changes/docforge-project-format-v1/development/tasks/002-generic-document-domain/brief.md",
+        "openspec/changes/docforge-project-format-v1/development/tasks/002-generic-document-domain/context.json"
+      ],
+      "expected_evidence": [
+        "Public model import tests",
+        "Parser and downstream focused regression output",
+        "Architecture dependency test output",
+        "Task report, spec review, and quality review"
+      ],
+      "allowed_files": [
+        "src/docforge/core/**",
+        "src/docforge/application/**",
+        "src/docforge/compiler/**",
+        "src/docforge/bibliography/**",
+        "src/docforge/presentation/**",
+        "qa/tools/parser_diff.py",
+        "tests/**",
+        "openspec/changes/docforge-project-format-v1/development/tasks/002-generic-document-domain",
+        "openspec/changes/docforge-project-format-v1/development"
+      ],
+      "query_ids": [
+        "verification:task-002-generic-document-domain:evidence"
+      ]
+    },
+    {
+      "id": "verification:task-003-python-package-cli",
+      "kind": "verification-task-traceability",
+      "stage": "verification",
+      "task_id": "003-python-package-cli",
+      "text": "Add distribution tests, move the import package in bounded batches, expose the",
+      "required": true,
+      "source": "specnav-codegraph-plan",
+      "source_paths": [
+        "openspec/changes/docforge-project-format-v1/development/tasks/003-python-package-cli/brief.md",
+        "openspec/changes/docforge-project-format-v1/development/tasks/003-python-package-cli/context.json"
+      ],
+      "expected_evidence": [
+        "Failing then passing package and CLI tests",
+        "Wheel build and content evidence",
+        "Clean-environment install and offline command evidence",
+        "Task report, spec review, and quality review"
+      ],
+      "allowed_files": [
+        "src/**",
+        "tests/**",
+        "pyproject.toml",
+        "README.md",
+        "Makefile",
+        "scripts/**",
+        "openspec/changes/docforge-project-format-v1/development/tasks/003-python-package-cli",
+        "openspec/changes/docforge-project-format-v1/development"
+      ],
+      "query_ids": [
+        "verification:task-003-python-package-cli:evidence"
+      ]
+    },
+    {
+      "id": "verification:task-004-runtime-protocol",
+      "kind": "verification-task-traceability",
+      "stage": "verification",
+      "task_id": "004-runtime-protocol",
+      "text": "Add parity fixtures, migrate Python adapters and schemas, migrate TypeScript",
+      "required": true,
+      "source": "specnav-codegraph-plan",
+      "source_paths": [
+        "openspec/changes/docforge-project-format-v1/development/tasks/004-runtime-protocol/brief.md",
+        "openspec/changes/docforge-project-format-v1/development/tasks/004-runtime-protocol/context.json"
+      ],
+      "expected_evidence": [
+        "Cross-language fixture parity output",
+        "Python adapter test output",
+        "TypeScript transport and build event test output",
+        "Rust Tauri protocol and preview authorization test output",
+        "Task report, spec review, and quality review"
+      ],
+      "allowed_files": [
+        "src/**",
+        "protocol/**",
+        "frontend/src/transport/**",
+        "frontend/src/state/**",
+        "frontend/e2e/**",
+        "src-tauri/**",
+        "tests/adapters/**",
+        "tests/application/**",
+        "tests/test_adapters.py",
+        "openspec/changes/docforge-project-format-v1/development/tasks/004-runtime-protocol",
+        "openspec/changes/docforge-project-format-v1/development"
+      ],
+      "query_ids": [
+        "verification:task-004-runtime-protocol:evidence"
+      ]
+    },
+    {
+      "id": "verification:task-005-template-profiles",
+      "kind": "verification-task-traceability",
+      "stage": "verification",
+      "task_id": "005-template-profiles",
+      "text": "Add template binding tests, extend typed common and academic bindings, package",
+      "required": true,
+      "source": "specnav-codegraph-plan",
+      "source_paths": [
+        "openspec/changes/docforge-project-format-v1/development/tasks/005-template-profiles/brief.md",
+        "openspec/changes/docforge-project-format-v1/development/tasks/005-template-profiles/context.json"
+      ],
+      "expected_evidence": [
+        "Template binding and package validation tests",
+        "General and academic RenderPlan comparisons",
+        "Visible output check for absent fabricated academic content",
+        "Task report, spec review, and quality review"
+      ],
+      "allowed_files": [
+        "src/docforge/templates/**",
+        "src/docforge/compiler/**",
+        "src/docforge/project/**",
+        "templates/**",
+        "tests/templates/**",
+        "tests/compiler/**",
+        "tests/project/**",
+        "tests/fixtures/**",
+        "examples/**",
+        "openspec/changes/docforge-project-format-v1/development/tasks/005-template-profiles",
+        "openspec/changes/docforge-project-format-v1/development"
+      ],
+      "query_ids": [
+        "verification:task-005-template-profiles:evidence"
+      ]
+    },
+    {
+      "id": "verification:task-006-workbench-desktop",
+      "kind": "verification-task-traceability",
+      "stage": "verification",
+      "task_id": "006-workbench-desktop",
+      "text": "Migrate project opening and workspace identity, replace active thesis-specific",
+      "required": true,
+      "source": "specnav-codegraph-plan",
+      "source_paths": [
+        "openspec/changes/docforge-project-format-v1/development/tasks/006-workbench-desktop/brief.md",
+        "openspec/changes/docforge-project-format-v1/development/tasks/006-workbench-desktop/context.json"
+      ],
+      "expected_evidence": [
+        "Frontend typecheck, unit, browser, responsive, and accessibility output",
+        "Rust Tauri identity and command test output",
+        "Installed macOS project-open, diagnostics, build, and Word preview evidence",
+        "Task report, spec review, and quality review"
+      ],
+      "allowed_files": [
+        "frontend/**",
+        "src-tauri/**",
+        "src/docforge/**",
+        "tests/adapters/**",
+        "tests/test_desktop_distribution.py",
+        "scripts/**",
+        "package.json",
+        "openspec/changes/docforge-project-format-v1/development/tasks/006-workbench-desktop",
+        "openspec/changes/docforge-project-format-v1/development"
+      ],
+      "query_ids": [
+        "verification:task-006-workbench-desktop:evidence"
+      ]
+    },
+    {
+      "id": "verification:task-007-repository-delivery",
+      "kind": "verification-task-traceability",
+      "stage": "verification",
+      "task_id": "007-repository-delivery",
+      "text": "Convert repository-owned projects and docs, update build and release automation,",
+      "required": true,
+      "source": "specnav-codegraph-plan",
+      "source_paths": [
+        "openspec/changes/docforge-project-format-v1/development/tasks/007-repository-delivery/brief.md",
+        "openspec/changes/docforge-project-format-v1/development/tasks/007-repository-delivery/context.json"
+      ],
+      "expected_evidence": [
+        "Converted example and fixture validation",
+        "Obsolete active identity facticity report",
+        "Local CI and packaging command output",
+        "macOS artifact content, metadata, checksum, and filename evidence",
+        "Task report, spec review, and quality review"
+      ],
+      "allowed_files": [
+        "examples/**",
+        "tests/fixtures/**",
+        "docs/**",
+        "protocol/**",
+        "qa/**",
+        "scripts/**",
+        ".github/**",
+        ".woodpecker/**",
+        "templates/**",
+        "pyproject.toml",
+        "package.json",
+        "README.md",
+        "Makefile",
+        "tests/test_desktop_distribution.py",
+        "openspec/changes/docforge-project-format-v1/development/tasks/007-repository-delivery",
+        "openspec/changes/docforge-project-format-v1/development"
+      ],
+      "query_ids": [
+        "verification:task-007-repository-delivery:evidence"
+      ]
+    },
+    {
+      "id": "verification:task-008-end-to-end-verification",
+      "kind": "verification-task-traceability",
+      "stage": "verification",
+      "task_id": "008-end-to-end-verification",
+      "text": "Run the complete verification matrix, validate general and academic builds,",
+      "required": true,
+      "source": "specnav-codegraph-plan",
+      "source_paths": [
+        "openspec/changes/docforge-project-format-v1/development/tasks/008-end-to-end-verification/brief.md",
+        "openspec/changes/docforge-project-format-v1/development/tasks/008-end-to-end-verification/context.json"
+      ],
+      "expected_evidence": [
+        "System-executed Python, frontend, Rust, E2E, and OpenSpec receipts",
+        "OOXML and deterministic comparison evidence",
+        "Installed macOS and Microsoft Word sensory evidence",
+        "Factual obsolete-identity classification",
+        "Acceptance A1 through A10 evidence",
+        "Task report, independent spec review, and independent quality review"
+      ],
+      "allowed_files": [
+        "tests/**",
+        "frontend/**",
+        "src-tauri/**",
+        "qa/**",
+        "scripts/**",
+        "examples/**",
+        "openspec/changes/docforge-project-format-v1"
+      ],
+      "query_ids": [
+        "verification:task-008-end-to-end-verification:evidence"
       ]
     }
   ]

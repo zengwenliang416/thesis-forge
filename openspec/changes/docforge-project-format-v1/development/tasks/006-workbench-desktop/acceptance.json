@@ -1,0 +1,1266 @@
+{
+  "schema": "specnav.task-acceptance-evidence.v2",
+  "generated_by": "specnav-development/task-acceptance-evidence",
+  "task_id": "006-workbench-desktop",
+  "generated_at": "2026-08-27T04:49:42.682Z",
+  "recorded_at": "2026-08-27T04:31:40.530Z",
+  "status": "approved",
+  "reviewed_git_head": "26344ca4489d60715550f14b774b22ddc4cc491b",
+  "reviewed_git_tree": "2cb10ec125ef48701d0afd41378c1a7bf6770cc9",
+  "implementation_scope": {
+    "included_patterns": [
+      "frontend/**",
+      "openspec/changes/docforge-project-format-v1/development",
+      "package.json",
+      "scripts/**",
+      "src-tauri/**",
+      "src/docforge/**",
+      "tests/adapters/**",
+      "tests/test_desktop_distribution.py"
+    ],
+    "entries": [
+      {
+        "path": "frontend/.gitignore",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "1a639a63fcf141d4203d6c456e4151d711099580"
+      },
+      {
+        "path": "frontend/e2e/acceptance.spec.ts",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "8220d65e8d6d181e43ccaa762a3846557c8b1d31"
+      },
+      {
+        "path": "frontend/e2e/real_http_server.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "39062c13b7ad9a263d10c2f59daaa12aaa993e65"
+      },
+      {
+        "path": "frontend/e2e/real-http.acceptance.ts",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "80f6ad069809893310c2aad77a874326e07f76b8"
+      },
+      {
+        "path": "frontend/e2e/real-http.playwright.config.ts",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "344b5d7192b5417cc7b2486540fd101c3ea5761d"
+      },
+      {
+        "path": "frontend/e2e/tauri-windows.acceptance.ts",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "b2cdec7f8dbcee12e2de4ce01d7106b2936882c4"
+      },
+      {
+        "path": "frontend/e2e/workbench.spec.ts",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "69f53d835b0a944f54abe782c66bf9584f58573f"
+      },
+      {
+        "path": "frontend/index.html",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "f9b9881ef2f5c57d776ba3fa5cbaf55cf48391ee"
+      },
+      {
+        "path": "frontend/package.json",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "2bd994f74a605deb3a99c379ce885c6f0fb211e5"
+      },
+      {
+        "path": "frontend/playwright.config.ts",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "731887b97e6fc7cb926d7d66c8a9d2a6b309a75b"
+      },
+      {
+        "path": "frontend/pnpm-lock.yaml",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "0eb78298a972b797b60beaa963695baf80e31f90"
+      },
+      {
+        "path": "frontend/scripts/lint.mjs",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "e81890a1a4852f0a471ecd994753e905dfb4c2c6"
+      },
+      {
+        "path": "frontend/src/components/BuildOutputPanel.test.tsx",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "97e76086b63a93e0725553a8d30a14489eee08f2"
+      },
+      {
+        "path": "frontend/src/components/BuildOutputPanel.tsx",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "dce182b41f8e9271de258c7012b3cba82695cc00"
+      },
+      {
+        "path": "frontend/src/components/OutputFeedback.tsx",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "1bffe2b4a67d5bccbf4b4258e623236251912640"
+      },
+      {
+        "path": "frontend/src/components/PanelHeader.tsx",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "d617ed16ceae657969ef6edc676fead363d230e9"
+      },
+      {
+        "path": "frontend/src/components/PreviewPanels.test.tsx",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "210d38e89409f79865c4a8746702afb4bdf5e9ac"
+      },
+      {
+        "path": "frontend/src/components/PreviewPanels.tsx",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "bebafa25ee279dacb24a48b4abec29b043da009b"
+      },
+      {
+        "path": "frontend/src/components/ProductBar.project.test.tsx",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "d5fedc66fb86d938d0bf902000788d2b58296a3b"
+      },
+      {
+        "path": "frontend/src/components/ProductBar.tsx",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "dbdec519703abc762820c1598740e642edc99077"
+      },
+      {
+        "path": "frontend/src/components/ReviewPanel.test.tsx",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "3fab5fd8a4fab51bd3856a7337c81db2c934736c"
+      },
+      {
+        "path": "frontend/src/components/ReviewPanel.tsx",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "d285ea4c425629881a2a1abcdb407e2d23adda57"
+      },
+      {
+        "path": "frontend/src/components/StatusStrip.tsx",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "33273612416512dfb458a29f460b4fe6e940360a"
+      },
+      {
+        "path": "frontend/src/components/usePdfObjectUrl.ts",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "05b873672daf7c58fadd24df05d12a497c15bff2"
+      },
+      {
+        "path": "frontend/src/components/WorkbenchApp.project.test.tsx",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "4cb2a71b2b0be3d179dbb1ca286cb77506f068b3"
+      },
+      {
+        "path": "frontend/src/components/WorkbenchApp.test.tsx",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "17a45410ebde778c7fd8123e428e0129e184348a"
+      },
+      {
+        "path": "frontend/src/components/WorkbenchApp.tsx",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "24c015b9207055bd1254f72b0f6c838f8128a2e7"
+      },
+      {
+        "path": "frontend/src/components/WorkbenchBuildFlow.test.tsx",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "1b7e397ecaef5e8723f0d332c56334b01ecba347"
+      },
+      {
+        "path": "frontend/src/components/WorkbenchPanels.tsx",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "2e3bc13d88bfde2e77a4b02685f001e63eae0b69"
+      },
+      {
+        "path": "frontend/src/components/WorkbenchPreviewFlow.test.tsx",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "dc6e1cd350bec80604d7de83e6d73c5b6d538ab7"
+      },
+      {
+        "path": "frontend/src/components/WorkbenchShell.project.test.tsx",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "42cd2a0ee389a6fd1bf6f7348c2144328ee15dcd"
+      },
+      {
+        "path": "frontend/src/components/WorkbenchShell.tsx",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "0208d1e69fbf30e6cd226a54b34e5e3ce59e2466"
+      },
+      {
+        "path": "frontend/src/main.tsx",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "ed107ea7dacbb12896a48d7db2c258105e8b1a81"
+      },
+      {
+        "path": "frontend/src/state/diagnostics.test.ts",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "afeb1664dd1d47d2807fd0e7921e76b0f04f9a34"
+      },
+      {
+        "path": "frontend/src/state/diagnostics.ts",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "ab26a4e005c6504ea7f48fd826af5f8cbbcecfcd"
+      },
+      {
+        "path": "frontend/src/state/editorNavigation.ts",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "685d2ddf02ef7057582c70914e05870be1755627"
+      },
+      {
+        "path": "frontend/src/state/preview.ts",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "d0da0ae58983f7f5ba36daaddcfce1ddd26b87df"
+      },
+      {
+        "path": "frontend/src/state/workspace-build.test.ts",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "891ca851a34bfacf59e7a9064ed8cc179af43e5e"
+      },
+      {
+        "path": "frontend/src/state/workspace-preview.test.ts",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "f3cb78643164c6b0af5700e274c851b347e166da"
+      },
+      {
+        "path": "frontend/src/state/workspace.project.test.ts",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "9bfe730d54c60e283732b89aca0dc328523ae99b"
+      },
+      {
+        "path": "frontend/src/state/workspace.test.ts",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "c531250db6f85b45f1a68858d9c400280ad3ca5c"
+      },
+      {
+        "path": "frontend/src/state/workspace.ts",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "592537154def35fd566603a405b1030ce906a877"
+      },
+      {
+        "path": "frontend/src/styles.css",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "e6f0b3c56f79a02367bcd797e7e860e7df1e8789"
+      },
+      {
+        "path": "frontend/src/test/setup.ts",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "f149f27ae4bbd7cc4f6253570176a4fce144ef95"
+      },
+      {
+        "path": "frontend/src/transport/buildEvents.test.ts",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "c069708b2d19abb62bef83161ace87b0c8558758"
+      },
+      {
+        "path": "frontend/src/transport/buildEvents.ts",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "3ec8ba1c5cfdfd4853aac7c4e3ea4a1135835f4a"
+      },
+      {
+        "path": "frontend/src/transport/constants.ts",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "5ae8b3001772e2b14738e97238da779e4b889982"
+      },
+      {
+        "path": "frontend/src/transport/dto.ts",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "ffa08d9bd097e75edda6f50f5df398d788b91df0"
+      },
+      {
+        "path": "frontend/src/transport/finalPreview.test.ts",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "58b351ff8db6f239d88f6d5c8fba36606844b16b"
+      },
+      {
+        "path": "frontend/src/transport/finalPreview.ts",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "2ddde97cc9ff275ed1eeeac2b24653a4f2259f16"
+      },
+      {
+        "path": "frontend/src/transport/previewDto.test.ts",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "a68f90dee152d251f369c981cf8aed5f0341a0b6"
+      },
+      {
+        "path": "frontend/src/transport/runtime.ts",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "883c4afd49cac02e6162bc709cb85dd740a64b73"
+      },
+      {
+        "path": "frontend/src/transport/tauri.ts",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "3d03afff8ce4907a951b55e184414c63361b457c"
+      },
+      {
+        "path": "frontend/src/transport/transports-build.test.ts",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "778347bfc26934a9aa1741fc3bbaa55b4c356b1c"
+      },
+      {
+        "path": "frontend/src/transport/transports.test.ts",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "655b620c4c60995b63077584797b64c5695ff0cc"
+      },
+      {
+        "path": "frontend/src/transport/web.ts",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "c39f152bd820e217eed623ac3d48a8c194000815"
+      },
+      {
+        "path": "frontend/src/transport/WorkbenchTransport.project.test.ts",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "edf4187a2784dd6561429a727db0441ecaaf0775"
+      },
+      {
+        "path": "frontend/src/transport/WorkbenchTransport.ts",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "59f9cbcf7b1a503af816a51ef9d5004535a91590"
+      },
+      {
+        "path": "frontend/src/vite-env.d.ts",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "39fc679a34ccec7224581e74553497dfacbe07a9"
+      },
+      {
+        "path": "frontend/tsconfig.app.json",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "a332c475756d982ffaeb9c980d723deee75dd329"
+      },
+      {
+        "path": "frontend/tsconfig.json",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "ea9d0cd8255683d84f125948115daf1de0f06b1f"
+      },
+      {
+        "path": "frontend/tsconfig.node.json",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "b3b4c6426de0f9b1d73f87297c44cbb74cd2492b"
+      },
+      {
+        "path": "frontend/vite.config.ts",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "2c7cb22913aaa605002b57bb286f9f98dc4b8c42"
+      },
+      {
+        "path": "package.json",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "1da40082e58814ebe2d5d82e20886df9412ba2b8"
+      },
+      {
+        "path": "scripts/build_sidecar.py",
+        "mode": "100755",
+        "type": "blob",
+        "object_id": "f2155faa97b7ffd0016965d1192144111226483e"
+      },
+      {
+        "path": "scripts/check_facticity.py",
+        "mode": "100755",
+        "type": "blob",
+        "object_id": "52bdfb275f84df00d3c6c7a7c9fc465103aae580"
+      },
+      {
+        "path": "scripts/ci-python312.in",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "f54af47dac8e3f8dc23d8c825f8f8263ecd3d2c3"
+      },
+      {
+        "path": "scripts/clone_references.sh",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "70bef87407714458b57719a784f9492118666892"
+      },
+      {
+        "path": "scripts/prepare_release.py",
+        "mode": "100755",
+        "type": "blob",
+        "object_id": "0e1254be1248b20f543ce455aec9ebcad49234eb"
+      },
+      {
+        "path": "scripts/verify_desktop_distribution.py",
+        "mode": "100755",
+        "type": "blob",
+        "object_id": "f57896758b01207d2797400b25042a08c9040d04"
+      },
+      {
+        "path": "scripts/verify_distribution.py",
+        "mode": "100755",
+        "type": "blob",
+        "object_id": "eac9127e8080ee15dc993ca8e8541e44d58a1049"
+      },
+      {
+        "path": "scripts/verify_thesisforge_v2_goal.py",
+        "mode": "100755",
+        "type": "blob",
+        "object_id": "53802114fec2f008dbf852011f5d410903cb0938"
+      },
+      {
+        "path": "src-tauri/.gitignore",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "85377a261b130fea9ee5649150e41475c760d73e"
+      },
+      {
+        "path": "src-tauri/build.rs",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "d860e1e6a7cac333c3cc0bc9cb67faf286b07d69"
+      },
+      {
+        "path": "src-tauri/Cargo.lock",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "71d7910e3f3f36e21a24d2354f147269d4dcef8f"
+      },
+      {
+        "path": "src-tauri/Cargo.toml",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "65e0d11432de36aeb899b5bfd168588bdc1fb8e3"
+      },
+      {
+        "path": "src-tauri/entitlements.plist",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "50623405677e34ba3a6114c069529c94daa7e93d"
+      },
+      {
+        "path": "src-tauri/icons/icon.ico",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "5f9f5c3421be6f4f15a4b8586faa7be8ae21d867"
+      },
+      {
+        "path": "src-tauri/icons/icon.png",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "5dd3277574a1826c6aa067e2c007df5ae2ff4d7a"
+      },
+      {
+        "path": "src-tauri/icons/icon.svg",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "cc1958eb52171f034bebeecbb203240bdbd53724"
+      },
+      {
+        "path": "src-tauri/Info.plist",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "9962b7ef49dec1541e646bf63481289c31c51387"
+      },
+      {
+        "path": "src-tauri/src/lib.rs",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "1a67298aac06a164592eafa3b201515e0bbbbff6"
+      },
+      {
+        "path": "src-tauri/src/main.rs",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "eb661277e52fa930799e01df97f123cbd2ae6b53"
+      },
+      {
+        "path": "src-tauri/src/project_tests.rs",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "eb674f8269848fa6116c79c9203d4b058e58f315"
+      },
+      {
+        "path": "src-tauri/tauri.conf.json",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "459c9f32b1d073b9e9a5f45eac0bf0f29872d377"
+      },
+      {
+        "path": "src-tauri/tauri.release.conf.json",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "2b347a2895dfeb9a1ea40ad3ae89039f1aaaa391"
+      },
+      {
+        "path": "src-tauri/tests/protocol_contract.rs",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "e4eb22f2a590f2385da2528b34b6a4d30ca8b15d"
+      },
+      {
+        "path": "src/docforge/__init__.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "3dc1f76bc69e3f559bee6253b24fc93acee9e1f9"
+      },
+      {
+        "path": "src/docforge/adapters/__init__.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "53aae12cc28304fc422b63266dfbad3764c712ba"
+      },
+      {
+        "path": "src/docforge/adapters/dto.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "384cf7e020829896a81ae06db9e241c94045bf96"
+      },
+      {
+        "path": "src/docforge/adapters/http.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "722e8a01959e7a87a846ab88e233ca1515dae827"
+      },
+      {
+        "path": "src/docforge/adapters/runtime.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "b88ea444df19d7cd19e9da3c1a26c82758fc8139"
+      },
+      {
+        "path": "src/docforge/adapters/sidecar.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "613a01bc7069d03d4772b89985b4304374d1069a"
+      },
+      {
+        "path": "src/docforge/ai/__init__.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+      },
+      {
+        "path": "src/docforge/ai/base.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "b7b4169a3972e87f0bc9cc6407d2967a63e88cd5"
+      },
+      {
+        "path": "src/docforge/ai/providers/__init__.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+      },
+      {
+        "path": "src/docforge/application/__init__.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "b00fce7d59cae119a9c9d13781bbc7488ddcacfc"
+      },
+      {
+        "path": "src/docforge/application/contracts.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "5a926416454c6510e24c3e73d22476dfbfdac2a9"
+      },
+      {
+        "path": "src/docforge/application/office_refresh.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "60e68a7156b3ba9447bdae6c58991d74e1ae0df2"
+      },
+      {
+        "path": "src/docforge/application/output.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "549425c8fbe40822d7dfafaeae2305bbfbc497c6"
+      },
+      {
+        "path": "src/docforge/application/pdf_preview.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "5a8a6bdc6b07890b8a9248af1f3406ca7c97e777"
+      },
+      {
+        "path": "src/docforge/application/services.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "de81376a845fbe66b0c98a32995727090885f10e"
+      },
+      {
+        "path": "src/docforge/bibliography/__init__.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "1bece295509d68f74391caaf291490ccf89e5091"
+      },
+      {
+        "path": "src/docforge/bibliography/bibtex.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "ba79f7fd78a446c17999ed12080ab10874ea911a"
+      },
+      {
+        "path": "src/docforge/bibliography/engine.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "b72726d86e68f3d5166e8e0fb42c451170eace49"
+      },
+      {
+        "path": "src/docforge/bibliography/formatter.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "1e74574f4beb603f667884e41cf0791933438de4"
+      },
+      {
+        "path": "src/docforge/bibliography/pandoc_provider.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "b958c846d1dbf73b1a9cdca15d456bb186a4e9e5"
+      },
+      {
+        "path": "src/docforge/bibliography/provider.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "221ae7e4e4cd14cbfa25f9fbee345c570561de57"
+      },
+      {
+        "path": "src/docforge/cli.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "006763152b88acd7f3ac32e383b9f637f6f863eb"
+      },
+      {
+        "path": "src/docforge/core/__init__.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "842038f950a896070ec75747fd5047645073091f"
+      },
+      {
+        "path": "src/docforge/core/compiler.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "2744ef05760372cfa7f573bad23dafb561bfcf37"
+      },
+      {
+        "path": "src/docforge/core/ids.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "d982023c0ba50cf481492bfe686fa2f462b5a78f"
+      },
+      {
+        "path": "src/docforge/core/index.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "fa4250db66375ecff5c5a45a21dbac87416c76a6"
+      },
+      {
+        "path": "src/docforge/core/math.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "630fc1b33a395ff2326345499555e65c1aacf11e"
+      },
+      {
+        "path": "src/docforge/core/model.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "2c5b7b7332d2f561422e42663ea3013ccb626751"
+      },
+      {
+        "path": "src/docforge/core/parser_backend.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "d0f79bb03375cd2b13222a9153d87697bbd96561"
+      },
+      {
+        "path": "src/docforge/core/parser_markdown_it.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "4e2cd4ab065383ab298a85c9ac36cce065d6725d"
+      },
+      {
+        "path": "src/docforge/core/parser_support.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "7f3fc336fcf5fece19b726666c5042a7e1e13fd8"
+      },
+      {
+        "path": "src/docforge/core/render_plan.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "8d8080b8d8df54a45c944cbf851f7ef404f5c0b5"
+      },
+      {
+        "path": "src/docforge/core/symbols.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "7108e98e414f3766945e528c6269f42c11e0ffb2"
+      },
+      {
+        "path": "src/docforge/core/validator.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "8d7b0e9b170e2d40ac4e715c836b75963b91f1d5"
+      },
+      {
+        "path": "src/docforge/presentation/__init__.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "480555f070b5a67cbcebfd7e328026a962d4ec72"
+      },
+      {
+        "path": "src/docforge/presentation/diagnostics.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "46161dc51852bd374baa90d40b832d7fb7279f70"
+      },
+      {
+        "path": "src/docforge/presentation/metadata.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "4dcf75eff25aa1336e536e88109e85360b62ebbe"
+      },
+      {
+        "path": "src/docforge/presentation/preview.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "60e70c3e857dde3542eaad5b97383032eac72c26"
+      },
+      {
+        "path": "src/docforge/presentation/review_markdown.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "d4808c1b6887c8f77eb470f50bba9aa3dc25016d"
+      },
+      {
+        "path": "src/docforge/presentation/review.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "75e43b8cbb140471f90b54e24a123ece2aaf1809"
+      },
+      {
+        "path": "src/docforge/project/__init__.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "27e7e2d21d4d631670a4d1cd1be470183db6ebd8"
+      },
+      {
+        "path": "src/docforge/project/constants.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "9b34e3885005e08da2f180cbafe22fd2c070ac6d"
+      },
+      {
+        "path": "src/docforge/project/loader.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "f357c8eb67c3e7637efd98f6bf3c0469d00db88b"
+      },
+      {
+        "path": "src/docforge/project/model.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "51a8fa53c1f0341869003cffa3b7eb0a0f40523e"
+      },
+      {
+        "path": "src/docforge/project/paths.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "d9587379edf0642431c21585c05ba699280c98ee"
+      },
+      {
+        "path": "src/docforge/renderers/__init__.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+      },
+      {
+        "path": "src/docforge/renderers/docx/__init__.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "e0ae154ac26ae28505e3afb604b9ab87f02e3094"
+      },
+      {
+        "path": "src/docforge/renderers/docx/bookmarks.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "b9006a4fb653dd1e4392e4f38b35b47ede279372"
+      },
+      {
+        "path": "src/docforge/renderers/docx/captions.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "f155cd206f6d6e3d7b5a9909a3179fb3479ad2c8"
+      },
+      {
+        "path": "src/docforge/renderers/docx/cover.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "5f12b6a9afea92096725818e544893ede112b56f"
+      },
+      {
+        "path": "src/docforge/renderers/docx/document.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "82ccd11186b67515c3a9ca7cce39db4c6422eaca"
+      },
+      {
+        "path": "src/docforge/renderers/docx/equations.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "b8fbc74ca9a97d368398d409c40c519282580cad"
+      },
+      {
+        "path": "src/docforge/renderers/docx/errors.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "2e9e50c35a071509896551ea3ebb3006eb51caab"
+      },
+      {
+        "path": "src/docforge/renderers/docx/fields.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "a0a0ea12b8eff7b0ee69b7b27aa5364902b45996"
+      },
+      {
+        "path": "src/docforge/renderers/docx/figures.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "518707aaff1002cc79bdca3af7454f0ebb08b25a"
+      },
+      {
+        "path": "src/docforge/renderers/docx/fonts.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "3b33223dc0cc49a1ea14e8792eee68c0bfaedf6c"
+      },
+      {
+        "path": "src/docforge/renderers/docx/footnotes.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "1b115a294fc828dc091a2d591af76d814d0e6f75"
+      },
+      {
+        "path": "src/docforge/renderers/docx/inlines.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "7ab6e3518185f42510ecf1cfbac1a7479177d944"
+      },
+      {
+        "path": "src/docforge/renderers/docx/lists.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "970db8456c9b3fe00c8cae4c2127eb79236a435c"
+      },
+      {
+        "path": "src/docforge/renderers/docx/math_provider.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "40fa1841785f1f851f92d152eb0b35292f40c56a"
+      },
+      {
+        "path": "src/docforge/renderers/docx/package.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "16c169d5161939694b7322fdb321a5a2eb48ca99"
+      },
+      {
+        "path": "src/docforge/renderers/docx/renderer.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "6d0afcb7c2ef0afdf4cdb3c953b479dd9d8981f6"
+      },
+      {
+        "path": "src/docforge/renderers/docx/sections.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "f4b84b8066fb85ba9abce10efd1fa9836bf697ee"
+      },
+      {
+        "path": "src/docforge/renderers/docx/styles.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "961b1bf6713be590c1cf2e63ca0f02dd77905820"
+      },
+      {
+        "path": "src/docforge/renderers/docx/tables.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "1fa53d992997baf2829ebfe581d184c18fd05e70"
+      },
+      {
+        "path": "src/docforge/renderers/docx/toc.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "9a48ab3dc6b5f1001b1a01b5929b0b333b636639"
+      },
+      {
+        "path": "src/docforge/renderers/docx/units.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "06303e9bc1b11f0ca012601b84ab7cd90f5304d4"
+      },
+      {
+        "path": "src/docforge/templates/__init__.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "4ff87fa89e3dbc974072cc898e69dbb120cfec74"
+      },
+      {
+        "path": "src/docforge/templates/bindings.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "ce0dfb8fa65d9a41ee836fef3cd237696eabb86a"
+      },
+      {
+        "path": "src/docforge/templates/model.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "a28c13b104602d7182aa7e8e97ab56ca358df275"
+      },
+      {
+        "path": "src/docforge/templates/resolver.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "c0e7d495d5558400240ccc217b65ecf2809e64ac"
+      },
+      {
+        "path": "src/docforge/templates/v2/__init__.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "524065c45f369fcba06de2d15fddaea7529c8921"
+      },
+      {
+        "path": "src/docforge/templates/v2/lint.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "7eb0f8c2d1c9650694534c2c8ff68ee1aaea837b"
+      },
+      {
+        "path": "src/docforge/templates/v2/migrate.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "f382b033777c67a419ff39ae9a37a5592bb46d20"
+      },
+      {
+        "path": "src/docforge/templates/v2/pack.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "596161bb6505867a3ff22bf88d575d116f3d124e"
+      },
+      {
+        "path": "src/docforge/templates/v2/package_editor.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "e5e4b2870f76d2af7d32086bf0f1f566d610add5"
+      },
+      {
+        "path": "src/docforge/templates/v2/package.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "e1421fa8f0adf1a064fd4e6a2673fa379b746de0"
+      },
+      {
+        "path": "src/docforge/templates/v2/schema.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "bb58a37bfd69eb9b9eb7b755fdf7364d84520799"
+      },
+      {
+        "path": "src/docforge/templates/v2/units.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "21ee870f0a2f73102b1dec21867937af0626ca59"
+      },
+      {
+        "path": "src/docforge/ui/__init__.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "40323c7ce67ee9f09b8e0adcefb837512a428227"
+      },
+      {
+        "path": "src/docforge/ui/controller.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "0d753a4f8101fc4ae2205d70666b5e72b7b6fe28"
+      },
+      {
+        "path": "src/docforge/ui/filesystem.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "3ca2041d33bc1209c5d6816c11791ee3d7ed7d22"
+      },
+      {
+        "path": "src/docforge/ui/models.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "6c2f844974ddb2496fffdcb88eb55f55a2ee1e81"
+      },
+      {
+        "path": "src/docforge/ui/tasks.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "c459cc6f91c1f87e124a89a87611c7e803c5b24a"
+      },
+      {
+        "path": "tests/adapters/test_build_report_dto.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "866772b012b8a6d2fab9fcc8172e3b850ae9d845"
+      },
+      {
+        "path": "tests/adapters/test_build_report_events.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "c7a6554c09fcd6d059007a1483aa2415ec4f3ea5"
+      },
+      {
+        "path": "tests/adapters/test_project_dto.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "f180c163390e0c93b9ee78050147043a0d0679a6"
+      },
+      {
+        "path": "tests/test_desktop_distribution.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "27663646b6fe1cb0fee75a14e4f384c46f0d2260"
+      }
+    ],
+    "sha256": "1d4579034493e0b61b913436463efa258c57053074d604db81cdc7ebe3467733"
+  },
+  "artifacts": {
+    "context": {
+      "path": "development/tasks/006-workbench-desktop/context.json",
+      "sha256": "db389865c5879b8edebe34af2cf5fa98603b394d2e4e4b7b565e9cf10c4b6351"
+    },
+    "report": {
+      "path": "development/tasks/006-workbench-desktop/report.md",
+      "sha256": "d3b9c89b0f80b8a88db1937706da69b37ccab88bec71c1f0d9cc931defa67f9f",
+      "status": "DONE"
+    },
+    "spec_review": {
+      "path": "development/tasks/006-workbench-desktop/spec-review.md",
+      "sha256": "5f0fc4f18746f9527240e29db8047b913930433fac2b3715b303f4bb6cc774a9",
+      "verdict": "approved"
+    },
+    "quality_review": {
+      "path": "development/tasks/006-workbench-desktop/quality-review.md",
+      "sha256": "247f90edd4e7dd7ac74ddabb80cc9a5f7e37fb25d8dcefe6586d6c9165fc1a9a",
+      "verdict": "approved"
+    }
+  },
+  "test_runs": [
+    {
+      "id": "receipt-2f60a804969647426b16886733df254dba1573a134789628c9b7ba69f8b9696b",
+      "command": "PYTHONPATH=src .venv/bin/python scripts/verify_desktop_distribution.py --platform macos --bundle-root src-tauri/target/release/bundle",
+      "assertion_ids": [
+        "A1",
+        "A2",
+        "A4",
+        "A5",
+        "A9"
+      ],
+      "recorded_at": "2026-08-27T04:31:40.530Z",
+      "validation_receipt_sha256": "4a82900c6f21084ac29c5c3224e4b2376eed31fe68d104b5cba36ba81339633c",
+      "evidence_log": {
+        "path": "development/evidence/046-006-workbench-desktop.log",
+        "sha256": "82f0b35692210d877e994dbb60f660241148d2753155f2afd42846693f80ab75",
+        "size": 1742
+      }
+    },
+    {
+      "id": "receipt-47d3f1a494fa739ad5157bc8157f54329c5e728636d12d81965b4676bd2a67f2",
+      "command": "pnpm --dir frontend typecheck && pnpm --dir frontend lint && pnpm --dir frontend test && pnpm --dir frontend build",
+      "assertion_ids": [
+        "A1",
+        "A2",
+        "A4",
+        "A5",
+        "A9"
+      ],
+      "recorded_at": "2026-08-27T04:30:28.495Z",
+      "validation_receipt_sha256": "d719f842eca89239cb09f86f484efb9d671351aee8a175b6eb0391c220f1fd65",
+      "evidence_log": {
+        "path": "development/evidence/042-006-workbench-desktop.log",
+        "sha256": "ad14457507911240bb812b5dfb0ba8b92ede8b63cc87718330639c6a2617dccf",
+        "size": 1333
+      }
+    },
+    {
+      "id": "receipt-5006a4116560d34cb7e6209da5d6d6a754c94cb1bcef20c66db739b480f897de",
+      "command": "pnpm --dir frontend exec playwright test --config e2e/real-http.playwright.config.ts",
+      "assertion_ids": [
+        "A1",
+        "A2",
+        "A4",
+        "A5",
+        "A9"
+      ],
+      "recorded_at": "2026-08-27T04:30:32.581Z",
+      "validation_receipt_sha256": "d823778d15c67ece271032b0386b5c0537c8e4b3d43c86a01cd6fbeb81a66996",
+      "evidence_log": {
+        "path": "development/evidence/043-006-workbench-desktop.log",
+        "sha256": "389e7c9cb4fd6e35f838d8cb71a848bef3d87bf63782ffae67802cc0a093e9a4",
+        "size": 1787
+      }
+    },
+    {
+      "id": "receipt-5043a3ff757f54efbd0b0cc5ecf4093525aa78c55ea3e5bd3e7b181190e29640",
+      "command": "PYTHONPATH=src .venv/bin/python -m pytest tests/adapters tests/test_desktop_distribution.py -q",
+      "assertion_ids": [
+        "A1",
+        "A2",
+        "A4",
+        "A5",
+        "A9"
+      ],
+      "recorded_at": "2026-08-27T04:31:29.400Z",
+      "validation_receipt_sha256": "35f939b173446363275bc411be31d67c1ec6909cd8b821b70b51faad8fa6f306",
+      "evidence_log": {
+        "path": "development/evidence/045-006-workbench-desktop.log",
+        "sha256": "6efad3ad18240f607f04fce12be6cc8b181659cefada9e1abd5fa350505506f5",
+        "size": 273
+      }
+    },
+    {
+      "id": "receipt-d22bd1906bf78e0c10f2b72bf7441dd774a32fdfd61015c553479b02819b9130",
+      "command": "cargo fmt --check --manifest-path src-tauri/Cargo.toml && cargo check --manifest-path src-tauri/Cargo.toml && cargo test --manifest-path src-tauri/Cargo.toml",
+      "assertion_ids": [
+        "A1",
+        "A2",
+        "A4",
+        "A5",
+        "A9"
+      ],
+      "recorded_at": "2026-08-27T04:31:27.226Z",
+      "validation_receipt_sha256": "3e551aebcbffafbf47419a91572ea991d0753263ab4849d85824d2b81b070282",
+      "evidence_log": {
+        "path": "development/evidence/044-006-workbench-desktop.log",
+        "sha256": "58448d9b8913d3ac8932eca8f99cdc5190f59a6a2e6a342f48020b67cd0cc4b5",
+        "size": 4763
+      }
+    }
+  ],
+  "assertions": [
+    {
+      "id": "A1",
+      "parent_id": "A1",
+      "status": "passing",
+      "test_run_ids": [
+        "receipt-2f60a804969647426b16886733df254dba1573a134789628c9b7ba69f8b9696b",
+        "receipt-47d3f1a494fa739ad5157bc8157f54329c5e728636d12d81965b4676bd2a67f2",
+        "receipt-5006a4116560d34cb7e6209da5d6d6a754c94cb1bcef20c66db739b480f897de",
+        "receipt-5043a3ff757f54efbd0b0cc5ecf4093525aa78c55ea3e5bd3e7b181190e29640",
+        "receipt-d22bd1906bf78e0c10f2b72bf7441dd774a32fdfd61015c553479b02819b9130"
+      ],
+      "direct_evidence": [],
+      "reused_evidence": [],
+      "claim": "A directory containing docforge.yaml with schema docforge.project.v1 opens through the CLI and desktop workbench."
+    },
+    {
+      "id": "A2",
+      "parent_id": "A2",
+      "status": "passing",
+      "test_run_ids": [
+        "receipt-2f60a804969647426b16886733df254dba1573a134789628c9b7ba69f8b9696b",
+        "receipt-47d3f1a494fa739ad5157bc8157f54329c5e728636d12d81965b4676bd2a67f2",
+        "receipt-5006a4116560d34cb7e6209da5d6d6a754c94cb1bcef20c66db739b480f897de",
+        "receipt-5043a3ff757f54efbd0b0cc5ecf4093525aa78c55ea3e5bd3e7b181190e29640",
+        "receipt-d22bd1906bf78e0c10f2b72bf7441dd774a32fdfd61015c553479b02819b9130"
+      ],
+      "direct_evidence": [],
+      "reused_evidence": [],
+      "claim": "A general project using document.md and docforge-standard completes inspect, validate, review, and build without academic metadata."
+    },
+    {
+      "id": "A4",
+      "parent_id": "A4",
+      "status": "passing",
+      "test_run_ids": [
+        "receipt-2f60a804969647426b16886733df254dba1573a134789628c9b7ba69f8b9696b",
+        "receipt-47d3f1a494fa739ad5157bc8157f54329c5e728636d12d81965b4676bd2a67f2",
+        "receipt-5006a4116560d34cb7e6209da5d6d6a754c94cb1bcef20c66db739b480f897de",
+        "receipt-5043a3ff757f54efbd0b0cc5ecf4093525aa78c55ea3e5bd3e7b181190e29640",
+        "receipt-d22bd1906bf78e0c10f2b72bf7441dd774a32fdfd61015c553479b02819b9130"
+      ],
+      "direct_evidence": [],
+      "reused_evidence": [],
+      "claim": "thesisforge.yaml, thesisforge.project.v2, the thesisforge command, ThesisDocument exports, and the old workbench protocol are absent or rejected without compatibility aliases."
+    },
+    {
+      "id": "A5",
+      "parent_id": "A5",
+      "status": "passing",
+      "test_run_ids": [
+        "receipt-2f60a804969647426b16886733df254dba1573a134789628c9b7ba69f8b9696b",
+        "receipt-47d3f1a494fa739ad5157bc8157f54329c5e728636d12d81965b4676bd2a67f2",
+        "receipt-5006a4116560d34cb7e6209da5d6d6a754c94cb1bcef20c66db739b480f897de",
+        "receipt-5043a3ff757f54efbd0b0cc5ecf4093525aa78c55ea3e5bd3e7b181190e29640",
+        "receipt-d22bd1906bf78e0c10f2b72bf7441dd774a32fdfd61015c553479b02819b9130"
+      ],
+      "direct_evidence": [],
+      "reused_evidence": [],
+      "claim": "Default source, build, and review paths are document.md, build/document.docx, review/document.review.md, and review/document.review-map.json."
+    },
+    {
+      "id": "A9",
+      "parent_id": "A9",
+      "status": "passing",
+      "test_run_ids": [
+        "receipt-2f60a804969647426b16886733df254dba1573a134789628c9b7ba69f8b9696b",
+        "receipt-47d3f1a494fa739ad5157bc8157f54329c5e728636d12d81965b4676bd2a67f2",
+        "receipt-5006a4116560d34cb7e6209da5d6d6a754c94cb1bcef20c66db739b480f897de",
+        "receipt-5043a3ff757f54efbd0b0cc5ecf4093525aa78c55ea3e5bd3e7b181190e29640",
+        "receipt-d22bd1906bf78e0c10f2b72bf7441dd774a32fdfd61015c553479b02819b9130"
+      ],
+      "direct_evidence": [],
+      "reused_evidence": [],
+      "claim": "The installed macOS workbench uses neutral DocForge and document terminology for project identity, filenames, diagnostics, help, and Word preview."
+    }
+  ],
+  "fallback_used": false
+}

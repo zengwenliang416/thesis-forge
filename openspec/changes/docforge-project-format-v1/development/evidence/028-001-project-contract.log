@@ -1,0 +1,12 @@
+# command: PYTHONPATH=src .venv/bin/python -m pytest tests/project tests/application/test_project_services.py -q
+# exit_status: 0
+# duration_ms: 1414
+
+## stdout
+........................................................................ [ 59%]
+..................................................                       [100%]
+122 passed in 0.99s
+
+
+## stderr
+(empty)

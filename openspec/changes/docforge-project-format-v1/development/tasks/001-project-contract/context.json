@@ -19,18 +19,18 @@
     "openspec/changes/docforge-project-format-v1/specs/docforge-project-format/spec.md"
   ],
   "allowed_files": [
-    "src/thesis_forge/project",
-    "src/thesis_forge/application",
-    "tests/project",
-    "tests/application",
-    "tests/fixtures",
-    "examples",
+    "src/docforge/project/**",
+    "src/docforge/application/**",
+    "tests/project/**",
+    "tests/application/**",
+    "tests/fixtures/**",
+    "examples/**",
     "openspec/changes/docforge-project-format-v1/development/tasks/001-project-contract",
     "openspec/changes/docforge-project-format-v1/development"
   ],
   "test_paths": [
-    "tests/project",
-    "tests/application/test_project_services.py"
+    "PYTHONPATH=src .venv/bin/python -m pytest tests/project tests/application/test_project_services.py -q",
+    ".venv/bin/ruff check src/docforge/project tests/project tests/application/test_project_services.py"
   ],
   "non_goals": [
     "Do not rename the Python package or core aggregate in this slice.",

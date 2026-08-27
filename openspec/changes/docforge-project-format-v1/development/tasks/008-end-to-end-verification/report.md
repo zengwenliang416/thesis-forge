@@ -2,12 +2,13 @@
 
 ## Status
 
-DONE_WITH_CONCERNS
+DONE
 
-Items 8.1 through 8.5 have current direct evidence. Item 8.6 remains blocked
-because the selected project-scoped SpecNav Verification Runtime
-`2.0.0-alpha.2` is not installed. Runtime installation requires separate
-explicit user approval and no receipt has been fabricated.
+Items 8.1 through 8.6 have current direct evidence. The selected
+project-scoped SpecNav Verification Runtime `2.0.0-alpha.2` is installed on
+APFS, its authority key has real mode `0600`, doctor reports
+`readiness=ready`, and all current-HEAD development commands have signed
+system-executed receipts with `fallback_used=false`.
 
 ## Files Changed
 
@@ -20,6 +21,9 @@ explicit user approval and no receipt has been fabricated.
 
 - Replayed the complete Python, frontend, Playwright, Rust, distribution,
   desktop-package, facticity, OOXML, deterministic-output, and OpenSpec matrix.
+- Replayed all `33` task commands against Git HEAD
+  `26344ca4489d60715550f14b774b22ddc4cc491b`; all passed and each receipt is
+  bound to its evidence log by SHA-256 and HMAC.
 - Exercised general and academic DocForge projects through offline
   inspect/validate/review/build flows.
 - Verified the installed macOS DocForge workbench and Microsoft Word 16.112
@@ -28,6 +32,8 @@ explicit user approval and no receipt has been fabricated.
 - Classified all remaining ThesisForge or thesis-named occurrences as
   historical, explicit-negative, binary, or invalid; no invalid active
   finding remains.
+- Preserved historical failed receipts and appended formal retest
+  adjudications without deleting or rewriting prior evidence.
 
 ## TDD Evidence
 
@@ -74,32 +80,39 @@ explicit user approval and no receipt has been fabricated.
 - `OPENSPEC_TELEMETRY=0 openspec validate docforge-project-format-v1
   --strict --no-interactive --json`
   -> `1` passed, `0` failed.
+- SpecNav evidence runner
+  -> `33` current-HEAD commands present, `0` remaining, `0` failed,
+  `fallback_used=false`.
 
 ## Concerns
 
-- The project-selected SpecNav Verification Runtime is absent at
-  `.specnav/runtime/verification/2.0.0-alpha.2`.
-- Historical failed receipts must remain append-only and be adjudicated by the
-  trusted verification lifecycle; they must not be deleted or rewritten into
-  passing evidence.
+- Native Windows WebView2 remains broader platform evidence; this change's
+  sensory contract uses installed macOS DocForge and Microsoft Word.
+- Local release artifacts do not prove external GitHub publication, signing,
+  or notarization.
 
 ## Scope Deviations
 
 - The default Playwright port `4173` is occupied by an unrelated process. The
   same browser matrix was executed on isolated port `4174` without terminating
   that process.
+- The repository volume is ExFAT and cannot represent the Runtime authority
+  key as mode `0600`; trusted verification therefore runs in an APFS Git
+  worktree at the same committed product HEAD. No permission check was
+  relaxed.
 
 ## Follow-up Needed
 
-- Commit the pre-Runtime implementation and lifecycle evidence so task
-  acceptance can bind a clean HEAD.
-- Obtain explicit approval before installing the locked project-scoped
-  SpecNav Verification Runtime `2.0.0-alpha.2`.
-- After installation, generate system receipts, task acceptance, A1 through
-  A10 adjudication, all six verification domains, promotion, and archive gates.
+- Materialize official task acceptance artifacts from the signed receipts.
+- Generate the immutable six-domain case snapshot and obtain explicit approval
+  for its exact id and SHA-256 before activation.
+- Complete generation approval, execution, reporting, promotion, and archive
+  without starting the separate Markdown-to-DocForge npm Agent Skill change.
 
 ## Adjudication
 
-Items 8.1 through 8.5 are complete. Item 8.6 remains deliberately open at the
-runtime-installation approval boundary; this report does not claim change-level
-PASS or substitute prose for machine-authoritative receipts.
+Items 8.1 through 8.6 are complete at the development handoff boundary.
+Change-level PASS remains controlled by immutable snapshot approval, successor
+generation approval, six-domain execution, and machine-authoritative
+promotion/archive gates; this report does not substitute prose for those
+artifacts.

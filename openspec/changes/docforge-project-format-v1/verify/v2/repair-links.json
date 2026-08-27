@@ -1,0 +1,192 @@
+[
+  {
+    "schema": "specnav.verification.repair-link.v1",
+    "failure_id": "failure-f814ed028e5b2dc94e5db0219d237ceaa8e22ce664031ea163ba1fc267c95791",
+    "change_id": "docforge-project-format-v1",
+    "development_task_id": "900-verification-repair-a6ff356696962b32",
+    "repair_kind": "test_code",
+    "status": "requested",
+    "requested_at": "2026-08-27T07:50:49.771Z",
+    "before_identity": {
+      "case_snapshot_hash": "e34e5e74c6ac469ee8bce2be6d0b6ce1e772d4e773710b8bc782cc99da337c85",
+      "code_sha": "60274f4c7bd0541d0a6346753e68eb7f5f2ae6a6",
+      "test_sha": "8898bb578306334a0f3e9e5723ac9a186ccfb90845268c19e0677fb7df12a193",
+      "environment_hash": "e70d297a62bab25e39bb4323fd1636081aac76eff129f315f3d3dbe56c04a1eb",
+      "runtime_version": "2.0.0-alpha.2",
+      "kernel_version": "2.0.0-alpha.2"
+    },
+    "scope_digest": "97de42eb572bacc046cabcec7e89d0bd7042184892d0584d4ce91eb2cc2afeda",
+    "id": "repair-338be7cb3542233f570f9f175d52be90764d1f6d5ebaea1c83700d9958cab817"
+  },
+  {
+    "schema": "specnav.verification.repair-link.v1",
+    "failure_id": "failure-73f8288bda2544be90b77e2d59f451a19bf1da787426f2bc7fffd960c7e7403a",
+    "change_id": "docforge-project-format-v1",
+    "development_task_id": "900-verification-repair-5c01b23095a0a9d6",
+    "repair_kind": "test_code",
+    "status": "requested",
+    "requested_at": "2026-08-27T07:42:50.621Z",
+    "before_identity": {
+      "case_snapshot_hash": "e34e5e74c6ac469ee8bce2be6d0b6ce1e772d4e773710b8bc782cc99da337c85",
+      "code_sha": "60274f4c7bd0541d0a6346753e68eb7f5f2ae6a6",
+      "test_sha": "8898bb578306334a0f3e9e5723ac9a186ccfb90845268c19e0677fb7df12a193",
+      "environment_hash": "e70d297a62bab25e39bb4323fd1636081aac76eff129f315f3d3dbe56c04a1eb",
+      "runtime_version": "2.0.0-alpha.2",
+      "kernel_version": "2.0.0-alpha.2"
+    },
+    "scope_digest": "97de42eb572bacc046cabcec7e89d0bd7042184892d0584d4ce91eb2cc2afeda",
+    "id": "repair-3f47a1578a441bf4cf99b96bd37aeb52d1fd449495a5f095d994236d4c664af3"
+  },
+  {
+    "schema": "specnav.verification.repair-link.v1",
+    "failure_id": "failure-0b7b1bb8ae4396daaf850b9954df7a2cf108ddf9b482e412e7e118bd0f2b05bd",
+    "change_id": "docforge-project-format-v1",
+    "development_task_id": "900-verification-repair-2dc73b7ad78de0d8",
+    "repair_kind": "test_code",
+    "status": "requested",
+    "requested_at": "2026-08-27T07:34:37.965Z",
+    "before_identity": {
+      "case_snapshot_hash": "e34e5e74c6ac469ee8bce2be6d0b6ce1e772d4e773710b8bc782cc99da337c85",
+      "code_sha": "60274f4c7bd0541d0a6346753e68eb7f5f2ae6a6",
+      "test_sha": "8898bb578306334a0f3e9e5723ac9a186ccfb90845268c19e0677fb7df12a193",
+      "environment_hash": "e70d297a62bab25e39bb4323fd1636081aac76eff129f315f3d3dbe56c04a1eb",
+      "runtime_version": "2.0.0-alpha.2",
+      "kernel_version": "2.0.0-alpha.2"
+    },
+    "scope_digest": "97de42eb572bacc046cabcec7e89d0bd7042184892d0584d4ce91eb2cc2afeda",
+    "id": "repair-515cca933df87a9700515e8fbd0e79aac1278f460e5adcbff429ae8962a7ce46"
+  },
+  {
+    "schema": "specnav.verification.repair-link.v1",
+    "failure_id": "failure-1ade668829948cfb896aba9e1ff2afce6c7f0604978a8b5a7cadfca7a657f7df",
+    "change_id": "docforge-project-format-v1",
+    "development_task_id": "900-verification-repair-eaba323b8fac8b12",
+    "repair_kind": "test_code",
+    "status": "requested",
+    "requested_at": "2026-08-27T07:36:34.974Z",
+    "before_identity": {
+      "case_snapshot_hash": "e34e5e74c6ac469ee8bce2be6d0b6ce1e772d4e773710b8bc782cc99da337c85",
+      "code_sha": "60274f4c7bd0541d0a6346753e68eb7f5f2ae6a6",
+      "test_sha": "8898bb578306334a0f3e9e5723ac9a186ccfb90845268c19e0677fb7df12a193",
+      "environment_hash": "e70d297a62bab25e39bb4323fd1636081aac76eff129f315f3d3dbe56c04a1eb",
+      "runtime_version": "2.0.0-alpha.2",
+      "kernel_version": "2.0.0-alpha.2"
+    },
+    "scope_digest": "97de42eb572bacc046cabcec7e89d0bd7042184892d0584d4ce91eb2cc2afeda",
+    "id": "repair-5935808a440270d2de6eaf22f0acbf635a459f8801c92072b3e73b0791fe72d6"
+  },
+  {
+    "schema": "specnav.verification.repair-link.v1",
+    "failure_id": "failure-460a6bec826047df8fb5695d9f35761718afb7180740ec3edfaba7ca8b7c9c71",
+    "change_id": "docforge-project-format-v1",
+    "development_task_id": "900-verification-repair-41ae30e0be6d4799",
+    "repair_kind": "test_code",
+    "status": "requested",
+    "requested_at": "2026-08-27T07:40:32.398Z",
+    "before_identity": {
+      "case_snapshot_hash": "e34e5e74c6ac469ee8bce2be6d0b6ce1e772d4e773710b8bc782cc99da337c85",
+      "code_sha": "60274f4c7bd0541d0a6346753e68eb7f5f2ae6a6",
+      "test_sha": "8898bb578306334a0f3e9e5723ac9a186ccfb90845268c19e0677fb7df12a193",
+      "environment_hash": "e70d297a62bab25e39bb4323fd1636081aac76eff129f315f3d3dbe56c04a1eb",
+      "runtime_version": "2.0.0-alpha.2",
+      "kernel_version": "2.0.0-alpha.2"
+    },
+    "scope_digest": "97de42eb572bacc046cabcec7e89d0bd7042184892d0584d4ce91eb2cc2afeda",
+    "id": "repair-5ec5ad5a9b65e5cd0a0b99a1adfa266dd678fc3f126a1af48f28af3d084699eb"
+  },
+  {
+    "schema": "specnav.verification.repair-link.v1",
+    "failure_id": "failure-93a392e01847eefeb57f51d044868cce536d5d29237404cc6e8729fe6847e8d5",
+    "change_id": "docforge-project-format-v1",
+    "development_task_id": "900-verification-repair-b5243fdf2e4c715a",
+    "repair_kind": "test_code",
+    "status": "requested",
+    "requested_at": "2026-08-27T07:44:51.134Z",
+    "before_identity": {
+      "case_snapshot_hash": "e34e5e74c6ac469ee8bce2be6d0b6ce1e772d4e773710b8bc782cc99da337c85",
+      "code_sha": "60274f4c7bd0541d0a6346753e68eb7f5f2ae6a6",
+      "test_sha": "8898bb578306334a0f3e9e5723ac9a186ccfb90845268c19e0677fb7df12a193",
+      "environment_hash": "e70d297a62bab25e39bb4323fd1636081aac76eff129f315f3d3dbe56c04a1eb",
+      "runtime_version": "2.0.0-alpha.2",
+      "kernel_version": "2.0.0-alpha.2"
+    },
+    "scope_digest": "97de42eb572bacc046cabcec7e89d0bd7042184892d0584d4ce91eb2cc2afeda",
+    "id": "repair-6a456af4587e64f14aa30ec843fd5d3a37105398c7fd75da5ab8540ca49cb171"
+  },
+  {
+    "schema": "specnav.verification.repair-link.v1",
+    "failure_id": "failure-046667276b7162f8e5ff3393bf25487fc05b2ab68270ff9e12f6f1a9c8656ee5",
+    "change_id": "docforge-project-format-v1",
+    "development_task_id": "900-verification-repair-319b0bcfd6cd8c65",
+    "repair_kind": "test_code",
+    "status": "requested",
+    "requested_at": "2026-08-27T07:32:24.774Z",
+    "before_identity": {
+      "case_snapshot_hash": "e34e5e74c6ac469ee8bce2be6d0b6ce1e772d4e773710b8bc782cc99da337c85",
+      "code_sha": "60274f4c7bd0541d0a6346753e68eb7f5f2ae6a6",
+      "test_sha": "8898bb578306334a0f3e9e5723ac9a186ccfb90845268c19e0677fb7df12a193",
+      "environment_hash": "e70d297a62bab25e39bb4323fd1636081aac76eff129f315f3d3dbe56c04a1eb",
+      "runtime_version": "2.0.0-alpha.2",
+      "kernel_version": "2.0.0-alpha.2"
+    },
+    "scope_digest": "97de42eb572bacc046cabcec7e89d0bd7042184892d0584d4ce91eb2cc2afeda",
+    "id": "repair-7a6b0cb3e74f5753efe0cd60058931d01adc1a070412fe9a4834fe9246f174bd"
+  },
+  {
+    "schema": "specnav.verification.repair-link.v1",
+    "failure_id": "failure-98298abaa9086b490c419c2829b887ae15a77d690824d18a273085cf62f64d98",
+    "change_id": "docforge-project-format-v1",
+    "development_task_id": "900-verification-repair-ef95f9719163589d",
+    "repair_kind": "test_code",
+    "status": "requested",
+    "requested_at": "2026-08-27T07:47:08.283Z",
+    "before_identity": {
+      "case_snapshot_hash": "e34e5e74c6ac469ee8bce2be6d0b6ce1e772d4e773710b8bc782cc99da337c85",
+      "code_sha": "60274f4c7bd0541d0a6346753e68eb7f5f2ae6a6",
+      "test_sha": "8898bb578306334a0f3e9e5723ac9a186ccfb90845268c19e0677fb7df12a193",
+      "environment_hash": "e70d297a62bab25e39bb4323fd1636081aac76eff129f315f3d3dbe56c04a1eb",
+      "runtime_version": "2.0.0-alpha.2",
+      "kernel_version": "2.0.0-alpha.2"
+    },
+    "scope_digest": "97de42eb572bacc046cabcec7e89d0bd7042184892d0584d4ce91eb2cc2afeda",
+    "id": "repair-a8c7b56a9b0d1d5c82753df5589283ad448c156838bf3f7829b517f37f5f5f6b"
+  },
+  {
+    "schema": "specnav.verification.repair-link.v1",
+    "failure_id": "failure-1cf04e4a2349690194b0df450d9215c4eb41407919e34e6ed4caca28a4496546",
+    "change_id": "docforge-project-format-v1",
+    "development_task_id": "900-verification-repair-8cc054eccad2a28b",
+    "repair_kind": "test_code",
+    "status": "requested",
+    "requested_at": "2026-08-27T07:38:37.045Z",
+    "before_identity": {
+      "case_snapshot_hash": "e34e5e74c6ac469ee8bce2be6d0b6ce1e772d4e773710b8bc782cc99da337c85",
+      "code_sha": "60274f4c7bd0541d0a6346753e68eb7f5f2ae6a6",
+      "test_sha": "8898bb578306334a0f3e9e5723ac9a186ccfb90845268c19e0677fb7df12a193",
+      "environment_hash": "e70d297a62bab25e39bb4323fd1636081aac76eff129f315f3d3dbe56c04a1eb",
+      "runtime_version": "2.0.0-alpha.2",
+      "kernel_version": "2.0.0-alpha.2"
+    },
+    "scope_digest": "97de42eb572bacc046cabcec7e89d0bd7042184892d0584d4ce91eb2cc2afeda",
+    "id": "repair-e798848d90e95653e4a7a38dfd7121c40dc90f911bbff54768be4c1636cd357e"
+  },
+  {
+    "schema": "specnav.verification.repair-link.v1",
+    "failure_id": "failure-aea586ad3f508740227d90a29b096d0b54461caa5a1c78f1eb0bfc4871d1b02e",
+    "change_id": "docforge-project-format-v1",
+    "development_task_id": "900-verification-repair-e10bfa4f4d2ab499",
+    "repair_kind": "test_code",
+    "status": "requested",
+    "requested_at": "2026-08-27T07:48:55.596Z",
+    "before_identity": {
+      "case_snapshot_hash": "e34e5e74c6ac469ee8bce2be6d0b6ce1e772d4e773710b8bc782cc99da337c85",
+      "code_sha": "60274f4c7bd0541d0a6346753e68eb7f5f2ae6a6",
+      "test_sha": "8898bb578306334a0f3e9e5723ac9a186ccfb90845268c19e0677fb7df12a193",
+      "environment_hash": "e70d297a62bab25e39bb4323fd1636081aac76eff129f315f3d3dbe56c04a1eb",
+      "runtime_version": "2.0.0-alpha.2",
+      "kernel_version": "2.0.0-alpha.2"
+    },
+    "scope_digest": "97de42eb572bacc046cabcec7e89d0bd7042184892d0584d4ce91eb2cc2afeda",
+    "id": "repair-fb42f9cd54704110dc0914f911fc80946db4f5f3896c0abc338ee4c0d0df146b"
+  }
+]

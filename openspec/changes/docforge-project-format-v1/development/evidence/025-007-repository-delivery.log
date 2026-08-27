@@ -1,0 +1,22 @@
+# command: pnpm --dir frontend build
+# exit_status: 0
+# duration_ms: 1072
+
+## stdout
+
+> @docforge/workbench@0.1.0 build /Volumes/ThesisForgeCI/workspaces/thesis-forge-docforge-verify/frontend
+> tsc -b && vite build
+
+vite v8.2.0 building client environment for production...
+[2Ktransforming...✓ 1806 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.58 kB │ gzip:  0.36 kB
+dist/assets/index-C8Sf9Qpd.css   21.20 kB │ gzip:  5.07 kB
+dist/assets/index-l4RSGFh1.js   275.26 kB │ gzip: 83.12 kB
+
+✓ built in 254ms
+
+
+## stderr
+(empty)

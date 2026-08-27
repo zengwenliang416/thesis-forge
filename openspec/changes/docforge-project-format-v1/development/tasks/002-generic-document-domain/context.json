@@ -1,6 +1,7 @@
 {
   "task_id": "002-generic-document-domain",
   "task_items": ["2.1", "2.2", "2.3", "2.4", "2.5"],
+  "acceptance_primary": ["A4", "A7"],
   "goal": "Replace ThesisDocument with ForgeDocument across the renderer-neutral semantic pipeline while preserving deterministic behavior and architecture boundaries.",
   "must_read": [
     "openspec/changes/docforge-project-format-v1/development/tasks/002-generic-document-domain/brief.md",
@@ -19,32 +20,19 @@
     "openspec/changes/docforge-project-format-v1/specs/document-markdown-model/spec.md"
   ],
   "allowed_files": [
-    "src/thesis_forge/core",
-    "src/thesis_forge/application",
-    "src/thesis_forge/compiler",
-    "src/thesis_forge/bibliography",
-    "src/thesis_forge/presentation",
+    "src/docforge/core/**",
+    "src/docforge/application/**",
+    "src/docforge/compiler/**",
+    "src/docforge/bibliography/**",
+    "src/docforge/presentation/**",
     "qa/tools/parser_diff.py",
-    "tests",
+    "tests/**",
     "openspec/changes/docforge-project-format-v1/development/tasks/002-generic-document-domain",
     "openspec/changes/docforge-project-format-v1/development"
   ],
   "test_paths": [
-    "tests/core",
-    "tests/application",
-    "tests/presentation",
-    "tests/cli",
-    "tests/contracts",
-    "tests/renderers/docx",
-    "tests/test_acceptance.py",
-    "tests/test_adapters.py",
-    "tests/test_compiler.py",
-    "tests/test_docx_renderer.py",
-    "tests/test_frontend_contract.py",
-    "tests/test_preview_presentation.py",
-    "tests/test_ui_controller.py",
-    "tests/test_validator.py",
-    "tests/test_architecture.py"
+    "PYTHONPATH=src .venv/bin/python -m pytest tests/core tests/application tests/presentation tests/cli tests/contracts tests/renderers/docx tests/test_acceptance.py tests/test_adapters.py tests/test_compiler.py tests/test_docx_renderer.py tests/test_frontend_contract.py tests/test_preview_presentation.py tests/test_ui_controller.py tests/test_validator.py tests/test_architecture.py -q",
+    ".venv/bin/ruff check src/docforge/core src/docforge/application src/docforge/presentation tests/core tests/application tests/presentation tests/cli tests/contracts tests/renderers/docx tests/test_acceptance.py tests/test_adapters.py tests/test_compiler.py tests/test_docx_renderer.py tests/test_frontend_contract.py tests/test_preview_presentation.py tests/test_ui_controller.py tests/test_validator.py tests/test_architecture.py"
   ],
   "non_goals": [
     "Do not rename the Python distribution, CLI, protocol, frontend, Tauri package, or templates in this slice.",

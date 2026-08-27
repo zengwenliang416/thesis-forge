@@ -27,7 +27,7 @@ approved
   and `scripts/prepare_release.py`.
 - CI and Woodpecker workflows compose these validators and build steps without
   moving parsing, compilation, rendering, or DOCX behavior into repository
-  migration scripts.
+  delivery tooling.
 - The release workflow keeps source checkout, native build, artifact
   verification, evidence capture, and staged upload as distinct steps. It does
   not claim that local packaging proves GitHub publication.
@@ -120,6 +120,13 @@ approved
 ## Required Fixes
 
 - None for the Task 007 quality slice.
+
+## Acceptance Assertions Verified
+
+- `A4`: active repository, package, protocol, and domain identities are
+  DocForge-only and obsolete inputs remain negative tests.
+- `A10`: examples, fixtures, documentation, packaging, CI, and release
+  configuration pass facticity and delivery verification.
 
 ## Non-Blocking Notes
 

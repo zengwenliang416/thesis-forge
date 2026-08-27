@@ -1,0 +1,31 @@
+# command: pnpm --dir frontend exec playwright test --config e2e/real-http.playwright.config.ts
+# exit_status: 0
+# duration_ms: 4331
+
+## stdout
+
+Running 1 test using 1 worker
+
+  ✓  1 [real-http-chromium] › e2e/real-http.acceptance.ts:37:1 › runs the Web workbench through the real Python HTTP adapter (927ms)
+
+  1 passed (3.6s)
+
+
+## stderr
+[WebServer] (node:46599) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:46619) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] 127.0.0.1 - - [27/Aug/2026 12:12:02] "GET / HTTP/1.1" 200 586
+(node:46641) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] 127.0.0.1 - - [27/Aug/2026 12:12:03] "GET / HTTP/1.1" 200 586
+[WebServer] 127.0.0.1 - - [27/Aug/2026 12:12:03] "GET /assets/index-C8Sf9Qpd.css HTTP/1.1" 200 21205
+[WebServer] 127.0.0.1 - - [27/Aug/2026 12:12:03] "GET /assets/index-l4RSGFh1.js HTTP/1.1" 200 275262
+[WebServer] 127.0.0.1 - - [27/Aug/2026 12:12:04] "POST /api/v1/workspaces HTTP/1.1" 201 407
+[WebServer] 127.0.0.1 - - [27/Aug/2026 12:12:04] "POST /api/v1/dispatch HTTP/1.1" 200 1364
+[WebServer] 127.0.0.1 - - [27/Aug/2026 12:12:04] "POST /api/v1/dispatch HTTP/1.1" 200 144
+[WebServer] 127.0.0.1 - - [27/Aug/2026 12:12:04] "POST /api/v1/dispatch HTTP/1.1" 200 1404
+[WebServer] 127.0.0.1 - - [27/Aug/2026 12:12:04] "POST /api/v1/dispatch HTTP/1.1" 200 1404
+[WebServer] 127.0.0.1 - - [27/Aug/2026 12:12:04] "POST /api/v1/build-stream HTTP/1.1" 200 1610
+

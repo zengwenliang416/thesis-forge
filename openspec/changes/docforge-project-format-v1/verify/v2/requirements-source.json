@@ -1,0 +1,42 @@
+[
+  {
+    "id": "R1",
+    "statement": "DocForge projects open only from a directory or docforge.yaml using schema docforge.project.v1."
+  },
+  {
+    "id": "R2",
+    "statement": "General documents use document.md and docforge-standard without academic metadata."
+  },
+  {
+    "id": "R3",
+    "statement": "Academic metadata is a typed optional profile selected by academic templates."
+  },
+  {
+    "id": "R4",
+    "statement": "Obsolete ThesisForge public contracts are absent or rejected without compatibility aliases."
+  },
+  {
+    "id": "R5",
+    "statement": "Default source, build, and Review paths use neutral document filenames."
+  },
+  {
+    "id": "R6",
+    "statement": "Project resources remain project-relative and reject unsafe path classes."
+  },
+  {
+    "id": "R7",
+    "statement": "The deterministic semantic and DOCX pipeline preserves renderer boundaries, cancellation, and atomic output."
+  },
+  {
+    "id": "R8",
+    "statement": "CLI, HTTP, Tauri, and frontend use one versioned DocForge runtime and BuildReport contract."
+  },
+  {
+    "id": "R9",
+    "statement": "The installed macOS workbench and Microsoft Word preview use neutral DocForge terminology and valid outputs."
+  },
+  {
+    "id": "R10",
+    "statement": "Repository examples, fixtures, documentation, packaging, CI, and release configuration use DocForge contracts."
+  }
+]

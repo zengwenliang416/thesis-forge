@@ -1,0 +1,22 @@
+{
+  "schema": "specnav.verification.root-cause-review.v1",
+  "id": "root-cause-review-f814ed028e5b2dc94e5db021",
+  "failure_id": "failure-f814ed028e5b2dc94e5db0219d237ceaa8e22ce664031ea163ba1fc267c95791",
+  "root_failure_digest": "8677e55f316acd6f555070415cc3edc2f3155f285b03a447f2ad104e06f3468e",
+  "change_id": "docforge-project-format-v1",
+  "run_id": "run-20260827064734-03b2884ca6381698",
+  "case_id": "case-a8-runtime-parity",
+  "attempt_id": "attempt-20260827064734-03b2884ca6381698",
+  "classification": "test_defect",
+  "summary": "The approved command runner omitted the assertion protocol and did not expose the required toolchain PATH.",
+  "root_cause": "The case contract declared env_keys=[] and relied on ambient PATH, so the Runtime could neither inject SPECNAV assertion output variables nor consistently locate Rust/Node toolchains.",
+  "failed_assertion_ids": [
+    "a8-protocol-parity"
+  ],
+  "reviewer": {
+    "id": "zengwenliang416",
+    "kind": "human"
+  },
+  "decision": "approved",
+  "reviewed_at": "2026-08-27T07:03:32.989Z"
+}

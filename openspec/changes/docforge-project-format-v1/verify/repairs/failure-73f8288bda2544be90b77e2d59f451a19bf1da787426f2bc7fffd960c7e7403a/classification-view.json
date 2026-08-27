@@ -1,0 +1,30 @@
+{
+  "schema": "specnav.verification.failure-packet.v1",
+  "change_id": "docforge-project-format-v1",
+  "run_id": "run-20260827064525-5e4db8725c20af7d",
+  "case_id": "case-a5-neutral-default-paths",
+  "attempt_id": "attempt-20260827064525-5e4db8725c20af7d",
+  "reading_ids": [
+    "reading-2a1e1c594cc5a66e032da5a5bf9758bd59f43ce2465a1652921556817bcdd10a",
+    "reading-464a0e16941553c0d031b04c8074544ae1b30169dcd70bcdae88a2b62f96426f",
+    "reading-5b472c349da3a58c3c42d40890e6947b798080b408605db45c00a8270bfa0e0b",
+    "reading-648938b8d85f893b571fbeaf9d770198c1d2817e61c80a880e28c708bb1fb08c",
+    "reading-68438651bc614e2861a61ead07f7be265e7554545d0ee90fb8ec357ffca977e8",
+    "reading-c4e8ef7d0a45ecb189fb717dd69604a6f001ad2797301709cb6b43a47b67355b"
+  ],
+  "evidence_ids": [
+    "evidence-5867f238b67d55c85f7ceb4f3b0f27997e2ea31c5e19cc153e4c974b54f11cfb"
+  ],
+  "classification": "test_defect",
+  "status": "repair_required",
+  "next_action": "repair_required",
+  "summary": "The approved command runner omitted the assertion protocol required to produce structured assertion_result evidence.",
+  "root_cause": "The case contract declared env_keys=[], so the Runtime did not inject SPECNAV_VERIFICATION_ASSERTION_IDS or SPECNAV_VERIFICATION_ASSERTION_RESULT_FILE and no authoritative oracle result was emitted.",
+  "failed_assertion_ids": [
+    "a5-default-paths"
+  ],
+  "owner": "development",
+  "created_at": "2026-08-27T06:45:31.253Z",
+  "frozen_at": "2026-08-27T06:45:31.253Z",
+  "id": "failure-73f8288bda2544be90b77e2d59f451a19bf1da787426f2bc7fffd960c7e7403a"
+}

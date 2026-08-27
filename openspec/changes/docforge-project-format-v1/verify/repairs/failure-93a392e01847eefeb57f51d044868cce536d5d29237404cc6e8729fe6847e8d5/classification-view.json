@@ -1,0 +1,30 @@
+{
+  "schema": "specnav.verification.failure-packet.v1",
+  "change_id": "docforge-project-format-v1",
+  "run_id": "run-20260827064704-d0c88d2a76efe074",
+  "case_id": "case-a7-deterministic-docx",
+  "attempt_id": "attempt-20260827064704-d0c88d2a76efe074",
+  "reading_ids": [
+    "reading-13a0376b60a9ba44598904feb9305315cf4bfb876e4a048dea48836ed9b7d282",
+    "reading-a46d47d76d8e82ee6ec6516b8da178719bb6d29ff2f7086a7fa5b18153566b54",
+    "reading-c5a5815c6dcdeda58f36813b1124a7a61419fc82ea87a097744e0cfdc8dbf82b",
+    "reading-cf4a111d2e7e6930aae65bde79224f480ae5cc57babecef4f5f9cbd9119f479f",
+    "reading-e39873cf71f32dd23bd75907ca4ea9b7793fe3fa9f4b7cabadaae510801ea9fa",
+    "reading-ffec365deebd9c2a671bfc56b1f3d3a78a54422ac8202f45f7702e18b4dfae9b"
+  ],
+  "evidence_ids": [
+    "evidence-8eea8974843b75768840990f61c402738ff52a524b325a8c92b6dff8a9dc509a"
+  ],
+  "classification": "test_defect",
+  "status": "repair_required",
+  "next_action": "repair_required",
+  "summary": "The approved command runner omitted the assertion protocol required to produce structured assertion_result evidence.",
+  "root_cause": "The case contract declared env_keys=[], so the Runtime did not inject SPECNAV_VERIFICATION_ASSERTION_IDS or SPECNAV_VERIFICATION_ASSERTION_RESULT_FILE and no authoritative oracle result was emitted.",
+  "failed_assertion_ids": [
+    "a7-deterministic-pipeline"
+  ],
+  "owner": "development",
+  "created_at": "2026-08-27T06:47:33.906Z",
+  "frozen_at": "2026-08-27T06:47:33.906Z",
+  "id": "failure-93a392e01847eefeb57f51d044868cce536d5d29237404cc6e8729fe6847e8d5"
+}

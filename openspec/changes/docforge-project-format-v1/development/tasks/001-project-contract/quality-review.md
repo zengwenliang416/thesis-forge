@@ -53,3 +53,9 @@ approved
 
 - None. The independent re-review approved the current checkout with no
   residual finding.
+
+## Acceptance Assertions Verified
+
+- `A5`: canonical DocForge manifest, source, output, and Review defaults pass.
+- `A6`: project-relative resource paths reject traversal, absolute, remote,
+  and symlink-escape inputs.

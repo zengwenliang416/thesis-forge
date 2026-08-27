@@ -1,0 +1,12 @@
+# command: PYTHONPATH=src .venv/bin/python -m pytest tests/adapters tests/application tests/test_adapters.py -q
+# exit_status: 0
+# duration_ms: 778
+
+## stdout
+........................................................................ [ 51%]
+....................................................................     [100%]
+140 passed in 0.56s
+
+
+## stderr
+(empty)

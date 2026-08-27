@@ -1,0 +1,55 @@
+{
+  "schema": "specnav.verification.trusted-fact-envelope.v1",
+  "id": "trusted-fact-b6a6f581d420ca7898202f9531e18893ca375127a556555edad85954263f1ddc",
+  "kind": "classification_result",
+  "producer": "specnav-failure-classifier",
+  "payload": {
+    "ok": true,
+    "status": "classified",
+    "packet": {
+      "schema": "specnav.verification.failure-packet.v1",
+      "change_id": "docforge-project-format-v1",
+      "run_id": "run-20260827064432-f7b0f5e993e8efdd",
+      "case_id": "case-a10-repository-delivery",
+      "attempt_id": "attempt-20260827064432-f7b0f5e993e8efdd",
+      "reading_ids": [
+        "reading-7fae418f5ac9905ac35f2882ec5691ce15f6c102de2175fc2d3c131f8ff82f07",
+        "reading-bc7bcfabba259bad73e2a08675b5ebd5ee67f611073e58f8a86cb8ed1c2a3810",
+        "reading-bf8ebd40191219bcf4eaed7e8cc5bc1f7b3e7edf875e1d384a966956df9318f8",
+        "reading-c9554ada9076a3b98359ec8d6269a14a1fb0514367d20cfb8500dab370aba9dc",
+        "reading-e4f3bbbb7f74c0b7593bf7986bb3117679b51795d62bbbf2ee0645c94dee3cbe",
+        "reading-e85421ed4571e4ddf0712d64c2dc1f63aa5f52ce6a87cebe02c722239388de88"
+      ],
+      "evidence_ids": [
+        "evidence-a98dea631fd0be3c6d337666501d1aeec730d47125d8c1b5a783ecf318ce7f24"
+      ],
+      "classification": "test_defect",
+      "status": "repair_required",
+      "next_action": "repair_required",
+      "summary": "The approved command runner omitted the assertion protocol and did not expose the required toolchain PATH.",
+      "root_cause": "The case contract declared env_keys=[] and relied on ambient PATH, so the Runtime could neither inject SPECNAV assertion output variables nor consistently locate Rust/Node toolchains.",
+      "failed_assertion_ids": [
+        "a10-repository-clean"
+      ],
+      "owner": "development",
+      "created_at": "2026-08-27T06:44:40.183Z",
+      "frozen_at": "2026-08-27T06:44:40.183Z",
+      "id": "failure-98298abaa9086b490c419c2829b887ae15a77d690824d18a273085cf62f64d98"
+    },
+    "signals": [],
+    "blockers": []
+  },
+  "payload_digest": "f719c8ef80dd7bdd4f8a5a8cc0c70c59dfbb7809791cc5cc6884e758b6b17725",
+  "issued_at": "2026-08-27T07:23:04.514Z",
+  "bindings": {
+    "failure_id": "failure-98298abaa9086b490c419c2829b887ae15a77d690824d18a273085cf62f64d98",
+    "change_id": "docforge-project-format-v1",
+    "run_id": "run-20260827064432-f7b0f5e993e8efdd",
+    "case_id": "case-a10-repository-delivery"
+  },
+  "claims": [
+    "failure-classification:verified"
+  ],
+  "signature_algorithm": "hmac-sha256",
+  "signature": "6faa5f8a00c9c3a6b56807be13fa08df00d81beb1ab6cdd474e088df8ab2df5e"
+}

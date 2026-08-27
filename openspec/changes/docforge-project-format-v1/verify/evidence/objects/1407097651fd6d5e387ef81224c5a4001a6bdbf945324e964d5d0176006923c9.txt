@@ -1,0 +1,23 @@
+status=failed
+exit_status=1
+--- stdout ---
+
+--- stderr ---
+Traceback (most recent call last):
+  File "/Volumes/ThesisForgeCI/workspaces/thesis-forge-docforge-verify/scripts/verify_desktop_distribution.py", line 375, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "/Volumes/ThesisForgeCI/workspaces/thesis-forge-docforge-verify/scripts/verify_desktop_distribution.py", line 352, in main
+    target = args.target_triple or host_target_triple()
+                                   ^^^^^^^^^^^^^^^^^^^^
+  File "/Volumes/ThesisForgeCI/workspaces/thesis-forge-docforge-verify/scripts/build_sidecar.py", line 57, in host_target_triple
+    result = subprocess.run(
+             ^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.12/3.12.9/Frameworks/Python.framework/Versions/3.12/lib/python3.12/subprocess.py", line 550, in run
+    with Popen(*popenargs, **kwargs) as process:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.12/3.12.9/Frameworks/Python.framework/Versions/3.12/lib/python3.12/subprocess.py", line 1028, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "/opt/homebrew/Cellar/python@3.12/3.12.9/Frameworks/Python.framework/Versions/3.12/lib/python3.12/subprocess.py", line 1963, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: 'rustc'

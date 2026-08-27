@@ -1,0 +1,23 @@
+{
+  "schema": "specnav.verification.attempt.v1",
+  "id": "attempt-20260827064734-03b2884ca6381698",
+  "run_id": "run-20260827064734-03b2884ca6381698",
+  "change_id": "docforge-project-format-v1",
+  "case_id": "case-a8-runtime-parity",
+  "case_snapshot_hash": "e34e5e74c6ac469ee8bce2be6d0b6ce1e772d4e773710b8bc782cc99da337c85",
+  "kind": "initial",
+  "sequence": 1,
+  "runner": "command",
+  "code_sha": "60274f4c7bd0541d0a6346753e68eb7f5f2ae6a6",
+  "test_sha": "8898bb578306334a0f3e9e5723ac9a186ccfb90845268c19e0677fb7df12a193",
+  "scenario_hash": "ff72abd0a2a645dcaf4832cd532c11bee5d291b9358855bcbf510c206937b255",
+  "environment_hash": "e70d297a62bab25e39bb4323fd1636081aac76eff129f315f3d3dbe56c04a1eb",
+  "browser_project": "none",
+  "test_data_snapshot": "d65cc2bd19998b047d63b860b2c16e4210c5f039bf9ec86f87d34eb4636d3915",
+  "runtime_version": "2.0.0-alpha.2",
+  "kernel_version": "2.0.0-alpha.2",
+  "status": "failed",
+  "started_at": "2026-08-27T06:47:34.558Z",
+  "completed_at": "2026-08-27T06:47:35.913Z",
+  "exit_status": 127
+}

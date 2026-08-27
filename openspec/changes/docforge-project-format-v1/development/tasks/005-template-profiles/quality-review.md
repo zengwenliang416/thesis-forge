@@ -85,6 +85,15 @@ approved
 - A static scan found no renderer branch on document type, profile, or
   template ID.
 
+## Component Cohesion / Coupling
+
+- Binding descriptors, locale selection, required-field enforcement, and
+  presentation labels remain in their owning template/compiler/presentation
+  modules.
+- The compiler hands renderer-neutral binding pairs to RenderPlan; the DOCX
+  renderer does not inspect project profiles or template identities.
+- No new cross-layer dependency or compatibility path was introduced.
+
 ## Test Quality
 
 - `PYTHONPATH=src .venv/bin/python -m pytest tests/templates tests/compiler tests/project -q`
@@ -118,6 +127,23 @@ approved
   explicitly name them. This is an ownership/bookkeeping note for the lead,
   not an unresolved functional defect in the Task 005 slice.
 
+## Reuse / Duplication
+
+- The descriptor registry is reused by binding resolution, default-cover
+  selection, and presentation labels.
+- General and academic clean-install flows use the same package, CLI,
+  validator, compiler, and renderer path.
+- No duplicate binding registry, template loader, or profile-specific compile
+  pipeline was added.
+
+## Complexity Delta
+
+- Complexity added by locale-aware bindings and required-field enforcement is
+  localized to existing template/compiler modules and directly covers the task
+  contract.
+- Four inherited C901 findings remain non-blocking; the new binding module and
+  cover helper do not add another complexity finding.
+
 ## Residual Risk
 
 - Manually constructed `CoverInstruction` values are not runtime-validated
@@ -129,3 +155,11 @@ approved
 ## Required Fixes
 
 - None for the Task 005 quality slice.
+
+## Acceptance Assertions Verified
+
+- `A2`: the generic template validates and builds without academic-only
+  metadata or labels.
+- `A3`: typed academic metadata remains optional and template-scoped.
+- `A7`: binding resolution, validation, RenderPlan, and installed package
+  flows pass for generic and academic projects.

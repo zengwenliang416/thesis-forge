@@ -1,0 +1,2586 @@
+{
+  "ok": true,
+  "status": "passed",
+  "run": {
+    "schema": "specnav.verification.run.v1",
+    "id": "run-20260827064704-d0c88d2a76efe074",
+    "change_id": "docforge-project-format-v1",
+    "case_snapshot_id": "snapshot-e34e5e74c6ac469ee8bce2be",
+    "case_snapshot_hash": "e34e5e74c6ac469ee8bce2be6d0b6ce1e772d4e773710b8bc782cc99da337c85",
+    "case_ids": [
+      "case-a7-deterministic-docx"
+    ],
+    "code_sha": "60274f4c7bd0541d0a6346753e68eb7f5f2ae6a6",
+    "test_sha": "8898bb578306334a0f3e9e5723ac9a186ccfb90845268c19e0677fb7df12a193",
+    "environment_hash": "e70d297a62bab25e39bb4323fd1636081aac76eff129f315f3d3dbe56c04a1eb",
+    "runtime_version": "2.0.0-alpha.2",
+    "kernel_version": "2.0.0-alpha.2",
+    "generation_id": "generation-3aec0b8644c6c59b7f56111e",
+    "status": "passed",
+    "created_at": "2026-08-27T06:47:04.921Z",
+    "started_at": "2026-08-27T06:47:04.935Z",
+    "completed_at": "2026-08-27T06:47:32.353Z",
+    "kind": "initial",
+    "origin_run_id": null,
+    "parent_run_id": null,
+    "parent_attempt_id": null,
+    "failure_id": null
+  },
+  "attempt": {
+    "schema": "specnav.verification.attempt.v1",
+    "id": "attempt-20260827064704-d0c88d2a76efe074",
+    "run_id": "run-20260827064704-d0c88d2a76efe074",
+    "change_id": "docforge-project-format-v1",
+    "case_id": "case-a7-deterministic-docx",
+    "case_snapshot_hash": "e34e5e74c6ac469ee8bce2be6d0b6ce1e772d4e773710b8bc782cc99da337c85",
+    "kind": "initial",
+    "sequence": 1,
+    "runner": "command",
+    "code_sha": "60274f4c7bd0541d0a6346753e68eb7f5f2ae6a6",
+    "test_sha": "8898bb578306334a0f3e9e5723ac9a186ccfb90845268c19e0677fb7df12a193",
+    "scenario_hash": "5206968372d19ed89ec58737416b9d0dad5fc636e238b620b31dce89bc457399",
+    "environment_hash": "e70d297a62bab25e39bb4323fd1636081aac76eff129f315f3d3dbe56c04a1eb",
+    "browser_project": "none",
+    "test_data_snapshot": "e3771af2f61e3826d94b15466e8199aa8d50eb8ac3df1439e557f610cc516cf3",
+    "runtime_version": "2.0.0-alpha.2",
+    "kernel_version": "2.0.0-alpha.2",
+    "status": "passed",
+    "started_at": "2026-08-27T06:47:04.935Z",
+    "completed_at": "2026-08-27T06:47:32.353Z",
+    "exit_status": 0
+  },
+  "run_states": [
+    {
+      "schema": "specnav.verification.run.v1",
+      "id": "run-20260827064704-d0c88d2a76efe074",
+      "change_id": "docforge-project-format-v1",
+      "case_snapshot_id": "snapshot-e34e5e74c6ac469ee8bce2be",
+      "case_snapshot_hash": "e34e5e74c6ac469ee8bce2be6d0b6ce1e772d4e773710b8bc782cc99da337c85",
+      "case_ids": [
+        "case-a7-deterministic-docx"
+      ],
+      "code_sha": "60274f4c7bd0541d0a6346753e68eb7f5f2ae6a6",
+      "test_sha": "8898bb578306334a0f3e9e5723ac9a186ccfb90845268c19e0677fb7df12a193",
+      "environment_hash": "e70d297a62bab25e39bb4323fd1636081aac76eff129f315f3d3dbe56c04a1eb",
+      "runtime_version": "2.0.0-alpha.2",
+      "kernel_version": "2.0.0-alpha.2",
+      "generation_id": "generation-3aec0b8644c6c59b7f56111e",
+      "status": "running",
+      "created_at": "2026-08-27T06:47:04.921Z",
+      "started_at": "2026-08-27T06:47:04.935Z",
+      "completed_at": null,
+      "kind": "initial",
+      "origin_run_id": null,
+      "parent_run_id": null,
+      "parent_attempt_id": null,
+      "failure_id": null
+    },
+    {
+      "schema": "specnav.verification.run.v1",
+      "id": "run-20260827064704-d0c88d2a76efe074",
+      "change_id": "docforge-project-format-v1",
+      "case_snapshot_id": "snapshot-e34e5e74c6ac469ee8bce2be",
+      "case_snapshot_hash": "e34e5e74c6ac469ee8bce2be6d0b6ce1e772d4e773710b8bc782cc99da337c85",
+      "case_ids": [
+        "case-a7-deterministic-docx"
+      ],
+      "code_sha": "60274f4c7bd0541d0a6346753e68eb7f5f2ae6a6",
+      "test_sha": "8898bb578306334a0f3e9e5723ac9a186ccfb90845268c19e0677fb7df12a193",
+      "environment_hash": "e70d297a62bab25e39bb4323fd1636081aac76eff129f315f3d3dbe56c04a1eb",
+      "runtime_version": "2.0.0-alpha.2",
+      "kernel_version": "2.0.0-alpha.2",
+      "generation_id": "generation-3aec0b8644c6c59b7f56111e",
+      "status": "passed",
+      "created_at": "2026-08-27T06:47:04.921Z",
+      "started_at": "2026-08-27T06:47:04.935Z",
+      "completed_at": "2026-08-27T06:47:32.353Z",
+      "kind": "initial",
+      "origin_run_id": null,
+      "parent_run_id": null,
+      "parent_attempt_id": null,
+      "failure_id": null
+    }
+  ],
+  "attempt_states": [
+    {
+      "schema": "specnav.verification.attempt.v1",
+      "id": "attempt-20260827064704-d0c88d2a76efe074",
+      "run_id": "run-20260827064704-d0c88d2a76efe074",
+      "change_id": "docforge-project-format-v1",
+      "case_id": "case-a7-deterministic-docx",
+      "case_snapshot_hash": "e34e5e74c6ac469ee8bce2be6d0b6ce1e772d4e773710b8bc782cc99da337c85",
+      "kind": "initial",
+      "sequence": 1,
+      "runner": "command",
+      "code_sha": "60274f4c7bd0541d0a6346753e68eb7f5f2ae6a6",
+      "test_sha": "8898bb578306334a0f3e9e5723ac9a186ccfb90845268c19e0677fb7df12a193",
+      "scenario_hash": "5206968372d19ed89ec58737416b9d0dad5fc636e238b620b31dce89bc457399",
+      "environment_hash": "e70d297a62bab25e39bb4323fd1636081aac76eff129f315f3d3dbe56c04a1eb",
+      "browser_project": "none",
+      "test_data_snapshot": "e3771af2f61e3826d94b15466e8199aa8d50eb8ac3df1439e557f610cc516cf3",
+      "runtime_version": "2.0.0-alpha.2",
+      "kernel_version": "2.0.0-alpha.2",
+      "status": "running",
+      "started_at": "2026-08-27T06:47:04.935Z",
+      "completed_at": null,
+      "exit_status": null
+    },
+    {
+      "schema": "specnav.verification.attempt.v1",
+      "id": "attempt-20260827064704-d0c88d2a76efe074",
+      "run_id": "run-20260827064704-d0c88d2a76efe074",
+      "change_id": "docforge-project-format-v1",
+      "case_id": "case-a7-deterministic-docx",
+      "case_snapshot_hash": "e34e5e74c6ac469ee8bce2be6d0b6ce1e772d4e773710b8bc782cc99da337c85",
+      "kind": "initial",
+      "sequence": 1,
+      "runner": "command",
+      "code_sha": "60274f4c7bd0541d0a6346753e68eb7f5f2ae6a6",
+      "test_sha": "8898bb578306334a0f3e9e5723ac9a186ccfb90845268c19e0677fb7df12a193",
+      "scenario_hash": "5206968372d19ed89ec58737416b9d0dad5fc636e238b620b31dce89bc457399",
+      "environment_hash": "e70d297a62bab25e39bb4323fd1636081aac76eff129f315f3d3dbe56c04a1eb",
+      "browser_project": "none",
+      "test_data_snapshot": "e3771af2f61e3826d94b15466e8199aa8d50eb8ac3df1439e557f610cc516cf3",
+      "runtime_version": "2.0.0-alpha.2",
+      "kernel_version": "2.0.0-alpha.2",
+      "status": "passed",
+      "started_at": "2026-08-27T06:47:04.935Z",
+      "completed_at": "2026-08-27T06:47:32.353Z",
+      "exit_status": 0
+    }
+  ],
+  "attempts": [
+    {
+      "schema": "specnav.verification.attempt.v1",
+      "id": "attempt-20260827064704-d0c88d2a76efe074",
+      "run_id": "run-20260827064704-d0c88d2a76efe074",
+      "change_id": "docforge-project-format-v1",
+      "case_id": "case-a7-deterministic-docx",
+      "case_snapshot_hash": "e34e5e74c6ac469ee8bce2be6d0b6ce1e772d4e773710b8bc782cc99da337c85",
+      "kind": "initial",
+      "sequence": 1,
+      "runner": "command",
+      "code_sha": "60274f4c7bd0541d0a6346753e68eb7f5f2ae6a6",
+      "test_sha": "8898bb578306334a0f3e9e5723ac9a186ccfb90845268c19e0677fb7df12a193",
+      "scenario_hash": "5206968372d19ed89ec58737416b9d0dad5fc636e238b620b31dce89bc457399",
+      "environment_hash": "e70d297a62bab25e39bb4323fd1636081aac76eff129f315f3d3dbe56c04a1eb",
+      "browser_project": "none",
+      "test_data_snapshot": "e3771af2f61e3826d94b15466e8199aa8d50eb8ac3df1439e557f610cc516cf3",
+      "runtime_version": "2.0.0-alpha.2",
+      "kernel_version": "2.0.0-alpha.2",
+      "status": "passed",
+      "started_at": "2026-08-27T06:47:04.935Z",
+      "completed_at": "2026-08-27T06:47:32.353Z",
+      "exit_status": 0
+    }
+  ],
+  "command": {
+    "exit_status": 0,
+    "signal": null,
+    "timed_out": false,
+    "canceled": false,
+    "spawn_error": null
+  },
+  "logs": {
+    "stdout": "........................................................................ [ 17%]\n........................................................................ [ 34%]\n........................................................................ [ 51%]\n........................................................................ [ 68%]\n........................................................................ [ 85%]\n...........................................................              [100%]\n419 passed in 26.77s\n",
+    "stderr": ""
+  },
+  "events": [
+    {
+      "sequence": 1,
+      "type": "run.running",
+      "at": "2026-08-27T06:47:04.935Z",
+      "run": {
+        "schema": "specnav.verification.run.v1",
+        "id": "run-20260827064704-d0c88d2a76efe074",
+        "change_id": "docforge-project-format-v1",
+        "case_snapshot_id": "snapshot-e34e5e74c6ac469ee8bce2be",
+        "case_snapshot_hash": "e34e5e74c6ac469ee8bce2be6d0b6ce1e772d4e773710b8bc782cc99da337c85",
+        "case_ids": [
+          "case-a7-deterministic-docx"
+        ],
+        "code_sha": "60274f4c7bd0541d0a6346753e68eb7f5f2ae6a6",
+        "test_sha": "8898bb578306334a0f3e9e5723ac9a186ccfb90845268c19e0677fb7df12a193",
+        "environment_hash": "e70d297a62bab25e39bb4323fd1636081aac76eff129f315f3d3dbe56c04a1eb",
+        "runtime_version": "2.0.0-alpha.2",
+        "kernel_version": "2.0.0-alpha.2",
+        "generation_id": "generation-3aec0b8644c6c59b7f56111e",
+        "status": "running",
+        "created_at": "2026-08-27T06:47:04.921Z",
+        "started_at": "2026-08-27T06:47:04.935Z",
+        "completed_at": null,
+        "kind": "initial",
+        "origin_run_id": null,
+        "parent_run_id": null,
+        "parent_attempt_id": null,
+        "failure_id": null
+      }
+    },
+    {
+      "sequence": 2,
+      "type": "attempt.running",
+      "at": "2026-08-27T06:47:04.935Z",
+      "attempt": {
+        "schema": "specnav.verification.attempt.v1",
+        "id": "attempt-20260827064704-d0c88d2a76efe074",
+        "run_id": "run-20260827064704-d0c88d2a76efe074",
+        "change_id": "docforge-project-format-v1",
+        "case_id": "case-a7-deterministic-docx",
+        "case_snapshot_hash": "e34e5e74c6ac469ee8bce2be6d0b6ce1e772d4e773710b8bc782cc99da337c85",
+        "kind": "initial",
+        "sequence": 1,
+        "runner": "command",
+        "code_sha": "60274f4c7bd0541d0a6346753e68eb7f5f2ae6a6",
+        "test_sha": "8898bb578306334a0f3e9e5723ac9a186ccfb90845268c19e0677fb7df12a193",
+        "scenario_hash": "5206968372d19ed89ec58737416b9d0dad5fc636e238b620b31dce89bc457399",
+        "environment_hash": "e70d297a62bab25e39bb4323fd1636081aac76eff129f315f3d3dbe56c04a1eb",
+        "browser_project": "none",
+        "test_data_snapshot": "e3771af2f61e3826d94b15466e8199aa8d50eb8ac3df1439e557f610cc516cf3",
+        "runtime_version": "2.0.0-alpha.2",
+        "kernel_version": "2.0.0-alpha.2",
+        "status": "running",
+        "started_at": "2026-08-27T06:47:04.935Z",
+        "completed_at": null,
+        "exit_status": null
+      }
+    },
+    {
+      "sequence": 3,
+      "type": "command.started",
+      "at": "2026-08-27T06:47:04.937Z",
+      "command": {
+        "argv": [
+          "/bin/sh",
+          "-c",
+          "PYTHONPATH=src .venv/bin/python -m pytest tests/core tests/compiler tests/renderers/docx tests/application tests/test_acceptance.py tests/test_compiler.py tests/test_docx_renderer.py -q"
+        ],
+        "cwd": "/Volumes/ThesisForgeCI/workspaces/thesis-forge-docforge-verify",
+        "env_keys": [],
+        "timeout_ms": 600000
+      }
+    },
+    {
+      "sequence": 4,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:08.289Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 5,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:08.291Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 6,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:08.293Z",
+      "chunk": ".."
+    },
+    {
+      "sequence": 7,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:08.296Z",
+      "chunk": "..."
+    },
+    {
+      "sequence": 8,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:08.299Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 9,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:08.299Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 10,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:08.300Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 11,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:08.301Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 12,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:08.303Z",
+      "chunk": "..."
+    },
+    {
+      "sequence": 13,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:08.304Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 14,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:08.305Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 15,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:08.307Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 16,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:08.309Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 17,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:08.310Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 18,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:08.311Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 19,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:08.313Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 20,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:08.313Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 21,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:08.315Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 22,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:08.315Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 23,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:08.317Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 24,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:08.318Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 25,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:08.319Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 26,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:08.320Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 27,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:08.321Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 28,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:08.322Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 29,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:08.323Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 30,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:08.324Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 31,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:08.325Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 32,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:08.501Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 33,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:08.503Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 34,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:08.504Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 35,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:08.504Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 36,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:08.505Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 37,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:08.506Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 38,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:08.507Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 39,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:08.507Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 40,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:08.508Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 41,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:08.508Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 42,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:08.509Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 43,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:08.510Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 44,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:08.510Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 45,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:08.511Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 46,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:08.511Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 47,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:08.512Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 48,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:08.512Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 49,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:08.513Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 50,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:08.515Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 51,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:08.519Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 52,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:08.522Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 53,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:08.523Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 54,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:08.524Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 55,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:08.524Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 56,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:08.525Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 57,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:08.526Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 58,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:08.528Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 59,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:08.530Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 60,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:08.533Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 61,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:08.534Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 62,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:08.535Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 63,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:08.536Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 64,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:08.539Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 65,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:08.540Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 66,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:08.541Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 67,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:08.541Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 68,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:08.542Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 69,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:08.542Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 70,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:08.543Z",
+      "chunk": ". [ 17%]\n"
+    },
+    {
+      "sequence": 71,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:08.545Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 72,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:08.546Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 73,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:08.547Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 74,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:08.548Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 75,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:08.548Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 76,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:08.549Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 77,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:08.549Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 78,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:08.549Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 79,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:08.550Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 80,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:08.550Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 81,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:08.551Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 82,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:08.551Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 83,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:08.552Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 84,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:08.552Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 85,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:08.553Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 86,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:08.554Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 87,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:08.559Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 88,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:08.571Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 89,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:08.572Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 90,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:08.585Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 91,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:08.595Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 92,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:08.602Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 93,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:09.011Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 94,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:09.611Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 95,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:09.716Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 96,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:09.822Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 97,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:10.087Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 98,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:10.106Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 99,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:10.199Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 100,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:10.203Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 101,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:10.207Z",
+      "chunk": "...."
+    },
+    {
+      "sequence": 102,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:10.207Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 103,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:10.208Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 104,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:10.210Z",
+      "chunk": ".."
+    },
+    {
+      "sequence": 105,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:10.211Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 106,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:10.212Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 107,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:10.212Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 108,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:10.213Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 109,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:10.215Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 110,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:10.215Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 111,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:10.216Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 112,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:10.218Z",
+      "chunk": ".."
+    },
+    {
+      "sequence": 113,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:10.219Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 114,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:10.219Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 115,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:10.220Z",
+      "chunk": ".."
+    },
+    {
+      "sequence": 116,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:10.221Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 117,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:10.221Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 118,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:10.222Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 119,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:10.222Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 120,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:10.222Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 121,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:10.224Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 122,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:10.224Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 123,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:10.225Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 124,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:10.228Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 125,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:10.228Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 126,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:10.229Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 127,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:10.230Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 128,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:10.231Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 129,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:10.372Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 130,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:10.390Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 131,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:10.398Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 132,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:10.406Z",
+      "chunk": ".."
+    },
+    {
+      "sequence": 133,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:10.416Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 134,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:10.422Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 135,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:10.423Z",
+      "chunk": ". [ 34%]\n"
+    },
+    {
+      "sequence": 136,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:10.423Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 137,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:10.424Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 138,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:10.425Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 139,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:10.445Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 140,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:10.465Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 141,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:10.470Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 142,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:10.478Z",
+      "chunk": ".."
+    },
+    {
+      "sequence": 143,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:10.479Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 144,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:10.498Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 145,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:10.508Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 146,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:10.697Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 147,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:10.895Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 148,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:11.039Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 149,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:11.276Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 150,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:11.791Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 151,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:11.796Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 152,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:11.955Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 153,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:12.407Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 154,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:12.416Z",
+      "chunk": "......"
+    },
+    {
+      "sequence": 155,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:12.421Z",
+      "chunk": "....."
+    },
+    {
+      "sequence": 156,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:12.428Z",
+      "chunk": "....."
+    },
+    {
+      "sequence": 157,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:12.436Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 158,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:12.486Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 159,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:12.486Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 160,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:12.487Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 161,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:12.487Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 162,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:12.489Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 163,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:12.544Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 164,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:12.545Z",
+      "chunk": ".."
+    },
+    {
+      "sequence": 165,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:12.548Z",
+      "chunk": "....."
+    },
+    {
+      "sequence": 166,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:12.548Z",
+      "chunk": ".."
+    },
+    {
+      "sequence": 167,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:12.550Z",
+      "chunk": "......"
+    },
+    {
+      "sequence": 168,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:12.551Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 169,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:12.553Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 170,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:12.557Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 171,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:12.558Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 172,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:12.981Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 173,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:13.173Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 174,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:13.266Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 175,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:13.299Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 176,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:13.301Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 177,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:13.348Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 178,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:13.594Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 179,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:13.730Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 180,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:13.843Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 181,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:13.854Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 182,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:13.996Z",
+      "chunk": ". [ 51%]\n"
+    },
+    {
+      "sequence": 183,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:14.195Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 184,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:14.202Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 185,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:14.206Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 186,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:14.356Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 187,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:14.458Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 188,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:14.613Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 189,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:14.783Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 190,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:15.001Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 191,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:15.102Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 192,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:15.183Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 193,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:15.277Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 194,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:15.352Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 195,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:15.445Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 196,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:15.537Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 197,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:15.567Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 198,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:15.568Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 199,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:15.569Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 200,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:15.570Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 201,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:15.570Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 202,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:15.570Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 203,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:15.571Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 204,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:15.571Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 205,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:15.572Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 206,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:15.572Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 207,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:15.573Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 208,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:15.573Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 209,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:15.573Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 210,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:15.574Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 211,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:15.574Z",
+      "chunk": ".."
+    },
+    {
+      "sequence": 212,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:15.575Z",
+      "chunk": ".."
+    },
+    {
+      "sequence": 213,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:15.576Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 214,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:15.577Z",
+      "chunk": "..."
+    },
+    {
+      "sequence": 215,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:15.577Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 216,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:15.580Z",
+      "chunk": "...."
+    },
+    {
+      "sequence": 217,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:15.580Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 218,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:15.581Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 219,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:15.581Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 220,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:15.582Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 221,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:15.582Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 222,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:15.583Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 223,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:15.583Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 224,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:15.584Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 225,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:15.584Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 226,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:15.585Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 227,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:15.586Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 228,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:15.587Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 229,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:15.587Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 230,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:15.588Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 231,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:15.588Z",
+      "chunk": ".."
+    },
+    {
+      "sequence": 232,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:15.588Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 233,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:15.589Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 234,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:15.589Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 235,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:15.589Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 236,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:15.590Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 237,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:15.590Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 238,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:15.591Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 239,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:15.593Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 240,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:15.594Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 241,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:15.594Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 242,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:15.595Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 243,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:15.596Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 244,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:15.596Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 245,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:15.597Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 246,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:15.598Z",
+      "chunk": ". [ 68%]\n."
+    },
+    {
+      "sequence": 247,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:15.598Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 248,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:15.602Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 249,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:15.605Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 250,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:15.611Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 251,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:15.615Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 252,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:15.616Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 253,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:15.619Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 254,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:15.625Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 255,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:18.213Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 256,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:22.752Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 257,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:23.664Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 258,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:25.417Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 259,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:25.693Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 260,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:27.392Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 261,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:29.574Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 262,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:29.759Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 263,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:29.761Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 264,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:29.764Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 265,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:29.772Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 266,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:29.775Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 267,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:29.777Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 268,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:29.779Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 269,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:29.782Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 270,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:29.784Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 271,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:29.784Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 272,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:29.786Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 273,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:29.788Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 274,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:29.790Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 275,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:29.798Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 276,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:29.801Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 277,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:29.801Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 278,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:29.802Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 279,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:29.802Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 280,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:29.802Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 281,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:29.803Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 282,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:29.803Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 283,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:29.803Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 284,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:29.803Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 285,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:29.804Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 286,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:29.805Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 287,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:29.845Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 288,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:29.873Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 289,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:29.878Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 290,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:29.907Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 291,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:29.935Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 292,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:29.943Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 293,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:29.951Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 294,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:29.958Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 295,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:29.969Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 296,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:29.978Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 297,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:29.985Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 298,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:29.992Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 299,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:30.000Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 300,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:30.011Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 301,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:30.018Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 302,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:30.025Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 303,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:30.029Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 304,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:30.051Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 305,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:30.057Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 306,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:30.086Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 307,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:30.118Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 308,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:30.150Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 309,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:30.193Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 310,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:30.222Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 311,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:30.252Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 312,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:30.283Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 313,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:30.311Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 314,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:30.340Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 315,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:30.369Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 316,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:30.371Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 317,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:30.407Z",
+      "chunk": ". [ 85%]\n"
+    },
+    {
+      "sequence": 318,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:30.546Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 319,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:30.580Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 320,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:30.618Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 321,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:30.689Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 322,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:30.721Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 323,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:30.788Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 324,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:30.810Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 325,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:30.853Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 326,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:30.888Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 327,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:30.912Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 328,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:30.936Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 329,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:30.961Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 330,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:30.990Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 331,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:31.020Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 332,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:31.043Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 333,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:31.068Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 334,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:31.094Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 335,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:31.117Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 336,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:31.142Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 337,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:31.167Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 338,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:31.192Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 339,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:31.244Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 340,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:31.270Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 341,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:31.309Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 342,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:31.338Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 343,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:31.382Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 344,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:31.415Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 345,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:31.450Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 346,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:31.483Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 347,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:31.522Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 348,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:31.528Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 349,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:31.529Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 350,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:31.557Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 351,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:31.582Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 352,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:31.586Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 353,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:31.591Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 354,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:31.619Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 355,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:31.642Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 356,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:31.667Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 357,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:31.690Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 358,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:31.725Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 359,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:31.756Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 360,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:31.771Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 361,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:31.787Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 362,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:31.811Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 363,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:31.834Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 364,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:31.857Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 365,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:31.881Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 366,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:31.905Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 367,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:31.929Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 368,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:31.953Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 369,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:31.977Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 370,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:32.032Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 371,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:32.079Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 372,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:32.102Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 373,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:32.126Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 374,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:32.150Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 375,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:32.174Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 376,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:32.189Z",
+      "chunk": "."
+    },
+    {
+      "sequence": 377,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:32.190Z",
+      "chunk": "              [100%]"
+    },
+    {
+      "sequence": 378,
+      "type": "command.stdout",
+      "at": "2026-08-27T06:47:32.280Z",
+      "chunk": "\n419 passed in 26.77s\n"
+    },
+    {
+      "sequence": 379,
+      "type": "command.terminal",
+      "at": "2026-08-27T06:47:32.353Z",
+      "result": {
+        "exit_status": 0,
+        "signal": null,
+        "timed_out": false,
+        "canceled": false,
+        "spawn_error": null
+      }
+    },
+    {
+      "sequence": 380,
+      "type": "attempt.terminal",
+      "at": "2026-08-27T06:47:32.353Z",
+      "attempt": {
+        "schema": "specnav.verification.attempt.v1",
+        "id": "attempt-20260827064704-d0c88d2a76efe074",
+        "run_id": "run-20260827064704-d0c88d2a76efe074",
+        "change_id": "docforge-project-format-v1",
+        "case_id": "case-a7-deterministic-docx",
+        "case_snapshot_hash": "e34e5e74c6ac469ee8bce2be6d0b6ce1e772d4e773710b8bc782cc99da337c85",
+        "kind": "initial",
+        "sequence": 1,
+        "runner": "command",
+        "code_sha": "60274f4c7bd0541d0a6346753e68eb7f5f2ae6a6",
+        "test_sha": "8898bb578306334a0f3e9e5723ac9a186ccfb90845268c19e0677fb7df12a193",
+        "scenario_hash": "5206968372d19ed89ec58737416b9d0dad5fc636e238b620b31dce89bc457399",
+        "environment_hash": "e70d297a62bab25e39bb4323fd1636081aac76eff129f315f3d3dbe56c04a1eb",
+        "browser_project": "none",
+        "test_data_snapshot": "e3771af2f61e3826d94b15466e8199aa8d50eb8ac3df1439e557f610cc516cf3",
+        "runtime_version": "2.0.0-alpha.2",
+        "kernel_version": "2.0.0-alpha.2",
+        "status": "passed",
+        "started_at": "2026-08-27T06:47:04.935Z",
+        "completed_at": "2026-08-27T06:47:32.353Z",
+        "exit_status": 0
+      },
+      "artifact_valid": true
+    },
+    {
+      "sequence": 381,
+      "type": "run.terminal",
+      "at": "2026-08-27T06:47:32.353Z",
+      "run": {
+        "schema": "specnav.verification.run.v1",
+        "id": "run-20260827064704-d0c88d2a76efe074",
+        "change_id": "docforge-project-format-v1",
+        "case_snapshot_id": "snapshot-e34e5e74c6ac469ee8bce2be",
+        "case_snapshot_hash": "e34e5e74c6ac469ee8bce2be6d0b6ce1e772d4e773710b8bc782cc99da337c85",
+        "case_ids": [
+          "case-a7-deterministic-docx"
+        ],
+        "code_sha": "60274f4c7bd0541d0a6346753e68eb7f5f2ae6a6",
+        "test_sha": "8898bb578306334a0f3e9e5723ac9a186ccfb90845268c19e0677fb7df12a193",
+        "environment_hash": "e70d297a62bab25e39bb4323fd1636081aac76eff129f315f3d3dbe56c04a1eb",
+        "runtime_version": "2.0.0-alpha.2",
+        "kernel_version": "2.0.0-alpha.2",
+        "generation_id": "generation-3aec0b8644c6c59b7f56111e",
+        "status": "passed",
+        "created_at": "2026-08-27T06:47:04.921Z",
+        "started_at": "2026-08-27T06:47:04.935Z",
+        "completed_at": "2026-08-27T06:47:32.353Z",
+        "kind": "initial",
+        "origin_run_id": null,
+        "parent_run_id": null,
+        "parent_attempt_id": null,
+        "failure_id": null
+      },
+      "artifact_valid": true
+    }
+  ],
+  "blockers": []
+}

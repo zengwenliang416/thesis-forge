@@ -1,0 +1,15 @@
+{
+  "allowed_files": [
+    "openspec/changes/docforge-project-format-v1/verify/v2/case-plan-request.json"
+  ],
+  "denied_files": [],
+  "requires_review_on": [
+    "openspec/changes/docforge-project-format-v1/verify/v2/case-plan-request.json"
+  ],
+  "allowed_operations": {
+    "create": true,
+    "modify": true,
+    "delete": false,
+    "rename": false
+  }
+}

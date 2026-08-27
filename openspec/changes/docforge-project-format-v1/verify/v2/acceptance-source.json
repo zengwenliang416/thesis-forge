@@ -1,0 +1,42 @@
+[
+  {
+    "id": "A1",
+    "statement": "A directory containing docforge.yaml with schema docforge.project.v1 opens through the CLI and desktop workbench."
+  },
+  {
+    "id": "A2",
+    "statement": "A general project using document.md and docforge-standard completes inspect, validate, review, and build without academic metadata."
+  },
+  {
+    "id": "A3",
+    "statement": "An academic project supplies a typed optional academic profile and builds without imposing those fields on general projects."
+  },
+  {
+    "id": "A4",
+    "statement": "Obsolete manifest, command, aggregate, package, BuildReport, and workbench protocol identities are absent or rejected."
+  },
+  {
+    "id": "A5",
+    "statement": "Default source, build, and Review paths use document.md and neutral document output names."
+  },
+  {
+    "id": "A6",
+    "statement": "Project paths reject absolute, remote, traversal, and symlink-escape inputs while accepting safe relative resources."
+  },
+  {
+    "id": "A7",
+    "statement": "The Markdown to ForgeDocument to RenderPlan to DOCX pipeline is deterministic, ordered, cancelable, and atomic."
+  },
+  {
+    "id": "A8",
+    "statement": "CLI, HTTP, Tauri, and frontend fixtures use one versioned DocForge protocol with matching identities."
+  },
+  {
+    "id": "A9",
+    "statement": "The installed macOS workbench uses neutral DocForge terminology and produces a valid Microsoft Word final preview."
+  },
+  {
+    "id": "A10",
+    "statement": "Repository-owned examples, fixtures, active documentation, packaging, and CI use DocForge contracts and neutral filenames."
+  }
+]

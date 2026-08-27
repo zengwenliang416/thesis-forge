@@ -1,0 +1,21 @@
+# command: PYTHONPATH=src .venv/bin/python scripts/verify_desktop_distribution.py --platform macos --bundle-root src-tauri/target/release/bundle
+# exit_status: 1
+# duration_ms: 453
+
+## stdout
+(empty)
+
+## stderr
+Traceback (most recent call last):
+  File "/Volumes/ThesisForgeCI/workspaces/thesis-forge-docforge-verify/scripts/verify_desktop_distribution.py", line 375, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "/Volumes/ThesisForgeCI/workspaces/thesis-forge-docforge-verify/scripts/verify_desktop_distribution.py", line 360, in main
+    "sidecar": verify_sidecar(sidecar),
+               ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Volumes/ThesisForgeCI/workspaces/thesis-forge-docforge-verify/scripts/verify_desktop_distribution.py", line 183, in verify_sidecar
+    validate_sidecar_artifact(sidecar)
+  File "/Volumes/ThesisForgeCI/workspaces/thesis-forge-docforge-verify/scripts/verify_desktop_distribution.py", line 68, in validate_sidecar_artifact
+    raise RuntimeError(f"Missing target-native sidecar: {sidecar}")
+RuntimeError: Missing target-native sidecar: /Volumes/ThesisForgeCI/workspaces/thesis-forge-docforge-verify/src-tauri/binaries/docforge-sidecar-aarch64-apple-darwin
+

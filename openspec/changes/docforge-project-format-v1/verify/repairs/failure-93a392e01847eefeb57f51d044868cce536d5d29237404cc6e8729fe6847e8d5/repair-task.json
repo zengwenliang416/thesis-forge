@@ -1,0 +1,78 @@
+{
+  "schema": "specnav.development.repair-task.v1",
+  "id": "900-verification-repair-b5243fdf2e4c715a",
+  "change_id": "docforge-project-format-v1",
+  "goal": "Repair test_defect for case-a7-deterministic-docx.",
+  "classification": "test_defect",
+  "owner": "development",
+  "status": "requested",
+  "requested_at": "2026-08-27T07:44:51.134Z",
+  "packet_path": "development/tasks/900-verification-repair-b5243fdf2e4c715a",
+  "scope": {
+    "owner": "development",
+    "source": "approved-development-scope-lock",
+    "allowed_files": [
+      "openspec/changes/docforge-project-format-v1/verify/v2/case-plan-request.json"
+    ],
+    "denied_files": [],
+    "requires_review_on": [
+      "openspec/changes/docforge-project-format-v1/verify/v2/case-plan-request.json"
+    ],
+    "allowed_operations": {
+      "create": true,
+      "modify": true,
+      "delete": false,
+      "rename": false
+    },
+    "digest": "ea64bc46cbf2af7e076e1803825244630d4ab3180294b5ea21346661eb7ac38a"
+  },
+  "packet_artifacts": [
+    "brief.md",
+    "context.json",
+    "report.md",
+    "spec-review.md",
+    "quality-review.md"
+  ],
+  "required_reviews": [
+    "spec-review",
+    "quality-review"
+  ],
+  "ownership": {
+    "evidence": "verification",
+    "closure": "verification",
+    "repair": "development",
+    "reviews": "development",
+    "transitions": "core",
+    "break_loop": "core"
+  },
+  "frozen_failure": {
+    "failure_packet_id": "failure-93a392e01847eefeb57f51d044868cce536d5d29237404cc6e8729fe6847e8d5",
+    "failure_packet_digest": "62090c2b44e84b6f282ed5ce97af8370b549e294723e861c26f570a588a4b08d",
+    "run_id": "run-20260827064704-d0c88d2a76efe074",
+    "case_id": "case-a7-deterministic-docx",
+    "attempt_id": "attempt-20260827064704-d0c88d2a76efe074",
+    "evidence_ids": [
+      "evidence-8eea8974843b75768840990f61c402738ff52a524b325a8c92b6dff8a9dc509a"
+    ],
+    "evidence_content": [
+      {
+        "id": "evidence-8eea8974843b75768840990f61c402738ff52a524b325a8c92b6dff8a9dc509a",
+        "digest": "dc0caef628a3836cecfdf6fee87fe011766afbc66c962ed6d0a033de3c49cc45"
+      }
+    ],
+    "reading_ids": [
+      "reading-13a0376b60a9ba44598904feb9305315cf4bfb876e4a048dea48836ed9b7d282",
+      "reading-a46d47d76d8e82ee6ec6516b8da178719bb6d29ff2f7086a7fa5b18153566b54",
+      "reading-c5a5815c6dcdeda58f36813b1124a7a61419fc82ea87a097744e0cfdc8dbf82b",
+      "reading-cf4a111d2e7e6930aae65bde79224f480ae5cc57babecef4f5f9cbd9119f479f",
+      "reading-e39873cf71f32dd23bd75907ca4ea9b7793fe3fa9f4b7cabadaae510801ea9fa",
+      "reading-ffec365deebd9c2a671bfc56b1f3d3a78a54422ac8202f45f7702e18b4dfae9b"
+    ],
+    "failed_assertion_ids": [
+      "a7-deterministic-pipeline"
+    ],
+    "summary": "The approved command runner omitted the assertion protocol required to produce structured assertion_result evidence.",
+    "root_cause": "The case contract declared env_keys=[], so the Runtime did not inject SPECNAV_VERIFICATION_ASSERTION_IDS or SPECNAV_VERIFICATION_ASSERTION_RESULT_FILE and no authoritative oracle result was emitted.",
+    "frozen_at": "2026-08-27T06:47:33.906Z"
+  }
+}

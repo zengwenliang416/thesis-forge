@@ -1,0 +1,268 @@
+{
+  "schema_version": 1,
+  "change_id": "docforge-project-format-v1",
+  "snapshot_id": "snapshot-e34e5e74c6ac469ee8bce2be",
+  "snapshot_hash": "e34e5e74c6ac469ee8bce2be6d0b6ce1e772d4e773710b8bc782cc99da337c85",
+  "cases": [
+    {
+      "case_id": "case-a1-project-open",
+      "acceptance_refs": [
+        "A1"
+      ],
+      "domains": {
+        "facticity": [
+          "Execute assertion a1-project-open with the approved command runner and retain content-addressed evidence."
+        ],
+        "static": [
+          "Execute assertion a1-project-open with the approved command runner and retain content-addressed evidence."
+        ],
+        "unit": [
+          "Execute assertion a1-project-open with the approved command runner and retain content-addressed evidence."
+        ],
+        "redteam": [
+          "Execute assertion a1-project-open with the approved command runner and retain content-addressed evidence."
+        ],
+        "e2e": [
+          "Execute assertion a1-project-open with the approved command runner and retain content-addressed evidence."
+        ],
+        "sensory": [
+          "Execute assertion a1-project-open with the approved command runner and retain content-addressed evidence."
+        ]
+      }
+    },
+    {
+      "case_id": "case-a10-repository-delivery",
+      "acceptance_refs": [
+        "A10"
+      ],
+      "domains": {
+        "facticity": [
+          "Execute assertion a10-repository-clean with the approved command runner and retain content-addressed evidence."
+        ],
+        "static": [
+          "Execute assertion a10-repository-clean with the approved command runner and retain content-addressed evidence."
+        ],
+        "unit": [
+          "Execute assertion a10-repository-clean with the approved command runner and retain content-addressed evidence."
+        ],
+        "redteam": [
+          "Execute assertion a10-repository-clean with the approved command runner and retain content-addressed evidence."
+        ],
+        "e2e": [
+          "Execute assertion a10-repository-clean with the approved command runner and retain content-addressed evidence."
+        ],
+        "sensory": [
+          "Execute assertion a10-repository-clean with the approved command runner and retain content-addressed evidence."
+        ]
+      }
+    },
+    {
+      "case_id": "case-a2-general-project",
+      "acceptance_refs": [
+        "A2"
+      ],
+      "domains": {
+        "facticity": [
+          "Execute assertion a2-general-flow with the approved command runner and retain content-addressed evidence."
+        ],
+        "static": [
+          "Execute assertion a2-general-flow with the approved command runner and retain content-addressed evidence."
+        ],
+        "unit": [
+          "Execute assertion a2-general-flow with the approved command runner and retain content-addressed evidence."
+        ],
+        "redteam": [
+          "Execute assertion a2-general-flow with the approved command runner and retain content-addressed evidence."
+        ],
+        "e2e": [
+          "Execute assertion a2-general-flow with the approved command runner and retain content-addressed evidence."
+        ],
+        "sensory": [
+          "Execute assertion a2-general-flow with the approved command runner and retain content-addressed evidence."
+        ]
+      }
+    },
+    {
+      "case_id": "case-a3-academic-profile",
+      "acceptance_refs": [
+        "A3"
+      ],
+      "domains": {
+        "facticity": [
+          "Execute assertion a3-profile-isolation with the approved command runner and retain content-addressed evidence."
+        ],
+        "static": [
+          "Execute assertion a3-profile-isolation with the approved command runner and retain content-addressed evidence."
+        ],
+        "unit": [
+          "Execute assertion a3-profile-isolation with the approved command runner and retain content-addressed evidence."
+        ],
+        "redteam": [
+          "Execute assertion a3-profile-isolation with the approved command runner and retain content-addressed evidence."
+        ],
+        "e2e": [
+          "Execute assertion a3-profile-isolation with the approved command runner and retain content-addressed evidence."
+        ],
+        "sensory": [
+          "Execute assertion a3-profile-isolation with the approved command runner and retain content-addressed evidence."
+        ]
+      }
+    },
+    {
+      "case_id": "case-a4-obsolete-contracts",
+      "acceptance_refs": [
+        "A4"
+      ],
+      "domains": {
+        "facticity": [
+          "Execute assertion a4-no-obsolete-contract with the approved command runner and retain content-addressed evidence."
+        ],
+        "static": [
+          "Execute assertion a4-no-obsolete-contract with the approved command runner and retain content-addressed evidence."
+        ],
+        "unit": [
+          "Execute assertion a4-no-obsolete-contract with the approved command runner and retain content-addressed evidence."
+        ],
+        "redteam": [
+          "Execute assertion a4-no-obsolete-contract with the approved command runner and retain content-addressed evidence."
+        ],
+        "e2e": [
+          "Execute assertion a4-no-obsolete-contract with the approved command runner and retain content-addressed evidence."
+        ],
+        "sensory": [
+          "Execute assertion a4-no-obsolete-contract with the approved command runner and retain content-addressed evidence."
+        ]
+      }
+    },
+    {
+      "case_id": "case-a5-neutral-default-paths",
+      "acceptance_refs": [
+        "A5"
+      ],
+      "domains": {
+        "facticity": [
+          "Execute assertion a5-default-paths with the approved command runner and retain content-addressed evidence."
+        ],
+        "static": [
+          "Execute assertion a5-default-paths with the approved command runner and retain content-addressed evidence."
+        ],
+        "unit": [
+          "Execute assertion a5-default-paths with the approved command runner and retain content-addressed evidence."
+        ],
+        "redteam": [
+          "Execute assertion a5-default-paths with the approved command runner and retain content-addressed evidence."
+        ],
+        "e2e": [
+          "Execute assertion a5-default-paths with the approved command runner and retain content-addressed evidence."
+        ],
+        "sensory": [
+          "Execute assertion a5-default-paths with the approved command runner and retain content-addressed evidence."
+        ]
+      }
+    },
+    {
+      "case_id": "case-a6-path-security",
+      "acceptance_refs": [
+        "A6"
+      ],
+      "domains": {
+        "facticity": [
+          "Execute assertion a6-secure-paths with the approved command runner and retain content-addressed evidence."
+        ],
+        "static": [
+          "Execute assertion a6-secure-paths with the approved command runner and retain content-addressed evidence."
+        ],
+        "unit": [
+          "Execute assertion a6-secure-paths with the approved command runner and retain content-addressed evidence."
+        ],
+        "redteam": [
+          "Execute assertion a6-secure-paths with the approved command runner and retain content-addressed evidence."
+        ],
+        "e2e": [
+          "Execute assertion a6-secure-paths with the approved command runner and retain content-addressed evidence."
+        ],
+        "sensory": [
+          "Execute assertion a6-secure-paths with the approved command runner and retain content-addressed evidence."
+        ]
+      }
+    },
+    {
+      "case_id": "case-a7-deterministic-docx",
+      "acceptance_refs": [
+        "A7"
+      ],
+      "domains": {
+        "facticity": [
+          "Execute assertion a7-deterministic-pipeline with the approved command runner and retain content-addressed evidence."
+        ],
+        "static": [
+          "Execute assertion a7-deterministic-pipeline with the approved command runner and retain content-addressed evidence."
+        ],
+        "unit": [
+          "Execute assertion a7-deterministic-pipeline with the approved command runner and retain content-addressed evidence."
+        ],
+        "redteam": [
+          "Execute assertion a7-deterministic-pipeline with the approved command runner and retain content-addressed evidence."
+        ],
+        "e2e": [
+          "Execute assertion a7-deterministic-pipeline with the approved command runner and retain content-addressed evidence."
+        ],
+        "sensory": [
+          "Execute assertion a7-deterministic-pipeline with the approved command runner and retain content-addressed evidence."
+        ]
+      }
+    },
+    {
+      "case_id": "case-a8-runtime-parity",
+      "acceptance_refs": [
+        "A8"
+      ],
+      "domains": {
+        "facticity": [
+          "Execute assertion a8-protocol-parity with the approved command runner and retain content-addressed evidence."
+        ],
+        "static": [
+          "Execute assertion a8-protocol-parity with the approved command runner and retain content-addressed evidence."
+        ],
+        "unit": [
+          "Execute assertion a8-protocol-parity with the approved command runner and retain content-addressed evidence."
+        ],
+        "redteam": [
+          "Execute assertion a8-protocol-parity with the approved command runner and retain content-addressed evidence."
+        ],
+        "e2e": [
+          "Execute assertion a8-protocol-parity with the approved command runner and retain content-addressed evidence."
+        ],
+        "sensory": [
+          "Execute assertion a8-protocol-parity with the approved command runner and retain content-addressed evidence."
+        ]
+      }
+    },
+    {
+      "case_id": "case-a9-installed-office",
+      "acceptance_refs": [
+        "A9"
+      ],
+      "domains": {
+        "facticity": [
+          "Execute assertion a9-installed-word-preview with the approved command runner and retain content-addressed evidence."
+        ],
+        "static": [
+          "Execute assertion a9-installed-word-preview with the approved command runner and retain content-addressed evidence."
+        ],
+        "unit": [
+          "Execute assertion a9-installed-word-preview with the approved command runner and retain content-addressed evidence."
+        ],
+        "redteam": [
+          "Execute assertion a9-installed-word-preview with the approved command runner and retain content-addressed evidence."
+        ],
+        "e2e": [
+          "Execute assertion a9-installed-word-preview with the approved command runner and retain content-addressed evidence."
+        ],
+        "sensory": [
+          "Execute assertion a9-installed-word-preview with the approved command runner and retain content-addressed evidence."
+        ]
+      }
+    }
+  ]
+}

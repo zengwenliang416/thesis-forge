@@ -50,3 +50,10 @@ approved
 
 - None. The final independent re-review approved the current checkout with no
   residual finding.
+
+## Acceptance Assertions Verified
+
+- `A4`: ForgeDocument is the sole public semantic aggregate without an obsolete
+  compatibility alias.
+- `A7`: parser, validation, compiler, RenderPlan, presentation, and renderer
+  consumers pass the generic-domain contract.

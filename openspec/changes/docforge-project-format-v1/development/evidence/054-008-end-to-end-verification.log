@@ -1,0 +1,10 @@
+# command: .venv/bin/ruff check src tests scripts qa
+# exit_status: 0
+# duration_ms: 212
+
+## stdout
+All checks passed!
+
+
+## stderr
+(empty)

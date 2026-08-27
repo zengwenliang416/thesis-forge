@@ -21,14 +21,14 @@
     "openspec/changes/docforge-project-format-v1/specs/desktop-workbench/spec.md"
   ],
   "allowed_files": [
-    "src",
-    "protocol",
-    "frontend/src/transport",
-    "frontend/src/state",
-    "frontend/e2e",
-    "src-tauri",
-    "tests/adapters",
-    "tests/application",
+    "src/**",
+    "protocol/**",
+    "frontend/src/transport/**",
+    "frontend/src/state/**",
+    "frontend/e2e/**",
+    "src-tauri/**",
+    "tests/adapters/**",
+    "tests/application/**",
     "tests/test_adapters.py",
     "openspec/changes/docforge-project-format-v1/development/tasks/004-runtime-protocol",
     "openspec/changes/docforge-project-format-v1/development"

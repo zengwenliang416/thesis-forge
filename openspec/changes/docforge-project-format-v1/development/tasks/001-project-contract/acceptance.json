@@ -1,0 +1,470 @@
+{
+  "schema": "specnav.task-acceptance-evidence.v2",
+  "generated_by": "specnav-development/task-acceptance-evidence",
+  "task_id": "001-project-contract",
+  "generated_at": "2026-08-27T04:49:42.521Z",
+  "recorded_at": "2026-08-27T04:26:20.777Z",
+  "status": "approved",
+  "reviewed_git_head": "26344ca4489d60715550f14b774b22ddc4cc491b",
+  "reviewed_git_tree": "2cb10ec125ef48701d0afd41378c1a7bf6770cc9",
+  "implementation_scope": {
+    "included_patterns": [
+      "examples/**",
+      "openspec/changes/docforge-project-format-v1/development",
+      "src/docforge/application/**",
+      "src/docforge/project/**",
+      "tests/application/**",
+      "tests/fixtures/**",
+      "tests/project/**"
+    ],
+    "entries": [
+      {
+        "path": "examples/bachelor-thesis/docforge.yaml",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "212e11c478d9c004c97b09daab9b607a62cd8f74"
+      },
+      {
+        "path": "examples/bachelor-thesis/document.md",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "df949267b01a29239c67b7e34f4720e637aec532"
+      },
+      {
+        "path": "examples/bachelor-thesis/images/.gitkeep",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+      },
+      {
+        "path": "examples/bachelor-thesis/images/acceptance-architecture.png",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "92f0a3d44591504481b0bb7c5356d111e551678f"
+      },
+      {
+        "path": "examples/bachelor-thesis/images/acceptance-architecture.svg",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "2027eceaf0d7f4cbeb6d2390b11af9c644382bc7"
+      },
+      {
+        "path": "examples/bachelor-thesis/references.bib",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "ee28c2c237b362193b976f12da7f0e7d2ab537d8"
+      },
+      {
+        "path": "examples/bachelor-thesis/thesis-full-template.md",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "76bca6a5fa36d6571db8a4f51f3e8fa18285a890"
+      },
+      {
+        "path": "examples/complete-thesis/docforge.yaml",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "80b0b2b0319dc7cd80db7796e68f92a02bad614f"
+      },
+      {
+        "path": "examples/complete-thesis/document.md",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "3caf92825c4da4a3da06c0cac255983680c228bf"
+      },
+      {
+        "path": "examples/complete-thesis/images/acceptance-architecture.png",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "92f0a3d44591504481b0bb7c5356d111e551678f"
+      },
+      {
+        "path": "examples/complete-thesis/references.bib",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "ee28c2c237b362193b976f12da7f0e7d2ab537d8"
+      },
+      {
+        "path": "examples/v2-complete-thesis.zip",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "44790630af16bafcab91e161633727e740ff4984"
+      },
+      {
+        "path": "examples/v2-complete-thesis/assets/architecture.png",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "92f0a3d44591504481b0bb7c5356d111e551678f"
+      },
+      {
+        "path": "examples/v2-complete-thesis/docforge.yaml",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "38648775f5d2d8b658b3f4c337b20d988e641bfc"
+      },
+      {
+        "path": "examples/v2-complete-thesis/document.md",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "d570b3b1132639c22cd1a5c705d8e25dc3f3308c"
+      },
+      {
+        "path": "examples/v2-complete-thesis/README.md",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "e7d97dcca95d1392fb21b0911247e5b8d5feacf1"
+      },
+      {
+        "path": "examples/v2-complete-thesis/references.bib",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "92ac4b4251a45668c89910d0c098d16c3d6267e9"
+      },
+      {
+        "path": "examples/v2-complete-thesis/review/document.review-map.json",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "4866632b52bdd0eb365a991548747746d41a6764"
+      },
+      {
+        "path": "examples/v2-complete-thesis/review/document.review.md",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "21aedcda6ef6abe50c2c48398137489a7f087bfc"
+      },
+      {
+        "path": "examples/v2-complete-thesis/templates/schools/example-university/2026.yaml",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "8eb87908c74bd2c17a44fb27a268a20588007d2a"
+      },
+      {
+        "path": "examples/v2-format-corpus/assets/architecture.png",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "92f0a3d44591504481b0bb7c5356d111e551678f"
+      },
+      {
+        "path": "examples/v2-format-corpus/assets/model.png",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "b486911e54c253c0d216b7b1fac3347147738266"
+      },
+      {
+        "path": "examples/v2-format-corpus/coverage-matrix.md",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "12e8d83f3b992243d3159550e9dcf97e13b9e8d9"
+      },
+      {
+        "path": "examples/v2-format-corpus/docforge.yaml",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "96cbecde808e22a6efac98fb35c682ad5481029a"
+      },
+      {
+        "path": "examples/v2-format-corpus/document.md",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "296b57d34d2e39027a4f38460b76e2054ec525ff"
+      },
+      {
+        "path": "examples/v2-format-corpus/README.md",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "256a10b489c4a5f2bfeadef313ed5bee04aeb5fd"
+      },
+      {
+        "path": "examples/v2-format-corpus/references.bib",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "e9e34671534b4389ece4df33e7b19ee86ab9e1e1"
+      },
+      {
+        "path": "src/docforge/application/__init__.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "b00fce7d59cae119a9c9d13781bbc7488ddcacfc"
+      },
+      {
+        "path": "src/docforge/application/contracts.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "5a926416454c6510e24c3e73d22476dfbfdac2a9"
+      },
+      {
+        "path": "src/docforge/application/office_refresh.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "60e68a7156b3ba9447bdae6c58991d74e1ae0df2"
+      },
+      {
+        "path": "src/docforge/application/output.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "549425c8fbe40822d7dfafaeae2305bbfbc497c6"
+      },
+      {
+        "path": "src/docforge/application/pdf_preview.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "5a8a6bdc6b07890b8a9248af1f3406ca7c97e777"
+      },
+      {
+        "path": "src/docforge/application/services.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "de81376a845fbe66b0c98a32995727090885f10e"
+      },
+      {
+        "path": "src/docforge/project/__init__.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "27e7e2d21d4d631670a4d1cd1be470183db6ebd8"
+      },
+      {
+        "path": "src/docforge/project/constants.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "9b34e3885005e08da2f180cbafe22fd2c070ac6d"
+      },
+      {
+        "path": "src/docforge/project/loader.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "f357c8eb67c3e7637efd98f6bf3c0469d00db88b"
+      },
+      {
+        "path": "src/docforge/project/model.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "51a8fa53c1f0341869003cffa3b7eb0a0f40523e"
+      },
+      {
+        "path": "src/docforge/project/paths.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "d9587379edf0642431c21585c05ba699280c98ee"
+      },
+      {
+        "path": "tests/application/test_build_report_contract.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "a2ea34e45e33d2508a366ce248eb83fc00306f4a"
+      },
+      {
+        "path": "tests/application/test_build_stage_lifecycle.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "54eceeb0aa3c0e21cb92639efeeb5d4a89b3558d"
+      },
+      {
+        "path": "tests/application/test_project_request_contract.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "7b8c8e426bf0f380d0e30c82e3f3da4a5126287c"
+      },
+      {
+        "path": "tests/application/test_project_services.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "a6175ad1c0222bcabea793466d5ce42e9546f855"
+      },
+      {
+        "path": "tests/fixtures/bibliography/gbt7714-2025-corpus.bib",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "d957fa01ba66ca0680d1310c4eb8f7719e18e38c"
+      },
+      {
+        "path": "tests/fixtures/bibliography/gbt7714-2025-corpus.json",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "44d20f178b4459abb7c028d8fb1980d891f418e7"
+      },
+      {
+        "path": "tests/fixtures/bibliography/gbt7714-v1.bib",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "371038509de88db307d2c8a418790c8a6bfa2867"
+      },
+      {
+        "path": "tests/fixtures/bibliography/gbt7714-v1.json",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "6fcf2b0bbf98b2972e674b854a1262d6971b1606"
+      },
+      {
+        "path": "tests/fixtures/diagnostics-zh-cn-v1.json",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "ec2fd8ecaa2d0cce63c489f9422f36c660c5965f"
+      },
+      {
+        "path": "tests/fixtures/docforge-academic/docforge.yaml",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "27802316d8d28a46bf57cee92759d4169d57fed0"
+      },
+      {
+        "path": "tests/fixtures/docforge-academic/document.md",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "5e2a3a4a3024296605118e099c024dfd47c01211"
+      },
+      {
+        "path": "tests/fixtures/docforge-general/docforge.yaml",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "e251e436ff148db6006b17309b32fe7208a16437"
+      },
+      {
+        "path": "tests/fixtures/docforge-general/document.md",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "9d6c971b0f8b26c1d596f149f8881ea0a4400005"
+      },
+      {
+        "path": "tests/fixtures/legacy-project/thesis.md",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "9fcc81af3f104555a5c61f7ffcef63fde4008611"
+      },
+      {
+        "path": "tests/fixtures/preview-workbench-v1.json",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "1363502f5f9d68a83bc78699452c02243962bbff"
+      },
+      {
+        "path": "tests/fixtures/v2-project/assets/model.png",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "b486911e54c253c0d216b7b1fac3347147738266"
+      },
+      {
+        "path": "tests/fixtures/v2-project/docforge.yaml",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "121e81ec03b081e479b83d4d898dfdeb8f88d8df"
+      },
+      {
+        "path": "tests/fixtures/v2-project/document.md",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "32286cc51dda05dfac39409ee0cefdc330ac1854"
+      },
+      {
+        "path": "tests/fixtures/v2-project/references.bib",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "92ac4b4251a45668c89910d0c098d16c3d6267e9"
+      },
+      {
+        "path": "tests/fixtures/workspace-state-v1.json",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "102796dc0b7bf029e12342279a2c43a059ebf883"
+      },
+      {
+        "path": "tests/project/test_manifest_loader.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "dcc9d2ddf59df0b962ab4604c61bbc03fdb1da22"
+      },
+      {
+        "path": "tests/project/test_manifest_model.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "9e3e143d399a064d69fa83307f711a4690039fa7"
+      },
+      {
+        "path": "tests/project/test_project_paths.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "c9790f92dfad50ecd7a3ddc25e6223d3bb2451aa"
+      }
+    ],
+    "sha256": "7ffef693667bedbcd07372935f41c9927f1f880624def3973cf69a0e0ae5e305"
+  },
+  "artifacts": {
+    "context": {
+      "path": "development/tasks/001-project-contract/context.json",
+      "sha256": "62a29814309bfb722600b62b46cee45afba7438d1077f0cbfebbebc5c68ffb21"
+    },
+    "report": {
+      "path": "development/tasks/001-project-contract/report.md",
+      "sha256": "d8ddafcb260f65ff647f77a56a4dfa509ae7efc9c4ef641ead1507f4be163bf9",
+      "status": "DONE"
+    },
+    "spec_review": {
+      "path": "development/tasks/001-project-contract/spec-review.md",
+      "sha256": "56a071eb7d0a926f7c9c8aa0c1eae341a602972ce37c8a0200d3515eb1dba4a7",
+      "verdict": "approved"
+    },
+    "quality_review": {
+      "path": "development/tasks/001-project-contract/quality-review.md",
+      "sha256": "84e6c04416b3b07772535a80b1072ce09fa99321e660015325457da428d53e9f",
+      "verdict": "approved"
+    }
+  },
+  "test_runs": [
+    {
+      "id": "receipt-4b2df473b45552aea02a7d91d3296565f6c74cc8c4477da85471749c0b691350",
+      "command": ".venv/bin/ruff check src/docforge/project tests/project tests/application/test_project_services.py",
+      "assertion_ids": [
+        "A5",
+        "A6"
+      ],
+      "recorded_at": "2026-08-27T04:26:20.777Z",
+      "validation_receipt_sha256": "cdb4de52db23cc40284d6f151e59b058ac5ce08d036ea22ac01b82a17897e12f",
+      "evidence_log": {
+        "path": "development/evidence/029-001-project-contract.log",
+        "sha256": "a892e30c37745973929e387ebf60c6ab30982eeef796d8fbc87eb60870638348",
+        "size": 195
+      }
+    },
+    {
+      "id": "receipt-9844424f4964a3e8714d5c8eb7af0049064872a7861b20a4f7850f24906fa098",
+      "command": "PYTHONPATH=src .venv/bin/python -m pytest tests/project tests/application/test_project_services.py -q",
+      "assertion_ids": [
+        "A5",
+        "A6"
+      ],
+      "recorded_at": "2026-08-27T04:26:20.625Z",
+      "validation_receipt_sha256": "2bcf90f0fb01dc1d85f08d6f1c12c30ae49804e4388a6d1c53bc019e0ed6f933",
+      "evidence_log": {
+        "path": "development/evidence/028-001-project-contract.log",
+        "sha256": "f2390cec21cf2ffe3af26d658825881ad8c71247842baeff15d57451f58db36f",
+        "size": 361
+      }
+    }
+  ],
+  "assertions": [
+    {
+      "id": "A5",
+      "parent_id": "A5",
+      "status": "passing",
+      "test_run_ids": [
+        "receipt-4b2df473b45552aea02a7d91d3296565f6c74cc8c4477da85471749c0b691350",
+        "receipt-9844424f4964a3e8714d5c8eb7af0049064872a7861b20a4f7850f24906fa098"
+      ],
+      "direct_evidence": [],
+      "reused_evidence": [],
+      "claim": "Default source, build, and review paths are document.md, build/document.docx, review/document.review.md, and review/document.review-map.json."
+    },
+    {
+      "id": "A6",
+      "parent_id": "A6",
+      "status": "passing",
+      "test_run_ids": [
+        "receipt-4b2df473b45552aea02a7d91d3296565f6c74cc8c4477da85471749c0b691350",
+        "receipt-9844424f4964a3e8714d5c8eb7af0049064872a7861b20a4f7850f24906fa098"
+      ],
+      "direct_evidence": [],
+      "reused_evidence": [],
+      "claim": "Project paths reject absolute, remote, traversal, and symlink-escape inputs while accepting safe project-relative resources."
+    }
+  ],
+  "fallback_used": false
+}

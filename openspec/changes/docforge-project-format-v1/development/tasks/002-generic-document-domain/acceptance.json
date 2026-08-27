@@ -1,0 +1,987 @@
+{
+  "schema": "specnav.task-acceptance-evidence.v2",
+  "generated_by": "specnav-development/task-acceptance-evidence",
+  "task_id": "002-generic-document-domain",
+  "generated_at": "2026-08-27T04:49:42.569Z",
+  "recorded_at": "2026-08-27T04:26:35.679Z",
+  "status": "approved",
+  "reviewed_git_head": "26344ca4489d60715550f14b774b22ddc4cc491b",
+  "reviewed_git_tree": "2cb10ec125ef48701d0afd41378c1a7bf6770cc9",
+  "implementation_scope": {
+    "included_patterns": [
+      "openspec/changes/docforge-project-format-v1/development",
+      "qa/tools/parser_diff.py",
+      "src/docforge/application/**",
+      "src/docforge/bibliography/**",
+      "src/docforge/compiler/**",
+      "src/docforge/core/**",
+      "src/docforge/presentation/**",
+      "tests/**"
+    ],
+    "entries": [
+      {
+        "path": "qa/tools/parser_diff.py",
+        "mode": "100755",
+        "type": "blob",
+        "object_id": "09a3f74e79a5ea2db1f6affc2b7c4438834afaee"
+      },
+      {
+        "path": "src/docforge/application/__init__.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "b00fce7d59cae119a9c9d13781bbc7488ddcacfc"
+      },
+      {
+        "path": "src/docforge/application/contracts.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "5a926416454c6510e24c3e73d22476dfbfdac2a9"
+      },
+      {
+        "path": "src/docforge/application/office_refresh.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "60e68a7156b3ba9447bdae6c58991d74e1ae0df2"
+      },
+      {
+        "path": "src/docforge/application/output.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "549425c8fbe40822d7dfafaeae2305bbfbc497c6"
+      },
+      {
+        "path": "src/docforge/application/pdf_preview.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "5a8a6bdc6b07890b8a9248af1f3406ca7c97e777"
+      },
+      {
+        "path": "src/docforge/application/services.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "de81376a845fbe66b0c98a32995727090885f10e"
+      },
+      {
+        "path": "src/docforge/bibliography/__init__.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "1bece295509d68f74391caaf291490ccf89e5091"
+      },
+      {
+        "path": "src/docforge/bibliography/bibtex.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "ba79f7fd78a446c17999ed12080ab10874ea911a"
+      },
+      {
+        "path": "src/docforge/bibliography/engine.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "b72726d86e68f3d5166e8e0fb42c451170eace49"
+      },
+      {
+        "path": "src/docforge/bibliography/formatter.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "1e74574f4beb603f667884e41cf0791933438de4"
+      },
+      {
+        "path": "src/docforge/bibliography/pandoc_provider.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "b958c846d1dbf73b1a9cdca15d456bb186a4e9e5"
+      },
+      {
+        "path": "src/docforge/bibliography/provider.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "221ae7e4e4cd14cbfa25f9fbee345c570561de57"
+      },
+      {
+        "path": "src/docforge/core/__init__.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "842038f950a896070ec75747fd5047645073091f"
+      },
+      {
+        "path": "src/docforge/core/compiler.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "2744ef05760372cfa7f573bad23dafb561bfcf37"
+      },
+      {
+        "path": "src/docforge/core/ids.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "d982023c0ba50cf481492bfe686fa2f462b5a78f"
+      },
+      {
+        "path": "src/docforge/core/index.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "fa4250db66375ecff5c5a45a21dbac87416c76a6"
+      },
+      {
+        "path": "src/docforge/core/math.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "630fc1b33a395ff2326345499555e65c1aacf11e"
+      },
+      {
+        "path": "src/docforge/core/model.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "2c5b7b7332d2f561422e42663ea3013ccb626751"
+      },
+      {
+        "path": "src/docforge/core/parser_backend.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "d0f79bb03375cd2b13222a9153d87697bbd96561"
+      },
+      {
+        "path": "src/docforge/core/parser_markdown_it.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "4e2cd4ab065383ab298a85c9ac36cce065d6725d"
+      },
+      {
+        "path": "src/docforge/core/parser_support.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "7f3fc336fcf5fece19b726666c5042a7e1e13fd8"
+      },
+      {
+        "path": "src/docforge/core/render_plan.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "8d8080b8d8df54a45c944cbf851f7ef404f5c0b5"
+      },
+      {
+        "path": "src/docforge/core/symbols.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "7108e98e414f3766945e528c6269f42c11e0ffb2"
+      },
+      {
+        "path": "src/docforge/core/validator.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "8d7b0e9b170e2d40ac4e715c836b75963b91f1d5"
+      },
+      {
+        "path": "src/docforge/presentation/__init__.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "480555f070b5a67cbcebfd7e328026a962d4ec72"
+      },
+      {
+        "path": "src/docforge/presentation/diagnostics.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "46161dc51852bd374baa90d40b832d7fb7279f70"
+      },
+      {
+        "path": "src/docforge/presentation/metadata.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "4dcf75eff25aa1336e536e88109e85360b62ebbe"
+      },
+      {
+        "path": "src/docforge/presentation/preview.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "60e70c3e857dde3542eaad5b97383032eac72c26"
+      },
+      {
+        "path": "src/docforge/presentation/review_markdown.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "d4808c1b6887c8f77eb470f50bba9aa3dc25016d"
+      },
+      {
+        "path": "src/docforge/presentation/review.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "75e43b8cbb140471f90b54e24a123ece2aaf1809"
+      },
+      {
+        "path": "tests/acceptance/test_v2_format_corpus.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "5f5806e0bfcc00a19573db40fa104e907f14b965"
+      },
+      {
+        "path": "tests/adapters/test_build_report_dto.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "866772b012b8a6d2fab9fcc8172e3b850ae9d845"
+      },
+      {
+        "path": "tests/adapters/test_build_report_events.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "c7a6554c09fcd6d059007a1483aa2415ec4f3ea5"
+      },
+      {
+        "path": "tests/adapters/test_project_dto.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "f180c163390e0c93b9ee78050147043a0d0679a6"
+      },
+      {
+        "path": "tests/application/test_build_report_contract.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "a2ea34e45e33d2508a366ce248eb83fc00306f4a"
+      },
+      {
+        "path": "tests/application/test_build_stage_lifecycle.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "54eceeb0aa3c0e21cb92639efeeb5d4a89b3558d"
+      },
+      {
+        "path": "tests/application/test_project_request_contract.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "7b8c8e426bf0f380d0e30c82e3f3da4a5126287c"
+      },
+      {
+        "path": "tests/application/test_project_services.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "a6175ad1c0222bcabea793466d5ce42e9546f855"
+      },
+      {
+        "path": "tests/architecture/test_no_legacy_parser.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "ac04e7f0babb62bf3589e984e66f247c8dd517bc"
+      },
+      {
+        "path": "tests/cli/test_json_reports.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "ca42ffe6127319467eaa0c6141d9b9d70dc86c5a"
+      },
+      {
+        "path": "tests/cli/test_project_commands.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "61eafa5d29e8ccf2310eb3169131cccddb5adbcb"
+      },
+      {
+        "path": "tests/cli/test_review_command.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "c50e09bf0b6fda99dc33dbf137df90e89bacd96a"
+      },
+      {
+        "path": "tests/compiler/test_template_profiles.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "70069d0b2d1aa8cd895a14b4154b10c1f217b4ef"
+      },
+      {
+        "path": "tests/conftest.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "d8cc29f1645ecfca45d94ff5747a4f654f712cb6"
+      },
+      {
+        "path": "tests/contracts/test_review_marker_leaks.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "ce5305e8c81c670aa915276ad0e19168b372c4f5"
+      },
+      {
+        "path": "tests/core/test_bibliography_region.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "645e3008a392f22fb9bf5e8c6addea517327c6ae"
+      },
+      {
+        "path": "tests/core/test_block_model.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "a764f6470af9edb9174192aa5a5dc2bac68e58b2"
+      },
+      {
+        "path": "tests/core/test_caption_runs_model.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "b5f863339005a95a5f7fa88c377ceaf091dead8e"
+      },
+      {
+        "path": "tests/core/test_diagnostics.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "1cffe945f7df7b9222952077369dc31c8fbfb120"
+      },
+      {
+        "path": "tests/core/test_document_index.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "8642207652a375d07266052606ef57a57c23c1cc"
+      },
+      {
+        "path": "tests/core/test_document_object_model.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "6122e7fdf75a072f2fe9cf34d99fee1b63848fe1"
+      },
+      {
+        "path": "tests/core/test_figure_caption_runs.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "bbab5cc35e7d86b45cad02920a554ecc4dc1cc96"
+      },
+      {
+        "path": "tests/core/test_footnote_integrity_v2.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "83bb634645e35cdad800cb485511915b4b22088f"
+      },
+      {
+        "path": "tests/core/test_forge_document.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "681df0a143206b4bf423cec437d371105f749a4a"
+      },
+      {
+        "path": "tests/core/test_inline_model.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "53be7bc7c77882487bd122046b4e32abbd66774b"
+      },
+      {
+        "path": "tests/core/test_legacy_source_rejection.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "dc3e81e12b771422f4ab80594e71ccbab5992e23"
+      },
+      {
+        "path": "tests/core/test_listing_algorithm_numbering.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "fddf2c1acd223c38c2858ee55055d7ec77e68ced"
+      },
+      {
+        "path": "tests/core/test_listing_algorithm_render_plan.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "d3c3e62a6405309bf268793a4c745f4fd95986d2"
+      },
+      {
+        "path": "tests/core/test_manifest_layout_overrides.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "97bf3b97df74ef951c7e1d140b914f56abd8832f"
+      },
+      {
+        "path": "tests/core/test_manifest_resource_validation.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "ba0efc32a53c815950f3a5c0eac23542e606279e"
+      },
+      {
+        "path": "tests/core/test_markdown_v2_blocks.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "a8257b78d73896ef9643aca749b435f332159622"
+      },
+      {
+        "path": "tests/core/test_markdown_v2_equations.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "27f7ac5e6554d8c8db1aa51fe07143707e137f18"
+      },
+      {
+        "path": "tests/core/test_markdown_v2_fences.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "71e1a6e42a932350f1b5f56aae77d46a7c413bb1"
+      },
+      {
+        "path": "tests/core/test_markdown_v2_figures.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "fc6c1e12197398b48607f0628e711f9bb9794773"
+      },
+      {
+        "path": "tests/core/test_markdown_v2_inlines.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "50a2097f3ae14040ec7ea58c75df3b6b0af13555"
+      },
+      {
+        "path": "tests/core/test_markdown_v2_parser_config.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "c8fa65efe31ba0d222c21ed24522491c20345376"
+      },
+      {
+        "path": "tests/core/test_markdown_v2_semantic_inlines.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "67f424c5080e71aa1463c932c8288b920dadd2b2"
+      },
+      {
+        "path": "tests/core/test_markdown_v2_tables.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "63108c77accc35840e219d030c5efcd6760ddb55"
+      },
+      {
+        "path": "tests/core/test_math_preflight.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "a3cdf858771f241a7ceeaffd59c71ee26c0d1ad6"
+      },
+      {
+        "path": "tests/core/test_no_manual_caches.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "f437e841e30d96dafe60b8ffd908c3eac5174610"
+      },
+      {
+        "path": "tests/core/test_object_overrides.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "0fa1c482c3e63b7a20cac1d9917edcaeb294b5eb"
+      },
+      {
+        "path": "tests/core/test_region_resolver.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "6ab073962f06f3b4f0a9b879ba284a65c93d2af6"
+      },
+      {
+        "path": "tests/core/test_single_parser_backend.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "3bedb11b51966cac12bc58a2ed3e02e8aae55522"
+      },
+      {
+        "path": "tests/core/test_source_identity.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "fb83305bf80a1fd783b0903995a08dd8e004bb1d"
+      },
+      {
+        "path": "tests/core/test_symbol_table.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "4b7f6ccc2a2fc944ab3e070f3777c79d3eeadeb1"
+      },
+      {
+        "path": "tests/core/test_table_model.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "58c1ebc0c260a5fa608ef710b4722a4e995e9f43"
+      },
+      {
+        "path": "tests/core/test_typed_inline_render_plan.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "d11a78f0438f0e05c27f63dd0d9e5944d3cb60a5"
+      },
+      {
+        "path": "tests/core/test_typed_table_render_plan.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "33d3011fbc4d1843a4f1ebe8f0565371c1b21f21"
+      },
+      {
+        "path": "tests/core/test_validator_document_index.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "0694792b1b01d287f0edbab1314f3375306665eb"
+      },
+      {
+        "path": "tests/fixtures/bibliography/gbt7714-2025-corpus.bib",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "d957fa01ba66ca0680d1310c4eb8f7719e18e38c"
+      },
+      {
+        "path": "tests/fixtures/bibliography/gbt7714-2025-corpus.json",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "44d20f178b4459abb7c028d8fb1980d891f418e7"
+      },
+      {
+        "path": "tests/fixtures/bibliography/gbt7714-v1.bib",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "371038509de88db307d2c8a418790c8a6bfa2867"
+      },
+      {
+        "path": "tests/fixtures/bibliography/gbt7714-v1.json",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "6fcf2b0bbf98b2972e674b854a1262d6971b1606"
+      },
+      {
+        "path": "tests/fixtures/diagnostics-zh-cn-v1.json",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "ec2fd8ecaa2d0cce63c489f9422f36c660c5965f"
+      },
+      {
+        "path": "tests/fixtures/docforge-academic/docforge.yaml",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "27802316d8d28a46bf57cee92759d4169d57fed0"
+      },
+      {
+        "path": "tests/fixtures/docforge-academic/document.md",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "5e2a3a4a3024296605118e099c024dfd47c01211"
+      },
+      {
+        "path": "tests/fixtures/docforge-general/docforge.yaml",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "e251e436ff148db6006b17309b32fe7208a16437"
+      },
+      {
+        "path": "tests/fixtures/docforge-general/document.md",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "9d6c971b0f8b26c1d596f149f8881ea0a4400005"
+      },
+      {
+        "path": "tests/fixtures/legacy-project/thesis.md",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "9fcc81af3f104555a5c61f7ffcef63fde4008611"
+      },
+      {
+        "path": "tests/fixtures/preview-workbench-v1.json",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "1363502f5f9d68a83bc78699452c02243962bbff"
+      },
+      {
+        "path": "tests/fixtures/v2-project/assets/model.png",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "b486911e54c253c0d216b7b1fac3347147738266"
+      },
+      {
+        "path": "tests/fixtures/v2-project/docforge.yaml",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "121e81ec03b081e479b83d4d898dfdeb8f88d8df"
+      },
+      {
+        "path": "tests/fixtures/v2-project/document.md",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "32286cc51dda05dfac39409ee0cefdc330ac1854"
+      },
+      {
+        "path": "tests/fixtures/v2-project/references.bib",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "92ac4b4251a45668c89910d0c098d16c3d6267e9"
+      },
+      {
+        "path": "tests/fixtures/workspace-state-v1.json",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "102796dc0b7bf029e12342279a2c43a059ebf883"
+      },
+      {
+        "path": "tests/presentation/test_listing_algorithm_review.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "e26f931c1569bfb0e705a55f29b0107ae70a0804"
+      },
+      {
+        "path": "tests/presentation/test_review_markdown.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "2487de1a42472a27c4513b20b4e2e4517e8b6af1"
+      },
+      {
+        "path": "tests/presentation/test_review_regions.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "0e6b19f97bd5d48898b7c43bc47a46a459ed26c3"
+      },
+      {
+        "path": "tests/presentation/test_review_source_map.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "b59e5c15bfa4c86505b192e4348e82553e772cc6"
+      },
+      {
+        "path": "tests/project/test_manifest_loader.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "dcc9d2ddf59df0b962ab4604c61bbc03fdb1da22"
+      },
+      {
+        "path": "tests/project/test_manifest_model.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "9e3e143d399a064d69fa83307f711a4690039fa7"
+      },
+      {
+        "path": "tests/project/test_project_paths.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "c9790f92dfad50ecd7a3ddc25e6223d3bb2451aa"
+      },
+      {
+        "path": "tests/renderers/docx/test_blockquote_code_italic.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "a76a5aed29e5efe88d56d5e0830a29000ab42663"
+      },
+      {
+        "path": "tests/renderers/docx/test_fields_v2.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "b4c720d8e9f52f175e792d466de6e6430ef4cc7a"
+      },
+      {
+        "path": "tests/renderers/docx/test_figure_rich_caption.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "9ae0bf3bab975afe90f4914f644d6f3561d73084"
+      },
+      {
+        "path": "tests/renderers/docx/test_listing_algorithm.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "46e4c5f8d6254f8816884f8ffdf42d86612a6bc3"
+      },
+      {
+        "path": "tests/renderers/docx/test_math_corpus_v2.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "a587f39c1c0b89fcff1d19fe409d69996f07dfbe"
+      },
+      {
+        "path": "tests/renderers/docx/test_package_semantics_v2.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "0f41da154025dd8e7dda27434164225484492b01"
+      },
+      {
+        "path": "tests/renderers/docx/test_structured_table.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "b151d319807533895866bc767ab4df7c3976d536"
+      },
+      {
+        "path": "tests/templates/test_metadata_bindings.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "efb0645b7259af78a5e78d66fff61c8de02e4046"
+      },
+      {
+        "path": "tests/test_acceptance.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "857e0235f9c14321ddda84a6bf1870674f006e03"
+      },
+      {
+        "path": "tests/test_adapters.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "01092713af555763b0708bc493381abbf4438b4b"
+      },
+      {
+        "path": "tests/test_application_services.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "88b3de84fd9fa99e34209f2d860082f0feaacf3a"
+      },
+      {
+        "path": "tests/test_architecture.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "b769a9fca3306d9e03a16fb047f1a558907f2fe9"
+      },
+      {
+        "path": "tests/test_bibliography.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "bb43337b64a0030682aaa51af6eefd9793c01705"
+      },
+      {
+        "path": "tests/test_cli.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "3bd3ce351c054ed9dee3445bb83f7deae58e6c80"
+      },
+      {
+        "path": "tests/test_compiler.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "b7234beef692ca8c2823e7faf1f32dde76b927da"
+      },
+      {
+        "path": "tests/test_desktop_distribution.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "27663646b6fe1cb0fee75a14e4f384c46f0d2260"
+      },
+      {
+        "path": "tests/test_distribution.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "2a4882fa17a47f102edf27a466d0df29031eedec"
+      },
+      {
+        "path": "tests/test_docx_renderer.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "f7981c20d0ad6704e740d16d88e71a4b9e79f233"
+      },
+      {
+        "path": "tests/test_facticity.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "f2d2f18a867ce63cf3ef938a9b9c8b048952d4e4"
+      },
+      {
+        "path": "tests/test_frontend_contract.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "950ea4d556736ab0a00b096984b0f64bb0a2b7d1"
+      },
+      {
+        "path": "tests/test_http_adapter.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "ad46f4a50ee325741be97f0f1f1a25a08c5a2ca0"
+      },
+      {
+        "path": "tests/test_lo_finalizer.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "4ff60db81c60d13c30eb6e38312235fd675e0c23"
+      },
+      {
+        "path": "tests/test_math.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "33af393f7fc28938c1cdf718f3f62f823b767deb"
+      },
+      {
+        "path": "tests/test_package_import.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "aefc5b395facca6f1564d3f0e0cedf6b18430b5e"
+      },
+      {
+        "path": "tests/test_pandoc_math.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "db1aaf773a24c9025ae593bf559536cbe7dbb328"
+      },
+      {
+        "path": "tests/test_pandoc_provider.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "c6017017c22641373a8b30bfc7807f1e1222dee7"
+      },
+      {
+        "path": "tests/test_parser_backend.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "146d1e988e99d29d46f7073fcb8e5fdbf5560a52"
+      },
+      {
+        "path": "tests/test_parser_markdown_it.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "8d9f5b3faa0cf516d28e588054fc7b4e515d25e7"
+      },
+      {
+        "path": "tests/test_pdf_preview.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "63ea01b8210109189e68516e6d76da6103280b8e"
+      },
+      {
+        "path": "tests/test_preview_presentation.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "1808c5b5655030ba90a3b629b724ea89f7bca0b4"
+      },
+      {
+        "path": "tests/test_prototype_acceptance.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "b8817a65c8a80c4f64b9dd12bf18db100c185767"
+      },
+      {
+        "path": "tests/test_qa_e2e.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "5b1837fb53075f3c2d21a185c7762ad9fbf6ba8b"
+      },
+      {
+        "path": "tests/test_qa_tools.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "6acf9303f965421f42e761dcbeb2d9a9f03e8ce1"
+      },
+      {
+        "path": "tests/test_render_plan.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "f7e1af2c741196465fa5f1ef9ce6535125f6df11"
+      },
+      {
+        "path": "tests/test_sidecar.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "d2e980f1b4912bf32f98c8d56fc5c78b852ce1ae"
+      },
+      {
+        "path": "tests/test_template_v2_editor.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "20e95f12310be543931689868169552509172f22"
+      },
+      {
+        "path": "tests/test_template_v2_pack.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "0ec62e837cd99c0e5468dcd39158ba3c48c058fd"
+      },
+      {
+        "path": "tests/test_template_v2.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "a82c7dd0aefff7d5e27cde351a0679d1e1f93e6a"
+      },
+      {
+        "path": "tests/test_template.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "1032bd6aaca010c55788a774398ffb238fa23466"
+      },
+      {
+        "path": "tests/test_ui_controller.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "3d7ef0e4a985c61f0d2735727e9d9112d46c0e58"
+      },
+      {
+        "path": "tests/test_ui_filesystem.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "0438dc794b60a37f973303697f0c186b4c96512b"
+      },
+      {
+        "path": "tests/test_ui_models.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "d540af29290867019bbf3b8700227ac1580e8f3d"
+      },
+      {
+        "path": "tests/test_validator.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "5ba2fc439c80c0bf6b779818854dcf3e5715c91a"
+      },
+      {
+        "path": "tests/test_visual_diff.py",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "82c7df5051f1ab4152bb085601fa808d96cb6f0b"
+      }
+    ],
+    "sha256": "63285913cefc32a846eac184c3d150e7d3bf2016bf86f861ec398b3ef44f9590"
+  },
+  "artifacts": {
+    "context": {
+      "path": "development/tasks/002-generic-document-domain/context.json",
+      "sha256": "20bf7fb59ad0b366cdba8a888b806fb0d0dfd79c07b54a2d0b9e0c4fc92d5ffb"
+    },
+    "report": {
+      "path": "development/tasks/002-generic-document-domain/report.md",
+      "sha256": "8c82d53feeafbc6e9dca38a79fc1b50fbe43036cc732d5cda8b2cc002065293a",
+      "status": "DONE"
+    },
+    "spec_review": {
+      "path": "development/tasks/002-generic-document-domain/spec-review.md",
+      "sha256": "0272bd019c5619f67517a161ba9df01f8d043234925a7a63bbbd55801c06b4ca",
+      "verdict": "approved"
+    },
+    "quality_review": {
+      "path": "development/tasks/002-generic-document-domain/quality-review.md",
+      "sha256": "09e9f18a95bde903765cfdf1c1bf2119da40eead599f8b45eab7778c600386ca",
+      "verdict": "approved"
+    }
+  },
+  "test_runs": [
+    {
+      "id": "receipt-73d860d3f243596cf3f2a7a8b78674b4d06984aef0de2055c0d9a9728f809528",
+      "command": ".venv/bin/ruff check src/docforge/core src/docforge/application src/docforge/presentation tests/core tests/application tests/presentation tests/cli tests/contracts tests/renderers/docx tests/test_acceptance.py tests/test_adapters.py tests/test_compiler.py tests/test_docx_renderer.py tests/test_frontend_contract.py tests/test_preview_presentation.py tests/test_ui_controller.py tests/test_validator.py tests/test_architecture.py",
+      "assertion_ids": [
+        "A4",
+        "A7"
+      ],
+      "recorded_at": "2026-08-27T04:26:35.679Z",
+      "validation_receipt_sha256": "032bf84e598cbf89137b25d51ba2296e0713f9e31d52be89a6ecb6be6eb1a330",
+      "evidence_log": {
+        "path": "development/evidence/031-002-generic-document-domain.log",
+        "sha256": "29a928aac7272c5aff61740a62ebfbe9e5b67c181b97b542a5d1ab1c47fb34f6",
+        "size": 526
+      }
+    },
+    {
+      "id": "receipt-f9182b8d69bfd16f5c20a5c78180d65e81304bf03819abcf4195dbd69155556c",
+      "command": "PYTHONPATH=src .venv/bin/python -m pytest tests/core tests/application tests/presentation tests/cli tests/contracts tests/renderers/docx tests/test_acceptance.py tests/test_adapters.py tests/test_compiler.py tests/test_docx_renderer.py tests/test_frontend_contract.py tests/test_preview_presentation.py tests/test_ui_controller.py tests/test_validator.py tests/test_architecture.py -q",
+      "assertion_ids": [
+        "A4",
+        "A7"
+      ],
+      "recorded_at": "2026-08-27T04:26:35.500Z",
+      "validation_receipt_sha256": "8be387e49de5726d27fb98a3679872fbdc81a3ee5131a3d0224899c9d807989c",
+      "evidence_log": {
+        "path": "development/evidence/030-002-generic-document-domain.log",
+        "sha256": "34fa51b4f21c0480f6ab3505a7b32620a3be5bb74c1ff6306b29eaa7afa177cf",
+        "size": 1206
+      }
+    }
+  ],
+  "assertions": [
+    {
+      "id": "A4",
+      "parent_id": "A4",
+      "status": "passing",
+      "test_run_ids": [
+        "receipt-73d860d3f243596cf3f2a7a8b78674b4d06984aef0de2055c0d9a9728f809528",
+        "receipt-f9182b8d69bfd16f5c20a5c78180d65e81304bf03819abcf4195dbd69155556c"
+      ],
+      "direct_evidence": [],
+      "reused_evidence": [],
+      "claim": "thesisforge.yaml, thesisforge.project.v2, the thesisforge command, ThesisDocument exports, and the old workbench protocol are absent or rejected without compatibility aliases."
+    },
+    {
+      "id": "A7",
+      "parent_id": "A7",
+      "status": "passing",
+      "test_run_ids": [
+        "receipt-73d860d3f243596cf3f2a7a8b78674b4d06984aef0de2055c0d9a9728f809528",
+        "receipt-f9182b8d69bfd16f5c20a5c78180d65e81304bf03819abcf4195dbd69155556c"
+      ],
+      "direct_evidence": [],
+      "reused_evidence": [],
+      "claim": "The deterministic Markdown to ForgeDocument to validation to template to RenderPlan to DOCX pipeline preserves ordered stages, renderer boundaries, cancellation, and atomic output behavior."
+    }
+  ],
+  "fallback_used": false
+}

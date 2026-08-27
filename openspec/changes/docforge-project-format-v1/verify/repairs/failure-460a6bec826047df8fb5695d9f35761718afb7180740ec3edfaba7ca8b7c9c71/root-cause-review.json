@@ -1,0 +1,22 @@
+{
+  "schema": "specnav.verification.root-cause-review.v1",
+  "id": "root-cause-review-460a6bec826047df8fb5695d",
+  "failure_id": "failure-460a6bec826047df8fb5695d9f35761718afb7180740ec3edfaba7ca8b7c9c71",
+  "root_failure_digest": "01ea3d0cfa23b6cd3148aa8a06679d2d07de5981da5064114675d0ca5fb3ebe2",
+  "change_id": "docforge-project-format-v1",
+  "run_id": "run-20260827064427-7306fa24d31e2dcf",
+  "case_id": "case-a1-project-open",
+  "attempt_id": "attempt-20260827064427-7306fa24d31e2dcf",
+  "classification": "test_defect",
+  "summary": "The approved command runner omitted the assertion protocol required to produce structured assertion_result evidence.",
+  "root_cause": "The case contract declared env_keys=[], so the Runtime did not inject SPECNAV_VERIFICATION_ASSERTION_IDS or SPECNAV_VERIFICATION_ASSERTION_RESULT_FILE and no authoritative oracle result was emitted.",
+  "failed_assertion_ids": [
+    "a1-project-open"
+  ],
+  "reviewer": {
+    "id": "zengwenliang416",
+    "kind": "human"
+  },
+  "decision": "approved",
+  "reviewed_at": "2026-08-27T07:03:32.989Z"
+}

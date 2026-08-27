@@ -1,0 +1,11 @@
+# command: cargo check --manifest-path src-tauri/Cargo.toml
+# exit_status: 0
+# duration_ms: 14384
+
+## stdout
+(empty)
+
+## stderr
+   Compiling docforge-desktop v0.1.0 (/Volumes/ThesisForgeCI/workspaces/thesis-forge-docforge-verify/src-tauri)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 14.30s
+

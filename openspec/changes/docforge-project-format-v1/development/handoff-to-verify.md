@@ -14,8 +14,9 @@
   installed macOS package, and Microsoft Word final preview.
 - `007-repository-delivery`: active projects, documentation, CI, packaging,
   facticity, and release-grade macOS artifacts.
-- `008-end-to-end-verification`: items 8.1 through 8.5 complete; item 8.6 waits
-  for the separately approved SpecNav Verification Runtime installation.
+- `008-end-to-end-verification`: items 8.1 through 8.6 complete with the
+  project-scoped SpecNav Verification Runtime ready and all current-HEAD task
+  receipts passing.
 
 ## Files Changed
 
@@ -122,16 +123,18 @@
   sensory gate.
 - Local release artifacts are not a claim of external GitHub publication,
   signing, or notarization.
-- Historical failure records remain append-only and require trusted
-  adjudication against later current-HEAD passes.
-- The selected project-scoped SpecNav Verification Runtime
-  `2.0.0-alpha.2` is not installed and requires explicit user approval.
+- Historical failure records remain append-only; eligible failures have
+  current-HEAD retest adjudications and are not deleted or rewritten.
+- The ExFAT source checkout cannot represent a `0600` Runtime authority key, so
+  trusted verification runs from an APFS Git worktree at the same product HEAD.
 
 ## Items Requiring Six-Domain Verification
 
-- Bind Task 001 through 008 evidence and A1 through A10 to the final committed
-  HEAD with machine-authoritative validation receipts.
-- Re-run facticity, static, unit, redteam, E2E, and sensory domains through the
+- Bind Task 001 through 008 evidence and A1 through A10 to the current committed
+  HEAD with official task acceptance artifacts.
+- Generate and explicitly approve the immutable case snapshot, then prepare and
+  explicitly approve the successor generation.
+- Run facticity, static, unit, redteam, E2E, and sensory domains through the
   locked project-scoped Runtime with `fallback_used: false`.
 - Preserve and adjudicate prior failed attempts instead of deleting them.
 - Validate installation, promotion, and archive gates.

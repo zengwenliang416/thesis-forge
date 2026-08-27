@@ -1,0 +1,30 @@
+{
+  "schema": "specnav.verification.failure-packet.v1",
+  "change_id": "docforge-project-format-v1",
+  "run_id": "run-20260827064734-03b2884ca6381698",
+  "case_id": "case-a8-runtime-parity",
+  "attempt_id": "attempt-20260827064734-03b2884ca6381698",
+  "reading_ids": [
+    "reading-0b2875ce6fc30606809111ae2b7a6855386d25ce0fbba8129ee8050c54cf0c30",
+    "reading-0edbc8fb1f3f88caf4ebda609e847af73efeed1c959711c6cf36936071d18be8",
+    "reading-24bf5b36d40679241762ef5907e0b9e59bd08e36f2cc5944b0fd417e496f8006",
+    "reading-47bf8ca9c02b6e0ad4d3fabbc11e7425d32db96004afd706842c9896a00e6ebf",
+    "reading-576e185dd9189961cffde513ebdcb89c8a05670cbfb6e14358d5faca12e17f0d",
+    "reading-b6bc52cc8d20b2d578681c40a7e77ef6b069dc77a5e04921bcf6c746a9890b15"
+  ],
+  "evidence_ids": [
+    "evidence-468d538a74e323bed10761f89a6a88444aa194bb7f09d3dffbef13ad040c5e92"
+  ],
+  "classification": "test_defect",
+  "status": "repair_required",
+  "next_action": "repair_required",
+  "summary": "The approved command runner omitted the assertion protocol and did not expose the required toolchain PATH.",
+  "root_cause": "The case contract declared env_keys=[] and relied on ambient PATH, so the Runtime could neither inject SPECNAV assertion output variables nor consistently locate Rust/Node toolchains.",
+  "failed_assertion_ids": [
+    "a8-protocol-parity"
+  ],
+  "owner": "development",
+  "created_at": "2026-08-27T06:47:37.398Z",
+  "frozen_at": "2026-08-27T06:47:37.398Z",
+  "id": "failure-f814ed028e5b2dc94e5db0219d237ceaa8e22ce664031ea163ba1fc267c95791"
+}

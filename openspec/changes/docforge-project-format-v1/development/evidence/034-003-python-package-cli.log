@@ -1,0 +1,153 @@
+# command: .venv/bin/python -m build --no-isolation --outdir /tmp/docforge-task003-runtime-dist && .venv/bin/python scripts/verify_distribution.py --dist-dir /tmp/docforge-task003-runtime-dist
+# exit_status: 0
+# duration_ms: 18551
+
+## stdout
+Successfully built docforge-0.1.0.tar.gz and docforge-0.1.0-py3-none-any.whl
+{
+  "ok": true,
+  "wheel": {
+    "path": "/private/tmp/docforge-task003-runtime-dist/docforge-0.1.0-py3-none-any.whl",
+    "sha256": "20160d8a288f38a749d255baee4b4395a92b29f359d5657c72e8d873175aa568",
+    "files": 93,
+    "runtime_requirements": [
+      "lxml<7,>=5.2",
+      "markdown-it-py<5,>=4.2",
+      "mdit-py-plugins<0.7,>=0.6.1",
+      "pydantic<3,>=2.8",
+      "python-docx<2,>=1.1",
+      "pyyaml<7,>=6.0",
+      "rich<15,>=13.7",
+      "typer<1,>=0.12",
+      "citeproc-py<1,>=0.8; extra == \"bibliography\"",
+      "build<2,>=1.2; extra == \"dev\"",
+      "hatchling<2,>=1.25; extra == \"dev\"",
+      "packaging<27,>=24; extra == \"dev\"",
+      "pyinstaller<7,>=6.14; extra == \"dev\"",
+      "pytest<9,>=8.2; extra == \"dev\"",
+      "ruff<1,>=0.5; extra == \"dev\""
+    ]
+  },
+  "sdist": {
+    "path": "/private/tmp/docforge-task003-runtime-dist/docforge-0.1.0.tar.gz",
+    "sha256": "b45e17b53e5773ca4f55155806cc1b45787f3b8f99a77564e5e7d64e96d5e849",
+    "files": 286
+  },
+  "installed": {
+    "isolated_install": true,
+    "installer_network": "disabled-by-pip-no-index",
+    "runtime_network_guard": "python-socket-apis",
+    "console_launcher": "/var/folders/1v/8sfc4rjx1834mzlqzxqr8lr40000gn/T/docforge-dist-7uyvqhc6/environment/bin/docforge",
+    "dependencies": {
+      "source": "validated-installed-distributions",
+      "distributions": [
+        "annotated-doc",
+        "annotated-types",
+        "lxml",
+        "markdown-it-py",
+        "mdit-py-plugins",
+        "mdurl",
+        "pydantic",
+        "pydantic_core",
+        "Pygments",
+        "python-docx",
+        "PyYAML",
+        "rich",
+        "shellingham",
+        "typer",
+        "typing_extensions",
+        "typing-inspection"
+      ],
+      "wheels": [
+        "annotated_doc-0.0.5-py3-none-any.whl",
+        "annotated_types-0.8.0-py3-none-any.whl",
+        "lxml-6.1.2-cp312-cp312-macosx_10_13_universal2.whl",
+        "markdown_it_py-4.2.0-py3-none-any.whl",
+        "mdit_py_plugins-0.6.1-py3-none-any.whl",
+        "mdurl-0.1.2-py3-none-any.whl",
+        "pydantic-2.13.4-py3-none-any.whl",
+        "pydantic_core-2.46.4-cp312-cp312-macosx_11_0_arm64.whl",
+        "pygments-2.21.0-py3-none-any.whl",
+        "python_docx-1.2.0-py3-none-any.whl",
+        "pyyaml-6.0.3-cp312-cp312-macosx_11_0_arm64.whl",
+        "rich-14.3.4-py3-none-any.whl",
+        "shellingham-1.5.4-py3-none-any.whl",
+        "typer-0.27.1-py3-none-any.whl",
+        "typing_extensions-4.16.0-py3-none-any.whl",
+        "typing_inspection-0.4.4-py3-none-any.whl"
+      ]
+    },
+    "imports": {
+      "docforge": "/private/var/folders/1v/8sfc4rjx1834mzlqzxqr8lr40000gn/T/docforge-dist-7uyvqhc6/environment/lib/python3.12/site-packages/docforge/__init__.py",
+      "docx": "/private/var/folders/1v/8sfc4rjx1834mzlqzxqr8lr40000gn/T/docforge-dist-7uyvqhc6/environment/lib/python3.12/site-packages/docx/__init__.py",
+      "lxml": "/private/var/folders/1v/8sfc4rjx1834mzlqzxqr8lr40000gn/T/docforge-dist-7uyvqhc6/environment/lib/python3.12/site-packages/lxml/__init__.py",
+      "pydantic": "/private/var/folders/1v/8sfc4rjx1834mzlqzxqr8lr40000gn/T/docforge-dist-7uyvqhc6/environment/lib/python3.12/site-packages/pydantic/__init__.py",
+      "rich": "/private/var/folders/1v/8sfc4rjx1834mzlqzxqr8lr40000gn/T/docforge-dist-7uyvqhc6/environment/lib/python3.12/site-packages/rich/__init__.py",
+      "typer": "/private/var/folders/1v/8sfc4rjx1834mzlqzxqr8lr40000gn/T/docforge-dist-7uyvqhc6/environment/lib/python3.12/site-packages/typer/__init__.py",
+      "yaml": "/private/var/folders/1v/8sfc4rjx1834mzlqzxqr8lr40000gn/T/docforge-dist-7uyvqhc6/environment/lib/python3.12/site-packages/yaml/__init__.py"
+    },
+    "sys_path": [
+      "",
+      "/var/folders/1v/8sfc4rjx1834mzlqzxqr8lr40000gn/T/docforge-dist-7uyvqhc6/network-guard",
+      "/opt/homebrew/Cellar/python@3.12/3.12.9/Frameworks/Python.framework/Versions/3.12/lib/python312.zip",
+      "/opt/homebrew/Cellar/python@3.12/3.12.9/Frameworks/Python.framework/Versions/3.12/lib/python3.12",
+      "/opt/homebrew/Cellar/python@3.12/3.12.9/Frameworks/Python.framework/Versions/3.12/lib/python3.12/lib-dynload",
+      "/private/var/folders/1v/8sfc4rjx1834mzlqzxqr8lr40000gn/T/docforge-dist-7uyvqhc6/environment/lib/python3.12/site-packages"
+    ],
+    "templates": "/private/var/folders/1v/8sfc4rjx1834mzlqzxqr8lr40000gn/T/docforge-dist-7uyvqhc6/environment/lib/python3.12/site-packages/docforge/template_data",
+    "fixtures": {
+      "docforge-general": {
+        "inspect": true,
+        "validate": true,
+        "review": true,
+        "build": true,
+        "review_markdown_bytes": 335,
+        "review_map_bytes": 892,
+        "docx_bytes": 38520,
+        "docx_sha256": "015b25974e24850b3167c878a469d1ce408c3a3a82d298819bfca523073f1016",
+        "visible_text_checks": {
+          "required": [
+            "DocForge 通用文档",
+            "示例科技有限公司",
+            "张三"
+          ],
+          "forbidden": [
+            "本科毕业论文",
+            "硕士学位论文",
+            "研究生：",
+            "学号：",
+            "指导教师："
+          ]
+        }
+      },
+      "docforge-academic": {
+        "inspect": true,
+        "validate": true,
+        "review": true,
+        "build": true,
+        "review_markdown_bytes": 476,
+        "review_map_bytes": 1281,
+        "docx_bytes": 27702,
+        "docx_sha256": "4effc3fefc9995791bd92107e09a6b9fe555ca27c21f478519fd824f280eda5f",
+        "visible_text_checks": {
+          "required": [
+            "DocForge 学术文档",
+            "示例大学",
+            "20260001",
+            "李教授"
+          ],
+          "forbidden": []
+        }
+      }
+    }
+  }
+}
+
+
+## stderr
+* Getting build dependencies for sdist...
+* Building sdist...
+* Building wheel from sdist
+* Getting build dependencies for wheel...
+* Building wheel...
+
