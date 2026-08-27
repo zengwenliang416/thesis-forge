@@ -492,6 +492,33 @@ test('lifecycle exclusions are limited to the active failure and task', () => {
     ),
     false
   );
+  assert.equal(
+    lifecycleRepairPath(
+      changeId,
+      failureId,
+      taskId,
+      '.specnav/.gitignore'
+    ),
+    true
+  );
+  assert.equal(
+    lifecycleRepairPath(
+      changeId,
+      failureId,
+      taskId,
+      '.specnav/config.json'
+    ),
+    true
+  );
+  assert.equal(
+    lifecycleRepairPath(
+      changeId,
+      failureId,
+      taskId,
+      '.specnav/unapproved-local-file.json'
+    ),
+    false
+  );
 });
 
 test('scope supersession rejects a task bound to another failure identity', async (t) => {

@@ -176,7 +176,9 @@ function lifecycleRepairPath(changeId, failureId, taskId, file) {
     || file.startsWith(
       '.specnav/overrides/specnav-verification-0.3.0-scope-supersession/'
     )
-    || file === '.specnav/decisions/repair-contract-gap-proposal.json';
+    || file === '.specnav/decisions/repair-contract-gap-proposal.json'
+    || file === '.specnav/.gitignore'
+    || file === '.specnav/config.json';
 }
 
 function validScopePath(file) {
