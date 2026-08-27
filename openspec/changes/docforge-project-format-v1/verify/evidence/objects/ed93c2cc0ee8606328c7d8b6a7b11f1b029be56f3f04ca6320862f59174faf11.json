@@ -1,0 +1,7 @@
+{
+  "actual": true,
+  "assertion_id": "a6-secure-paths",
+  "expected": true,
+  "method": "equal",
+  "status": "passed"
+}

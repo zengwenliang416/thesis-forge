@@ -1,0 +1,7 @@
+{
+  "actual": true,
+  "assertion_id": "a8-protocol-parity",
+  "expected": true,
+  "method": "equal",
+  "status": "passed"
+}

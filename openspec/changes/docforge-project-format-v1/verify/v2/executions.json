@@ -173,5 +173,185 @@
       }
     ],
     "recorded_at": "2026-08-27T06:47:40.007Z"
+  },
+  {
+    "id": "execution-attempt-20260827143729-5c56ae56cba8bdd7",
+    "run_id": "run-20260827143729-5c56ae56cba8bdd7",
+    "attempt_id": "attempt-20260827143729-5c56ae56cba8bdd7",
+    "case_id": "case-a1-project-open",
+    "status": "passed",
+    "assertions": [
+      {
+        "id": "a1-project-open",
+        "method": "equal",
+        "expected": true,
+        "actual": true,
+        "status": "passed"
+      }
+    ],
+    "blockers": [],
+    "recorded_at": "2026-08-27T14:37:35.158Z"
+  },
+  {
+    "id": "execution-attempt-20260827144010-c9ad0f2404127045",
+    "run_id": "run-20260827144010-c9ad0f2404127045",
+    "attempt_id": "attempt-20260827144010-c9ad0f2404127045",
+    "case_id": "case-a2-general-project",
+    "status": "passed",
+    "assertions": [
+      {
+        "id": "a2-general-flow",
+        "method": "equal",
+        "expected": true,
+        "actual": true,
+        "status": "passed"
+      }
+    ],
+    "blockers": [],
+    "recorded_at": "2026-08-27T14:40:16.843Z"
+  },
+  {
+    "id": "execution-attempt-20260827144211-6793841c117f6aa4",
+    "run_id": "run-20260827144211-6793841c117f6aa4",
+    "attempt_id": "attempt-20260827144211-6793841c117f6aa4",
+    "case_id": "case-a3-academic-profile",
+    "status": "passed",
+    "assertions": [
+      {
+        "id": "a3-profile-isolation",
+        "method": "equal",
+        "expected": true,
+        "actual": true,
+        "status": "passed"
+      }
+    ],
+    "blockers": [],
+    "recorded_at": "2026-08-27T14:42:41.888Z"
+  },
+  {
+    "id": "execution-attempt-20260827144440-471acf587e9a54c6",
+    "run_id": "run-20260827144440-471acf587e9a54c6",
+    "attempt_id": "attempt-20260827144440-471acf587e9a54c6",
+    "case_id": "case-a4-obsolete-contracts",
+    "status": "passed",
+    "assertions": [
+      {
+        "id": "a4-no-obsolete-contract",
+        "method": "equal",
+        "expected": true,
+        "actual": true,
+        "status": "passed"
+      }
+    ],
+    "blockers": [],
+    "recorded_at": "2026-08-27T14:44:51.538Z"
+  },
+  {
+    "id": "execution-attempt-20260827144646-a9e78af0071b90e6",
+    "run_id": "run-20260827144646-a9e78af0071b90e6",
+    "attempt_id": "attempt-20260827144646-a9e78af0071b90e6",
+    "case_id": "case-a5-neutral-default-paths",
+    "status": "passed",
+    "assertions": [
+      {
+        "id": "a5-default-paths",
+        "method": "equal",
+        "expected": true,
+        "actual": true,
+        "status": "passed"
+      }
+    ],
+    "blockers": [],
+    "recorded_at": "2026-08-27T14:46:52.799Z"
+  },
+  {
+    "id": "execution-attempt-20260827144845-85ef866ab982cc8e",
+    "run_id": "run-20260827144845-85ef866ab982cc8e",
+    "attempt_id": "attempt-20260827144845-85ef866ab982cc8e",
+    "case_id": "case-a6-path-security",
+    "status": "passed",
+    "assertions": [
+      {
+        "id": "a6-secure-paths",
+        "method": "equal",
+        "expected": true,
+        "actual": true,
+        "status": "passed"
+      }
+    ],
+    "blockers": [],
+    "recorded_at": "2026-08-27T14:50:50.296Z"
+  },
+  {
+    "id": "execution-attempt-20260827145246-d796826ed52b40e6",
+    "run_id": "run-20260827145246-d796826ed52b40e6",
+    "attempt_id": "attempt-20260827145246-d796826ed52b40e6",
+    "case_id": "case-a7-deterministic-docx",
+    "status": "passed",
+    "assertions": [
+      {
+        "id": "a7-deterministic-pipeline",
+        "method": "equal",
+        "expected": true,
+        "actual": true,
+        "status": "passed"
+      }
+    ],
+    "blockers": [],
+    "recorded_at": "2026-08-27T14:53:09.719Z"
+  },
+  {
+    "id": "execution-attempt-20260827145510-a0d2a76a3bbc2a00",
+    "run_id": "run-20260827145510-a0d2a76a3bbc2a00",
+    "attempt_id": "attempt-20260827145510-a0d2a76a3bbc2a00",
+    "case_id": "case-a8-runtime-parity",
+    "status": "passed",
+    "assertions": [
+      {
+        "id": "a8-protocol-parity",
+        "method": "equal",
+        "expected": true,
+        "actual": true,
+        "status": "passed"
+      }
+    ],
+    "blockers": [],
+    "recorded_at": "2026-08-27T14:57:15.746Z"
+  },
+  {
+    "id": "execution-attempt-20260827145918-d6a199cbbc2b0871",
+    "run_id": "run-20260827145918-d6a199cbbc2b0871",
+    "attempt_id": "attempt-20260827145918-d6a199cbbc2b0871",
+    "case_id": "case-a9-installed-office",
+    "status": "passed",
+    "assertions": [
+      {
+        "id": "a9-installed-word-preview",
+        "method": "equal",
+        "expected": true,
+        "actual": true,
+        "status": "passed"
+      }
+    ],
+    "blockers": [],
+    "recorded_at": "2026-08-27T14:59:21.042Z"
+  },
+  {
+    "id": "execution-attempt-20260827150110-50cf8f0cf0500ad5",
+    "run_id": "run-20260827150110-50cf8f0cf0500ad5",
+    "attempt_id": "attempt-20260827150110-50cf8f0cf0500ad5",
+    "case_id": "case-a10-repository-delivery",
+    "status": "passed",
+    "assertions": [
+      {
+        "id": "a10-repository-clean",
+        "method": "equal",
+        "expected": true,
+        "actual": true,
+        "status": "passed"
+      }
+    ],
+    "blockers": [],
+    "recorded_at": "2026-08-27T15:01:38.386Z"
   }
 ]

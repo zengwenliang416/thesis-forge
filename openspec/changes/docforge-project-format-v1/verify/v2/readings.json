@@ -1,6 +1,84 @@
 [
   {
     "schema": "specnav.verification.reading.v1",
+    "id": "reading-01b5a961c07ff38f11cabf54585282763c82d032f59e7c0150a483935a0f1fca",
+    "change_id": "docforge-project-format-v1",
+    "run_id": "run-20260827144211-6793841c117f6aa4",
+    "case_id": "case-a3-academic-profile",
+    "attempt_id": "attempt-20260827144211-6793841c117f6aa4",
+    "step_id": "a3-step-profiles",
+    "assertion_id": "a3-profile-isolation",
+    "domain": "e2e",
+    "expected": true,
+    "actual": true,
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-0a5956ecae2905b4c0b39bc395eaf02dbb03a01615d2288acef37bbeb50bebcc",
+      "evidence-60d78f44e4a7a332057966b326e2e467e37c62a18008ced377e676f4d7469b2f"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-08-27T14:42:41.188Z",
+    "code_sha": "60274f4c7bd0541d0a6346753e68eb7f5f2ae6a6",
+    "test_sha": "b84991f223678bcfa385d82ef08148d57456f2f4c68ce945559a4313550059ec"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-079a9cc4917fbd48b31f7f0fe5ff81e1fe506cedcf0688c589e30421d55930c2",
+    "change_id": "docforge-project-format-v1",
+    "run_id": "run-20260827145918-d6a199cbbc2b0871",
+    "case_id": "case-a9-installed-office",
+    "attempt_id": "attempt-20260827145918-d6a199cbbc2b0871",
+    "step_id": "a9-step-receipt",
+    "assertion_id": "a9-installed-word-preview",
+    "domain": "unit",
+    "expected": true,
+    "actual": true,
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-e0e52d8f9f6be3f69c0992b5cde499a07befc101d47b1f760ee27c6626ebbb82",
+      "evidence-eba5a14309dd3dba9e8bf7e2a4e5635f73b7a3c1296585e8114d59d9399235d3"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-08-27T14:59:20.274Z",
+    "code_sha": "60274f4c7bd0541d0a6346753e68eb7f5f2ae6a6",
+    "test_sha": "b84991f223678bcfa385d82ef08148d57456f2f4c68ce945559a4313550059ec"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-0aa3a9a23263c76c928fab4dc3c10107fa7b180f1c9422c52168a221813124d7",
+    "change_id": "docforge-project-format-v1",
+    "run_id": "run-20260827145510-a0d2a76a3bbc2a00",
+    "case_id": "case-a8-runtime-parity",
+    "attempt_id": "attempt-20260827145510-a0d2a76a3bbc2a00",
+    "step_id": "a8-step-parity",
+    "assertion_id": "a8-protocol-parity",
+    "domain": "e2e",
+    "expected": true,
+    "actual": true,
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-3380a695c4926f9001f1de1f258ac91874bb8a3372ffe8002f89938f01db5496",
+      "evidence-538b372f207e7de661cf9844d7c22df877b85e705f7121f1f397eb0a8dd16f91"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-08-27T14:57:14.790Z",
+    "code_sha": "60274f4c7bd0541d0a6346753e68eb7f5f2ae6a6",
+    "test_sha": "b84991f223678bcfa385d82ef08148d57456f2f4c68ce945559a4313550059ec"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
     "id": "reading-0b2875ce6fc30606809111ae2b7a6855386d25ce0fbba8129ee8050c54cf0c30",
     "change_id": "docforge-project-format-v1",
     "run_id": "run-20260827064734-03b2884ca6381698",
@@ -23,6 +101,32 @@
     "recorded_at": "2026-08-27T06:47:37.080Z",
     "code_sha": "60274f4c7bd0541d0a6346753e68eb7f5f2ae6a6",
     "test_sha": "8898bb578306334a0f3e9e5723ac9a186ccfb90845268c19e0677fb7df12a193"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-0b8201de32154a527fef144b5e0cc899b064b8cd78b3c84087ea6315ca2d3712",
+    "change_id": "docforge-project-format-v1",
+    "run_id": "run-20260827145918-d6a199cbbc2b0871",
+    "case_id": "case-a9-installed-office",
+    "attempt_id": "attempt-20260827145918-d6a199cbbc2b0871",
+    "step_id": "a9-step-receipt",
+    "assertion_id": "a9-installed-word-preview",
+    "domain": "redteam",
+    "expected": true,
+    "actual": true,
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-e0e52d8f9f6be3f69c0992b5cde499a07befc101d47b1f760ee27c6626ebbb82",
+      "evidence-eba5a14309dd3dba9e8bf7e2a4e5635f73b7a3c1296585e8114d59d9399235d3"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-08-27T14:59:20.274Z",
+    "code_sha": "60274f4c7bd0541d0a6346753e68eb7f5f2ae6a6",
+    "test_sha": "b84991f223678bcfa385d82ef08148d57456f2f4c68ce945559a4313550059ec"
   },
   {
     "schema": "specnav.verification.reading.v1",
@@ -101,6 +205,32 @@
   },
   {
     "schema": "specnav.verification.reading.v1",
+    "id": "reading-13bc462cd6a21bc4a70bfaea11cf327b85b8118f9171955a66f27a0d8ff9ef68",
+    "change_id": "docforge-project-format-v1",
+    "run_id": "run-20260827145246-d796826ed52b40e6",
+    "case_id": "case-a7-deterministic-docx",
+    "attempt_id": "attempt-20260827145246-d796826ed52b40e6",
+    "step_id": "a7-step-pipeline",
+    "assertion_id": "a7-deterministic-pipeline",
+    "domain": "e2e",
+    "expected": true,
+    "actual": true,
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-4ee4304a09c008b9131f9dcccb05a2c97e0caaa79eefa8233ea31f7443e1e305",
+      "evidence-845d92a344bfec5e8f96e794ca3986d19856a415b2b9f4cdcd1b4f4fb7a00445"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-08-27T14:53:08.728Z",
+    "code_sha": "60274f4c7bd0541d0a6346753e68eb7f5f2ae6a6",
+    "test_sha": "b84991f223678bcfa385d82ef08148d57456f2f4c68ce945559a4313550059ec"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
     "id": "reading-149e1df62b99d781599c0c9274a4daf20b91e164a3524e307f1c46482b24ee3e",
     "change_id": "docforge-project-format-v1",
     "run_id": "run-20260827064531-285da31c798070fb",
@@ -123,6 +253,84 @@
     "recorded_at": "2026-08-27T06:47:03.008Z",
     "code_sha": "60274f4c7bd0541d0a6346753e68eb7f5f2ae6a6",
     "test_sha": "8898bb578306334a0f3e9e5723ac9a186ccfb90845268c19e0677fb7df12a193"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-17af5e075e0ebb974b6fc2e9a06621323e97cd72fa28c35416c59832e67be328",
+    "change_id": "docforge-project-format-v1",
+    "run_id": "run-20260827145918-d6a199cbbc2b0871",
+    "case_id": "case-a9-installed-office",
+    "attempt_id": "attempt-20260827145918-d6a199cbbc2b0871",
+    "step_id": "a9-step-receipt",
+    "assertion_id": "a9-installed-word-preview",
+    "domain": "e2e",
+    "expected": true,
+    "actual": true,
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-e0e52d8f9f6be3f69c0992b5cde499a07befc101d47b1f760ee27c6626ebbb82",
+      "evidence-eba5a14309dd3dba9e8bf7e2a4e5635f73b7a3c1296585e8114d59d9399235d3"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-08-27T14:59:20.274Z",
+    "code_sha": "60274f4c7bd0541d0a6346753e68eb7f5f2ae6a6",
+    "test_sha": "b84991f223678bcfa385d82ef08148d57456f2f4c68ce945559a4313550059ec"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-1b455e97deb214794d8be621e39fbcc8619673806c1394a31f8deff42ab81aca",
+    "change_id": "docforge-project-format-v1",
+    "run_id": "run-20260827145918-d6a199cbbc2b0871",
+    "case_id": "case-a9-installed-office",
+    "attempt_id": "attempt-20260827145918-d6a199cbbc2b0871",
+    "step_id": "a9-step-receipt",
+    "assertion_id": "a9-installed-word-preview",
+    "domain": "sensory",
+    "expected": true,
+    "actual": true,
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-e0e52d8f9f6be3f69c0992b5cde499a07befc101d47b1f760ee27c6626ebbb82",
+      "evidence-eba5a14309dd3dba9e8bf7e2a4e5635f73b7a3c1296585e8114d59d9399235d3"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-08-27T14:59:20.274Z",
+    "code_sha": "60274f4c7bd0541d0a6346753e68eb7f5f2ae6a6",
+    "test_sha": "b84991f223678bcfa385d82ef08148d57456f2f4c68ce945559a4313550059ec"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-1d5da21611a9243ff6bb742c7b68b40191dfaa090cc42149893d424cf87d29d6",
+    "change_id": "docforge-project-format-v1",
+    "run_id": "run-20260827144010-c9ad0f2404127045",
+    "case_id": "case-a2-general-project",
+    "attempt_id": "attempt-20260827144010-c9ad0f2404127045",
+    "step_id": "a2-step-build",
+    "assertion_id": "a2-general-flow",
+    "domain": "sensory",
+    "expected": true,
+    "actual": true,
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-2458526c3213c0e3c01c20c19320f4ed91031c58822d7214707b4536dfac4e9a",
+      "evidence-edd4346a8d96669bfbe48ed87a73041c0839b9015143c89d3157d3139b27cd4a"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-08-27T14:40:16.158Z",
+    "code_sha": "60274f4c7bd0541d0a6346753e68eb7f5f2ae6a6",
+    "test_sha": "b84991f223678bcfa385d82ef08148d57456f2f4c68ce945559a4313550059ec"
   },
   {
     "schema": "specnav.verification.reading.v1",
@@ -151,6 +359,32 @@
   },
   {
     "schema": "specnav.verification.reading.v1",
+    "id": "reading-1eae1ba4e06b2eae2c8b8fe17c999d0fe3d7173b0bc68c2a99b86ff481ab1c72",
+    "change_id": "docforge-project-format-v1",
+    "run_id": "run-20260827145510-a0d2a76a3bbc2a00",
+    "case_id": "case-a8-runtime-parity",
+    "attempt_id": "attempt-20260827145510-a0d2a76a3bbc2a00",
+    "step_id": "a8-step-parity",
+    "assertion_id": "a8-protocol-parity",
+    "domain": "redteam",
+    "expected": true,
+    "actual": true,
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-3380a695c4926f9001f1de1f258ac91874bb8a3372ffe8002f89938f01db5496",
+      "evidence-538b372f207e7de661cf9844d7c22df877b85e705f7121f1f397eb0a8dd16f91"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-08-27T14:57:14.790Z",
+    "code_sha": "60274f4c7bd0541d0a6346753e68eb7f5f2ae6a6",
+    "test_sha": "b84991f223678bcfa385d82ef08148d57456f2f4c68ce945559a4313550059ec"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
     "id": "reading-2087aa275d27d7559f6d6cafc2f8a6936babb96097d441efdb06adef3f876dc4",
     "change_id": "docforge-project-format-v1",
     "run_id": "run-20260827064427-7306fa24d31e2dcf",
@@ -173,6 +407,32 @@
     "recorded_at": "2026-08-27T06:44:31.156Z",
     "code_sha": "60274f4c7bd0541d0a6346753e68eb7f5f2ae6a6",
     "test_sha": "8898bb578306334a0f3e9e5723ac9a186ccfb90845268c19e0677fb7df12a193"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-2479a4f37f566fe4da812fd54b1ef84d73c9c77a5c9099753d2e62f118e99b1e",
+    "change_id": "docforge-project-format-v1",
+    "run_id": "run-20260827145918-d6a199cbbc2b0871",
+    "case_id": "case-a9-installed-office",
+    "attempt_id": "attempt-20260827145918-d6a199cbbc2b0871",
+    "step_id": "a9-step-receipt",
+    "assertion_id": "a9-installed-word-preview",
+    "domain": "facticity",
+    "expected": true,
+    "actual": true,
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-e0e52d8f9f6be3f69c0992b5cde499a07befc101d47b1f760ee27c6626ebbb82",
+      "evidence-eba5a14309dd3dba9e8bf7e2a4e5635f73b7a3c1296585e8114d59d9399235d3"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-08-27T14:59:20.274Z",
+    "code_sha": "60274f4c7bd0541d0a6346753e68eb7f5f2ae6a6",
+    "test_sha": "b84991f223678bcfa385d82ef08148d57456f2f4c68ce945559a4313550059ec"
   },
   {
     "schema": "specnav.verification.reading.v1",
@@ -326,6 +586,84 @@
   },
   {
     "schema": "specnav.verification.reading.v1",
+    "id": "reading-33fbf457b081f2063a28b89e675200ad94cbc28553a4df28fe7fb4b23eeed2e3",
+    "change_id": "docforge-project-format-v1",
+    "run_id": "run-20260827150110-50cf8f0cf0500ad5",
+    "case_id": "case-a10-repository-delivery",
+    "attempt_id": "attempt-20260827150110-50cf8f0cf0500ad5",
+    "step_id": "a10-step-delivery",
+    "assertion_id": "a10-repository-clean",
+    "domain": "unit",
+    "expected": true,
+    "actual": true,
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-2f07c9bdb6077b853443f0c8d79a30655db9afa1910f5ad0c771fda512e89a1a",
+      "evidence-59dba3de9a77c4bf7b95a46844364b04c053cc4565d38f9ce137507a9001f897"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-08-27T15:01:37.552Z",
+    "code_sha": "60274f4c7bd0541d0a6346753e68eb7f5f2ae6a6",
+    "test_sha": "b84991f223678bcfa385d82ef08148d57456f2f4c68ce945559a4313550059ec"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-35bcab50db3c894d5706988bdd5fd0020cc3608e704a4e433c8a0a7ccb763e27",
+    "change_id": "docforge-project-format-v1",
+    "run_id": "run-20260827145510-a0d2a76a3bbc2a00",
+    "case_id": "case-a8-runtime-parity",
+    "attempt_id": "attempt-20260827145510-a0d2a76a3bbc2a00",
+    "step_id": "a8-step-parity",
+    "assertion_id": "a8-protocol-parity",
+    "domain": "unit",
+    "expected": true,
+    "actual": true,
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-3380a695c4926f9001f1de1f258ac91874bb8a3372ffe8002f89938f01db5496",
+      "evidence-538b372f207e7de661cf9844d7c22df877b85e705f7121f1f397eb0a8dd16f91"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-08-27T14:57:14.790Z",
+    "code_sha": "60274f4c7bd0541d0a6346753e68eb7f5f2ae6a6",
+    "test_sha": "b84991f223678bcfa385d82ef08148d57456f2f4c68ce945559a4313550059ec"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-36faba676ad5e0d68f257195424a4743da5b2e534872853f0ce2c7f5b30d15db",
+    "change_id": "docforge-project-format-v1",
+    "run_id": "run-20260827143729-5c56ae56cba8bdd7",
+    "case_id": "case-a1-project-open",
+    "attempt_id": "attempt-20260827143729-5c56ae56cba8bdd7",
+    "step_id": "a1-step-open",
+    "assertion_id": "a1-project-open",
+    "domain": "unit",
+    "expected": true,
+    "actual": true,
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-3538127be9871ee0aaef5be925125df7cbb5d4f169ddc2078c5d9ed1b4bc0fe0",
+      "evidence-d0d281636990c67c9776fee4b17f5592863845dbeae2d9d480f99553d4137dab"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-08-27T14:37:34.364Z",
+    "code_sha": "60274f4c7bd0541d0a6346753e68eb7f5f2ae6a6",
+    "test_sha": "b84991f223678bcfa385d82ef08148d57456f2f4c68ce945559a4313550059ec"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
     "id": "reading-375cedfdee24cd7cf47b328c01544ba5ab665eb9bcf30688b4d22d01f864adca",
     "change_id": "docforge-project-format-v1",
     "run_id": "run-20260827064518-8097b5c25829a2d4",
@@ -348,6 +686,84 @@
     "recorded_at": "2026-08-27T06:45:24.873Z",
     "code_sha": "60274f4c7bd0541d0a6346753e68eb7f5f2ae6a6",
     "test_sha": "8898bb578306334a0f3e9e5723ac9a186ccfb90845268c19e0677fb7df12a193"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-3ade48ac1c896c382baed43fb7a747ac70d14a6d323d108cf24c34a2c08665d4",
+    "change_id": "docforge-project-format-v1",
+    "run_id": "run-20260827144010-c9ad0f2404127045",
+    "case_id": "case-a2-general-project",
+    "attempt_id": "attempt-20260827144010-c9ad0f2404127045",
+    "step_id": "a2-step-build",
+    "assertion_id": "a2-general-flow",
+    "domain": "facticity",
+    "expected": true,
+    "actual": true,
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-2458526c3213c0e3c01c20c19320f4ed91031c58822d7214707b4536dfac4e9a",
+      "evidence-edd4346a8d96669bfbe48ed87a73041c0839b9015143c89d3157d3139b27cd4a"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-08-27T14:40:16.158Z",
+    "code_sha": "60274f4c7bd0541d0a6346753e68eb7f5f2ae6a6",
+    "test_sha": "b84991f223678bcfa385d82ef08148d57456f2f4c68ce945559a4313550059ec"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-3cbb264867448db6fe7a8f216150369495f1fb6a13c3911764abf54e95042915",
+    "change_id": "docforge-project-format-v1",
+    "run_id": "run-20260827150110-50cf8f0cf0500ad5",
+    "case_id": "case-a10-repository-delivery",
+    "attempt_id": "attempt-20260827150110-50cf8f0cf0500ad5",
+    "step_id": "a10-step-delivery",
+    "assertion_id": "a10-repository-clean",
+    "domain": "redteam",
+    "expected": true,
+    "actual": true,
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-2f07c9bdb6077b853443f0c8d79a30655db9afa1910f5ad0c771fda512e89a1a",
+      "evidence-59dba3de9a77c4bf7b95a46844364b04c053cc4565d38f9ce137507a9001f897"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-08-27T15:01:37.552Z",
+    "code_sha": "60274f4c7bd0541d0a6346753e68eb7f5f2ae6a6",
+    "test_sha": "b84991f223678bcfa385d82ef08148d57456f2f4c68ce945559a4313550059ec"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-44477c955010d7b2fce4eb06d5557f4b98deefd9dda617f29328dedcaf6aea05",
+    "change_id": "docforge-project-format-v1",
+    "run_id": "run-20260827144845-85ef866ab982cc8e",
+    "case_id": "case-a6-path-security",
+    "attempt_id": "attempt-20260827144845-85ef866ab982cc8e",
+    "step_id": "a6-step-redteam",
+    "assertion_id": "a6-secure-paths",
+    "domain": "facticity",
+    "expected": true,
+    "actual": true,
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-05bea41ab279f82b9733ffe9c89441c15c243d99ded9ec84e87c85f1949e0fb1",
+      "evidence-854102baf75b913e801302ccd9849d4c80c6c82536df6b0ad730bf8a1221ac35"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-08-27T14:50:49.381Z",
+    "code_sha": "60274f4c7bd0541d0a6346753e68eb7f5f2ae6a6",
+    "test_sha": "b84991f223678bcfa385d82ef08148d57456f2f4c68ce945559a4313550059ec"
   },
   {
     "schema": "specnav.verification.reading.v1",
@@ -398,6 +814,32 @@
     "recorded_at": "2026-08-27T06:47:39.177Z",
     "code_sha": "60274f4c7bd0541d0a6346753e68eb7f5f2ae6a6",
     "test_sha": "8898bb578306334a0f3e9e5723ac9a186ccfb90845268c19e0677fb7df12a193"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-450ba05d9184337242d89bb5e5259450901dc7652c1f6c5847c46488a7b19feb",
+    "change_id": "docforge-project-format-v1",
+    "run_id": "run-20260827145246-d796826ed52b40e6",
+    "case_id": "case-a7-deterministic-docx",
+    "attempt_id": "attempt-20260827145246-d796826ed52b40e6",
+    "step_id": "a7-step-pipeline",
+    "assertion_id": "a7-deterministic-pipeline",
+    "domain": "sensory",
+    "expected": true,
+    "actual": true,
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-4ee4304a09c008b9131f9dcccb05a2c97e0caaa79eefa8233ea31f7443e1e305",
+      "evidence-845d92a344bfec5e8f96e794ca3986d19856a415b2b9f4cdcd1b4f4fb7a00445"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-08-27T14:53:08.728Z",
+    "code_sha": "60274f4c7bd0541d0a6346753e68eb7f5f2ae6a6",
+    "test_sha": "b84991f223678bcfa385d82ef08148d57456f2f4c68ce945559a4313550059ec"
   },
   {
     "schema": "specnav.verification.reading.v1",
@@ -476,6 +918,32 @@
   },
   {
     "schema": "specnav.verification.reading.v1",
+    "id": "reading-48d865e642b6cbdf6ce1b60445dd23e6a458c6adbe63b87ad749588b7ccaff27",
+    "change_id": "docforge-project-format-v1",
+    "run_id": "run-20260827145510-a0d2a76a3bbc2a00",
+    "case_id": "case-a8-runtime-parity",
+    "attempt_id": "attempt-20260827145510-a0d2a76a3bbc2a00",
+    "step_id": "a8-step-parity",
+    "assertion_id": "a8-protocol-parity",
+    "domain": "sensory",
+    "expected": true,
+    "actual": true,
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-3380a695c4926f9001f1de1f258ac91874bb8a3372ffe8002f89938f01db5496",
+      "evidence-538b372f207e7de661cf9844d7c22df877b85e705f7121f1f397eb0a8dd16f91"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-08-27T14:57:14.790Z",
+    "code_sha": "60274f4c7bd0541d0a6346753e68eb7f5f2ae6a6",
+    "test_sha": "b84991f223678bcfa385d82ef08148d57456f2f4c68ce945559a4313550059ec"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
     "id": "reading-4928fc84668d9552d0e87539daad15ecdb1f25dadb2492b2a015b076dc5d81dc",
     "change_id": "docforge-project-format-v1",
     "run_id": "run-20260827064738-bcbe02a786beafa0",
@@ -498,6 +966,32 @@
     "recorded_at": "2026-08-27T06:47:39.177Z",
     "code_sha": "60274f4c7bd0541d0a6346753e68eb7f5f2ae6a6",
     "test_sha": "8898bb578306334a0f3e9e5723ac9a186ccfb90845268c19e0677fb7df12a193"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-49add21b9de45aff6c877d25773dee583e9e3b424da3a27f1028c1907264cfab",
+    "change_id": "docforge-project-format-v1",
+    "run_id": "run-20260827145246-d796826ed52b40e6",
+    "case_id": "case-a7-deterministic-docx",
+    "attempt_id": "attempt-20260827145246-d796826ed52b40e6",
+    "step_id": "a7-step-pipeline",
+    "assertion_id": "a7-deterministic-pipeline",
+    "domain": "redteam",
+    "expected": true,
+    "actual": true,
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-4ee4304a09c008b9131f9dcccb05a2c97e0caaa79eefa8233ea31f7443e1e305",
+      "evidence-845d92a344bfec5e8f96e794ca3986d19856a415b2b9f4cdcd1b4f4fb7a00445"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-08-27T14:53:08.728Z",
+    "code_sha": "60274f4c7bd0541d0a6346753e68eb7f5f2ae6a6",
+    "test_sha": "b84991f223678bcfa385d82ef08148d57456f2f4c68ce945559a4313550059ec"
   },
   {
     "schema": "specnav.verification.reading.v1",
@@ -551,6 +1045,32 @@
   },
   {
     "schema": "specnav.verification.reading.v1",
+    "id": "reading-575ae83ec649bf530b9185e2962414ede630fec7e51d7c083d22f502ff00d16c",
+    "change_id": "docforge-project-format-v1",
+    "run_id": "run-20260827144010-c9ad0f2404127045",
+    "case_id": "case-a2-general-project",
+    "attempt_id": "attempt-20260827144010-c9ad0f2404127045",
+    "step_id": "a2-step-build",
+    "assertion_id": "a2-general-flow",
+    "domain": "unit",
+    "expected": true,
+    "actual": true,
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-2458526c3213c0e3c01c20c19320f4ed91031c58822d7214707b4536dfac4e9a",
+      "evidence-edd4346a8d96669bfbe48ed87a73041c0839b9015143c89d3157d3139b27cd4a"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-08-27T14:40:16.158Z",
+    "code_sha": "60274f4c7bd0541d0a6346753e68eb7f5f2ae6a6",
+    "test_sha": "b84991f223678bcfa385d82ef08148d57456f2f4c68ce945559a4313550059ec"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
     "id": "reading-576e185dd9189961cffde513ebdcb89c8a05670cbfb6e14358d5faca12e17f0d",
     "change_id": "docforge-project-format-v1",
     "run_id": "run-20260827064734-03b2884ca6381698",
@@ -576,6 +1096,32 @@
   },
   {
     "schema": "specnav.verification.reading.v1",
+    "id": "reading-584adeba5a46d2a5cc023c2a3cb93c40ebea71f555fdfa4fd027ca8f75f18fc5",
+    "change_id": "docforge-project-format-v1",
+    "run_id": "run-20260827144845-85ef866ab982cc8e",
+    "case_id": "case-a6-path-security",
+    "attempt_id": "attempt-20260827144845-85ef866ab982cc8e",
+    "step_id": "a6-step-redteam",
+    "assertion_id": "a6-secure-paths",
+    "domain": "e2e",
+    "expected": true,
+    "actual": true,
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-05bea41ab279f82b9733ffe9c89441c15c243d99ded9ec84e87c85f1949e0fb1",
+      "evidence-854102baf75b913e801302ccd9849d4c80c6c82536df6b0ad730bf8a1221ac35"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-08-27T14:50:49.381Z",
+    "code_sha": "60274f4c7bd0541d0a6346753e68eb7f5f2ae6a6",
+    "test_sha": "b84991f223678bcfa385d82ef08148d57456f2f4c68ce945559a4313550059ec"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
     "id": "reading-58e9c645339fd9a37f710749c29874aacdbc2f0e7534490d86cb0952214c8fe5",
     "change_id": "docforge-project-format-v1",
     "run_id": "run-20260827064518-8097b5c25829a2d4",
@@ -598,6 +1144,32 @@
     "recorded_at": "2026-08-27T06:45:24.873Z",
     "code_sha": "60274f4c7bd0541d0a6346753e68eb7f5f2ae6a6",
     "test_sha": "8898bb578306334a0f3e9e5723ac9a186ccfb90845268c19e0677fb7df12a193"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-5906b2fabc75bac82664c420bdf590d5b4eb53b27824edbd3d57b51a0b767db2",
+    "change_id": "docforge-project-format-v1",
+    "run_id": "run-20260827150110-50cf8f0cf0500ad5",
+    "case_id": "case-a10-repository-delivery",
+    "attempt_id": "attempt-20260827150110-50cf8f0cf0500ad5",
+    "step_id": "a10-step-delivery",
+    "assertion_id": "a10-repository-clean",
+    "domain": "e2e",
+    "expected": true,
+    "actual": true,
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-2f07c9bdb6077b853443f0c8d79a30655db9afa1910f5ad0c771fda512e89a1a",
+      "evidence-59dba3de9a77c4bf7b95a46844364b04c053cc4565d38f9ce137507a9001f897"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-08-27T15:01:37.552Z",
+    "code_sha": "60274f4c7bd0541d0a6346753e68eb7f5f2ae6a6",
+    "test_sha": "b84991f223678bcfa385d82ef08148d57456f2f4c68ce945559a4313550059ec"
   },
   {
     "schema": "specnav.verification.reading.v1",
@@ -651,6 +1223,32 @@
   },
   {
     "schema": "specnav.verification.reading.v1",
+    "id": "reading-5fd3da29d97d363850d55e642f8bcb1393ee902735645768355c6395c535a56e",
+    "change_id": "docforge-project-format-v1",
+    "run_id": "run-20260827150110-50cf8f0cf0500ad5",
+    "case_id": "case-a10-repository-delivery",
+    "attempt_id": "attempt-20260827150110-50cf8f0cf0500ad5",
+    "step_id": "a10-step-delivery",
+    "assertion_id": "a10-repository-clean",
+    "domain": "static",
+    "expected": true,
+    "actual": true,
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-2f07c9bdb6077b853443f0c8d79a30655db9afa1910f5ad0c771fda512e89a1a",
+      "evidence-59dba3de9a77c4bf7b95a46844364b04c053cc4565d38f9ce137507a9001f897"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-08-27T15:01:37.552Z",
+    "code_sha": "60274f4c7bd0541d0a6346753e68eb7f5f2ae6a6",
+    "test_sha": "b84991f223678bcfa385d82ef08148d57456f2f4c68ce945559a4313550059ec"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
     "id": "reading-6279a8aa09fc215aed68b5987f176faafb2cc5bbd73faa5a66927728bfbed6aa",
     "change_id": "docforge-project-format-v1",
     "run_id": "run-20260827064427-7306fa24d31e2dcf",
@@ -673,6 +1271,32 @@
     "recorded_at": "2026-08-27T06:44:31.156Z",
     "code_sha": "60274f4c7bd0541d0a6346753e68eb7f5f2ae6a6",
     "test_sha": "8898bb578306334a0f3e9e5723ac9a186ccfb90845268c19e0677fb7df12a193"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-634ec6d8bee64be721414beaa57eb806b58568fc08ff3f2b45e74f6d2bd5ff9b",
+    "change_id": "docforge-project-format-v1",
+    "run_id": "run-20260827144646-a9e78af0071b90e6",
+    "case_id": "case-a5-neutral-default-paths",
+    "attempt_id": "attempt-20260827144646-a9e78af0071b90e6",
+    "step_id": "a5-step-defaults",
+    "assertion_id": "a5-default-paths",
+    "domain": "facticity",
+    "expected": true,
+    "actual": true,
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-0d7d4cc4cbd12c13fdd21c7fd08f88c514164cccb2a62422ce1a526f798e5e5f",
+      "evidence-7fd8c6f40aa496a6440ea635fa66ff6ef6b0b9eea852e4cc9e0b3d729abe7371"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-08-27T14:46:51.939Z",
+    "code_sha": "60274f4c7bd0541d0a6346753e68eb7f5f2ae6a6",
+    "test_sha": "b84991f223678bcfa385d82ef08148d57456f2f4c68ce945559a4313550059ec"
   },
   {
     "schema": "specnav.verification.reading.v1",
@@ -701,6 +1325,32 @@
   },
   {
     "schema": "specnav.verification.reading.v1",
+    "id": "reading-6810edcb16ef04acc4716347b4a170d938f267276e794940edf209924cdb1860",
+    "change_id": "docforge-project-format-v1",
+    "run_id": "run-20260827144440-471acf587e9a54c6",
+    "case_id": "case-a4-obsolete-contracts",
+    "attempt_id": "attempt-20260827144440-471acf587e9a54c6",
+    "step_id": "a4-step-scan",
+    "assertion_id": "a4-no-obsolete-contract",
+    "domain": "unit",
+    "expected": true,
+    "actual": true,
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-014d4e3ebba22187d420b88f189495a59a95e803e313996db0db84e2e76bbaba",
+      "evidence-cdfda50e6086fa3b17de0d23260d7fc9a10f20c3991f2225de2527c74c0bde4c"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-08-27T14:44:50.747Z",
+    "code_sha": "60274f4c7bd0541d0a6346753e68eb7f5f2ae6a6",
+    "test_sha": "b84991f223678bcfa385d82ef08148d57456f2f4c68ce945559a4313550059ec"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
     "id": "reading-68438651bc614e2861a61ead07f7be265e7554545d0ee90fb8ec357ffca977e8",
     "change_id": "docforge-project-format-v1",
     "run_id": "run-20260827064525-5e4db8725c20af7d",
@@ -726,6 +1376,136 @@
   },
   {
     "schema": "specnav.verification.reading.v1",
+    "id": "reading-6b0d5ad9d0e6989db64347f4e170532bdf1deb261b7c7773d49a519a391b525e",
+    "change_id": "docforge-project-format-v1",
+    "run_id": "run-20260827144010-c9ad0f2404127045",
+    "case_id": "case-a2-general-project",
+    "attempt_id": "attempt-20260827144010-c9ad0f2404127045",
+    "step_id": "a2-step-build",
+    "assertion_id": "a2-general-flow",
+    "domain": "e2e",
+    "expected": true,
+    "actual": true,
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-2458526c3213c0e3c01c20c19320f4ed91031c58822d7214707b4536dfac4e9a",
+      "evidence-edd4346a8d96669bfbe48ed87a73041c0839b9015143c89d3157d3139b27cd4a"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-08-27T14:40:16.158Z",
+    "code_sha": "60274f4c7bd0541d0a6346753e68eb7f5f2ae6a6",
+    "test_sha": "b84991f223678bcfa385d82ef08148d57456f2f4c68ce945559a4313550059ec"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-6bb3f8ba6e9309ed02576598773efd4d9625c436d9a881fd09e67e75fd2671e2",
+    "change_id": "docforge-project-format-v1",
+    "run_id": "run-20260827145918-d6a199cbbc2b0871",
+    "case_id": "case-a9-installed-office",
+    "attempt_id": "attempt-20260827145918-d6a199cbbc2b0871",
+    "step_id": "a9-step-receipt",
+    "assertion_id": "a9-installed-word-preview",
+    "domain": "static",
+    "expected": true,
+    "actual": true,
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-e0e52d8f9f6be3f69c0992b5cde499a07befc101d47b1f760ee27c6626ebbb82",
+      "evidence-eba5a14309dd3dba9e8bf7e2a4e5635f73b7a3c1296585e8114d59d9399235d3"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-08-27T14:59:20.274Z",
+    "code_sha": "60274f4c7bd0541d0a6346753e68eb7f5f2ae6a6",
+    "test_sha": "b84991f223678bcfa385d82ef08148d57456f2f4c68ce945559a4313550059ec"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-6d3d763546b5e0bc0c7c8a36fdfa7191121933559ce85732a3bd408c53eac315",
+    "change_id": "docforge-project-format-v1",
+    "run_id": "run-20260827144440-471acf587e9a54c6",
+    "case_id": "case-a4-obsolete-contracts",
+    "attempt_id": "attempt-20260827144440-471acf587e9a54c6",
+    "step_id": "a4-step-scan",
+    "assertion_id": "a4-no-obsolete-contract",
+    "domain": "facticity",
+    "expected": true,
+    "actual": true,
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-014d4e3ebba22187d420b88f189495a59a95e803e313996db0db84e2e76bbaba",
+      "evidence-cdfda50e6086fa3b17de0d23260d7fc9a10f20c3991f2225de2527c74c0bde4c"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-08-27T14:44:50.747Z",
+    "code_sha": "60274f4c7bd0541d0a6346753e68eb7f5f2ae6a6",
+    "test_sha": "b84991f223678bcfa385d82ef08148d57456f2f4c68ce945559a4313550059ec"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-6ead9707d36aee3e7a70e34098eca49d7cf6cf8173a9d995049eb6f7b84ef6d9",
+    "change_id": "docforge-project-format-v1",
+    "run_id": "run-20260827144211-6793841c117f6aa4",
+    "case_id": "case-a3-academic-profile",
+    "attempt_id": "attempt-20260827144211-6793841c117f6aa4",
+    "step_id": "a3-step-profiles",
+    "assertion_id": "a3-profile-isolation",
+    "domain": "unit",
+    "expected": true,
+    "actual": true,
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-0a5956ecae2905b4c0b39bc395eaf02dbb03a01615d2288acef37bbeb50bebcc",
+      "evidence-60d78f44e4a7a332057966b326e2e467e37c62a18008ced377e676f4d7469b2f"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-08-27T14:42:41.188Z",
+    "code_sha": "60274f4c7bd0541d0a6346753e68eb7f5f2ae6a6",
+    "test_sha": "b84991f223678bcfa385d82ef08148d57456f2f4c68ce945559a4313550059ec"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-71cf085c9dca4e80dfa56b1d17d38759a1604ab6228ae3c102dbf6fc859faf1c",
+    "change_id": "docforge-project-format-v1",
+    "run_id": "run-20260827144211-6793841c117f6aa4",
+    "case_id": "case-a3-academic-profile",
+    "attempt_id": "attempt-20260827144211-6793841c117f6aa4",
+    "step_id": "a3-step-profiles",
+    "assertion_id": "a3-profile-isolation",
+    "domain": "sensory",
+    "expected": true,
+    "actual": true,
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-0a5956ecae2905b4c0b39bc395eaf02dbb03a01615d2288acef37bbeb50bebcc",
+      "evidence-60d78f44e4a7a332057966b326e2e467e37c62a18008ced377e676f4d7469b2f"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-08-27T14:42:41.188Z",
+    "code_sha": "60274f4c7bd0541d0a6346753e68eb7f5f2ae6a6",
+    "test_sha": "b84991f223678bcfa385d82ef08148d57456f2f4c68ce945559a4313550059ec"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
     "id": "reading-74061bfd38880f64918f3fbd602963fd7b9024a7087baf56ded6ba0885408010",
     "change_id": "docforge-project-format-v1",
     "run_id": "run-20260827064441-8b4a7bb42f90f287",
@@ -748,6 +1528,32 @@
     "recorded_at": "2026-08-27T06:44:45.774Z",
     "code_sha": "60274f4c7bd0541d0a6346753e68eb7f5f2ae6a6",
     "test_sha": "8898bb578306334a0f3e9e5723ac9a186ccfb90845268c19e0677fb7df12a193"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-7bd55f7adc6fc9296a3d06e45e7bec0130158fc1e2e3e2163a4641d89058d41e",
+    "change_id": "docforge-project-format-v1",
+    "run_id": "run-20260827150110-50cf8f0cf0500ad5",
+    "case_id": "case-a10-repository-delivery",
+    "attempt_id": "attempt-20260827150110-50cf8f0cf0500ad5",
+    "step_id": "a10-step-delivery",
+    "assertion_id": "a10-repository-clean",
+    "domain": "sensory",
+    "expected": true,
+    "actual": true,
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-2f07c9bdb6077b853443f0c8d79a30655db9afa1910f5ad0c771fda512e89a1a",
+      "evidence-59dba3de9a77c4bf7b95a46844364b04c053cc4565d38f9ce137507a9001f897"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-08-27T15:01:37.552Z",
+    "code_sha": "60274f4c7bd0541d0a6346753e68eb7f5f2ae6a6",
+    "test_sha": "b84991f223678bcfa385d82ef08148d57456f2f4c68ce945559a4313550059ec"
   },
   {
     "schema": "specnav.verification.reading.v1",
@@ -851,6 +1657,58 @@
   },
   {
     "schema": "specnav.verification.reading.v1",
+    "id": "reading-8225fc8b49a7768789393f1e99daa6cb9278e1a4d5ceed6f58e5e570efd40041",
+    "change_id": "docforge-project-format-v1",
+    "run_id": "run-20260827144845-85ef866ab982cc8e",
+    "case_id": "case-a6-path-security",
+    "attempt_id": "attempt-20260827144845-85ef866ab982cc8e",
+    "step_id": "a6-step-redteam",
+    "assertion_id": "a6-secure-paths",
+    "domain": "unit",
+    "expected": true,
+    "actual": true,
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-05bea41ab279f82b9733ffe9c89441c15c243d99ded9ec84e87c85f1949e0fb1",
+      "evidence-854102baf75b913e801302ccd9849d4c80c6c82536df6b0ad730bf8a1221ac35"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-08-27T14:50:49.381Z",
+    "code_sha": "60274f4c7bd0541d0a6346753e68eb7f5f2ae6a6",
+    "test_sha": "b84991f223678bcfa385d82ef08148d57456f2f4c68ce945559a4313550059ec"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-84e2afed436146d17589ae472e426ac116b3a65da883d54c46acdf7eed329205",
+    "change_id": "docforge-project-format-v1",
+    "run_id": "run-20260827145246-d796826ed52b40e6",
+    "case_id": "case-a7-deterministic-docx",
+    "attempt_id": "attempt-20260827145246-d796826ed52b40e6",
+    "step_id": "a7-step-pipeline",
+    "assertion_id": "a7-deterministic-pipeline",
+    "domain": "unit",
+    "expected": true,
+    "actual": true,
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-4ee4304a09c008b9131f9dcccb05a2c97e0caaa79eefa8233ea31f7443e1e305",
+      "evidence-845d92a344bfec5e8f96e794ca3986d19856a415b2b9f4cdcd1b4f4fb7a00445"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-08-27T14:53:08.728Z",
+    "code_sha": "60274f4c7bd0541d0a6346753e68eb7f5f2ae6a6",
+    "test_sha": "b84991f223678bcfa385d82ef08148d57456f2f4c68ce945559a4313550059ec"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
     "id": "reading-8b6150e9a91a3cb6c5c77e109f76e947466ced1bf04f259ee3e2d7745df88f70",
     "change_id": "docforge-project-format-v1",
     "run_id": "run-20260827064441-8b4a7bb42f90f287",
@@ -926,6 +1784,32 @@
   },
   {
     "schema": "specnav.verification.reading.v1",
+    "id": "reading-9f3299132ca26f50fa345daebca3c34befc137c0568172d8d9c029e40ebc0e15",
+    "change_id": "docforge-project-format-v1",
+    "run_id": "run-20260827144646-a9e78af0071b90e6",
+    "case_id": "case-a5-neutral-default-paths",
+    "attempt_id": "attempt-20260827144646-a9e78af0071b90e6",
+    "step_id": "a5-step-defaults",
+    "assertion_id": "a5-default-paths",
+    "domain": "static",
+    "expected": true,
+    "actual": true,
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-0d7d4cc4cbd12c13fdd21c7fd08f88c514164cccb2a62422ce1a526f798e5e5f",
+      "evidence-7fd8c6f40aa496a6440ea635fa66ff6ef6b0b9eea852e4cc9e0b3d729abe7371"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-08-27T14:46:51.939Z",
+    "code_sha": "60274f4c7bd0541d0a6346753e68eb7f5f2ae6a6",
+    "test_sha": "b84991f223678bcfa385d82ef08148d57456f2f4c68ce945559a4313550059ec"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
     "id": "reading-9f371b926718e04dc38bc84d5b12679e5561cc1c682b37065189e3c6e22ff5e2",
     "change_id": "docforge-project-format-v1",
     "run_id": "run-20260827064446-2b9dc52f4d4f9ab2",
@@ -976,6 +1860,110 @@
   },
   {
     "schema": "specnav.verification.reading.v1",
+    "id": "reading-a48252132a52d458ae5e4c0617d7ed8dc7ca3f00a525f2f0654a085bcacb9392",
+    "change_id": "docforge-project-format-v1",
+    "run_id": "run-20260827144845-85ef866ab982cc8e",
+    "case_id": "case-a6-path-security",
+    "attempt_id": "attempt-20260827144845-85ef866ab982cc8e",
+    "step_id": "a6-step-redteam",
+    "assertion_id": "a6-secure-paths",
+    "domain": "redteam",
+    "expected": true,
+    "actual": true,
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-05bea41ab279f82b9733ffe9c89441c15c243d99ded9ec84e87c85f1949e0fb1",
+      "evidence-854102baf75b913e801302ccd9849d4c80c6c82536df6b0ad730bf8a1221ac35"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-08-27T14:50:49.381Z",
+    "code_sha": "60274f4c7bd0541d0a6346753e68eb7f5f2ae6a6",
+    "test_sha": "b84991f223678bcfa385d82ef08148d57456f2f4c68ce945559a4313550059ec"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-a540e17fa7fb5762aa830b32dd49abe59fb2269a5589798c3fca93c31de98eed",
+    "change_id": "docforge-project-format-v1",
+    "run_id": "run-20260827144646-a9e78af0071b90e6",
+    "case_id": "case-a5-neutral-default-paths",
+    "attempt_id": "attempt-20260827144646-a9e78af0071b90e6",
+    "step_id": "a5-step-defaults",
+    "assertion_id": "a5-default-paths",
+    "domain": "e2e",
+    "expected": true,
+    "actual": true,
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-0d7d4cc4cbd12c13fdd21c7fd08f88c514164cccb2a62422ce1a526f798e5e5f",
+      "evidence-7fd8c6f40aa496a6440ea635fa66ff6ef6b0b9eea852e4cc9e0b3d729abe7371"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-08-27T14:46:51.939Z",
+    "code_sha": "60274f4c7bd0541d0a6346753e68eb7f5f2ae6a6",
+    "test_sha": "b84991f223678bcfa385d82ef08148d57456f2f4c68ce945559a4313550059ec"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-a5e614a5d806a925aade450759104be45238d009059501b06e6b3725e4be2876",
+    "change_id": "docforge-project-format-v1",
+    "run_id": "run-20260827145246-d796826ed52b40e6",
+    "case_id": "case-a7-deterministic-docx",
+    "attempt_id": "attempt-20260827145246-d796826ed52b40e6",
+    "step_id": "a7-step-pipeline",
+    "assertion_id": "a7-deterministic-pipeline",
+    "domain": "facticity",
+    "expected": true,
+    "actual": true,
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-4ee4304a09c008b9131f9dcccb05a2c97e0caaa79eefa8233ea31f7443e1e305",
+      "evidence-845d92a344bfec5e8f96e794ca3986d19856a415b2b9f4cdcd1b4f4fb7a00445"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-08-27T14:53:08.728Z",
+    "code_sha": "60274f4c7bd0541d0a6346753e68eb7f5f2ae6a6",
+    "test_sha": "b84991f223678bcfa385d82ef08148d57456f2f4c68ce945559a4313550059ec"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-a945785e7514df9db2ff1bbcaee01302a4901dcb4a82d27bb420dedaf5e282f2",
+    "change_id": "docforge-project-format-v1",
+    "run_id": "run-20260827144845-85ef866ab982cc8e",
+    "case_id": "case-a6-path-security",
+    "attempt_id": "attempt-20260827144845-85ef866ab982cc8e",
+    "step_id": "a6-step-redteam",
+    "assertion_id": "a6-secure-paths",
+    "domain": "static",
+    "expected": true,
+    "actual": true,
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-05bea41ab279f82b9733ffe9c89441c15c243d99ded9ec84e87c85f1949e0fb1",
+      "evidence-854102baf75b913e801302ccd9849d4c80c6c82536df6b0ad730bf8a1221ac35"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-08-27T14:50:49.381Z",
+    "code_sha": "60274f4c7bd0541d0a6346753e68eb7f5f2ae6a6",
+    "test_sha": "b84991f223678bcfa385d82ef08148d57456f2f4c68ce945559a4313550059ec"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
     "id": "reading-aeae2b58971df794600053c4ea0a5cb5dea6249f61bd176613ed62a7118338fa",
     "change_id": "docforge-project-format-v1",
     "run_id": "run-20260827064518-8097b5c25829a2d4",
@@ -998,6 +1986,58 @@
     "recorded_at": "2026-08-27T06:45:24.873Z",
     "code_sha": "60274f4c7bd0541d0a6346753e68eb7f5f2ae6a6",
     "test_sha": "8898bb578306334a0f3e9e5723ac9a186ccfb90845268c19e0677fb7df12a193"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-af4160dbae59dc774d854aef8d0ba4cdbb777a17c0a380e33245d65e818e49f9",
+    "change_id": "docforge-project-format-v1",
+    "run_id": "run-20260827145510-a0d2a76a3bbc2a00",
+    "case_id": "case-a8-runtime-parity",
+    "attempt_id": "attempt-20260827145510-a0d2a76a3bbc2a00",
+    "step_id": "a8-step-parity",
+    "assertion_id": "a8-protocol-parity",
+    "domain": "static",
+    "expected": true,
+    "actual": true,
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-3380a695c4926f9001f1de1f258ac91874bb8a3372ffe8002f89938f01db5496",
+      "evidence-538b372f207e7de661cf9844d7c22df877b85e705f7121f1f397eb0a8dd16f91"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-08-27T14:57:14.790Z",
+    "code_sha": "60274f4c7bd0541d0a6346753e68eb7f5f2ae6a6",
+    "test_sha": "b84991f223678bcfa385d82ef08148d57456f2f4c68ce945559a4313550059ec"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-afa2e45e10d1469045c06f0ae51e201669aa3008e0db6322460ff5e7380e2427",
+    "change_id": "docforge-project-format-v1",
+    "run_id": "run-20260827143729-5c56ae56cba8bdd7",
+    "case_id": "case-a1-project-open",
+    "attempt_id": "attempt-20260827143729-5c56ae56cba8bdd7",
+    "step_id": "a1-step-open",
+    "assertion_id": "a1-project-open",
+    "domain": "static",
+    "expected": true,
+    "actual": true,
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-3538127be9871ee0aaef5be925125df7cbb5d4f169ddc2078c5d9ed1b4bc0fe0",
+      "evidence-d0d281636990c67c9776fee4b17f5592863845dbeae2d9d480f99553d4137dab"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-08-27T14:37:34.364Z",
+    "code_sha": "60274f4c7bd0541d0a6346753e68eb7f5f2ae6a6",
+    "test_sha": "b84991f223678bcfa385d82ef08148d57456f2f4c68ce945559a4313550059ec"
   },
   {
     "schema": "specnav.verification.reading.v1",
@@ -1101,6 +2141,58 @@
   },
   {
     "schema": "specnav.verification.reading.v1",
+    "id": "reading-b98409b77e97972bf11cbb690d1d31bcce68212a910a6975630138a959fa1894",
+    "change_id": "docforge-project-format-v1",
+    "run_id": "run-20260827144440-471acf587e9a54c6",
+    "case_id": "case-a4-obsolete-contracts",
+    "attempt_id": "attempt-20260827144440-471acf587e9a54c6",
+    "step_id": "a4-step-scan",
+    "assertion_id": "a4-no-obsolete-contract",
+    "domain": "e2e",
+    "expected": true,
+    "actual": true,
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-014d4e3ebba22187d420b88f189495a59a95e803e313996db0db84e2e76bbaba",
+      "evidence-cdfda50e6086fa3b17de0d23260d7fc9a10f20c3991f2225de2527c74c0bde4c"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-08-27T14:44:50.747Z",
+    "code_sha": "60274f4c7bd0541d0a6346753e68eb7f5f2ae6a6",
+    "test_sha": "b84991f223678bcfa385d82ef08148d57456f2f4c68ce945559a4313550059ec"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-b9cd7dc8873f2636d1055e8b2f601290a6e0d1aad32a91333e4cb2eb03d766e1",
+    "change_id": "docforge-project-format-v1",
+    "run_id": "run-20260827144440-471acf587e9a54c6",
+    "case_id": "case-a4-obsolete-contracts",
+    "attempt_id": "attempt-20260827144440-471acf587e9a54c6",
+    "step_id": "a4-step-scan",
+    "assertion_id": "a4-no-obsolete-contract",
+    "domain": "static",
+    "expected": true,
+    "actual": true,
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-014d4e3ebba22187d420b88f189495a59a95e803e313996db0db84e2e76bbaba",
+      "evidence-cdfda50e6086fa3b17de0d23260d7fc9a10f20c3991f2225de2527c74c0bde4c"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-08-27T14:44:50.747Z",
+    "code_sha": "60274f4c7bd0541d0a6346753e68eb7f5f2ae6a6",
+    "test_sha": "b84991f223678bcfa385d82ef08148d57456f2f4c68ce945559a4313550059ec"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
     "id": "reading-bc7bcfabba259bad73e2a08675b5ebd5ee67f611073e58f8a86cb8ed1c2a3810",
     "change_id": "docforge-project-format-v1",
     "run_id": "run-20260827064432-f7b0f5e993e8efdd",
@@ -1176,6 +2268,32 @@
   },
   {
     "schema": "specnav.verification.reading.v1",
+    "id": "reading-c01acc83a7861a1f1aabf48b5c4e736af0ae728920ceaa2e22ad61d5a1415a45",
+    "change_id": "docforge-project-format-v1",
+    "run_id": "run-20260827150110-50cf8f0cf0500ad5",
+    "case_id": "case-a10-repository-delivery",
+    "attempt_id": "attempt-20260827150110-50cf8f0cf0500ad5",
+    "step_id": "a10-step-delivery",
+    "assertion_id": "a10-repository-clean",
+    "domain": "facticity",
+    "expected": true,
+    "actual": true,
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-2f07c9bdb6077b853443f0c8d79a30655db9afa1910f5ad0c771fda512e89a1a",
+      "evidence-59dba3de9a77c4bf7b95a46844364b04c053cc4565d38f9ce137507a9001f897"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-08-27T15:01:37.552Z",
+    "code_sha": "60274f4c7bd0541d0a6346753e68eb7f5f2ae6a6",
+    "test_sha": "b84991f223678bcfa385d82ef08148d57456f2f4c68ce945559a4313550059ec"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
     "id": "reading-c0c7b5fd6840ec49614227da0e05752b28c22025dd7278cb5f14f086ad798924",
     "change_id": "docforge-project-format-v1",
     "run_id": "run-20260827064427-7306fa24d31e2dcf",
@@ -1198,6 +2316,32 @@
     "recorded_at": "2026-08-27T06:44:31.156Z",
     "code_sha": "60274f4c7bd0541d0a6346753e68eb7f5f2ae6a6",
     "test_sha": "8898bb578306334a0f3e9e5723ac9a186ccfb90845268c19e0677fb7df12a193"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-c18ee81caeb20b29d1ee6fd20d42e2a2468670d7dd5bbce6984e34df947db11f",
+    "change_id": "docforge-project-format-v1",
+    "run_id": "run-20260827145246-d796826ed52b40e6",
+    "case_id": "case-a7-deterministic-docx",
+    "attempt_id": "attempt-20260827145246-d796826ed52b40e6",
+    "step_id": "a7-step-pipeline",
+    "assertion_id": "a7-deterministic-pipeline",
+    "domain": "static",
+    "expected": true,
+    "actual": true,
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-4ee4304a09c008b9131f9dcccb05a2c97e0caaa79eefa8233ea31f7443e1e305",
+      "evidence-845d92a344bfec5e8f96e794ca3986d19856a415b2b9f4cdcd1b4f4fb7a00445"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-08-27T14:53:08.728Z",
+    "code_sha": "60274f4c7bd0541d0a6346753e68eb7f5f2ae6a6",
+    "test_sha": "b84991f223678bcfa385d82ef08148d57456f2f4c68ce945559a4313550059ec"
   },
   {
     "schema": "specnav.verification.reading.v1",
@@ -1276,6 +2420,32 @@
   },
   {
     "schema": "specnav.verification.reading.v1",
+    "id": "reading-c6307c1036aeb052c57eebf93c1171de3462ae19186ec18c293b7734bd3f9573",
+    "change_id": "docforge-project-format-v1",
+    "run_id": "run-20260827144211-6793841c117f6aa4",
+    "case_id": "case-a3-academic-profile",
+    "attempt_id": "attempt-20260827144211-6793841c117f6aa4",
+    "step_id": "a3-step-profiles",
+    "assertion_id": "a3-profile-isolation",
+    "domain": "redteam",
+    "expected": true,
+    "actual": true,
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-0a5956ecae2905b4c0b39bc395eaf02dbb03a01615d2288acef37bbeb50bebcc",
+      "evidence-60d78f44e4a7a332057966b326e2e467e37c62a18008ced377e676f4d7469b2f"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-08-27T14:42:41.188Z",
+    "code_sha": "60274f4c7bd0541d0a6346753e68eb7f5f2ae6a6",
+    "test_sha": "b84991f223678bcfa385d82ef08148d57456f2f4c68ce945559a4313550059ec"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
     "id": "reading-c87006f00d28cec93a4c82566eaed39771cd85754751fcf33f3adffbf302a6ac",
     "change_id": "docforge-project-format-v1",
     "run_id": "run-20260827064427-7306fa24d31e2dcf",
@@ -1326,6 +2496,84 @@
   },
   {
     "schema": "specnav.verification.reading.v1",
+    "id": "reading-c984c44507620027f41618155052fdd946c98430b677b5a68d8fa424266b6998",
+    "change_id": "docforge-project-format-v1",
+    "run_id": "run-20260827144010-c9ad0f2404127045",
+    "case_id": "case-a2-general-project",
+    "attempt_id": "attempt-20260827144010-c9ad0f2404127045",
+    "step_id": "a2-step-build",
+    "assertion_id": "a2-general-flow",
+    "domain": "redteam",
+    "expected": true,
+    "actual": true,
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-2458526c3213c0e3c01c20c19320f4ed91031c58822d7214707b4536dfac4e9a",
+      "evidence-edd4346a8d96669bfbe48ed87a73041c0839b9015143c89d3157d3139b27cd4a"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-08-27T14:40:16.158Z",
+    "code_sha": "60274f4c7bd0541d0a6346753e68eb7f5f2ae6a6",
+    "test_sha": "b84991f223678bcfa385d82ef08148d57456f2f4c68ce945559a4313550059ec"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-cca1ba7c74f63ef933070e6cf387714dc82f6da5e3ac935d4b1ecd324c2140b7",
+    "change_id": "docforge-project-format-v1",
+    "run_id": "run-20260827143729-5c56ae56cba8bdd7",
+    "case_id": "case-a1-project-open",
+    "attempt_id": "attempt-20260827143729-5c56ae56cba8bdd7",
+    "step_id": "a1-step-open",
+    "assertion_id": "a1-project-open",
+    "domain": "facticity",
+    "expected": true,
+    "actual": true,
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-3538127be9871ee0aaef5be925125df7cbb5d4f169ddc2078c5d9ed1b4bc0fe0",
+      "evidence-d0d281636990c67c9776fee4b17f5592863845dbeae2d9d480f99553d4137dab"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-08-27T14:37:34.364Z",
+    "code_sha": "60274f4c7bd0541d0a6346753e68eb7f5f2ae6a6",
+    "test_sha": "b84991f223678bcfa385d82ef08148d57456f2f4c68ce945559a4313550059ec"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-cee4d5275a696447d222f3f7f21627a435da7e6c7c5308b56f90c4c8ec3ff0c6",
+    "change_id": "docforge-project-format-v1",
+    "run_id": "run-20260827144845-85ef866ab982cc8e",
+    "case_id": "case-a6-path-security",
+    "attempt_id": "attempt-20260827144845-85ef866ab982cc8e",
+    "step_id": "a6-step-redteam",
+    "assertion_id": "a6-secure-paths",
+    "domain": "sensory",
+    "expected": true,
+    "actual": true,
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-05bea41ab279f82b9733ffe9c89441c15c243d99ded9ec84e87c85f1949e0fb1",
+      "evidence-854102baf75b913e801302ccd9849d4c80c6c82536df6b0ad730bf8a1221ac35"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-08-27T14:50:49.381Z",
+    "code_sha": "60274f4c7bd0541d0a6346753e68eb7f5f2ae6a6",
+    "test_sha": "b84991f223678bcfa385d82ef08148d57456f2f4c68ce945559a4313550059ec"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
     "id": "reading-cf4a111d2e7e6930aae65bde79224f480ae5cc57babecef4f5f9cbd9119f479f",
     "change_id": "docforge-project-format-v1",
     "run_id": "run-20260827064704-d0c88d2a76efe074",
@@ -1348,6 +2596,32 @@
     "recorded_at": "2026-08-27T06:47:33.616Z",
     "code_sha": "60274f4c7bd0541d0a6346753e68eb7f5f2ae6a6",
     "test_sha": "8898bb578306334a0f3e9e5723ac9a186ccfb90845268c19e0677fb7df12a193"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-d4bc36cfca61aeb446a215940ecf66027c50baeb5feb87f01095b156a44ff2be",
+    "change_id": "docforge-project-format-v1",
+    "run_id": "run-20260827144211-6793841c117f6aa4",
+    "case_id": "case-a3-academic-profile",
+    "attempt_id": "attempt-20260827144211-6793841c117f6aa4",
+    "step_id": "a3-step-profiles",
+    "assertion_id": "a3-profile-isolation",
+    "domain": "facticity",
+    "expected": true,
+    "actual": true,
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-0a5956ecae2905b4c0b39bc395eaf02dbb03a01615d2288acef37bbeb50bebcc",
+      "evidence-60d78f44e4a7a332057966b326e2e467e37c62a18008ced377e676f4d7469b2f"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-08-27T14:42:41.188Z",
+    "code_sha": "60274f4c7bd0541d0a6346753e68eb7f5f2ae6a6",
+    "test_sha": "b84991f223678bcfa385d82ef08148d57456f2f4c68ce945559a4313550059ec"
   },
   {
     "schema": "specnav.verification.reading.v1",
@@ -1451,6 +2725,188 @@
   },
   {
     "schema": "specnav.verification.reading.v1",
+    "id": "reading-e98aea4b9f23f5059ac3a22ad33b1dbe0fc55ac5e617927e647c411084ce83ca",
+    "change_id": "docforge-project-format-v1",
+    "run_id": "run-20260827144440-471acf587e9a54c6",
+    "case_id": "case-a4-obsolete-contracts",
+    "attempt_id": "attempt-20260827144440-471acf587e9a54c6",
+    "step_id": "a4-step-scan",
+    "assertion_id": "a4-no-obsolete-contract",
+    "domain": "sensory",
+    "expected": true,
+    "actual": true,
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-014d4e3ebba22187d420b88f189495a59a95e803e313996db0db84e2e76bbaba",
+      "evidence-cdfda50e6086fa3b17de0d23260d7fc9a10f20c3991f2225de2527c74c0bde4c"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-08-27T14:44:50.747Z",
+    "code_sha": "60274f4c7bd0541d0a6346753e68eb7f5f2ae6a6",
+    "test_sha": "b84991f223678bcfa385d82ef08148d57456f2f4c68ce945559a4313550059ec"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-e9b2ffd7e6a4e899b4d5af3a870890eb28f82a1c95ec6b01401c80afe0db7099",
+    "change_id": "docforge-project-format-v1",
+    "run_id": "run-20260827144646-a9e78af0071b90e6",
+    "case_id": "case-a5-neutral-default-paths",
+    "attempt_id": "attempt-20260827144646-a9e78af0071b90e6",
+    "step_id": "a5-step-defaults",
+    "assertion_id": "a5-default-paths",
+    "domain": "redteam",
+    "expected": true,
+    "actual": true,
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-0d7d4cc4cbd12c13fdd21c7fd08f88c514164cccb2a62422ce1a526f798e5e5f",
+      "evidence-7fd8c6f40aa496a6440ea635fa66ff6ef6b0b9eea852e4cc9e0b3d729abe7371"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-08-27T14:46:51.939Z",
+    "code_sha": "60274f4c7bd0541d0a6346753e68eb7f5f2ae6a6",
+    "test_sha": "b84991f223678bcfa385d82ef08148d57456f2f4c68ce945559a4313550059ec"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-eb5363a45de8f1877eb4f4efceccce7e60442c2ca43c810ce86873f7354f5440",
+    "change_id": "docforge-project-format-v1",
+    "run_id": "run-20260827144646-a9e78af0071b90e6",
+    "case_id": "case-a5-neutral-default-paths",
+    "attempt_id": "attempt-20260827144646-a9e78af0071b90e6",
+    "step_id": "a5-step-defaults",
+    "assertion_id": "a5-default-paths",
+    "domain": "unit",
+    "expected": true,
+    "actual": true,
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-0d7d4cc4cbd12c13fdd21c7fd08f88c514164cccb2a62422ce1a526f798e5e5f",
+      "evidence-7fd8c6f40aa496a6440ea635fa66ff6ef6b0b9eea852e4cc9e0b3d729abe7371"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-08-27T14:46:51.939Z",
+    "code_sha": "60274f4c7bd0541d0a6346753e68eb7f5f2ae6a6",
+    "test_sha": "b84991f223678bcfa385d82ef08148d57456f2f4c68ce945559a4313550059ec"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-ecc6f8cabf24a9420159cc18c794638c2fa54647269e19e744bcfcbb8efcb54c",
+    "change_id": "docforge-project-format-v1",
+    "run_id": "run-20260827143729-5c56ae56cba8bdd7",
+    "case_id": "case-a1-project-open",
+    "attempt_id": "attempt-20260827143729-5c56ae56cba8bdd7",
+    "step_id": "a1-step-open",
+    "assertion_id": "a1-project-open",
+    "domain": "sensory",
+    "expected": true,
+    "actual": true,
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-3538127be9871ee0aaef5be925125df7cbb5d4f169ddc2078c5d9ed1b4bc0fe0",
+      "evidence-d0d281636990c67c9776fee4b17f5592863845dbeae2d9d480f99553d4137dab"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-08-27T14:37:34.364Z",
+    "code_sha": "60274f4c7bd0541d0a6346753e68eb7f5f2ae6a6",
+    "test_sha": "b84991f223678bcfa385d82ef08148d57456f2f4c68ce945559a4313550059ec"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-ee79b72812f926939809fb60cc1394e0ba505ec61085d0cdb96577d2b6da1a2f",
+    "change_id": "docforge-project-format-v1",
+    "run_id": "run-20260827144010-c9ad0f2404127045",
+    "case_id": "case-a2-general-project",
+    "attempt_id": "attempt-20260827144010-c9ad0f2404127045",
+    "step_id": "a2-step-build",
+    "assertion_id": "a2-general-flow",
+    "domain": "static",
+    "expected": true,
+    "actual": true,
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-2458526c3213c0e3c01c20c19320f4ed91031c58822d7214707b4536dfac4e9a",
+      "evidence-edd4346a8d96669bfbe48ed87a73041c0839b9015143c89d3157d3139b27cd4a"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-08-27T14:40:16.158Z",
+    "code_sha": "60274f4c7bd0541d0a6346753e68eb7f5f2ae6a6",
+    "test_sha": "b84991f223678bcfa385d82ef08148d57456f2f4c68ce945559a4313550059ec"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-f047b6aca066fce935aa6af666cfec7c991be4b770fb5713c681920e1538a77f",
+    "change_id": "docforge-project-format-v1",
+    "run_id": "run-20260827144440-471acf587e9a54c6",
+    "case_id": "case-a4-obsolete-contracts",
+    "attempt_id": "attempt-20260827144440-471acf587e9a54c6",
+    "step_id": "a4-step-scan",
+    "assertion_id": "a4-no-obsolete-contract",
+    "domain": "redteam",
+    "expected": true,
+    "actual": true,
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-014d4e3ebba22187d420b88f189495a59a95e803e313996db0db84e2e76bbaba",
+      "evidence-cdfda50e6086fa3b17de0d23260d7fc9a10f20c3991f2225de2527c74c0bde4c"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-08-27T14:44:50.747Z",
+    "code_sha": "60274f4c7bd0541d0a6346753e68eb7f5f2ae6a6",
+    "test_sha": "b84991f223678bcfa385d82ef08148d57456f2f4c68ce945559a4313550059ec"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-f0a6ea8cb3496ba7e3c02f8f447aaa1991d2ee7c5ba63d3d61b6f642cc552ce3",
+    "change_id": "docforge-project-format-v1",
+    "run_id": "run-20260827144646-a9e78af0071b90e6",
+    "case_id": "case-a5-neutral-default-paths",
+    "attempt_id": "attempt-20260827144646-a9e78af0071b90e6",
+    "step_id": "a5-step-defaults",
+    "assertion_id": "a5-default-paths",
+    "domain": "sensory",
+    "expected": true,
+    "actual": true,
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-0d7d4cc4cbd12c13fdd21c7fd08f88c514164cccb2a62422ce1a526f798e5e5f",
+      "evidence-7fd8c6f40aa496a6440ea635fa66ff6ef6b0b9eea852e4cc9e0b3d729abe7371"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-08-27T14:46:51.939Z",
+    "code_sha": "60274f4c7bd0541d0a6346753e68eb7f5f2ae6a6",
+    "test_sha": "b84991f223678bcfa385d82ef08148d57456f2f4c68ce945559a4313550059ec"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
     "id": "reading-f4b353f3b5596403af36b4c8705c60438d88d8a75e5d3d44cae0dea371feb1a3",
     "change_id": "docforge-project-format-v1",
     "run_id": "run-20260827064446-2b9dc52f4d4f9ab2",
@@ -1473,6 +2929,110 @@
     "recorded_at": "2026-08-27T06:45:17.543Z",
     "code_sha": "60274f4c7bd0541d0a6346753e68eb7f5f2ae6a6",
     "test_sha": "8898bb578306334a0f3e9e5723ac9a186ccfb90845268c19e0677fb7df12a193"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-fa40bf23a03b8fce6b694f5b0730748c65319562902198aa3a853dce2905a1b3",
+    "change_id": "docforge-project-format-v1",
+    "run_id": "run-20260827143729-5c56ae56cba8bdd7",
+    "case_id": "case-a1-project-open",
+    "attempt_id": "attempt-20260827143729-5c56ae56cba8bdd7",
+    "step_id": "a1-step-open",
+    "assertion_id": "a1-project-open",
+    "domain": "redteam",
+    "expected": true,
+    "actual": true,
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-3538127be9871ee0aaef5be925125df7cbb5d4f169ddc2078c5d9ed1b4bc0fe0",
+      "evidence-d0d281636990c67c9776fee4b17f5592863845dbeae2d9d480f99553d4137dab"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-08-27T14:37:34.364Z",
+    "code_sha": "60274f4c7bd0541d0a6346753e68eb7f5f2ae6a6",
+    "test_sha": "b84991f223678bcfa385d82ef08148d57456f2f4c68ce945559a4313550059ec"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-faadc042d5b07490a2eb52edd23df778cef5b7dfb25cb4705c187c48337672b4",
+    "change_id": "docforge-project-format-v1",
+    "run_id": "run-20260827144211-6793841c117f6aa4",
+    "case_id": "case-a3-academic-profile",
+    "attempt_id": "attempt-20260827144211-6793841c117f6aa4",
+    "step_id": "a3-step-profiles",
+    "assertion_id": "a3-profile-isolation",
+    "domain": "static",
+    "expected": true,
+    "actual": true,
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-0a5956ecae2905b4c0b39bc395eaf02dbb03a01615d2288acef37bbeb50bebcc",
+      "evidence-60d78f44e4a7a332057966b326e2e467e37c62a18008ced377e676f4d7469b2f"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-08-27T14:42:41.188Z",
+    "code_sha": "60274f4c7bd0541d0a6346753e68eb7f5f2ae6a6",
+    "test_sha": "b84991f223678bcfa385d82ef08148d57456f2f4c68ce945559a4313550059ec"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-fcd7270fb41435ded9ae6e2d663cfdf3fc15e789bb6d580bfae7f4623ec9e39f",
+    "change_id": "docforge-project-format-v1",
+    "run_id": "run-20260827143729-5c56ae56cba8bdd7",
+    "case_id": "case-a1-project-open",
+    "attempt_id": "attempt-20260827143729-5c56ae56cba8bdd7",
+    "step_id": "a1-step-open",
+    "assertion_id": "a1-project-open",
+    "domain": "e2e",
+    "expected": true,
+    "actual": true,
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-3538127be9871ee0aaef5be925125df7cbb5d4f169ddc2078c5d9ed1b4bc0fe0",
+      "evidence-d0d281636990c67c9776fee4b17f5592863845dbeae2d9d480f99553d4137dab"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-08-27T14:37:34.364Z",
+    "code_sha": "60274f4c7bd0541d0a6346753e68eb7f5f2ae6a6",
+    "test_sha": "b84991f223678bcfa385d82ef08148d57456f2f4c68ce945559a4313550059ec"
+  },
+  {
+    "schema": "specnav.verification.reading.v1",
+    "id": "reading-fcfb4b1dc7005450a21b92e21ed06999b0e4d94369fecdee8e9f89837058f1f1",
+    "change_id": "docforge-project-format-v1",
+    "run_id": "run-20260827145510-a0d2a76a3bbc2a00",
+    "case_id": "case-a8-runtime-parity",
+    "attempt_id": "attempt-20260827145510-a0d2a76a3bbc2a00",
+    "step_id": "a8-step-parity",
+    "assertion_id": "a8-protocol-parity",
+    "domain": "facticity",
+    "expected": true,
+    "actual": true,
+    "oracle": {
+      "type": "structured_comparison",
+      "owner": "command-runner",
+      "deterministic": true
+    },
+    "evidence_ids": [
+      "evidence-3380a695c4926f9001f1de1f258ac91874bb8a3372ffe8002f89938f01db5496",
+      "evidence-538b372f207e7de661cf9844d7c22df877b85e705f7121f1f397eb0a8dd16f91"
+    ],
+    "verdict": "pass",
+    "recorded_at": "2026-08-27T14:57:14.790Z",
+    "code_sha": "60274f4c7bd0541d0a6346753e68eb7f5f2ae6a6",
+    "test_sha": "b84991f223678bcfa385d82ef08148d57456f2f4c68ce945559a4313550059ec"
   },
   {
     "schema": "specnav.verification.reading.v1",

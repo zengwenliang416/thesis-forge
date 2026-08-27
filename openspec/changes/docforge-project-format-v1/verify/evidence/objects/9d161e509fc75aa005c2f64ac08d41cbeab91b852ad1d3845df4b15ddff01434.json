@@ -1,0 +1,7 @@
+{
+  "actual": true,
+  "assertion_id": "a5-default-paths",
+  "expected": true,
+  "method": "equal",
+  "status": "passed"
+}

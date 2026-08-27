@@ -1,0 +1,7 @@
+{
+  "actual": true,
+  "assertion_id": "a3-profile-isolation",
+  "expected": true,
+  "method": "equal",
+  "status": "passed"
+}
