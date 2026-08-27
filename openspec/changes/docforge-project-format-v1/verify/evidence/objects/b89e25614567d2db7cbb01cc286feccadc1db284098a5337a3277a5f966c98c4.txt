@@ -1,0 +1,52 @@
+status=passed
+exit_status=0
+--- stdout ---
+{
+  "ok": true,
+  "target": "aarch64-apple-darwin",
+  "platform": "macos",
+  "sidecar": {
+    "path": "/Volumes/ThesisForgeCI/workspaces/thesis-forge-docforge-verify/src-tauri/binaries/docforge-sidecar-aarch64-apple-darwin",
+    "bytes": 20775840,
+    "sha256": "07b92b5a13a95507fbb04142bd9ce2a28d2cb4908d1faeed6b9e3e968c0401b8",
+    "operations": [
+      "inspect",
+      "preview",
+      "validate"
+    ],
+    "canceled": true,
+    "buildStages": [
+      "parse",
+      "validate",
+      "compile",
+      "render",
+      "finalize"
+    ],
+    "docxBytes": 27703,
+    "docxSha256": "e6ceab22664fe01913d53c33ae1c1c40d560ec249d68c384f49c047d479d210c",
+    "reopened": true,
+    "offline": true
+  },
+  "web": {
+    "path": "/Volumes/ThesisForgeCI/workspaces/thesis-forge-docforge-verify/dist/web",
+    "files": 3,
+    "indexSha256": "141e1515584e11f936afd9884c91d66eca81caddbea53c1de0219725326d8bc5"
+  },
+  "bundles": {
+    "platform": "macos",
+    "artifacts": {
+      ".app": {
+        "path": "/Volumes/ThesisForgeCI/workspaces/thesis-forge-docforge-verify/src-tauri/target/release/bundle/macos/DocForge.app",
+        "bytes": 33312733,
+        "managedSidecar": "/Volumes/ThesisForgeCI/workspaces/thesis-forge-docforge-verify/src-tauri/target/release/bundle/macos/DocForge.app/Contents/MacOS/docforge-sidecar"
+      },
+      ".dmg": {
+        "path": "/Volumes/ThesisForgeCI/workspaces/thesis-forge-docforge-verify/src-tauri/target/release/bundle/dmg/DocForge_0.1.0_aarch64.dmg",
+        "bytes": 24574887
+      }
+    }
+  }
+}
+{"ok": true, "tag": "v0.1.0", "version": "0.1.0"}
+
+--- stderr ---

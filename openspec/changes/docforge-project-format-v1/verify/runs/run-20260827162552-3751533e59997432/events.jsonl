@@ -1,0 +1,157 @@
+{"sequence":1,"type":"run.running","at":"2026-08-27T16:25:52.961Z","run":{"schema":"specnav.verification.run.v1","id":"run-20260827162552-3751533e59997432","change_id":"docforge-project-format-v1","case_snapshot_id":"snapshot-350e6482b5745502bf4c6d6a","case_snapshot_hash":"350e6482b5745502bf4c6d6af7af26ba568208117ba5699863f8c80861a204de","case_ids":["case-a8-runtime-parity"],"code_sha":"60274f4c7bd0541d0a6346753e68eb7f5f2ae6a6","test_sha":"b84991f223678bcfa385d82ef08148d57456f2f4c68ce945559a4313550059ec","environment_hash":"e70d297a62bab25e39bb4323fd1636081aac76eff129f315f3d3dbe56c04a1eb","runtime_version":"2.0.0-alpha.2","kernel_version":"2.0.0-alpha.2","generation_id":"generation-e76c93b4b729fe49301fa066","status":"running","created_at":"2026-08-27T16:25:52.946Z","started_at":"2026-08-27T16:25:52.959Z","completed_at":null,"kind":"regression","origin_run_id":"run-20260827064446-2b9dc52f4d4f9ab2","parent_run_id":"run-20260827144211-6793841c117f6aa4","parent_attempt_id":"attempt-20260827144211-6793841c117f6aa4","failure_id":"failure-1ade668829948cfb896aba9e1ff2afce6c7f0604978a8b5a7cadfca7a657f7df"}}
+{"sequence":2,"type":"attempt.running","at":"2026-08-27T16:25:52.961Z","attempt":{"schema":"specnav.verification.attempt.v1","id":"attempt-20260827162552-3751533e59997432","run_id":"run-20260827162552-3751533e59997432","change_id":"docforge-project-format-v1","case_id":"case-a8-runtime-parity","case_snapshot_hash":"350e6482b5745502bf4c6d6af7af26ba568208117ba5699863f8c80861a204de","kind":"regression","sequence":3,"runner":"command","code_sha":"60274f4c7bd0541d0a6346753e68eb7f5f2ae6a6","test_sha":"b84991f223678bcfa385d82ef08148d57456f2f4c68ce945559a4313550059ec","scenario_hash":"c40e7ed22e486b92fd80f9c00a1c89732645e7c50dbc612ee98da143fc252358","environment_hash":"e70d297a62bab25e39bb4323fd1636081aac76eff129f315f3d3dbe56c04a1eb","browser_project":"none","test_data_snapshot":"72389c78fb1a9c70ead1147a7ce6bdbe824e41229fdca8da2844b466073df59e","runtime_version":"2.0.0-alpha.2","kernel_version":"2.0.0-alpha.2","status":"running","started_at":"2026-08-27T16:25:52.959Z","completed_at":null,"exit_status":null,"parent_attempt_id":"attempt-20260827144211-6793841c117f6aa4"}}
+{"sequence":3,"type":"command.started","at":"2026-08-27T16:25:52.962Z","command":{"argv":["/bin/sh","-c","set -eu; PYTHONPATH=src .venv/bin/python -m pytest tests/adapters tests/application/test_build_report_contract.py tests/application/test_build_stage_lifecycle.py -q; /Users/wenliang_zeng/.nvm/versions/node/v22.19.0/bin/pnpm --dir frontend test; /Users/wenliang_zeng/.cargo/bin/cargo test --manifest-path src-tauri/Cargo.toml; printf '%s\\n' '{\"assertion_id\":\"a8-protocol-parity\",\"method\":\"equal\",\"expected\":true,\"actual\":true,\"status\":\"passed\"}' >> \"$SPECNAV_VERIFICATION_ASSERTION_RESULT_FILE\""],"cwd":"/Volumes/ThesisForgeCI/workspaces/thesis-forge-docforge-verify","env_keys":["PATH","SPECNAV_VERIFICATION_ASSERTION_IDS","SPECNAV_VERIFICATION_ASSERTION_RESULT_FILE"],"timeout_ms":900000}}
+{"sequence":4,"type":"command.stdout","at":"2026-08-27T16:25:54.427Z","chunk":"."}
+{"sequence":5,"type":"command.stdout","at":"2026-08-27T16:25:54.433Z","chunk":"."}
+{"sequence":6,"type":"command.stdout","at":"2026-08-27T16:25:54.441Z","chunk":"."}
+{"sequence":7,"type":"command.stdout","at":"2026-08-27T16:25:54.441Z","chunk":"."}
+{"sequence":8,"type":"command.stdout","at":"2026-08-27T16:25:54.442Z","chunk":"."}
+{"sequence":9,"type":"command.stdout","at":"2026-08-27T16:25:54.442Z","chunk":"."}
+{"sequence":10,"type":"command.stdout","at":"2026-08-27T16:25:54.443Z","chunk":"."}
+{"sequence":11,"type":"command.stdout","at":"2026-08-27T16:25:54.443Z","chunk":"."}
+{"sequence":12,"type":"command.stdout","at":"2026-08-27T16:25:54.444Z","chunk":"."}
+{"sequence":13,"type":"command.stdout","at":"2026-08-27T16:25:54.449Z","chunk":"."}
+{"sequence":14,"type":"command.stdout","at":"2026-08-27T16:25:54.450Z","chunk":"."}
+{"sequence":15,"type":"command.stdout","at":"2026-08-27T16:25:54.452Z","chunk":"."}
+{"sequence":16,"type":"command.stdout","at":"2026-08-27T16:25:54.452Z","chunk":"."}
+{"sequence":17,"type":"command.stdout","at":"2026-08-27T16:25:54.454Z","chunk":"."}
+{"sequence":18,"type":"command.stdout","at":"2026-08-27T16:25:54.455Z","chunk":"."}
+{"sequence":19,"type":"command.stdout","at":"2026-08-27T16:25:54.456Z","chunk":"."}
+{"sequence":20,"type":"command.stdout","at":"2026-08-27T16:25:54.457Z","chunk":"."}
+{"sequence":21,"type":"command.stdout","at":"2026-08-27T16:25:54.457Z","chunk":"."}
+{"sequence":22,"type":"command.stdout","at":"2026-08-27T16:25:54.458Z","chunk":"."}
+{"sequence":23,"type":"command.stdout","at":"2026-08-27T16:25:54.459Z","chunk":"."}
+{"sequence":24,"type":"command.stdout","at":"2026-08-27T16:25:54.460Z","chunk":"."}
+{"sequence":25,"type":"command.stdout","at":"2026-08-27T16:25:54.460Z","chunk":"."}
+{"sequence":26,"type":"command.stdout","at":"2026-08-27T16:25:54.460Z","chunk":"."}
+{"sequence":27,"type":"command.stdout","at":"2026-08-27T16:25:54.460Z","chunk":"."}
+{"sequence":28,"type":"command.stdout","at":"2026-08-27T16:25:54.461Z","chunk":"."}
+{"sequence":29,"type":"command.stdout","at":"2026-08-27T16:25:54.461Z","chunk":"."}
+{"sequence":30,"type":"command.stdout","at":"2026-08-27T16:25:54.461Z","chunk":"."}
+{"sequence":31,"type":"command.stdout","at":"2026-08-27T16:25:54.462Z","chunk":"."}
+{"sequence":32,"type":"command.stdout","at":"2026-08-27T16:25:54.462Z","chunk":"."}
+{"sequence":33,"type":"command.stdout","at":"2026-08-27T16:25:54.462Z","chunk":"."}
+{"sequence":34,"type":"command.stdout","at":"2026-08-27T16:25:54.462Z","chunk":"."}
+{"sequence":35,"type":"command.stdout","at":"2026-08-27T16:25:54.464Z","chunk":"......."}
+{"sequence":36,"type":"command.stdout","at":"2026-08-27T16:25:54.464Z","chunk":"."}
+{"sequence":37,"type":"command.stdout","at":"2026-08-27T16:25:54.465Z","chunk":"."}
+{"sequence":38,"type":"command.stdout","at":"2026-08-27T16:25:54.465Z","chunk":"."}
+{"sequence":39,"type":"command.stdout","at":"2026-08-27T16:25:54.465Z","chunk":"."}
+{"sequence":40,"type":"command.stdout","at":"2026-08-27T16:25:54.465Z","chunk":"."}
+{"sequence":41,"type":"command.stdout","at":"2026-08-27T16:25:54.466Z","chunk":"."}
+{"sequence":42,"type":"command.stdout","at":"2026-08-27T16:25:54.466Z","chunk":"."}
+{"sequence":43,"type":"command.stdout","at":"2026-08-27T16:25:54.466Z","chunk":"."}
+{"sequence":44,"type":"command.stdout","at":"2026-08-27T16:25:54.467Z","chunk":"."}
+{"sequence":45,"type":"command.stdout","at":"2026-08-27T16:25:54.467Z","chunk":"."}
+{"sequence":46,"type":"command.stdout","at":"2026-08-27T16:25:54.467Z","chunk":"."}
+{"sequence":47,"type":"command.stdout","at":"2026-08-27T16:25:54.467Z","chunk":"."}
+{"sequence":48,"type":"command.stdout","at":"2026-08-27T16:25:54.468Z","chunk":"."}
+{"sequence":49,"type":"command.stdout","at":"2026-08-27T16:25:54.468Z","chunk":"."}
+{"sequence":50,"type":"command.stdout","at":"2026-08-27T16:25:54.468Z","chunk":"."}
+{"sequence":51,"type":"command.stdout","at":"2026-08-27T16:25:54.469Z","chunk":"."}
+{"sequence":52,"type":"command.stdout","at":"2026-08-27T16:25:54.469Z","chunk":"."}
+{"sequence":53,"type":"command.stdout","at":"2026-08-27T16:25:54.469Z","chunk":"."}
+{"sequence":54,"type":"command.stdout","at":"2026-08-27T16:25:54.470Z","chunk":"."}
+{"sequence":55,"type":"command.stdout","at":"2026-08-27T16:25:54.470Z","chunk":"."}
+{"sequence":56,"type":"command.stdout","at":"2026-08-27T16:25:54.470Z","chunk":"."}
+{"sequence":57,"type":"command.stdout","at":"2026-08-27T16:25:54.470Z","chunk":"."}
+{"sequence":58,"type":"command.stdout","at":"2026-08-27T16:25:54.471Z","chunk":"."}
+{"sequence":59,"type":"command.stdout","at":"2026-08-27T16:25:54.471Z","chunk":"."}
+{"sequence":60,"type":"command.stdout","at":"2026-08-27T16:25:54.471Z","chunk":"."}
+{"sequence":61,"type":"command.stdout","at":"2026-08-27T16:25:54.472Z","chunk":"."}
+{"sequence":62,"type":"command.stdout","at":"2026-08-27T16:25:54.473Z","chunk":"."}
+{"sequence":63,"type":"command.stdout","at":"2026-08-27T16:25:54.473Z","chunk":"."}
+{"sequence":64,"type":"command.stdout","at":"2026-08-27T16:25:54.474Z","chunk":"."}
+{"sequence":65,"type":"command.stdout","at":"2026-08-27T16:25:54.474Z","chunk":"."}
+{"sequence":66,"type":"command.stdout","at":"2026-08-27T16:25:54.474Z","chunk":"."}
+{"sequence":67,"type":"command.stdout","at":"2026-08-27T16:25:54.475Z","chunk":"."}
+{"sequence":68,"type":"command.stdout","at":"2026-08-27T16:25:54.475Z","chunk":"."}
+{"sequence":69,"type":"command.stdout","at":"2026-08-27T16:25:54.475Z","chunk":". [ 97%]\n"}
+{"sequence":70,"type":"command.stdout","at":"2026-08-27T16:25:54.475Z","chunk":"."}
+{"sequence":71,"type":"command.stdout","at":"2026-08-27T16:25:54.476Z","chunk":"."}
+{"sequence":72,"type":"command.stdout","at":"2026-08-27T16:25:54.476Z","chunk":"                                                                       [100%]"}
+{"sequence":73,"type":"command.stdout","at":"2026-08-27T16:25:54.547Z","chunk":"\n74 passed in 1.11s\n"}
+{"sequence":74,"type":"command.stdout","at":"2026-08-27T16:25:54.855Z","chunk":"\n> @docforge/workbench@0.1.0 test /Volumes/ThesisForgeCI/workspaces/thesis-forge-docforge-verify/frontend\n> vitest run\n\n"}
+{"sequence":75,"type":"command.stdout","at":"2026-08-27T16:25:55.548Z","chunk":"\n"}
+{"sequence":76,"type":"command.stdout","at":"2026-08-27T16:25:55.548Z","chunk":"\u001b[1m\u001b[30m\u001b[46m RUN \u001b[49m\u001b[39m\u001b[22m \u001b[36mv4.1.10 \u001b[39m\u001b[90m/Volumes/ThesisForgeCI/workspaces/thesis-forge-docforge-verify/frontend\u001b[39m\n\n"}
+{"sequence":77,"type":"command.stdout","at":"2026-08-27T16:26:00.662Z","chunk":" \u001b[32m✓\u001b[39m src/components/BuildOutputPanel.test.tsx \u001b[2m(\u001b[22m\u001b[2m3 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[33m 466\u001b[2mms\u001b[22m\u001b[39m\n"}
+{"sequence":78,"type":"command.stdout","at":"2026-08-27T16:26:00.819Z","chunk":" \u001b[32m✓\u001b[39m src/components/ProductBar.project.test.tsx \u001b[2m(\u001b[22m\u001b[2m11 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[33m 551\u001b[2mms\u001b[22m\u001b[39m\n"}
+{"sequence":79,"type":"command.stdout","at":"2026-08-27T16:26:00.884Z","chunk":" \u001b[32m✓\u001b[39m src/components/PreviewPanels.test.tsx \u001b[2m(\u001b[22m\u001b[2m8 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[33m 577\u001b[2mms\u001b[22m\u001b[39m\n"}
+{"sequence":80,"type":"command.stdout","at":"2026-08-27T16:26:00.957Z","chunk":" \u001b[32m✓\u001b[39m src/components/WorkbenchPreviewFlow.test.tsx \u001b[2m(\u001b[22m\u001b[2m2 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[33m 617\u001b[2mms\u001b[22m\u001b[39m\n     \u001b[33m\u001b[2m✓\u001b[22m\u001b[39m refreshes outline, diagnostics, and preview through one preview operation \u001b[33m 410\u001b[2mms\u001b[22m\u001b[39m\n"}
+{"sequence":81,"type":"command.stdout","at":"2026-08-27T16:26:01.516Z","chunk":" \u001b[32m✓\u001b[39m src/components/WorkbenchBuildFlow.test.tsx \u001b[2m(\u001b[22m\u001b[2m11 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[33m 1184\u001b[2mms\u001b[22m\u001b[39m\n"}
+{"sequence":82,"type":"command.stdout","at":"2026-08-27T16:26:01.517Z","chunk":"     \u001b[33m\u001b[2m✓\u001b[22m\u001b[39m shows ordered progress and the successful output \u001b[33m 384\u001b[2mms\u001b[22m\u001b[39m\n"}
+{"sequence":83,"type":"command.stdout","at":"2026-08-27T16:26:01.996Z","chunk":" \u001b[32m✓\u001b[39m src/components/WorkbenchApp.project.test.tsx \u001b[2m(\u001b[22m\u001b[2m11 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[33m 1661\u001b[2mms\u001b[22m\u001b[39m\n     \u001b[33m\u001b[2m✓\u001b[22m\u001b[39m opens a desktop project and refreshes with the typed project identity \u001b[33m 424\u001b[2mms\u001b[22m\u001b[39m\n"}
+{"sequence":84,"type":"command.stdout","at":"2026-08-27T16:26:02.024Z","chunk":" \u001b[32m✓\u001b[39m src/components/WorkbenchApp.test.tsx \u001b[2m(\u001b[22m\u001b[2m17 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[33m 1688\u001b[2mms\u001b[22m\u001b[39m\n     \u001b[33m\u001b[2m✓\u001b[22m\u001b[39m renders the approved zh-CN workbench regions and empty state \u001b[33m 329\u001b[2mms\u001b[22m\u001b[39m\n"}
+{"sequence":85,"type":"command.stdout","at":"2026-08-27T16:26:02.266Z","chunk":" \u001b[32m✓\u001b[39m src/transport/WorkbenchTransport.project.test.ts \u001b[2m(\u001b[22m\u001b[2m53 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[32m 17\u001b[2mms\u001b[22m\u001b[39m\n"}
+{"sequence":86,"type":"command.stdout","at":"2026-08-27T16:26:02.300Z","chunk":" \u001b[32m✓\u001b[39m src/transport/transports-build.test.ts \u001b[2m(\u001b[22m\u001b[2m2 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[32m 59\u001b[2mms\u001b[22m\u001b[39m\n"}
+{"sequence":87,"type":"command.stdout","at":"2026-08-27T16:26:02.453Z","chunk":" \u001b[32m✓\u001b[39m src/components/WorkbenchShell.project.test.tsx \u001b[2m(\u001b[22m\u001b[2m1 test\u001b[22m\u001b[2m)\u001b[22m\u001b[32m 198\u001b[2mms\u001b[22m\u001b[39m\n"}
+{"sequence":88,"type":"command.stdout","at":"2026-08-27T16:26:02.479Z","chunk":" \u001b[32m✓\u001b[39m src/components/ReviewPanel.test.tsx \u001b[2m(\u001b[22m\u001b[2m5 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[33m 330\u001b[2mms\u001b[22m\u001b[39m\n"}
+{"sequence":89,"type":"command.stdout","at":"2026-08-27T16:26:02.535Z","chunk":" \u001b[32m✓\u001b[39m src/transport/transports.test.ts \u001b[2m(\u001b[22m\u001b[2m22 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[32m 15\u001b[2mms\u001b[22m\u001b[39m\n"}
+{"sequence":90,"type":"command.stdout","at":"2026-08-27T16:26:03.178Z","chunk":" \u001b[32m✓\u001b[39m src/transport/buildEvents.test.ts \u001b[2m(\u001b[22m\u001b[2m48 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[32m 18\u001b[2mms\u001b[22m\u001b[39m\n"}
+{"sequence":91,"type":"command.stdout","at":"2026-08-27T16:26:03.232Z","chunk":" \u001b[32m✓\u001b[39m src/transport/previewDto.test.ts \u001b[2m(\u001b[22m\u001b[2m12 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[32m 5\u001b[2mms\u001b[22m\u001b[39m\n"}
+{"sequence":92,"type":"command.stdout","at":"2026-08-27T16:26:03.311Z","chunk":" \u001b[32m✓\u001b[39m src/state/workspace.project.test.ts \u001b[2m(\u001b[22m\u001b[2m10 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[32m 6\u001b[2mms\u001b[22m\u001b[39m\n"}
+{"sequence":93,"type":"command.stdout","at":"2026-08-27T16:26:03.347Z","chunk":" \u001b[32m✓\u001b[39m src/transport/finalPreview.test.ts \u001b[2m(\u001b[22m\u001b[2m10 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[32m 6\u001b[2mms\u001b[22m\u001b[39m\n"}
+{"sequence":94,"type":"command.stdout","at":"2026-08-27T16:26:03.544Z","chunk":" \u001b[32m✓\u001b[39m src/state/workspace-build.test.ts \u001b[2m(\u001b[22m\u001b[2m6 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[32m 4\u001b[2mms\u001b[22m\u001b[39m\n"}
+{"sequence":95,"type":"command.stdout","at":"2026-08-27T16:26:03.637Z","chunk":" \u001b[32m✓\u001b[39m src/state/workspace-preview.test.ts \u001b[2m(\u001b[22m\u001b[2m6 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[32m 4\u001b[2mms\u001b[22m\u001b[39m\n"}
+{"sequence":96,"type":"command.stdout","at":"2026-08-27T16:26:03.689Z","chunk":" \u001b[32m✓\u001b[39m src/state/workspace.test.ts \u001b[2m(\u001b[22m\u001b[2m5 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[32m 4\u001b[2mms\u001b[22m\u001b[39m\n"}
+{"sequence":97,"type":"command.stdout","at":"2026-08-27T16:26:03.873Z","chunk":" \u001b[32m✓\u001b[39m src/state/diagnostics.test.ts \u001b[2m(\u001b[22m\u001b[2m2 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[32m 2\u001b[2mms\u001b[22m\u001b[39m\n"}
+{"sequence":98,"type":"command.stdout","at":"2026-08-27T16:26:03.879Z","chunk":"\n"}
+{"sequence":99,"type":"command.stdout","at":"2026-08-27T16:26:03.879Z","chunk":"\u001b[2m Test Files \u001b[22m \u001b[1m\u001b[32m20 passed\u001b[39m\u001b[22m\u001b[90m (20)\u001b[39m\n"}
+{"sequence":100,"type":"command.stdout","at":"2026-08-27T16:26:03.879Z","chunk":"\u001b[2m      Tests \u001b[22m \u001b[1m\u001b[32m245 passed\u001b[39m\u001b[22m\u001b[90m (245)\u001b[39m\n\u001b[2m   Start at \u001b[22m 00:25:55\n"}
+{"sequence":101,"type":"command.stdout","at":"2026-08-27T16:26:03.879Z","chunk":"\u001b[2m   Duration \u001b[22m 8.33s\u001b[2m (transform 3.28s, setup 3.90s, import 9.18s, tests 7.41s, environment 30.22s)\u001b[22m\n"}
+{"sequence":102,"type":"command.stdout","at":"2026-08-27T16:26:03.879Z","chunk":"\n"}
+{"sequence":103,"type":"command.stderr","at":"2026-08-27T16:26:14.645Z","chunk":"   Compiling docforge-desktop v0.1.0 (/Volumes/ThesisForgeCI/workspaces/thesis-forge-docforge-verify/src-tauri)\n"}
+{"sequence":104,"type":"command.stderr","at":"2026-08-27T16:27:32.207Z","chunk":"    Finished `test` profile [unoptimized + debuginfo] target(s) in 1m 28s\n"}
+{"sequence":105,"type":"command.stderr","at":"2026-08-27T16:27:32.240Z","chunk":"     Running unittests src/lib.rs (src-tauri/target/debug/deps/docforge_desktop-3695d8c24da47fe5)\n"}
+{"sequence":106,"type":"command.stdout","at":"2026-08-27T16:27:32.434Z","chunk":"\nrunning 14 tests\n"}
+{"sequence":107,"type":"command.stdout","at":"2026-08-27T16:27:32.452Z","chunk":"test project_tests::cancellation_path_uses_docforge_namespace ... ok\n"}
+{"sequence":108,"type":"command.stdout","at":"2026-08-27T16:27:32.453Z","chunk":"test project_tests::omitted_source_defaults_to_document_markdown ... ok\n"}
+{"sequence":109,"type":"command.stdout","at":"2026-08-27T16:27:32.453Z","chunk":"test project_tests::rejects_non_markdown_project_sources ... ok\ntest project_tests::invalid_build_operation_does_not_revoke_existing_preview_authorization ... ok\n"}
+{"sequence":110,"type":"command.stdout","at":"2026-08-27T16:27:32.453Z","chunk":"test project_tests::rejects_nul_project_sources ... ok\ntest project_tests::explicit_symlinked_manifest_is_rejected_when_target_is_external ... ok\n"}
+{"sequence":111,"type":"command.stdout","at":"2026-08-27T16:27:32.453Z","chunk":"test project_tests::forged_live_preview_output_does_not_revoke_existing_preview_authorization ... ok\n"}
+{"sequence":112,"type":"command.stdout","at":"2026-08-27T16:27:32.453Z","chunk":"test project_tests::project_directory_and_manifest_path_return_identity_and_source ... ok\n"}
+{"sequence":113,"type":"command.stdout","at":"2026-08-27T16:27:32.453Z","chunk":"test project_tests::rejects_obsolete_manifest_paths_and_directory_entries ... ok\ntest project_tests::rejects_obsolete_project_schema_in_docforge_manifest ... ok\n"}
+{"sequence":114,"type":"command.stdout","at":"2026-08-27T16:27:32.454Z","chunk":"test project_tests::standalone_markdown_is_rejected ... ok\n"}
+{"sequence":115,"type":"command.stdout","at":"2026-08-27T16:27:32.454Z","chunk":"test project_tests::traversal_and_missing_source_are_rejected ... ok\n"}
+{"sequence":116,"type":"command.stdout","at":"2026-08-27T16:27:32.454Z","chunk":"test project_tests::symlinked_manifest_is_rejected_when_it_escapes_root ... ok\n"}
+{"sequence":117,"type":"command.stdout","at":"2026-08-27T16:27:32.454Z","chunk":"test project_tests::windows_absolute_and_uri_source_values_are_rejected_cross_platform ... ok\n"}
+{"sequence":118,"type":"command.stdout","at":"2026-08-27T16:27:32.454Z","chunk":"\ntest result: ok. 14 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s\n\n"}
+{"sequence":119,"type":"command.stderr","at":"2026-08-27T16:27:32.455Z","chunk":"     Running unittests src/main.rs (src-tauri/target/debug/deps/docforge_desktop-81f54f6f4ab44b1b)\n"}
+{"sequence":120,"type":"command.stdout","at":"2026-08-27T16:27:32.460Z","chunk":"\nrunning 0 tests\n\ntest result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n"}
+{"sequence":121,"type":"command.stderr","at":"2026-08-27T16:27:32.461Z","chunk":"     Running tests/protocol_contract.rs (src-tauri/target/debug/deps/protocol_contract-1cc3bedfd7178a8e)\n"}
+{"sequence":122,"type":"command.stdout","at":"2026-08-27T16:27:32.467Z","chunk":"\nrunning 32 tests\n"}
+{"sequence":123,"type":"command.stdout","at":"2026-08-27T16:27:32.468Z","chunk":"test accepts_only_strict_path_free_desktop_preview_descriptors ... ok\n"}
+{"sequence":124,"type":"command.stdout","at":"2026-08-27T16:27:32.468Z","chunk":"test accepts_the_shared_versioned_request_envelope ... ok\n"}
+{"sequence":125,"type":"command.stdout","at":"2026-08-27T16:27:32.470Z","chunk":"test accepts_the_long_markdown_extension ... ok\n"}
+{"sequence":126,"type":"command.stdout","at":"2026-08-27T16:27:32.470Z","chunk":"test authorization_rejects_descriptor_drift_and_revocation ... ok\n"}
+{"sequence":127,"type":"command.stdout","at":"2026-08-27T16:27:32.471Z","chunk":"test builds_loopback_only_webview2_arguments_for_native_acceptance ... ok\n"}
+{"sequence":128,"type":"command.stdout","at":"2026-08-27T16:27:32.471Z","chunk":"test a_new_failed_or_canceled_build_revokes_the_previous_derived_authorization ... ok\ntest a_new_build_revokes_authorization_after_the_old_preview_is_deleted ... ok\n"}
+{"sequence":129,"type":"command.stdout","at":"2026-08-27T16:27:32.471Z","chunk":"test derives_only_the_fixed_preview_pdf_sibling ... ok\n"}
+{"sequence":130,"type":"command.stdout","at":"2026-08-27T16:27:32.471Z","chunk":"test completed_report_without_preview_passes_through_and_request_drift_fails ... ok\n"}
+{"sequence":131,"type":"command.stdout","at":"2026-08-27T16:27:32.471Z","chunk":"test keeps_the_native_acceptance_source_seam_disabled_by_default ... ok\n"}
+{"sequence":132,"type":"command.stdout","at":"2026-08-27T16:27:32.471Z","chunk":"test keeps_webview_remote_debugging_disabled_without_the_acceptance_port ... ok\n"}
+{"sequence":133,"type":"command.stdout","at":"2026-08-27T16:27:32.471Z","chunk":"test authorization_revalidates_symlinks_and_pdf_content_at_read_time ... ok\ntest authorization_rejects_a_file_replaced_by_a_symlink_at_read_time ... ok\n"}
+{"sequence":134,"type":"command.stdout","at":"2026-08-27T16:27:32.471Z","chunk":"test authorization_handles_keep_same_named_pdfs_bound_to_their_selected_paths ... ok\n"}
+{"sequence":135,"type":"command.stdout","at":"2026-08-27T16:27:32.471Z","chunk":"test a_new_build_revokes_old_authorization_after_preview_becomes_a_symlink ... ok\n"}
+{"sequence":136,"type":"command.stdout","at":"2026-08-27T16:27:32.472Z","chunk":"test build_success_authorizes_only_the_derived_preview_and_injects_an_opaque_id ... ok\ntest formal_preview_authorization_never_requests_live_cleanup ... ok\n"}
+{"sequence":137,"type":"command.stdout","at":"2026-08-27T16:27:32.472Z","chunk":"test rejects_a_request_without_an_object_payload ... ok\n"}
+{"sequence":138,"type":"command.stdout","at":"2026-08-27T16:27:32.472Z","chunk":"test live_preview_output_state_rejects_forged_capabilities_and_releases_idempotently ... ok\n"}
+{"sequence":139,"type":"command.stdout","at":"2026-08-27T16:27:32.472Z","chunk":"test rejects_empty_request_ids_and_operations ... ok\ntest completed_live_preview_authorization_marks_cleanup_after_read ... ok\ntest opens_the_explicit_native_acceptance_source_without_a_system_picker ... ok\n"}
+{"sequence":140,"type":"command.stdout","at":"2026-08-27T16:27:32.472Z","chunk":"test prepared_live_preview_output_can_be_discarded_before_build_starts ... ok\n"}
+{"sequence":141,"type":"command.stdout","at":"2026-08-27T16:27:32.472Z","chunk":"test reads_a_native_markdown_source_into_the_shared_source_dto ... ok\n"}
+{"sequence":142,"type":"command.stdout","at":"2026-08-27T16:27:32.472Z","chunk":"test rejects_unsafe_native_acceptance_cdp_ports ... ok"}
+{"sequence":143,"type":"command.stdout","at":"2026-08-27T16:27:32.472Z","chunk":"\ntest live_preview_output_is_unique_and_cleanup_is_scoped_to_its_directory ... ok\n"}
+{"sequence":144,"type":"command.stdout","at":"2026-08-27T16:27:32.472Z","chunk":"test rejects_obsolete_build_report_before_preview_authorization ... ok\n"}
+{"sequence":145,"type":"command.stdout","at":"2026-08-27T16:27:32.472Z","chunk":"test rejects_obsolete_event_protocol_before_preview_authorization ... ok\n"}
+{"sequence":146,"type":"command.stdout","at":"2026-08-27T16:27:32.472Z","chunk":"test rejects_the_obsolete_protocol_before_spawning_python ... ok\n"}
+{"sequence":147,"type":"command.stdout","at":"2026-08-27T16:27:32.472Z","chunk":"test rust_identity_matches_the_shared_runtime_fixture ... ok\n"}
+{"sequence":148,"type":"command.stdout","at":"2026-08-27T16:27:32.472Z","chunk":"test rejects_non_markdown_sources_at_the_native_boundary ... ok\n"}
+{"sequence":149,"type":"command.stdout","at":"2026-08-27T16:27:32.472Z","chunk":"test reads_only_regular_pdf_signature_files ... ok\n\n"}
+{"sequence":150,"type":"command.stdout","at":"2026-08-27T16:27:32.472Z","chunk":"test result: ok. 32 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s\n\n"}
+{"sequence":151,"type":"command.stderr","at":"2026-08-27T16:27:32.473Z","chunk":"   Doc-tests docforge_desktop\n"}
+{"sequence":152,"type":"command.stdout","at":"2026-08-27T16:27:36.777Z","chunk":"\nrunning 0 tests\n"}
+{"sequence":153,"type":"command.stdout","at":"2026-08-27T16:27:36.777Z","chunk":"\ntest result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out"}
+{"sequence":154,"type":"command.stdout","at":"2026-08-27T16:27:36.777Z","chunk":"; finished in 0.00s\n\n"}
+{"sequence":155,"type":"command.terminal","at":"2026-08-27T16:27:36.795Z","result":{"exit_status":0,"signal":null,"timed_out":false,"canceled":false,"spawn_error":null}}
+{"sequence":156,"type":"attempt.terminal","at":"2026-08-27T16:27:36.795Z","attempt":{"schema":"specnav.verification.attempt.v1","id":"attempt-20260827162552-3751533e59997432","run_id":"run-20260827162552-3751533e59997432","change_id":"docforge-project-format-v1","case_id":"case-a8-runtime-parity","case_snapshot_hash":"350e6482b5745502bf4c6d6af7af26ba568208117ba5699863f8c80861a204de","kind":"regression","sequence":3,"runner":"command","code_sha":"60274f4c7bd0541d0a6346753e68eb7f5f2ae6a6","test_sha":"b84991f223678bcfa385d82ef08148d57456f2f4c68ce945559a4313550059ec","scenario_hash":"c40e7ed22e486b92fd80f9c00a1c89732645e7c50dbc612ee98da143fc252358","environment_hash":"e70d297a62bab25e39bb4323fd1636081aac76eff129f315f3d3dbe56c04a1eb","browser_project":"none","test_data_snapshot":"72389c78fb1a9c70ead1147a7ce6bdbe824e41229fdca8da2844b466073df59e","runtime_version":"2.0.0-alpha.2","kernel_version":"2.0.0-alpha.2","status":"passed","started_at":"2026-08-27T16:25:52.959Z","completed_at":"2026-08-27T16:27:36.795Z","exit_status":0,"parent_attempt_id":"attempt-20260827144211-6793841c117f6aa4"},"artifact_valid":true}
+{"sequence":157,"type":"run.terminal","at":"2026-08-27T16:27:36.795Z","run":{"schema":"specnav.verification.run.v1","id":"run-20260827162552-3751533e59997432","change_id":"docforge-project-format-v1","case_snapshot_id":"snapshot-350e6482b5745502bf4c6d6a","case_snapshot_hash":"350e6482b5745502bf4c6d6af7af26ba568208117ba5699863f8c80861a204de","case_ids":["case-a8-runtime-parity"],"code_sha":"60274f4c7bd0541d0a6346753e68eb7f5f2ae6a6","test_sha":"b84991f223678bcfa385d82ef08148d57456f2f4c68ce945559a4313550059ec","environment_hash":"e70d297a62bab25e39bb4323fd1636081aac76eff129f315f3d3dbe56c04a1eb","runtime_version":"2.0.0-alpha.2","kernel_version":"2.0.0-alpha.2","generation_id":"generation-e76c93b4b729fe49301fa066","status":"passed","created_at":"2026-08-27T16:25:52.946Z","started_at":"2026-08-27T16:25:52.959Z","completed_at":"2026-08-27T16:27:36.795Z","kind":"regression","origin_run_id":"run-20260827064446-2b9dc52f4d4f9ab2","parent_run_id":"run-20260827144211-6793841c117f6aa4","parent_attempt_id":"attempt-20260827144211-6793841c117f6aa4","failure_id":"failure-1ade668829948cfb896aba9e1ff2afce6c7f0604978a8b5a7cadfca7a657f7df"},"artifact_valid":true}

@@ -1,9 +1,9 @@
 {
   "schema": "specnav.verification.evidence-cache-meta.v1",
-  "generated_at": "2026-08-27T15:01:37.308Z",
+  "generated_at": "2026-08-27T18:37:11.098Z",
   "index_path": "index.json",
   "source_raw": "raw.jsonl",
-  "source_digest": "72a022b7285421acb83df5dffcb00e2fab1aed9b7f7d8f321e1aec1f4548032d",
-  "index_version": 30,
-  "record_count": 30
+  "source_digest": "f1f257779d2c6c33be5e40f4248c3abb5e8052e816a98757b9a7076f70c68e2e",
+  "index_version": 210,
+  "record_count": 210
 }

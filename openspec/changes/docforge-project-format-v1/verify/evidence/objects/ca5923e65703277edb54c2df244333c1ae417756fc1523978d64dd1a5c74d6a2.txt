@@ -1,0 +1,42 @@
+status=passed
+exit_status=0
+--- stdout ---
+........................................................................ [ 59%]
+..................................................                       [100%]
+122 passed in 1.29s
+
+running 14 tests
+test project_tests::cancellation_path_uses_docforge_namespace ... ok
+test project_tests::rejects_nul_project_sources ... ok
+test project_tests::forged_live_preview_output_does_not_revoke_existing_preview_authorization ... ok
+test project_tests::rejects_non_markdown_project_sources ... ok
+test project_tests::omitted_source_defaults_to_document_markdown ... ok
+test project_tests::invalid_build_operation_does_not_revoke_existing_preview_authorization ... ok
+test project_tests::rejects_obsolete_manifest_paths_and_directory_entries ... ok
+test project_tests::explicit_symlinked_manifest_is_rejected_when_target_is_external ... ok
+test project_tests::standalone_markdown_is_rejected ... ok
+test project_tests::project_directory_and_manifest_path_return_identity_and_source ... ok
+test project_tests::rejects_obsolete_project_schema_in_docforge_manifest ... ok
+test project_tests::traversal_and_missing_source_are_rejected ... ok
+test project_tests::symlinked_manifest_is_rejected_when_it_escapes_root ... ok
+test project_tests::windows_absolute_and_uri_source_values_are_rejected_cross_platform ... ok
+
+test result: ok. 14 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 32 filtered out; finished in 0.00s
+
+
+--- stderr ---
+   Compiling docforge-desktop v0.1.0 (/Volumes/ThesisForgeCI/workspaces/thesis-forge-docforge-verify/src-tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 2m 11s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/docforge_desktop-3695d8c24da47fe5)
+     Running unittests src/main.rs (src-tauri/target/debug/deps/docforge_desktop-81f54f6f4ab44b1b)
+     Running tests/protocol_contract.rs (src-tauri/target/debug/deps/protocol_contract-1cc3bedfd7178a8e)

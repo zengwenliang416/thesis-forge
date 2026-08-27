@@ -353,5 +353,1625 @@
     ],
     "blockers": [],
     "recorded_at": "2026-08-27T15:01:38.386Z"
+  },
+  {
+    "id": "execution-attempt-20260827152604-52789cd9d16d72bb",
+    "run_id": "run-20260827152604-52789cd9d16d72bb",
+    "attempt_id": "attempt-20260827152604-52789cd9d16d72bb",
+    "case_id": "case-a2-general-project",
+    "status": "passed",
+    "assertions": [
+      {
+        "id": "a2-general-flow",
+        "method": "equal",
+        "expected": true,
+        "actual": true,
+        "status": "passed"
+      }
+    ],
+    "blockers": [],
+    "recorded_at": "2026-08-27T15:26:09.907Z"
+  },
+  {
+    "id": "execution-attempt-20260827152852-4f3d2ddce71b3ffa",
+    "run_id": "run-20260827152852-4f3d2ddce71b3ffa",
+    "attempt_id": "attempt-20260827152852-4f3d2ddce71b3ffa",
+    "case_id": "case-a3-academic-profile",
+    "status": "passed",
+    "assertions": [
+      {
+        "id": "a3-profile-isolation",
+        "method": "equal",
+        "expected": true,
+        "actual": true,
+        "status": "passed"
+      }
+    ],
+    "blockers": [],
+    "recorded_at": "2026-08-27T15:29:27.603Z"
+  },
+  {
+    "id": "execution-attempt-20260827153154-2cd53b26e5e42fb9",
+    "run_id": "run-20260827153154-2cd53b26e5e42fb9",
+    "attempt_id": "attempt-20260827153154-2cd53b26e5e42fb9",
+    "case_id": "case-a4-obsolete-contracts",
+    "status": "passed",
+    "assertions": [
+      {
+        "id": "a4-no-obsolete-contract",
+        "method": "equal",
+        "expected": true,
+        "actual": true,
+        "status": "passed"
+      }
+    ],
+    "blockers": [],
+    "recorded_at": "2026-08-27T15:32:14.569Z"
+  },
+  {
+    "id": "execution-attempt-20260827153413-82e04bca5d2dee4d",
+    "run_id": "run-20260827153413-82e04bca5d2dee4d",
+    "attempt_id": "attempt-20260827153413-82e04bca5d2dee4d",
+    "case_id": "case-a5-neutral-default-paths",
+    "status": "passed",
+    "assertions": [
+      {
+        "id": "a5-default-paths",
+        "method": "equal",
+        "expected": true,
+        "actual": true,
+        "status": "passed"
+      }
+    ],
+    "blockers": [],
+    "recorded_at": "2026-08-27T15:34:20.973Z"
+  },
+  {
+    "id": "execution-attempt-20260827153616-06cdc9dfce1d7074",
+    "run_id": "run-20260827153616-06cdc9dfce1d7074",
+    "attempt_id": "attempt-20260827153616-06cdc9dfce1d7074",
+    "case_id": "case-a6-path-security",
+    "status": "passed",
+    "assertions": [
+      {
+        "id": "a6-secure-paths",
+        "method": "equal",
+        "expected": true,
+        "actual": true,
+        "status": "passed"
+      }
+    ],
+    "blockers": [],
+    "recorded_at": "2026-08-27T15:38:33.728Z"
+  },
+  {
+    "id": "execution-attempt-20260827154019-778ea3a10436ab05",
+    "run_id": "run-20260827154019-778ea3a10436ab05",
+    "attempt_id": "attempt-20260827154019-778ea3a10436ab05",
+    "case_id": "case-a7-deterministic-docx",
+    "status": "passed",
+    "assertions": [
+      {
+        "id": "a7-deterministic-pipeline",
+        "method": "equal",
+        "expected": true,
+        "actual": true,
+        "status": "passed"
+      }
+    ],
+    "blockers": [],
+    "recorded_at": "2026-08-27T15:40:40.584Z"
+  },
+  {
+    "id": "execution-attempt-20260827154221-2036bb0db34d0f4c",
+    "run_id": "run-20260827154221-2036bb0db34d0f4c",
+    "attempt_id": "attempt-20260827154221-2036bb0db34d0f4c",
+    "case_id": "case-a8-runtime-parity",
+    "status": "passed",
+    "assertions": [
+      {
+        "id": "a8-protocol-parity",
+        "method": "equal",
+        "expected": true,
+        "actual": true,
+        "status": "passed"
+      }
+    ],
+    "blockers": [],
+    "recorded_at": "2026-08-27T15:44:30.677Z"
+  },
+  {
+    "id": "execution-attempt-20260827154636-29c99edf037add40",
+    "run_id": "run-20260827154636-29c99edf037add40",
+    "attempt_id": "attempt-20260827154636-29c99edf037add40",
+    "case_id": "case-a9-installed-office",
+    "status": "passed",
+    "assertions": [
+      {
+        "id": "a9-installed-word-preview",
+        "method": "equal",
+        "expected": true,
+        "actual": true,
+        "status": "passed"
+      }
+    ],
+    "blockers": [],
+    "recorded_at": "2026-08-27T15:46:39.072Z"
+  },
+  {
+    "id": "execution-attempt-20260827154841-0c7351c974021968",
+    "run_id": "run-20260827154841-0c7351c974021968",
+    "attempt_id": "attempt-20260827154841-0c7351c974021968",
+    "case_id": "case-a10-repository-delivery",
+    "status": "passed",
+    "assertions": [
+      {
+        "id": "a10-repository-clean",
+        "method": "equal",
+        "expected": true,
+        "actual": true,
+        "status": "passed"
+      }
+    ],
+    "blockers": [],
+    "recorded_at": "2026-08-27T15:49:20.390Z"
+  },
+  {
+    "id": "execution-attempt-20260827155130-23ce0365e1afb071",
+    "run_id": "run-20260827155130-23ce0365e1afb071",
+    "attempt_id": "attempt-20260827155130-23ce0365e1afb071",
+    "case_id": "case-a1-project-open",
+    "status": "passed",
+    "assertions": [
+      {
+        "id": "a1-project-open",
+        "method": "equal",
+        "expected": true,
+        "actual": true,
+        "status": "passed"
+      }
+    ],
+    "blockers": [],
+    "recorded_at": "2026-08-27T15:51:37.654Z"
+  },
+  {
+    "id": "execution-attempt-20260827155327-45fbfa6d583178b3",
+    "run_id": "run-20260827155327-45fbfa6d583178b3",
+    "attempt_id": "attempt-20260827155327-45fbfa6d583178b3",
+    "case_id": "case-a3-academic-profile",
+    "status": "passed",
+    "assertions": [
+      {
+        "id": "a3-profile-isolation",
+        "method": "equal",
+        "expected": true,
+        "actual": true,
+        "status": "passed"
+      }
+    ],
+    "blockers": [],
+    "recorded_at": "2026-08-27T15:54:01.361Z"
+  },
+  {
+    "id": "execution-attempt-20260827155554-185933506aa1f2f9",
+    "run_id": "run-20260827155554-185933506aa1f2f9",
+    "attempt_id": "attempt-20260827155554-185933506aa1f2f9",
+    "case_id": "case-a4-obsolete-contracts",
+    "status": "passed",
+    "assertions": [
+      {
+        "id": "a4-no-obsolete-contract",
+        "method": "equal",
+        "expected": true,
+        "actual": true,
+        "status": "passed"
+      }
+    ],
+    "blockers": [],
+    "recorded_at": "2026-08-27T15:56:04.869Z"
+  },
+  {
+    "id": "execution-attempt-20260827155802-fbee46955b32ea12",
+    "run_id": "run-20260827155802-fbee46955b32ea12",
+    "attempt_id": "attempt-20260827155802-fbee46955b32ea12",
+    "case_id": "case-a5-neutral-default-paths",
+    "status": "passed",
+    "assertions": [
+      {
+        "id": "a5-default-paths",
+        "method": "equal",
+        "expected": true,
+        "actual": true,
+        "status": "passed"
+      }
+    ],
+    "blockers": [],
+    "recorded_at": "2026-08-27T15:58:08.035Z"
+  },
+  {
+    "id": "execution-attempt-20260827160005-87686854e8850ae2",
+    "run_id": "run-20260827160005-87686854e8850ae2",
+    "attempt_id": "attempt-20260827160005-87686854e8850ae2",
+    "case_id": "case-a6-path-security",
+    "status": "passed",
+    "assertions": [
+      {
+        "id": "a6-secure-paths",
+        "method": "equal",
+        "expected": true,
+        "actual": true,
+        "status": "passed"
+      }
+    ],
+    "blockers": [],
+    "recorded_at": "2026-08-27T16:01:52.437Z"
+  },
+  {
+    "id": "execution-attempt-20260827160339-3c252fea496b1d8d",
+    "run_id": "run-20260827160339-3c252fea496b1d8d",
+    "attempt_id": "attempt-20260827160339-3c252fea496b1d8d",
+    "case_id": "case-a7-deterministic-docx",
+    "status": "passed",
+    "assertions": [
+      {
+        "id": "a7-deterministic-pipeline",
+        "method": "equal",
+        "expected": true,
+        "actual": true,
+        "status": "passed"
+      }
+    ],
+    "blockers": [],
+    "recorded_at": "2026-08-27T16:03:56.965Z"
+  },
+  {
+    "id": "execution-attempt-20260827160534-f19c09de7c8dce1d",
+    "run_id": "run-20260827160534-f19c09de7c8dce1d",
+    "attempt_id": "attempt-20260827160534-f19c09de7c8dce1d",
+    "case_id": "case-a8-runtime-parity",
+    "status": "passed",
+    "assertions": [
+      {
+        "id": "a8-protocol-parity",
+        "method": "equal",
+        "expected": true,
+        "actual": true,
+        "status": "passed"
+      }
+    ],
+    "blockers": [],
+    "recorded_at": "2026-08-27T16:06:49.848Z"
+  },
+  {
+    "id": "execution-attempt-20260827160826-1640a9d04947998f",
+    "run_id": "run-20260827160826-1640a9d04947998f",
+    "attempt_id": "attempt-20260827160826-1640a9d04947998f",
+    "case_id": "case-a9-installed-office",
+    "status": "passed",
+    "assertions": [
+      {
+        "id": "a9-installed-word-preview",
+        "method": "equal",
+        "expected": true,
+        "actual": true,
+        "status": "passed"
+      }
+    ],
+    "blockers": [],
+    "recorded_at": "2026-08-27T16:08:28.559Z"
+  },
+  {
+    "id": "execution-attempt-20260827161002-0312368c94147433",
+    "run_id": "run-20260827161002-0312368c94147433",
+    "attempt_id": "attempt-20260827161002-0312368c94147433",
+    "case_id": "case-a10-repository-delivery",
+    "status": "passed",
+    "assertions": [
+      {
+        "id": "a10-repository-clean",
+        "method": "equal",
+        "expected": true,
+        "actual": true,
+        "status": "passed"
+      }
+    ],
+    "blockers": [],
+    "recorded_at": "2026-08-27T16:10:26.979Z"
+  },
+  {
+    "id": "execution-attempt-20260827161226-80dc25b33e66483b",
+    "run_id": "run-20260827161226-80dc25b33e66483b",
+    "attempt_id": "attempt-20260827161226-80dc25b33e66483b",
+    "case_id": "case-a1-project-open",
+    "status": "passed",
+    "assertions": [
+      {
+        "id": "a1-project-open",
+        "method": "equal",
+        "expected": true,
+        "actual": true,
+        "status": "passed"
+      }
+    ],
+    "blockers": [],
+    "recorded_at": "2026-08-27T16:12:30.226Z"
+  },
+  {
+    "id": "execution-attempt-20260827161420-90360c07b36f5a83",
+    "run_id": "run-20260827161420-90360c07b36f5a83",
+    "attempt_id": "attempt-20260827161420-90360c07b36f5a83",
+    "case_id": "case-a2-general-project",
+    "status": "passed",
+    "assertions": [
+      {
+        "id": "a2-general-flow",
+        "method": "equal",
+        "expected": true,
+        "actual": true,
+        "status": "passed"
+      }
+    ],
+    "blockers": [],
+    "recorded_at": "2026-08-27T16:14:26.506Z"
+  },
+  {
+    "id": "execution-attempt-20260827161613-80357784e92bb334",
+    "run_id": "run-20260827161613-80357784e92bb334",
+    "attempt_id": "attempt-20260827161613-80357784e92bb334",
+    "case_id": "case-a4-obsolete-contracts",
+    "status": "passed",
+    "assertions": [
+      {
+        "id": "a4-no-obsolete-contract",
+        "method": "equal",
+        "expected": true,
+        "actual": true,
+        "status": "passed"
+      }
+    ],
+    "blockers": [],
+    "recorded_at": "2026-08-27T16:16:23.950Z"
+  },
+  {
+    "id": "execution-attempt-20260827161810-e15323e4af3fc641",
+    "run_id": "run-20260827161810-e15323e4af3fc641",
+    "attempt_id": "attempt-20260827161810-e15323e4af3fc641",
+    "case_id": "case-a5-neutral-default-paths",
+    "status": "passed",
+    "assertions": [
+      {
+        "id": "a5-default-paths",
+        "method": "equal",
+        "expected": true,
+        "actual": true,
+        "status": "passed"
+      }
+    ],
+    "blockers": [],
+    "recorded_at": "2026-08-27T16:18:16.034Z"
+  },
+  {
+    "id": "execution-attempt-20260827162004-1f30b99ca6a0173d",
+    "run_id": "run-20260827162004-1f30b99ca6a0173d",
+    "attempt_id": "attempt-20260827162004-1f30b99ca6a0173d",
+    "case_id": "case-a6-path-security",
+    "status": "passed",
+    "assertions": [
+      {
+        "id": "a6-secure-paths",
+        "method": "equal",
+        "expected": true,
+        "actual": true,
+        "status": "passed"
+      }
+    ],
+    "blockers": [],
+    "recorded_at": "2026-08-27T16:21:42.163Z"
+  },
+  {
+    "id": "execution-attempt-20260827162341-3466701fc0c9282c",
+    "run_id": "run-20260827162341-3466701fc0c9282c",
+    "attempt_id": "attempt-20260827162341-3466701fc0c9282c",
+    "case_id": "case-a7-deterministic-docx",
+    "status": "passed",
+    "assertions": [
+      {
+        "id": "a7-deterministic-pipeline",
+        "method": "equal",
+        "expected": true,
+        "actual": true,
+        "status": "passed"
+      }
+    ],
+    "blockers": [],
+    "recorded_at": "2026-08-27T16:24:07.105Z"
+  },
+  {
+    "id": "execution-attempt-20260827162552-3751533e59997432",
+    "run_id": "run-20260827162552-3751533e59997432",
+    "attempt_id": "attempt-20260827162552-3751533e59997432",
+    "case_id": "case-a8-runtime-parity",
+    "status": "passed",
+    "assertions": [
+      {
+        "id": "a8-protocol-parity",
+        "method": "equal",
+        "expected": true,
+        "actual": true,
+        "status": "passed"
+      }
+    ],
+    "blockers": [],
+    "recorded_at": "2026-08-27T16:27:39.584Z"
+  },
+  {
+    "id": "execution-attempt-20260827162917-967c8165e005b7cd",
+    "run_id": "run-20260827162917-967c8165e005b7cd",
+    "attempt_id": "attempt-20260827162917-967c8165e005b7cd",
+    "case_id": "case-a9-installed-office",
+    "status": "passed",
+    "assertions": [
+      {
+        "id": "a9-installed-word-preview",
+        "method": "equal",
+        "expected": true,
+        "actual": true,
+        "status": "passed"
+      }
+    ],
+    "blockers": [],
+    "recorded_at": "2026-08-27T16:29:20.211Z"
+  },
+  {
+    "id": "execution-attempt-20260827163101-0e338648a7e89cce",
+    "run_id": "run-20260827163101-0e338648a7e89cce",
+    "attempt_id": "attempt-20260827163101-0e338648a7e89cce",
+    "case_id": "case-a10-repository-delivery",
+    "status": "passed",
+    "assertions": [
+      {
+        "id": "a10-repository-clean",
+        "method": "equal",
+        "expected": true,
+        "actual": true,
+        "status": "passed"
+      }
+    ],
+    "blockers": [],
+    "recorded_at": "2026-08-27T16:31:31.939Z"
+  },
+  {
+    "id": "execution-attempt-20260827163310-b0a952dbb283c283",
+    "run_id": "run-20260827163310-b0a952dbb283c283",
+    "attempt_id": "attempt-20260827163310-b0a952dbb283c283",
+    "case_id": "case-a1-project-open",
+    "status": "passed",
+    "assertions": [
+      {
+        "id": "a1-project-open",
+        "method": "equal",
+        "expected": true,
+        "actual": true,
+        "status": "passed"
+      }
+    ],
+    "blockers": [],
+    "recorded_at": "2026-08-27T16:33:14.836Z"
+  },
+  {
+    "id": "execution-attempt-20260827163451-5856c02edd7b0339",
+    "run_id": "run-20260827163451-5856c02edd7b0339",
+    "attempt_id": "attempt-20260827163451-5856c02edd7b0339",
+    "case_id": "case-a2-general-project",
+    "status": "passed",
+    "assertions": [
+      {
+        "id": "a2-general-flow",
+        "method": "equal",
+        "expected": true,
+        "actual": true,
+        "status": "passed"
+      }
+    ],
+    "blockers": [],
+    "recorded_at": "2026-08-27T16:34:57.619Z"
+  },
+  {
+    "id": "execution-attempt-20260827163634-a4da8ccd2349d091",
+    "run_id": "run-20260827163634-a4da8ccd2349d091",
+    "attempt_id": "attempt-20260827163634-a4da8ccd2349d091",
+    "case_id": "case-a3-academic-profile",
+    "status": "passed",
+    "assertions": [
+      {
+        "id": "a3-profile-isolation",
+        "method": "equal",
+        "expected": true,
+        "actual": true,
+        "status": "passed"
+      }
+    ],
+    "blockers": [],
+    "recorded_at": "2026-08-27T16:37:04.024Z"
+  },
+  {
+    "id": "execution-attempt-20260827163840-b96a7f8f0cca9a5d",
+    "run_id": "run-20260827163840-b96a7f8f0cca9a5d",
+    "attempt_id": "attempt-20260827163840-b96a7f8f0cca9a5d",
+    "case_id": "case-a5-neutral-default-paths",
+    "status": "passed",
+    "assertions": [
+      {
+        "id": "a5-default-paths",
+        "method": "equal",
+        "expected": true,
+        "actual": true,
+        "status": "passed"
+      }
+    ],
+    "blockers": [],
+    "recorded_at": "2026-08-27T16:38:45.409Z"
+  },
+  {
+    "id": "execution-attempt-20260827164023-69c9b313ca489248",
+    "run_id": "run-20260827164023-69c9b313ca489248",
+    "attempt_id": "attempt-20260827164023-69c9b313ca489248",
+    "case_id": "case-a6-path-security",
+    "status": "passed",
+    "assertions": [
+      {
+        "id": "a6-secure-paths",
+        "method": "equal",
+        "expected": true,
+        "actual": true,
+        "status": "passed"
+      }
+    ],
+    "blockers": [],
+    "recorded_at": "2026-08-27T16:41:19.104Z"
+  },
+  {
+    "id": "execution-attempt-20260827164257-580e8a4a6ec6c064",
+    "run_id": "run-20260827164257-580e8a4a6ec6c064",
+    "attempt_id": "attempt-20260827164257-580e8a4a6ec6c064",
+    "case_id": "case-a7-deterministic-docx",
+    "status": "passed",
+    "assertions": [
+      {
+        "id": "a7-deterministic-pipeline",
+        "method": "equal",
+        "expected": true,
+        "actual": true,
+        "status": "passed"
+      }
+    ],
+    "blockers": [],
+    "recorded_at": "2026-08-27T16:43:15.486Z"
+  },
+  {
+    "id": "execution-attempt-20260827164449-fb152f6042b00405",
+    "run_id": "run-20260827164449-fb152f6042b00405",
+    "attempt_id": "attempt-20260827164449-fb152f6042b00405",
+    "case_id": "case-a8-runtime-parity",
+    "status": "passed",
+    "assertions": [
+      {
+        "id": "a8-protocol-parity",
+        "method": "equal",
+        "expected": true,
+        "actual": true,
+        "status": "passed"
+      }
+    ],
+    "blockers": [],
+    "recorded_at": "2026-08-27T16:46:06.772Z"
+  },
+  {
+    "id": "execution-attempt-20260827164741-2f7a410921cc1db3",
+    "run_id": "run-20260827164741-2f7a410921cc1db3",
+    "attempt_id": "attempt-20260827164741-2f7a410921cc1db3",
+    "case_id": "case-a9-installed-office",
+    "status": "passed",
+    "assertions": [
+      {
+        "id": "a9-installed-word-preview",
+        "method": "equal",
+        "expected": true,
+        "actual": true,
+        "status": "passed"
+      }
+    ],
+    "blockers": [],
+    "recorded_at": "2026-08-27T16:47:44.362Z"
+  },
+  {
+    "id": "execution-attempt-20260827164919-2fbb1ab650d1d275",
+    "run_id": "run-20260827164919-2fbb1ab650d1d275",
+    "attempt_id": "attempt-20260827164919-2fbb1ab650d1d275",
+    "case_id": "case-a10-repository-delivery",
+    "status": "passed",
+    "assertions": [
+      {
+        "id": "a10-repository-clean",
+        "method": "equal",
+        "expected": true,
+        "actual": true,
+        "status": "passed"
+      }
+    ],
+    "blockers": [],
+    "recorded_at": "2026-08-27T16:49:48.386Z"
+  },
+  {
+    "id": "execution-attempt-20260827165130-e1f74d4393379188",
+    "run_id": "run-20260827165130-e1f74d4393379188",
+    "attempt_id": "attempt-20260827165130-e1f74d4393379188",
+    "case_id": "case-a1-project-open",
+    "status": "passed",
+    "assertions": [
+      {
+        "id": "a1-project-open",
+        "method": "equal",
+        "expected": true,
+        "actual": true,
+        "status": "passed"
+      }
+    ],
+    "blockers": [],
+    "recorded_at": "2026-08-27T16:51:35.213Z"
+  },
+  {
+    "id": "execution-attempt-20260827165307-dc460ebd90c9c1c5",
+    "run_id": "run-20260827165307-dc460ebd90c9c1c5",
+    "attempt_id": "attempt-20260827165307-dc460ebd90c9c1c5",
+    "case_id": "case-a2-general-project",
+    "status": "passed",
+    "assertions": [
+      {
+        "id": "a2-general-flow",
+        "method": "equal",
+        "expected": true,
+        "actual": true,
+        "status": "passed"
+      }
+    ],
+    "blockers": [],
+    "recorded_at": "2026-08-27T16:53:13.150Z"
+  },
+  {
+    "id": "execution-attempt-20260827165448-33ae7e9da2aa786b",
+    "run_id": "run-20260827165448-33ae7e9da2aa786b",
+    "attempt_id": "attempt-20260827165448-33ae7e9da2aa786b",
+    "case_id": "case-a3-academic-profile",
+    "status": "passed",
+    "assertions": [
+      {
+        "id": "a3-profile-isolation",
+        "method": "equal",
+        "expected": true,
+        "actual": true,
+        "status": "passed"
+      }
+    ],
+    "blockers": [],
+    "recorded_at": "2026-08-27T16:55:15.193Z"
+  },
+  {
+    "id": "execution-attempt-20260827165648-4306fe7a975d4e57",
+    "run_id": "run-20260827165648-4306fe7a975d4e57",
+    "attempt_id": "attempt-20260827165648-4306fe7a975d4e57",
+    "case_id": "case-a4-obsolete-contracts",
+    "status": "passed",
+    "assertions": [
+      {
+        "id": "a4-no-obsolete-contract",
+        "method": "equal",
+        "expected": true,
+        "actual": true,
+        "status": "passed"
+      }
+    ],
+    "blockers": [],
+    "recorded_at": "2026-08-27T16:56:59.740Z"
+  },
+  {
+    "id": "execution-attempt-20260827165835-8d9f66c5355f25a7",
+    "run_id": "run-20260827165835-8d9f66c5355f25a7",
+    "attempt_id": "attempt-20260827165835-8d9f66c5355f25a7",
+    "case_id": "case-a6-path-security",
+    "status": "passed",
+    "assertions": [
+      {
+        "id": "a6-secure-paths",
+        "method": "equal",
+        "expected": true,
+        "actual": true,
+        "status": "passed"
+      }
+    ],
+    "blockers": [],
+    "recorded_at": "2026-08-27T16:59:49.742Z"
+  },
+  {
+    "id": "execution-attempt-20260827170131-a8995211eebaf5a0",
+    "run_id": "run-20260827170131-a8995211eebaf5a0",
+    "attempt_id": "attempt-20260827170131-a8995211eebaf5a0",
+    "case_id": "case-a7-deterministic-docx",
+    "status": "passed",
+    "assertions": [
+      {
+        "id": "a7-deterministic-pipeline",
+        "method": "equal",
+        "expected": true,
+        "actual": true,
+        "status": "passed"
+      }
+    ],
+    "blockers": [],
+    "recorded_at": "2026-08-27T17:01:49.738Z"
+  },
+  {
+    "id": "execution-attempt-20260827170325-d0d5c533b8fe0c8a",
+    "run_id": "run-20260827170325-d0d5c533b8fe0c8a",
+    "attempt_id": "attempt-20260827170325-d0d5c533b8fe0c8a",
+    "case_id": "case-a8-runtime-parity",
+    "status": "passed",
+    "assertions": [
+      {
+        "id": "a8-protocol-parity",
+        "method": "equal",
+        "expected": true,
+        "actual": true,
+        "status": "passed"
+      }
+    ],
+    "blockers": [],
+    "recorded_at": "2026-08-27T17:05:11.343Z"
+  },
+  {
+    "id": "execution-attempt-20260827170658-9b3f74bd04cf5e09",
+    "run_id": "run-20260827170658-9b3f74bd04cf5e09",
+    "attempt_id": "attempt-20260827170658-9b3f74bd04cf5e09",
+    "case_id": "case-a9-installed-office",
+    "status": "passed",
+    "assertions": [
+      {
+        "id": "a9-installed-word-preview",
+        "method": "equal",
+        "expected": true,
+        "actual": true,
+        "status": "passed"
+      }
+    ],
+    "blockers": [],
+    "recorded_at": "2026-08-27T17:07:01.533Z"
+  },
+  {
+    "id": "execution-attempt-20260827170838-67ba0101765e2309",
+    "run_id": "run-20260827170838-67ba0101765e2309",
+    "attempt_id": "attempt-20260827170838-67ba0101765e2309",
+    "case_id": "case-a10-repository-delivery",
+    "status": "passed",
+    "assertions": [
+      {
+        "id": "a10-repository-clean",
+        "method": "equal",
+        "expected": true,
+        "actual": true,
+        "status": "passed"
+      }
+    ],
+    "blockers": [],
+    "recorded_at": "2026-08-27T17:09:05.436Z"
+  },
+  {
+    "id": "execution-attempt-20260827171042-9e36cdefa9c99aec",
+    "run_id": "run-20260827171042-9e36cdefa9c99aec",
+    "attempt_id": "attempt-20260827171042-9e36cdefa9c99aec",
+    "case_id": "case-a1-project-open",
+    "status": "passed",
+    "assertions": [
+      {
+        "id": "a1-project-open",
+        "method": "equal",
+        "expected": true,
+        "actual": true,
+        "status": "passed"
+      }
+    ],
+    "blockers": [],
+    "recorded_at": "2026-08-27T17:10:45.998Z"
+  },
+  {
+    "id": "execution-attempt-20260827171219-d6b354bd1672fb00",
+    "run_id": "run-20260827171219-d6b354bd1672fb00",
+    "attempt_id": "attempt-20260827171219-d6b354bd1672fb00",
+    "case_id": "case-a2-general-project",
+    "status": "passed",
+    "assertions": [
+      {
+        "id": "a2-general-flow",
+        "method": "equal",
+        "expected": true,
+        "actual": true,
+        "status": "passed"
+      }
+    ],
+    "blockers": [],
+    "recorded_at": "2026-08-27T17:12:24.820Z"
+  },
+  {
+    "id": "execution-attempt-20260827171359-50df188fa3eb7d0d",
+    "run_id": "run-20260827171359-50df188fa3eb7d0d",
+    "attempt_id": "attempt-20260827171359-50df188fa3eb7d0d",
+    "case_id": "case-a3-academic-profile",
+    "status": "passed",
+    "assertions": [
+      {
+        "id": "a3-profile-isolation",
+        "method": "equal",
+        "expected": true,
+        "actual": true,
+        "status": "passed"
+      }
+    ],
+    "blockers": [],
+    "recorded_at": "2026-08-27T17:14:25.476Z"
+  },
+  {
+    "id": "execution-attempt-20260827171601-77c450f6d446945a",
+    "run_id": "run-20260827171601-77c450f6d446945a",
+    "attempt_id": "attempt-20260827171601-77c450f6d446945a",
+    "case_id": "case-a4-obsolete-contracts",
+    "status": "passed",
+    "assertions": [
+      {
+        "id": "a4-no-obsolete-contract",
+        "method": "equal",
+        "expected": true,
+        "actual": true,
+        "status": "passed"
+      }
+    ],
+    "blockers": [],
+    "recorded_at": "2026-08-27T17:16:11.629Z"
+  },
+  {
+    "id": "execution-attempt-20260827171747-90df6ab0686e9553",
+    "run_id": "run-20260827171747-90df6ab0686e9553",
+    "attempt_id": "attempt-20260827171747-90df6ab0686e9553",
+    "case_id": "case-a5-neutral-default-paths",
+    "status": "passed",
+    "assertions": [
+      {
+        "id": "a5-default-paths",
+        "method": "equal",
+        "expected": true,
+        "actual": true,
+        "status": "passed"
+      }
+    ],
+    "blockers": [],
+    "recorded_at": "2026-08-27T17:17:52.116Z"
+  },
+  {
+    "id": "execution-attempt-20260827171926-e9e4848201f13e33",
+    "run_id": "run-20260827171926-e9e4848201f13e33",
+    "attempt_id": "attempt-20260827171926-e9e4848201f13e33",
+    "case_id": "case-a7-deterministic-docx",
+    "status": "passed",
+    "assertions": [
+      {
+        "id": "a7-deterministic-pipeline",
+        "method": "equal",
+        "expected": true,
+        "actual": true,
+        "status": "passed"
+      }
+    ],
+    "blockers": [],
+    "recorded_at": "2026-08-27T17:19:44.948Z"
+  },
+  {
+    "id": "execution-attempt-20260827172121-1ea76bb9f4ab517d",
+    "run_id": "run-20260827172121-1ea76bb9f4ab517d",
+    "attempt_id": "attempt-20260827172121-1ea76bb9f4ab517d",
+    "case_id": "case-a8-runtime-parity",
+    "status": "passed",
+    "assertions": [
+      {
+        "id": "a8-protocol-parity",
+        "method": "equal",
+        "expected": true,
+        "actual": true,
+        "status": "passed"
+      }
+    ],
+    "blockers": [],
+    "recorded_at": "2026-08-27T17:22:36.403Z"
+  },
+  {
+    "id": "execution-attempt-20260827172412-d0b3762e931c513a",
+    "run_id": "run-20260827172412-d0b3762e931c513a",
+    "attempt_id": "attempt-20260827172412-d0b3762e931c513a",
+    "case_id": "case-a9-installed-office",
+    "status": "passed",
+    "assertions": [
+      {
+        "id": "a9-installed-word-preview",
+        "method": "equal",
+        "expected": true,
+        "actual": true,
+        "status": "passed"
+      }
+    ],
+    "blockers": [],
+    "recorded_at": "2026-08-27T17:24:14.775Z"
+  },
+  {
+    "id": "execution-attempt-20260827172548-7ca59b606fc3ea63",
+    "run_id": "run-20260827172548-7ca59b606fc3ea63",
+    "attempt_id": "attempt-20260827172548-7ca59b606fc3ea63",
+    "case_id": "case-a10-repository-delivery",
+    "status": "passed",
+    "assertions": [
+      {
+        "id": "a10-repository-clean",
+        "method": "equal",
+        "expected": true,
+        "actual": true,
+        "status": "passed"
+      }
+    ],
+    "blockers": [],
+    "recorded_at": "2026-08-27T17:26:11.060Z"
+  },
+  {
+    "id": "execution-attempt-20260827172746-d8581fe72480fa33",
+    "run_id": "run-20260827172746-d8581fe72480fa33",
+    "attempt_id": "attempt-20260827172746-d8581fe72480fa33",
+    "case_id": "case-a1-project-open",
+    "status": "passed",
+    "assertions": [
+      {
+        "id": "a1-project-open",
+        "method": "equal",
+        "expected": true,
+        "actual": true,
+        "status": "passed"
+      }
+    ],
+    "blockers": [],
+    "recorded_at": "2026-08-27T17:27:50.198Z"
+  },
+  {
+    "id": "execution-attempt-20260827172923-166fa3900a64504f",
+    "run_id": "run-20260827172923-166fa3900a64504f",
+    "attempt_id": "attempt-20260827172923-166fa3900a64504f",
+    "case_id": "case-a2-general-project",
+    "status": "passed",
+    "assertions": [
+      {
+        "id": "a2-general-flow",
+        "method": "equal",
+        "expected": true,
+        "actual": true,
+        "status": "passed"
+      }
+    ],
+    "blockers": [],
+    "recorded_at": "2026-08-27T17:29:28.707Z"
+  },
+  {
+    "id": "execution-attempt-20260827173103-d58efe0df71e2b59",
+    "run_id": "run-20260827173103-d58efe0df71e2b59",
+    "attempt_id": "attempt-20260827173103-d58efe0df71e2b59",
+    "case_id": "case-a3-academic-profile",
+    "status": "passed",
+    "assertions": [
+      {
+        "id": "a3-profile-isolation",
+        "method": "equal",
+        "expected": true,
+        "actual": true,
+        "status": "passed"
+      }
+    ],
+    "blockers": [],
+    "recorded_at": "2026-08-27T17:31:29.951Z"
+  },
+  {
+    "id": "execution-attempt-20260827173303-84301cfd6f30d710",
+    "run_id": "run-20260827173303-84301cfd6f30d710",
+    "attempt_id": "attempt-20260827173303-84301cfd6f30d710",
+    "case_id": "case-a4-obsolete-contracts",
+    "status": "passed",
+    "assertions": [
+      {
+        "id": "a4-no-obsolete-contract",
+        "method": "equal",
+        "expected": true,
+        "actual": true,
+        "status": "passed"
+      }
+    ],
+    "blockers": [],
+    "recorded_at": "2026-08-27T17:33:14.071Z"
+  },
+  {
+    "id": "execution-attempt-20260827173449-6f1b0903cb9ea83f",
+    "run_id": "run-20260827173449-6f1b0903cb9ea83f",
+    "attempt_id": "attempt-20260827173449-6f1b0903cb9ea83f",
+    "case_id": "case-a5-neutral-default-paths",
+    "status": "passed",
+    "assertions": [
+      {
+        "id": "a5-default-paths",
+        "method": "equal",
+        "expected": true,
+        "actual": true,
+        "status": "passed"
+      }
+    ],
+    "blockers": [],
+    "recorded_at": "2026-08-27T17:34:54.634Z"
+  },
+  {
+    "id": "execution-attempt-20260827173630-b4105e1677e0e038",
+    "run_id": "run-20260827173630-b4105e1677e0e038",
+    "attempt_id": "attempt-20260827173630-b4105e1677e0e038",
+    "case_id": "case-a6-path-security",
+    "status": "passed",
+    "assertions": [
+      {
+        "id": "a6-secure-paths",
+        "method": "equal",
+        "expected": true,
+        "actual": true,
+        "status": "passed"
+      }
+    ],
+    "blockers": [],
+    "recorded_at": "2026-08-27T17:37:37.858Z"
+  },
+  {
+    "id": "execution-attempt-20260827173912-99b252a17070dce3",
+    "run_id": "run-20260827173912-99b252a17070dce3",
+    "attempt_id": "attempt-20260827173912-99b252a17070dce3",
+    "case_id": "case-a8-runtime-parity",
+    "status": "passed",
+    "assertions": [
+      {
+        "id": "a8-protocol-parity",
+        "method": "equal",
+        "expected": true,
+        "actual": true,
+        "status": "passed"
+      }
+    ],
+    "blockers": [],
+    "recorded_at": "2026-08-27T17:40:28.059Z"
+  },
+  {
+    "id": "execution-attempt-20260827174203-4e2d4de46d6e0914",
+    "run_id": "run-20260827174203-4e2d4de46d6e0914",
+    "attempt_id": "attempt-20260827174203-4e2d4de46d6e0914",
+    "case_id": "case-a9-installed-office",
+    "status": "passed",
+    "assertions": [
+      {
+        "id": "a9-installed-word-preview",
+        "method": "equal",
+        "expected": true,
+        "actual": true,
+        "status": "passed"
+      }
+    ],
+    "blockers": [],
+    "recorded_at": "2026-08-27T17:42:05.578Z"
+  },
+  {
+    "id": "execution-attempt-20260827174338-641c4d4b96b35cde",
+    "run_id": "run-20260827174338-641c4d4b96b35cde",
+    "attempt_id": "attempt-20260827174338-641c4d4b96b35cde",
+    "case_id": "case-a10-repository-delivery",
+    "status": "passed",
+    "assertions": [
+      {
+        "id": "a10-repository-clean",
+        "method": "equal",
+        "expected": true,
+        "actual": true,
+        "status": "passed"
+      }
+    ],
+    "blockers": [],
+    "recorded_at": "2026-08-27T17:44:01.971Z"
+  },
+  {
+    "id": "execution-attempt-20260827174537-615e74c7919f939e",
+    "run_id": "run-20260827174537-615e74c7919f939e",
+    "attempt_id": "attempt-20260827174537-615e74c7919f939e",
+    "case_id": "case-a1-project-open",
+    "status": "passed",
+    "assertions": [
+      {
+        "id": "a1-project-open",
+        "method": "equal",
+        "expected": true,
+        "actual": true,
+        "status": "passed"
+      }
+    ],
+    "blockers": [],
+    "recorded_at": "2026-08-27T17:45:40.894Z"
+  },
+  {
+    "id": "execution-attempt-20260827174714-4206a3cc1c800953",
+    "run_id": "run-20260827174714-4206a3cc1c800953",
+    "attempt_id": "attempt-20260827174714-4206a3cc1c800953",
+    "case_id": "case-a2-general-project",
+    "status": "passed",
+    "assertions": [
+      {
+        "id": "a2-general-flow",
+        "method": "equal",
+        "expected": true,
+        "actual": true,
+        "status": "passed"
+      }
+    ],
+    "blockers": [],
+    "recorded_at": "2026-08-27T17:47:19.844Z"
+  },
+  {
+    "id": "execution-attempt-20260827174853-6ef6c53e7afb79ed",
+    "run_id": "run-20260827174853-6ef6c53e7afb79ed",
+    "attempt_id": "attempt-20260827174853-6ef6c53e7afb79ed",
+    "case_id": "case-a3-academic-profile",
+    "status": "passed",
+    "assertions": [
+      {
+        "id": "a3-profile-isolation",
+        "method": "equal",
+        "expected": true,
+        "actual": true,
+        "status": "passed"
+      }
+    ],
+    "blockers": [],
+    "recorded_at": "2026-08-27T17:49:19.350Z"
+  },
+  {
+    "id": "execution-attempt-20260827175054-b78a108e07567a24",
+    "run_id": "run-20260827175054-b78a108e07567a24",
+    "attempt_id": "attempt-20260827175054-b78a108e07567a24",
+    "case_id": "case-a4-obsolete-contracts",
+    "status": "passed",
+    "assertions": [
+      {
+        "id": "a4-no-obsolete-contract",
+        "method": "equal",
+        "expected": true,
+        "actual": true,
+        "status": "passed"
+      }
+    ],
+    "blockers": [],
+    "recorded_at": "2026-08-27T17:51:04.771Z"
+  },
+  {
+    "id": "execution-attempt-20260827175239-f30884e3d12968b9",
+    "run_id": "run-20260827175239-f30884e3d12968b9",
+    "attempt_id": "attempt-20260827175239-f30884e3d12968b9",
+    "case_id": "case-a5-neutral-default-paths",
+    "status": "passed",
+    "assertions": [
+      {
+        "id": "a5-default-paths",
+        "method": "equal",
+        "expected": true,
+        "actual": true,
+        "status": "passed"
+      }
+    ],
+    "blockers": [],
+    "recorded_at": "2026-08-27T17:52:44.671Z"
+  },
+  {
+    "id": "execution-attempt-20260827175419-b687a1dcd64f0802",
+    "run_id": "run-20260827175419-b687a1dcd64f0802",
+    "attempt_id": "attempt-20260827175419-b687a1dcd64f0802",
+    "case_id": "case-a6-path-security",
+    "status": "passed",
+    "assertions": [
+      {
+        "id": "a6-secure-paths",
+        "method": "equal",
+        "expected": true,
+        "actual": true,
+        "status": "passed"
+      }
+    ],
+    "blockers": [],
+    "recorded_at": "2026-08-27T17:55:28.348Z"
+  },
+  {
+    "id": "execution-attempt-20260827175703-c4eda50f935dc776",
+    "run_id": "run-20260827175703-c4eda50f935dc776",
+    "attempt_id": "attempt-20260827175703-c4eda50f935dc776",
+    "case_id": "case-a7-deterministic-docx",
+    "status": "passed",
+    "assertions": [
+      {
+        "id": "a7-deterministic-pipeline",
+        "method": "equal",
+        "expected": true,
+        "actual": true,
+        "status": "passed"
+      }
+    ],
+    "blockers": [],
+    "recorded_at": "2026-08-27T17:57:21.375Z"
+  },
+  {
+    "id": "execution-attempt-20260827175856-2109181dce06db71",
+    "run_id": "run-20260827175856-2109181dce06db71",
+    "attempt_id": "attempt-20260827175856-2109181dce06db71",
+    "case_id": "case-a9-installed-office",
+    "status": "passed",
+    "assertions": [
+      {
+        "id": "a9-installed-word-preview",
+        "method": "equal",
+        "expected": true,
+        "actual": true,
+        "status": "passed"
+      }
+    ],
+    "blockers": [],
+    "recorded_at": "2026-08-27T17:58:59.066Z"
+  },
+  {
+    "id": "execution-attempt-20260827180032-06a8e334663c7571",
+    "run_id": "run-20260827180032-06a8e334663c7571",
+    "attempt_id": "attempt-20260827180032-06a8e334663c7571",
+    "case_id": "case-a10-repository-delivery",
+    "status": "passed",
+    "assertions": [
+      {
+        "id": "a10-repository-clean",
+        "method": "equal",
+        "expected": true,
+        "actual": true,
+        "status": "passed"
+      }
+    ],
+    "blockers": [],
+    "recorded_at": "2026-08-27T18:00:54.701Z"
+  },
+  {
+    "id": "execution-attempt-20260827180230-ccc4b39fcdd6f33a",
+    "run_id": "run-20260827180230-ccc4b39fcdd6f33a",
+    "attempt_id": "attempt-20260827180230-ccc4b39fcdd6f33a",
+    "case_id": "case-a1-project-open",
+    "status": "passed",
+    "assertions": [
+      {
+        "id": "a1-project-open",
+        "method": "equal",
+        "expected": true,
+        "actual": true,
+        "status": "passed"
+      }
+    ],
+    "blockers": [],
+    "recorded_at": "2026-08-27T18:02:34.223Z"
+  },
+  {
+    "id": "execution-attempt-20260827180408-aada1d97bcaad994",
+    "run_id": "run-20260827180408-aada1d97bcaad994",
+    "attempt_id": "attempt-20260827180408-aada1d97bcaad994",
+    "case_id": "case-a2-general-project",
+    "status": "passed",
+    "assertions": [
+      {
+        "id": "a2-general-flow",
+        "method": "equal",
+        "expected": true,
+        "actual": true,
+        "status": "passed"
+      }
+    ],
+    "blockers": [],
+    "recorded_at": "2026-08-27T18:04:13.463Z"
+  },
+  {
+    "id": "execution-attempt-20260827180548-cbbded35cfda6540",
+    "run_id": "run-20260827180548-cbbded35cfda6540",
+    "attempt_id": "attempt-20260827180548-cbbded35cfda6540",
+    "case_id": "case-a3-academic-profile",
+    "status": "passed",
+    "assertions": [
+      {
+        "id": "a3-profile-isolation",
+        "method": "equal",
+        "expected": true,
+        "actual": true,
+        "status": "passed"
+      }
+    ],
+    "blockers": [],
+    "recorded_at": "2026-08-27T18:06:14.589Z"
+  },
+  {
+    "id": "execution-attempt-20260827180749-d87a0bbbcc5c62cc",
+    "run_id": "run-20260827180749-d87a0bbbcc5c62cc",
+    "attempt_id": "attempt-20260827180749-d87a0bbbcc5c62cc",
+    "case_id": "case-a4-obsolete-contracts",
+    "status": "passed",
+    "assertions": [
+      {
+        "id": "a4-no-obsolete-contract",
+        "method": "equal",
+        "expected": true,
+        "actual": true,
+        "status": "passed"
+      }
+    ],
+    "blockers": [],
+    "recorded_at": "2026-08-27T18:08:00.283Z"
+  },
+  {
+    "id": "execution-attempt-20260827180935-4cd1895f8ba96e97",
+    "run_id": "run-20260827180935-4cd1895f8ba96e97",
+    "attempt_id": "attempt-20260827180935-4cd1895f8ba96e97",
+    "case_id": "case-a5-neutral-default-paths",
+    "status": "passed",
+    "assertions": [
+      {
+        "id": "a5-default-paths",
+        "method": "equal",
+        "expected": true,
+        "actual": true,
+        "status": "passed"
+      }
+    ],
+    "blockers": [],
+    "recorded_at": "2026-08-27T18:09:40.550Z"
+  },
+  {
+    "id": "execution-attempt-20260827181114-7b89bb10b13967d0",
+    "run_id": "run-20260827181114-7b89bb10b13967d0",
+    "attempt_id": "attempt-20260827181114-7b89bb10b13967d0",
+    "case_id": "case-a6-path-security",
+    "status": "passed",
+    "assertions": [
+      {
+        "id": "a6-secure-paths",
+        "method": "equal",
+        "expected": true,
+        "actual": true,
+        "status": "passed"
+      }
+    ],
+    "blockers": [],
+    "recorded_at": "2026-08-27T18:12:24.817Z"
+  },
+  {
+    "id": "execution-attempt-20260827181400-0166737123fec42a",
+    "run_id": "run-20260827181400-0166737123fec42a",
+    "attempt_id": "attempt-20260827181400-0166737123fec42a",
+    "case_id": "case-a7-deterministic-docx",
+    "status": "passed",
+    "assertions": [
+      {
+        "id": "a7-deterministic-pipeline",
+        "method": "equal",
+        "expected": true,
+        "actual": true,
+        "status": "passed"
+      }
+    ],
+    "blockers": [],
+    "recorded_at": "2026-08-27T18:14:18.820Z"
+  },
+  {
+    "id": "execution-attempt-20260827181554-86b94c43fc35bb2a",
+    "run_id": "run-20260827181554-86b94c43fc35bb2a",
+    "attempt_id": "attempt-20260827181554-86b94c43fc35bb2a",
+    "case_id": "case-a8-runtime-parity",
+    "status": "passed",
+    "assertions": [
+      {
+        "id": "a8-protocol-parity",
+        "method": "equal",
+        "expected": true,
+        "actual": true,
+        "status": "passed"
+      }
+    ],
+    "blockers": [],
+    "recorded_at": "2026-08-27T18:17:12.490Z"
+  },
+  {
+    "id": "execution-attempt-20260827181848-329fe8e773cae09d",
+    "run_id": "run-20260827181848-329fe8e773cae09d",
+    "attempt_id": "attempt-20260827181848-329fe8e773cae09d",
+    "case_id": "case-a10-repository-delivery",
+    "status": "passed",
+    "assertions": [
+      {
+        "id": "a10-repository-clean",
+        "method": "equal",
+        "expected": true,
+        "actual": true,
+        "status": "passed"
+      }
+    ],
+    "blockers": [],
+    "recorded_at": "2026-08-27T18:19:10.996Z"
+  },
+  {
+    "id": "execution-attempt-20260827182047-39312b02e7655e7e",
+    "run_id": "run-20260827182047-39312b02e7655e7e",
+    "attempt_id": "attempt-20260827182047-39312b02e7655e7e",
+    "case_id": "case-a1-project-open",
+    "status": "passed",
+    "assertions": [
+      {
+        "id": "a1-project-open",
+        "method": "equal",
+        "expected": true,
+        "actual": true,
+        "status": "passed"
+      }
+    ],
+    "blockers": [],
+    "recorded_at": "2026-08-27T18:20:51.296Z"
+  },
+  {
+    "id": "execution-attempt-20260827182225-3807ecb6717019a5",
+    "run_id": "run-20260827182225-3807ecb6717019a5",
+    "attempt_id": "attempt-20260827182225-3807ecb6717019a5",
+    "case_id": "case-a2-general-project",
+    "status": "passed",
+    "assertions": [
+      {
+        "id": "a2-general-flow",
+        "method": "equal",
+        "expected": true,
+        "actual": true,
+        "status": "passed"
+      }
+    ],
+    "blockers": [],
+    "recorded_at": "2026-08-27T18:22:30.770Z"
+  },
+  {
+    "id": "execution-attempt-20260827182405-d982b2f693705291",
+    "run_id": "run-20260827182405-d982b2f693705291",
+    "attempt_id": "attempt-20260827182405-d982b2f693705291",
+    "case_id": "case-a3-academic-profile",
+    "status": "passed",
+    "assertions": [
+      {
+        "id": "a3-profile-isolation",
+        "method": "equal",
+        "expected": true,
+        "actual": true,
+        "status": "passed"
+      }
+    ],
+    "blockers": [],
+    "recorded_at": "2026-08-27T18:24:32.261Z"
+  },
+  {
+    "id": "execution-attempt-20260827182606-39fc5b6f90150751",
+    "run_id": "run-20260827182606-39fc5b6f90150751",
+    "attempt_id": "attempt-20260827182606-39fc5b6f90150751",
+    "case_id": "case-a4-obsolete-contracts",
+    "status": "passed",
+    "assertions": [
+      {
+        "id": "a4-no-obsolete-contract",
+        "method": "equal",
+        "expected": true,
+        "actual": true,
+        "status": "passed"
+      }
+    ],
+    "blockers": [],
+    "recorded_at": "2026-08-27T18:26:17.721Z"
+  },
+  {
+    "id": "execution-attempt-20260827182752-f309b45bc6f79c4f",
+    "run_id": "run-20260827182752-f309b45bc6f79c4f",
+    "attempt_id": "attempt-20260827182752-f309b45bc6f79c4f",
+    "case_id": "case-a5-neutral-default-paths",
+    "status": "passed",
+    "assertions": [
+      {
+        "id": "a5-default-paths",
+        "method": "equal",
+        "expected": true,
+        "actual": true,
+        "status": "passed"
+      }
+    ],
+    "blockers": [],
+    "recorded_at": "2026-08-27T18:27:58.059Z"
+  },
+  {
+    "id": "execution-attempt-20260827182932-1579e8f95d04fd0b",
+    "run_id": "run-20260827182932-1579e8f95d04fd0b",
+    "attempt_id": "attempt-20260827182932-1579e8f95d04fd0b",
+    "case_id": "case-a6-path-security",
+    "status": "passed",
+    "assertions": [
+      {
+        "id": "a6-secure-paths",
+        "method": "equal",
+        "expected": true,
+        "actual": true,
+        "status": "passed"
+      }
+    ],
+    "blockers": [],
+    "recorded_at": "2026-08-27T18:30:42.069Z"
+  },
+  {
+    "id": "execution-attempt-20260827183218-46aea56bf0619712",
+    "run_id": "run-20260827183218-46aea56bf0619712",
+    "attempt_id": "attempt-20260827183218-46aea56bf0619712",
+    "case_id": "case-a7-deterministic-docx",
+    "status": "passed",
+    "assertions": [
+      {
+        "id": "a7-deterministic-pipeline",
+        "method": "equal",
+        "expected": true,
+        "actual": true,
+        "status": "passed"
+      }
+    ],
+    "blockers": [],
+    "recorded_at": "2026-08-27T18:32:36.606Z"
+  },
+  {
+    "id": "execution-attempt-20260827183412-8a25defa8b38765d",
+    "run_id": "run-20260827183412-8a25defa8b38765d",
+    "attempt_id": "attempt-20260827183412-8a25defa8b38765d",
+    "case_id": "case-a8-runtime-parity",
+    "status": "passed",
+    "assertions": [
+      {
+        "id": "a8-protocol-parity",
+        "method": "equal",
+        "expected": true,
+        "actual": true,
+        "status": "passed"
+      }
+    ],
+    "blockers": [],
+    "recorded_at": "2026-08-27T18:35:33.539Z"
+  },
+  {
+    "id": "execution-attempt-20260827183709-c4e5cedcc4ad2a7a",
+    "run_id": "run-20260827183709-c4e5cedcc4ad2a7a",
+    "attempt_id": "attempt-20260827183709-c4e5cedcc4ad2a7a",
+    "case_id": "case-a9-installed-office",
+    "status": "passed",
+    "assertions": [
+      {
+        "id": "a9-installed-word-preview",
+        "method": "equal",
+        "expected": true,
+        "actual": true,
+        "status": "passed"
+      }
+    ],
+    "blockers": [],
+    "recorded_at": "2026-08-27T18:37:12.133Z"
   }
 ]
