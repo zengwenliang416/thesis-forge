@@ -1,0 +1,88 @@
+{
+  "schema": "specnav.development.repair-task.v1",
+  "id": "900-verification-repair-4ab205d7e891c6c8",
+  "change_id": "docforge-project-format-v1",
+  "goal": "Repair test_defect for case-a9-installed-office.",
+  "classification": "test_defect",
+  "owner": "development",
+  "status": "in_progress",
+  "requested_at": "2026-08-27T07:34:37.965Z",
+  "packet_path": "development/tasks/900-verification-repair-4ab205d7e891c6c8",
+  "scope": {
+    "owner": "development",
+    "source": "approved-repair-scope-supersession",
+    "allowed_files": [
+      "openspec/changes/docforge-project-format-v1/verify/v2/case-approval.approval-e34e5e74c6ac469ee8bce2be.json",
+      "openspec/changes/docforge-project-format-v1/verify/v2/case-approval.json",
+      "openspec/changes/docforge-project-format-v1/verify/v2/case-plan-request.json",
+      "openspec/changes/docforge-project-format-v1/verify/v2/case-snapshot.json",
+      "openspec/changes/docforge-project-format-v1/verify/v2/case-snapshot.repair-proposed.json",
+      "openspec/changes/docforge-project-format-v1/verify/v2/case-snapshot.snapshot-e34e5e74c6ac469ee8bce2be.json"
+    ],
+    "denied_files": [],
+    "requires_review_on": [
+      "openspec/changes/docforge-project-format-v1/verify/v2/case-approval.approval-e34e5e74c6ac469ee8bce2be.json",
+      "openspec/changes/docforge-project-format-v1/verify/v2/case-approval.json",
+      "openspec/changes/docforge-project-format-v1/verify/v2/case-plan-request.json",
+      "openspec/changes/docforge-project-format-v1/verify/v2/case-snapshot.json",
+      "openspec/changes/docforge-project-format-v1/verify/v2/case-snapshot.repair-proposed.json",
+      "openspec/changes/docforge-project-format-v1/verify/v2/case-snapshot.snapshot-e34e5e74c6ac469ee8bce2be.json"
+    ],
+    "allowed_operations": {
+      "create": true,
+      "modify": true,
+      "delete": false,
+      "rename": false
+    },
+    "digest": "0e39fc3562a473bdcef92f20df714d1d583af68a2d1458262e5efee7449ca4df"
+  },
+  "packet_artifacts": [
+    "brief.md",
+    "context.json",
+    "report.md",
+    "spec-review.md",
+    "quality-review.md"
+  ],
+  "required_reviews": [
+    "spec-review",
+    "quality-review"
+  ],
+  "ownership": {
+    "evidence": "verification",
+    "closure": "verification",
+    "repair": "development",
+    "reviews": "development",
+    "transitions": "core",
+    "break_loop": "core"
+  },
+  "frozen_failure": {
+    "failure_packet_id": "failure-0b7b1bb8ae4396daaf850b9954df7a2cf108ddf9b482e412e7e118bd0f2b05bd",
+    "failure_packet_digest": "770ce1512a6948e68de94a408967697670a7d0f4552d0ac28153260f2806ca6f",
+    "run_id": "run-20260827064738-bcbe02a786beafa0",
+    "case_id": "case-a9-installed-office",
+    "attempt_id": "attempt-20260827064738-bcbe02a786beafa0",
+    "evidence_ids": [
+      "evidence-d370d756d2e549524ff52066d23ade4c389bbaef58d8f68e5315709712c43f77"
+    ],
+    "evidence_content": [
+      {
+        "id": "evidence-d370d756d2e549524ff52066d23ade4c389bbaef58d8f68e5315709712c43f77",
+        "digest": "9e862ef221b4a59c4bc9f9e4af66d7bea6000a3f5b41c8a5a51ebcc6857d0d1f"
+      }
+    ],
+    "reading_ids": [
+      "reading-4468e8ded4d8e9d8d5e67fa35f21bc05f44982f4e4373324f03e4a253acc5965",
+      "reading-449c7f1a52a6a73f9298c7ad9bbb815cc926d573c966e129a3b0634dff877000",
+      "reading-4928fc84668d9552d0e87539daad15ecdb1f25dadb2492b2a015b076dc5d81dc",
+      "reading-808c9dfe2f5ec2d8feadb2e19029172a1f46ec5dff183888f6883dd35da99e67",
+      "reading-afb77bb07c26211c304d322373ec62696602baec19b9993c8f14bace2fa1e0e9",
+      "reading-c5548acc8601dc89e26e8b6e01a663e23a368c039e95bd3224ad0df71fdfcb8a"
+    ],
+    "failed_assertion_ids": [
+      "a9-installed-word-preview"
+    ],
+    "summary": "The approved command runner omitted the assertion protocol required to produce structured assertion_result evidence.",
+    "root_cause": "The case contract declared env_keys=[], so the Runtime did not inject SPECNAV_VERIFICATION_ASSERTION_IDS or SPECNAV_VERIFICATION_ASSERTION_RESULT_FILE and no authoritative oracle result was emitted.",
+    "frozen_at": "2026-08-27T06:47:39.499Z"
+  }
+}

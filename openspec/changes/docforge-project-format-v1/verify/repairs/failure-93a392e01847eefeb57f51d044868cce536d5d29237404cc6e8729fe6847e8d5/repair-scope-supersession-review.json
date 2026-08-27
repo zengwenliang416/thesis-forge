@@ -1,0 +1,46 @@
+{
+  "schema": "specnav.verification.repair-scope-supersession-review.v1",
+  "id": "repair-scope-review-9207e7d3539e651f48d69c54106b8697",
+  "failure_id": "failure-93a392e01847eefeb57f51d044868cce536d5d29237404cc6e8729fe6847e8d5",
+  "change_id": "docforge-project-format-v1",
+  "classification": "test_defect",
+  "decision": "approved",
+  "reviewer": {
+    "id": "zengwenliang416",
+    "kind": "human"
+  },
+  "reviewed_at": "2026-08-27T09:58:21.283Z",
+  "reason": "Approved project-local contract repair supersedes the insufficient immutable test scope while preserving all prior trusted history.",
+  "proposal_sha256": "e80a0cbe900a86b270253bba08fe5d348c91f8596860b73ffcabfa882054c96b",
+  "original_requested_envelope_digest": "0923e53bf383a37006cc357f04dfde0b62ce2aa4a17fd4b097ea4226dd086b0e",
+  "original_started_envelope_digest": "e98e9d7899c9375b617a6947f19e65c221be5d5af6920d147cfa2b021296b428",
+  "original_baseline_envelope_digest": "62f1b50facbacdbb753413a6659459b63548e1f2aebe41f4154d2fec7819afd7",
+  "current_git_revision": "6da98d641415a5a98745761eec675bbbceecddb2",
+  "replacement_scope": {
+    "allowed_files": [
+      "openspec/changes/docforge-project-format-v1/verify/v2/case-approval.approval-e34e5e74c6ac469ee8bce2be.json",
+      "openspec/changes/docforge-project-format-v1/verify/v2/case-approval.json",
+      "openspec/changes/docforge-project-format-v1/verify/v2/case-plan-request.json",
+      "openspec/changes/docforge-project-format-v1/verify/v2/case-snapshot.json",
+      "openspec/changes/docforge-project-format-v1/verify/v2/case-snapshot.repair-proposed.json",
+      "openspec/changes/docforge-project-format-v1/verify/v2/case-snapshot.snapshot-e34e5e74c6ac469ee8bce2be.json"
+    ],
+    "denied_files": [],
+    "requires_review_on": [
+      "openspec/changes/docforge-project-format-v1/verify/v2/case-approval.approval-e34e5e74c6ac469ee8bce2be.json",
+      "openspec/changes/docforge-project-format-v1/verify/v2/case-approval.json",
+      "openspec/changes/docforge-project-format-v1/verify/v2/case-plan-request.json",
+      "openspec/changes/docforge-project-format-v1/verify/v2/case-snapshot.json",
+      "openspec/changes/docforge-project-format-v1/verify/v2/case-snapshot.repair-proposed.json",
+      "openspec/changes/docforge-project-format-v1/verify/v2/case-snapshot.snapshot-e34e5e74c6ac469ee8bce2be.json"
+    ],
+    "allowed_operations": {
+      "create": true,
+      "modify": true,
+      "delete": false,
+      "rename": false
+    }
+  },
+  "approved_snapshot_id": "snapshot-350e6482b5745502bf4c6d6a",
+  "approved_snapshot_hash": "350e6482b5745502bf4c6d6af7af26ba568208117ba5699863f8c80861a204de"
+}

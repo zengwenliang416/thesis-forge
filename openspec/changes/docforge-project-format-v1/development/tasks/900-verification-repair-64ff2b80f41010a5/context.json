@@ -1,0 +1,88 @@
+{
+  "schema": "specnav.development.repair-task.v1",
+  "id": "900-verification-repair-64ff2b80f41010a5",
+  "change_id": "docforge-project-format-v1",
+  "goal": "Repair test_defect for case-a6-path-security.",
+  "classification": "test_defect",
+  "owner": "development",
+  "status": "in_progress",
+  "requested_at": "2026-08-27T07:32:24.774Z",
+  "packet_path": "development/tasks/900-verification-repair-64ff2b80f41010a5",
+  "scope": {
+    "owner": "development",
+    "source": "approved-repair-scope-supersession",
+    "allowed_files": [
+      "openspec/changes/docforge-project-format-v1/verify/v2/case-approval.approval-e34e5e74c6ac469ee8bce2be.json",
+      "openspec/changes/docforge-project-format-v1/verify/v2/case-approval.json",
+      "openspec/changes/docforge-project-format-v1/verify/v2/case-plan-request.json",
+      "openspec/changes/docforge-project-format-v1/verify/v2/case-snapshot.json",
+      "openspec/changes/docforge-project-format-v1/verify/v2/case-snapshot.repair-proposed.json",
+      "openspec/changes/docforge-project-format-v1/verify/v2/case-snapshot.snapshot-e34e5e74c6ac469ee8bce2be.json"
+    ],
+    "denied_files": [],
+    "requires_review_on": [
+      "openspec/changes/docforge-project-format-v1/verify/v2/case-approval.approval-e34e5e74c6ac469ee8bce2be.json",
+      "openspec/changes/docforge-project-format-v1/verify/v2/case-approval.json",
+      "openspec/changes/docforge-project-format-v1/verify/v2/case-plan-request.json",
+      "openspec/changes/docforge-project-format-v1/verify/v2/case-snapshot.json",
+      "openspec/changes/docforge-project-format-v1/verify/v2/case-snapshot.repair-proposed.json",
+      "openspec/changes/docforge-project-format-v1/verify/v2/case-snapshot.snapshot-e34e5e74c6ac469ee8bce2be.json"
+    ],
+    "allowed_operations": {
+      "create": true,
+      "modify": true,
+      "delete": false,
+      "rename": false
+    },
+    "digest": "0e39fc3562a473bdcef92f20df714d1d583af68a2d1458262e5efee7449ca4df"
+  },
+  "packet_artifacts": [
+    "brief.md",
+    "context.json",
+    "report.md",
+    "spec-review.md",
+    "quality-review.md"
+  ],
+  "required_reviews": [
+    "spec-review",
+    "quality-review"
+  ],
+  "ownership": {
+    "evidence": "verification",
+    "closure": "verification",
+    "repair": "development",
+    "reviews": "development",
+    "transitions": "core",
+    "break_loop": "core"
+  },
+  "frozen_failure": {
+    "failure_packet_id": "failure-046667276b7162f8e5ff3393bf25487fc05b2ab68270ff9e12f6f1a9c8656ee5",
+    "failure_packet_digest": "d82a35e26f30c5ef639f24f4628f7b9b761754fd25777aca5b179fa74ae40b5a",
+    "run_id": "run-20260827064531-285da31c798070fb",
+    "case_id": "case-a6-path-security",
+    "attempt_id": "attempt-20260827064531-285da31c798070fb",
+    "evidence_ids": [
+      "evidence-c75b197aba5440a4fb22140e9a206b5ba3f1810d57096bb43902eed1025fe654"
+    ],
+    "evidence_content": [
+      {
+        "id": "evidence-c75b197aba5440a4fb22140e9a206b5ba3f1810d57096bb43902eed1025fe654",
+        "digest": "7937a811404af31fb22a87d29c48daeccc59d9f6328fe01d3a7afb24e12b4575"
+      }
+    ],
+    "reading_ids": [
+      "reading-133417b681e43b6f330dc3ebda14413ec9200c8a012297a70e9c000183a860c3",
+      "reading-149e1df62b99d781599c0c9274a4daf20b91e164a3524e307f1c46482b24ee3e",
+      "reading-32bd03ad61694ba0a491ebff25e0ffd44352d792a05670eab06258346ad17d7d",
+      "reading-7eb5d2486f2f1b78b27187c2d9ea5fabb26055e19c152e5906a609daf8173226",
+      "reading-8bf1b3ed5f70eab416174b6fb192953fd9a4b0f9308d3fb9d610c6e72c324db7",
+      "reading-94027985c64824c046b83d678e0478988e7f0aa66f7644539950016519dd0e31"
+    ],
+    "failed_assertion_ids": [
+      "a6-secure-paths"
+    ],
+    "summary": "The approved command runner omitted the assertion protocol and did not expose the required toolchain PATH.",
+    "root_cause": "The case contract declared env_keys=[] and relied on ambient PATH, so the Runtime could neither inject SPECNAV assertion output variables nor consistently locate Rust/Node toolchains.",
+    "frozen_at": "2026-08-27T06:47:03.747Z"
+  }
+}

@@ -1,0 +1,88 @@
+{
+  "schema": "specnav.development.repair-task.v1",
+  "id": "900-verification-repair-3e4e795616a16840",
+  "change_id": "docforge-project-format-v1",
+  "goal": "Repair test_defect for case-a10-repository-delivery.",
+  "classification": "test_defect",
+  "owner": "development",
+  "status": "in_progress",
+  "requested_at": "2026-08-27T07:47:08.283Z",
+  "packet_path": "development/tasks/900-verification-repair-3e4e795616a16840",
+  "scope": {
+    "owner": "development",
+    "source": "approved-repair-scope-supersession",
+    "allowed_files": [
+      "openspec/changes/docforge-project-format-v1/verify/v2/case-approval.approval-e34e5e74c6ac469ee8bce2be.json",
+      "openspec/changes/docforge-project-format-v1/verify/v2/case-approval.json",
+      "openspec/changes/docforge-project-format-v1/verify/v2/case-plan-request.json",
+      "openspec/changes/docforge-project-format-v1/verify/v2/case-snapshot.json",
+      "openspec/changes/docforge-project-format-v1/verify/v2/case-snapshot.repair-proposed.json",
+      "openspec/changes/docforge-project-format-v1/verify/v2/case-snapshot.snapshot-e34e5e74c6ac469ee8bce2be.json"
+    ],
+    "denied_files": [],
+    "requires_review_on": [
+      "openspec/changes/docforge-project-format-v1/verify/v2/case-approval.approval-e34e5e74c6ac469ee8bce2be.json",
+      "openspec/changes/docforge-project-format-v1/verify/v2/case-approval.json",
+      "openspec/changes/docforge-project-format-v1/verify/v2/case-plan-request.json",
+      "openspec/changes/docforge-project-format-v1/verify/v2/case-snapshot.json",
+      "openspec/changes/docforge-project-format-v1/verify/v2/case-snapshot.repair-proposed.json",
+      "openspec/changes/docforge-project-format-v1/verify/v2/case-snapshot.snapshot-e34e5e74c6ac469ee8bce2be.json"
+    ],
+    "allowed_operations": {
+      "create": true,
+      "modify": true,
+      "delete": false,
+      "rename": false
+    },
+    "digest": "0e39fc3562a473bdcef92f20df714d1d583af68a2d1458262e5efee7449ca4df"
+  },
+  "packet_artifacts": [
+    "brief.md",
+    "context.json",
+    "report.md",
+    "spec-review.md",
+    "quality-review.md"
+  ],
+  "required_reviews": [
+    "spec-review",
+    "quality-review"
+  ],
+  "ownership": {
+    "evidence": "verification",
+    "closure": "verification",
+    "repair": "development",
+    "reviews": "development",
+    "transitions": "core",
+    "break_loop": "core"
+  },
+  "frozen_failure": {
+    "failure_packet_id": "failure-98298abaa9086b490c419c2829b887ae15a77d690824d18a273085cf62f64d98",
+    "failure_packet_digest": "162b95bb1674ac576d596840e4f9171b2fa3cf23ba91fa408b250ed354459590",
+    "run_id": "run-20260827064432-f7b0f5e993e8efdd",
+    "case_id": "case-a10-repository-delivery",
+    "attempt_id": "attempt-20260827064432-f7b0f5e993e8efdd",
+    "evidence_ids": [
+      "evidence-a98dea631fd0be3c6d337666501d1aeec730d47125d8c1b5a783ecf318ce7f24"
+    ],
+    "evidence_content": [
+      {
+        "id": "evidence-a98dea631fd0be3c6d337666501d1aeec730d47125d8c1b5a783ecf318ce7f24",
+        "digest": "fe09a5d5fae795b082533f00b7c99f4355057666436b25291a2a3ee4ccf46d8d"
+      }
+    ],
+    "reading_ids": [
+      "reading-7fae418f5ac9905ac35f2882ec5691ce15f6c102de2175fc2d3c131f8ff82f07",
+      "reading-bc7bcfabba259bad73e2a08675b5ebd5ee67f611073e58f8a86cb8ed1c2a3810",
+      "reading-bf8ebd40191219bcf4eaed7e8cc5bc1f7b3e7edf875e1d384a966956df9318f8",
+      "reading-c9554ada9076a3b98359ec8d6269a14a1fb0514367d20cfb8500dab370aba9dc",
+      "reading-e4f3bbbb7f74c0b7593bf7986bb3117679b51795d62bbbf2ee0645c94dee3cbe",
+      "reading-e85421ed4571e4ddf0712d64c2dc1f63aa5f52ce6a87cebe02c722239388de88"
+    ],
+    "failed_assertion_ids": [
+      "a10-repository-clean"
+    ],
+    "summary": "The approved command runner omitted the assertion protocol and did not expose the required toolchain PATH.",
+    "root_cause": "The case contract declared env_keys=[] and relied on ambient PATH, so the Runtime could neither inject SPECNAV assertion output variables nor consistently locate Rust/Node toolchains.",
+    "frozen_at": "2026-08-27T06:44:40.183Z"
+  }
+}

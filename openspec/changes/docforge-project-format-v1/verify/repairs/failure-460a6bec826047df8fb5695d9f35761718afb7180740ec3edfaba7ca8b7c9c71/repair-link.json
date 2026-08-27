@@ -2,7 +2,7 @@
   "schema": "specnav.verification.repair-link.v1",
   "failure_id": "failure-460a6bec826047df8fb5695d9f35761718afb7180740ec3edfaba7ca8b7c9c71",
   "change_id": "docforge-project-format-v1",
-  "development_task_id": "900-verification-repair-41ae30e0be6d4799",
+  "development_task_id": "900-verification-repair-e2c474102a3875eb",
   "repair_kind": "test_code",
   "status": "in_progress",
   "requested_at": "2026-08-27T07:40:32.398Z",
@@ -14,6 +14,6 @@
     "runtime_version": "2.0.0-alpha.2",
     "kernel_version": "2.0.0-alpha.2"
   },
-  "scope_digest": "97de42eb572bacc046cabcec7e89d0bd7042184892d0584d4ce91eb2cc2afeda",
-  "id": "repair-5ec5ad5a9b65e5cd0a0b99a1adfa266dd678fc3f126a1af48f28af3d084699eb"
+  "scope_digest": "74af54e1d41c2bbda9e678995ea4551f50af47b540fe9800f081a280e0e45080",
+  "id": "repair-superseded-b88a1c4188e1f3684219d99a98e5915de51a40254dcf5cabc3103487cad1ba69"
 }

@@ -1,0 +1,88 @@
+{
+  "schema": "specnav.development.repair-task.v1",
+  "id": "900-verification-repair-250ab80ac35adfd2",
+  "change_id": "docforge-project-format-v1",
+  "goal": "Repair test_defect for case-a2-general-project.",
+  "classification": "test_defect",
+  "owner": "development",
+  "status": "in_progress",
+  "requested_at": "2026-08-27T07:48:55.596Z",
+  "packet_path": "development/tasks/900-verification-repair-250ab80ac35adfd2",
+  "scope": {
+    "owner": "development",
+    "source": "approved-repair-scope-supersession",
+    "allowed_files": [
+      "openspec/changes/docforge-project-format-v1/verify/v2/case-approval.approval-e34e5e74c6ac469ee8bce2be.json",
+      "openspec/changes/docforge-project-format-v1/verify/v2/case-approval.json",
+      "openspec/changes/docforge-project-format-v1/verify/v2/case-plan-request.json",
+      "openspec/changes/docforge-project-format-v1/verify/v2/case-snapshot.json",
+      "openspec/changes/docforge-project-format-v1/verify/v2/case-snapshot.repair-proposed.json",
+      "openspec/changes/docforge-project-format-v1/verify/v2/case-snapshot.snapshot-e34e5e74c6ac469ee8bce2be.json"
+    ],
+    "denied_files": [],
+    "requires_review_on": [
+      "openspec/changes/docforge-project-format-v1/verify/v2/case-approval.approval-e34e5e74c6ac469ee8bce2be.json",
+      "openspec/changes/docforge-project-format-v1/verify/v2/case-approval.json",
+      "openspec/changes/docforge-project-format-v1/verify/v2/case-plan-request.json",
+      "openspec/changes/docforge-project-format-v1/verify/v2/case-snapshot.json",
+      "openspec/changes/docforge-project-format-v1/verify/v2/case-snapshot.repair-proposed.json",
+      "openspec/changes/docforge-project-format-v1/verify/v2/case-snapshot.snapshot-e34e5e74c6ac469ee8bce2be.json"
+    ],
+    "allowed_operations": {
+      "create": true,
+      "modify": true,
+      "delete": false,
+      "rename": false
+    },
+    "digest": "0e39fc3562a473bdcef92f20df714d1d583af68a2d1458262e5efee7449ca4df"
+  },
+  "packet_artifacts": [
+    "brief.md",
+    "context.json",
+    "report.md",
+    "spec-review.md",
+    "quality-review.md"
+  ],
+  "required_reviews": [
+    "spec-review",
+    "quality-review"
+  ],
+  "ownership": {
+    "evidence": "verification",
+    "closure": "verification",
+    "repair": "development",
+    "reviews": "development",
+    "transitions": "core",
+    "break_loop": "core"
+  },
+  "frozen_failure": {
+    "failure_packet_id": "failure-aea586ad3f508740227d90a29b096d0b54461caa5a1c78f1eb0bfc4871d1b02e",
+    "failure_packet_digest": "63118d7cfb10dd59f11371bd238a426682f52feabcc7ba11f37849901fdb39f3",
+    "run_id": "run-20260827064441-8b4a7bb42f90f287",
+    "case_id": "case-a2-general-project",
+    "attempt_id": "attempt-20260827064441-8b4a7bb42f90f287",
+    "evidence_ids": [
+      "evidence-7ac424059518b8feb579007e60e2aa292b806488cd0c5f0216cdab49509d64f4"
+    ],
+    "evidence_content": [
+      {
+        "id": "evidence-7ac424059518b8feb579007e60e2aa292b806488cd0c5f0216cdab49509d64f4",
+        "digest": "7ed07719bd15edcc5c75e38898773af384e5845eb20531163e461a39e1afaa9c"
+      }
+    ],
+    "reading_ids": [
+      "reading-2568efa254ae91201d2ff4e96f1e4c709c7c70a8e4f490a654ae4bc6f53ee804",
+      "reading-5413ca921f2de2ba8e4345ca821f6c43d3397d1b22103086cd9f7a7e271b66e5",
+      "reading-5a39c4939ead9e7f2af6e96d03d87dd9c3ac22a30e062b6b35755ce3343bfe5d",
+      "reading-74061bfd38880f64918f3fbd602963fd7b9024a7087baf56ded6ba0885408010",
+      "reading-8b6150e9a91a3cb6c5c77e109f76e947466ced1bf04f259ee3e2d7745df88f70",
+      "reading-b1d6600808c7a8e687f26fd64137ccf7cc6be1d0bba25b64655a68d9c0b2c1db"
+    ],
+    "failed_assertion_ids": [
+      "a2-general-flow"
+    ],
+    "summary": "The approved command runner omitted the assertion protocol required to produce structured assertion_result evidence.",
+    "root_cause": "The case contract declared env_keys=[], so the Runtime did not inject SPECNAV_VERIFICATION_ASSERTION_IDS or SPECNAV_VERIFICATION_ASSERTION_RESULT_FILE and no authoritative oracle result was emitted.",
+    "frozen_at": "2026-08-27T06:44:46.068Z"
+  }
+}
