@@ -1,4 +1,4 @@
-# V2 Coverage Matrix
+# DocForge v1 Coverage Matrix
 
 本矩阵把语料中的 source 结构映射到领域 IR、RenderPlan、Review、DOCX 和
 聚焦验收测试。测试文件为
@@ -6,8 +6,8 @@
 
 | Coverage item | Source evidence | Domain IR | RenderPlan | Review | DOCX/OpenXML | Test evidence |
 | --- | --- | --- | --- | --- | --- | --- |
-| Project entry and metadata | `thesisforge.yaml` schema/project/metadata | `ProjectManifestV2`, `LoadedProject` | cover and section policy inputs | cover fields and source map | cover content, section geometry | `test_v2_format_corpus_cli_validate_is_clean`, DOCX test |
-| Abstract and English abstract | `# 摘要 {#chap:abstract-zh}`, `# Abstract {#chap:abstract-en}` | `Heading`, `Paragraph` | semantic heading/body/keyword roles | reader-facing abstract blocks | semantic paragraph styles and front matter | `test_v2_format_corpus_covers_render_plan_review_and_inline_semantics` |
+| Project entry and metadata | `docforge.yaml` schema/project/metadata | `DocForgeProjectManifest`, `LoadedProject` | cover and section policy inputs | cover fields and source map | cover content, section geometry | `test_v2_format_corpus_cli_validate_is_clean`, DOCX test |
+| Abstract and English abstract | `# 摘要 {#chap:abstract-zh}`, `# Abstract {#chap:abstract-en}` | `Heading`, `Paragraph` | semantic heading/body/keyword roles | reader-facing abstract blocks | semantic paragraph styles and manifest metadata | `test_v2_format_corpus_covers_render_plan_review_and_inline_semantics` |
 | Main chapter, H2 and H3 | `chap:introduction`, `sec:*`, `sec:semantic-types` | typed headings with stable IDs | heading bookmarks, TOC entries | visible heading hierarchy | heading paragraphs and TOC/PAGEREF fields | plan kind/TOC assertions and DOCX fields |
 | Acknowledgements and achievements | `chap:acknowledgements`, `chap:achievements` | semantic heading/body roles | `special.acknowledgements`, `special.achievements` | visible back-matter sections | semantic role-compatible paragraphs | heading role assertions and Review export assertions |
 | Rich inline text | bold, italic, bold+italic, `` `inline-code` `` | `Strong`, `Emphasis`, `InlineCode`, `Text` | `TextRun` flags | styled `ReviewTextRun` | `w:b`, `w:i`, Courier New, `w:noProof` | inline run assertions and DOCX XML assertions |

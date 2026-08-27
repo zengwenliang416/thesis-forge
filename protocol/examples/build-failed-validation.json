@@ -1,5 +1,5 @@
 {
-  "schemaVersion": "thesisforge.build-report.v2",
+  "schemaVersion": "docforge.build-report.v2",
   "buildId": "build-0002",
   "intent": "publish",
   "outcome": "failed",
@@ -25,7 +25,7 @@
       "stage": "validate",
       "message": "Figure image does not exist.",
       "source": {
-        "file": "thesis.md",
+        "file": "document.md",
         "startLine": 14,
         "startColumn": 1,
         "endLine": 14,
@@ -41,8 +41,8 @@
     {"sequence": 0, "stage": "validate", "level": "error", "message": "Validation failed with 1 error."}
   ],
   "output": {
-    "docxPath": "build/thesis.docx",
-    "pdfPath": "build/thesis.pdf",
+    "docxPath": "build/document.docx",
+    "pdfPath": "build/document.pdf",
     "previewStale": true,
     "successfulBuildId": "build-0001"
   }

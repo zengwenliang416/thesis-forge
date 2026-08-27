@@ -35,8 +35,31 @@ from docforge.core.parser_support import ParseError
 REPO_ROOT = Path(__file__).resolve().parents[1]
 PARSER_DIFF_PATH = REPO_ROOT / "qa" / "tools" / "parser_diff.py"
 
-COMPLETE_THESIS = REPO_ROOT / "examples" / "complete-thesis" / "thesis.md"
-BACHELOR_THESIS = REPO_ROOT / "examples" / "bachelor-thesis" / "thesis.md"
+LEGACY_SOURCES = {
+    "complete-thesis": (
+        "---\n"
+        "thesis:\n"
+        "  title: 完整旧格式论文\n"
+        "render:\n"
+        "  template_id: example-university-2026\n"
+        "---\n\n"
+        "# 绪论 {#chap:introduction}\n\n"
+        "::: figure {#fig:model}\n"
+        "src: assets/model.png\n"
+        "caption: 旧格式图片\n"
+        ":::\n\n"
+        "如 @fig:model 所示。\n"
+    ),
+    "bachelor-thesis": (
+        "---\n"
+        "title: 本科旧格式论文\n"
+        "author:\n"
+        "  name: 张三\n"
+        "---\n\n"
+        "# 研究方法 {#chap:method}\n\n"
+        "正文引用 [@legacy2026]。\n"
+    ),
+}
 
 
 def _load_parser_diff():
@@ -90,13 +113,15 @@ def test_canonical_backend_satisfies_protocol() -> None:
 
 
 @pytest.mark.parametrize(
-    "source",
-    [COMPLETE_THESIS, BACHELOR_THESIS],
-    ids=["complete-thesis", "bachelor-thesis"],
+    ("name", "text"),
+    LEGACY_SOURCES.items(),
 )
-def test_legacy_fixtures_are_rejected_by_canonical_backend(source: Path) -> None:
+def test_legacy_sources_are_rejected_by_canonical_backend(
+    name: str,
+    text: str,
+) -> None:
     with pytest.raises(ParseError, match=r"TF-SOURCE-LEGACY-00[1-3]"):
-        canonical.parse_file(source)
+        canonical.parse_text(text, source_path=Path(f"{name}.md"))
 
 
 def test_full_syntax_standard_inline_nodes_are_typed() -> None:

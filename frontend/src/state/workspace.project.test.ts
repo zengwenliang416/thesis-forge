@@ -5,23 +5,27 @@ import {
   type WorkspaceProject,
   type WorkspaceSource,
 } from "./workspace";
+import {
+  DEFAULT_SOURCE_FILENAME,
+  MANIFEST_FILENAME,
+} from "../transport/constants";
 
 const project: WorkspaceProject = {
   id: "proj-1",
   root: "/home/user/thesis",
-  manifestPath: "/home/user/thesis/thesisforge.yaml",
+  manifestPath: `/home/user/thesis/${MANIFEST_FILENAME}`,
   name: "学士学位论文",
 };
 
 const desktopSource: WorkspaceSource = {
   kind: "desktop",
-  name: "thesis.md",
+  name: DEFAULT_SOURCE_FILENAME,
   writable: true,
 };
 
 const readOnlySource: WorkspaceSource = {
   kind: "desktop",
-  name: "thesis.md",
+  name: DEFAULT_SOURCE_FILENAME,
   writable: false,
 };
 

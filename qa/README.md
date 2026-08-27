@@ -1,6 +1,6 @@
-# qa/ — 质量基础设施
+# qa/ — DocForge 质量基础设施
 
-本目录承载 ThesisForge 六域质量策略（见 `docs/update/QUALITY_STRATEGY.md`）的
+本目录承载 DocForge 六域质量策略（见 `docs/update/QUALITY_STRATEGY.md`）的
 用例目录、测试夹具、基线、工具与运行证据。Phase 0 仅建立骨架与门禁工具，
 正式用例和基线随后续阶段逐步填充。
 
@@ -32,8 +32,8 @@ qa/
 field 配对、media 对应、sectPr、styles/numbering/footnotes 引用一致性。
 
 ```bash
-.venv/bin/python qa/tools/openxml_validate.py output/thesis.docx
-.venv/bin/python qa/tools/openxml_validate.py output/thesis.docx --json report.json
+.venv/bin/python qa/tools/openxml_validate.py output/document.docx
+.venv/bin/python qa/tools/openxml_validate.py output/document.docx --json report.json
 ```
 
 退出码：`0` 全部通过；`1` 存在失败项；`2` 文件不可读。
@@ -45,9 +45,9 @@ field 配对、media 对应、sectPr、styles/numbering/footnotes 引用一致�
 Word/WPS 侧打开后一律「关闭不保存」。
 
 ```bash
-.venv/bin/python qa/tools/no_repair_open.py output/thesis.docx
-.venv/bin/python qa/tools/no_repair_open.py output/thesis.docx --apps word,libreoffice
-.venv/bin/python qa/tools/no_repair_open.py output/thesis.docx --json evidence.json
+.venv/bin/python qa/tools/no_repair_open.py output/document.docx
+.venv/bin/python qa/tools/no_repair_open.py output/document.docx --apps word,libreoffice
+.venv/bin/python qa/tools/no_repair_open.py output/document.docx --json evidence.json
 ```
 
 - LibreOffice：headless 转 PDF 成功即 pass（可进 CI，需本机有 `soffice`）；

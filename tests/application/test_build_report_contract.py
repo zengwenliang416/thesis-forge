@@ -24,6 +24,7 @@ from docforge.application.contracts import (
     BuildValidationError,
 )
 from docforge.core.model import ValidationIssue
+from docforge.project.constants import DEFAULT_DOCX_PATH, DEFAULT_SOURCE_PATH
 
 
 def _issue(
@@ -46,8 +47,8 @@ def _issue(
 
 def test_success_report_contains_typed_lifecycle_and_output_policy() -> None:
     output = BuildOutput(
-        docx_path=Path("build/thesis.docx"),
-        pdf_path=Path("build/thesis.pdf"),
+        docx_path=Path(DEFAULT_DOCX_PATH),
+        pdf_path=Path("build/document.pdf"),
         preview_stale=False,
         successful_build_id="build-0001",
     )
@@ -102,7 +103,7 @@ def test_validation_report_preserves_every_issue_in_original_order() -> None:
     report = error.to_report(
         build_id="build-0002",
         intent="publish",
-        source_file="thesis.md",
+        source_file=DEFAULT_SOURCE_PATH,
     )
 
     assert report.outcome is BuildOutcome.FAILED
@@ -140,7 +141,7 @@ def test_source_ranges_require_integer_coordinates(field: str, value: object) ->
 
 def test_source_ranges_require_string_files() -> None:
     with pytest.raises(TypeError, match="file"):
-        BuildSourceRange(file=Path("thesis.md"))  # type: ignore[arg-type]
+        BuildSourceRange(file=Path(DEFAULT_SOURCE_PATH))  # type: ignore[arg-type]
 
 
 @pytest.mark.parametrize("field", ["start_line", "start_column", "end_line", "end_column"])
@@ -389,5 +390,26 @@ def test_stage_statuses_and_log_bounds_are_enforced() -> None:
             primary_diagnostic_id=None,
             diagnostics=(),
             logs=too_many_logs,
+            output=None,
+        )
+
+
+def test_build_report_rejects_obsolete_schema() -> None:
+    with pytest.raises(ValueError, match="unsupported BuildReport schema"):
+        BuildReport(
+            schema_version="thesisforge.build-report.v2",
+            build_id="build-obsolete-schema",
+            intent=BuildIntent.PUBLISH,
+            outcome=BuildOutcome.SUCCEEDED,
+            stages=(
+                BuildStageState(
+                    name=BuildReportStage.PARSE,
+                    status=BuildStageStatus.SUCCEEDED,
+                ),
+            ),
+            failed_stage=None,
+            primary_diagnostic_id=None,
+            diagnostics=(),
+            logs=(),
             output=None,
         )

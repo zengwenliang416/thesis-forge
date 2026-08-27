@@ -16,9 +16,30 @@ use tauri_plugin_shell::{
 };
 use uuid::Uuid;
 
-pub const PROTOCOL_VERSION: &str = "thesisforge.workbench.v1";
-const WINDOWS_ACCEPTANCE_CDP_PORT_ENV: &str = "THESISFORGE_WINDOWS_CDP_PORT";
-const WINDOWS_ACCEPTANCE_SOURCE_ENV: &str = "THESISFORGE_WINDOWS_ACCEPTANCE_SOURCE";
+pub const MANIFEST_FILENAME: &str = "docforge.yaml";
+pub const PROJECT_SCHEMA_VERSION: &str = "docforge.project.v1";
+pub const DEFAULT_SOURCE_PATH: &str = "document.md";
+pub const DEFAULT_OUTPUT_DIRECTORY: &str = "build";
+pub const DEFAULT_DOCX_FILENAME: &str = "document.docx";
+pub const DEFAULT_DOCX_PATH: &str = "build/document.docx";
+pub const DEFAULT_REVIEW_DIRECTORY: &str = "review";
+pub const DEFAULT_REVIEW_MARKDOWN_FILENAME: &str = "document.review.md";
+pub const DEFAULT_REVIEW_MARKDOWN_PATH: &str = "review/document.review.md";
+pub const DEFAULT_REVIEW_MAP_FILENAME: &str = "document.review-map.json";
+pub const DEFAULT_REVIEW_MAP_PATH: &str = "review/document.review-map.json";
+pub const PROTOCOL_VERSION: &str = "docforge.workbench.v1";
+pub const BUILD_REPORT_SCHEMA_VERSION: &str = "docforge.build-report.v2";
+const LIVE_PREVIEW_PREFIX: &str = "docforge-live-preview-";
+pub const OBSOLETE_MANIFEST_FILENAME: &str = "thesisforge.yaml";
+pub const OBSOLETE_PROJECT_SCHEMA_PREFIX: &str = "thesisforge.project.";
+pub const OBSOLETE_PROTOCOL_VERSION: &str = "thesisforge.workbench.v1";
+pub const OBSOLETE_BUILD_REPORT_SCHEMA_VERSION: &str = "thesisforge.build-report.v2";
+const WINDOWS_ACCEPTANCE_CDP_PORT_ENV: &str = "DOCFORGE_WINDOWS_CDP_PORT";
+const WINDOWS_ACCEPTANCE_SOURCE_ENV: &str = "DOCFORGE_WINDOWS_ACCEPTANCE_SOURCE";
+const SIDECAR_EXECUTABLE_ENV: &str = "DOCFORGE_SIDECAR_EXECUTABLE";
+const PYTHON_ENV: &str = "DOCFORGE_PYTHON";
+const CANCEL_FILE_ENV: &str = "DOCFORGE_CANCEL_FILE";
+const CANCELLATION_PREFIX: &str = "docforge-cancel-";
 
 pub fn windows_acceptance_browser_args(raw_port: Option<&str>) -> Result<Option<String>, String> {
     let Some(raw_port) = raw_port.map(str::trim).filter(|value| !value.is_empty()) else {
@@ -136,10 +157,20 @@ pub fn validate_request(request: &Value) -> Result<(), String> {
     if protocol != PROTOCOL_VERSION {
         return Err("unsupported protocol".to_string());
     }
-    if request.get("requestId").and_then(Value::as_str).is_none() {
+    if request
+        .get("requestId")
+        .and_then(Value::as_str)
+        .filter(|value| !value.is_empty())
+        .is_none()
+    {
         return Err("requestId is required".to_string());
     }
-    if request.get("operation").and_then(Value::as_str).is_none() {
+    if request
+        .get("operation")
+        .and_then(Value::as_str)
+        .filter(|value| !value.is_empty())
+        .is_none()
+    {
         return Err("operation is required".to_string());
     }
     if !request.get("payload").is_some_and(Value::is_object) {
@@ -190,6 +221,17 @@ fn yaml_section_value(text: &str, section: &str, field: &str) -> Option<String> 
     None
 }
 
+fn yaml_root_value(text: &str, field: &str) -> Option<String> {
+    let field_prefix = format!("{field}:");
+    text.lines().find_map(|line| {
+        if line.starts_with(' ') || line.starts_with('\t') {
+            return None;
+        }
+        let value = line.trim().strip_prefix(&field_prefix)?.trim();
+        (!value.is_empty()).then(|| value.trim_matches(['"', '\'']).to_string())
+    })
+}
+
 fn resolve_project_relative(root: &Path, raw: &str, field: &str) -> Result<PathBuf, String> {
     let value = raw.trim().replace('\\', "/");
     let path = Path::new(&value);
@@ -203,6 +245,7 @@ fn resolve_project_relative(root: &Path, raw: &str, field: &str) -> Result<PathB
                 .all(|character| character.is_ascii_alphabetic())
     });
     if value.is_empty()
+        || value.contains('\0')
         || value.starts_with('/')
         || value.starts_with("//")
         || Path::new(raw).is_absolute()
@@ -226,24 +269,38 @@ fn resolve_project_relative(root: &Path, raw: &str, field: &str) -> Result<PathB
 
 pub fn open_project_path(path: &Path) -> Result<Value, String> {
     if is_markdown_source(path) {
-        return Err("project selection requires a directory or thesisforge.yaml".to_string());
+        return Err(format!(
+            "project selection requires a directory or {MANIFEST_FILENAME}"
+        ));
     }
     let candidate = path.to_path_buf();
     let (root, manifest) = if candidate.is_dir() {
         let root = candidate
             .canonicalize()
             .map_err(|error| format!("failed to resolve project selection: {error}"))?;
-        let manifest = root.join("thesisforge.yaml");
+        let obsolete_manifest = root.join(OBSOLETE_MANIFEST_FILENAME);
+        if std::fs::symlink_metadata(&obsolete_manifest).is_ok() {
+            return Err(format!(
+                "{OBSOLETE_MANIFEST_FILENAME} is obsolete; create a {MANIFEST_FILENAME} project"
+            ));
+        }
+        let manifest = root.join(MANIFEST_FILENAME);
         if !manifest.is_file() {
-            return Err("project directory does not contain thesisforge.yaml".to_string());
+            return Err(format!(
+                "project directory does not contain {MANIFEST_FILENAME}"
+            ));
         }
         (
             root,
             manifest.canonicalize().map_err(|_| {
-                "thesisforge.yaml cannot be resolved inside the project root".to_string()
+                format!("{MANIFEST_FILENAME} cannot be resolved inside the project root")
             })?,
         )
-    } else if candidate.file_name() == Some(OsStr::new("thesisforge.yaml")) {
+    } else if candidate.file_name() == Some(OsStr::new(OBSOLETE_MANIFEST_FILENAME)) {
+        return Err(format!(
+            "{OBSOLETE_MANIFEST_FILENAME} is obsolete; use {MANIFEST_FILENAME}"
+        ));
+    } else if candidate.file_name() == Some(OsStr::new(MANIFEST_FILENAME)) {
         let raw_root = candidate
             .parent()
             .ok_or_else(|| "manifest project root is missing".to_string())?
@@ -253,25 +310,40 @@ pub fn open_project_path(path: &Path) -> Result<Value, String> {
             .canonicalize()
             .map_err(|error| format!("failed to resolve manifest: {error}"))?;
         if manifest.parent() != Some(raw_root.as_path()) {
-            return Err("thesisforge.yaml escapes the project root".to_string());
+            return Err(format!("{MANIFEST_FILENAME} escapes the project root"));
         }
         (raw_root, manifest)
     } else {
-        return Err("project selection must be a directory or thesisforge.yaml".to_string());
+        return Err(format!(
+            "project selection must be a directory or {MANIFEST_FILENAME}"
+        ));
     };
     if manifest.parent() != Some(root.as_path()) {
-        return Err("thesisforge.yaml escapes the project root".to_string());
+        return Err(format!("{MANIFEST_FILENAME} escapes the project root"));
     }
 
     let manifest_text = std::fs::read_to_string(&manifest)
-        .map_err(|error| format!("failed to read thesisforge.yaml: {error}"))?;
+        .map_err(|error| format!("failed to read {MANIFEST_FILENAME}: {error}"))?;
+    let schema = yaml_root_value(&manifest_text, "schema")
+        .ok_or_else(|| "project manifest schema is required".to_string())?;
+    if schema.starts_with(OBSOLETE_PROJECT_SCHEMA_PREFIX) {
+        return Err(format!(
+            "{schema} is obsolete; use {PROJECT_SCHEMA_VERSION}"
+        ));
+    }
+    if schema != PROJECT_SCHEMA_VERSION {
+        return Err(format!("unsupported project schema: {schema}"));
+    }
     let project_id = yaml_section_value(&manifest_text, "project", "id")
         .ok_or_else(|| "project.id is required".to_string())?;
     let source_value = yaml_section_value(&manifest_text, "document", "source")
-        .ok_or_else(|| "document.source is required".to_string())?;
+        .unwrap_or_else(|| DEFAULT_SOURCE_PATH.to_string());
     let source = resolve_project_relative(&root, &source_value, "document.source")?;
     if !source.is_file() {
         return Err("document.source must be a regular file".to_string());
+    }
+    if !is_markdown_source(&source) {
+        return Err("document.source must be a Markdown file (.md or .markdown)".to_string());
     }
     let file_name = source
         .file_name()
@@ -303,10 +375,10 @@ pub fn acceptance_source_override(raw_path: Option<&OsStr>) -> Result<Option<Val
 
 fn sidecar_command(stream: bool) -> (String, Vec<String>) {
     let mode = if stream { "--stream" } else { "--once" };
-    if let Ok(executable) = env::var("THESISFORGE_SIDECAR_EXECUTABLE") {
+    if let Ok(executable) = env::var(SIDECAR_EXECUTABLE_ENV) {
         return (executable, vec![mode.to_string()]);
     }
-    let python = env::var("THESISFORGE_PYTHON").unwrap_or_else(|_| {
+    let python = env::var(PYTHON_ENV).unwrap_or_else(|_| {
         if cfg!(target_os = "windows") {
             "python".to_string()
         } else {
@@ -317,7 +389,7 @@ fn sidecar_command(stream: bool) -> (String, Vec<String>) {
         python,
         vec![
             "-m".to_string(),
-            "thesis_forge.adapters.sidecar".to_string(),
+            "docforge.adapters.sidecar".to_string(),
             mode.to_string(),
         ],
     )
@@ -325,8 +397,8 @@ fn sidecar_command(stream: bool) -> (String, Vec<String>) {
 
 fn use_development_sidecar() -> bool {
     cfg!(debug_assertions)
-        || env::var_os("THESISFORGE_SIDECAR_EXECUTABLE").is_some()
-        || env::var_os("THESISFORGE_PYTHON").is_some()
+        || env::var_os(SIDECAR_EXECUTABLE_ENV).is_some()
+        || env::var_os(PYTHON_ENV).is_some()
 }
 
 pub fn dispatch_to_sidecar(request: &Value) -> Result<Value, String> {
@@ -338,7 +410,7 @@ pub fn dispatch_to_sidecar(request: &Value) -> Result<Value, String> {
         .stdout(Stdio::piped())
         .stderr(Stdio::piped())
         .spawn()
-        .map_err(|error| format!("failed to start ThesisForge sidecar: {error}"))?;
+        .map_err(|error| format!("failed to start DocForge sidecar: {error}"))?;
     let encoded = serde_json::to_vec(request)
         .map_err(|error| format!("failed to encode sidecar request: {error}"))?;
     let stdin = child
@@ -365,12 +437,12 @@ async fn dispatch_to_managed_sidecar(app: &AppHandle, request: &Value) -> Result
         .map_err(|error| format!("failed to encode sidecar request: {error}"))?;
     let command = app
         .shell()
-        .sidecar("thesisforge-sidecar")
-        .map_err(|error| format!("failed to resolve packaged ThesisForge sidecar: {error}"))?
+        .sidecar("docforge-sidecar")
+        .map_err(|error| format!("failed to resolve packaged DocForge sidecar: {error}"))?
         .arg("--once");
     let (mut events, mut child) = command
         .spawn()
-        .map_err(|error| format!("failed to start packaged ThesisForge sidecar: {error}"))?;
+        .map_err(|error| format!("failed to start packaged DocForge sidecar: {error}"))?;
     child
         .write(&[encoded, b"\n".to_vec()].concat())
         .map_err(|error| format!("failed to write packaged sidecar request: {error}"))?;
@@ -383,7 +455,7 @@ async fn dispatch_to_managed_sidecar(app: &AppHandle, request: &Value) -> Result
             CommandEvent::Stdout(line) => stdout.extend(line),
             CommandEvent::Stderr(line) => stderr.extend(line),
             CommandEvent::Error(error) => {
-                return Err(format!("packaged ThesisForge sidecar failed: {error}"));
+                return Err(format!("packaged DocForge sidecar failed: {error}"));
             }
             CommandEvent::Terminated(payload) => terminated = Some(payload),
             _ => {}
@@ -403,7 +475,7 @@ fn ensure_successful_termination(
     }
     let detail = String::from_utf8_lossy(stderr).trim().to_string();
     Err(if detail.is_empty() {
-        "packaged ThesisForge sidecar terminated without success".to_string()
+        "packaged DocForge sidecar terminated without success".to_string()
     } else {
         detail
     })
@@ -538,7 +610,7 @@ impl LivePreviewOutputState {
         let live_preview_id = path
             .file_stem()
             .and_then(|value| value.to_str())
-            .and_then(|value| value.strip_prefix("thesisforge-live-preview-"))
+            .and_then(|value| value.strip_prefix(LIVE_PREVIEW_PREFIX))
             .ok_or_else(|| "prepared live preview path is invalid".to_string())?
             .to_string();
         self.outputs
@@ -664,6 +736,14 @@ pub fn authorize_build_preview(
     request: &Value,
     event: &Value,
 ) -> Result<Value, String> {
+    validate_request(request)?;
+    let event_protocol = event
+        .get("protocol")
+        .and_then(Value::as_str)
+        .ok_or_else(|| "preview event protocol is required".to_string())?;
+    if event_protocol != PROTOCOL_VERSION {
+        return Err("unsupported protocol".to_string());
+    }
     if event.get("type").and_then(Value::as_str) != Some("completed") {
         return Ok(event.clone());
     }
@@ -673,9 +753,23 @@ pub fn authorize_build_preview(
     let Some(report) = event.get("report") else {
         return Ok(event.clone());
     };
-    if report.get("schemaVersion").and_then(Value::as_str) != Some("thesisforge.build-report.v2")
-        || report.get("outcome").and_then(Value::as_str) != Some("succeeded")
-    {
+    let report_schema = report
+        .get("schemaVersion")
+        .and_then(Value::as_str)
+        .ok_or_else(|| "BuildReport schemaVersion is required".to_string())?;
+    if report_schema == OBSOLETE_BUILD_REPORT_SCHEMA_VERSION {
+        return Err(format!(
+            "{OBSOLETE_BUILD_REPORT_SCHEMA_VERSION} is obsolete; use {BUILD_REPORT_SCHEMA_VERSION}"
+        ));
+    }
+    if report_schema != BUILD_REPORT_SCHEMA_VERSION {
+        return Err("unsupported BuildReport schema".to_string());
+    }
+    let outcome = report
+        .get("outcome")
+        .and_then(Value::as_str)
+        .ok_or_else(|| "BuildReport outcome is required".to_string())?;
+    if outcome != "succeeded" {
         return Ok(event.clone());
     }
     let Some(descriptor_value) = event
@@ -712,7 +806,7 @@ static CANCEL_TOKEN: AtomicU64 = AtomicU64::new(1);
 
 fn cancellation_path() -> PathBuf {
     env::temp_dir().join(format!(
-        "thesisforge-cancel-{}-{}",
+        "{CANCELLATION_PREFIX}{}-{}",
         std::process::id(),
         CANCEL_TOKEN.fetch_add(1, Ordering::Relaxed)
     ))
@@ -720,15 +814,15 @@ fn cancellation_path() -> PathBuf {
 
 pub fn live_preview_output_path() -> Result<PathBuf, String> {
     let token = Uuid::new_v4().simple().to_string();
-    let directory = env::temp_dir().join(format!("thesisforge-live-preview-{token}"));
+    let directory = env::temp_dir().join(format!("{LIVE_PREVIEW_PREFIX}{token}"));
     std::fs::create_dir_all(&directory)
         .map_err(|error| format!("failed to prepare live preview directory: {error}"))?;
-    Ok(directory.join(format!("thesisforge-live-preview-{token}.docx")))
+    Ok(directory.join(format!("{LIVE_PREVIEW_PREFIX}{token}.docx")))
 }
 
 fn is_live_preview_directory_name(value: &str) -> bool {
     value
-        .strip_prefix("thesisforge-live-preview-")
+        .strip_prefix(LIVE_PREVIEW_PREFIX)
         .is_some_and(|token| {
             token.len() == 32 && token.bytes().all(|byte| byte.is_ascii_hexdigit())
         })
@@ -749,7 +843,7 @@ pub fn cleanup_live_preview_path(path: &Path) {
     let temporary_root = env::temp_dir()
         .canonicalize()
         .unwrap_or_else(|_| env::temp_dir());
-    if !file_name.starts_with("thesisforge-live-preview-")
+    if !file_name.starts_with(LIVE_PREVIEW_PREFIX)
         || !file_name.ends_with(".preview.pdf")
         || !is_live_preview_directory_name(directory_name)
         || parent.parent() != Some(temporary_root.as_path())
@@ -806,12 +900,12 @@ fn stream_sidecar_events(
     let (program, args) = sidecar_command(true);
     let mut child = Command::new(program)
         .args(args)
-        .env("THESISFORGE_CANCEL_FILE", cancel_path)
+        .env(CANCEL_FILE_ENV, cancel_path)
         .stdin(Stdio::piped())
         .stdout(Stdio::piped())
         .stderr(Stdio::piped())
         .spawn()
-        .map_err(|error| format!("failed to start ThesisForge sidecar: {error}"))?;
+        .map_err(|error| format!("failed to start DocForge sidecar: {error}"))?;
     let encoded = serde_json::to_vec(request)
         .map_err(|error| format!("failed to encode sidecar request: {error}"))?;
     let mut stdin = child
@@ -865,13 +959,13 @@ async fn stream_managed_sidecar_events(
         .map_err(|error| format!("failed to encode sidecar request: {error}"))?;
     let command = app
         .shell()
-        .sidecar("thesisforge-sidecar")
-        .map_err(|error| format!("failed to resolve packaged ThesisForge sidecar: {error}"))?
+        .sidecar("docforge-sidecar")
+        .map_err(|error| format!("failed to resolve packaged DocForge sidecar: {error}"))?
         .arg("--stream")
-        .env("THESISFORGE_CANCEL_FILE", cancel_path);
+        .env(CANCEL_FILE_ENV, cancel_path);
     let (mut events, mut child) = command
         .spawn()
-        .map_err(|error| format!("failed to start packaged ThesisForge sidecar: {error}"))?;
+        .map_err(|error| format!("failed to start packaged DocForge sidecar: {error}"))?;
     child
         .write(&[encoded, b"\n".to_vec()].concat())
         .map_err(|error| format!("failed to write packaged sidecar request: {error}"))?;
@@ -890,7 +984,7 @@ async fn stream_managed_sidecar_events(
             }
             CommandEvent::Stderr(line) => stderr.extend(line),
             CommandEvent::Error(error) => {
-                return Err(format!("packaged ThesisForge sidecar failed: {error}"));
+                return Err(format!("packaged DocForge sidecar failed: {error}"));
             }
             CommandEvent::Terminated(payload) => terminated = Some(payload),
             _ => {}
@@ -905,6 +999,7 @@ async fn dispatch_workbench(
     request: Value,
     live_preview_state: State<'_, LivePreviewOutputState>,
 ) -> Result<Value, String> {
+    validate_request(&request)?;
     if request
         .get("payload")
         .and_then(|payload| payload.get("intent"))
@@ -925,21 +1020,14 @@ async fn dispatch_workbench(
     dispatch_to_managed_sidecar(&app, &request).await
 }
 
-#[tauri::command]
-async fn run_build(
-    app: AppHandle,
-    request: Value,
-    on_event: Channel<Value>,
-    state: State<'_, BuildCancellationState>,
-    preview_state: State<'_, PreviewAuthorizationState>,
-    live_preview_state: State<'_, LivePreviewOutputState>,
+fn validate_and_prepare_build_preview_authorization(
+    preview_state: &PreviewAuthorizationState,
+    live_preview_state: &LivePreviewOutputState,
+    request: &Value,
 ) -> Result<(), String> {
-    let request_id = request
-        .get("requestId")
-        .and_then(Value::as_str)
-        .ok_or_else(|| "requestId is required".to_string())?
-        .to_string();
-    prepare_build_preview_authorization(preview_state.inner(), &request)?;
+    if request.get("operation").and_then(Value::as_str) != Some("build") {
+        return Err("build stream requires a build operation".to_string());
+    }
     if request
         .get("payload")
         .and_then(|payload| payload.get("intent"))
@@ -952,6 +1040,29 @@ async fn run_build(
             .ok_or_else(|| "live preview output is required".to_string())?;
         live_preview_state.validate_output(output)?;
     }
+    prepare_build_preview_authorization(preview_state, request)
+}
+
+#[tauri::command]
+async fn run_build(
+    app: AppHandle,
+    request: Value,
+    on_event: Channel<Value>,
+    state: State<'_, BuildCancellationState>,
+    preview_state: State<'_, PreviewAuthorizationState>,
+    live_preview_state: State<'_, LivePreviewOutputState>,
+) -> Result<(), String> {
+    validate_request(&request)?;
+    let request_id = request
+        .get("requestId")
+        .and_then(Value::as_str)
+        .ok_or_else(|| "requestId is required".to_string())?
+        .to_string();
+    validate_and_prepare_build_preview_authorization(
+        preview_state.inner(),
+        live_preview_state.inner(),
+        &request,
+    )?;
     let cancel_path = cancellation_path();
     let _ = std::fs::remove_file(&cancel_path);
     state
@@ -1045,7 +1156,7 @@ async fn pick_source() -> Result<Option<Value>, String> {
 #[tauri::command]
 async fn pick_project() -> Result<Option<Value>, String> {
     let handle = rfd::AsyncFileDialog::new()
-        .set_title("选择 ThesisForge 项目")
+        .set_title("选择 DocForge 项目")
         .pick_folder()
         .await;
     handle
@@ -1153,7 +1264,7 @@ pub fn run() {
             read_pdf_preview
         ])
         .run(tauri::generate_context!())
-        .expect("error while running ThesisForge desktop");
+        .expect("error while running DocForge desktop");
 }
 
 #[cfg(test)]

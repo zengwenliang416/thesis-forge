@@ -1,3 +1,3 @@
 fn main() {
-    thesisforge_desktop::run();
+    docforge_desktop::run();
 }

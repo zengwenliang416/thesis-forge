@@ -152,6 +152,9 @@ def test_docx_renderer_applies_template_page_body_and_heading_xml(tmp_path: Path
         ],
     )
     template = load_template("templates/schools/example-university/2026.yaml")
+    template.cover = CoverSpec.model_validate(
+        {"items": [{"text": "样式测试封面"}]}
+    )
     plan = compile_document(document, template=template)
     output = tmp_path / "thesis.docx"
 
@@ -1298,16 +1301,33 @@ def test_docx_renderer_writes_metadata_cover_before_front_matter(tmp_path: Path)
     document = ForgeDocument(
         source_path=tmp_path / "thesis.md",
         metadata={
-            "university": {"name": "XX大学", "college": "计算机学院"},
-            "thesis": {
-                "title": "结构化论文编译",
-                "title_en": "Structured Thesis Compilation",
-                "major": "计算机科学与技术",
-                "degree": "工学学士",
+            "metadata": {
+                "title": {
+                    "zh": "结构化论文编译",
+                    "en": "Structured Thesis Compilation",
+                },
             },
-            "author": {"name": "张三", "student_id": "2022000001"},
-            "advisor": {"name": "李老师", "title": "副教授"},
-            "dates": {"completed": "2026-06"},
+            "academic": {
+                "institution": {
+                    "name": "XX大学",
+                    "department": "计算机学院",
+                },
+                "degree": {
+                    "name": "工学学士",
+                    "major": "计算机科学与技术",
+                },
+                "student": {
+                    "name": "张三",
+                    "id": "2022000001",
+                },
+                "advisor": {
+                    "name": "李老师",
+                    "title": "副教授",
+                },
+                "completion": {
+                    "date": "2026-06",
+                },
+            },
         },
         blocks=[
             Heading(
@@ -1329,7 +1349,7 @@ def test_docx_renderer_writes_metadata_cover_before_front_matter(tmp_path: Path)
     document_xml = _xml_part(output, "word/document.xml")
     body_text = "".join(document_xml.xpath(".//w:body//w:t/text()", namespaces=NS))
     assert body_text.startswith(
-        "XX大学计算机学院结构化论文编译Structured Thesis Compilation"
+        "XX大学本科毕业论文结构化论文编译Structured Thesis Compilation"
     )
     for value in (
         "计算机科学与技术",
@@ -1375,7 +1395,7 @@ def test_docx_renderer_uses_template_cover_order_content_and_style(tmp_path: Pat
         {
             "items": [
                 {
-                    "field": "thesis.title",
+                    "field": "metadata.title.zh",
                     "prefix": "题目：",
                     "style": {
                         "font": {
@@ -1397,7 +1417,7 @@ def test_docx_renderer_uses_template_cover_order_content_and_style(tmp_path: Pat
                     },
                 },
                 {
-                    "field": "advisor.title",
+                    "field": "academic.advisor.title",
                     "prefix": "导师职称：",
                     "skip_if_empty": True,
                 },
@@ -1407,7 +1427,11 @@ def test_docx_renderer_uses_template_cover_order_content_and_style(tmp_path: Pat
     document = ForgeDocument(
         source_path=tmp_path / "thesis.md",
         metadata={
-            "thesis": {"title": "参数化封面"},
+            "metadata": {
+                "title": {
+                    "zh": "参数化封面",
+                },
+            },
         },
         blocks=[
             Heading(

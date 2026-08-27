@@ -1,4 +1,5 @@
 import { PROTOCOL_VERSION, type CommandEnvelope } from "./dto";
+import { BUILD_REPORT_SCHEMA_VERSION } from "./constants";
 import type { BuildEvent, BuildReport } from "./buildEvents";
 import { TauriWorkbenchTransport } from "./tauri";
 import { WebWorkbenchTransport } from "./web";
@@ -10,13 +11,13 @@ const request: CommandEnvelope = {
   payload: {
     source: {
       kind: "desktop",
-      path: "/tmp/thesis.md",
-      fileName: "thesis.md",
+      path: "/tmp/document.md",
+      fileName: "document.md",
     },
     output: {
       kind: "desktop",
-      path: "/tmp/thesis.docx",
-      fileName: "thesis.docx",
+      path: "/tmp/document.docx",
+      fileName: "document.docx",
     },
   },
 };
@@ -33,7 +34,7 @@ const events: BuildEvent[] = [
     requestId: "build-1",
     type: "completed",
     report: {
-      schemaVersion: "thesisforge.build-report.v2",
+      schemaVersion: BUILD_REPORT_SCHEMA_VERSION,
       buildId: "build-1",
       intent: "publish",
       outcome: "succeeded",
@@ -43,7 +44,7 @@ const events: BuildEvent[] = [
       diagnostics: [],
       logs: [],
       output: {
-        docxPath: "thesis.docx",
+        docxPath: "document.docx",
         pdfPath: null,
         previewStale: false,
         successfulBuildId: "build-1",

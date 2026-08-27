@@ -56,7 +56,7 @@ def _snapshot(controller: ui.WorkspaceController) -> dict:
 def test_workspace_fixture_matches_python_reference_controller(tmp_path: Path):
     fixture = json.loads(FIXTURE.read_text(encoding="utf-8"))
     steps = fixture["cases"][0]["steps"]
-    source = tmp_path / "thesis.md"
+    source = tmp_path / "document.md"
     source.write_text("# Saved\n", encoding="utf-8")
     runner = _DeferredTaskRunner()
     controller = ui.WorkspaceController(

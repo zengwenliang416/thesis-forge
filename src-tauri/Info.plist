@@ -3,6 +3,6 @@
 <plist version="1.0">
 <dict>
   <key>NSAppleEventsUsageDescription</key>
-  <string>ThesisForge uses Microsoft Word to render the current thesis document as a PDF preview.</string>
+  <string>DocForge uses Microsoft Word to render the current document as a PDF preview.</string>
 </dict>
 </plist>

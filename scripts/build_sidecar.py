@@ -13,11 +13,15 @@ import tempfile
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-SIDECAR_NAME = "thesisforge-sidecar"
+SIDECAR_NAME = "docforge-sidecar"
 SIDECAR_DIRECTORY = ROOT / "src-tauri" / "binaries"
 PACKAGE_DATA = (
     (
         ROOT / "templates" / "base" / "bachelor.yaml",
+        "docforge/template_data/base",
+    ),
+    (
+        ROOT / "templates" / "base" / "docforge-standard.yaml",
         "docforge/template_data/base",
     ),
     (
@@ -118,7 +122,7 @@ def pyinstaller_command(
 def _entrypoint_text() -> str:
     return (
         "import os\n"
-        "if os.environ.get('THESISFORGE_BLOCK_NETWORK') == '1':\n"
+        "if os.environ.get('DOCFORGE_BLOCK_NETWORK') == '1':\n"
         "    import socket\n"
         "    def blocked(*args, **kwargs):\n"
         "        raise RuntimeError('network access blocked by desktop verification')\n"
@@ -143,7 +147,7 @@ def build_sidecar(
             raise RuntimeError(f"Required sidecar package data is missing: {source}")
 
     output_directory.mkdir(parents=True, exist_ok=True)
-    with tempfile.TemporaryDirectory(prefix="thesisforge-sidecar-") as raw_temp:
+    with tempfile.TemporaryDirectory(prefix="docforge-sidecar-") as raw_temp:
         temp = Path(raw_temp)
         entrypoint = temp / "sidecar_entry.py"
         entrypoint.write_text(_entrypoint_text(), encoding="utf-8")
@@ -179,7 +183,7 @@ def build_sidecar(
 
 def main() -> int:
     parser = argparse.ArgumentParser(
-        description="Build the target-native ThesisForge Python sidecar for Tauri."
+        description="Build the target-native DocForge Python sidecar for Tauri."
     )
     parser.add_argument("--target-triple", default=None)
     parser.add_argument("--output-directory", type=Path, default=SIDECAR_DIRECTORY)

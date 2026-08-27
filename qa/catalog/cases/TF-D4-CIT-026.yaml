@@ -15,7 +15,7 @@ input:
   project: qa/fixtures/e2e/figure-reference（含 2 条 BibTeX，后续扩展 citation-heavy）
   template: templates/schools/example-university/2026.yaml
 steps:
-  - run: thesisforge build <fixture> -o <tmp>.docx
+  - run: docforge build <fixture> -o <tmp>.docx
   - inspect: 正文上标/顺序编码标注与文后条目顺序
 expected:
   exit_code: 0

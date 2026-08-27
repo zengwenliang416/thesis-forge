@@ -15,8 +15,8 @@ releases:
 input:
   project: qa/fixtures/parser/duplicate-id.md
 steps:
-  - run: thesis_forge.core.parser.parse_markdown(qa/fixtures/parser/duplicate-id.md)
-  - run: thesis_forge.core.validator.validate_document(...)
+  - run: docforge.core.parser_backend.create_parser_backend().parse_file(qa/fixtures/parser/duplicate-id.md)
+  - run: docforge.core.validator.validate_document(...)
 expected:
   exit_code: 1
   diagnostics_errors: 1

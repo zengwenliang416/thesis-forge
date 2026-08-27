@@ -25,15 +25,18 @@ from docforge.core.render_plan import (
 
 def test_cover_instruction_resolves_closed_renderer_neutral_fields():
     instruction = CoverInstruction(
-        university="湖南工业大学",
-        title="确定性论文编译",
-        author="曾文亮",
+        bindings=(
+            ("academic.institution.name", "湖南工业大学"),
+            ("metadata.title.zh", "确定性文档编译"),
+            ("metadata.authors", "曾文亮"),
+            ("academic.advisor.title", ""),
+        )
     )
 
-    assert instruction.value_for("university.name") == "湖南工业大学"
-    assert instruction.value_for("thesis.title") == "确定性论文编译"
-    assert instruction.value_for("author.name") == "曾文亮"
-    assert instruction.value_for("advisor.title") == ""
+    assert instruction.value_for("academic.institution.name") == "湖南工业大学"
+    assert instruction.value_for("metadata.title.zh") == "确定性文档编译"
+    assert instruction.value_for("metadata.authors") == "曾文亮"
+    assert instruction.value_for("academic.advisor.title") == ""
     with pytest.raises(ValueError, match="unsupported cover field"):
         instruction.value_for("word.style")
 

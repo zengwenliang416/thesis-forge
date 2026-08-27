@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import os
 import shutil
 from pathlib import Path
 
@@ -216,3 +217,87 @@ def test_review_writes_blocked_artifacts_and_returns_diagnostic(
     assert "Review status: blocked" in markdown
     assert "missing-reference" not in markdown
     assert source_map["blocks"] == []
+
+
+def test_review_second_output_failure_preserves_existing_outputs(
+    monkeypatch,
+    tmp_path: Path,
+) -> None:
+    service = RecordingReviewService()
+    monkeypatch.setattr(
+        "docforge.cli.ProjectApplicationService",
+        lambda: service,
+    )
+    output_dir = tmp_path / "review-export"
+    output_dir.mkdir()
+    markdown_path = output_dir / "document.review.md"
+    source_map_path = output_dir / "document.review-map.json"
+    previous_markdown = "# Previous Review\n"
+    previous_source_map = '{"schemaVersion": 1, "blocks": []}\n'
+    markdown_path.write_text(previous_markdown, encoding="utf-8")
+    source_map_path.write_text(previous_source_map, encoding="utf-8")
+
+    original_replace = os.replace
+    failed = False
+
+    def fail_source_map_replace(source: Path, target: Path) -> None:
+        nonlocal failed
+        if (
+            target == source_map_path
+            and source.name.startswith(f".{source_map_path.name}.")
+            and not failed
+        ):
+            failed = True
+            raise OSError("source map replace denied")
+        original_replace(source, target)
+
+    monkeypatch.setattr("docforge.cli.os.replace", fail_source_map_replace)
+
+    result = CliRunner().invoke(
+        app,
+        ["review", str(PROJECT), "--output-dir", str(output_dir)],
+    )
+
+    assert result.exit_code == 2, result.stdout
+    assert failed
+    payload = json.loads(result.stdout)
+    assert payload["error"]["code"] == "TF-REVIEW-OUTPUT-WRITE"
+    assert markdown_path.read_text(encoding="utf-8") == previous_markdown
+    assert source_map_path.read_text(encoding="utf-8") == previous_source_map
+    assert list(output_dir.glob(".*.tmp")) == []
+
+
+def test_review_second_output_failure_leaves_no_partial_outputs(
+    monkeypatch,
+    tmp_path: Path,
+) -> None:
+    service = RecordingReviewService()
+    monkeypatch.setattr(
+        "docforge.cli.ProjectApplicationService",
+        lambda: service,
+    )
+    output_dir = tmp_path / "review-export"
+    markdown_path = output_dir / "document.review.md"
+    source_map_path = output_dir / "document.review-map.json"
+    original_replace = os.replace
+    failed = False
+
+    def fail_source_map_replace(source: Path, target: Path) -> None:
+        nonlocal failed
+        if target == source_map_path and not failed:
+            failed = True
+            raise OSError("source map replace denied")
+        original_replace(source, target)
+
+    monkeypatch.setattr("docforge.cli.os.replace", fail_source_map_replace)
+
+    result = CliRunner().invoke(
+        app,
+        ["review", str(PROJECT), "--output-dir", str(output_dir)],
+    )
+
+    assert result.exit_code == 2, result.stdout
+    assert failed
+    assert not markdown_path.exists()
+    assert not source_map_path.exists()
+    assert list(output_dir.glob(".*.tmp")) == []

@@ -7,6 +7,7 @@ import {
 } from "../state/workspace";
 import { presentBuildReportDiagnostics } from "../state/diagnostics";
 import type { WorkbenchTransport } from "../transport/WorkbenchTransport";
+import { BUILD_REPORT_SCHEMA_VERSION } from "../transport/constants";
 import { PROTOCOL_VERSION, type CommandEnvelope } from "../transport/dto";
 import type { BuildEvent, BuildReport } from "../transport/buildEvents";
 import { WorkbenchApp } from "./WorkbenchApp";
@@ -17,12 +18,12 @@ function initialState() {
     status: "populated" as const,
     source: {
       kind: "desktop" as const,
-      name: "thesis.md",
+      name: "document.md",
       writable: true,
       reference: {
         kind: "desktop" as const,
-        path: "/Users/test/thesis.md",
-        fileName: "thesis.md",
+        path: "/Users/test/document.md",
+        fileName: "document.md",
       },
     },
     savedText: "# 绪论\n",
@@ -69,7 +70,7 @@ function completedEvent(
     requestId,
     type: "completed",
     report: {
-      schemaVersion: "thesisforge.build-report.v2",
+      schemaVersion: BUILD_REPORT_SCHEMA_VERSION,
       buildId: requestId,
       intent,
       outcome: "succeeded",
@@ -114,7 +115,7 @@ describe("Workbench build flow", () => {
           }
           onEvent(
             completedEvent(request.requestId, {
-              docxPath: "thesis.docx",
+              docxPath: "document.docx",
               pdfPath: null,
               previewStale: false,
               successfulBuildId: request.requestId,
@@ -127,11 +128,49 @@ describe("Workbench build flow", () => {
 
     await user.click(screen.getByRole("button", { name: "生成 DOCX" }));
 
-    expect(await screen.findByText("thesis.docx")).toBeVisible();
+    expect(await screen.findByText("document.docx")).toBeVisible();
     expect(screen.getByText("构建完成")).toBeVisible();
     expect(screen.getByLabelText("构建进度")).toHaveTextContent(
       "解析验证编译渲染完成",
     );
+  });
+
+  it("falls back to a DOCX name for a .markdown source", async () => {
+    const user = userEvent.setup();
+    const sourceState = {
+      ...initialState(),
+      source: {
+        kind: "desktop" as const,
+        name: "document.markdown",
+        writable: true,
+        reference: {
+          kind: "desktop" as const,
+          path: "/Users/test/document.markdown",
+          fileName: "document.markdown",
+        },
+      },
+    };
+    render(
+      <WorkbenchApp
+        transport={transport(async (request, onEvent) => {
+          onEvent(
+            completedEvent(request.requestId, {
+              docxPath: null,
+              pdfPath: null,
+              previewStale: false,
+              successfulBuildId: request.requestId,
+            }),
+          );
+        })}
+        initialState={sourceState}
+      />,
+    );
+
+    await user.click(screen.getByRole("button", { name: "生成 DOCX" }));
+
+    expect(
+      await screen.findByRole("status", { name: "输出结果" }),
+    ).toHaveTextContent("document.docx");
   });
 
   it("cancels the active build, preserves output, and exposes retry", async () => {
@@ -173,7 +212,7 @@ describe("Workbench build flow", () => {
     const descriptor = {
       engine: "libreoffice" as const,
       label: "LibreOffice PDF" as const,
-      fileName: "thesis.preview.pdf",
+      fileName: "document.preview.pdf",
       authorizationId: "b".repeat(32),
     };
     const resolveFinalPreview = vi
@@ -185,8 +224,8 @@ describe("Workbench build flow", () => {
           async (request, onEvent) => {
             onEvent(
               completedEvent(request.requestId, {
-                docxPath: "thesis.docx",
-                pdfPath: "thesis.preview.pdf",
+                docxPath: "document.docx",
+                pdfPath: "document.preview.pdf",
                 previewStale: false,
                 successfulBuildId: request.requestId,
                 finalPreview: descriptor,
@@ -293,7 +332,7 @@ describe("Workbench build flow", () => {
         stage: "render",
         message: "Figure rendering failed.",
         source: {
-          file: "thesis.md",
+          file: "document.md",
           startLine: 12,
           startColumn: 1,
           endLine: 12,
@@ -406,7 +445,7 @@ describe("Workbench build flow", () => {
                       stage: "render",
                       message: "Figure rendering failed.",
                       source: {
-                        file: "thesis.md",
+                        file: "document.md",
                         startLine: 12,
                         startColumn: 1,
                         endLine: 12,

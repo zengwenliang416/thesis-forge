@@ -94,7 +94,7 @@ export class WebWorkbenchTransport implements WorkbenchTransport {
       typeof body !== "object" ||
       body === null ||
       !("protocol" in body) ||
-      body.protocol !== "thesisforge.workbench.v1" ||
+      body.protocol !== PROTOCOL_VERSION ||
       !("ok" in body) ||
       body.ok !== true ||
       !("source" in body) ||

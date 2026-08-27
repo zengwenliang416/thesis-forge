@@ -181,17 +181,15 @@ def test_cover_policy_has_deterministic_renderer_neutral_defaults():
     template = load_template("templates/base/bachelor.yaml")
 
     assert [item.field for item in template.cover.items] == [
-        "university.name",
-        "university.college",
-        "thesis.title",
-        "thesis.title_en",
-        "thesis.major",
-        "thesis.degree",
-        "author.name",
-        "author.student_id",
-        "advisor.name",
-        "advisor.title",
-        "dates.completed",
+        "metadata.title.zh",
+        "metadata.title.en",
+        "metadata.subtitle.zh",
+        "metadata.subtitle.en",
+        "metadata.authors",
+        "metadata.organization",
+        "metadata.date",
+        "metadata.version",
+        "metadata.keywords",
     ]
     assert all(item.style.alignment == "center" for item in template.cover.items)
 
@@ -200,17 +198,17 @@ def test_cover_item_requires_exactly_one_content_source():
     with pytest.raises(ValueError, match="必须且只能配置"):
         CoverItemSpec()
     with pytest.raises(ValueError, match="必须且只能配置"):
-        CoverItemSpec(field="thesis.title", text="论文题目")
+        CoverItemSpec(field="metadata.title.zh", text="文档题目")
     with pytest.raises(ValueError, match="text 不能为空"):
         CoverItemSpec(text="   ")
 
 
 def test_cover_policy_rejects_duplicate_metadata_fields():
-    with pytest.raises(ValueError, match="重复 field: thesis.title"):
+    with pytest.raises(ValueError, match="重复 field: metadata.title.zh"):
         CoverSpec(
             items=(
-                CoverItemSpec(field="thesis.title"),
-                CoverItemSpec(field="thesis.title"),
+                CoverItemSpec(field="metadata.title.zh"),
+                CoverItemSpec(field="metadata.title.zh"),
             )
         )
 

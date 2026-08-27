@@ -89,7 +89,7 @@ def prepare_macos_release(
 
     dmg = _single_artifact(
         bundle_root,
-        f"ThesisForge_{version}_aarch64.dmg",
+        f"DocForge_{version}_aarch64.dmg",
         "macOS DMG",
     )
     wheel = _single_artifact(
@@ -116,13 +116,13 @@ def prepare_macos_release(
     notes.write_text(
         "\n".join(
             [
-                f"# ThesisForge {tag}",
+                f"# DocForge {tag}",
                 "",
                 "本版本是供早期用户验证的未公证预发布版本。",
                 "",
                 "## 下载",
                 "",
-                f"- `ThesisForge_{version}_aarch64.dmg`: macOS Apple Silicon 安装包。",
+                f"- `DocForge_{version}_aarch64.dmg`: macOS Apple Silicon 安装包。",
                 f"- `docforge-{version}-py3-none-any.whl`: Python wheel。",
                 f"- `docforge-{version}.tar.gz`: Python 源码分发包。",
                 "",
@@ -147,7 +147,7 @@ def prepare_macos_release(
 
 def main() -> int:
     parser = argparse.ArgumentParser(
-        description="Validate ThesisForge release versions and collect release assets."
+        description="Validate DocForge release versions and collect release assets."
     )
     parser.add_argument("--tag", required=True)
     parser.add_argument("--validate-only", action="store_true")

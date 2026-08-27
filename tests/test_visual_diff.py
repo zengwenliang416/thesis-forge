@@ -138,7 +138,7 @@ def test_baseline_update_requires_reason_and_reviewer(base_pdf: Path, tmp_path: 
     )
     assert exit_ok == 0
     manifest = json.loads((target / "manifest.json").read_text(encoding="utf-8"))
-    assert manifest["schema"] == "thesisforge/visual-baseline-v1"
+    assert manifest["schema"] == "docforge/visual-baseline-v1"
     assert manifest["page_count"] == 2
     assert len(manifest["text_hashes"]) == 2
     assert manifest["change_log"][0]["reviewer"] == "zwl"

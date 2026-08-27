@@ -1,6 +1,7 @@
 import type { ProjectIdentityRef } from "./WorkbenchTransport";
+import { PROTOCOL_VERSION } from "./constants";
 
-export const PROTOCOL_VERSION = "thesisforge.workbench.v1" as const;
+export { PROTOCOL_VERSION } from "./constants";
 
 export type RuntimeKind = "web" | "tauri";
 export type SourceKind = "desktop" | "web-workspace" | "web-upload";
@@ -647,7 +648,7 @@ export function readSerializedPreviewResult(
   const hasPreviewData = "schemaVersion" in result || "preview" in result;
   if (!hasPreviewData) {
     if (required) {
-      throw new Error("无效的 ThesisForge transport 响应");
+      throw new Error("无效的 DocForge transport 响应");
     }
     return null;
   }
@@ -657,7 +658,7 @@ export function readSerializedPreviewResult(
     !result.outline.every(isOutlineItem) ||
     !isPreviewDocument(result.preview)
   ) {
-    throw new Error("无效的 ThesisForge transport 响应");
+    throw new Error("无效的 DocForge transport 响应");
   }
   return result as unknown as SerializedPreviewResult;
 }
@@ -692,7 +693,7 @@ export function readSerializedDiagnostics(
 ): SerializedDiagnostic[] {
   if (!("diagnostics" in result)) {
     if (required) {
-      throw new Error("无效的 ThesisForge transport 响应");
+      throw new Error("无效的 DocForge transport 响应");
     }
     return [];
   }
@@ -700,7 +701,7 @@ export function readSerializedDiagnostics(
     !Array.isArray(result.diagnostics) ||
     !result.diagnostics.every(isSerializedDiagnostic)
   ) {
-    throw new Error("无效的 ThesisForge transport 响应");
+    throw new Error("无效的 DocForge transport 响应");
   }
   return result.diagnostics;
 }
@@ -717,7 +718,7 @@ export function assertCommandResponse(value: unknown): CommandResponse {
     !("ok" in value) ||
     typeof value.ok !== "boolean"
   ) {
-    throw new Error("无效的 ThesisForge transport 响应");
+    throw new Error("无效的 DocForge transport 响应");
   }
   if (value.ok) {
     if (
@@ -726,7 +727,7 @@ export function assertCommandResponse(value: unknown): CommandResponse {
       value.result === null ||
       Array.isArray(value.result)
     ) {
-      throw new Error("无效的 ThesisForge transport 响应");
+      throw new Error("无效的 DocForge transport 响应");
     }
     readSerializedDiagnostics(value.result as Record<string, unknown>);
     readSerializedPreviewResult(value.result as Record<string, unknown>);
@@ -745,7 +746,7 @@ export function assertCommandResponse(value: unknown): CommandResponse {
     !("message" in value.error) ||
     typeof value.error.message !== "string"
   ) {
-    throw new Error("无效的 ThesisForge transport 响应");
+    throw new Error("无效的 DocForge transport 响应");
   }
   return value as CommandResponse;
 }

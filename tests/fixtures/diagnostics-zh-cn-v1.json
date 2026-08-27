@@ -105,7 +105,7 @@
           "resource_type": "image"
         }
       },
-      "expectedMessage": "图片路径越出论文资源目录：../outside.png"
+      "expectedMessage": "图片路径越出文档资源目录：../outside.png"
     },
     {
       "input": {

@@ -1,6 +1,9 @@
 from __future__ import annotations
 
 import json
+import os
+import shutil
+import tempfile
 from dataclasses import asdict
 from pathlib import Path
 from typing import Annotated
@@ -210,6 +213,97 @@ def _report_review_error(
     raise typer.Exit(2) from None
 
 
+def _temporary_review_path(target: Path) -> Path:
+    descriptor, temporary_name = tempfile.mkstemp(
+        prefix=f".{target.name}.",
+        suffix=".tmp",
+        dir=target.parent,
+    )
+    os.close(descriptor)
+    return Path(temporary_name)
+
+
+def _cleanup_review_temporary(path: Path) -> None:
+    try:
+        path.unlink(missing_ok=True)
+    except OSError:
+        pass
+
+
+def _stage_review_output(target: Path, content: str) -> Path:
+    temporary_path = _temporary_review_path(target)
+    try:
+        temporary_path.write_text(content, encoding="utf-8")
+        if temporary_path.read_text(encoding="utf-8") != content:
+            raise OSError(
+                f"staged Review output verification failed: {temporary_path}"
+            )
+        return temporary_path
+    except BaseException:
+        _cleanup_review_temporary(temporary_path)
+        raise
+
+
+def _backup_review_output(target: Path) -> Path | None:
+    if not target.exists():
+        return None
+    backup_path = _temporary_review_path(target)
+    try:
+        shutil.copy2(target, backup_path)
+        return backup_path
+    except BaseException:
+        _cleanup_review_temporary(backup_path)
+        raise
+
+
+def _restore_review_outputs(
+    attempted_targets: list[Path],
+    backups: list[tuple[Path, Path | None]],
+) -> None:
+    for target in reversed(attempted_targets):
+        _cleanup_review_temporary(target)
+    for target, backup_path in reversed(backups):
+        if backup_path is not None and backup_path.exists():
+            shutil.copy2(backup_path, target)
+
+
+def _write_review_outputs(
+    markdown_path: Path,
+    markdown: str,
+    source_map_path: Path,
+    source_map: str,
+) -> None:
+    outputs = (
+        (markdown_path, markdown),
+        (source_map_path, source_map),
+    )
+    for target, _ in outputs:
+        target.parent.mkdir(parents=True, exist_ok=True)
+        if target.exists() and not target.is_file():
+            raise OSError(f"Review output target is not a regular file: {target}")
+
+    staged_paths: list[Path] = []
+    backups: list[tuple[Path, Path | None]] = []
+    attempted_targets: list[Path] = []
+    try:
+        for target, content in outputs:
+            staged_paths.append(_stage_review_output(target, content))
+        for target, _ in outputs:
+            backups.append((target, _backup_review_output(target)))
+        for (target, _), staged_path in zip(outputs, staged_paths):
+            attempted_targets.append(target)
+            os.replace(staged_path, target)
+    except BaseException:
+        _restore_review_outputs(attempted_targets, backups)
+        raise
+    finally:
+        for staged_path in staged_paths:
+            _cleanup_review_temporary(staged_path)
+        for _, backup_path in backups:
+            if backup_path is not None:
+                _cleanup_review_temporary(backup_path)
+
+
 @app.command()
 def inspect(source: Path) -> None:
     """解析 Markdown 并输出结构。"""
@@ -339,10 +433,12 @@ def review(
             ).resolve()
         if markdown_path == source_map_path:
             raise ValueError("Review Markdown and source map output paths must differ")
-        markdown_path.parent.mkdir(parents=True, exist_ok=True)
-        source_map_path.parent.mkdir(parents=True, exist_ok=True)
-        markdown_path.write_text(rendered.markdown, encoding="utf-8")
-        source_map_path.write_text(source_map, encoding="utf-8")
+        _write_review_outputs(
+            markdown_path,
+            rendered.markdown,
+            source_map_path,
+            source_map,
+        )
     except (ProjectLoadError, ProjectPathError, ApplicationStageError) as error:
         _report_review_error(error)
     except (OSError, ValueError) as error:

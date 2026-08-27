@@ -1,30 +1,39 @@
-schema: thesisforge.project.v2
+schema: docforge.project.v1
 
 project:
   id: goal-fixture
   language: zh-CN
 
 document:
-  source: thesis.md
+  source: document.md
+  type: academic
 
 metadata:
   title:
-    zh: ThesisForge v2 目标验证论文
-    en: ThesisForge v2 Goal Verification Thesis
-  author:
+    zh: DocForge 目标验证论文
+    en: DocForge Goal Verification Document
+  authors:
+    - name: 张三
+  organization: 示例大学
+  keywords:
+    - 文档编译
+    - 结构化验证
+
+academic:
+  student:
     name: 张三
-    student_id: "20260001"
+    id: "20260001"
   institution:
-    university: 示例大学
-    college: 计算机学院
+    name: 示例大学
+    department: 计算机学院
   degree:
     name: 工学硕士
     major: 计算机科学与技术
   advisor:
     name: 李教授
     title: 教授
-  dates:
-    completed: "2026-05"
+  completion:
+    date: "2026-05"
 
 resources:
   root: .
@@ -42,10 +51,10 @@ layout:
 
 output:
   directory: build
-  docx: thesis.docx
+  docx: document.docx
   retain_last_successful_preview: true
 
 review:
   directory: review
-  markdown: thesis.review.md
-  source_map: thesis.review-map.json
+  markdown: document.review.md
+  source_map: document.review-map.json

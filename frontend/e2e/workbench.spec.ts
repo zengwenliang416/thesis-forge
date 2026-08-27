@@ -1,20 +1,28 @@
 import { expect, test } from "@playwright/test";
 import { readFileSync } from "node:fs";
 import type { BuildReport } from "../src/transport/buildEvents";
+import {
+  BUILD_REPORT_SCHEMA_VERSION,
+  DEFAULT_DOCX_FILENAME,
+  DEFAULT_SOURCE_FILENAME,
+  MANIFEST_FILENAME,
+  PROJECT_SCHEMA_VERSION,
+  PROTOCOL_VERSION,
+} from "../src/transport/constants";
 
 const workspaceId = "a".repeat(32);
 const sourceText = "# 绪论\n";
-const manifestText = `schema: thesisforge.project.v2
+const manifestText = `schema: ${PROJECT_SCHEMA_VERSION}
 project:
   id: mocked-workbench
-  source: thesis.md
+  source: ${DEFAULT_SOURCE_FILENAME}
 template:
   id: example-university-2026
 `;
 const projectIdentity = {
   id: "mocked-workbench",
-  root: "/workspace/thesis",
-  manifestPath: "/workspace/thesis/thesisforge.yaml",
+  root: "/workspace/document",
+  manifestPath: `/workspace/document/${MANIFEST_FILENAME}`,
 };
 const previewFixture = JSON.parse(
   readFileSync(
@@ -46,7 +54,7 @@ function completedBuildEvent(
   intent: BuildReport["intent"] = "publish",
 ) {
   const report: BuildReport = {
-    schemaVersion: "thesisforge.build-report.v2",
+    schemaVersion: BUILD_REPORT_SCHEMA_VERSION,
     buildId: requestId,
     intent,
     outcome: "succeeded",
@@ -58,7 +66,7 @@ function completedBuildEvent(
     output,
   };
   return {
-    protocol: "thesisforge.workbench.v1",
+    protocol: PROTOCOL_VERSION,
     requestId,
     type: "completed",
     report,
@@ -67,13 +75,13 @@ function completedBuildEvent(
 
 function openedProjectResponse() {
   return {
-    protocol: "thesisforge.workbench.v1",
+    protocol: PROTOCOL_VERSION,
     ok: true,
     project: projectIdentity,
     source: {
       kind: "web-workspace",
       workspaceId,
-      fileName: "thesis.md",
+      fileName: DEFAULT_SOURCE_FILENAME,
     },
     text: sourceText,
   };
@@ -82,12 +90,12 @@ function openedProjectResponse() {
 function projectFiles() {
   return [
     {
-      name: "thesisforge.yaml",
+      name: MANIFEST_FILENAME,
       mimeType: "text/yaml",
       buffer: Buffer.from(manifestText),
     },
     {
-      name: "thesis.md",
+      name: DEFAULT_SOURCE_FILENAME,
       mimeType: "text/markdown",
       buffer: Buffer.from(sourceText),
     },
@@ -106,12 +114,12 @@ test.beforeEach(async ({ page }) => {
       status: 201,
       contentType: "application/json",
       body: JSON.stringify({
-        protocol: "thesisforge.workbench.v1",
+        protocol: PROTOCOL_VERSION,
         ok: true,
         output: {
           kind: "web-download",
           workspaceId: request.source.workspaceId,
-          fileName: `.thesisforge-live-preview-${livePreviewId}.docx`,
+          fileName: `.docforge-live-preview-${livePreviewId}.docx`,
           livePreviewId,
         },
       }),
@@ -122,7 +130,7 @@ test.beforeEach(async ({ page }) => {
       status: 200,
       contentType: "application/json",
       body: JSON.stringify({
-        protocol: "thesisforge.workbench.v1",
+        protocol: PROTOCOL_VERSION,
         ok: true,
       }),
     });
@@ -134,7 +142,7 @@ function onePagePdf(): Buffer {
     "<< /Type /Catalog /Pages 2 0 R >>",
     "<< /Type /Pages /Kids [3 0 R] /Count 1 >>",
     "<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 5 0 R >> >> /Contents 4 0 R >>",
-    "<< /Length 61 >>\nstream\nBT /F1 24 Tf 72 720 Td (ThesisForge PDF Preview) Tj ET\nendstream",
+    "<< /Length 59 >>\nstream\nBT /F1 24 Tf 72 720 Td (DocForge PDF Preview) Tj ET\nendstream",
     "<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>",
   ];
   const chunks = [Buffer.from("%PDF-1.4\n%\xe2\xe3\xcf\xd3\n", "binary")];
@@ -251,7 +259,7 @@ test("opens, edits, explicitly saves, refreshes, and builds through HTTP", async
       status: 200,
       contentType: "application/json",
       body: JSON.stringify({
-        protocol: "thesisforge.workbench.v1",
+        protocol: PROTOCOL_VERSION,
         requestId: request.requestId,
         ok: true,
         result,
@@ -265,14 +273,14 @@ test("opens, edits, explicitly saves, refreshes, and builds through HTTP", async
     const events = [
       ...["parse", "validate", "compile", "render", "finalize"].map(
         (stage) => ({
-          protocol: "thesisforge.workbench.v1",
+          protocol: PROTOCOL_VERSION,
           requestId,
           type: "progress",
           stage,
         }),
       ),
       completedBuildEvent(requestId, {
-        docxPath: "/tmp/thesis.docx",
+        docxPath: `/tmp/${DEFAULT_DOCX_FILENAME}`,
         pdfPath: null,
         previewStale: false,
         successfulBuildId: requestId,
@@ -340,7 +348,7 @@ test("opens, edits, explicitly saves, refreshes, and builds through HTTP", async
       source: {
         kind: "web-workspace",
         workspaceId,
-        fileName: "thesis.md",
+        fileName: DEFAULT_SOURCE_FILENAME,
       },
       text: "# 绪论\n\n正文。\n",
     },
@@ -352,12 +360,12 @@ test("opens, edits, explicitly saves, refreshes, and builds through HTTP", async
       output: {
         kind: "web-download",
         workspaceId,
-        fileName: "thesis.docx",
+        fileName: DEFAULT_DOCX_FILENAME,
       },
     },
   });
   await expect(page.getByText("构建完成")).toBeVisible();
-  await expect(page.getByText("thesis.docx")).toBeVisible();
+  await expect(page.getByText(DEFAULT_DOCX_FILENAME)).toBeVisible();
 });
 
 test("loads and refreshes a complete automatic PDF after an edit", async ({
@@ -383,7 +391,7 @@ test("loads and refreshes a complete automatic PDF after an edit", async ({
       status: 200,
       contentType: "application/json",
       body: JSON.stringify({
-        protocol: "thesisforge.workbench.v1",
+        protocol: PROTOCOL_VERSION,
         requestId: request.requestId,
         ok: true,
         result: request.operation === "preview" ? previewResult : {},
@@ -522,7 +530,7 @@ test("cancels an active Web build and retries without losing prior output", asyn
       status: 200,
       contentType: "application/json",
       body: JSON.stringify({
-        protocol: "thesisforge.workbench.v1",
+        protocol: PROTOCOL_VERSION,
         requestId: request.requestId,
         ok: true,
         result: previewResult,
@@ -587,7 +595,7 @@ test("selects a template and blocks build on an activated fatal diagnostic", asy
       status: 200,
       contentType: "application/json",
       body: JSON.stringify({
-        protocol: "thesisforge.workbench.v1",
+        protocol: PROTOCOL_VERSION,
         requestId: request.requestId,
         ok: true,
         result:

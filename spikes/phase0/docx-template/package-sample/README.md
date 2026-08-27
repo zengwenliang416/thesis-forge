@@ -13,7 +13,7 @@ package-sample/
 ├── assets/
 │   └── logo.png             # 占位 logo（纯 stdlib 生成，字节确定）
 ├── fixtures/
-│   └── minimal/thesis.md    # 最小论文源
+│   └── minimal/document.md  # 最小文档源
 ├── provenance.yaml
 └── README.md
 ```

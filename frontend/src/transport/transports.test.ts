@@ -5,6 +5,10 @@ import {
   type CommandEnvelope,
   type CommandResponse,
 } from "./dto";
+import {
+  DEFAULT_SOURCE_FILENAME,
+  MANIFEST_FILENAME,
+} from "./constants";
 import { TauriWorkbenchTransport } from "./tauri";
 import { WebWorkbenchTransport } from "./web";
 import type { ProjectIdentityRef } from "./WorkbenchTransport";
@@ -17,7 +21,7 @@ const request: CommandEnvelope = {
     source: {
       kind: "web-workspace",
       workspaceId: "workspace-1",
-      fileName: "thesis.md",
+      fileName: DEFAULT_SOURCE_FILENAME,
     },
   },
 };
@@ -27,7 +31,7 @@ const response: CommandResponse = {
   requestId: "request-1",
   ok: true,
   result: {
-    source: { kind: "web-workspace", name: "thesis.md" },
+    source: { kind: "web-workspace", name: DEFAULT_SOURCE_FILENAME },
     outline: [],
     diagnostics: [],
   },
@@ -82,7 +86,7 @@ describe("runtime transports", () => {
             source: {
               kind: "web-workspace",
               workspaceId: "a".repeat(32),
-              fileName: "thesis.md",
+              fileName: DEFAULT_SOURCE_FILENAME,
             },
             text: "# 绪论\n",
           }),
@@ -92,12 +96,12 @@ describe("runtime transports", () => {
     });
 
     await expect(
-      transport.openSource({ fileName: "thesis.md", text: "# 绪论\n" }),
+      transport.openSource({ fileName: DEFAULT_SOURCE_FILENAME, text: "# 绪论\n" }),
     ).resolves.toEqual({
       source: {
         kind: "web-workspace",
         workspaceId: "a".repeat(32),
-        fileName: "thesis.md",
+        fileName: DEFAULT_SOURCE_FILENAME,
       },
       text: "# 绪论\n",
     });
@@ -111,8 +115,8 @@ describe("runtime transports", () => {
       return {
         source: {
           kind: "desktop",
-          path: "/Users/test/thesis.md",
-          fileName: "thesis.md",
+          path: `/Users/test/${DEFAULT_SOURCE_FILENAME}`,
+          fileName: DEFAULT_SOURCE_FILENAME,
         },
         text: "# 绪论\n",
       };
@@ -121,8 +125,8 @@ describe("runtime transports", () => {
     await expect(transport.openSource()).resolves.toEqual({
       source: {
         kind: "desktop",
-        path: "/Users/test/thesis.md",
-        fileName: "thesis.md",
+        path: `/Users/test/${DEFAULT_SOURCE_FILENAME}`,
+        fileName: DEFAULT_SOURCE_FILENAME,
       },
       text: "# 绪论\n",
     });
@@ -137,12 +141,12 @@ describe("runtime transports", () => {
         project: {
           id: "project-1",
           root: "/Users/test/thesis",
-          manifestPath: "/Users/test/thesis/thesisforge.yaml",
+          manifestPath: `/Users/test/thesis/${MANIFEST_FILENAME}`,
         },
         source: {
           kind: "desktop",
-          path: "/Users/test/thesis/thesis.md",
-          fileName: "thesis.md",
+          path: `/Users/test/thesis/${DEFAULT_SOURCE_FILENAME}`,
+          fileName: DEFAULT_SOURCE_FILENAME,
         },
         text: "# 绪论\n",
       };
@@ -152,12 +156,12 @@ describe("runtime transports", () => {
       project: {
         id: "project-1",
         root: "/Users/test/thesis",
-        manifestPath: "/Users/test/thesis/thesisforge.yaml",
+        manifestPath: `/Users/test/thesis/${MANIFEST_FILENAME}`,
       },
       source: {
         kind: "desktop",
-        path: "/Users/test/thesis/thesis.md",
-        fileName: "thesis.md",
+        path: `/Users/test/thesis/${DEFAULT_SOURCE_FILENAME}`,
+        fileName: DEFAULT_SOURCE_FILENAME,
       },
       text: "# 绪论\n",
     });
@@ -180,13 +184,13 @@ describe("runtime transports", () => {
     const bytes = await transport.resolveFinalPreview({
       engine: "libreoffice",
       label: "LibreOffice PDF",
-      fileName: "thesis.preview.pdf",
+      fileName: "document.preview.pdf",
       downloadId: "a".repeat(32),
     });
 
     expect(new TextDecoder().decode(bytes)).toBe("%PDF-1.7\n");
     expect(calls).toEqual([
-      `http://127.0.0.1:8765/api/v1/workspaces/${"a".repeat(32)}/files/thesis.preview.pdf`,
+      `http://127.0.0.1:8765/api/v1/workspaces/${"a".repeat(32)}/files/document.preview.pdf`,
     ]);
   });
 
@@ -195,7 +199,7 @@ describe("runtime transports", () => {
     const output = {
       kind: "web-download" as const,
       workspaceId: "a".repeat(32),
-      fileName: `.thesisforge-live-preview-${"b".repeat(32)}.docx`,
+      fileName: `.docforge-live-preview-${"b".repeat(32)}.docx`,
       livePreviewId: "b".repeat(32),
     };
     const transport = new WebWorkbenchTransport({
@@ -223,7 +227,7 @@ describe("runtime transports", () => {
     const source = {
       kind: "web-workspace" as const,
       workspaceId: "a".repeat(32),
-      fileName: "thesis.md",
+      fileName: DEFAULT_SOURCE_FILENAME,
     };
 
     await expect(transport.prepareLivePreviewOutput(source)).resolves.toEqual(
@@ -309,8 +313,8 @@ describe("runtime transports", () => {
     const calls: Array<{ command: string; args?: Record<string, unknown> }> = [];
     const output = {
       kind: "desktop" as const,
-      path: "/tmp/thesisforge-live-preview-a/thesisforge-live-preview-a.docx",
-      fileName: "thesisforge-live-preview-a.docx",
+      path: "/tmp/docforge-live-preview-a/docforge-live-preview-a.docx",
+      fileName: "docforge-live-preview-a.docx",
     };
     const transport = new TauriWorkbenchTransport(async (command, args) => {
       calls.push({ command, args });
@@ -320,8 +324,8 @@ describe("runtime transports", () => {
     await expect(
       transport.prepareLivePreviewOutput({
         kind: "desktop",
-        path: "/Users/test/thesis.md",
-        fileName: "thesis.md",
+        path: `/Users/test/${DEFAULT_SOURCE_FILENAME}`,
+        fileName: DEFAULT_SOURCE_FILENAME,
       }),
     ).resolves.toEqual(output);
     await transport.discardLivePreviewOutput(output);
@@ -339,14 +343,14 @@ describe("runtime transports", () => {
         requestId: "request-1",
         ok: true,
       }),
-    ).toThrow("无效的 ThesisForge transport 响应");
+    ).toThrow("无效的 DocForge transport 响应");
     expect(() =>
       assertCommandResponse({
         protocol: PROTOCOL_VERSION,
         requestId: "request-1",
         ok: false,
       }),
-    ).toThrow("无效的 ThesisForge transport 响应");
+    ).toThrow("无效的 DocForge transport 响应");
   });
 
   it("rejects malformed serialized diagnostics", () => {
@@ -365,7 +369,7 @@ describe("runtime transports", () => {
           ],
         },
       }),
-    ).toThrow("无效的 ThesisForge transport 响应");
+    ).toThrow("无效的 DocForge transport 响应");
   });
 
   it("rejects coerced enum values and non-finite diagnostic details", () => {
@@ -387,7 +391,7 @@ describe("runtime transports", () => {
     for (const invalid of rejectedDiagnostics) {
       expect(() =>
         readSerializedDiagnostics({ diagnostics: [invalid] }, true),
-      ).toThrow("无效的 ThesisForge transport 响应");
+      ).toThrow("无效的 DocForge transport 响应");
     }
 
     expect(() =>
@@ -400,12 +404,12 @@ describe("runtime transports", () => {
           message: "invalid",
         },
       }),
-    ).toThrow("无效的 ThesisForge transport 响应");
+    ).toThrow("无效的 DocForge transport 响应");
   });
 
   it("requires diagnostics for validation result consumers", () => {
     expect(() => readSerializedDiagnostics({}, true)).toThrow(
-      "无效的 ThesisForge transport 响应",
+      "无效的 DocForge transport 响应",
     );
     expect(readSerializedDiagnostics({ diagnostics: [] }, true)).toEqual([]);
   });
@@ -415,7 +419,7 @@ describe("project identity envelope", () => {
   const project: ProjectIdentityRef = {
     id: "thesis-2026",
     root: "/home/user/thesis",
-    manifestPath: "/home/user/thesis/thesisforge.yaml",
+    manifestPath: `/home/user/thesis/${MANIFEST_FILENAME}`,
   };
 
   function projectRequest(
@@ -429,8 +433,8 @@ describe("project identity envelope", () => {
       payload: {
         source: {
           kind: "desktop",
-          path: "/home/user/thesis/thesis.md",
-          fileName: "thesis.md",
+          path: `/home/user/thesis/${DEFAULT_SOURCE_FILENAME}`,
+          fileName: DEFAULT_SOURCE_FILENAME,
         },
         project,
       },
@@ -544,7 +548,7 @@ describe("project identity envelope", () => {
         source: {
           kind: "web-upload",
           uploadId: "a".repeat(32),
-          fileName: "thesis.md",
+          fileName: DEFAULT_SOURCE_FILENAME,
         },
       },
     };

@@ -54,7 +54,7 @@ def _format_heading_level_jump(diagnostic: _DiagnosticLike) -> str:
 
 def _format_resource_path_escape(diagnostic: _DiagnosticLike) -> str:
     kind = "图片" if diagnostic.details.get("resource_type") == "image" else "参考文献"
-    return f"{kind}路径越出论文资源目录：{diagnostic.target or ''}"
+    return f"{kind}路径越出文档资源目录：{diagnostic.target or ''}"
 
 
 def _format_missing_image(diagnostic: _DiagnosticLike) -> str:

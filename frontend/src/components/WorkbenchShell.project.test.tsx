@@ -55,10 +55,10 @@ describe("WorkbenchShell project opening", () => {
       />,
     );
 
-    const manifest = new File(["project: {}"], "thesisforge.yaml", {
+    const manifest = new File(["project: {}"], "docforge.yaml", {
       type: "text/yaml",
     });
-    const source = new File(["# 绪论\n"], "thesis.md", {
+    const source = new File(["# 绪论\n"], "document.md", {
       type: "text/markdown",
     });
     const files = [manifest, source];

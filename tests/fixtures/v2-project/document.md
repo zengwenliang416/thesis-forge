@@ -3,7 +3,7 @@
 ## 研究背景 {#sec:background}
 
 已有研究表明，**结构化编译**与*可验证反馈*能够提升论文工程的一致性 [@smith2025]。
-本项目使用 `thesisforge.yaml` 作为入口，普通源码换行
+本项目使用 `docforge.yaml` 作为入口，普通源码换行
 不应在 Word 中产生手动换行。这里使用一个[普通链接](https://example.com)，模型流程见[图](#fig:model)。
 
 ![模型总体结构](assets/model.png){#fig:model}

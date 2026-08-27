@@ -104,7 +104,7 @@ def build_manifest(pdf: Path, *, dpi: int, reason: str, reviewer: str, issue: st
         raise ValueError("pdftotext 不可用，无法建立基线")
     texts = _page_texts(pdf)
     manifest = {
-        "schema": "thesisforge/visual-baseline-v1",
+        "schema": "docforge/visual-baseline-v1",
         "source": str(pdf),
         "page_count": len(texts),
         "text_hashes": [hashlib.sha256(t.encode()).hexdigest() for t in texts],

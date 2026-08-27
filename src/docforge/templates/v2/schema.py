@@ -215,7 +215,7 @@ def _optional_pattern(value: str | None, allowed: frozenset[str], field: str) ->
 
 
 class CompatibilitySpec(TemplateModel):
-    thesisforge: str
+    docforge: str
     document_types: list[
         Literal[
             "bachelor_thesis",
@@ -230,7 +230,7 @@ class CompatibilitySpec(TemplateModel):
         Literal["primary", "compatible", "preview", "unsupported"],
     ] = Field(default_factory=lambda: {"word": "primary"})
 
-    @field_validator("thesisforge")
+    @field_validator("docforge")
     @classmethod
     def validate_range(cls, value: str) -> str:
         try:

@@ -19,7 +19,7 @@
     <circle cx="1280" cy="600" r="26"/>
   </g>
   <text x="720" y="105" text-anchor="middle" font-family="Georgia, serif" font-size="44" font-weight="700" fill="#17352d">
-    ThesisForge Deterministic Pipeline
+    DocForge Deterministic Pipeline
   </text>
   <text x="720" y="150" text-anchor="middle" font-family="Georgia, serif" font-size="21" fill="#41675e">
     Offline inputs become editable Word objects through one renderer-neutral plan
@@ -34,7 +34,7 @@
     <g transform="translate(355 255)">
       <rect width="220" height="190" rx="24" fill="#fef8ed" stroke="#d8c7a8" stroke-width="3"/>
       <text x="110" y="66" text-anchor="middle" font-size="29" font-weight="700" fill="#17352d">Domain</text>
-      <text x="110" y="108" text-anchor="middle" font-size="18" fill="#55756d">ThesisDocument</text>
+      <text x="110" y="108" text-anchor="middle" font-size="18" fill="#55756d">ForgeDocument</text>
       <text x="110" y="139" text-anchor="middle" font-size="18" fill="#55756d">Validation</text>
     </g>
     <g transform="translate(640 255)">

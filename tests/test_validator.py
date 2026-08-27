@@ -223,7 +223,6 @@ def test_validation_reports_metadata_ids_bibliography_and_resources(tmp_path: Pa
     codes = {issue.code for issue in issues}
 
     assert {
-        "required-metadata",
         "missing-template",
         "invalid-id-prefix",
         "missing-reference",
@@ -318,15 +317,15 @@ heading:
     )
     project_root = tmp_path / "project"
     project_root.mkdir()
-    source = project_root / "thesis.md"
+    source = project_root / "document.md"
     source.write_text("# 绪论 {#chap:intro}\n", encoding="utf-8")
-    (project_root / "thesisforge.yaml").write_text(
-        """schema: thesisforge.project.v2
+    (project_root / "docforge.yaml").write_text(
+        """schema: docforge.project.v1
 project:
   id: template-fixture
   language: zh-CN
 document:
-  source: thesis.md
+  source: document.md
 render:
   template_id: school-2026
 """,

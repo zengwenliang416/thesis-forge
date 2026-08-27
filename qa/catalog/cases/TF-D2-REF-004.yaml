@@ -15,11 +15,11 @@ releases:
 input:
   project: qa/fixtures/parser/missing-reference.md
 steps:
-  - run: thesis_forge.core.parser.parse_markdown(qa/fixtures/parser/missing-reference.md)
-  - run: thesis_forge.core.validator.validate_document(...)
+  - run: docforge.core.parser_backend.create_parser_backend().parse_file(qa/fixtures/parser/missing-reference.md)
+  - run: docforge.core.validator.validate_document(...)
 expected:
   exit_code: 1
-  diagnostics_errors: 2
+  diagnostics_errors: 1
   diagnostic_codes:
     - missing-reference
 evidence:

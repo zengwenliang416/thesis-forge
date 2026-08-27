@@ -24,6 +24,7 @@ from docforge.application.contracts import (
     BuildStageState,
     BuildStageStatus,
 )
+from docforge.project.constants import DEFAULT_DOCX_PATH, DEFAULT_SOURCE_PATH
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 EXAMPLES = PROJECT_ROOT / "protocol" / "examples"
@@ -179,7 +180,7 @@ def test_path_bearing_report_fields_are_sanitized() -> None:
     )
     report = _report(payload)
     source = BuildSourceRange(
-        file="/Users/alice/thesis.md",
+        file=f"/Users/alice/{DEFAULT_SOURCE_PATH}",
         start_line=14,
         start_column=1,
         end_line=14,
@@ -192,7 +193,7 @@ def test_path_bearing_report_fields_are_sanitized() -> None:
         suggestion="Fix /Users/alice/assets/missing.png",
         related_locations=(
             BuildRelatedLocation(
-                message="See /Users/alice/thesis.md",
+                message=f"See /Users/alice/{DEFAULT_SOURCE_PATH}",
                 source=source,
             ),
         ),
@@ -200,8 +201,8 @@ def test_path_bearing_report_fields_are_sanitized() -> None:
     )
     output = replace(
         report.output,
-        docx_path=Path("/Users/alice/build/thesis.docx"),
-        pdf_path=Path("/Users/alice/build/thesis.pdf"),
+        docx_path=Path(f"/Users/alice/{DEFAULT_DOCX_PATH}"),
+        pdf_path=Path("/Users/alice/build/document.pdf"),
     )
     report = replace(report, diagnostics=(diagnostic,), output=output)
 

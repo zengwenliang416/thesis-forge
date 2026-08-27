@@ -18,10 +18,12 @@ import {
 } from "../state/diagnostics";
 import { lineSelectionRange } from "../state/editorNavigation";
 import type { ContentSelection } from "../state/preview";
-import type {
-  OpenedProject,
-  ProjectIdentityRef,
-  WorkbenchTransport,
+import {
+  deriveDocxFileName,
+  isMarkdownFileName,
+  type OpenedProject,
+  type ProjectIdentityRef,
+  type WorkbenchTransport,
 } from "../transport/WorkbenchTransport";
 import type {
   BuildErrorKind,
@@ -38,6 +40,7 @@ import {
   type OperationKind,
   type SourceRef,
 } from "../transport/dto";
+import { MANIFEST_FILENAME } from "../transport/constants";
 import { WorkbenchShell } from "./WorkbenchShell";
 
 interface WorkbenchAppProps {
@@ -110,7 +113,7 @@ function reportOutput(
   if (report.outcome !== "succeeded" || !report.output || !source) {
     return null;
   }
-  const fallback = source.fileName.replace(/\.md$/i, ".docx");
+  const fallback = deriveDocxFileName(source.fileName);
   const pathName = report.output.docxPath?.split(/[\\/]/).at(-1);
   return {
     kind: source.kind === "desktop" ? "desktop" : "web-download",
@@ -230,7 +233,7 @@ export function WorkbenchApp({
       }
       const presentation = readSerializedPreviewResult(response.result, true);
       if (!presentation) {
-        throw new Error("无效的 ThesisForge transport 响应");
+        throw new Error("无效的 DocForge transport 响应");
       }
       dispatch({
         type: "diagnosticsLoaded",
@@ -272,14 +275,14 @@ export function WorkbenchApp({
       kind === "build" && source.kind === "desktop"
         ? {
             kind: "desktop" as const,
-            path: source.path.replace(/\.md$/i, ".docx"),
-            fileName: source.fileName.replace(/\.md$/i, ".docx"),
+            path: deriveDocxFileName(source.path),
+            fileName: deriveDocxFileName(source.fileName),
           }
         : kind === "build" && source.kind === "web-workspace"
           ? {
               kind: "web-download" as const,
               workspaceId: source.workspaceId,
-              fileName: source.fileName.replace(/\.md$/i, ".docx"),
+              fileName: deriveDocxFileName(source.fileName),
             }
           : undefined;
     const command: CommandOperation = kind === "validate" ? "preview" : kind;
@@ -381,7 +384,7 @@ export function WorkbenchApp({
         if (kind === "validate") {
           const presentation = readSerializedPreviewResult(response.result, true);
           if (!presentation) {
-            throw new Error("无效的 ThesisForge transport 响应");
+            throw new Error("无效的 DocForge transport 响应");
           }
           dispatch({
             type: "diagnosticsLoaded",
@@ -728,17 +731,19 @@ export function WorkbenchApp({
         throw new Error("当前运行时不支持打开 Markdown 或 DocForge 项目。");
       }
       const manifestFiles = files.filter(
-        (file) => file.name === "thesisforge.yaml",
+        (file) => file.name === MANIFEST_FILENAME,
       );
       const sourceFiles = files.filter((file) =>
-        file.name.toLowerCase().endsWith(".md"),
+        isMarkdownFileName(file.name),
       );
       if (
         files.length !== 2 ||
         manifestFiles.length !== 1 ||
         sourceFiles.length !== 1
       ) {
-        throw new Error("请选择一个 thesisforge.yaml 和一个 Markdown 文件。");
+        throw new Error(
+          `请选择一个 ${MANIFEST_FILENAME} 和一个 Markdown 文件。`,
+        );
       }
       const opened = await transport.openProject({
         manifest: {

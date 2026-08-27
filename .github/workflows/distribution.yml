@@ -87,8 +87,8 @@ jobs:
         run: |
           set -euo pipefail
           dmg_bundle_dir="src-tauri/target/${{ matrix.target }}/release/bundle/dmg"
-          app_bundle_dir="src-tauri/target/${{ matrix.target }}/release/bundle/macos/ThesisForge.app"
-          app_backup_dir="${RUNNER_TEMP}/ThesisForge.app"
+          app_bundle_dir="src-tauri/target/${{ matrix.target }}/release/bundle/macos/DocForge.app"
+          app_backup_dir="${RUNNER_TEMP}/DocForge.app"
           if [[ ! -d "$app_bundle_dir" ]]; then
             echo "::error::macOS app bundle is missing before DMG construction"
             exit 1
@@ -127,7 +127,7 @@ jobs:
           if (-not $msi) {
             throw "Windows MSI artifact is missing"
           }
-          $installLog = Join-Path $env:RUNNER_TEMP "thesisforge-windows-install.log"
+          $installLog = Join-Path $env:RUNNER_TEMP "docforge-windows-install.log"
           $arguments = "/i `"$($msi.FullName)`" /qn /norestart /l*v `"$installLog`""
           $installer = Start-Process msiexec.exe -ArgumentList $arguments -Wait -PassThru
           if ($installer.ExitCode -notin 0, 3010) {
@@ -141,25 +141,25 @@ jobs:
           ) | Where-Object { $_ -and (Test-Path $_) }
           $app = Get-ChildItem $roots -Filter *.exe -Recurse -ErrorAction SilentlyContinue |
             Where-Object {
-              $_.Name -in @("ThesisForge.exe", "thesisforge-desktop.exe") -and
+              $_.Name -in @("DocForge.exe", "docforge-desktop.exe") -and
               $_.FullName -notlike "*\target\*"
             } |
             Select-Object -First 1
           if (-not $app) {
-            throw "Installed ThesisForge executable was not found"
+            throw "Installed DocForge executable was not found"
           }
 
-          $workspace = Join-Path $env:RUNNER_TEMP "thesisforge-windows-native"
+          $workspace = Join-Path $env:RUNNER_TEMP "docforge-windows-native"
           $evidence = Join-Path $env:RUNNER_TEMP "windows-native-evidence"
           New-Item -ItemType Directory -Force -Path $workspace, $evidence | Out-Null
           Copy-Item "examples/bachelor-thesis/*" $workspace -Recurse -Force
-          "THESISFORGE_WINDOWS_APP=$($app.FullName)" |
+          "DOCFORGE_WINDOWS_APP=$($app.FullName)" |
             Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
-          "THESISFORGE_WINDOWS_SOURCE=$(Join-Path $workspace 'thesis.md')" |
+          "DOCFORGE_WINDOWS_SOURCE=$(Join-Path $workspace 'document.md')" |
             Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
-          "THESISFORGE_WINDOWS_EVIDENCE=$evidence" |
+          "DOCFORGE_WINDOWS_EVIDENCE=$evidence" |
             Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
-          "THESISFORGE_WINDOWS_CDP_PORT=9222" |
+          "DOCFORGE_WINDOWS_CDP_PORT=9222" |
             Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
       - name: Run installed Windows native acceptance
         if: runner.os == 'Windows'
@@ -171,9 +171,9 @@ jobs:
               $_.Name -in @("HTTP_PROXY", "HTTPS_PROXY", "ALL_PROXY", "NO_PROXY")
             } |
             Remove-Item
-          $env:THESISFORGE_BLOCK_NETWORK = "1"
+          $env:DOCFORGE_BLOCK_NETWORK = "1"
           $acceptanceLog = Join-Path `
-            $env:THESISFORGE_WINDOWS_EVIDENCE `
+            $env:DOCFORGE_WINDOWS_EVIDENCE `
             "playwright-cdp.log"
           pnpm --dir frontend e2e:tauri:windows 2>&1 |
             Tee-Object -FilePath $acceptanceLog
@@ -186,8 +186,8 @@ jobs:
         shell: pwsh
         run: |
           $ErrorActionPreference = "Continue"
-          $evidence = if ($env:THESISFORGE_WINDOWS_EVIDENCE) {
-            $env:THESISFORGE_WINDOWS_EVIDENCE
+          $evidence = if ($env:DOCFORGE_WINDOWS_EVIDENCE) {
+            $env:DOCFORGE_WINDOWS_EVIDENCE
           } else {
             Join-Path $env:RUNNER_TEMP "windows-native-evidence"
           }
@@ -197,7 +197,7 @@ jobs:
             Get-CimInstance Win32_Process |
               Where-Object {
                 $_.Name -match (
-                  "thesisforge|msedgewebview2"
+                  "docforge|msedgewebview2"
                 )
               } |
               Select-Object Name, ProcessId, ParentProcessId, ExecutablePath,
@@ -217,7 +217,7 @@ jobs:
                 $_.ProviderName -match (
                   "Application Error|Windows Error Reporting|WebView2|Edge"
                 ) -or
-                $_.Message -match "thesisforge|msedgewebview2|WebView2"
+                $_.Message -match "docforge|msedgewebview2|WebView2"
               } |
               Select-Object TimeCreated, Id, LevelDisplayName, ProviderName,
                 Message
@@ -231,7 +231,7 @@ jobs:
           if (-not (Test-Path $cdpEvidence)) {
             $cdpUri = (
               "http://127.0.0.1:{0}/json/version" -f
-              $env:THESISFORGE_WINDOWS_CDP_PORT
+              $env:DOCFORGE_WINDOWS_CDP_PORT
             )
             try {
               Invoke-RestMethod -Uri $cdpUri -TimeoutSec 5 |
@@ -252,29 +252,29 @@ jobs:
           name: windows-native-evidence
           path: |
             ${{ runner.temp }}/windows-native-evidence
-            ${{ runner.temp }}/thesisforge-windows-install.log
+            ${{ runner.temp }}/docforge-windows-install.log
           if-no-files-found: warn
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: thesisforge-web-${{ matrix.target }}
+          name: docforge-web-${{ matrix.target }}
           path: dist/web
           if-no-files-found: warn
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: thesisforge-python-${{ matrix.target }}
+          name: docforge-python-${{ matrix.target }}
           path: dist/python
           if-no-files-found: warn
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: thesisforge-sidecar-${{ matrix.target }}
+          name: docforge-sidecar-${{ matrix.target }}
           path: src-tauri/binaries
           if-no-files-found: warn
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: thesisforge-desktop-${{ matrix.target }}
+          name: docforge-desktop-${{ matrix.target }}
           path: src-tauri/target/${{ matrix.target }}/release/bundle
           if-no-files-found: warn

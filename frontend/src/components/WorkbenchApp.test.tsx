@@ -22,14 +22,14 @@ const finalPreviewMethods = {
 
 const openedDesktopProject: OpenedProject = {
   project: {
-    id: "desktop-thesis",
-    root: "/Users/test/desktop-thesis",
-    manifestPath: "/Users/test/desktop-thesis/thesisforge.yaml",
+    id: "desktop-document",
+    root: "/Users/test/desktop-document",
+    manifestPath: "/Users/test/desktop-document/docforge.yaml",
   },
   source: {
     kind: "desktop",
-    path: "/Users/test/desktop-thesis/thesis.md",
-    fileName: "thesis.md",
+    path: "/Users/test/desktop-document/document.md",
+    fileName: "document.md",
   },
   text: "# 绪论\n",
 };
@@ -153,7 +153,7 @@ describe("WorkbenchApp", () => {
       protocol: PROTOCOL_VERSION,
       requestId: "build-1",
       ok: true,
-      result: { output: { kind: "desktop", name: "thesis.docx" } },
+      result: { output: { kind: "desktop", name: "document.docx" } },
     });
     const desktopTransport: WorkbenchTransport = {
       ...finalPreviewMethods,
@@ -173,12 +173,12 @@ describe("WorkbenchApp", () => {
       status: "populated" as const,
       source: {
         kind: "desktop" as const,
-        name: "thesis.md",
+        name: "document.markdown",
         writable: true,
         reference: {
           kind: "desktop" as const,
-          path: "/Users/test/thesis.md",
-          fileName: "thesis.md",
+          path: "/Users/test/document.markdown",
+          fileName: "document.markdown",
         },
       },
       savedText: "# 绪论\n",
@@ -201,6 +201,11 @@ describe("WorkbenchApp", () => {
         payload: expect.objectContaining({
           source: initialState.source.reference,
           templateId: "bachelor-base",
+          output: {
+            kind: "desktop",
+            path: "/Users/test/document.docx",
+            fileName: "document.docx",
+          },
         }),
       }),
     );
@@ -214,7 +219,7 @@ describe("WorkbenchApp", () => {
         protocol: PROTOCOL_VERSION,
         requestId: "save-1",
         ok: true,
-        result: { source: { kind: "desktop", name: "thesis.md" } },
+        result: { source: { kind: "desktop", name: "document.md" } },
       })
       .mockResolvedValueOnce({
         protocol: PROTOCOL_VERSION,
@@ -240,12 +245,12 @@ describe("WorkbenchApp", () => {
       status: "populated" as const,
       source: {
         kind: "desktop" as const,
-        name: "thesis.md",
+        name: "document.md",
         writable: true,
         reference: {
           kind: "desktop" as const,
-          path: "/Users/test/thesis.md",
-          fileName: "thesis.md",
+          path: "/Users/test/document.md",
+          fileName: "document.md",
         },
       },
       savedText: "# 绪论\n",
@@ -308,12 +313,12 @@ describe("WorkbenchApp", () => {
       status: "dirty" as const,
       source: {
         kind: "desktop" as const,
-        name: "thesis.md",
+        name: "document.md",
         writable: true,
         reference: {
           kind: "desktop" as const,
-          path: "/Users/test/thesis.md",
-          fileName: "thesis.md",
+          path: "/Users/test/document.md",
+          fileName: "document.md",
         },
       },
       savedText: "# Saved\n",
@@ -366,12 +371,12 @@ describe("WorkbenchApp", () => {
       status: "dirty" as const,
       source: {
         kind: "desktop" as const,
-        name: "thesis.md",
+        name: "document.md",
         writable: true,
         reference: {
           kind: "desktop" as const,
-          path: "/Users/test/thesis.md",
-          fileName: "thesis.md",
+          path: "/Users/test/document.md",
+          fileName: "document.md",
         },
       },
       savedText: "# Saved\n",
@@ -433,12 +438,12 @@ describe("WorkbenchApp", () => {
       status: "populated" as const,
       source: {
         kind: "web-workspace" as const,
-        name: "thesis.md",
+        name: "document.MARKDOWN",
         writable: true,
         reference: {
           kind: "web-workspace" as const,
           workspaceId: "a".repeat(32),
-          fileName: "thesis.md",
+          fileName: "document.MARKDOWN",
         },
       },
       savedText: "# 绪论\n",
@@ -460,7 +465,7 @@ describe("WorkbenchApp", () => {
           output: {
             kind: "web-download",
             workspaceId: "a".repeat(32),
-            fileName: "thesis.docx",
+            fileName: "document.docx",
           },
         }),
       }),
@@ -507,12 +512,12 @@ describe("WorkbenchApp", () => {
       status: "dirty" as const,
       source: {
         kind: "desktop" as const,
-        name: "thesis.md",
+        name: "document.md",
         writable: true,
         reference: {
           kind: "desktop" as const,
-          path: "/Users/test/thesis.md",
-          fileName: "thesis.md",
+          path: "/Users/test/document.md",
+          fileName: "document.md",
         },
       },
       savedText: "# Saved\n",
@@ -565,12 +570,12 @@ describe("WorkbenchApp", () => {
       status: "populated" as const,
       source: {
         kind: "desktop" as const,
-        name: "thesis.md",
+        name: "document.md",
         writable: true,
         reference: {
           kind: "desktop" as const,
-          path: "/Users/test/thesis.md",
-          fileName: "thesis.md",
+          path: "/Users/test/document.md",
+          fileName: "document.md",
         },
       },
       savedText: "# 绪论\n",
@@ -606,12 +611,12 @@ describe("WorkbenchApp", () => {
       status: "populated" as const,
       source: {
         kind: "desktop" as const,
-        name: "thesis.md",
+        name: "document.md",
         writable: true,
         reference: {
           kind: "desktop" as const,
-          path: "/Users/test/thesis.md",
-          fileName: "thesis.md",
+          path: "/Users/test/document.md",
+          fileName: "document.md",
         },
       },
       savedText: "# 第一行\n第二行\n第三行\n",
@@ -670,12 +675,12 @@ describe("WorkbenchApp", () => {
       status: "populated" as const,
       source: {
         kind: "desktop" as const,
-        name: "thesis.md",
+        name: "document.md",
         writable: true,
         reference: {
           kind: "desktop" as const,
-          path: "/Users/test/thesis.md",
-          fileName: "thesis.md",
+          path: "/Users/test/document.md",
+          fileName: "document.md",
         },
       },
       savedText: "# 第一行\n第二行\n第三行\n",
@@ -724,12 +729,12 @@ describe("WorkbenchApp", () => {
       status: "populated" as const,
       source: {
         kind: "desktop" as const,
-        name: "thesis.md",
+        name: "document.md",
         writable: true,
         reference: {
           kind: "desktop" as const,
-          path: "/Users/test/thesis.md",
-          fileName: "thesis.md",
+          path: "/Users/test/document.md",
+          fileName: "document.md",
         },
       },
       savedText: "# 绪论\n",
@@ -782,9 +787,9 @@ describe("WorkbenchApp", () => {
       openSource: async () => null,
       openProject: async () => ({
         project: {
-          id: "new-thesis",
+          id: "new-document",
           root: "/Users/test",
-          manifestPath: "/Users/test/thesisforge.yaml",
+          manifestPath: "/Users/test/docforge.yaml",
         },
         source: {
           kind: "desktop",
@@ -832,9 +837,9 @@ describe("WorkbenchApp", () => {
             fileName: "new.md",
           },
           project: {
-            id: "new-thesis",
+            id: "new-document",
             root: "/Users/test",
-            manifestPath: "/Users/test/thesisforge.yaml",
+            manifestPath: "/Users/test/docforge.yaml",
           },
           templateId: null,
         },

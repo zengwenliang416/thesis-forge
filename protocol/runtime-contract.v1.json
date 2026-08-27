@@ -1,0 +1,115 @@
+{
+  "schema": "docforge.runtime-contract-fixture.v1",
+  "identity": {
+    "manifest": "docforge.yaml",
+    "projectSchema": "docforge.project.v1",
+    "source": "document.md",
+    "docx": "build/document.docx",
+    "reviewMarkdown": "review/document.review.md",
+    "reviewMap": "review/document.review-map.json",
+    "workbenchProtocol": "docforge.workbench.v1",
+    "buildReportSchema": "docforge.build-report.v2"
+  },
+  "command": {
+    "protocol": "docforge.workbench.v1",
+    "requestId": "runtime-fixture-inspect",
+    "operation": "inspect",
+    "payload": {
+      "project": {
+        "id": "runtime-fixture",
+        "root": "/runtime-fixture",
+        "manifestPath": "/runtime-fixture/docforge.yaml"
+      },
+      "source": {
+        "kind": "desktop",
+        "path": "/runtime-fixture/document.md",
+        "fileName": "document.md"
+      }
+    }
+  },
+  "obsoleteCommand": {
+    "protocol": "thesisforge.workbench.v1",
+    "requestId": "runtime-fixture-obsolete",
+    "operation": "inspect",
+    "payload": {
+      "project": {
+        "id": "runtime-fixture",
+        "root": "/runtime-fixture",
+        "manifestPath": "/runtime-fixture/docforge.yaml"
+      },
+      "source": {
+        "kind": "desktop",
+        "path": "/runtime-fixture/document.md",
+        "fileName": "document.md"
+      }
+    }
+  },
+  "completedBuildEvent": {
+    "protocol": "docforge.workbench.v1",
+    "requestId": "runtime-fixture-build",
+    "type": "completed",
+    "report": {
+      "schemaVersion": "docforge.build-report.v2",
+      "buildId": "build-runtime-fixture",
+      "intent": "publish",
+      "outcome": "succeeded",
+      "startedAt": "2026-08-26T00:00:00Z",
+      "completedAt": "2026-08-26T00:00:07Z",
+      "stages": [
+        {"name": "parse", "status": "succeeded", "startedAt": null, "completedAt": null},
+        {"name": "validate", "status": "succeeded", "startedAt": null, "completedAt": null},
+        {"name": "compile", "status": "succeeded", "startedAt": null, "completedAt": null},
+        {"name": "render", "status": "succeeded", "startedAt": null, "completedAt": null},
+        {"name": "finalize", "status": "succeeded", "startedAt": null, "completedAt": null},
+        {"name": "postflight", "status": "succeeded", "startedAt": null, "completedAt": null},
+        {"name": "preview", "status": "succeeded", "startedAt": null, "completedAt": null}
+      ],
+      "failedStage": null,
+      "primaryDiagnosticId": null,
+      "diagnostics": [
+        {
+          "id": "runtime-fixture-info",
+          "severity": "info",
+          "category": "project",
+          "code": "TF-PROJECT-RUNTIME-READY",
+          "stage": "parse",
+          "message": "DocForge project loaded.",
+          "source": {
+            "file": "document.md",
+            "startLine": 1,
+            "startColumn": 1,
+            "endLine": 1,
+            "endColumn": 12
+          },
+          "target": null,
+          "suggestion": null,
+          "relatedLocations": [],
+          "details": {
+            "projectId": "runtime-fixture"
+          }
+        }
+      ],
+      "logs": [
+        {
+          "sequence": 0,
+          "stage": "parse",
+          "level": "info",
+          "message": "Project parsed."
+        }
+      ],
+      "output": {
+        "docxPath": "build/document.docx",
+        "pdfPath": "build/document.preview.pdf",
+        "previewStale": false,
+        "successfulBuildId": "build-runtime-fixture",
+        "finalPreview": {
+          "engine": "microsoft-word",
+          "label": "Microsoft Word PDF",
+          "fileName": "document.preview.pdf",
+          "authorizationId": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        }
+      }
+    }
+  },
+  "obsoleteBuildReportSchema": "thesisforge.build-report.v2"
+}

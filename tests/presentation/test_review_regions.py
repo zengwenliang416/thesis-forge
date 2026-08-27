@@ -111,7 +111,12 @@ def _all_region_instructions(tmp_path: Path) -> list[object]:
     asset.parent.mkdir()
     asset.write_bytes(b"png")
     return [
-        CoverInstruction(title="论文标题", author="作者"),
+        CoverInstruction(
+            bindings=(
+                ("metadata.title.zh", "文档标题"),
+                ("metadata.authors", "作者"),
+            )
+        ),
         SectionBreakInstruction(role="front_matter"),
         TocInstruction(entries=(TocEntryInstruction("绪论", 1, "chap_intro"),)),
         HeadingInstruction(

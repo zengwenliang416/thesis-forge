@@ -40,7 +40,7 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 SAMPLE_PACKAGE = REPO_ROOT / "spikes" / "phase0" / "docx-template" / "package-sample"
 SHELL = SAMPLE_PACKAGE / "shell.docx"
 V2_PROJECT = REPO_ROOT / "tests" / "fixtures" / "v2-project"
-SOURCE = V2_PROJECT / "thesis.md"
+SOURCE = V2_PROJECT / "document.md"
 HUT_YAML = (
     REPO_ROOT / "templates" / "schools" / "hunan-university-of-technology" / "master-2026.yaml"
 )
@@ -794,7 +794,7 @@ def test_lint_l5_sample_fixture_passes() -> None:
 
 
 def test_lint_l5_fixture_without_markdown_fails(package_copy: Path) -> None:
-    (package_copy / "fixtures" / "minimal" / "thesis.md").unlink()
+    (package_copy / "fixtures" / "minimal" / "document.md").unlink()
     report = v2.lint_package(package_copy, level="L5")
     failed = [i for i in report.issues if i.code == "fixture-build-failed"]
     assert failed and failed[0].severity == "error"

@@ -1039,7 +1039,7 @@ def test_validate_and_build_do_not_mutate_persisted_source(tmp_path: Path):
 
 def test_open_project_uses_typed_identity_and_editor_snapshots(tmp_path: Path):
     project_root = Path(__file__).resolve().parents[1] / "tests" / "fixtures" / "v2-project"
-    source = (project_root / "thesis.md").resolve()
+    source = (project_root / "document.md").resolve()
     filesystem = _MemoryFileSystem({source: source.read_text(encoding="utf-8")})
     runner = _DeferredTaskRunner()
 
@@ -1081,7 +1081,7 @@ def test_open_project_uses_typed_identity_and_editor_snapshots(tmp_path: Path):
         ProjectRequestIntent.BUILD,
     ]
     assert all(
-        request.project.manifest_path == (project_root / "thesisforge.yaml").resolve()
+        request.project.manifest_path == (project_root / "docforge.yaml").resolve()
         for request in project_service.requests
     )
     assert project_service.requests[1].editor_snapshot == source.read_text(

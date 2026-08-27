@@ -435,7 +435,7 @@ class BuildReport:
     started_at: datetime | None = None
     completed_at: datetime | None = None
 
-    SCHEMA_VERSION: ClassVar[str] = "thesisforge.build-report.v2"
+    SCHEMA_VERSION: ClassVar[str] = "docforge.build-report.v2"
     MAX_LOG_ENTRIES: ClassVar[int] = 500
 
     def __post_init__(self) -> None:

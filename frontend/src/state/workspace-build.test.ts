@@ -4,6 +4,10 @@ import {
   selectWorkspaceActions,
   type WorkspaceState,
 } from "./workspace";
+import {
+  DEFAULT_DOCX_FILENAME,
+  DEFAULT_SOURCE_FILENAME,
+} from "../transport/constants";
 
 const build = { kind: "build" as const, generation: 2 };
 
@@ -13,7 +17,7 @@ function populated(): WorkspaceState {
     status: "populated",
     source: {
       kind: "desktop",
-      name: "thesis.md",
+      name: DEFAULT_SOURCE_FILENAME,
       writable: true,
     },
   };
@@ -129,15 +133,15 @@ describe("workspace build lifecycle", () => {
       operation: build,
       output: {
         kind: "desktop",
-        name: "thesis.docx",
+        name: DEFAULT_DOCX_FILENAME,
         finalPreview: {
           engine: "libreoffice",
           label: "LibreOffice PDF",
-          fileName: "thesis.preview.pdf",
+          fileName: "document.preview.pdf",
         },
       },
     });
-    expect(state.output?.name).toBe("thesis.docx");
+    expect(state.output?.name).toBe(DEFAULT_DOCX_FILENAME);
     expect(state.finalPreview.status).toBe("building");
     expect(state.status).toBe("populated");
     expect(state.operation).toBeNull();
@@ -147,7 +151,7 @@ describe("workspace build lifecycle", () => {
       operation: { kind: "build", generation: 1 },
       output: { kind: "desktop", name: "stale.docx" },
     });
-    expect(stale.output?.name).toBe("thesis.docx");
+    expect(stale.output?.name).toBe(DEFAULT_DOCX_FILENAME);
   });
 
   it("binds resolved PDF bytes to the current build revision only", () => {
@@ -160,11 +164,11 @@ describe("workspace build lifecycle", () => {
       operation: build,
       output: {
         kind: "desktop",
-        name: "thesis.docx",
+        name: DEFAULT_DOCX_FILENAME,
         finalPreview: {
           engine: "libreoffice",
           label: "LibreOffice PDF",
-          fileName: "thesis.preview.pdf",
+          fileName: "document.preview.pdf",
         },
       },
     });
@@ -202,10 +206,10 @@ describe("workspace build lifecycle", () => {
     state = reduceWorkspaceState(state, {
       type: "buildSucceeded",
       operation: build,
-      output: { kind: "desktop", name: "thesis.docx" },
+      output: { kind: "desktop", name: DEFAULT_DOCX_FILENAME },
     });
 
-    expect(state.output?.name).toBe("thesis.docx");
+    expect(state.output?.name).toBe(DEFAULT_DOCX_FILENAME);
     expect(state.finalPreview.status).toBe("unavailable");
     expect(state.finalPreview.message).toContain("DOCX 已生成");
   });

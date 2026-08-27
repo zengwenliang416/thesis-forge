@@ -1,11 +1,11 @@
 [package]
-name = "thesisforge-desktop"
+name = "docforge-desktop"
 version = "0.1.0"
-description = "ThesisForge Tauri 2 desktop shell"
+description = "DocForge Tauri 2 desktop shell"
 edition = "2024"
 
 [lib]
-name = "thesisforge_desktop"
+name = "docforge_desktop"
 crate-type = ["lib", "cdylib", "staticlib"]
 
 [build-dependencies]

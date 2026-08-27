@@ -1,20 +1,27 @@
 import { expect, test } from "@playwright/test";
 import { readFileSync } from "node:fs";
 import type { BuildReport } from "../src/transport/buildEvents";
+import {
+  BUILD_REPORT_SCHEMA_VERSION,
+  DEFAULT_SOURCE_FILENAME,
+  MANIFEST_FILENAME,
+  PROJECT_SCHEMA_VERSION,
+  PROTOCOL_VERSION,
+} from "../src/transport/constants";
 
 const workspaceId = "b".repeat(32);
 const sourceText = "# 绪论\n";
-const manifestText = `schema: thesisforge.project.v2
+const manifestText = `schema: ${PROJECT_SCHEMA_VERSION}
 project:
   id: mocked-acceptance
-  source: thesis.md
+  source: ${DEFAULT_SOURCE_FILENAME}
 template:
   id: example-university-2026
 `;
 const projectIdentity = {
   id: "mocked-acceptance",
-  root: "/workspace/thesis",
-  manifestPath: "/workspace/thesis/thesisforge.yaml",
+  root: "/workspace/document",
+  manifestPath: `/workspace/document/${MANIFEST_FILENAME}`,
 };
 const previewFixture = JSON.parse(
   readFileSync(
@@ -44,7 +51,7 @@ function completedBuildEvent(
   intent: BuildReport["intent"] = "publish",
 ) {
   const report: BuildReport = {
-    schemaVersion: "thesisforge.build-report.v2",
+    schemaVersion: BUILD_REPORT_SCHEMA_VERSION,
     buildId: requestId,
     intent,
     outcome: "succeeded",
@@ -56,7 +63,7 @@ function completedBuildEvent(
     output,
   };
   return {
-    protocol: "thesisforge.workbench.v1",
+    protocol: PROTOCOL_VERSION,
     requestId,
     type: "completed",
     report,
@@ -65,13 +72,13 @@ function completedBuildEvent(
 
 function openedProjectResponse() {
   return {
-    protocol: "thesisforge.workbench.v1",
+    protocol: PROTOCOL_VERSION,
     ok: true,
     project: projectIdentity,
     source: {
       kind: "web-workspace",
       workspaceId,
-      fileName: "thesis.md",
+      fileName: DEFAULT_SOURCE_FILENAME,
     },
     text: sourceText,
   };
@@ -80,12 +87,12 @@ function openedProjectResponse() {
 function projectFiles() {
   return [
     {
-      name: "thesisforge.yaml",
+      name: MANIFEST_FILENAME,
       mimeType: "text/yaml",
       buffer: Buffer.from(manifestText),
     },
     {
-      name: "thesis.md",
+      name: DEFAULT_SOURCE_FILENAME,
       mimeType: "text/markdown",
       buffer: Buffer.from(sourceText),
     },
@@ -104,12 +111,12 @@ test.beforeEach(async ({ page }) => {
       status: 201,
       contentType: "application/json",
       body: JSON.stringify({
-        protocol: "thesisforge.workbench.v1",
+        protocol: PROTOCOL_VERSION,
         ok: true,
         output: {
           kind: "web-download",
           workspaceId: request.source.workspaceId,
-          fileName: `.thesisforge-live-preview-${livePreviewId}.docx`,
+          fileName: `.docforge-live-preview-${livePreviewId}.docx`,
           livePreviewId,
         },
       }),
@@ -120,7 +127,7 @@ test.beforeEach(async ({ page }) => {
       status: 200,
       contentType: "application/json",
       body: JSON.stringify({
-        protocol: "thesisforge.workbench.v1",
+        protocol: PROTOCOL_VERSION,
         ok: true,
       }),
     });
@@ -229,7 +236,7 @@ test("saves with Ctrl+S when the minimum desktop toolbar hides secondary actions
       status: 200,
       contentType: "application/json",
       body: JSON.stringify({
-        protocol: "thesisforge.workbench.v1",
+        protocol: PROTOCOL_VERSION,
         requestId: request.requestId,
         ok: true,
         result: request.operation === "preview" ? acceptedPreview : {},
@@ -278,7 +285,7 @@ test("verifies loading and permission recovery without losing the opened source"
       status: 403,
       contentType: "application/json",
       body: JSON.stringify({
-        protocol: "thesisforge.workbench.v1",
+        protocol: PROTOCOL_VERSION,
         requestId: request.requestId,
         ok: false,
         error: {
@@ -326,7 +333,7 @@ test("verifies populated, dirty, and successful output states with the complete 
       status: 200,
       contentType: "application/json",
       body: JSON.stringify({
-        protocol: "thesisforge.workbench.v1",
+        protocol: PROTOCOL_VERSION,
         requestId: request.requestId,
         ok: true,
         result: request.operation === "preview" ? acceptedPreview : {},
@@ -337,7 +344,7 @@ test("verifies populated, dirty, and successful output states with the complete 
     const request = route.request().postDataJSON() as { requestId: string };
     const events = [
       ...["parse", "validate", "compile", "render", "finalize"].map((stage) => ({
-        protocol: "thesisforge.workbench.v1",
+        protocol: PROTOCOL_VERSION,
         requestId: request.requestId,
         type: "progress",
         stage,

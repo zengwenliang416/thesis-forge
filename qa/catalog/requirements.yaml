@@ -2,7 +2,7 @@
 # 域定义见 docs/update/QUALITY_STRATEGY.md 第 2 节。
 requirements:
   - id: MD-FM-001
-    title: Front Matter 元数据解析与文档类型识别
+    title: 项目 manifest 元数据解析与文档类型识别
     domain: D1
     priority: P0
   - id: MD-FIG-001

@@ -22,12 +22,12 @@ const projectState: WorkspaceState = {
   project: {
     id: "proj-1",
     root: "/home/alice/thesis",
-    manifestPath: "/home/alice/thesis/thesisforge.yaml",
+    manifestPath: "/home/alice/thesis/docforge.yaml",
     name: "毕业论文",
   },
   source: {
     kind: "desktop" as const,
-    name: "thesis.md",
+    name: "document.md",
     writable: true,
   },
 };
@@ -87,7 +87,7 @@ describe("ProductBar project opening", () => {
     expect(input).not.toBeNull();
     expect(input).toHaveAttribute(
       "accept",
-      ".yaml,.yml,.md,text/yaml,text/markdown",
+      ".yaml,.yml,.md,.markdown,text/yaml,text/markdown",
     );
     expect(input).toHaveAttribute("multiple");
   });
@@ -104,14 +104,14 @@ describe("ProductBar project opening", () => {
 
     expect(screen.getByText("毕业论文")).toBeVisible();
     expect(
-      screen.getByText("活动源：thesis.md · 文档已保存"),
+      screen.getByText("活动源：document.md · 文档已保存"),
     ).toBeVisible();
   });
 
   it("keeps showing the source name when only a source is loaded", () => {
     renderProductBar({ ...projectState, project: null });
 
-    expect(screen.getByText("thesis.md")).toBeVisible();
+    expect(screen.getByText("document.md")).toBeVisible();
     expect(screen.getByText("文档已保存")).toBeVisible();
     expect(screen.queryByText(/活动源：/)).toBeNull();
   });
@@ -121,7 +121,7 @@ describe("ProductBar project opening", () => {
 
     expect(screen.getByText("毕业论文")).toBeVisible();
     expect(
-      screen.getByText("活动源：thesis.md · 有未保存修改"),
+      screen.getByText("活动源：document.md · 有未保存修改"),
     ).toBeVisible();
   });
 
@@ -134,10 +134,10 @@ describe("ProductBar project opening", () => {
       onFileSelected,
     });
 
-    const manifest = new File(["name: demo"], "thesisforge.yaml", {
+    const manifest = new File(["name: demo"], "docforge.yaml", {
       type: "text/yaml",
     });
-    const source = new File(["# 绪论\n"], "thesis.md", {
+    const source = new File(["# 绪论\n"], "document.MARKDOWN", {
       type: "text/markdown",
     });
     await user.upload(fileInputRef.current as HTMLInputElement, [
@@ -178,8 +178,8 @@ describe("ProductBar project opening", () => {
           ...projectState.source!,
           reference: {
             kind: "desktop",
-            path: "/home/alice/thesis/thesis.md",
-            fileName: "thesis.md",
+            path: "/home/alice/thesis/document.md",
+            fileName: "document.md",
           },
         },
       },
@@ -194,5 +194,23 @@ describe("ProductBar project opening", () => {
     expect(onTemplateSelected).toHaveBeenCalledWith(
       "example-university-2026",
     );
+  });
+
+  it("shows the selected generic template in the command bar", () => {
+    renderProductBar({
+      ...projectState,
+      templateId: "docforge-standard",
+      source: {
+        ...projectState.source!,
+        reference: {
+          kind: "desktop",
+          path: "/home/alice/thesis/document.md",
+          fileName: "document.md",
+        },
+      },
+    });
+
+    expect(screen.getByLabelText("Word 模板")).toHaveValue("docforge-standard");
+    expect(screen.getByRole("option", { name: "DocForge 通用模板" })).toBeVisible();
   });
 });

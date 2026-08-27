@@ -74,7 +74,7 @@ Keywords: thesis compiler; DOCX; deterministic build
 ## 研究背景 {#sec:background}
 
 已有研究表明，**结构化编译**与*可验证反馈*能够提升论文工程的一致性 [@smith2025]。
-本项目使用 `thesisforge.yaml` 作为入口，普通源码换行
+本项目使用 `docforge.yaml` 作为入口，普通源码换行
 不应在 Word 中产生手动换行，模型流程见[图](#fig:model)。
 
 ![模型总体结构](assets/model.png){#fig:model}
@@ -120,33 +120,38 @@ for epoch in range(epochs):
 # 参考文献
 """
 
-V2_MANIFEST = """schema: thesisforge.project.v2
+V2_MANIFEST = """schema: docforge.project.v1
 
 project:
   id: lo-finalizer-fixture
   language: zh-CN
 
 document:
-  source: thesis.md
+  source: document.md
+  type: academic
 
 metadata:
   title:
-    zh: ThesisForge finalizer V2 fixture
-    en: ThesisForge finalizer V2 fixture
-  author:
+    zh: DocForge finalizer V2 fixture
+    en: DocForge finalizer V2 fixture
+  authors:
+    - name: 张三
+
+academic:
+  student:
     name: 张三
-    student_id: "20260001"
+    id: "20260001"
   institution:
-    university: 示例大学
-    college: 计算机学院
+    name: 示例大学
+    department: 计算机学院
   degree:
     name: 工学硕士
     major: 计算机科学与技术
   advisor:
     name: 李教授
     title: 教授
-  dates:
-    completed: "2026-05"
+  completion:
+    date: "2026-05"
 
 resources:
   root: .
@@ -164,12 +169,12 @@ layout:
 
 output:
   directory: build
-  docx: thesis.docx
+  docx: document.docx
 
 review:
   directory: review
-  markdown: thesis.review.md
-  source_map: thesis.review-map.json
+  markdown: document.review.md
+  source_map: document.review-map.json
 """
 
 V2_BIBLIOGRAPHY = """@article{smith2025,
@@ -214,8 +219,8 @@ def v2_project(tmp_path_factory: pytest.TempPathFactory) -> Path:
     (project_root / "assets").mkdir()
     template_root = project_root / "templates"
     template_root.mkdir()
-    (project_root / "thesisforge.yaml").write_text(V2_MANIFEST, encoding="utf-8")
-    (project_root / "thesis.md").write_text(V2_SOURCE, encoding="utf-8")
+    (project_root / "docforge.yaml").write_text(V2_MANIFEST, encoding="utf-8")
+    (project_root / "document.md").write_text(V2_SOURCE, encoding="utf-8")
     (project_root / "references.bib").write_text(
         V2_BIBLIOGRAPHY,
         encoding="utf-8",
@@ -239,7 +244,7 @@ def _project_request(
         project=ProjectIdentity(
             project_id="lo-finalizer-fixture",
             project_root=project_root,
-            manifest_path=(project_root / "thesisforge.yaml").resolve(),
+            manifest_path=(project_root / "docforge.yaml").resolve(),
         ),
         intent=intent,
         output=ProjectOutput(output.resolve()) if output is not None else None,
@@ -263,7 +268,7 @@ def test_manifest_template_id_controls_default_template_selection(
 ) -> None:
     mutated_project = tmp_path / "missing-template"
     shutil.copytree(v2_project, mutated_project)
-    manifest_path = mutated_project / "thesisforge.yaml"
+    manifest_path = mutated_project / "docforge.yaml"
     manifest_path.write_text(
         manifest_path.read_text(encoding="utf-8").replace(
             "hut-master-2026",

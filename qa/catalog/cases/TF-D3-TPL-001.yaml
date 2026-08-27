@@ -14,11 +14,11 @@ releases:
   - beta
   - ga
 input:
-  project: examples/complete-thesis
-  template: templates/schools/hunan-university-of-technology/master-2026.yaml
+  project: examples/v2-complete-thesis
+  template: templates/schools/example-university/2026.yaml
 steps:
-  - run: thesisforge validate examples/complete-thesis/thesis.md --template <模板>
-  - run: thesisforge build examples/complete-thesis/thesis.md --template <模板> -o <tmp>.docx
+  - run: docforge validate examples/v2-complete-thesis --json
+  - run: docforge build examples/v2-complete-thesis -o <tmp>.docx --report-json <tmp>/build-report.json
 expected:
   exit_code: 0
   diagnostics_errors: 0

@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://thesisforge.local/protocol/build-report.v2.schema.json",
-  "title": "ThesisForge BuildReport v2",
+  "$id": "https://docforge.local/protocol/build-report.v2.schema.json",
+  "title": "DocForge BuildReport v2",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -18,7 +18,7 @@
   ],
   "properties": {
     "schemaVersion": {
-      "const": "thesisforge.build-report.v2"
+      "const": "docforge.build-report.v2"
     },
     "buildId": {
       "type": "string",

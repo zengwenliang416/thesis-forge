@@ -33,7 +33,7 @@ HUT_TEMPLATE = (
 EXAMPLE_TEMPLATE = (
     ROOT / "templates" / "schools" / "example-university" / "2026.yaml"
 )
-CLI = ROOT / ".venv" / "bin" / "thesisforge"
+CLI = ROOT / ".venv" / "bin" / "docforge"
 
 ACCEPTANCE_SOURCE = """# 摘要 {#chap:abstract-zh}
 
@@ -121,8 +121,8 @@ P0 核心能力见[表](#tbl:capabilities)。
 
 ```python {#lst:service title="安全构建服务调用"}
 result = build_service(
-    source="thesisforge.yaml",
-    output="thesis.docx",
+    source="docforge.yaml",
+    output="document.docx",
 )
 ```
 
@@ -147,9 +147,9 @@ result = build_service(
 
 本附录记录完整样例使用的离线命令：
 
-1. thesisforge inspect project
-2. thesisforge validate project
-3. thesisforge build project -o thesis.docx
+1. docforge inspect project
+2. docforge validate project
+3. docforge build project -o document.docx
 
 [^determinism]: 确定性构建指相同输入、模板和依赖版本产生一致的 RenderPlan、编号、引用、字段、章节结构和规范化 OOXML。
 """
@@ -174,33 +174,38 @@ ACCEPTANCE_BIBLIOGRAPHY = """@article{ref-example-1,
 }
 """
 
-ACCEPTANCE_MANIFEST = """schema: thesisforge.project.v2
+ACCEPTANCE_MANIFEST = """schema: docforge.project.v1
 
 project:
   id: {project_id}
   language: zh-CN
 
 document:
-  source: thesis.md
+  source: document.md
+  type: academic
 
 metadata:
   title:
     zh: 面向结构化学术文档的确定性论文编译系统设计
     en: Design of a Deterministic Thesis Compiler for Structured Academic Documents
-  author:
+  authors:
+    - name: 曾文亮
+
+academic:
+  student:
     name: 曾文亮
-    student_id: "2024000001"
+    id: "2024000001"
   institution:
-    university: 湖南工业大学
-    college: 计算机学院
+    name: 湖南工业大学
+    department: 计算机学院
   degree:
     name: 工学硕士
     major: 计算机科学与技术
   advisor:
     name: 指导教师
     title: 教授
-  dates:
-    completed: "2026-06"
+  completion:
+    date: "2026-06"
 
 resources:
   root: .
@@ -213,7 +218,7 @@ render:
 
 output:
   directory: build
-  docx: thesis.docx
+  docx: document.docx
   retain_last_successful_preview: true
 """
 
@@ -312,13 +317,13 @@ def _materialize_project(
     template_data = yaml.safe_load(template_path.read_text(encoding="utf-8"))
     template_id = template_data["id"]
     shutil.copy2(template_path, templates / template_path.name)
-    (project / "thesis.md").write_text(source_text, encoding="utf-8")
+    (project / "document.md").write_text(source_text, encoding="utf-8")
     (project / "references.bib").write_text(
         ACCEPTANCE_BIBLIOGRAPHY,
         encoding="utf-8",
     )
     shutil.copy2(CANONICAL_ASSET, assets / "model.png")
-    (project / "thesisforge.yaml").write_text(
+    (project / "docforge.yaml").write_text(
         ACCEPTANCE_MANIFEST.format(
             project_id=project_name.replace("_", "-"),
             template_id=template_id,
@@ -332,8 +337,8 @@ def _project_inputs(project: Path) -> tuple[Path, ...]:
     template_files = tuple((project / "templates").glob("*.yaml"))
     assert len(template_files) == 1
     return (
-        project / "thesis.md",
-        project / "thesisforge.yaml",
+        project / "document.md",
+        project / "docforge.yaml",
         project / "references.bib",
         project / "assets" / "model.png",
         template_files[0],
@@ -462,8 +467,8 @@ def _write_minimal_source(path: Path, *, template_id: str) -> None:
 """,
         encoding="utf-8",
     )
-    (path.parent / "thesisforge.yaml").write_text(
-        f"""schema: thesisforge.project.v2
+    (path.parent / "docforge.yaml").write_text(
+        f"""schema: docforge.project.v1
 
 project:
   id: acceptance-fixture
@@ -471,12 +476,29 @@ project:
 
 document:
   source: {path.name}
+  type: academic
 
 metadata:
   title:
     zh: Template validation fixture
-  author:
-    name: ThesisForge
+  authors:
+    - name: DocForge
+
+academic:
+  student:
+    name: DocForge
+    id: "20260001"
+  institution:
+    name: 示例大学
+    department: 计算机学院
+  degree:
+    name: 工学硕士
+    major: 计算机科学与技术
+  advisor:
+    name: 指导教师
+    title: 教授
+  completion:
+    date: "2026-06"
 
 render:
   template_id: {template_id}
@@ -961,7 +983,7 @@ def test_complete_example_repeated_builds_have_identical_plan_and_word_ooxml(
     first = tmp_path / "first.docx"
     second = tmp_path / "second.docx"
 
-    source = project / "thesis.md"
+    source = project / "document.md"
     assert _render_plan_snapshot(source) == _render_plan_snapshot(source)
     first_result = _run_cli(tmp_path, "build", str(project), "-o", str(first))
     second_result = _run_cli(tmp_path, "build", str(project), "-o", str(second))
@@ -1060,9 +1082,9 @@ def test_complete_example_two_templates_change_style_not_semantics(tmp_path: Pat
         project_name="alternate-project",
     )
 
-    hut_plan = _render_plan_snapshot(hut_project / "thesis.md")
+    hut_plan = _render_plan_snapshot(hut_project / "document.md")
     alternate_plan = _render_plan_snapshot(
-        alternate_project / "thesis.md",
+        alternate_project / "document.md",
     )
     assert hut_plan == alternate_plan
 
@@ -1127,10 +1149,10 @@ def test_same_list_markdown_uses_hut_and_default_template_policies_offline(
     input_paths = _project_inputs(hut_project) + _project_inputs(example_project)
     before = {path: _digest(path) for path in input_paths}
 
-    assert _render_plan_snapshot(
-        hut_project / "thesis.md",
-    ) == _render_plan_snapshot(
-        example_project / "thesis.md",
+    hut_plan = _render_plan_snapshot(hut_project / "document.md")
+    example_plan = _render_plan_snapshot(example_project / "document.md")
+    assert tuple(node for node in hut_plan["nodes"] if node[0] == "list") == tuple(
+        node for node in example_plan["nodes"] if node[0] == "list"
     )
 
     for project, output in (
@@ -1284,10 +1306,10 @@ def test_hut_template_contains_school_values_without_renderer_hardcoding():
     assert template.sections.main.footer.default.page_number is not None
     assert template.sections.main.footer.default.page_number.include_total is False
     assert [item.field or item.text for item in template.cover.items[:4]] == [
-        "university.name",
+        "academic.institution.name",
         "硕士学位论文",
-        "thesis.title",
-        "thesis.title_en",
+        "metadata.title.zh",
+        "metadata.title.en",
     ]
     assert template.cover.items[0].style.font is not None
     assert template.cover.items[0].style.font.east_asia == "黑体"

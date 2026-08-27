@@ -1,6 +1,6 @@
 {
-  "schema": "thesisforge/visual-baseline-v1",
-  "source": "thesis-final-auto.pdf（examples/complete-thesis + templates/schools/hunan-university-of-technology/master-2026.yaml，final-auto 后 soffice --convert-to pdf）",
+  "schema": "docforge/visual-baseline-v1",
+  "source": "document-final-auto.pdf（examples/v2-complete-thesis + templates/schools/hunan-university-of-technology/master-2026.yaml，final-auto 后 soffice --convert-to pdf）",
   "page_count": 12,
   "text_hashes": [
     "1d9176a74aa365536f31edb60c0cb4c326b2ba844112135d7cf2b17f266a5d1d",
@@ -40,7 +40,7 @@
   },
   "change_log": [
     {
-      "reason": "Alpha gate 首建：complete-thesis + HUT master-2026 final-auto 产物",
+      "reason": "Alpha gate 首建：v2-complete-thesis + HUT master-2026 final-auto 产物",
       "reviewer": "zwl",
       "issue": ""
     }

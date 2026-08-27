@@ -1,4 +1,4 @@
-# ThesisForge Template Package v2 — Phase 0 最小样例
+# DocForge Template Package v2 — Phase 0 最小样例
 # 这是 spike 样例，不是正式模板；用于验证「YAML + reference.docx + shell.docx」路线。
 schema_version: 2
 id: hunan-university-of-technology.master.2026.sample
@@ -8,7 +8,7 @@ language: zh-CN
 status: draft
 
 compatibility:
-  thesisforge: ">=0.1,<1.0"
+  docforge: ">=0.1,<1.0"
   document_types:
     - master_thesis
   target_apps:

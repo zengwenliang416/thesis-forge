@@ -10,6 +10,7 @@ import type {
   FinalPreviewDescriptor,
   ResolvedFinalPreview,
 } from "./finalPreview";
+import { MANIFEST_FILENAME } from "./constants";
 
 export interface RuntimeCapabilities {
   nativePaths: boolean;
@@ -88,6 +89,18 @@ function isNonEmptyString(value: unknown): value is string {
   return typeof value === "string" && value.length > 0;
 }
 
+const MARKDOWN_FILENAME_PATTERN = /\.(?:md|markdown)$/i;
+
+export const MARKDOWN_FILE_ACCEPT = ".md,.markdown" as const;
+
+export function isMarkdownFileName(fileName: string): boolean {
+  return MARKDOWN_FILENAME_PATTERN.test(fileName);
+}
+
+export function deriveDocxFileName(fileName: string): string {
+  return fileName.replace(MARKDOWN_FILENAME_PATTERN, ".docx");
+}
+
 export function readProjectIdentity(value: unknown): ProjectIdentityRef {
   if (
     !isObject(value) ||
@@ -96,7 +109,7 @@ export function readProjectIdentity(value: unknown): ProjectIdentityRef {
     !isNonEmptyString(value.root) ||
     !isNonEmptyString(value.manifestPath)
   ) {
-    throw new Error("无效的 ThesisForge project 标识");
+    throw new Error("无效的 DocForge project 标识");
   }
   return {
     id: value.id,
@@ -115,13 +128,13 @@ export function readProjectFileSnapshot(
     !isNonEmptyString(value.fileName) ||
     typeof value.text !== "string"
   ) {
-    throw new Error(`无效的 ThesisForge ${role} 快照`);
+    throw new Error(`无效的 DocForge ${role} 快照`);
   }
-  if (role === "manifest" && value.fileName !== "thesisforge.yaml") {
-    throw new Error("ThesisForge project manifest 必须是 thesisforge.yaml");
+  if (role === "manifest" && value.fileName !== MANIFEST_FILENAME) {
+    throw new Error(`DocForge project manifest 必须是 ${MANIFEST_FILENAME}`);
   }
-  if (role === "source" && !value.fileName.toLowerCase().endsWith(".md")) {
-    throw new Error("ThesisForge project source 必须是 Markdown 文件");
+  if (role === "source" && !isMarkdownFileName(value.fileName)) {
+    throw new Error("DocForge project source 必须是 Markdown 文件");
   }
   return {
     fileName: value.fileName,
@@ -134,7 +147,7 @@ export function readOpenProjectInput(value: unknown): OpenProjectInput {
     !isObject(value) ||
     !hasOnlyKeys(value, ["manifest", "source"])
   ) {
-    throw new Error("无效的 ThesisForge project 输入");
+    throw new Error("无效的 DocForge project 输入");
   }
   return {
     manifest: readProjectFileSnapshot(value.manifest, "manifest"),
@@ -144,7 +157,7 @@ export function readOpenProjectInput(value: unknown): OpenProjectInput {
 
 function readSourceRef(value: unknown): ProjectSourceRef {
   if (!isObject(value)) {
-    throw new Error("无效的 ThesisForge project 响应");
+    throw new Error("无效的 DocForge project 响应");
   }
   if (value.kind === "desktop") {
     if (
@@ -152,7 +165,7 @@ function readSourceRef(value: unknown): ProjectSourceRef {
       !isNonEmptyString(value.path) ||
       !isNonEmptyString(value.fileName)
     ) {
-      throw new Error("无效的 ThesisForge project 响应");
+      throw new Error("无效的 DocForge project 响应");
     }
     return { kind: "desktop", path: value.path, fileName: value.fileName };
   }
@@ -162,7 +175,7 @@ function readSourceRef(value: unknown): ProjectSourceRef {
       !isNonEmptyString(value.workspaceId) ||
       !isNonEmptyString(value.fileName)
     ) {
-      throw new Error("无效的 ThesisForge project 响应");
+      throw new Error("无效的 DocForge project 响应");
     }
     return {
       kind: "web-workspace",
@@ -170,7 +183,7 @@ function readSourceRef(value: unknown): ProjectSourceRef {
       fileName: value.fileName,
     };
   }
-  throw new Error("无效的 ThesisForge project 响应");
+  throw new Error("无效的 DocForge project 响应");
 }
 
 export function readOpenedProject(value: unknown): OpenedProject {
@@ -179,7 +192,7 @@ export function readOpenedProject(value: unknown): OpenedProject {
     !hasOnlyKeys(value, ["project", "source", "text"]) ||
     typeof value.text !== "string"
   ) {
-    throw new Error("无效的 ThesisForge project 响应");
+    throw new Error("无效的 DocForge project 响应");
   }
   return {
     project: readProjectIdentity(value.project),

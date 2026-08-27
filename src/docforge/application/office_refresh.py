@@ -250,7 +250,7 @@ def _automatic_refresh_enabled(
     environ: Mapping[str, str] | None = None,
 ) -> bool:
     active_environ = os.environ if environ is None else environ
-    value = active_environ.get("THESISFORGE_OFFICE_REFRESH", "auto")
+    value = active_environ.get("DOCFORGE_OFFICE_REFRESH", "auto")
     return value.strip().lower() not in {"0", "false", "no", "off", "disabled"}
 
 
@@ -278,7 +278,7 @@ def _platform_candidates(
     environ: Mapping[str, str],
 ) -> tuple[Path, ...]:
     candidates: list[Path] = []
-    override = environ.get("THESISFORGE_LIBREOFFICE")
+    override = environ.get("DOCFORGE_LIBREOFFICE")
     if override:
         candidates.append(Path(override))
 
@@ -342,7 +342,7 @@ def discover_libreoffice_python(
 ) -> Path | None:
     active_environ = os.environ if environ is None else environ
     candidates: list[Path] = []
-    override = active_environ.get("THESISFORGE_LIBREOFFICE_PYTHON")
+    override = active_environ.get("DOCFORGE_LIBREOFFICE_PYTHON")
     if override:
         candidates.append(Path(override))
 
@@ -613,11 +613,11 @@ def _run_libreoffice_refresh(
 ) -> None:
     temporary_root = _libreoffice_temporary_root()
     with tempfile.TemporaryDirectory(
-        prefix="thesisforge-lo-",
+        prefix="docforge-lo-",
         dir=temporary_root,
     ) as profile_name:
         profile_path = Path(profile_name).resolve()
-        pipe_name = f"thesisforge_{uuid.uuid4().hex}"
+        pipe_name = f"docforge_{uuid.uuid4().hex}"
         connection_timeout = max(1.0, timeout_seconds - 10.0)
         command = (
             str(executable),

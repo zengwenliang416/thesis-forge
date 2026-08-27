@@ -8,14 +8,15 @@
 
 ```text
 figure-reference/
-├── thesis.md           # 论文源文件（front matter + 两章 + 摘要/参考文献/致谢）
+├── docforge.yaml       # 项目入口、元数据、资源和模板选择
+├── document.md         # 论文源文件（两章 + 摘要/参考文献/致谢）
 ├── references.bib      # 最小 BibTeX（2 条，均被正文引用）
 └── images/             # 纯 stdlib 生成的小 PNG（见下）
     ├── pipeline.png    # 96x64 RGB，被 fig:pipeline 引用
     └── dashboard.png   # 96x64 RGB，被 fig:dashboard 引用
 ```
 
-`thesis.md` 覆盖的语义对象：
+`document.md` 覆盖的语义对象：
 
 - 2 张图：`fig:pipeline`（第一章）、`fig:dashboard`（第二章），验证按章编号
   （`SEQ TF_Figure_1` / `SEQ TF_Figure_2`）；
@@ -27,9 +28,8 @@ figure-reference/
 - 1 个脚注（`fixture-note`）；
 - 摘要 / 关键词（`chap:abstract-zh`）、参考文献、致谢特殊章节。
 
-模板使用仓库既有 `templates/schools/example-university/2026.yaml`
-（front matter 中 `render.template_id: example-university-2026`，测试亦显式
-传入模板路径）。
+模板使用仓库既有 `templates/schools/example-university/2026.yaml`，由
+`docforge.yaml` 中的 `render.template_id: example-university-2026` 选择。
 
 ## 图片生成方式
 

@@ -1,10 +1,11 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import type { BuildReport } from "../transport/buildEvents";
+import { BUILD_REPORT_SCHEMA_VERSION } from "../transport/constants";
 import { BuildOutputPanel } from "./BuildOutputPanel";
 
 const report: BuildReport = {
-  schemaVersion: "thesisforge.build-report.v2",
+  schemaVersion: BUILD_REPORT_SCHEMA_VERSION,
   buildId: "build-42",
   intent: "publish",
   outcome: "failed",
@@ -26,7 +27,7 @@ const report: BuildReport = {
       stage: "validate",
       message: "引用目标不存在",
       source: {
-        file: "thesis.md",
+        file: "document.md",
         startLine: 12,
         startColumn: 3,
         endLine: 12,
@@ -67,7 +68,7 @@ const report: BuildReport = {
   ],
   output: {
     docxPath: null,
-    pdfPath: "build/thesis.preview.pdf",
+    pdfPath: "build/document.preview.pdf",
     previewStale: true,
     successfulBuildId: "build-41",
   },
@@ -87,7 +88,7 @@ describe("BuildOutputPanel", () => {
     );
     expect(screen.getByText("TF-SOURCE-001")).toBeVisible();
     expect(screen.getByText("引用目标不存在")).toBeVisible();
-    expect(screen.getByText("thesis.md:12:3")).toBeVisible();
+    expect(screen.getByText("document.md:12:3")).toBeVisible();
     expect(screen.getByText("补充对应的图或修正引用目标。")).toBeVisible();
     expect(screen.getByRole("button", { name: "复制诊断" })).toBeVisible();
     expect(screen.getByRole("status")).toHaveTextContent("上一次成功预览");

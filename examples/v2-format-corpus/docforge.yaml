@@ -1,30 +1,39 @@
-schema: thesisforge.project.v2
+schema: docforge.project.v1
 
 project:
   id: v2-format-corpus
   language: zh-CN
 
 document:
-  source: thesis.md
+  source: document.md
+  type: academic
 
 metadata:
   title:
-    zh: ThesisForge V2 格式语料验收
-    en: ThesisForge V2 Format Corpus Acceptance
-  author:
+    zh: DocForge 格式语料验收
+    en: DocForge Format Corpus Acceptance
+  authors:
+    - name: 张三
+  organization: 示例大学
+  keywords:
+    - 格式语料
+    - 文档编译
+
+academic:
+  student:
     name: 张三
-    student_id: "20260002"
+    id: "20260002"
   institution:
-    university: 示例大学
-    college: 计算机学院
+    name: 示例大学
+    department: 计算机学院
   degree:
     name: 工学硕士
     major: 文档工程
   advisor:
     name: 李教授
     title: 教授
-  dates:
-    completed: "2026-08"
+  completion:
+    date: "2026-08"
 
 resources:
   root: .
@@ -44,10 +53,10 @@ layout:
 
 output:
   directory: build
-  docx: thesis.docx
+  docx: document.docx
   retain_last_successful_preview: true
 
 review:
   directory: review
-  markdown: thesis.review.md
-  source_map: thesis.review-map.json
+  markdown: document.review.md
+  source_map: document.review-map.json

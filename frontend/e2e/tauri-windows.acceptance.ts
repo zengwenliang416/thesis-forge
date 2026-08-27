@@ -12,16 +12,16 @@ function requireEnvironment(name: string): string {
   return value;
 }
 
-const sourcePath = requireEnvironment("THESISFORGE_WINDOWS_SOURCE");
-const evidenceDirectory = requireEnvironment("THESISFORGE_WINDOWS_EVIDENCE");
-const appBinaryPath = requireEnvironment("THESISFORGE_WINDOWS_APP");
-const cdpPort = Number(process.env.THESISFORGE_WINDOWS_CDP_PORT ?? "9222");
+const sourcePath = requireEnvironment("DOCFORGE_WINDOWS_SOURCE");
+const evidenceDirectory = requireEnvironment("DOCFORGE_WINDOWS_EVIDENCE");
+const appBinaryPath = requireEnvironment("DOCFORGE_WINDOWS_APP");
+const cdpPort = Number(process.env.DOCFORGE_WINDOWS_CDP_PORT ?? "9222");
 
 if (!Number.isInteger(cdpPort) || cdpPort < 1024 || cdpPort > 65_535) {
-  throw new Error(`Invalid THESISFORGE_WINDOWS_CDP_PORT: ${cdpPort}`);
+  throw new Error(`Invalid DOCFORGE_WINDOWS_CDP_PORT: ${cdpPort}`);
 }
 
-const outputPath = sourcePath.replace(/\.md$/i, ".docx");
+const outputPath = sourcePath.replace(/\.(?:md|markdown)$/i, ".docx");
 const marker = "<!-- windows native acceptance -->";
 const cdpEndpoint = `http://127.0.0.1:${cdpPort}`;
 
@@ -53,7 +53,7 @@ async function waitForCdp(
   while (Date.now() < deadline) {
     if (child.exitCode !== null) {
       throw new Error(
-        `Installed ThesisForge exited before CDP was ready: ${child.exitCode}`,
+        `Installed DocForge exited before CDP was ready: ${child.exitCode}`,
       );
     }
     try {
@@ -74,7 +74,7 @@ async function waitForCdp(
     }
     await new Promise((resolve) => setTimeout(resolve, 500));
   }
-  throw new Error(`Installed ThesisForge CDP endpoint was not ready: ${lastError}`);
+  throw new Error(`Installed DocForge CDP endpoint was not ready: ${lastError}`);
 }
 
 async function waitForWorkbenchPage(browser: Browser): Promise<Page> {
@@ -93,7 +93,7 @@ async function waitForWorkbenchPage(browser: Browser): Promise<Page> {
     }
     await new Promise((resolve) => setTimeout(resolve, 250));
   }
-  throw new Error("Connected WebView2 target did not render the ThesisForge workbench");
+  throw new Error("Connected WebView2 target did not render the DocForge workbench");
 }
 
 async function waitForSavedSource(): Promise<void> {
@@ -124,7 +124,7 @@ function captureWindowsProcesses(child: ChildProcess): Record<string, unknown> {
       "Where-Object { " +
       "$_.ProcessId -eq $rootPid -or " +
       "$_.ParentProcessId -eq $rootPid -or " +
-      "$_.Name -match 'thesisforge|msedgewebview2' " +
+      "$_.Name -match 'docforge|msedgewebview2' " +
       "} | Select-Object Name, ProcessId, ParentProcessId, ExecutablePath, " +
       "CommandLine, CreationDate)",
     "$processes | ConvertTo-Json -Depth 4 -Compress",
@@ -258,9 +258,9 @@ async function main(): Promise<void> {
   const app = spawn(appBinaryPath, [], {
     env: {
       ...process.env,
-      THESISFORGE_BLOCK_NETWORK: "1",
-      THESISFORGE_WINDOWS_CDP_PORT: String(cdpPort),
-      THESISFORGE_WINDOWS_ACCEPTANCE_SOURCE: sourcePath,
+      DOCFORGE_BLOCK_NETWORK: "1",
+      DOCFORGE_WINDOWS_CDP_PORT: String(cdpPort),
+      DOCFORGE_WINDOWS_ACCEPTANCE_SOURCE: sourcePath,
     },
     stdio: ["pipe", "pipe", "pipe"],
     windowsHide: false,
@@ -363,7 +363,7 @@ async function main(): Promise<void> {
     await progress.getByText("构建完成", { exact: false }).waitFor({
       timeout: 90_000,
     });
-    assert.match(await page.getByLabel("输出结果").innerText(), /thesis\.docx/);
+    assert.match(await page.getByLabel("输出结果").innerText(), /document\.docx/);
 
     const output = await readFile(outputPath);
     assert.equal(output.subarray(0, 2).toString("ascii"), "PK");

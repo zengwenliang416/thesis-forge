@@ -11,6 +11,99 @@ page:
     left: 30mm
     right: 25mm
 
+cover:
+  items:
+    - field: academic.institution.name
+      required: true
+      style:
+        font:
+          east_asia: 黑体
+          latin: Times New Roman
+        size: 22pt
+        bold: true
+        alignment: center
+        space_after: 18pt
+    - text: 本科毕业论文
+      style:
+        font:
+          east_asia: 黑体
+          latin: Times New Roman
+        size: 20pt
+        bold: true
+        alignment: center
+        space_after: 30pt
+    - field: metadata.title.zh
+      required: true
+      style:
+        font:
+          east_asia: 黑体
+          latin: Times New Roman
+        size: 20pt
+        bold: true
+        alignment: center
+        space_after: 12pt
+    - field: metadata.title.en
+      style:
+        font:
+          east_asia: 宋体
+          latin: Times New Roman
+        size: 14pt
+        alignment: center
+        space_after: 30pt
+    - field: academic.institution.department
+      required: true
+      prefix: "院系："
+      style:
+        size: 12pt
+        alignment: center
+        space_after: 6pt
+    - field: academic.degree.name
+      required: true
+      prefix: "学位："
+      style:
+        size: 12pt
+        alignment: center
+        space_after: 6pt
+    - field: academic.degree.major
+      required: true
+      prefix: "专业："
+      style:
+        size: 12pt
+        alignment: center
+        space_after: 6pt
+    - field: academic.student.name
+      required: true
+      prefix: "学生："
+      style:
+        size: 12pt
+        alignment: center
+        space_after: 6pt
+    - field: academic.student.id
+      required: true
+      prefix: "学号："
+      style:
+        size: 12pt
+        alignment: center
+        space_after: 6pt
+    - field: academic.advisor.name
+      required: true
+      prefix: "指导教师："
+      style:
+        size: 12pt
+        alignment: center
+        space_after: 6pt
+    - field: academic.advisor.title
+      prefix: "导师职称："
+      style:
+        size: 12pt
+        alignment: center
+        space_after: 6pt
+    - field: academic.completion.date
+      required: true
+      style:
+        size: 12pt
+        alignment: center
+
 body:
   font:
     east_asia: 宋体

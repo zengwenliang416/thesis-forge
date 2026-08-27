@@ -13,7 +13,7 @@ page:
 
 cover:
   items:
-    - field: university.name
+    - text: 项目建设方案
       style:
         font:
           east_asia: 黑体
@@ -22,7 +22,8 @@ cover:
         bold: true
         alignment: center
         space_after: 30pt
-    - field: thesis.title
+    - field: metadata.title.zh
+      required: true
       style:
         font:
           east_asia: 黑体
@@ -34,7 +35,7 @@ cover:
         line_spacing:
           type: fixed
           value: 32pt
-    - field: university.college
+    - field: metadata.organization
       prefix: "编制部门："
       style:
         font:
@@ -45,7 +46,7 @@ cover:
         left_indent: 42mm
         first_line_indent: 0pt
         space_after: 8pt
-    - field: author.student_id
+    - field: metadata.version
       prefix: "文档版本："
       style:
         font:
@@ -56,7 +57,7 @@ cover:
         left_indent: 42mm
         first_line_indent: 0pt
         space_after: 8pt
-    - field: advisor.name
+    - field: metadata.authors
       prefix: "项目负责人："
       style:
         font:
@@ -67,7 +68,7 @@ cover:
         left_indent: 42mm
         first_line_indent: 0pt
         space_after: 8pt
-    - field: dates.completed
+    - field: metadata.date
       prefix: "编制日期："
       style:
         font:

@@ -17,19 +17,12 @@ from zipfile import ZipFile
 
 import pytest
 
-from docforge.core.compiler import compile_document
-from docforge.core.parser_backend import create_parser_backend
+from docforge.application import preview_service
 from docforge.renderers.docx import DocxRenderer
-from docforge.templates import load_template
 
 ROOT = Path(__file__).resolve().parents[1]
 TOOLS_DIR = ROOT / "qa" / "tools"
-EXAMPLE_SOURCE = ROOT / "tests" / "fixtures" / "v2-project" / "thesis.md"
-HUT_TEMPLATE = (
-    ROOT / "templates" / "schools" / "hunan-university-of-technology" / "master-2026.yaml"
-)
-PARSER = create_parser_backend()
-
+EXAMPLE_SOURCE = ROOT / "tests" / "fixtures" / "v2-project" / "document.md"
 EXPECTED_CHECKS = {
     "zip_integrity",
     "content_types",
@@ -70,9 +63,9 @@ no_repair_open = _load_tool("no_repair_open")
 def sample_docx(tmp_path_factory: pytest.TempPathFactory) -> Path:
     """用项目自身构建流程生成真实 docx 作为被测样本。"""
     output = tmp_path_factory.mktemp("qa-sample") / "sample.docx"
-    document = PARSER.parse_file(EXAMPLE_SOURCE)
-    template = load_template(HUT_TEMPLATE)
-    DocxRenderer().render(compile_document(document, template=template), output)
+    preview = preview_service(EXAMPLE_SOURCE)
+    assert preview.plan is not None, preview.issues
+    DocxRenderer().render(preview.plan, output)
     return output
 
 

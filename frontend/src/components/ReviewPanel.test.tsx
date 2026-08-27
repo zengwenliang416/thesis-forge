@@ -11,7 +11,7 @@ function stateWithBlocks(blocks: SerializedPreviewBlock[]): WorkspaceState {
     status: "populated",
     source: {
       kind: "desktop",
-      name: "thesis.md",
+      name: "document.md",
       writable: true,
     },
     preview: {
@@ -451,7 +451,7 @@ describe("ReviewPanel", () => {
             {
               type: "hyperlink",
               text: "本地文件 {#link:raw}",
-              destination: "/Volumes/secret/thesis.md",
+              destination: "/Volumes/secret/document.md",
             },
             {
               type: "hyperlink",

@@ -20,7 +20,7 @@ when:
 
 concurrency:
   limit: 1
-  group: thesis-forge-quality
+  group: docforge-quality
 
 steps:
   - name: python-quality
@@ -34,9 +34,10 @@ steps:
       - .venv/bin/python -m pip install --require-hashes -r requirements/ci-python312.txt
       - .venv/bin/python -m pip install --no-deps --no-build-isolation -e .
       - .venv/bin/python -m pip check
+      - .venv/bin/python scripts/check_facticity.py
       - .venv/bin/python -m ruff check src tests qa spikes scripts
       - .venv/bin/python -m pytest tests/ -q
-      - .venv/bin/python qa/tools/parser_diff.py examples/v2-format-corpus/thesis.md
+      - .venv/bin/python qa/tools/parser_diff.py examples/v2-format-corpus/document.md
       - .venv/bin/python qa/tools/build_catalog.py
       - .venv/bin/python -m build --no-isolation --outdir dist/python
       - .venv/bin/python scripts/verify_distribution.py --dist-dir dist/python

@@ -4,6 +4,7 @@ import type {
   WorkspaceActions,
   WorkspaceState,
 } from "../state/workspace";
+import { MARKDOWN_FILE_ACCEPT } from "../transport/WorkbenchTransport";
 
 interface ProductBarProps {
   state: WorkspaceState;
@@ -62,7 +63,7 @@ export function ProductBar({
           ref={fileInputRef}
           className="visually-hidden"
           type="file"
-          accept=".yaml,.yml,.md,text/yaml,text/markdown"
+          accept={`.yaml,.yml,${MARKDOWN_FILE_ACCEPT},text/yaml,text/markdown`}
           multiple
           tabIndex={-1}
           onChange={(event) => {
@@ -158,6 +159,7 @@ export function TemplateSelector({
         onChange={(event) => onSelected(event.currentTarget.value || null)}
       >
         <option value="">使用项目声明模板</option>
+        <option value="docforge-standard">DocForge 通用模板</option>
         <option value="bachelor-base">基础 Word 模板</option>
         <option value="example-university-2026">示例大学 2026 模板</option>
       </select>

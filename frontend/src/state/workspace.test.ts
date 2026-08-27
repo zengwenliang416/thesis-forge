@@ -6,6 +6,7 @@ import {
   type WorkspaceEvent,
   type WorkspaceState,
 } from "./workspace";
+import { DEFAULT_SOURCE_FILENAME } from "../transport/constants";
 
 describe("workspace state parity", () => {
   it("matches the shared desktop source lifecycle fixture", () => {
@@ -48,7 +49,7 @@ describe("workspace state parity", () => {
       status: "dirty" as const,
       source: {
         kind: "desktop" as const,
-        name: "thesis.md",
+        name: DEFAULT_SOURCE_FILENAME,
         writable: true,
       },
       savedText: "# Saved\n",
@@ -81,7 +82,7 @@ describe("workspace state parity", () => {
       status: "populated" as const,
       source: {
         kind: "desktop" as const,
-        name: "thesis.md",
+        name: DEFAULT_SOURCE_FILENAME,
         writable: true,
       },
     };

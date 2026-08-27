@@ -19,7 +19,7 @@ const readyState: WorkspaceState = {
   status: "populated" as const,
   source: {
     kind: "desktop" as const,
-    name: "thesis.md",
+    name: "document.md",
     writable: true,
   },
   outline: presentation.outline,
@@ -316,7 +316,7 @@ describe("renderer-neutral preview panels", () => {
             descriptor: {
               engine: "libreoffice",
               label: "LibreOffice PDF",
-              fileName: "thesis.preview.pdf",
+              fileName: "document.preview.pdf",
               authorizationId: "b".repeat(32),
             },
             bytes: new Uint8Array([37, 80, 68, 70, 45]),
@@ -356,7 +356,7 @@ describe("renderer-neutral preview panels", () => {
             descriptor: {
               engine: "microsoft-word",
               label: "Microsoft Word PDF",
-              fileName: "thesis.pdf",
+              fileName: "document.pdf",
               authorizationId: "c".repeat(32),
             },
             bytes: new Uint8Array([37, 80, 68, 70, 45]),

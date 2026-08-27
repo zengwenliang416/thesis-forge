@@ -116,7 +116,7 @@ def test_http_build_stream_is_incremental_and_cancelable(tmp_path: Path):
     assert remaining[0]["type"] == "completed"
     assert "error" not in remaining[0]
     report = remaining[0]["report"]
-    assert report["schemaVersion"] == "thesisforge.build-report.v2"
+    assert report["schemaVersion"] == "docforge.build-report.v2"
     assert report["outcome"] == "canceled"
     assert report["failedStage"] == "validate"
     assert report["primaryDiagnosticId"] == "build-error-1"
@@ -139,7 +139,7 @@ def test_http_dispatch_preserves_project_identity_snapshot_and_output(
 
     project_root = (tmp_path / "project").resolve()
     project_root.mkdir()
-    manifest = project_root / "thesisforge.yaml"
+    manifest = project_root / "docforge.yaml"
     payload = {
         "project": {
             "id": "http-fixture",
@@ -150,7 +150,7 @@ def test_http_dispatch_preserves_project_identity_snapshot_and_output(
         "output": {
             "kind": "web-download",
             "workspaceId": "a" * 32,
-            "fileName": "thesis.docx",
+            "fileName": "document.docx",
             "downloadId": "a" * 32,
         },
     }
@@ -193,7 +193,7 @@ def test_http_rejects_malformed_project_payload(tmp_path: Path):
                         "project": {
                             "id": "http-fixture",
                             "root": 42,
-                            "manifestPath": str(tmp_path / "thesisforge.yaml"),
+                            "manifestPath": str(tmp_path / "docforge.yaml"),
                         }
                     },
                 },
@@ -213,12 +213,12 @@ def test_http_rejects_malformed_project_payload(tmp_path: Path):
         {
             "id": "   ",
             "root": "/tmp/project",
-            "manifestPath": "/tmp/project/thesisforge.yaml",
+            "manifestPath": "/tmp/project/docforge.yaml",
         },
         {
             "id": "http-fixture",
             "root": "relative/project",
-            "manifestPath": "relative/project/thesisforge.yaml",
+            "manifestPath": "relative/project/docforge.yaml",
         },
     ],
 )
@@ -247,8 +247,8 @@ def test_http_rejects_semantically_invalid_project_identity_before_dispatch(
             "text": "# 未保存\n",
             "output": {
                 "kind": "desktop",
-                "path": str(tmp_path / "thesis.docx"),
-                "fileName": "thesis.docx",
+                "path": str(tmp_path / "document.docx"),
+                "fileName": "document.docx",
             },
         },
     }
@@ -276,8 +276,8 @@ def test_http_serves_only_workspace_bound_pdf_bytes_with_safe_headers(
     tmp_path: Path,
 ):
     runtime = WebWorkspaceRuntime(tmp_path / "workspaces")
-    source = runtime.create_workspace("thesis.md", "# 绪论\n")
-    pdf = runtime.root / source["workspaceId"] / "thesis.preview.pdf"
+    source = runtime.create_workspace("document.md", "# 绪论\n")
+    pdf = runtime.root / source["workspaceId"] / "document.preview.pdf"
     content = b"%PDF-1.7\npreview"
     pdf.write_bytes(content)
     app = WorkbenchHttpApp(
@@ -306,7 +306,7 @@ def test_http_serves_only_workspace_bound_pdf_bytes_with_safe_headers(
 
 def test_http_live_preview_pdf_is_consumed_and_cleans_its_docx(tmp_path: Path):
     runtime = WebWorkspaceRuntime(tmp_path / "workspaces")
-    source = runtime.create_workspace("thesis.md", "# 绪论\n")
+    source = runtime.create_workspace("document.md", "# 绪论\n")
     output = runtime.prepare_live_preview_output(source)
     docx = runtime.output_path(output)
     pdf = docx.with_suffix(".preview.pdf")
@@ -334,11 +334,11 @@ def test_http_live_preview_pdf_is_consumed_and_cleans_its_docx(tmp_path: Path):
 
 def test_http_named_like_live_preview_regular_pdf_is_not_consumed(tmp_path: Path):
     runtime = WebWorkspaceRuntime(tmp_path / "workspaces")
-    source = runtime.create_workspace("thesis.md", "# 绪论\n")
+    source = runtime.create_workspace("document.md", "# 绪论\n")
     workspace = runtime.root / source["workspaceId"]
     token = "c" * 32
-    docx = workspace / f".thesisforge-live-preview-{token}.docx"
-    pdf = workspace / f".thesisforge-live-preview-{token}.preview.pdf"
+    docx = workspace / f".docforge-live-preview-{token}.docx"
+    pdf = workspace / f".docforge-live-preview-{token}.preview.pdf"
     docx.write_bytes(b"formal docx")
     pdf.write_bytes(b"%PDF-1.7\nformal")
     app = WorkbenchHttpApp(
@@ -362,7 +362,7 @@ def test_http_named_like_live_preview_regular_pdf_is_not_consumed(tmp_path: Path
 
 def test_http_can_discard_unread_live_preview_idempotently(tmp_path: Path):
     runtime = WebWorkspaceRuntime(tmp_path / "workspaces")
-    source = runtime.create_workspace("thesis.md", "# 绪论\n")
+    source = runtime.create_workspace("document.md", "# 绪论\n")
     output = runtime.prepare_live_preview_output(source)
     docx = runtime.output_path(output)
     pdf = docx.with_suffix(".preview.pdf")
@@ -393,7 +393,7 @@ def test_http_can_discard_unread_live_preview_idempotently(tmp_path: Path):
 
 def test_http_rejects_invalid_workspace_pdf_requests(tmp_path: Path):
     runtime = WebWorkspaceRuntime(tmp_path / "workspaces")
-    source = runtime.create_workspace("thesis.md", "# 绪论\n")
+    source = runtime.create_workspace("document.md", "# 绪论\n")
     workspace = runtime.root / source["workspaceId"]
     (workspace / "not-pdf.pdf").write_bytes(b"not a pdf")
     other = runtime.create_workspace("other.md", "# 其他\n")
@@ -404,7 +404,7 @@ def test_http_rejects_invalid_workspace_pdf_requests(tmp_path: Path):
     )
 
     cases = [
-        (f"/api/v1/workspaces/{source['workspaceId']}/files/thesis.docx", "400"),
+        (f"/api/v1/workspaces/{source['workspaceId']}/files/document.docx", "400"),
         (f"/api/v1/workspaces/{source['workspaceId']}/files/not-pdf.pdf", "400"),
         (f"/api/v1/workspaces/{source['workspaceId']}/files/missing.pdf", "404"),
         (f"/api/v1/workspaces/{'g' * 32}/files/missing.pdf", "400"),

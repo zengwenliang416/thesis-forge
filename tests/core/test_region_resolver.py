@@ -33,12 +33,32 @@ W_NS = "http://schemas.openxmlformats.org/wordprocessingml/2006/main"
 NS = {"w": W_NS}
 
 MANIFEST = """\
-schema: thesisforge.project.v2
+schema: docforge.project.v1
 project:
   id: region-evidence
   language: zh-CN
 document:
-  source: thesis.md
+  source: document.md
+  type: academic
+metadata:
+  title:
+    zh: 区域解析验证
+  authors:
+    - name: 测试作者
+academic:
+  student:
+    name: 测试作者
+    id: "20260001"
+  institution:
+    name: 示例大学
+    department: 计算机学院
+  degree:
+    name: 工学学士
+    major: 文档工程
+  advisor:
+    name: 示例导师
+  completion:
+    date: "2026-08"
 resources:
   root: .
   assets: assets
@@ -61,8 +81,8 @@ def _compile_manifest_project(tmp_path: Path):
     project = tmp_path / "project"
     project.mkdir()
     (project / "assets").mkdir()
-    (project / "thesisforge.yaml").write_text(MANIFEST, encoding="utf-8")
-    source_path = project / "thesis.md"
+    (project / "docforge.yaml").write_text(MANIFEST, encoding="utf-8")
+    source_path = project / "document.md"
     source_path.write_text(SOURCE, encoding="utf-8")
 
     document = create_parser_backend().parse_file(source_path)

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import sys
+from io import StringIO
 from pathlib import Path
 from types import SimpleNamespace
 
@@ -15,6 +16,7 @@ from docforge.adapters import (
 from docforge.adapters.sidecar import (
     _configure_standard_streams,
     create_dispatcher,
+    main,
 )
 from docforge.application import BuildResult, BuildStage
 from docforge.application.contracts import ProjectRequestIntent
@@ -56,6 +58,74 @@ def test_sidecar_project_builds_use_microsoft_word_pdf_preview():
         dispatcher._project_service.dependencies.pdf_preview_exporter,
         MicrosoftWordPdfPreviewExporter,
     )
+
+
+def test_sidecar_stream_ignores_legacy_cancellation_environment_variable(
+    monkeypatch,
+    tmp_path: Path,
+):
+    cancel_file = tmp_path / "cancel"
+    cancel_file.write_text("cancel", encoding="utf-8")
+    observed: list[object] = []
+
+    monkeypatch.delenv("DOCFORGE_CANCEL_FILE", raising=False)
+    monkeypatch.setenv("THESISFORGE_CANCEL_FILE", str(cancel_file))
+    monkeypatch.setattr(
+        "docforge.adapters.sidecar._configure_standard_streams",
+        lambda: None,
+    )
+    monkeypatch.setattr(
+        "docforge.adapters.sidecar.create_dispatcher",
+        lambda: object(),
+    )
+
+    def fake_stream(_dispatcher, _line, *, should_cancel=None):
+        observed.append(should_cancel)
+        return iter(())
+
+    monkeypatch.setattr(
+        "docforge.adapters.sidecar.stream_json_lines",
+        fake_stream,
+    )
+    monkeypatch.setattr(sys, "stdin", StringIO("{}\n"))
+
+    assert main(["--stream"]) == 0
+    assert observed == [None]
+
+
+def test_sidecar_stream_uses_docforge_cancellation_environment_variable(
+    monkeypatch,
+    tmp_path: Path,
+):
+    cancel_file = tmp_path / "cancel"
+    cancel_file.write_text("cancel", encoding="utf-8")
+    observed: list[object] = []
+
+    monkeypatch.delenv("THESISFORGE_CANCEL_FILE", raising=False)
+    monkeypatch.setenv("DOCFORGE_CANCEL_FILE", str(cancel_file))
+    monkeypatch.setattr(
+        "docforge.adapters.sidecar._configure_standard_streams",
+        lambda: None,
+    )
+    monkeypatch.setattr(
+        "docforge.adapters.sidecar.create_dispatcher",
+        lambda: object(),
+    )
+
+    def fake_stream(_dispatcher, _line, *, should_cancel=None):
+        observed.append(should_cancel)
+        return iter(())
+
+    monkeypatch.setattr(
+        "docforge.adapters.sidecar.stream_json_lines",
+        fake_stream,
+    )
+    monkeypatch.setattr(sys, "stdin", StringIO("{}\n"))
+
+    assert main(["--stream"]) == 0
+    assert len(observed) == 1
+    assert callable(observed[0])
+    assert observed[0]()
 
 
 def test_sidecar_build_stream_uses_the_shared_event_contract(tmp_path: Path):
@@ -285,11 +355,22 @@ def test_sidecar_project_request_preserves_identity_and_cancellation(
 ) -> None:
     project_root = (tmp_path / "project").resolve()
     project_root.mkdir()
-    source = project_root / "thesis.md"
+    source = project_root / "document.md"
     source.write_text("# 绪论\n", encoding="utf-8")
-    manifest = project_root / "thesisforge.yaml"
-    manifest.write_text("schema: thesisforge.project.v2\n", encoding="utf-8")
-    output = project_root / "build" / "thesis.docx"
+    manifest = project_root / "docforge.yaml"
+    manifest.write_text(
+        """schema: docforge.project.v1
+project:
+  id: sidecar-fixture
+  language: zh-CN
+document:
+  source: document.md
+render:
+  template_id: docforge-standard
+""",
+        encoding="utf-8",
+    )
+    output = project_root / "build" / "document.docx"
     observed = []
 
     class ProjectService:

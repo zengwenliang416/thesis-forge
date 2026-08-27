@@ -1,5 +1,5 @@
 {
-  "schema": "thesisforge/gbt7714-2025-corpus-v1",
+  "schema": "docforge/gbt7714-2025-corpus-v1",
   "source": {
     "corpus_bib": "gbt7714-2025-corpus.bib（复制自 spikes/phase0/citation/corpus/gbt7714-corpus.bib）",
     "spike_golden": "spikes/phase0/citation/golden/gbt7714-golden-v1.json（pandoc 3.8.2.1 + 官方 2025 CSL，CSL SHA256 3b5ab624...95faf）",

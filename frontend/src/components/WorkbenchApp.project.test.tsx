@@ -7,6 +7,7 @@ import type {
   WorkbenchTransport,
 } from "../transport/WorkbenchTransport";
 import type { BuildEvent, BuildReport } from "../transport/buildEvents";
+import { BUILD_REPORT_SCHEMA_VERSION } from "../transport/constants";
 import { PROTOCOL_VERSION, type CommandEnvelope } from "../transport/dto";
 import previewFixture from "../../../tests/fixtures/preview-workbench-v1.json";
 
@@ -16,23 +17,23 @@ const previewResult = {
 };
 
 const projectAIdentity = {
-  id: "thesis-alpha",
-  root: "/Users/test/thesis-alpha",
-  manifestPath: "/Users/test/thesis-alpha/thesisforge.yaml",
+  id: "document-alpha",
+  root: "/Users/test/document-alpha",
+  manifestPath: "/Users/test/document-alpha/docforge.yaml",
 };
 
 const projectBIdentity = {
-  id: "thesis-beta",
-  root: "/Users/test/thesis-beta",
-  manifestPath: "/Users/test/thesis-beta/thesisforge.yaml",
+  id: "document-beta",
+  root: "/Users/test/document-beta",
+  manifestPath: "/Users/test/document-beta/docforge.yaml",
 };
 
 const projectA: OpenedProject = {
   project: projectAIdentity,
   source: {
     kind: "desktop",
-    path: "/Users/test/thesis-alpha/thesis.md",
-    fileName: "thesis.md",
+    path: "/Users/test/document-alpha/document.md",
+    fileName: "document.md",
   },
   text: "# 绪论\n",
 };
@@ -42,7 +43,7 @@ const webProject: OpenedProject = {
   source: {
     kind: "web-workspace",
     workspaceId: "b".repeat(32),
-    fileName: "thesis.md",
+    fileName: "document.md",
   },
   text: "# 网页文稿\n",
 };
@@ -51,7 +52,7 @@ const projectB: OpenedProject = {
   project: projectBIdentity,
   source: {
     kind: "desktop",
-    path: "/Users/test/thesis-beta/draft.md",
+    path: "/Users/test/document-beta/draft.md",
     fileName: "draft.md",
   },
   text: "# 另一篇\n",
@@ -74,7 +75,7 @@ const warningReportDiagnostic: BuildReport["diagnostics"][number] = {
   stage: "validate",
   message: "标题层级从 H1 跳到 H3",
   source: {
-    file: "thesis.md",
+    file: "document.md",
     startLine: 3,
     startColumn: 1,
     endLine: 3,
@@ -132,7 +133,7 @@ function completedEvent(
     requestId,
     type: "completed",
     report: {
-      schemaVersion: "thesisforge.build-report.v2",
+      schemaVersion: BUILD_REPORT_SCHEMA_VERSION,
       buildId: requestId,
       intent,
       outcome: "succeeded",
@@ -164,9 +165,9 @@ describe("WorkbenchApp project flow", () => {
       screen.getByRole("button", { name: "打开 Markdown 或 DocForge 项目" }),
     );
 
-    expect(await screen.findByText("thesis-alpha")).toBeVisible();
+    expect(await screen.findByText("document-alpha")).toBeVisible();
     expect(
-      screen.getByText("活动源：thesis.md · 文档已保存"),
+      screen.getByText("活动源：document.md · 文档已保存"),
     ).toBeVisible();
     expect(dispatch).toHaveBeenCalledTimes(1);
     expect(dispatch).toHaveBeenCalledWith(
@@ -208,7 +209,7 @@ describe("WorkbenchApp project flow", () => {
       <WorkbenchApp
         transport={desktopTransport({
           openProject: async () => {
-            throw new Error("无法读取 ThesisForge 项目");
+            throw new Error("无法读取 DocForge 项目");
           },
         })}
         initialState={createInitialWorkspaceState()}
@@ -219,7 +220,7 @@ describe("WorkbenchApp project flow", () => {
       screen.getByRole("button", { name: "打开 Markdown 或 DocForge 项目" }),
     );
 
-    expect(await screen.findByText("无法读取 ThesisForge 项目")).toBeVisible();
+    expect(await screen.findByText("无法读取 DocForge 项目")).toBeVisible();
     expect(screen.getByText("文档操作失败")).toBeVisible();
     expect(
       screen.getByRole("button", { name: "打开 Markdown 或 DocForge 项目" }),
@@ -312,8 +313,8 @@ describe("WorkbenchApp project flow", () => {
       intent: "publish",
       output: {
         kind: "desktop",
-        path: "/Users/test/thesis-alpha/thesis.docx",
-        fileName: "thesis.docx",
+        path: "/Users/test/document-alpha/document.docx",
+        fileName: "document.docx",
       },
     });
   });
@@ -400,8 +401,8 @@ describe("WorkbenchApp project flow", () => {
           },
           prepareLivePreviewOutput: async () => ({
             kind: "desktop",
-            path: "/tmp/thesis-alpha.live.docx",
-            fileName: "thesis-alpha.live.docx",
+            path: "/tmp/document-alpha.live.docx",
+            fileName: "document-alpha.live.docx",
           }),
           discardLivePreviewOutput: async () => undefined,
         })}
@@ -424,8 +425,8 @@ describe("WorkbenchApp project flow", () => {
       source: projectA.source,
       output: {
         kind: "desktop",
-        path: "/tmp/thesis-alpha.live.docx",
-        fileName: "thesis-alpha.live.docx",
+        path: "/tmp/document-alpha.live.docx",
+        fileName: "document-alpha.live.docx",
       },
       templateId: null,
       text: "# 绪论\n",
@@ -472,14 +473,14 @@ describe("WorkbenchApp project flow", () => {
                 completedEvent(
                   request.requestId,
                   {
-                    docxPath: "/Users/test/thesis-alpha/thesis.docx",
-                    pdfPath: "/Users/test/thesis-alpha/thesis.pdf",
+                    docxPath: "/Users/test/document-alpha/document.docx",
+                    pdfPath: "/Users/test/document-alpha/document.pdf",
                     previewStale: false,
                     successfulBuildId: request.requestId,
                     finalPreview: {
                       engine: "libreoffice",
                       label: "LibreOffice PDF",
-                      fileName: "thesis.preview.pdf",
+                      fileName: "document.preview.pdf",
                       authorizationId: "a".repeat(32),
                     },
                   },
@@ -496,11 +497,11 @@ describe("WorkbenchApp project flow", () => {
       await user.click(
         screen.getByRole("button", { name: "打开 Markdown 或 DocForge 项目" }),
       );
-      expect(await screen.findByText("thesis-alpha")).toBeVisible();
+      expect(await screen.findByText("document-alpha")).toBeVisible();
       expect(await screen.findByText("标题层级从 H1 跳到 H3")).toBeVisible();
 
       await user.click(screen.getByRole("button", { name: "生成 DOCX" }));
-      expect(await screen.findByText("thesis.docx")).toBeVisible();
+      expect(await screen.findByText("document.docx")).toBeVisible();
       expect(await screen.findByText("当前 Word 预览")).toBeVisible();
       expect(screen.getByText("LibreOffice PDF")).toBeVisible();
       expect(screen.getByText("标题层级从 H1 跳到 H3")).toBeVisible();
@@ -509,14 +510,14 @@ describe("WorkbenchApp project flow", () => {
         screen.getByRole("button", { name: "打开 Markdown 或 DocForge 项目" }),
       );
 
-      expect(await screen.findByText("thesis-beta")).toBeVisible();
+      expect(await screen.findByText("document-beta")).toBeVisible();
       expect(
         screen.getByText("活动源：draft.md · 文档已保存"),
       ).toBeVisible();
-      expect(screen.queryByText("thesis-alpha")).toBeNull();
+      expect(screen.queryByText("document-alpha")).toBeNull();
       expect(screen.queryByText("标题层级从 H1 跳到 H3")).toBeNull();
       expect(screen.getByText("尚无诊断")).toBeVisible();
-      expect(screen.queryByText("thesis.docx")).toBeNull();
+      expect(screen.queryByText("document.docx")).toBeNull();
       expect(screen.getByText("准备生成 DOCX · 桌面")).toBeVisible();
       expect(screen.queryByText("LibreOffice PDF")).toBeNull();
       expect(screen.queryByText("当前 Word 预览")).toBeNull();
@@ -564,29 +565,29 @@ describe("WorkbenchApp project flow", () => {
     expect(input).not.toBeNull();
 
     const manifest = new File(
-      ["schema: thesisforge.project.v2\n"],
-      "thesisforge.yaml",
+      ["schema: docforge.project.v1\n"],
+      "docforge.yaml",
       { type: "text/yaml" },
     );
-    const source = new File(["# 网页文稿\n"], "thesis.md", {
+    const source = new File(["# 网页文稿\n"], "document.MARKDOWN", {
       type: "text/markdown",
     });
     await user.upload(input as HTMLInputElement, [manifest, source]);
 
     expect(await screen.findByText("文档、模板与预览已同步")).toBeVisible();
-    expect(screen.getByText("thesis-alpha")).toBeVisible();
+    expect(screen.getByText("document-alpha")).toBeVisible();
     expect(
-      screen.getByText("活动源：thesis.md · 文档已保存"),
+      screen.getByText("活动源：document.md · 文档已保存"),
     ).toBeVisible();
     expect(openSource).not.toHaveBeenCalled();
     expect(openProject).toHaveBeenCalledTimes(1);
     expect(openProject).toHaveBeenCalledWith({
       manifest: {
-        fileName: "thesisforge.yaml",
-        text: "schema: thesisforge.project.v2\n",
+        fileName: "docforge.yaml",
+        text: "schema: docforge.project.v1\n",
       },
       source: {
-        fileName: "thesis.md",
+        fileName: "document.MARKDOWN",
         text: "# 网页文稿\n",
       },
     });
@@ -597,9 +598,9 @@ describe("WorkbenchApp project flow", () => {
         operation: "preview",
         payload: {
           source: {
-            kind: "web-workspace",
-            workspaceId: "b".repeat(32),
-            fileName: "thesis.md",
+          kind: "web-workspace",
+          workspaceId: "b".repeat(32),
+          fileName: "document.md",
           },
           templateId: null,
           project: projectAIdentity,
@@ -636,11 +637,11 @@ describe("WorkbenchApp project flow", () => {
 
     await user.upload(
       input as HTMLInputElement,
-      new File(["# 独立文稿\n"], "thesis.md", { type: "text/markdown" }),
+      new File(["# 独立文稿\n"], "document.md", { type: "text/markdown" }),
     );
 
     expect(
-      await screen.findByText("请选择一个 thesisforge.yaml 和一个 Markdown 文件。"),
+      await screen.findByText("请选择一个 docforge.yaml 和一个 Markdown 文件。"),
     ).toBeVisible();
     expect(openProject).not.toHaveBeenCalled();
     expect(openSource).not.toHaveBeenCalled();

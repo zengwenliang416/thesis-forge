@@ -26,10 +26,24 @@ from docforge.application import (
     PreviewResult,
     ValidationResult,
 )
-from docforge.application.contracts import ProjectRequestIntent
+from docforge.application.contracts import BuildReport, ProjectRequestIntent
 from docforge.core.model import ForgeDocument, Heading, Text, ValidationIssue
 from docforge.core.parser_backend import create_parser_backend
 from docforge.core.validator import ValidationContext
+from docforge.project.constants import (
+    DEFAULT_DOCX_FILENAME,
+    DEFAULT_DOCX_PATH,
+    DEFAULT_SOURCE_PATH,
+    MANIFEST_FILENAME,
+    PROJECT_SCHEMA,
+)
+
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+RUNTIME_CONTRACT = PROJECT_ROOT / "protocol" / "runtime-contract.v1.json"
+
+
+def _runtime_contract() -> dict:
+    return json.loads(RUNTIME_CONTRACT.read_text(encoding="utf-8"))
 
 
 def _text_inlines(value: str) -> list[Text]:
@@ -79,7 +93,7 @@ def _v2_dispatcher() -> WorkbenchCommandDispatcher:
 
 
 def _dispatcher(tmp_path: Path):
-    source = tmp_path / "thesis.md"
+    source = tmp_path / DEFAULT_SOURCE_PATH
     source.write_text("# 绪论\n", encoding="utf-8")
     calls: list[tuple[str, Path]] = []
 
@@ -199,7 +213,7 @@ class _RecordingProjectService:
     @staticmethod
     def _document(request) -> ForgeDocument:
         return ForgeDocument(
-            source_path=request.project.project_root / "thesis.md",
+            source_path=request.project.project_root / DEFAULT_SOURCE_PATH,
             metadata={"project": request.project.project_id},
             blocks=[
                 Heading(
@@ -239,10 +253,10 @@ class _RecordingProjectService:
 def _project_request_payload(tmp_path: Path, operation: str) -> dict:
     root = (tmp_path / "project").resolve()
     root.mkdir(parents=True)
-    source = root / "thesis.md"
+    source = root / DEFAULT_SOURCE_PATH
     source.write_text("# 项目论文\n", encoding="utf-8")
-    manifest = root / "thesisforge.yaml"
-    manifest.write_text("schema: thesisforge.project.v2\n", encoding="utf-8")
+    manifest = root / MANIFEST_FILENAME
+    manifest.write_text(f"schema: {PROJECT_SCHEMA}\n", encoding="utf-8")
     payload = {
         "project": {
             "id": "adapter-fixture",
@@ -259,8 +273,8 @@ def _project_request_payload(tmp_path: Path, operation: str) -> dict:
     if operation == "build":
         payload["output"] = {
             "kind": "desktop",
-            "path": str((root / "build" / "thesis.docx").resolve()),
-            "fileName": "thesis.docx",
+            "path": str((root / DEFAULT_DOCX_PATH).resolve()),
+            "fileName": DEFAULT_DOCX_FILENAME,
         }
     return payload
 
@@ -304,7 +318,7 @@ def test_dispatcher_project_payload_preserves_typed_identity_snapshot_and_output
     assert all(request.project.project_id == "adapter-fixture" for request in service.requests)
     assert all(request.editor_snapshot == "# 未保存项目论文\n" for request in service.requests)
     assert service.requests[-1].output is not None
-    assert service.requests[-1].output.path.name == "thesis.docx"
+    assert service.requests[-1].output.path.name == DEFAULT_DOCX_FILENAME
 
 
 def test_dispatcher_serializes_inspection_and_validation_without_python_objects(
@@ -321,7 +335,7 @@ def test_dispatcher_serializes_inspection_and_validation_without_python_objects(
         "requestId": "inspect-1",
         "ok": True,
         "result": {
-            "source": {"kind": "desktop", "name": "thesis.md"},
+            "source": {"kind": "desktop", "name": DEFAULT_SOURCE_PATH},
             "metadata": {"thesis": {"title": "共享工作台"}},
             "outline": [
                 {
@@ -351,7 +365,7 @@ def test_dispatcher_serializes_inspection_and_validation_without_python_objects(
 def test_dispatcher_serializes_renderer_neutral_preview_from_application_service(
     tmp_path: Path,
 ):
-    source = tmp_path / "thesis.md"
+    source = tmp_path / DEFAULT_SOURCE_PATH
     source.write_text("# 绪论 {#chap:intro}\n", encoding="utf-8")
     request = _request("preview", source)
     request["payload"]["templateId"] = "bachelor-base"
@@ -383,7 +397,7 @@ def test_dispatcher_rejects_conflicting_template_selectors_for_analysis(
     tmp_path: Path,
     operation: str,
 ):
-    source = tmp_path / "thesis.md"
+    source = tmp_path / DEFAULT_SOURCE_PATH
     template = tmp_path / "school.yaml"
     _write_source(source)
     _write_template(template, include_level2=True)
@@ -401,7 +415,7 @@ def test_dispatcher_rejects_conflicting_template_selectors_for_analysis(
 
 
 def test_dispatcher_validates_with_a_selected_template_path(tmp_path: Path):
-    source = tmp_path / "thesis.md"
+    source = tmp_path / DEFAULT_SOURCE_PATH
     template = tmp_path / "school.yaml"
     _write_source(source)
     _write_template(template, include_level2=True)
@@ -423,7 +437,7 @@ def test_dispatcher_resolves_a_stable_template_id_without_using_process_cwd(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
 ):
-    source = tmp_path / "thesis.md"
+    source = tmp_path / DEFAULT_SOURCE_PATH
     _write_source(source)
     monkeypatch.chdir(tmp_path)
     request = _request("validate", source)
@@ -440,7 +454,7 @@ def test_dispatcher_resolves_a_stable_template_id_without_using_process_cwd(
 
 
 def test_dispatcher_rejects_conflicting_template_selectors(tmp_path: Path):
-    source = tmp_path / "thesis.md"
+    source = tmp_path / DEFAULT_SOURCE_PATH
     template = tmp_path / "school.yaml"
     _write_source(source)
     _write_template(template, include_level2=True)
@@ -470,7 +484,7 @@ def test_dispatcher_surfaces_structured_selected_template_failures(
     template_kind: str,
     expected_code: str,
 ):
-    source = tmp_path / "thesis.md"
+    source = tmp_path / DEFAULT_SOURCE_PATH
     template = tmp_path / "school.yaml"
     _write_source(source)
     if template_kind == "malformed":
@@ -525,7 +539,7 @@ def test_http_and_sidecar_use_the_same_versioned_command_contract(tmp_path: Path
 def test_adapter_rejects_wrong_protocol_and_unknown_operations(tmp_path: Path):
     dispatcher, source, _calls = _dispatcher(tmp_path)
     wrong = _request("inspect", source)
-    wrong["protocol"] = "thesisforge.workbench.v0"
+    wrong["protocol"] = "docforge.workbench.v0"
 
     response = dispatcher.dispatch(wrong)
     unknown = dispatcher.dispatch(_request("delete-everything", source))
@@ -536,11 +550,57 @@ def test_adapter_rejects_wrong_protocol_and_unknown_operations(tmp_path: Path):
     assert unknown["error"]["kind"] == "request"
 
 
+def test_dispatcher_rejects_obsolete_fixture_without_dispatching_service(
+    tmp_path: Path,
+):
+    dispatcher, _source, calls = _dispatcher(tmp_path)
+    request = _runtime_contract()["obsoleteCommand"]
+
+    response = dispatcher.dispatch(request)
+
+    assert response == {
+        "protocol": PROTOCOL_VERSION,
+        "requestId": request["requestId"],
+        "ok": False,
+        "error": {
+            "kind": "protocol",
+            "message": "unsupported protocol",
+        },
+    }
+    assert calls == []
+
+
+def test_runtime_contract_fixture_matches_python_identity_constants() -> None:
+    contract = _runtime_contract()
+    identity = contract["identity"]
+
+    assert identity == {
+        "manifest": MANIFEST_FILENAME,
+        "projectSchema": PROJECT_SCHEMA,
+        "source": DEFAULT_SOURCE_PATH,
+        "docx": DEFAULT_DOCX_PATH,
+        "reviewMarkdown": "review/document.review.md",
+        "reviewMap": "review/document.review-map.json",
+        "workbenchProtocol": PROTOCOL_VERSION,
+        "buildReportSchema": BuildReport.SCHEMA_VERSION,
+    }
+    assert contract["command"]["protocol"] == PROTOCOL_VERSION
+    assert contract["command"]["payload"]["source"]["fileName"] == DEFAULT_SOURCE_PATH
+    assert contract["command"]["payload"]["project"]["manifestPath"] == (
+        f"/runtime-fixture/{MANIFEST_FILENAME}"
+    )
+
+    completed = contract["completedBuildEvent"]
+    assert completed["protocol"] == PROTOCOL_VERSION
+    assert completed["report"]["schemaVersion"] == BuildReport.SCHEMA_VERSION
+    assert completed["report"]["output"]["docxPath"] == DEFAULT_DOCX_PATH
+
+
 def test_web_runtime_resolves_opaque_workspace_without_serializing_service_path(
     tmp_path: Path,
 ):
     runtime = WebWorkspaceRuntime(tmp_path / "workspaces")
-    handle = runtime.create_workspace("thesis.md", "# 绪论\n")
+    handle = runtime.create_workspace(DEFAULT_SOURCE_PATH, "# 绪论\n")
     calls: list[Path] = []
 
     def inspect(path):
@@ -557,7 +617,7 @@ def test_web_runtime_resolves_opaque_workspace_without_serializing_service_path(
             "source": {
                 "kind": "web-workspace",
                 "workspaceId": handle["workspaceId"],
-                "fileName": "thesis.md",
+                "fileName": DEFAULT_SOURCE_PATH,
             }
         },
     }
@@ -568,16 +628,20 @@ def test_web_runtime_resolves_opaque_workspace_without_serializing_service_path(
     assert response["ok"] is True
     assert response["result"]["source"] == {
         "kind": "web-workspace",
-        "name": "thesis.md",
+        "name": DEFAULT_SOURCE_PATH,
     }
-    assert calls == [runtime.root / handle["workspaceId"] / "thesis.md"]
+    assert calls == [runtime.root / handle["workspaceId"] / DEFAULT_SOURCE_PATH]
     assert str(runtime.root) not in encoded
 
 
 def test_web_runtime_rejects_path_like_names(tmp_path: Path):
     runtime = WebWorkspaceRuntime(tmp_path / "workspaces")
 
-    for file_name in ("../thesis.md", "folder/thesis.md", r"folder\thesis.md"):
+    for file_name in (
+        f"../{DEFAULT_SOURCE_PATH}",
+        f"folder/{DEFAULT_SOURCE_PATH}",
+        rf"folder\{DEFAULT_SOURCE_PATH}",
+    ):
         with pytest.raises(ValueError, match="plain file name"):
             runtime.create_workspace(file_name, "# 绪论\n")
 
@@ -588,25 +652,20 @@ def test_http_workspace_creation_returns_opaque_handle(tmp_path: Path):
     app = WorkbenchHttpApp(dispatcher, web_runtime=runtime)
     body = json.dumps(
         {
-            "manifest": {
-                "fileName": "thesisforge.yaml",
-                "text": (
-                    "schema: thesisforge.project.v2\n"
-                    "project:\n"
-                    "  id: web-fixture\n"
-                    "  language: zh-CN\n"
-                    "document:\n"
-                    "  source: thesis.md\n"
-                    "metadata:\n"
-                    "  title:\n"
-                    "    zh: Web 项目\n"
-                    "  author:\n"
-                    "    name: 测试作者\n"
-                    "render:\n"
-                    "  template_id: example-university-2026\n"
-                ),
-            },
-            "source": {"fileName": "thesis.md", "text": "# 绪论\n"},
+                "manifest": {
+                    "fileName": MANIFEST_FILENAME,
+                    "text": (
+                        f"schema: {PROJECT_SCHEMA}\n"
+                        "project:\n"
+                        "  id: web-fixture\n"
+                        "  language: zh-CN\n"
+                        "document:\n"
+                        f"  source: {DEFAULT_SOURCE_PATH}\n"
+                        "render:\n"
+                        "  template_id: example-university-2026\n"
+                    ),
+                },
+                "source": {"fileName": DEFAULT_SOURCE_PATH, "text": "# 绪论\n"},
         }
     ).encode()
     status: list[str] = []
@@ -627,15 +686,15 @@ def test_http_workspace_creation_returns_opaque_handle(tmp_path: Path):
     workspace_id = payload["source"]["workspaceId"]
     assert payload["project"] == {
         "id": "web-fixture",
-        "root": f"/thesisforge-web/{workspace_id}",
-        "manifestPath": f"/thesisforge-web/{workspace_id}/thesisforge.yaml",
+        "root": f"/docforge-web/{workspace_id}",
+        "manifestPath": f"/docforge-web/{workspace_id}/{MANIFEST_FILENAME}",
     }
     assert payload["source"]["kind"] == "web-workspace"
-    assert payload["source"]["fileName"] == "thesis.md"
+    assert payload["source"]["fileName"] == DEFAULT_SOURCE_PATH
     assert payload["text"] == "# 绪论\n"
     workspace = runtime.root / workspace_id
-    assert (workspace / "thesisforge.yaml").is_file()
-    assert (workspace / "thesis.md").read_text(encoding="utf-8") == "# 绪论\n"
+    assert (workspace / MANIFEST_FILENAME).is_file()
+    assert (workspace / DEFAULT_SOURCE_PATH).read_text(encoding="utf-8") == "# 绪论\n"
     assert str(runtime.root) not in json.dumps(payload)
 
 
@@ -645,7 +704,7 @@ def test_http_workspace_creation_rejects_bare_markdown(tmp_path: Path):
         WorkbenchCommandDispatcher(runtime=runtime),
         web_runtime=runtime,
     )
-    body = json.dumps({"fileName": "thesis.md", "text": "# 绪论\n"}).encode()
+    body = json.dumps({"fileName": DEFAULT_SOURCE_PATH, "text": "# 绪论\n"}).encode()
     status: list[str] = []
 
     payload = json.loads(
@@ -709,19 +768,19 @@ def test_web_runtime_project_dispatch_uses_persisted_manifest(
     runtime = WebWorkspaceRuntime(tmp_path / "workspaces")
     opened = runtime.create_project_workspace(
         {
-            "fileName": "thesisforge.yaml",
+            "fileName": MANIFEST_FILENAME,
             "text": (
-                "schema: thesisforge.project.v2\n"
+                f"schema: {PROJECT_SCHEMA}\n"
                 "project:\n"
                 "  id: web-fixture\n"
                 "  language: zh-CN\n"
                 "document:\n"
-                "  source: thesis.md\n"
+                f"  source: {DEFAULT_SOURCE_PATH}\n"
                 "render:\n"
                 "  template_id: example-university-2026\n"
             ),
         },
-        {"fileName": "thesis.md", "text": "# 绪论\n"},
+        {"fileName": DEFAULT_SOURCE_PATH, "text": "# 绪论\n"},
     )
     service = _RecordingProjectService()
     dispatcher = WorkbenchCommandDispatcher(
@@ -748,7 +807,7 @@ def test_web_runtime_project_dispatch_uses_persisted_manifest(
         runtime.root / opened["source"]["workspaceId"]
     )
     assert service.requests[0].project.manifest_path == (
-        runtime.root / opened["source"]["workspaceId"] / "thesisforge.yaml"
+        runtime.root / opened["source"]["workspaceId"] / MANIFEST_FILENAME
     )
 
 
@@ -759,7 +818,7 @@ def test_web_runtime_project_dispatch_uses_persisted_manifest(
         {
             "kind": "web-upload",
             "uploadId": "a" * 32,
-            "fileName": "thesis.md",
+            "fileName": DEFAULT_SOURCE_PATH,
         },
     ],
 )
@@ -776,7 +835,7 @@ def test_web_runtime_rejects_unbound_project_dispatch(
         "project": {
             "id": "web-fixture",
             "root": "/client/root",
-            "manifestPath": "/client/root/thesisforge.yaml",
+            "manifestPath": f"/client/root/{MANIFEST_FILENAME}",
         },
         "text": "# 绪论\n",
     }
@@ -804,23 +863,208 @@ def test_web_runtime_derives_project_identity_from_manifest(
 
     opened = runtime.create_project_workspace(
         {
-            "fileName": "thesisforge.yaml",
+            "fileName": MANIFEST_FILENAME,
             "text": (
-                "schema: thesisforge.project.v2\n"
+                f"schema: {PROJECT_SCHEMA}\n"
                 "project:\n"
                 "  id: manifest-id\n"
                 "  language: zh-CN\n"
                 "document:\n"
-                "  source: thesis.md\n"
+                f"  source: {DEFAULT_SOURCE_PATH}\n"
                 "render:\n"
                 "  template_id: example-university-2026\n"
             ),
         },
-        {"fileName": "thesis.md", "text": "# 绪论\n"},
+        {"fileName": DEFAULT_SOURCE_PATH, "text": "# 绪论\n"},
     )
 
     assert opened["project"]["id"] == "manifest-id"
-    assert opened["project"]["root"].startswith("/thesisforge-web/")
+    assert opened["project"]["root"].startswith("/docforge-web/")
+
+
+@pytest.mark.parametrize("source_name", ["document.markdown", "document.MARKDOWN"])
+def test_web_runtime_accepts_case_insensitive_markdown_project_source_and_builds(
+    tmp_path: Path,
+    source_name: str,
+):
+    runtime = WebWorkspaceRuntime(tmp_path / "workspaces")
+    source_text = "# Markdown 文档\n"
+    opened = runtime.create_project_workspace(
+        {
+            "fileName": MANIFEST_FILENAME,
+            "text": (
+                f"schema: {PROJECT_SCHEMA}\n"
+                "project:\n"
+                "  id: markdown-fixture\n"
+                "  language: zh-CN\n"
+                "document:\n"
+                f"  source: {source_name}\n"
+                "render:\n"
+                "  template_id: example-university-2026\n"
+            ),
+        },
+        {"fileName": source_name, "text": source_text},
+    )
+    output = {
+        "kind": "web-download",
+        "workspaceId": opened["source"]["workspaceId"],
+        "fileName": DEFAULT_DOCX_FILENAME,
+    }
+    build_calls: list[tuple[Path, Path]] = []
+
+    def build(source_path, output_path, **_kwargs):
+        source_path = Path(source_path)
+        output_path = Path(output_path)
+        build_calls.append((source_path, output_path))
+        output_path.write_bytes(b"docx")
+        return SimpleNamespace(output_path=output_path, issues=())
+
+    response = WorkbenchCommandDispatcher(runtime=runtime, build=build).dispatch(
+        {
+            "protocol": PROTOCOL_VERSION,
+            "requestId": "build-markdown-1",
+            "operation": "build",
+            "payload": {
+                "source": opened["source"],
+                "output": output,
+            },
+        }
+    )
+    source_path = runtime.root / opened["source"]["workspaceId"] / source_name
+
+    assert response["ok"] is True
+    assert response["result"]["source"] == {
+        "kind": "web-workspace",
+        "name": source_name,
+    }
+    assert source_path.read_text(encoding="utf-8") == source_text
+    assert build_calls == [
+        (
+            source_path,
+            runtime.root
+            / opened["source"]["workspaceId"]
+            / DEFAULT_DOCX_FILENAME,
+        )
+    ]
+
+
+def test_web_build_rejects_output_matching_markdown_source_before_writing(
+    tmp_path: Path,
+):
+    runtime = WebWorkspaceRuntime(tmp_path / "workspaces")
+    source_text = "# 保留原文\n"
+    opened = runtime.create_project_workspace(
+        {
+            "fileName": MANIFEST_FILENAME,
+            "text": (
+                f"schema: {PROJECT_SCHEMA}\n"
+                "project:\n"
+                "  id: markdown-collision\n"
+                "  language: zh-CN\n"
+                "document:\n"
+                "  source: document.markdown\n"
+                "render:\n"
+                "  template_id: example-university-2026\n"
+            ),
+        },
+        {"fileName": "document.markdown", "text": source_text},
+    )
+    output = {
+        "kind": "web-download",
+        "workspaceId": opened["source"]["workspaceId"],
+        "fileName": "document.markdown",
+    }
+    build_calls: list[tuple[Path, Path]] = []
+
+    def build(source_path, output_path, **_kwargs):
+        build_calls.append((Path(source_path), Path(output_path)))
+        Path(output_path).write_bytes(b"must not replace Markdown")
+        return SimpleNamespace(output_path=Path(output_path), issues=())
+
+    response = WorkbenchCommandDispatcher(runtime=runtime, build=build).dispatch(
+        {
+            "protocol": PROTOCOL_VERSION,
+            "requestId": "build-markdown-collision",
+            "operation": "build",
+            "payload": {
+                "source": opened["source"],
+                "output": output,
+            },
+        }
+    )
+    source_path = runtime.root / opened["source"]["workspaceId"] / "document.markdown"
+
+    assert response == {
+        "protocol": PROTOCOL_VERSION,
+        "requestId": "build-markdown-collision",
+        "ok": False,
+        "error": {
+            "kind": "request",
+            "message": "build output path must differ from source path",
+        },
+    }
+    assert build_calls == []
+    assert source_path.read_text(encoding="utf-8") == source_text
+
+
+def test_desktop_build_rejects_normalized_output_matching_source_before_writing(
+    tmp_path: Path,
+):
+    source_path = tmp_path / DEFAULT_SOURCE_PATH
+    source_text = "# 保留原文\n"
+    source_path.write_text(source_text, encoding="utf-8")
+    output_path = tmp_path / "nested" / ".." / DEFAULT_SOURCE_PATH
+    build_calls: list[tuple[Path, Path]] = []
+
+    def build(source, output, **_kwargs):
+        build_calls.append((Path(source), Path(output)))
+        Path(output).write_bytes(b"must not replace Markdown")
+        return SimpleNamespace(output_path=Path(output), issues=())
+
+    response = WorkbenchCommandDispatcher(
+        runtime=DesktopRuntime(),
+        build=build,
+    ).dispatch(
+        {
+            "protocol": PROTOCOL_VERSION,
+            "requestId": "build-normalized-collision",
+            "operation": "build",
+            "payload": {
+                "source": {
+                    "kind": "desktop",
+                    "path": str(source_path),
+                    "fileName": source_path.name,
+                },
+                "output": {
+                    "kind": "desktop",
+                    "path": str(output_path),
+                    "fileName": output_path.name,
+                },
+            },
+        }
+    )
+
+    assert response["ok"] is False
+    assert response["error"] == {
+        "kind": "request",
+        "message": "build output path must differ from source path",
+    }
+    assert build_calls == []
+    assert source_path.read_text(encoding="utf-8") == source_text
+
+
+def test_build_service_rejects_source_output_collision_before_writing(
+    tmp_path: Path,
+):
+    source_path = tmp_path / "document.markdown"
+    source_text = "# 保留原文\n"
+    source_path.write_text(source_text, encoding="utf-8")
+    output_path = tmp_path / "." / "document.markdown"
+
+    with pytest.raises(ValueError, match="build output path must differ from source path"):
+        application.build_service(source_path, output_path)
+
+    assert source_path.read_text(encoding="utf-8") == source_text
 
 
 def test_desktop_save_uses_atomic_source_persistence(tmp_path: Path):
@@ -835,7 +1079,7 @@ def test_desktop_save_uses_atomic_source_persistence(tmp_path: Path):
         "requestId": "save-1",
         "ok": True,
         "result": {
-            "source": {"kind": "desktop", "name": "thesis.md"},
+            "source": {"kind": "desktop", "name": DEFAULT_SOURCE_PATH},
         },
     }
     assert source.read_text(encoding="utf-8") == "# 已保存\n"
@@ -843,11 +1087,11 @@ def test_desktop_save_uses_atomic_source_persistence(tmp_path: Path):
 
 def test_web_workspace_save_and_build_share_one_opaque_workspace(tmp_path: Path):
     runtime = WebWorkspaceRuntime(tmp_path / "workspaces")
-    source = runtime.create_workspace("thesis.md", "# Before\n")
+    source = runtime.create_workspace(DEFAULT_SOURCE_PATH, "# Before\n")
     output = {
         "kind": "web-download",
         "workspaceId": source["workspaceId"],
-        "fileName": "thesis.docx",
+        "fileName": DEFAULT_DOCX_FILENAME,
     }
     build_calls: list[tuple[Path, Path]] = []
 
@@ -875,28 +1119,28 @@ def test_web_workspace_save_and_build_share_one_opaque_workspace(tmp_path: Path)
 
     save_response = dispatcher.dispatch(save_request)
     build_response = dispatcher.dispatch(build_request)
-    source_path = runtime.root / source["workspaceId"] / "thesis.md"
+    source_path = runtime.root / source["workspaceId"] / DEFAULT_SOURCE_PATH
 
     assert save_response["ok"] is True
     assert source_path.read_text(encoding="utf-8") == "# After\n"
     assert build_response["ok"] is True
     assert build_response["result"]["output"] == {
         "kind": "web-download",
-        "name": "thesis.docx",
+        "name": DEFAULT_DOCX_FILENAME,
         "downloadId": source["workspaceId"],
     }
     assert build_calls == [
-        (source_path, runtime.root / source["workspaceId"] / "thesis.docx")
+        (source_path, runtime.root / source["workspaceId"] / DEFAULT_DOCX_FILENAME)
     ]
 
 
 def test_live_preview_build_uses_editor_text_without_mutating_source(tmp_path: Path):
-    source = tmp_path / "thesis.md"
+    source = tmp_path / DEFAULT_SOURCE_PATH
     source.write_text("# 磁盘旧内容\n", encoding="utf-8")
     token = "a" * 32
-    preview_dir = Path(tempfile.gettempdir()) / f"thesisforge-live-preview-{token}"
+    preview_dir = Path(tempfile.gettempdir()) / f"docforge-live-preview-{token}"
     preview_dir.mkdir(exist_ok=True)
-    output = preview_dir / f"thesisforge-live-preview-{token}.docx"
+    output = preview_dir / f"docforge-live-preview-{token}.docx"
     calls: list[tuple[Path, Path, str]] = []
 
     def build(source_path, output_path, *, source_text, **_kwargs):
@@ -944,13 +1188,13 @@ def test_live_preview_build_uses_editor_text_without_mutating_source(tmp_path: P
 
 
 def test_live_preview_requires_editor_text(tmp_path: Path):
-    source = tmp_path / "thesis.md"
+    source = tmp_path / DEFAULT_SOURCE_PATH
     source.write_text("# 绪论\n", encoding="utf-8")
     token = "b" * 32
     output = (
         Path(tempfile.gettempdir())
-        / f"thesisforge-live-preview-{token}"
-        / f"thesisforge-live-preview-{token}.docx"
+        / f"docforge-live-preview-{token}"
+        / f"docforge-live-preview-{token}.docx"
     )
     request = _request("build", source)
     request["payload"].update(
@@ -975,9 +1219,9 @@ def test_live_preview_requires_editor_text(tmp_path: Path):
 
 
 def test_live_preview_rejects_a_normal_desktop_output_path(tmp_path: Path):
-    source = tmp_path / "thesis.md"
+    source = tmp_path / DEFAULT_SOURCE_PATH
     source.write_text("# 绪论\n", encoding="utf-8")
-    output = tmp_path / "thesis.docx"
+    output = tmp_path / DEFAULT_DOCX_FILENAME
     request = _request("build", source)
     request["payload"].update(
         {
@@ -1004,7 +1248,7 @@ def test_live_preview_rejects_a_normal_desktop_output_path(tmp_path: Path):
 
 def test_web_live_preview_rejects_a_forged_capability(tmp_path: Path):
     runtime = WebWorkspaceRuntime(tmp_path / "workspaces")
-    source = runtime.create_workspace("thesis.md", "# 绪论\n")
+    source = runtime.create_workspace(DEFAULT_SOURCE_PATH, "# 绪论\n")
     token = "e" * 32
     request = {
         "protocol": PROTOCOL_VERSION,
@@ -1017,7 +1261,7 @@ def test_web_live_preview_rejects_a_forged_capability(tmp_path: Path):
             "output": {
                 "kind": "web-download",
                 "workspaceId": source["workspaceId"],
-                "fileName": f".thesisforge-live-preview-{token}.docx",
+                "fileName": f".docforge-live-preview-{token}.docx",
                 "livePreviewId": token,
             },
         },
@@ -1037,7 +1281,7 @@ def test_web_live_preview_expired_capability_is_swept(tmp_path: Path):
         live_preview_ttl_seconds=5.0,
         clock=lambda: now[0],
     )
-    source = runtime.create_workspace("thesis.md", "# 绪论\n")
+    source = runtime.create_workspace(DEFAULT_SOURCE_PATH, "# 绪论\n")
     expired = runtime.prepare_live_preview_output(source)
     expired_docx = runtime.output_path(expired)
     expired_pdf = expired_docx.with_suffix(".preview.pdf")
@@ -1060,7 +1304,7 @@ def test_web_live_preview_orphans_are_swept_after_runtime_restart(tmp_path: Path
         live_preview_ttl_seconds=5.0,
         wall_clock=lambda: now[0],
     )
-    source = first_runtime.create_workspace("thesis.md", "# 绪论\n")
+    source = first_runtime.create_workspace(DEFAULT_SOURCE_PATH, "# 绪论\n")
     output = first_runtime.prepare_live_preview_output(source)
     docx = first_runtime.output_path(output)
     pdf = docx.with_suffix(".preview.pdf")
@@ -1092,23 +1336,23 @@ def test_build_serializes_strict_final_preview_without_private_paths(
 ):
     if runtime_kind == "web":
         runtime = WebWorkspaceRuntime(tmp_path / "workspaces")
-        source = runtime.create_workspace("thesis.md", "# 绪论\n")
-        output_path = runtime.root / source["workspaceId"] / "thesis.docx"
+        source = runtime.create_workspace(DEFAULT_SOURCE_PATH, "# 绪论\n")
+        output_path = runtime.root / source["workspaceId"] / DEFAULT_DOCX_FILENAME
         output = {
             "kind": "web-download",
             "workspaceId": source["workspaceId"],
-            "fileName": "thesis.docx",
+            "fileName": DEFAULT_DOCX_FILENAME,
         }
     else:
         runtime = DesktopRuntime()
-        source_path = tmp_path / "thesis.md"
+        source_path = tmp_path / DEFAULT_SOURCE_PATH
         source_path.write_text("# 绪论\n", encoding="utf-8")
         source = {
             "kind": "desktop",
             "path": str(source_path),
             "fileName": source_path.name,
         }
-        output_path = tmp_path / "thesis.docx"
+        output_path = tmp_path / DEFAULT_DOCX_FILENAME
         output = {
             "kind": "desktop",
             "path": str(output_path),
@@ -1144,7 +1388,7 @@ def test_build_serializes_strict_final_preview_without_private_paths(
     assert descriptor == {
         "engine": "libreoffice",
         "label": "LibreOffice PDF",
-        "fileName": "thesis.preview.pdf",
+        "fileName": "document.preview.pdf",
         **(
             {"downloadId": source["workspaceId"]}
             if expected_download_id is not None
@@ -1158,9 +1402,9 @@ def test_build_serializes_strict_final_preview_without_private_paths(
 def test_build_rejects_a_final_preview_that_is_not_the_derived_pdf(
     tmp_path: Path,
 ):
-    source = tmp_path / "thesis.md"
+    source = tmp_path / DEFAULT_SOURCE_PATH
     source.write_text("# 绪论\n", encoding="utf-8")
-    output = tmp_path / "thesis.docx"
+    output = tmp_path / DEFAULT_DOCX_FILENAME
 
     def build(_source, target, **_kwargs):
         return SimpleNamespace(
@@ -1190,9 +1434,9 @@ def test_build_rejects_a_final_preview_that_is_not_the_derived_pdf(
 
 
 def test_desktop_accepts_microsoft_word_preview_metadata(tmp_path: Path):
-    source = tmp_path / "thesis.md"
+    source = tmp_path / DEFAULT_SOURCE_PATH
     source.write_text("# 绪论\n", encoding="utf-8")
-    output = tmp_path / "thesis.docx"
+    output = tmp_path / DEFAULT_DOCX_FILENAME
 
     def build(_source, target, **_kwargs):
         target = Path(target)
@@ -1224,17 +1468,17 @@ def test_desktop_accepts_microsoft_word_preview_metadata(tmp_path: Path):
     assert response["result"]["output"]["finalPreview"] == {
         "engine": "microsoft-word",
         "label": "Microsoft Word PDF",
-        "fileName": "thesis.preview.pdf",
+        "fileName": "document.preview.pdf",
     }
 
 
 def test_web_rejects_microsoft_word_preview_metadata(tmp_path: Path):
     runtime = WebWorkspaceRuntime(tmp_path / "workspaces")
-    source = runtime.create_workspace("thesis.md", "# 绪论\n")
+    source = runtime.create_workspace(DEFAULT_SOURCE_PATH, "# 绪论\n")
     output = {
         "kind": "web-download",
         "workspaceId": source["workspaceId"],
-        "fileName": "thesis.docx",
+        "fileName": DEFAULT_DOCX_FILENAME,
     }
 
     def build(_source, target, **_kwargs):
@@ -1271,7 +1515,7 @@ def test_build_event_stream_emits_ordered_progress_and_completed_report(
     tmp_path: Path,
 ):
     dispatcher, source, _calls = _dispatcher(tmp_path)
-    output = tmp_path / "thesis.docx"
+    output = tmp_path / DEFAULT_DOCX_FILENAME
 
     def build(_source, output_path, *, on_progress=None, should_cancel=None, **_kwargs):
         assert should_cancel is not None
@@ -1311,7 +1555,7 @@ def test_build_event_stream_emits_ordered_progress_and_completed_report(
         "finalize",
     ]
     report = events[-1]["report"]
-    assert report["schemaVersion"] == "thesisforge.build-report.v2"
+    assert report["schemaVersion"] == "docforge.build-report.v2"
     assert report["outcome"] == "succeeded"
     assert report["failedStage"] is None
     assert report["primaryDiagnosticId"] is None
@@ -1325,7 +1569,7 @@ def test_build_event_stream_emits_ordered_progress_and_completed_report(
         "skipped",
     ]
     assert report["output"] == {
-        "docxPath": "thesis.docx",
+        "docxPath": DEFAULT_DOCX_FILENAME,
         "pdfPath": None,
         "previewStale": False,
         "successfulBuildId": report["buildId"],
@@ -1337,7 +1581,7 @@ def test_build_event_stream_emits_ordered_progress_and_completed_report(
 
 def test_build_event_stream_normalizes_validation_codes(tmp_path: Path):
     _dispatcher_instance, source, _calls = _dispatcher(tmp_path)
-    output = tmp_path / "thesis.docx"
+    output = tmp_path / DEFAULT_DOCX_FILENAME
 
     def build(_source, output_path, *, on_progress=None, **_kwargs):
         on_progress(BuildStage.PARSE)
@@ -1375,7 +1619,7 @@ def test_build_event_stream_normalizes_validation_codes(tmp_path: Path):
 
 def test_build_event_stream_rejects_non_plain_output_name(tmp_path: Path):
     _dispatcher_instance, source, _calls = _dispatcher(tmp_path)
-    output = tmp_path / "thesis.docx"
+    output = tmp_path / DEFAULT_DOCX_FILENAME
 
     def build(_source, output_path, **_kwargs):
         Path(output_path).write_bytes(b"docx")
@@ -1402,7 +1646,7 @@ def test_build_event_stream_rejects_non_plain_output_name(tmp_path: Path):
 
 def test_build_event_stream_emits_one_typed_cancellation_error(tmp_path: Path):
     dispatcher, source, _calls = _dispatcher(tmp_path)
-    output = tmp_path / "thesis.docx"
+    output = tmp_path / DEFAULT_DOCX_FILENAME
 
     def build(_source, _output, *, on_progress=None, should_cancel=None, **_kwargs):
         on_progress(BuildStage.PARSE)
@@ -1433,7 +1677,7 @@ def test_build_event_stream_emits_one_typed_cancellation_error(tmp_path: Path):
     assert events[1]["type"] == "completed"
     assert "error" not in events[1]
     report = events[1]["report"]
-    assert report["schemaVersion"] == "thesisforge.build-report.v2"
+    assert report["schemaVersion"] == "docforge.build-report.v2"
     assert report["buildId"]
     assert report["intent"] == "publish"
     assert report["outcome"] == "canceled"
@@ -1458,7 +1702,7 @@ def test_save_rejects_missing_text_without_mutating_source(tmp_path: Path):
 def test_unexpected_application_failure_is_normalized_as_transport_error(
     tmp_path: Path,
 ):
-    source = tmp_path / "thesis.md"
+    source = tmp_path / DEFAULT_SOURCE_PATH
     source.write_text("# 绪论\n", encoding="utf-8")
 
     def inspect(_path):

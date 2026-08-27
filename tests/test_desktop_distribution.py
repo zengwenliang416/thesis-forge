@@ -49,7 +49,7 @@ def test_release_config_bundles_one_managed_sidecar() -> None:
         (ROOT / "src-tauri" / "tauri.conf.json").read_text(encoding="utf-8")
     )
 
-    assert config["bundle"]["externalBin"] == ["binaries/thesisforge-sidecar"]
+    assert config["bundle"]["externalBin"] == ["binaries/docforge-sidecar"]
     assert config["bundle"]["macOS"]["signingIdentity"] == "-"
     assert "beforeBuildCommand" not in config.get("build", {})
     assert base_config["build"]["beforeDevCommand"] == "pnpm --dir frontend dev"
@@ -58,6 +58,56 @@ def test_release_config_bundles_one_managed_sidecar() -> None:
         "icons/icon.png",
         "icons/icon.ico",
     ]
+
+
+def test_docforge_desktop_identity_preserves_the_office_only_preview_policy() -> None:
+    config = json.loads(
+        (ROOT / "src-tauri" / "tauri.conf.json").read_text(encoding="utf-8")
+    )
+    cargo = tomllib.loads(
+        (ROOT / "src-tauri" / "Cargo.toml").read_text(encoding="utf-8")
+    )
+    lock = tomllib.loads(
+        (ROOT / "src-tauri" / "Cargo.lock").read_text(encoding="utf-8")
+    )
+    package = json.loads((ROOT / "package.json").read_text(encoding="utf-8"))
+    main = (ROOT / "src-tauri" / "src" / "main.rs").read_text(encoding="utf-8")
+    plist = (ROOT / "src-tauri" / "Info.plist").read_text(encoding="utf-8")
+    locked_desktop = next(
+        item for item in lock["package"] if item["name"] == "docforge-desktop"
+    )
+
+    assert config["productName"] == "DocForge"
+    assert config["identifier"] == "com.docforge.workbench"
+    assert config["app"]["windows"][0]["title"].startswith("DocForge - ")
+    assert cargo["package"]["name"] == "docforge-desktop"
+    assert cargo["package"]["description"] == "DocForge Tauri 2 desktop shell"
+    assert cargo["lib"]["name"] == "docforge_desktop"
+    assert locked_desktop["name"] == "docforge-desktop"
+    assert "docforge_desktop::run();" in main
+    assert package["name"] == "docforge-workspace"
+    assert "DocForge uses Microsoft Word" in plist
+    assert "Microsoft Word" in plist
+
+
+def test_docforge_desktop_runtime_has_no_active_obsolete_identity() -> None:
+    active_files = (
+        ROOT / "src-tauri" / "tauri.conf.json",
+        ROOT / "src-tauri" / "tauri.release.conf.json",
+        ROOT / "src-tauri" / "Cargo.toml",
+        ROOT / "src-tauri" / "Cargo.lock",
+        ROOT / "src-tauri" / "Info.plist",
+        ROOT / "src-tauri" / "src" / "main.rs",
+        BUILD_SIDECAR,
+        VERIFY_DESKTOP,
+        ROOT / "package.json",
+    )
+
+    for path in active_files:
+        text = path.read_text(encoding="utf-8")
+        assert "ThesisForge" not in text
+        assert "thesisforge" not in text
+        assert "THESISFORGE" not in text
 
 
 def test_windows_resource_icon_is_packaged() -> None:
@@ -70,11 +120,11 @@ def test_sidecar_builder_uses_native_target_specific_names() -> None:
 
     assert (
         builder.sidecar_binary_name("aarch64-apple-darwin")
-        == "thesisforge-sidecar-aarch64-apple-darwin"
+        == "docforge-sidecar-aarch64-apple-darwin"
     )
     assert (
         builder.sidecar_binary_name("x86_64-pc-windows-msvc")
-        == "thesisforge-sidecar-x86_64-pc-windows-msvc.exe"
+        == "docforge-sidecar-x86_64-pc-windows-msvc.exe"
     )
     with pytest.raises(ValueError, match="must be built on its native target"):
         builder.ensure_native_target(
@@ -99,9 +149,10 @@ def test_sidecar_builder_embeds_package_data_without_wheel_runtime_leakage() -> 
     assert str(ROOT / "src") in command
     assert "--collect-data" in command
     assert "docx" in command
-    assert command.count("--add-data") == 5
+    assert command.count("--add-data") == 6
     assert any("docx/parts" in value for value in command)
     assert any("templates/base/bachelor.yaml" in value for value in command)
+    assert any("templates/base/docforge-standard.yaml" in value for value in command)
     assert any("templates/schools/example-university/2026.yaml" in value for value in command)
     assert any(
         "templates/schools/hunan-university-of-technology/master-2026.yaml" in value
@@ -148,7 +199,7 @@ def test_sidecar_builder_keeps_pyinstaller_work_outside_checkout(
             assert not path.is_relative_to(ROOT)
         dist_path = observed["--distpath"]
         dist_path.mkdir(parents=True)
-        (dist_path / "thesisforge-sidecar").write_bytes(b"sidecar")
+        (dist_path / "docforge-sidecar").write_bytes(b"sidecar")
         return SimpleNamespace(returncode=0, stdout="", stderr="")
 
     monkeypatch.setattr(builder, "host_target_triple", lambda: "aarch64-apple-darwin")
@@ -169,8 +220,8 @@ def test_desktop_verifier_maps_native_bundle_artifacts() -> None:
 
     assert verifier.required_bundle_suffixes("macos") == (".app", ".dmg")
     assert verifier.required_bundle_suffixes("windows") == (".msi", ".exe")
-    assert verifier.managed_sidecar_name("macos") == "thesisforge-sidecar"
-    assert verifier.managed_sidecar_name("windows") == "thesisforge-sidecar.exe"
+    assert verifier.managed_sidecar_name("macos") == "docforge-sidecar"
+    assert verifier.managed_sidecar_name("windows") == "docforge-sidecar.exe"
     with pytest.raises(ValueError, match="Unsupported desktop platform"):
         verifier.required_bundle_suffixes("linux")
 
@@ -179,10 +230,10 @@ def test_desktop_verifier_rejects_cross_host_targets_and_sidecar_pollution(
     tmp_path: Path,
 ) -> None:
     verifier = _load_module(VERIFY_DESKTOP, "verify_desktop_distribution_pollution")
-    sidecar = tmp_path / "thesisforge-sidecar-aarch64-apple-darwin"
+    sidecar = tmp_path / "docforge-sidecar-aarch64-apple-darwin"
     sidecar.write_bytes(b"sidecar")
     sidecar.chmod(0o755)
-    (tmp_path / "._thesisforge-sidecar-aarch64-apple-darwin").write_bytes(
+    (tmp_path / "._docforge-sidecar-aarch64-apple-darwin").write_bytes(
         b"metadata"
     )
 
@@ -222,7 +273,7 @@ def test_desktop_verifier_decodes_sidecar_output_as_utf8(
     monkeypatch.setattr(verifier.subprocess, "run", fake_run)
 
     verifier._run_sidecar(
-        tmp_path / "thesisforge-sidecar.exe",
+        tmp_path / "docforge-sidecar.exe",
         {"operation": "inspect"},
         stream=False,
         cwd=tmp_path,
@@ -250,7 +301,7 @@ def test_desktop_verifier_uses_canonical_docforge_fixture_and_strict_build_repor
             {
                 "type": "completed",
                 "report": {
-                    "schemaVersion": "thesisforge.build-report.v2",
+                    "schemaVersion": "docforge.build-report.v2",
                     "outcome": "canceled",
                 },
             }
@@ -265,7 +316,7 @@ def test_desktop_verifier_uses_canonical_docforge_fixture_and_strict_build_repor
             {
                 "type": "completed",
                 "report": {
-                    "schemaVersion": "thesisforge.build-report.v2",
+                    "schemaVersion": "docforge.build-report.v2",
                     "outcome": "succeeded",
                 },
             }
@@ -283,12 +334,31 @@ def test_desktop_verifier_uses_canonical_docforge_fixture_and_strict_build_repor
         )
 
 
+def test_desktop_verifier_rejects_obsolete_build_report_schema() -> None:
+    verifier = _load_module(VERIFY_DESKTOP, "verify_desktop_distribution_obsolete")
+
+    with pytest.raises(RuntimeError, match="obsolete"):
+        verifier._require_build_report(
+            [
+                {
+                    "type": "completed",
+                    "report": {
+                        "schemaVersion": "thesisforge.build-report.v2",
+                        "outcome": "succeeded",
+                    },
+                }
+            ],
+            outcome="succeeded",
+            label="obsolete",
+        )
+
+
 def test_desktop_verifier_wires_canonical_docforge_source_and_output(
     monkeypatch: pytest.MonkeyPatch,
     tmp_path: Path,
 ) -> None:
     verifier = _load_module(VERIFY_DESKTOP, "verify_desktop_distribution_wiring")
-    sidecar = tmp_path / "thesisforge-sidecar-aarch64-apple-darwin"
+    sidecar = tmp_path / "docforge-sidecar-aarch64-apple-darwin"
     sidecar.write_bytes(b"sidecar")
     requests: list[dict] = []
 
@@ -319,7 +389,7 @@ def test_desktop_verifier_wires_canonical_docforge_source_and_output(
                 {
                     "type": "completed",
                     "report": {
-                        "schemaVersion": "thesisforge.build-report.v2",
+                        "schemaVersion": "docforge.build-report.v2",
                         "outcome": outcome,
                     },
                 },
@@ -329,7 +399,7 @@ def test_desktop_verifier_wires_canonical_docforge_source_and_output(
             {
                 "type": "completed",
                 "report": {
-                    "schemaVersion": "thesisforge.build-report.v2",
+                    "schemaVersion": "docforge.build-report.v2",
                     "outcome": outcome,
                 },
             }
@@ -363,9 +433,9 @@ def test_windows_bundle_verifier_finds_the_managed_sidecar_in_release_directory(
     bundle_root = release / "bundle"
     (bundle_root / "msi").mkdir(parents=True)
     (bundle_root / "nsis").mkdir()
-    (bundle_root / "msi" / "ThesisForge.msi").write_bytes(b"MSI")
-    (bundle_root / "nsis" / "ThesisForge-setup.exe").write_bytes(b"MZinstaller")
-    managed_sidecar = release / "thesisforge-sidecar.exe"
+    (bundle_root / "msi" / "DocForge.msi").write_bytes(b"MSI")
+    (bundle_root / "nsis" / "DocForge-setup.exe").write_bytes(b"MZinstaller")
+    managed_sidecar = release / "docforge-sidecar.exe"
     managed_sidecar.write_bytes(b"MZsidecar")
 
     evidence = verifier.verify_native_bundles(bundle_root, "windows")
@@ -411,8 +481,8 @@ def test_distribution_workflow_builds_native_macos_and_windows_artifacts() -> No
     assert "-vv" in dmg_step["run"]
     assert "for attempt in 1 2 3" in dmg_step["run"]
     assert 'rm -rf "$dmg_bundle_dir"' in dmg_step["run"]
-    assert 'app_bundle_dir="src-tauri/target/${{ matrix.target }}/release/bundle/macos/ThesisForge.app"' in dmg_step["run"]
-    assert 'app_backup_dir="${RUNNER_TEMP}/ThesisForge.app"' in dmg_step["run"]
+    assert 'app_bundle_dir="src-tauri/target/${{ matrix.target }}/release/bundle/macos/DocForge.app"' in dmg_step["run"]
+    assert 'app_backup_dir="${RUNNER_TEMP}/DocForge.app"' in dmg_step["run"]
     assert 'ditto "$app_bundle_dir" "$app_backup_dir"' in dmg_step["run"]
     assert 'ditto "$app_backup_dir" "$app_bundle_dir"' in dmg_step["run"]
 
@@ -470,7 +540,7 @@ def test_woodpecker_macos_release_is_tag_only_and_quality_gated() -> None:
     assert workflow["labels"] == {
         "platform": "darwin/arm64",
         "backend": "local",
-        "purpose": "thesisforge-release",
+        "purpose": "docforge-release",
         "repo": "zengwenliang416/thesis-forge",
     }
     assert workflow["when"] == [{"event": "tag", "ref": "refs/tags/v*"}]
@@ -578,7 +648,7 @@ def test_woodpecker_publish_downloads_verified_assets_on_linux() -> None:
     assert download["environment"]["RELEASE_STAGING_ENDPOINT"] == {
         "from_secret": "release_staging_read_endpoint"
     }
-    assert 'test -f "ThesisForge_${version}_aarch64.dmg"' in download_commands
+    assert 'test -f "DocForge_${version}_aarch64.dmg"' in download_commands
     assert "NR == 3" in download_commands
     assert "sha256sum -c SHA256SUMS" in download_commands
     assert "find . -maxdepth 1 -type f" in download_commands
@@ -655,7 +725,7 @@ def test_release_preparer_requires_consistent_versions_and_collects_assets(
         preparer.validate_release_tag("v0.2.0")
 
     bundle_root = tmp_path / "bundle"
-    dmg = bundle_root / "dmg" / "ThesisForge_0.1.0_aarch64.dmg"
+    dmg = bundle_root / "dmg" / "DocForge_0.1.0_aarch64.dmg"
     dmg.parent.mkdir(parents=True)
     dmg.write_bytes(b"dmg")
     python_dist = tmp_path / "python"
@@ -693,7 +763,7 @@ def test_release_preparer_rejects_appledouble_metadata(tmp_path: Path) -> None:
     preparer = _load_module(PREPARE_RELEASE, "prepare_release_pollution")
     bundle_root = tmp_path / "bundle"
     bundle_root.mkdir()
-    (bundle_root / "._ThesisForge.dmg").write_bytes(b"metadata")
+    (bundle_root / "._DocForge.dmg").write_bytes(b"metadata")
 
     with pytest.raises(RuntimeError, match="AppleDouble"):
         preparer.prepare_macos_release(
@@ -711,7 +781,7 @@ def test_release_preparer_rejects_wrong_names_symlinks_and_stale_output(
     bundle_root = tmp_path / "bundle"
     dmg_dir = bundle_root / "dmg"
     dmg_dir.mkdir(parents=True)
-    (dmg_dir / "ThesisForge_9.9.9_x86_64.dmg").write_bytes(b"wrong")
+    (dmg_dir / "DocForge_9.9.9_x86_64.dmg").write_bytes(b"wrong")
     python_dist = tmp_path / "python"
     python_dist.mkdir()
     (python_dist / "docforge-0.1.0-py3-none-any.whl").write_bytes(b"wheel")
@@ -725,11 +795,11 @@ def test_release_preparer_rejects_wrong_names_symlinks_and_stale_output(
             output_dir=tmp_path / "release-wrong-name",
         )
 
-    wrong_dmg = dmg_dir / "ThesisForge_9.9.9_x86_64.dmg"
+    wrong_dmg = dmg_dir / "DocForge_9.9.9_x86_64.dmg"
     wrong_dmg.unlink()
     outside = tmp_path / "outside.dmg"
     outside.write_bytes(b"outside")
-    (dmg_dir / "ThesisForge_0.1.0_aarch64.dmg").symlink_to(outside)
+    (dmg_dir / "DocForge_0.1.0_aarch64.dmg").symlink_to(outside)
     with pytest.raises(RuntimeError, match="symbolic link"):
         preparer.prepare_macos_release(
             tag="v0.1.0",
@@ -738,8 +808,8 @@ def test_release_preparer_rejects_wrong_names_symlinks_and_stale_output(
             output_dir=tmp_path / "release-symlink",
         )
 
-    (dmg_dir / "ThesisForge_0.1.0_aarch64.dmg").unlink()
-    (dmg_dir / "ThesisForge_0.1.0_aarch64.dmg").write_bytes(b"dmg")
+    (dmg_dir / "DocForge_0.1.0_aarch64.dmg").unlink()
+    (dmg_dir / "DocForge_0.1.0_aarch64.dmg").write_bytes(b"dmg")
     stale_output = tmp_path / "release-stale"
     stale_output.mkdir()
     (stale_output / "stale.dmg").write_bytes(b"stale")
@@ -791,9 +861,9 @@ def test_windows_workflow_installs_and_drives_the_native_tauri_package() -> None
 
     assert "cargo install tauri-driver" not in workflow_text
     assert "msiexec.exe" in workflow_text
-    assert "THESISFORGE_WINDOWS_APP" in workflow_text
-    assert "THESISFORGE_BLOCK_NETWORK" in workflow_text
-    assert "THESISFORGE_WINDOWS_CDP_PORT" in workflow_text
+    assert "DOCFORGE_WINDOWS_APP" in workflow_text
+    assert "DOCFORGE_BLOCK_NETWORK" in workflow_text
+    assert "DOCFORGE_WINDOWS_CDP_PORT" in workflow_text
     assert "e2e:tauri:windows" in workflow_text
     assert "windows-native-evidence" in workflow_text
 
@@ -832,17 +902,17 @@ def test_windows_workflow_installs_and_drives_the_native_tauri_package() -> None
     )
     assert evidence_upload["if"] == "runner.os == 'Windows' && always()"
     assert "${{ runner.temp }}/windows-native-evidence" in evidence_upload["with"]["path"]
-    assert "${{ runner.temp }}/thesisforge-windows-install.log" in evidence_upload["with"]["path"]
+    assert "${{ runner.temp }}/docforge-windows-install.log" in evidence_upload["with"]["path"]
 
 
 def test_distribution_workflow_retains_built_artifacts_after_acceptance_failure() -> None:
     workflow = yaml.safe_load(WORKFLOW.read_text(encoding="utf-8"))
     steps = workflow["jobs"]["desktop"]["steps"]
     expected_artifacts = {
-        "thesisforge-web-${{ matrix.target }}",
-        "thesisforge-python-${{ matrix.target }}",
-        "thesisforge-sidecar-${{ matrix.target }}",
-        "thesisforge-desktop-${{ matrix.target }}",
+        "docforge-web-${{ matrix.target }}",
+        "docforge-python-${{ matrix.target }}",
+        "docforge-sidecar-${{ matrix.target }}",
+        "docforge-desktop-${{ matrix.target }}",
     }
     uploads = {
         step["with"]["name"]: step
@@ -895,8 +965,8 @@ def test_windows_tauri_acceptance_uses_webview2_cdp_and_real_commands() -> None:
     acceptance = WINDOWS_TAURI_ACCEPTANCE.read_text(encoding="utf-8")
 
     assert "WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS" not in acceptance
-    assert "THESISFORGE_WINDOWS_CDP_PORT" in acceptance
-    assert "THESISFORGE_WINDOWS_ACCEPTANCE_SOURCE" in acceptance
+    assert "DOCFORGE_WINDOWS_CDP_PORT" in acceptance
+    assert "DOCFORGE_WINDOWS_ACCEPTANCE_SOURCE" in acceptance
     assert "chromium.connectOverCDP" in acceptance
     assert "http://127.0.0.1:" in acceptance
     assert "spawn(appBinaryPath" in acceptance
@@ -915,7 +985,7 @@ def test_windows_tauri_acceptance_uses_webview2_cdp_and_real_commands() -> None:
     assert "windows-native-failure.html" in acceptance
     assert "windows-native-failure.json" in acceptance
     assert "prefers-reduced-motion" in acceptance
-    assert "THESISFORGE_WINDOWS_EVIDENCE" in acceptance
+    assert "DOCFORGE_WINDOWS_EVIDENCE" in acceptance
 
 
 def test_tauri_window_owner_enables_cdp_only_for_native_acceptance() -> None:
@@ -928,7 +998,7 @@ def test_tauri_window_owner_enables_cdp_only_for_native_acceptance() -> None:
     assert "WebviewWindowBuilder::from_config" in tauri_lib
     assert "windows_acceptance_browser_args" in tauri_lib
     assert ".additional_browser_args(&browser_args)" in tauri_lib
-    assert "THESISFORGE_WINDOWS_CDP_PORT" in tauri_lib
+    assert "DOCFORGE_WINDOWS_CDP_PORT" in tauri_lib
 
 
 def test_windows_tauri_acceptance_captures_processes_before_termination() -> None:
@@ -956,7 +1026,7 @@ def test_windows_tauri_acceptance_uses_existing_playwright_toolchain() -> None:
 def test_real_http_acceptance_selects_a_native_python_interpreter() -> None:
     config = REAL_HTTP_CONFIG.read_text(encoding="utf-8")
 
-    assert "THESISFORGE_PYTHON" in config
+    assert "DOCFORGE_PYTHON" in config
     assert 'process.platform === "win32"' in config
     assert ".venv/Scripts/python.exe" in config
     assert ".venv/bin/python" in config
@@ -970,9 +1040,9 @@ def test_tauri_uses_packaged_sidecar_without_removing_development_overrides() ->
 
     assert "tauri-plugin-shell" in cargo["dependencies"]
     assert "ShellExt" in rust
-    assert '.sidecar("thesisforge-sidecar")' in rust
-    assert "THESISFORGE_SIDECAR_EXECUTABLE" in rust
-    assert "THESISFORGE_PYTHON" in rust
+    assert '.sidecar("docforge-sidecar")' in rust
+    assert "DOCFORGE_SIDECAR_EXECUTABLE" in rust
+    assert "DOCFORGE_PYTHON" in rust
 
 
 def test_makefile_keeps_web_python_and_desktop_outputs_isolated() -> None:

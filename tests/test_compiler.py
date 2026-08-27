@@ -600,16 +600,20 @@ def test_compile_document_emits_renderer_neutral_cover_from_front_matter():
     document = ForgeDocument(
         source_path=Path("/tmp/thesis.md"),
         metadata={
-            "university": {"name": "XX大学", "college": "计算机学院"},
-            "thesis": {
-                "title": "结构化论文编译",
-                "title_en": "Structured Thesis Compilation",
-                "major": "计算机科学与技术",
-                "degree": "工学学士",
+            "metadata": {
+                "title": {
+                    "zh": "结构化文档编译",
+                    "en": "Structured Document Compilation",
+                },
+                "authors": [{"name": "张三"}],
             },
-            "author": {"name": "张三", "student_id": "2022000001"},
-            "advisor": {"name": "李老师", "title": "副教授"},
-            "dates": {"completed": "2026-06"},
+            "academic": {
+                "institution": {"name": "XX大学", "department": "计算机学院"},
+                "degree": {"name": "工学学士", "major": "计算机科学与技术"},
+                "student": {"name": "张三", "id": "2022000001"},
+                "advisor": {"name": "李老师", "title": "副教授"},
+                "completion": {"date": "2026-06"},
+            },
         },
         blocks=[
             Heading(
@@ -623,19 +627,21 @@ def test_compile_document_emits_renderer_neutral_cover_from_front_matter():
     plan = compile_document(document, template=template)
 
     assert plan.nodes[0] == CoverInstruction(
-        university="XX大学",
-        college="计算机学院",
-        title="结构化论文编译",
-        title_en="Structured Thesis Compilation",
-        major="计算机科学与技术",
-        degree="工学学士",
-        author="张三",
-        student_id="2022000001",
-        advisor="李老师",
-        advisor_title="副教授",
-        completed="2026-06",
+        bindings=(
+            ("academic.institution.name", "XX大学"),
+            ("metadata.title.zh", "结构化文档编译"),
+            ("metadata.title.en", "Structured Document Compilation"),
+            ("academic.institution.department", "计算机学院"),
+            ("academic.degree.name", "工学学士"),
+            ("academic.degree.major", "计算机科学与技术"),
+            ("academic.student.name", "张三"),
+            ("academic.student.id", "2022000001"),
+            ("academic.advisor.name", "李老师"),
+            ("academic.advisor.title", "副教授"),
+            ("academic.completion.date", "2026-06"),
+        )
     )
-    assert plan.nodes[0].payload["student_id"] == "2022000001"
+    assert plan.nodes[0].value_for("academic.student.id") == "2022000001"
     assert plan.nodes[1] == SectionBreakInstruction(role="front_matter")
 
 

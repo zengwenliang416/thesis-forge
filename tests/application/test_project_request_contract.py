@@ -11,6 +11,7 @@ from docforge.application.contracts import (
     ProjectRequest,
     ProjectRequestIntent,
 )
+from docforge.project.constants import DEFAULT_DOCX_FILENAME, MANIFEST_FILENAME
 
 
 def identity(tmp_path: Path) -> ProjectIdentity:
@@ -18,7 +19,7 @@ def identity(tmp_path: Path) -> ProjectIdentity:
     return ProjectIdentity(
         project_id="request-fixture",
         project_root=root,
-        manifest_path=root / "thesisforge.yaml",
+        manifest_path=root / MANIFEST_FILENAME,
     )
 
 
@@ -26,7 +27,7 @@ def test_project_request_preserves_identity_intent_output_and_editor_snapshot(
     tmp_path: Path,
 ) -> None:
     project = identity(tmp_path)
-    output = ProjectOutput(tmp_path.resolve() / "build/thesis.docx")
+    output = ProjectOutput(tmp_path.resolve() / "build" / DEFAULT_DOCX_FILENAME)
 
     request = ProjectRequest(
         project=project,
@@ -83,12 +84,12 @@ def test_request_types_do_not_use_bare_path_or_compatibility_unions() -> None:
         lambda tmp_path: ProjectIdentity(
             project_id="",
             project_root=tmp_path.resolve(),
-            manifest_path=tmp_path.resolve() / "thesisforge.yaml",
+            manifest_path=tmp_path.resolve() / MANIFEST_FILENAME,
         ),
         lambda tmp_path: ProjectIdentity(
             project_id="x",
             project_root=Path("relative"),
-            manifest_path=tmp_path.resolve() / "thesisforge.yaml",
+            manifest_path=tmp_path.resolve() / MANIFEST_FILENAME,
         ),
         lambda tmp_path: ProjectOutput(Path("relative-output.docx")),
     ],
@@ -110,7 +111,7 @@ def test_request_rejects_untyped_compatibility_values(tmp_path: Path) -> None:
         ProjectRequest(
             project=project,
             intent=ProjectRequestIntent.BUILD,
-            output=tmp_path / "thesis.docx",  # type: ignore[arg-type]
+            output=tmp_path / DEFAULT_DOCX_FILENAME,  # type: ignore[arg-type]
         )
     with pytest.raises(TypeError):
         ProjectRequest(

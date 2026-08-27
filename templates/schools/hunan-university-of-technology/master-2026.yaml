@@ -18,7 +18,8 @@ page:
 
 cover:
   items:
-    - field: university.name
+    - field: academic.institution.name
+      required: true
       style:
         font:
           east_asia: 黑体
@@ -46,7 +47,8 @@ cover:
         line_spacing:
           type: fixed
           value: 28pt
-    - field: thesis.title
+    - field: metadata.title.zh
+      required: true
       style:
         font:
           east_asia: 黑体
@@ -61,7 +63,7 @@ cover:
           type: fixed
           value: 30pt
         keep_together: true
-    - field: thesis.title_en
+    - field: metadata.title.en
       style:
         font:
           east_asia: 宋体
@@ -75,7 +77,8 @@ cover:
         line_spacing:
           type: fixed
           value: 20pt
-    - field: university.college
+    - field: academic.institution.department
+      required: true
       prefix: "培养单位："
       style:
         font:
@@ -90,7 +93,8 @@ cover:
         line_spacing:
           type: fixed
           value: 20pt
-    - field: thesis.major
+    - field: academic.degree.major
+      required: true
       prefix: "学科专业："
       style:
         font:
@@ -105,7 +109,8 @@ cover:
         line_spacing:
           type: fixed
           value: 20pt
-    - field: thesis.degree
+    - field: academic.degree.name
+      required: true
       prefix: "学位类别："
       style:
         font:
@@ -120,7 +125,8 @@ cover:
         line_spacing:
           type: fixed
           value: 20pt
-    - field: author.name
+    - field: academic.student.name
+      required: true
       prefix: "研究生："
       style:
         font:
@@ -135,7 +141,8 @@ cover:
         line_spacing:
           type: fixed
           value: 20pt
-    - field: author.student_id
+    - field: academic.student.id
+      required: true
       prefix: "学号："
       style:
         font:
@@ -150,7 +157,8 @@ cover:
         line_spacing:
           type: fixed
           value: 20pt
-    - field: advisor.name
+    - field: academic.advisor.name
+      required: true
       prefix: "指导教师："
       style:
         font:
@@ -165,7 +173,7 @@ cover:
         line_spacing:
           type: fixed
           value: 20pt
-    - field: advisor.title
+    - field: academic.advisor.title
       prefix: "导师职称："
       style:
         font:
@@ -180,7 +188,8 @@ cover:
         line_spacing:
           type: fixed
           value: 20pt
-    - field: dates.completed
+    - field: academic.completion.date
+      required: true
       style:
         font:
           east_asia: 宋体

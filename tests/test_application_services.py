@@ -55,7 +55,7 @@ from docforge.renderers.docx.package import (
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 _CANONICAL_TEMPLATE = PROJECT_ROOT / "templates" / "base" / "bachelor.yaml"
-_EXAMPLE_SOURCE_ROOT = tempfile.TemporaryDirectory(prefix="thesisforge-v2-")
+_EXAMPLE_SOURCE_ROOT = tempfile.TemporaryDirectory(prefix="docforge-v2-")
 EXAMPLE_SOURCE = Path(_EXAMPLE_SOURCE_ROOT.name) / "thesis.md"
 EXAMPLE_SOURCE.write_text(
     "# 绪论 {#chap:introduction}\n\n正文。\n",
@@ -147,12 +147,25 @@ def test_libreoffice_discovery_prefers_explicit_override():
 
     discovered = discover_libreoffice_executable(
         platform_name="linux",
-        environ={"THESISFORGE_LIBREOFFICE": str(expected)},
+        environ={"DOCFORGE_LIBREOFFICE": str(expected)},
         which=lambda _name: None,
         is_file=lambda path: path == expected,
     )
 
     assert discovered == expected
+
+
+def test_libreoffice_discovery_ignores_legacy_override():
+    legacy = Path("/custom/legacy-libreoffice")
+
+    discovered = discover_libreoffice_executable(
+        platform_name="linux",
+        environ={"THESISFORGE_LIBREOFFICE": str(legacy)},
+        which=lambda _name: None,
+        is_file=lambda path: path == legacy,
+    )
+
+    assert discovered is None
 
 
 def test_libreoffice_python_discovery_uses_macos_bundled_runtime():
@@ -168,6 +181,42 @@ def test_libreoffice_python_discovery_uses_macos_bundled_runtime():
     )
 
     assert discovered == expected
+
+
+def test_libreoffice_python_discovery_uses_explicit_docforge_override(
+    tmp_path: Path,
+):
+    executable = tmp_path / "soffice"
+    expected = tmp_path / "docforge-python"
+    expected.touch()
+
+    discovered = discover_libreoffice_python(
+        executable,
+        environ={"DOCFORGE_LIBREOFFICE_PYTHON": str(expected)},
+        is_file=Path.is_file,
+        which=lambda _name: None,
+        can_import_uno=lambda path: path == expected,
+    )
+
+    assert discovered == expected
+
+
+def test_libreoffice_python_discovery_ignores_legacy_override(
+    tmp_path: Path,
+):
+    executable = tmp_path / "soffice"
+    legacy = tmp_path / "legacy-python"
+    legacy.touch()
+
+    discovered = discover_libreoffice_python(
+        executable,
+        environ={"THESISFORGE_LIBREOFFICE_PYTHON": str(legacy)},
+        is_file=lambda path: path == legacy,
+        which=lambda _name: None,
+        can_import_uno=lambda _path: True,
+    )
+
+    assert discovered is None
 
 
 def test_libreoffice_python_discovery_rejects_runtime_without_uno(tmp_path: Path):
@@ -188,7 +237,11 @@ def test_libreoffice_python_discovery_rejects_runtime_without_uno(tmp_path: Path
 
 @pytest.mark.parametrize("value", ["0", "false", "NO", " off ", "disabled"])
 def test_automatic_office_refresh_can_be_disabled(value: str):
-    assert not _automatic_refresh_enabled({"THESISFORGE_OFFICE_REFRESH": value})
+    assert not _automatic_refresh_enabled({"DOCFORGE_OFFICE_REFRESH": value})
+
+
+def test_automatic_office_refresh_ignores_legacy_environment_variable():
+    assert _automatic_refresh_enabled({"THESISFORGE_OFFICE_REFRESH": "0"})
 
 
 def test_automatic_office_refresh_defaults_to_enabled_for_empty_environment():
@@ -1688,7 +1741,7 @@ def test_typed_project_application_service_loads_manifest_context() -> None:
         project=ProjectIdentity(
             project_id="goal-fixture",
             project_root=project_root.resolve(),
-            manifest_path=(project_root / "thesisforge.yaml").resolve(),
+            manifest_path=(project_root / "docforge.yaml").resolve(),
         ),
         intent=ProjectRequestIntent.INSPECT,
     )
@@ -1696,4 +1749,4 @@ def test_typed_project_application_service_loads_manifest_context() -> None:
     context = ProjectApplicationService().load(request)
 
     assert context.project.manifest.project.id == "goal-fixture"
-    assert context.paths.source == (project_root / "thesis.md").resolve()
+    assert context.paths.source == (project_root / "document.md").resolve()

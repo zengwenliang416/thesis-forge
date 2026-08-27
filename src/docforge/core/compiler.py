@@ -12,6 +12,7 @@ from docforge.bibliography import (
     CitationFormatter,
     resolve_citation_provider,
 )
+from docforge.templates import resolve_template_bindings
 from docforge.templates.model import SectionsSpec, ThesisTemplate
 
 from .index import DocumentIndex
@@ -147,6 +148,13 @@ SEMANTIC_BODY_ROLES: dict[str, ParagraphRole] = {
 
 class CompilerError(ValueError):
     pass
+
+
+class MissingRequiredBindingError(CompilerError):
+    def __init__(self, paths: tuple[str, ...]):
+        self.paths = paths
+        joined = ", ".join(paths)
+        super().__init__(f"Required template bindings are missing: {joined}")
 
 
 class UnresolvedReferenceError(CompilerError):
@@ -406,33 +414,26 @@ def _initial_section_role(template: ThesisTemplate | None) -> str | None:
     return None
 
 
-def _metadata_text(metadata: dict, *path: str) -> str:
-    value = metadata
-    for part in path:
-        if not isinstance(value, dict):
-            return ""
-        value = value.get(part)
-    if value is None or isinstance(value, (dict, list)):
-        return ""
-    return str(value).strip()
-
-
-def _compile_cover(document: ForgeDocument) -> CoverInstruction | None:
-    metadata = document.metadata
-    instruction = CoverInstruction(
-        university=_metadata_text(metadata, "university", "name"),
-        college=_metadata_text(metadata, "university", "college"),
-        title=_metadata_text(metadata, "thesis", "title"),
-        title_en=_metadata_text(metadata, "thesis", "title_en"),
-        major=_metadata_text(metadata, "thesis", "major"),
-        degree=_metadata_text(metadata, "thesis", "degree"),
-        author=_metadata_text(metadata, "author", "name"),
-        student_id=_metadata_text(metadata, "author", "student_id"),
-        advisor=_metadata_text(metadata, "advisor", "name"),
-        advisor_title=_metadata_text(metadata, "advisor", "title"),
-        completed=_metadata_text(metadata, "dates", "completed"),
+def _compile_cover(
+    document: ForgeDocument,
+    template: ThesisTemplate,
+) -> CoverInstruction | None:
+    bindings = resolve_template_bindings(document.metadata, template)
+    missing = tuple(
+        binding.required_group or binding.path
+        for binding in bindings
+        if binding.required and not binding.value
     )
-    return instruction if any(instruction.payload.values()) else None
+    if missing:
+        raise MissingRequiredBindingError(missing)
+    resolved = tuple(
+        (binding.path, binding.value)
+        for binding in bindings
+        if binding.value
+    )
+    if not resolved:
+        return None
+    return CoverInstruction(bindings=resolved)
 
 
 @dataclass(slots=True)
@@ -898,8 +899,8 @@ def compile_document(
     )
     section_planner = _SectionPlanner.from_template(template)
     instructions: list[RenderInstruction] = []
-    if section_planner.initial_role == "cover":
-        cover = _compile_cover(document)
+    if section_planner.initial_role == "cover" and template is not None:
+        cover = _compile_cover(document, template)
         if cover is not None:
             instructions.append(cover)
     instructions.extend(section_planner.initial_instructions())

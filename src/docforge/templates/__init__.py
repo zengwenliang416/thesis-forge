@@ -1,10 +1,15 @@
+from .bindings import (
+    ResolvedMetadataBinding,
+    manifest_binding_data,
+    resolve_template_bindings,
+)
 from .model import (
+    METADATA_BINDING_REGISTRY,
     AbstractStyleSpec,
     BibliographySpec,
     BodySpec,
     CaptionSpec,
     CitationSpec,
-    CoverField,
     CoverItemSpec,
     CoverSpec,
     DocumentGridSpec,
@@ -21,6 +26,9 @@ from .model import (
     ListMarkerAlignment,
     ListSpec,
     MarginSpec,
+    MetadataBindingDescriptor,
+    MetadataBindingLocale,
+    MetadataBindingPath,
     NumberingSpec,
     OrderedListFormat,
     OrderedListLevelSpec,
@@ -53,12 +61,12 @@ from .resolver import (
 )
 
 __all__ = [
+    "METADATA_BINDING_REGISTRY",
     "AbstractStyleSpec",
     "BibliographySpec",
     "BodySpec",
     "CaptionSpec",
     "CitationSpec",
-    "CoverField",
     "CoverItemSpec",
     "CoverSpec",
     "DocumentGridSpec",
@@ -75,6 +83,9 @@ __all__ = [
     "ListMarkerAlignment",
     "ListSpec",
     "MarginSpec",
+    "MetadataBindingDescriptor",
+    "MetadataBindingLocale",
+    "MetadataBindingPath",
     "NumberingSpec",
     "OrderedListFormat",
     "OrderedListLevelSpec",
@@ -84,6 +95,7 @@ __all__ = [
     "PageSpec",
     "ParagraphBorderSpec",
     "ParagraphStyleSpec",
+    "ResolvedMetadataBinding",
     "ResolvedTemplate",
     "SectionSpec",
     "SectionsSpec",
@@ -101,5 +113,7 @@ __all__ = [
     "UnorderedListSpec",
     "default_template_search_roots",
     "load_template",
+    "manifest_binding_data",
     "resolve_template",
+    "resolve_template_bindings",
 ]

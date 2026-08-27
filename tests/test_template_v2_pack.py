@@ -90,7 +90,7 @@ def _write_l1_complete_package(package_dir: Path, data: dict) -> Path:
     )
     minimal = package_dir / "fixtures" / "minimal"
     minimal.mkdir(parents=True)
-    (minimal / "thesis.md").write_text("# 绪论 {#chap:intro}\n", encoding="utf-8")
+    (minimal / "document.md").write_text("# 绪论 {#chap:intro}\n", encoding="utf-8")
     return package_dir
 
 
@@ -101,7 +101,7 @@ def _template_data(**overrides) -> dict:
         "version": "1.0.0",
         "name": "演示模板",
         "compatibility": {
-            "thesisforge": ">=0.0.0",
+            "docforge": ">=0.0.0",
             "document_types": ["master_thesis"],
         },
         "page": {
@@ -140,7 +140,7 @@ def _build_malicious_tftpl(
     names = manifest_entries if manifest_entries is not None else list(entries)
     manifest = {
         "manifest_version": 1,
-        "generator": {"name": "thesisforge", "version": "0.1.0"},
+        "generator": {"name": "docforge", "version": "0.1.0"},
         "template": {
             "id": "demo.pack",
             "version": "1.0.0",
@@ -148,7 +148,7 @@ def _build_malicious_tftpl(
             "language": "zh-CN",
         },
         "compatibility": {
-            "thesisforge": ">=0.0.0",
+            "docforge": ">=0.0.0",
             "document_types": ["master_thesis"],
         },
         "entries": [
@@ -202,7 +202,7 @@ def test_pack_manifest_structure(tmp_path: Path) -> None:
         manifest = json.loads(archive.read("manifest.json").decode("utf-8"))
 
     assert manifest["manifest_version"] == 1
-    assert manifest["generator"]["name"] == "thesisforge"
+    assert manifest["generator"]["name"] == "docforge"
     header = yaml.safe_load(
         (SAMPLE_PACKAGE / "template.yaml").read_text(encoding="utf-8")
     )
@@ -380,7 +380,7 @@ def test_migrate_bachelor_ledger_and_lint(tmp_path: Path) -> None:
     ):
         assert (out / name).is_file(), name
     assert any((out / "fixtures" / "minimal").iterdir())
-    fixture_source = (out / "fixtures" / "minimal" / "thesis.md").read_text(
+    fixture_source = (out / "fixtures" / "minimal" / "document.md").read_text(
         encoding="utf-8"
     )
     assert fixture_source.startswith("# 第一章 绪论 {#chap:intro}\n")

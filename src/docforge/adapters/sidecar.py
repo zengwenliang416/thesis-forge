@@ -9,6 +9,7 @@ from pathlib import Path
 
 from docforge.application.services import ProjectApplicationService
 
+from .dto import PROTOCOL_VERSION
 from .runtime import (
     DesktopRuntime,
     WorkbenchCommandDispatcher,
@@ -46,7 +47,7 @@ def dispatch_json_line(
         response = dispatcher.dispatch(request)
     except (TypeError, ValueError, json.JSONDecodeError) as error:
         response = {
-            "protocol": "thesisforge.workbench.v1",
+            "protocol": PROTOCOL_VERSION,
             "requestId": "invalid-request",
             "ok": False,
             "error": {"kind": "request", "message": str(error)},
@@ -73,7 +74,7 @@ def stream_json_lines(
     except (TypeError, ValueError, json.JSONDecodeError) as error:
         yield json.dumps(
             {
-                "protocol": "thesisforge.workbench.v1",
+                "protocol": PROTOCOL_VERSION,
                 "requestId": "invalid-request",
                 "type": "error",
                 "error": {"kind": "transport", "message": str(error)},
@@ -90,7 +91,7 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
     dispatcher = create_dispatcher()
     if args.stream:
-        cancel_file = os.environ.get("THESISFORGE_CANCEL_FILE")
+        cancel_file = os.environ.get("DOCFORGE_CANCEL_FILE")
         should_cancel = (
             (lambda: Path(cancel_file).exists())
             if cancel_file is not None

@@ -1,5 +1,5 @@
 {
-  "protocol": "thesisforge.workbench.v1",
+  "protocol": "docforge.workbench.v1",
   "cases": [
     {
       "name": "desktop-source-lifecycle",
@@ -9,7 +9,7 @@
             "type": "sourceOpened",
             "source": {
               "kind": "desktop",
-              "name": "thesis.md",
+              "name": "document.md",
               "writable": true
             },
             "text": "# Saved\n"
@@ -17,7 +17,7 @@
           "expected": {
             "status": "populated",
             "sourceKind": "desktop",
-            "sourceName": "thesis.md",
+            "sourceName": "document.md",
             "savedText": "# Saved\n",
             "editorText": "# Saved\n",
             "dirty": false,
@@ -42,7 +42,7 @@
           "expected": {
             "status": "dirty",
             "sourceKind": "desktop",
-            "sourceName": "thesis.md",
+            "sourceName": "document.md",
             "savedText": "# Saved\n",
             "editorText": "# Changed\n",
             "dirty": true,
@@ -70,7 +70,7 @@
           "expected": {
             "status": "loading",
             "sourceKind": "desktop",
-            "sourceName": "thesis.md",
+            "sourceName": "document.md",
             "savedText": "# Saved\n",
             "editorText": "# Changed\n",
             "dirty": true,
@@ -98,7 +98,7 @@
           "expected": {
             "status": "populated",
             "sourceKind": "desktop",
-            "sourceName": "thesis.md",
+            "sourceName": "document.md",
             "savedText": "# Changed\n",
             "editorText": "# Changed\n",
             "dirty": false,

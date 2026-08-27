@@ -26,12 +26,12 @@ $$
 """.lstrip()
 
 MANIFEST = """
-schema: thesisforge.project.v2
+schema: docforge.project.v1
 project:
   id: layout-override-fixture
   language: zh-CN
 document:
-  source: thesis.md
+  source: document.md
 resources:
   root: .
   assets: assets
@@ -44,14 +44,14 @@ def write_project(tmp_path: Path, *, layout: str = "") -> Path:
     root = tmp_path / "project"
     (root / "assets").mkdir(parents=True)
     (root / "assets" / "model.png").write_bytes(b"png")
-    (root / "thesis.md").write_text(THESIS_MD, encoding="utf-8")
-    (root / "thesisforge.yaml").write_text(MANIFEST + layout, encoding="utf-8")
+    (root / "document.md").write_text(THESIS_MD, encoding="utf-8")
+    (root / "docforge.yaml").write_text(MANIFEST + layout, encoding="utf-8")
     return root
 
 
 def override_issues(tmp_path: Path, *, layout: str = "") -> list[ValidationIssue]:
     root = write_project(tmp_path, layout=layout)
-    document = PARSER.parse_file(root / "thesis.md")
+    document = PARSER.parse_file(root / "document.md")
     issues = validate_document(document)
     return [issue for issue in issues if issue.code in OVERRIDE_CODES]
 

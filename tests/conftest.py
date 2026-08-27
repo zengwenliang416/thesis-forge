@@ -5,4 +5,4 @@ import pytest
 
 @pytest.fixture(autouse=True)
 def disable_automatic_office_refresh(monkeypatch):
-    monkeypatch.setenv("THESISFORGE_OFFICE_REFRESH", "0")
+    monkeypatch.setenv("DOCFORGE_OFFICE_REFRESH", "0")

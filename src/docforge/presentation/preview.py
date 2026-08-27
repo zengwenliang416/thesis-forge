@@ -51,6 +51,8 @@ from docforge.core.render_plan import (
     ensure_inline_run,
 )
 
+from .metadata import cover_binding_label
+
 PREVIEW_SCHEMA_VERSION = 1
 PREVIEW_DISCLAIMER = "结构预览不代表 Word 最终分页。"
 _TECHNICAL_MARKER_RE = re.compile(
@@ -220,20 +222,8 @@ class _SourceIndex:
 
 def _cover_content(instruction: CoverInstruction) -> dict[str, Any]:
     fields = [
-        {"label": label, "value": value}
-        for label, value in (
-            ("学校", instruction.university),
-            ("学院", instruction.college),
-            ("题目", instruction.title),
-            ("英文题目", instruction.title_en),
-            ("专业", instruction.major),
-            ("学位", instruction.degree),
-            ("作者", instruction.author),
-            ("学号", instruction.student_id),
-            ("导师", instruction.advisor),
-            ("导师职称", instruction.advisor_title),
-            ("完成日期", instruction.completed),
-        )
+        {"label": cover_binding_label(path), "value": value}
+        for path, value in instruction.bindings
         if value
     ]
     return {"type": "cover", "fields": fields}

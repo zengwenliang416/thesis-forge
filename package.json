@@ -1,5 +1,5 @@
 {
-  "name": "thesis-forge-workspace",
+  "name": "docforge-workspace",
   "private": true,
   "packageManager": "pnpm@10.34.5",
   "scripts": {

@@ -32,7 +32,7 @@ from . import lint as _lint
 from . import package as pkg
 
 MANIFEST_VERSION = 1
-GENERATOR_NAME = "thesisforge"
+GENERATOR_NAME = "docforge"
 
 # §1.3 默认阈值（与 lint.py 保持一致）
 MAX_ENTRY_SIZE = 64 * 1024 * 1024  # 64 MB
@@ -341,7 +341,7 @@ def _load_and_check_manifest(
         )
     compatibility = manifest.get("compatibility")
     if isinstance(compatibility, dict):
-        host_range = compatibility.get("thesisforge")
+        host_range = compatibility.get("docforge")
         if isinstance(host_range, str):
             try:
                 from .schema import version_satisfies
@@ -349,18 +349,18 @@ def _load_and_check_manifest(
                 if not version_satisfies(host_range, host_version):
                     issues.append(
                         _error(
-                            "incompatible-thesisforge",
-                            f"宿主 ThesisForge {host_version} 不满足模板兼容区间 "
+                            "incompatible-docforge",
+                            f"宿主 DocForge {host_version} 不满足模板兼容区间 "
                             f"{host_range!r}",
-                            target="compatibility.thesisforge",
+                            target="compatibility.docforge",
                         )
                     )
             except ValueError:
                 issues.append(
                     _error(
                         "invalid-package",
-                        f"manifest compatibility.thesisforge 区间无效：{host_range!r}",
-                        target="compatibility.thesisforge",
+                        f"manifest compatibility.docforge 区间无效：{host_range!r}",
+                        target="compatibility.docforge",
                     )
                 )
     entries = manifest.get("entries")
@@ -621,7 +621,7 @@ def verify_package(
 
     import tempfile
 
-    with tempfile.TemporaryDirectory(prefix="thesisforge-tftpl-") as tmp:
+    with tempfile.TemporaryDirectory(prefix="docforge-tftpl-") as tmp:
         dest = Path(tmp) / "package"
         try:
             unpack_package(tftpl, dest, host_version=host_version)

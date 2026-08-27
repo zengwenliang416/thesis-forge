@@ -25,7 +25,9 @@ from docforge.templates import (
     TemplateSelectionError,
     ThesisTemplate,
     default_template_search_roots,
+    manifest_binding_data,
     resolve_template,
+    resolve_template_bindings,
 )
 
 from .ids import is_valid_stable_id
@@ -52,7 +54,6 @@ ValidationRule: TypeAlias = Callable[
     Iterable[ValidationIssue],
 ]
 
-DEFAULT_REQUIRED_METADATA = ("thesis.title", "author.name")
 SEVERITY_ORDER = {"error": 0, "warning": 1, "info": 2}
 
 
@@ -62,7 +63,7 @@ class ValidationContext:
     template_path: Path | None = None
     template_error: TemplateSelectionError | TemplateLoadError | None = None
     resource_roots: tuple[Path, ...] = ()
-    required_metadata: tuple[str, ...] = DEFAULT_REQUIRED_METADATA
+    required_metadata: tuple[str, ...] = ()
     rules: Sequence[ValidationRule] | None = None
     bibliography_loader: BibliographyLoader = field(default_factory=LocalBibTeXLoader)
     bibliography_database: BibliographyDatabase | None = None
@@ -80,7 +81,7 @@ class ValidationContext:
         template_path: str | Path | None = None,
         template_roots: Iterable[Path] | None = None,
         resource_roots: Iterable[Path] | None = None,
-        required_metadata: Iterable[str] = DEFAULT_REQUIRED_METADATA,
+        required_metadata: Iterable[str] | None = None,
         rules: Sequence[ValidationRule] | None = None,
         bibliography_loader: BibliographyLoader | None = None,
     ) -> ValidationContext:
@@ -97,7 +98,10 @@ class ValidationContext:
         except (ProjectLoadError, ProjectPathError) as error:
             project_error = error
         if project is not None:
-            document.metadata = _manifest_metadata(project)
+            document.metadata = manifest_binding_data(project.manifest)
+        active_required_metadata = (
+            tuple(required_metadata) if required_metadata is not None else ()
+        )
         render = document.metadata.get("render")
         template_id = render.get("template_id") if isinstance(render, dict) else None
         if not isinstance(template_id, str):
@@ -158,7 +162,7 @@ class ValidationContext:
             return cls(
                 template_error=error,
                 resource_roots=active_resource_roots,
-                required_metadata=tuple(required_metadata),
+                required_metadata=active_required_metadata,
                 rules=rules,
                 bibliography_loader=bibliography_loader or LocalBibTeXLoader(),
                 manifest_bibliography_path=manifest_bibliography_path,
@@ -171,7 +175,7 @@ class ValidationContext:
             template=resolved.template,
             template_path=resolved.path,
             resource_roots=active_resource_roots,
-            required_metadata=tuple(required_metadata),
+            required_metadata=active_required_metadata,
             rules=rules,
             bibliography_loader=bibliography_loader or LocalBibTeXLoader(),
             manifest_bibliography_path=manifest_bibliography_path,
@@ -189,42 +193,6 @@ def _discover_project(source_path: Path):
         if manifest_path.is_file():
             return load_project(manifest_path)
     return None
-
-
-def _manifest_metadata(project) -> dict[str, dict[str, str]]:
-    metadata = project.manifest.metadata
-    normalized: dict[str, dict[str, str]] = {}
-
-    def add(group: str, field: str, value: str | None) -> None:
-        if value:
-            normalized.setdefault(group, {})[field] = value
-
-    title = metadata.title
-    if title is not None:
-        add("thesis", "title", title.zh or title.en)
-        add("thesis", "title_en", title.en)
-
-    if metadata.authors:
-        add("author", "name", metadata.authors[0].name)
-
-    academic = project.manifest.academic
-    if academic is not None:
-        if academic.student is not None:
-            add("author", "name", academic.student.name)
-            add("author", "student_id", academic.student.id)
-        if academic.institution is not None:
-            add("university", "name", academic.institution.name)
-            add("university", "college", academic.institution.department)
-        if academic.degree is not None:
-            add("thesis", "degree", academic.degree.name)
-            add("thesis", "major", academic.degree.major)
-        if academic.advisor is not None:
-            add("advisor", "name", academic.advisor.name)
-            add("advisor", "title", academic.advisor.title)
-        if academic.completion is not None:
-            add("dates", "completed", academic.completion.date)
-
-    return normalized
 
 
 def _metadata_value(document: ForgeDocument, dotted_path: str) -> object | None:
@@ -281,6 +249,24 @@ def _validate_required_metadata(
                 message="Required metadata is missing",
                 target=dotted_path,
                 details={"path": dotted_path},
+            )
+    if context.template is None:
+        return
+    for binding in resolve_template_bindings(document.metadata, context.template):
+        if binding.required and not binding.value:
+            target = binding.required_group or binding.path
+            details: dict[str, str | int] = {
+                "path": binding.path,
+                "template_id": context.template.id,
+            }
+            if binding.required_group is not None:
+                details["required_group"] = binding.required_group
+            yield ValidationIssue(
+                code="required-metadata",
+                severity="error",
+                message="Template-required metadata is missing",
+                target=target,
+                details=details,
             )
 
 

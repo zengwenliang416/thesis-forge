@@ -158,7 +158,7 @@ def test_project_build_validation_failure_emits_typed_report(monkeypatch) -> Non
 
     assert result.exit_code == 1
     payload = json.loads(result.stdout)
-    assert payload["report"]["schemaVersion"] == "thesisforge.build-report.v2"
+    assert payload["report"]["schemaVersion"] == "docforge.build-report.v2"
     assert payload["report"]["outcome"] == "failed"
     assert payload["report"]["failedStage"] == BuildStage.VALIDATE.value
     assert payload["report"]["diagnostics"][0]["code"] == "missing-image"

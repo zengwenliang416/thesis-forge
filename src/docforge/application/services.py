@@ -53,6 +53,18 @@ CancellationPredicate = Callable[[], bool]
 REPORT_STAGES = tuple(BuildReportStage)
 
 
+def ensure_build_output_differs_from_source(
+    source: str | Path,
+    output: str | Path,
+) -> None:
+    """Reject a build target that resolves to the source document."""
+
+    source_path = Path(source).expanduser().resolve(strict=False)
+    output_path = Path(output).expanduser().resolve(strict=False)
+    if source_path == output_path:
+        raise ValueError("build output path must differ from source path")
+
+
 class DocumentRenderer(Protocol):
     def render(self, plan: RenderPlan, output: str | Path) -> Path: ...
 
@@ -450,6 +462,7 @@ def build_service(
 ) -> BuildResult:
     active = _dependencies(dependencies)
     output_path = Path(output)
+    ensure_build_output_differs_from_source(source, output_path)
     final_preview: PdfPreviewArtifact | None = None
 
     _check_canceled(should_cancel, BuildStage.PARSE)

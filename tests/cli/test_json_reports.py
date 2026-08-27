@@ -84,7 +84,7 @@ def test_build_success_writes_deterministic_typed_report(
 
     assert result.exit_code == 0, result.stdout
     payload = json.loads(report_path.read_text(encoding="utf-8"))
-    assert payload["report"]["schemaVersion"] == "thesisforge.build-report.v2"
+    assert payload["report"]["schemaVersion"] == "docforge.build-report.v2"
     assert payload["report"]["outcome"] == "succeeded"
     assert payload["report"]["output"]["docxPath"] == "<path>"
     assert json.loads(result.stdout) == payload
@@ -113,7 +113,7 @@ def test_build_failure_writes_complete_typed_report(
 
     assert result.exit_code == 1
     payload = json.loads(report_path.read_text(encoding="utf-8"))
-    assert payload["report"]["schemaVersion"] == "thesisforge.build-report.v2"
+    assert payload["report"]["schemaVersion"] == "docforge.build-report.v2"
     assert payload["report"]["outcome"] == "failed"
     assert payload["report"]["failedStage"] == BuildStage.VALIDATE.value
     assert payload["report"]["diagnostics"][0]["code"] == "missing-image"

@@ -1,8 +1,11 @@
 from __future__ import annotations
 
 import re
+from collections.abc import Mapping
+from dataclasses import dataclass
 from decimal import Decimal
 from pathlib import Path
+from types import MappingProxyType
 from typing import Any, Literal
 
 import yaml
@@ -185,19 +188,103 @@ class ParagraphStyleSpec(TemplateModel):
         return value
 
 
-CoverField = Literal[
-    "university.name",
-    "university.college",
-    "thesis.title",
-    "thesis.title_en",
-    "thesis.major",
-    "thesis.degree",
-    "author.name",
-    "author.student_id",
-    "advisor.name",
-    "advisor.title",
-    "dates.completed",
+MetadataBindingPath = Literal[
+    "metadata.title.zh",
+    "metadata.title.en",
+    "metadata.subtitle.zh",
+    "metadata.subtitle.en",
+    "metadata.authors",
+    "metadata.organization",
+    "metadata.date",
+    "metadata.version",
+    "metadata.keywords",
+    "academic.student.name",
+    "academic.student.id",
+    "academic.institution.name",
+    "academic.institution.department",
+    "academic.degree.name",
+    "academic.degree.major",
+    "academic.advisor.name",
+    "academic.advisor.title",
+    "academic.completion.date",
 ]
+
+
+MetadataBindingFormat = Literal["scalar", "authors", "keywords"]
+MetadataBindingLocale = Literal["zh", "en"]
+
+
+@dataclass(frozen=True, slots=True)
+class MetadataBindingDescriptor:
+    label: str
+    format_kind: MetadataBindingFormat = "scalar"
+    default_cover: bool = False
+    localized_group: str | None = None
+    locale: MetadataBindingLocale | None = None
+
+
+METADATA_BINDING_REGISTRY: Mapping[
+    MetadataBindingPath, MetadataBindingDescriptor
+] = MappingProxyType(
+    {
+        "metadata.title.zh": MetadataBindingDescriptor(
+            "标题",
+            default_cover=True,
+            localized_group="metadata.title",
+            locale="zh",
+        ),
+        "metadata.title.en": MetadataBindingDescriptor(
+            "英文标题",
+            default_cover=True,
+            localized_group="metadata.title",
+            locale="en",
+        ),
+        "metadata.subtitle.zh": MetadataBindingDescriptor(
+            "副标题",
+            default_cover=True,
+            localized_group="metadata.subtitle",
+            locale="zh",
+        ),
+        "metadata.subtitle.en": MetadataBindingDescriptor(
+            "英文副标题",
+            default_cover=True,
+            localized_group="metadata.subtitle",
+            locale="en",
+        ),
+        "metadata.authors": MetadataBindingDescriptor(
+            "作者",
+            format_kind="authors",
+            default_cover=True,
+        ),
+        "metadata.organization": MetadataBindingDescriptor(
+            "组织",
+            default_cover=True,
+        ),
+        "metadata.date": MetadataBindingDescriptor("日期", default_cover=True),
+        "metadata.version": MetadataBindingDescriptor("版本", default_cover=True),
+        "metadata.keywords": MetadataBindingDescriptor(
+            "关键词",
+            format_kind="keywords",
+            default_cover=True,
+        ),
+        "academic.student.name": MetadataBindingDescriptor("学生"),
+        "academic.student.id": MetadataBindingDescriptor("学号"),
+        "academic.institution.name": MetadataBindingDescriptor("学校"),
+        "academic.institution.department": MetadataBindingDescriptor("院系"),
+        "academic.degree.name": MetadataBindingDescriptor("学位"),
+        "academic.degree.major": MetadataBindingDescriptor("专业"),
+        "academic.advisor.name": MetadataBindingDescriptor("导师"),
+        "academic.advisor.title": MetadataBindingDescriptor("导师职称"),
+        "academic.completion.date": MetadataBindingDescriptor("完成日期"),
+    }
+)
+
+
+def get_metadata_binding_descriptor(path: str) -> MetadataBindingDescriptor:
+    try:
+        return METADATA_BINDING_REGISTRY[path]  # type: ignore[index]
+    except KeyError as error:
+        raise ValueError(f"unsupported metadata binding path: {path}") from error
 
 
 OrderedListFormat = Literal[
@@ -310,11 +397,14 @@ class ListSpec(TemplateModel):
 
 
 class CoverItemSpec(TemplateModel):
-    field: CoverField | None = None
+    field: MetadataBindingPath | None = None
     text: str | None = None
     prefix: str = ""
     suffix: str = ""
     skip_if_empty: bool = True
+    required: bool = False
+    required_group: str | None = None
+    join_with: str = "、"
     style: ParagraphStyleSpec = Field(
         default_factory=lambda: ParagraphStyleSpec(alignment="center")
     )
@@ -327,22 +417,24 @@ class CoverItemSpec(TemplateModel):
             self.text = self.text.strip()
             if not self.text:
                 raise ValueError("cover item text 不能为空")
+            if self.required:
+                raise ValueError("静态 cover item 不能声明 required")
+            if self.required_group is not None:
+                raise ValueError("静态 cover item 不能声明 required_group")
+        if self.required_group is not None:
+            self.required_group = self.required_group.strip()
+            if not self.required_group:
+                raise ValueError("cover item required_group 不能为空")
+        if not self.join_with:
+            raise ValueError("cover item join_with 不能为空")
         return self
 
 
 def _default_cover_items() -> tuple[CoverItemSpec, ...]:
-    fields: tuple[CoverField, ...] = (
-        "university.name",
-        "university.college",
-        "thesis.title",
-        "thesis.title_en",
-        "thesis.major",
-        "thesis.degree",
-        "author.name",
-        "author.student_id",
-        "advisor.name",
-        "advisor.title",
-        "dates.completed",
+    fields = (
+        path
+        for path, descriptor in METADATA_BINDING_REGISTRY.items()
+        if descriptor.default_cover
     )
     return tuple(CoverItemSpec(field=field) for field in fields)
 

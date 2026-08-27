@@ -39,7 +39,7 @@ from docforge.presentation.review import (
 
 ROOT = Path(__file__).resolve().parents[2]
 V2_PROJECT = ROOT / "tests" / "fixtures" / "v2-project"
-CANONICAL_SOURCE = V2_PROJECT / "thesis.md"
+CANONICAL_SOURCE = V2_PROJECT / "document.md"
 TEMPLATE_ROOT = ROOT / "templates"
 
 _MARKER_LABELS = frozenset(

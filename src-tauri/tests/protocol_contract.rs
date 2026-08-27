@@ -1,37 +1,53 @@
-use serde_json::json;
-use std::path::Path;
-use thesisforge_desktop::{
-    FinalPreviewDescriptor, LivePreviewOutputState, PROTOCOL_VERSION, PreviewAuthorizationState,
+use docforge_desktop::{
+    BUILD_REPORT_SCHEMA_VERSION, DEFAULT_DOCX_PATH, DEFAULT_REVIEW_MAP_PATH,
+    DEFAULT_REVIEW_MARKDOWN_PATH, DEFAULT_SOURCE_PATH, FinalPreviewDescriptor,
+    LivePreviewOutputState, MANIFEST_FILENAME, OBSOLETE_BUILD_REPORT_SCHEMA_VERSION,
+    OBSOLETE_PROTOCOL_VERSION, PROJECT_SCHEMA_VERSION, PROTOCOL_VERSION, PreviewAuthorizationState,
     acceptance_source_override, authorize_build_preview, cleanup_live_preview_output_path,
     cleanup_live_preview_path, derived_preview_path, live_preview_output_path, open_source_path,
     prepare_build_preview_authorization, read_pdf_preview_path, validate_final_preview_descriptor,
     validate_request, windows_acceptance_browser_args,
 };
+use serde_json::json;
+use std::path::Path;
+
+fn runtime_fixture() -> serde_json::Value {
+    serde_json::from_str(include_str!("../../protocol/runtime-contract.v1.json"))
+        .expect("runtime contract fixture")
+}
+
+#[test]
+fn rust_identity_matches_the_shared_runtime_fixture() {
+    let identity = runtime_fixture()["identity"].clone();
+
+    assert_eq!(identity["manifest"], MANIFEST_FILENAME);
+    assert_eq!(identity["projectSchema"], PROJECT_SCHEMA_VERSION);
+    assert_eq!(identity["source"], DEFAULT_SOURCE_PATH);
+    assert_eq!(identity["docx"], DEFAULT_DOCX_PATH);
+    assert_eq!(identity["reviewMarkdown"], DEFAULT_REVIEW_MARKDOWN_PATH);
+    assert_eq!(identity["reviewMap"], DEFAULT_REVIEW_MAP_PATH);
+    assert_eq!(identity["workbenchProtocol"], PROTOCOL_VERSION);
+    assert_eq!(identity["buildReportSchema"], BUILD_REPORT_SCHEMA_VERSION);
+}
 
 #[test]
 fn accepts_the_shared_versioned_request_envelope() {
-    let request = json!({
-        "protocol": PROTOCOL_VERSION,
-        "requestId": "request-1",
-        "operation": "inspect",
-        "payload": {}
-    });
+    let request = runtime_fixture()["command"].clone();
 
     assert!(validate_request(&request).is_ok());
 }
 
 #[test]
-fn rejects_protocol_drift_before_spawning_python() {
-    let request = json!({
-        "protocol": "thesisforge.workbench.v0",
-        "requestId": "request-1",
-        "operation": "inspect",
-        "payload": {}
-    });
+fn rejects_the_obsolete_protocol_before_spawning_python() {
+    let request = runtime_fixture()["obsoleteCommand"].clone();
 
     assert_eq!(
         validate_request(&request).unwrap_err(),
         "unsupported protocol"
+    );
+    assert_eq!(
+        request["protocol"].as_str(),
+        Some(OBSOLETE_PROTOCOL_VERSION)
     );
 }
 
@@ -106,6 +122,27 @@ fn rejects_a_request_without_an_object_payload() {
 }
 
 #[test]
+fn rejects_empty_request_ids_and_operations() {
+    let mut request = json!({
+        "protocol": PROTOCOL_VERSION,
+        "requestId": "",
+        "operation": "inspect",
+        "payload": {}
+    });
+    assert_eq!(
+        validate_request(&request).unwrap_err(),
+        "requestId is required"
+    );
+
+    request["requestId"] = json!("request-1");
+    request["operation"] = json!("");
+    assert_eq!(
+        validate_request(&request).unwrap_err(),
+        "operation is required"
+    );
+}
+
+#[test]
 fn keeps_webview_remote_debugging_disabled_without_the_acceptance_port() {
     assert_eq!(windows_acceptance_browser_args(None).unwrap(), None);
     assert_eq!(windows_acceptance_browser_args(Some("   ")).unwrap(), None);
@@ -127,11 +164,11 @@ fn builds_loopback_only_webview2_arguments_for_native_acceptance() {
 fn rejects_unsafe_native_acceptance_cdp_ports() {
     assert_eq!(
         windows_acceptance_browser_args(Some("not-a-port")).unwrap_err(),
-        "THESISFORGE_WINDOWS_CDP_PORT must be an integer from 1024 to 65535"
+        "DOCFORGE_WINDOWS_CDP_PORT must be an integer from 1024 to 65535"
     );
     assert_eq!(
         windows_acceptance_browser_args(Some("80")).unwrap_err(),
-        "THESISFORGE_WINDOWS_CDP_PORT must be an integer from 1024 to 65535"
+        "DOCFORGE_WINDOWS_CDP_PORT must be an integer from 1024 to 65535"
     );
 }
 
@@ -262,7 +299,7 @@ fn build_success_authorizes_only_the_derived_preview_and_injects_an_opaque_id() 
         "requestId": "build-1",
         "type": "completed",
         "report": {
-            "schemaVersion": "thesisforge.build-report.v2",
+            "schemaVersion": BUILD_REPORT_SCHEMA_VERSION,
             "buildId": "build-1",
             "intent": "publish",
             "outcome": "succeeded",
@@ -308,6 +345,47 @@ fn build_success_authorizes_only_the_derived_preview_and_injects_an_opaque_id() 
 }
 
 #[test]
+fn rejects_obsolete_build_report_before_preview_authorization() {
+    let fixture = runtime_fixture();
+    let request = json!({
+        "protocol": PROTOCOL_VERSION,
+        "requestId": "runtime-fixture-build",
+        "operation": "build",
+        "payload": {
+            "output": {
+                "kind": "desktop",
+                "path": "/runtime-fixture/build/document.docx",
+                "fileName": "document.docx"
+            }
+        }
+    });
+    let mut event = fixture["completedBuildEvent"].clone();
+    event["report"]["schemaVersion"] = json!(OBSOLETE_BUILD_REPORT_SCHEMA_VERSION);
+    let descriptor =
+        validate_final_preview_descriptor(&event["report"]["output"]["finalPreview"]).unwrap();
+    let state = PreviewAuthorizationState::default();
+
+    let error = authorize_build_preview(&state, &request, &event).unwrap_err();
+
+    assert!(error.contains("obsolete"));
+    assert!(state.resolve(&descriptor).is_err());
+}
+
+#[test]
+fn rejects_obsolete_event_protocol_before_preview_authorization() {
+    let fixture = runtime_fixture();
+    let request = fixture["command"].clone();
+    let mut event = fixture["completedBuildEvent"].clone();
+    event["protocol"] = json!(OBSOLETE_PROTOCOL_VERSION);
+
+    assert_eq!(
+        authorize_build_preview(&PreviewAuthorizationState::default(), &request, &event)
+            .unwrap_err(),
+        "unsupported protocol"
+    );
+}
+
+#[test]
 fn completed_report_without_preview_passes_through_and_request_drift_fails() {
     let request = json!({
         "protocol": PROTOCOL_VERSION,
@@ -320,7 +398,7 @@ fn completed_report_without_preview_passes_through_and_request_drift_fails() {
         "requestId": "build-1",
         "type": "completed",
         "report": {
-            "schemaVersion": "thesisforge.build-report.v2",
+            "schemaVersion": BUILD_REPORT_SCHEMA_VERSION,
             "buildId": "build-1",
             "intent": "publish",
             "outcome": "succeeded",
@@ -368,7 +446,7 @@ fn completed_live_preview_authorization_marks_cleanup_after_read() {
         "requestId": "live-1",
         "type": "completed",
         "report": {
-            "schemaVersion": "thesisforge.build-report.v2",
+            "schemaVersion": BUILD_REPORT_SCHEMA_VERSION,
             "buildId": "build-live-1",
             "intent": "live-preview",
             "outcome": "succeeded",
@@ -434,7 +512,7 @@ fn a_new_failed_or_canceled_build_revokes_the_previous_derived_authorization() {
             "requestId": "build-1",
             "type": "completed",
             "report": {
-                "schemaVersion": "thesisforge.build-report.v2",
+                "schemaVersion": BUILD_REPORT_SCHEMA_VERSION,
                 "buildId": "build-2",
                 "intent": "live-preview",
                 "outcome": outcome,
@@ -617,7 +695,7 @@ fn live_preview_output_is_unique_and_cleanup_is_scoped_to_its_directory() {
         first
             .file_name()
             .and_then(|value| value.to_str())
-            .is_some_and(|value| value.starts_with("thesisforge-live-preview-"))
+            .is_some_and(|value| value.starts_with("docforge-live-preview-"))
     );
 
     std::fs::write(&first, b"docx").unwrap();

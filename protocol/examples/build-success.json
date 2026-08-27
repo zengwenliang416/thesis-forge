@@ -1,5 +1,5 @@
 {
-  "schemaVersion": "thesisforge.build-report.v2",
+  "schemaVersion": "docforge.build-report.v2",
   "buildId": "build-0001",
   "intent": "publish",
   "outcome": "succeeded",
@@ -22,8 +22,8 @@
     {"sequence": 1, "stage": "postflight", "level": "info", "message": "DOCX postflight passed."}
   ],
   "output": {
-    "docxPath": "build/thesis.docx",
-    "pdfPath": "build/thesis.pdf",
+    "docxPath": "build/document.docx",
+    "pdfPath": "build/document.pdf",
     "previewStale": false,
     "successfulBuildId": "build-0001"
   }

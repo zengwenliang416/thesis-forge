@@ -5,7 +5,11 @@ from decimal import Decimal
 from pathlib import Path
 from typing import Any, ClassVar, Literal, Self, TypeAlias
 
-from docforge.templates.model import SectionsSpec, ThesisTemplate
+from docforge.templates.model import (
+    SectionsSpec,
+    ThesisTemplate,
+    get_metadata_binding_descriptor,
+)
 
 
 class _Instruction:
@@ -527,51 +531,25 @@ class BibliographyInstruction(_Instruction):
 @dataclass(frozen=True, slots=True)
 class CoverInstruction(_Instruction):
     kind: ClassVar[str] = "cover"
-    university: str = ""
-    college: str = ""
-    title: str = ""
-    title_en: str = ""
-    major: str = ""
-    degree: str = ""
-    author: str = ""
-    student_id: str = ""
-    advisor: str = ""
-    advisor_title: str = ""
-    completed: str = ""
+    bindings: tuple[tuple[str, str], ...] = ()
 
     def value_for(self, field: str) -> str:
-        values = {
-            "university.name": self.university,
-            "university.college": self.college,
-            "thesis.title": self.title,
-            "thesis.title_en": self.title_en,
-            "thesis.major": self.major,
-            "thesis.degree": self.degree,
-            "author.name": self.author,
-            "author.student_id": self.student_id,
-            "advisor.name": self.advisor,
-            "advisor.title": self.advisor_title,
-            "dates.completed": self.completed,
-        }
-        try:
+        values = dict(self.bindings)
+        if field in values:
             return values[field]
-        except KeyError as error:
+        try:
+            get_metadata_binding_descriptor(field)
+        except ValueError as error:
             raise ValueError(f"unsupported cover field: {field}") from error
+        return ""
 
     @property
     def payload(self) -> dict[str, Any]:
         return {
-            "university": self.university,
-            "college": self.college,
-            "title": self.title,
-            "title_en": self.title_en,
-            "major": self.major,
-            "degree": self.degree,
-            "author": self.author,
-            "student_id": self.student_id,
-            "advisor": self.advisor,
-            "advisor_title": self.advisor_title,
-            "completed": self.completed,
+            "bindings": [
+                {"path": path, "value": value}
+                for path, value in self.bindings
+            ],
         }
 
 

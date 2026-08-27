@@ -53,7 +53,7 @@ def _template_data(package_id: str = "demo.pack", **overrides) -> dict:
         "version": "1.0.0",
         "name": "演示模板",
         "compatibility": {
-            "thesisforge": ">=0.0.0",
+            "docforge": ">=0.0.0",
             "document_types": ["master_thesis"],
         },
         "page": {
@@ -204,7 +204,7 @@ def _write_l1_complete_package(package_dir: Path, data: dict) -> Path:
     minimal = package_dir / "fixtures" / "minimal"
     minimal.mkdir(parents=True)
     # L5 fixture 使用 canonical v2 source；metadata contract 由 lint 显式定义。
-    (minimal / "thesis.md").write_text(
+    (minimal / "document.md").write_text(
         "# 绪论 {#chap:intro}\n\n正文段落。\n",
         encoding="utf-8",
     )

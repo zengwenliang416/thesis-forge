@@ -13,6 +13,7 @@ from docforge.application.pdf_preview import (
     MicrosoftWordPdfPreviewExporter,
     _adapt_docx_font_aliases,
     _installed_font_families,
+    _preview_export_canceled,
     _run_libreoffice_pdf_export,
     _run_microsoft_word_pdf_export,
     discover_microsoft_word_automation,
@@ -248,7 +249,11 @@ def test_microsoft_word_discovery_requires_word_and_platform_automation(
 
 
 def test_microsoft_word_preview_root_uses_word_container_on_macos(monkeypatch):
-    monkeypatch.delenv("THESISFORGE_WORD_PREVIEW_ROOT", raising=False)
+    monkeypatch.delenv("DOCFORGE_WORD_PREVIEW_ROOT", raising=False)
+    monkeypatch.setenv(
+        "THESISFORGE_WORD_PREVIEW_ROOT",
+        "/tmp/legacy-word-preview-root",
+    )
 
     root = microsoft_word_preview_root("darwin")
 
@@ -259,8 +264,31 @@ def test_microsoft_word_preview_root_uses_word_container_on_macos(monkeypatch):
         / "com.microsoft.Word"
         / "Data"
         / "Documents"
-        / "ThesisForgePreview"
+        / "DocForgePreview"
     )
+
+
+def test_microsoft_word_preview_root_uses_explicit_docforge_override(
+    monkeypatch,
+    tmp_path: Path,
+):
+    expected = tmp_path / "word-preview"
+    monkeypatch.setenv("DOCFORGE_WORD_PREVIEW_ROOT", str(expected))
+    monkeypatch.setenv("THESISFORGE_WORD_PREVIEW_ROOT", "/tmp/legacy-root")
+
+    assert microsoft_word_preview_root("darwin") == expected
+
+
+def test_preview_cancellation_ignores_legacy_environment_variable(
+    monkeypatch,
+    tmp_path: Path,
+):
+    cancel_file = tmp_path / "cancel"
+    cancel_file.write_text("cancel", encoding="utf-8")
+    monkeypatch.delenv("DOCFORGE_CANCEL_FILE", raising=False)
+    monkeypatch.setenv("THESISFORGE_CANCEL_FILE", str(cancel_file))
+
+    assert not _preview_export_canceled()
 
 
 def test_microsoft_word_exporter_publishes_from_isolated_word_workspace(
@@ -464,7 +492,7 @@ def test_preferred_exporter_skips_all_engines_after_cancellation(
 ):
     cancel_file = tmp_path / "cancel"
     cancel_file.write_text("cancel", encoding="utf-8")
-    monkeypatch.setenv("THESISFORGE_CANCEL_FILE", str(cancel_file))
+    monkeypatch.setenv("DOCFORGE_CANCEL_FILE", str(cancel_file))
     monkeypatch.setattr(
         "docforge.application.pdf_preview.discover_microsoft_word_automation",
         lambda: (_ for _ in ()).throw(AssertionError("Word discovery must not run")),

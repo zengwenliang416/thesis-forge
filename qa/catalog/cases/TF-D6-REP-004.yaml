@@ -12,10 +12,10 @@ releases:
   - beta
   - ga
 input:
-  project: examples/complete-thesis
+  project: examples/v2-complete-thesis
 steps:
-  - run: thesisforge build <fixture> -o <tmp>/first.docx
-  - run: thesisforge build <fixture> -o <tmp>/second.docx
+  - run: docforge build <fixture> -o <tmp>/first.docx
+  - run: docforge build <fixture> -o <tmp>/second.docx
   - compare: word/ 下 XML 与 rels 的 c14n 规范化字节
 expected:
   exit_code: 0

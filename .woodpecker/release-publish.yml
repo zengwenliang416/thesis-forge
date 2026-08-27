@@ -19,7 +19,7 @@ when:
 
 concurrency:
   limit: 1
-  group: thesis-forge-release-publish
+  group: docforge-release-publish
 
 steps:
   - name: download-and-verify-staging
@@ -46,16 +46,16 @@ steps:
       - aws --endpoint-url "$RELEASE_STAGING_ENDPOINT" s3 cp "s3://$RELEASE_STAGING_BUCKET/$CI_REPO/$CI_COMMIT_TAG/macos/" dist/release/ --recursive --only-show-errors
       - cd dist/release
       - version="${CI_COMMIT_TAG#v}"
-      - test -f "ThesisForge_${version}_aarch64.dmg"
-      - test -f "thesis_forge-${version}-py3-none-any.whl"
-      - test -f "thesis_forge-${version}.tar.gz"
+      - test -f "DocForge_${version}_aarch64.dmg"
+      - test -f "docforge-${version}-py3-none-any.whl"
+      - test -f "docforge-${version}.tar.gz"
       - test -f RELEASE_NOTES.md
       - test -f SHA256SUMS
       - test "$(find . -maxdepth 1 -type f | wc -l | tr -d ' ')" = "5"
       - |
-        awk -v dmg="ThesisForge_${version}_aarch64.dmg" \
-            -v wheel="thesis_forge-${version}-py3-none-any.whl" \
-            -v source="thesis_forge-${version}.tar.gz" '
+        awk -v dmg="DocForge_${version}_aarch64.dmg" \
+            -v wheel="docforge-${version}-py3-none-any.whl" \
+            -v source="docforge-${version}.tar.gz" '
           NF != 2 || $1 !~ /^[0-9a-f]{64}$/ { exit 1 }
           $2 != dmg && $2 != wheel && $2 != source { exit 1 }
           { seen[$2]++ }
@@ -101,5 +101,5 @@ steps:
         - dist/release/SHA256SUMS
       file_exists: fail
       prerelease: true
-      title: "ThesisForge ${CI_COMMIT_TAG}"
+      title: "DocForge ${CI_COMMIT_TAG}"
       note: dist/release/RELEASE_NOTES.md

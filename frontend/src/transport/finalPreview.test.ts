@@ -9,7 +9,7 @@ describe("final preview descriptor", () => {
       readFinalPreviewDescriptor({
         engine: "microsoft-word",
         label: "Microsoft Word PDF",
-        fileName: "thesis.preview.pdf",
+        fileName: "document.preview.pdf",
         authorizationId: "c".repeat(32),
       }),
     ).toMatchObject({ engine: "microsoft-word" });
@@ -17,7 +17,7 @@ describe("final preview descriptor", () => {
       readFinalPreviewDescriptor({
         engine: "libreoffice",
         label: "LibreOffice PDF",
-        fileName: "thesis.preview.pdf",
+        fileName: "document.preview.pdf",
         downloadId: "a".repeat(32),
       }),
     ).toMatchObject({ engine: "libreoffice" });

@@ -23,7 +23,7 @@ NS = {
 
 
 def _manifest_figure() -> tuple[FigureInstruction, RenderPlan]:
-    result = preview_service(PROJECT / "thesis.md")
+    result = preview_service(PROJECT / "document.md")
 
     assert result.plan is not None
     figure = next(

@@ -1,5 +1,12 @@
 import { PROTOCOL_VERSION } from "./dto";
 import {
+  DEFAULT_SOURCE_FILENAME,
+  MANIFEST_FILENAME,
+  PROJECT_SCHEMA_VERSION,
+} from "./constants";
+import {
+  deriveDocxFileName,
+  isMarkdownFileName,
   readOpenProjectInput,
   readOpenedProject,
   readProjectFileSnapshot,
@@ -13,20 +20,19 @@ import { WebWorkbenchTransport } from "./web";
 const project: ProjectIdentityRef = {
   id: "project-1",
   root: "/workspace/thesis",
-  manifestPath: "/workspace/thesis/thesisforge.yaml",
+  manifestPath: `/workspace/thesis/${MANIFEST_FILENAME}`,
 };
 
 const sourceText = "# 绪论\n\n公式 $a^2 + b^2 = c^2$，引用“文献”。\n";
-const manifestText =
-  "schema: thesisforge.project.v2\nproject:\n  id: project-1\n";
+const manifestText = `schema: ${PROJECT_SCHEMA_VERSION}\nproject:\n  id: project-1\n`;
 
 const input: OpenProjectInput = {
   manifest: {
-    fileName: "thesisforge.yaml",
+    fileName: MANIFEST_FILENAME,
     text: manifestText,
   },
   source: {
-    fileName: "thesis.md",
+    fileName: DEFAULT_SOURCE_FILENAME,
     text: sourceText,
   },
 };
@@ -34,7 +40,7 @@ const input: OpenProjectInput = {
 const workspaceSource = {
   kind: "web-workspace" as const,
   workspaceId: "a".repeat(32),
-  fileName: "thesis.md",
+  fileName: DEFAULT_SOURCE_FILENAME,
 };
 
 const openedProjectBody = {
@@ -70,11 +76,11 @@ describe("WebWorkbenchTransport.openProject", () => {
     expect(calls[0].init?.method).toBe("POST");
     expect(JSON.parse(String(calls[0].init?.body))).toEqual({
       manifest: {
-        fileName: "thesisforge.yaml",
+        fileName: MANIFEST_FILENAME,
         text: manifestText,
       },
       source: {
-        fileName: "thesis.md",
+        fileName: DEFAULT_SOURCE_FILENAME,
         text: sourceText,
       },
     });
@@ -92,12 +98,12 @@ describe("WebWorkbenchTransport.openProject", () => {
       project: {
         id: "project-1",
         root: "/workspace/thesis",
-        manifestPath: "/workspace/thesis/thesisforge.yaml",
+        manifestPath: `/workspace/thesis/${MANIFEST_FILENAME}`,
       },
       source: {
         kind: "web-workspace",
         workspaceId: "a".repeat(32),
-        fileName: "thesis.md",
+        fileName: DEFAULT_SOURCE_FILENAME,
       },
       text: sourceText,
     });
@@ -130,7 +136,20 @@ describe("WebWorkbenchTransport.openProject", () => {
 
     await expect(
       transport.openProject({ source: input.source } as OpenProjectInput),
-    ).rejects.toThrow("无效的 ThesisForge manifest 快照");
+    ).rejects.toThrow("无效的 DocForge manifest 快照");
+  });
+
+  it("rejects the obsolete ThesisForge manifest filename", async () => {
+    const transport = new WebWorkbenchTransport({
+      fetch: async () => jsonResponse(openedProjectBody),
+    });
+
+    await expect(
+      transport.openProject({
+        ...input,
+        manifest: { ...input.manifest, fileName: "thesisforge.yaml" },
+      }),
+    ).rejects.toThrow(`DocForge project manifest 必须是 ${MANIFEST_FILENAME}`);
   });
 
   it("rejects an input without a source snapshot", async () => {
@@ -140,7 +159,7 @@ describe("WebWorkbenchTransport.openProject", () => {
 
     await expect(
       transport.openProject({ manifest: input.manifest } as OpenProjectInput),
-    ).rejects.toThrow("无效的 ThesisForge source 快照");
+    ).rejects.toThrow("无效的 DocForge source 快照");
   });
 
   it("rejects an input carrying a client project identity", async () => {
@@ -154,7 +173,7 @@ describe("WebWorkbenchTransport.openProject", () => {
 
     await expect(
       transport.openProject(invalid),
-    ).rejects.toThrow("无效的 ThesisForge project 输入");
+    ).rejects.toThrow("无效的 DocForge project 输入");
   });
 
   it("rejects an input carrying duplicate metadata", async () => {
@@ -165,9 +184,9 @@ describe("WebWorkbenchTransport.openProject", () => {
     await expect(
       transport.openProject({
         ...input,
-        fileName: "thesis.md",
+        fileName: DEFAULT_SOURCE_FILENAME,
       } as unknown as OpenProjectInput),
-    ).rejects.toThrow("无效的 ThesisForge project 输入");
+    ).rejects.toThrow("无效的 DocForge project 输入");
   });
 
   it("rejects when the input source snapshot fileName is empty", async () => {
@@ -180,7 +199,7 @@ describe("WebWorkbenchTransport.openProject", () => {
         ...input,
         source: { ...input.source, fileName: "" },
       }),
-    ).rejects.toThrow("无效的 ThesisForge source 快照");
+    ).rejects.toThrow("无效的 DocForge source 快照");
   });
 
   it("rejects a response with a wrong protocol version", async () => {
@@ -230,7 +249,7 @@ describe("WebWorkbenchTransport.openProject", () => {
           ...openedProjectBody,
           project: {
             id: "project-1",
-            manifestPath: "/workspace/thesis/thesisforge.yaml",
+            manifestPath: `/workspace/thesis/${MANIFEST_FILENAME}`,
           },
         }),
     });
@@ -264,7 +283,7 @@ describe("WebWorkbenchTransport.openProject", () => {
           source: {
             kind: "web-mirror",
             mirrorId: "mirror-1",
-            fileName: "thesis.md",
+            fileName: DEFAULT_SOURCE_FILENAME,
           },
         }),
     });
@@ -282,7 +301,7 @@ describe("WebWorkbenchTransport.openProject", () => {
           source: {
             kind: "web-upload",
             uploadId: "u".repeat(32),
-            fileName: "thesis.md",
+            fileName: DEFAULT_SOURCE_FILENAME,
           },
         }),
     });
@@ -336,8 +355,8 @@ describe("WebWorkbenchTransport.openProject", () => {
 describe("TauriWorkbenchTransport.openProject", () => {
   const desktopSource = {
     kind: "desktop" as const,
-    path: "/workspace/thesis/thesis.md",
-    fileName: "thesis.md",
+    path: `/workspace/thesis/${DEFAULT_SOURCE_FILENAME}`,
+    fileName: DEFAULT_SOURCE_FILENAME,
   };
 
   const pickerBody = {
@@ -360,12 +379,12 @@ describe("TauriWorkbenchTransport.openProject", () => {
       project: {
         id: "project-1",
         root: "/workspace/thesis",
-        manifestPath: "/workspace/thesis/thesisforge.yaml",
+        manifestPath: `/workspace/thesis/${MANIFEST_FILENAME}`,
       },
       source: {
         kind: "desktop",
-        path: "/workspace/thesis/thesis.md",
-        fileName: "thesis.md",
+        path: `/workspace/thesis/${DEFAULT_SOURCE_FILENAME}`,
+        fileName: DEFAULT_SOURCE_FILENAME,
       },
       text: sourceText,
     });
@@ -454,7 +473,11 @@ describe("TauriWorkbenchTransport.openProject", () => {
   it("rejects a picker response with an unknown source kind", async () => {
     const transport = new TauriWorkbenchTransport(async () => ({
       ...pickerBody,
-      source: { kind: "web-mirror", mirrorId: "mirror-1", fileName: "thesis.md" },
+      source: {
+        kind: "web-mirror",
+        mirrorId: "mirror-1",
+        fileName: DEFAULT_SOURCE_FILENAME,
+      },
     }));
 
     await expect(transport.openProject()).rejects.toThrow(
@@ -490,7 +513,7 @@ describe("TauriWorkbenchTransport.openProject", () => {
       source: {
         kind: "web-workspace" as const,
         workspaceId: "a".repeat(32),
-        fileName: "thesis.md",
+        fileName: DEFAULT_SOURCE_FILENAME,
       },
       text: sourceText,
     };
@@ -518,27 +541,27 @@ describe("project transport readers", () => {
       readProjectIdentity({
         id: "project-1",
         root: "/workspace/thesis",
-        manifestPath: "/workspace/thesis/thesisforge.yaml",
+        manifestPath: `/workspace/thesis/${MANIFEST_FILENAME}`,
       }),
     ).toEqual(project);
   });
 
   it("readProjectIdentity rejects null", () => {
     expect(() => readProjectIdentity(null)).toThrow(
-      "无效的 ThesisForge project 标识",
+      "无效的 DocForge project 标识",
     );
   });
 
   it("readProjectIdentity rejects non-object values", () => {
     expect(() => readProjectIdentity("project-1")).toThrow(
-      "无效的 ThesisForge project 标识",
+      "无效的 DocForge project 标识",
     );
   });
 
   it("readProjectIdentity rejects arrays", () => {
     expect(() =>
       readProjectIdentity(["project-1", "/workspace/thesis"]),
-    ).toThrow("无效的 ThesisForge project 标识");
+    ).toThrow("无效的 DocForge project 标识");
   });
 
   it("readProjectIdentity rejects wrong field types", () => {
@@ -548,7 +571,7 @@ describe("project transport readers", () => {
         root: "/workspace/thesis",
         manifestPath: 7,
       }),
-    ).toThrow("无效的 ThesisForge project 标识");
+    ).toThrow("无效的 DocForge project 标识");
   });
 
   it("readProjectIdentity rejects empty strings", () => {
@@ -556,30 +579,39 @@ describe("project transport readers", () => {
       readProjectIdentity({
         id: "project-1",
         root: "",
-        manifestPath: "/workspace/thesis/thesisforge.yaml",
+        manifestPath: `/workspace/thesis/${MANIFEST_FILENAME}`,
       }),
-    ).toThrow("无效的 ThesisForge project 标识");
+    ).toThrow("无效的 DocForge project 标识");
   });
 
   it("readProjectIdentity rejects extra keys", () => {
     expect(() =>
       readProjectIdentity({ ...project, extra: true }),
-    ).toThrow("无效的 ThesisForge project 标识");
+    ).toThrow("无效的 DocForge project 标识");
   });
 
   it("readProjectFileSnapshot accepts the manifest and source shapes", () => {
     expect(
       readProjectFileSnapshot(
-        { fileName: "thesisforge.yaml", text: manifestText },
+        { fileName: MANIFEST_FILENAME, text: manifestText },
         "manifest",
       ),
-    ).toEqual({ fileName: "thesisforge.yaml", text: manifestText });
+    ).toEqual({ fileName: MANIFEST_FILENAME, text: manifestText });
     expect(
       readProjectFileSnapshot(
-        { fileName: "chapters/intro.md", text: sourceText },
+        { fileName: "chapters/intro.MARKDOWN", text: sourceText },
         "source",
       ),
-    ).toEqual({ fileName: "chapters/intro.md", text: sourceText });
+    ).toEqual({ fileName: "chapters/intro.MARKDOWN", text: sourceText });
+  });
+
+  it("recognizes Markdown extensions case-insensitively and derives DOCX names", () => {
+    expect(isMarkdownFileName("document.md")).toBe(true);
+    expect(isMarkdownFileName("document.MARKDOWN")).toBe(true);
+    expect(isMarkdownFileName("document.txt")).toBe(false);
+    expect(deriveDocxFileName("/workspace/document.MARKDOWN")).toBe(
+      "/workspace/document.docx",
+    );
   });
 
   it("readProjectFileSnapshot rejects non-canonical manifest and source names", () => {
@@ -588,10 +620,10 @@ describe("project transport readers", () => {
         { fileName: "project.yaml", text: manifestText },
         "manifest",
       ),
-    ).toThrow("必须是 thesisforge.yaml");
+    ).toThrow(`必须是 ${MANIFEST_FILENAME}`);
     expect(() =>
       readProjectFileSnapshot(
-        { fileName: "thesisforge.yaml", text: sourceText },
+        { fileName: MANIFEST_FILENAME, text: sourceText },
         "source",
       ),
     ).toThrow("必须是 Markdown 文件");
@@ -603,16 +635,16 @@ describe("project transport readers", () => {
       readOpenProjectInput({
         ...input,
         project,
-        fileName: "thesis.md",
+        fileName: DEFAULT_SOURCE_FILENAME,
       }),
-    ).toThrow("无效的 ThesisForge project 输入");
+    ).toThrow("无效的 DocForge project 输入");
   });
 
   it("readOpenedProject accepts the shared typed contract", () => {
     const desktopSource = {
       kind: "desktop",
-      path: "/workspace/thesis/thesis.md",
-      fileName: "thesis.md",
+      path: `/workspace/thesis/${DEFAULT_SOURCE_FILENAME}`,
+      fileName: DEFAULT_SOURCE_FILENAME,
     };
 
     expect(
@@ -622,30 +654,34 @@ describe("project transport readers", () => {
 
   it("readOpenedProject rejects null", () => {
     expect(() => readOpenedProject(null)).toThrow(
-      "无效的 ThesisForge project 响应",
+      "无效的 DocForge project 响应",
     );
   });
 
   it("readOpenedProject rejects non-object values", () => {
     expect(() => readOpenedProject(42)).toThrow(
-      "无效的 ThesisForge project 响应",
+      "无效的 DocForge project 响应",
     );
   });
 
   it("readOpenedProject rejects a missing source", () => {
     expect(() =>
       readOpenedProject({ project, text: sourceText }),
-    ).toThrow("无效的 ThesisForge project 响应");
+    ).toThrow("无效的 DocForge project 响应");
   });
 
   it("readOpenedProject rejects an unknown source kind", () => {
     expect(() =>
       readOpenedProject({
         project,
-        source: { kind: "web-mirror", mirrorId: "mirror-1", fileName: "thesis.md" },
+        source: {
+          kind: "web-mirror",
+          mirrorId: "mirror-1",
+          fileName: DEFAULT_SOURCE_FILENAME,
+        },
         text: sourceText,
       }),
-    ).toThrow("无效的 ThesisForge project 响应");
+    ).toThrow("无效的 DocForge project 响应");
   });
 
   it("readOpenedProject rejects an uploaded-file-only source", () => {
@@ -655,11 +691,11 @@ describe("project transport readers", () => {
         source: {
           kind: "web-upload",
           uploadId: "u".repeat(32),
-          fileName: "thesis.md",
+          fileName: DEFAULT_SOURCE_FILENAME,
         },
         text: sourceText,
       }),
-    ).toThrow("无效的 ThesisForge project 响应");
+    ).toThrow("无效的 DocForge project 响应");
   });
 
   it("readOpenedProject rejects a source with an extra key", () => {
@@ -669,13 +705,13 @@ describe("project transport readers", () => {
         source: { ...workspaceSource, uploadId: "upload-1" },
         text: sourceText,
       }),
-    ).toThrow("无效的 ThesisForge project 响应");
+    ).toThrow("无效的 DocForge project 响应");
   });
 
   it("readOpenedProject rejects a non-string text", () => {
     expect(() =>
       readOpenedProject({ project, source: workspaceSource, text: null }),
-    ).toThrow("无效的 ThesisForge project 响应");
+    ).toThrow("无效的 DocForge project 响应");
   });
 
   it("readOpenedProject rejects extra top-level keys", () => {
@@ -686,6 +722,6 @@ describe("project transport readers", () => {
         text: sourceText,
         extra: true,
       }),
-    ).toThrow("无效的 ThesisForge project 响应");
+    ).toThrow("无效的 DocForge project 响应");
   });
 });

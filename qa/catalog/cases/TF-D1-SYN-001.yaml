@@ -7,7 +7,6 @@ domain: D1
 priority: P0
 automation: automated
 requirements:
-  - MD-FM-001
   - MD-FIG-001
   - MD-TBL-001
 releases:
@@ -17,7 +16,7 @@ releases:
 input:
   project: qa/fixtures/parser/full-syntax.md
 steps:
-  - run: thesis_forge.core.parser.parse_markdown(qa/fixtures/parser/full-syntax.md)
+  - run: docforge.core.parser_backend.create_parser_backend().parse_file(qa/fixtures/parser/full-syntax.md)
 expected:
   exit_code: 0
   diagnostics_errors: 0
@@ -31,7 +30,6 @@ expected:
     - Algorithm
     - Listing
     - FootnoteDefinition
-    - BibliographyBlock
   block_ids:
     - chap:introduction
     - fig:model

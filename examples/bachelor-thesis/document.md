@@ -1,34 +1,3 @@
----
-document:
-  type: bachelor_thesis
-  language: zh-CN
-  spec_version: "1.0"
-university:
-  name: "XX大学"
-  name_en: "XX University"
-  college: "计算机科学与技术学院"
-thesis:
-  title: "基于结构化 Markdown 的本科论文编译系统设计"
-  title_en: "Design of a Bachelor Thesis Compiler Based on Structured Markdown"
-  major: "计算机科学与技术"
-  degree: "工学学士"
-author:
-  name: "张三"
-  student_id: "2022000001"
-  class: "计算机 2201 班"
-advisor:
-  name: "李老师"
-  title: "副教授"
-dates:
-  submitted: "2026-05-20"
-  defended: "2026-06-01"
-  completed: "2026-06"
-render:
-  template_id: "example-university-2026"
-  bibliography: "./references.bib"
-  citation_style: "GB-T-7714-2025"
----
-
 # 摘要 {#chap:abstract-zh}
 
 本文设计并实现一种本地优先、确定性、模板驱动的本科论文编译器。系统将 Markdown 解析为与 Word 实现无关的论文领域模型，经结构化验证与统一编译后生成可编辑 DOCX。验收结果表明，该方案能够离线完成图表、公式、交叉引用、脚注和参考文献等学术对象的编译。
@@ -60,30 +29,22 @@ Keywords: Markdown; thesis compiler; OOXML; deterministic build
 
 系统总体架构如 @fig:architecture 所示。
 
-::: figure {#fig:architecture}
-src: "./images/acceptance-architecture.png"
-caption: "ThesisForge 确定性编译架构"
-width: "85%"
-:::
+![DocForge 确定性编译架构](images/acceptance-architecture.png){#fig:architecture}
 
 # 系统设计 {#chap:design}
 
 ## 编译流水线 {#sec:pipeline}
 
-系统采用 Markdown -> ThesisDocument -> Validation -> Template -> RenderPlan -> DOCX 的单向编译链路，其抽象关系见 @eq:pipeline。
+系统采用 Markdown -> ForgeDocument -> Validation -> Template -> RenderPlan -> DOCX 的单向编译链路，其抽象关系见 @eq:pipeline。
 
-::: equation {#eq:pipeline}
 $$
 D_{docx} = R(C(V(P(D_{md}))))
 $$
-:::
+{#eq:pipeline}
 
 ## 能力模型 {#sec:capabilities}
 
 V1 核心能力见 @tbl:capabilities。
-
-::: table {#tbl:capabilities}
-caption: "ThesisForge V1 核心能力"
 
 | 能力 | 输入 | DOCX 输出 |
 | --- | --- | --- |
@@ -92,39 +53,31 @@ caption: "ThesisForge V1 核心能力"
 | 公式 | LaTeX 子集 | OMML |
 | 引用 | BibTeX key | 顺序编码引用 |
 
-:::
+: DocForge V1 核心能力 {#tbl:capabilities}
 
 ## 安全构建算法 {#sec:safe-build}
 
 安全构建流程见 @alg:build。
 
-::: algorithm {#alg:build}
-caption: "安全构建流程"
-
+```algorithm {#alg:build title="安全构建流程"}
 1. 解析并验证本地输入；
 2. 编译 renderer-neutral RenderPlan；
 3. 渲染到目标目录临时文件；
 4. 校验 DOCX ZIP 与核心 XML；
 5. 原子替换最终输出。
 
-:::
+```
 
 ## 应用服务接口 {#sec:application-service}
 
 核心服务接口示意见 @lst:service。
 
-::: listing {#lst:service}
-caption: "安全构建服务调用"
-language: "python"
-
-```python
+```python {#lst:service title="安全构建服务调用"}
 result = build_service(
-    source="thesis.md",
-    output="thesis.docx",
+    source="document.md",
+    output="build/document.docx",
 )
 ```
-
-:::
 
 # 实验结果与分析 {#chap:results}
 
@@ -138,14 +91,9 @@ result = build_service(
 
 # 结论与展望 {#chap:conclusion}
 
-本文完成了 ThesisForge V1 核心编译链和端到端验收。系统在不依赖网络或 AI 服务的条件下生成可编辑 DOCX，并以结构化测试验证关键 OOXML 对象。
+本文完成了 DocForge V1 核心编译链和端到端验收。系统在不依赖网络或 AI 服务的条件下生成可编辑 DOCX，并以结构化测试验证关键 OOXML 对象。
 
 # 参考文献 {#chap:references}
-
-::: bibliography
-source: "./references.bib"
-style: "GB-T-7714-2025"
-:::
 
 # 致谢 {#chap:acknowledgements}
 
@@ -155,8 +103,8 @@ style: "GB-T-7714-2025"
 
 本附录记录完整样例使用的离线命令：
 
-1. thesisforge inspect thesis.md
-2. thesisforge validate thesis.md
-3. thesisforge build thesis.md -o thesis.docx
+1. docforge inspect .
+2. docforge validate .
+3. docforge build . -o build/document.docx
 
 [^determinism]: 确定性构建指相同输入、模板和依赖版本产生语义等价的编号、引用、字段和章节结构。

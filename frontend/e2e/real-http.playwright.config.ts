@@ -14,7 +14,7 @@ const virtualEnvironmentPythonPath = resolve(
   virtualEnvironmentPython,
 );
 const python =
-  process.env.THESISFORGE_PYTHON ??
+  process.env.DOCFORGE_PYTHON ??
   (existsSync(virtualEnvironmentPythonPath)
     ? virtualEnvironmentPythonPath
     : process.platform === "win32"

@@ -17,7 +17,7 @@ BACKEND = MarkdownItParserBackend()
         (
             "---\ntitle: Legacy\n---\n# Thesis\n",
             "TF-SOURCE-LEGACY-001",
-            "thesisforge.yaml",
+            "docforge.yaml",
         ),
         (
             (

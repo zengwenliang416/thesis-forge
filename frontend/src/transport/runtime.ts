@@ -8,6 +8,6 @@ export function createRuntimeTransport(): WorkbenchTransport {
     return new TauriWorkbenchTransport(invoke);
   }
   return new WebWorkbenchTransport({
-    baseUrl: import.meta.env.VITE_THESISFORGE_API_URL ?? "",
+    baseUrl: import.meta.env.VITE_DOCFORGE_API_URL ?? "",
   });
 }

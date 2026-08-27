@@ -7,16 +7,16 @@
 
 研究结果表明，**内容与格式分离**能够降低重复排版成本，*结构化验证*能够在
 生成文件之前发现未解析引用、重复 ID 和不安全资源。实现中使用
-`thesisforge.yaml` 作为项目入口，使用 `$E = mc^2$` 表示行内公式，并通过
+`docforge.yaml` 作为项目入口，使用 `$E = mc^2$` 表示行内公式，并通过
 [@smith2025] 的研究结果说明可追踪编译的重要性。
 
 关键词：学术论文；Markdown；DOCX；OpenXML；文档编译
 
 # Abstract {#chap:abstract-en}
 
-This example demonstrates a manifest-backed academic thesis project. The source
+This example demonstrates a manifest-backed academic document project. The source
 remains readable Markdown while metadata, resources, school template and output
-policy live in `thesisforge.yaml`. The compiler validates the semantic document,
+policy live in `docforge.yaml`. The compiler validates the semantic document,
 resolves references, creates a typed RenderPlan and emits a structurally checked
 DOCX package.
 
@@ -38,8 +38,8 @@ Keywords: academic writing; Markdown; DOCX; OpenXML; document compilation
 普通换行会被归一化为空格，而这一行使用显式硬换行。\
 这两个源代码行在 Word 中只应产生一个真实手动换行。
 
-系统提供一个[项目规范说明](https://example.com/thesisforge-spec)作为普通
-外部链接；本节还使用行内代码 `thesisforge.yaml` 标识项目配置文件。
+系统提供一个[项目规范说明](https://example.com/docforge-spec)作为普通
+外部链接；本节还使用行内代码 `docforge.yaml` 标识项目配置文件。
 
 > 一个可交付的论文项目不应只有一个 `.docx` 文件，还应保留可验证的源文件、
 > 资源、模板选择和构建报告。
@@ -71,8 +71,8 @@ Keywords: academic writing; Markdown; DOCX; OpenXML; document compilation
 
 ## 项目包与单一事实源 {#sec:project-model}
 
-项目包的入口是 `thesisforge.yaml`，它定义 schema、项目身份、元数据、资源、
-学校模板、对象级布局、Word 输出名称以及 Review 输出位置。`thesis.md` 只
+项目包的入口是 `docforge.yaml`，它定义 schema、项目身份、元数据、资源、
+学校模板、对象级布局、Word 输出名称以及 Review 输出位置。`document.md` 只
 负责可读正文和稳定的语义 ID。
 
 图像资源使用项目相对路径。下面的图展示了从源文件到 Word 的主流程：
@@ -82,7 +82,7 @@ Keywords: academic writing; Markdown; DOCX; OpenXML; document compilation
 图中的处理阶段可以概括为：
 
 1. Source：读取项目 manifest 和 Markdown。
-2. Typed IR：生成 `ThesisDocument` 和 `DocumentIndex`。
+2. Typed IR：生成 `ForgeDocument` 和 `DocumentIndex`。
 3. Validation：校验引用、资源、模板能力和路径边界。
 4. RenderPlan：计算编号并生成 typed instructions。
 5. DOCX：写入字段、书签、OMML、脚注、样式、关系和媒体。
@@ -116,11 +116,11 @@ $$
 |---|---:|---:|---:|
 | 手工 Word | 7 | 4 | 18.2 min |
 | 纯文本转换 | 5 | 6 | 4.8 min |
-| ThesisForge V2 | 0 | 0 | 1.6 min |
+| DocForge v1 | 0 | 0 | 1.6 min |
 
 : 三种文档编译策略的实验结果 {#tbl:results}
 
-结果显示，V2 把错误前移到 validate 阶段，并通过 BuildReport 保留每一阶段
+结果显示，DocForge v1 把错误前移到 validate 阶段，并通过 BuildReport 保留每一阶段
 的执行状态。
 
 ## 训练代码清单 {#sec:listing}
@@ -144,8 +144,8 @@ def train_epoch(model, batches, optimizer):
 ```algorithm {#alg:compile title="论文编译算法"}
 输入：项目目录 P，Markdown 源文件 M，学校模板 T
 输出：Review R，DOCX D，BuildReport B
-1. 读取 thesisforge.yaml 并解析 M
-2. 构建 ThesisDocument 和 DocumentIndex
+1. 读取 docforge.yaml 并解析 M
+2. 构建 ForgeDocument 和 DocumentIndex
 3. 校验资源、引用、ID、模板能力和路径边界
 4. 生成编号、书签、字段和 typed RenderPlan
 5. 渲染 Review、DOCX 和结构化 BuildReport
@@ -190,11 +190,11 @@ inspect、validate、review 和 build。模板、图片、BibTeX 和源代码均
 
 ## 局限性 {#sec:limitations}
 
-当前 V2 有明确的边界：
+当前 DocForge v1 有明确的边界：
 
 - 不提供 DOCX 到 Markdown 的反向转换。
 - 不执行任意 TeX 宏或外部脚本。
-- 不保留旧 Front Matter、`:::` 容器或 `@fig:id` 兼容路径。
+- 不提供旧式元数据、容器或交叉引用兼容路径。
 - Microsoft Word 的最终分页仍需在目标 Office 环境中人工验收。
 
 # 结论 {#chap:conclusion}
@@ -206,9 +206,9 @@ postflight 和 BuildReport，论文内容、格式策略和最终输出之间建
 # 附录 A 构建命令 {#chap:appendix}
 
 ```bash
-.venv/bin/python -m thesis_forge.cli validate examples/v2-complete-thesis --json
-.venv/bin/python -m thesis_forge.cli build examples/v2-complete-thesis \
-  -o examples/v2-complete-thesis/build/thesis.docx \
+.venv/bin/python -m docforge.cli validate examples/v2-complete-thesis --json
+.venv/bin/python -m docforge.cli build examples/v2-complete-thesis \
+  -o examples/v2-complete-thesis/build/document.docx \
   --report-json examples/v2-complete-thesis/build/build-report.json
 ```
 

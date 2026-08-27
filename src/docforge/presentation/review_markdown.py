@@ -491,7 +491,7 @@ def _safe_source_name(source_name: str | Path) -> str:
     value = value.replace("\\", "/").rstrip("/")
     basename = value.rsplit("/", 1)[-1]
     basename = _sanitize_visible_text(basename).replace("`", "")
-    return basename or "thesis.md"
+    return basename or "document.md"
 
 
 def _safe_language(language: str | None) -> str:
@@ -764,7 +764,7 @@ def _render_block(
 def render_review_markdown(
     review: ReviewDocument,
     *,
-    source_name: str | Path = "thesis.md",
+    source_name: str | Path = "document.md",
     asset_links: Mapping[str, str] | None = None,
 ) -> ReviewMarkdownResult:
     """Render Review content and retain source navigation metadata separately."""
@@ -821,7 +821,7 @@ def render_review_markdown(
 def serialize_review_markdown(
     review: ReviewDocument,
     *,
-    source_name: str | Path = "thesis.md",
+    source_name: str | Path = "document.md",
     asset_links: Mapping[str, str] | None = None,
 ) -> str:
     """Return only the generated reader-facing Markdown."""

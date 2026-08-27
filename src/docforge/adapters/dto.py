@@ -8,8 +8,9 @@ from pathlib import Path
 from typing import Final
 
 from docforge.application.contracts import BuildReport, ProjectIdentity
+from docforge.project.constants import MANIFEST_FILENAME
 
-PROTOCOL_VERSION: Final = "thesisforge.workbench.v1"
+PROTOCOL_VERSION: Final = "docforge.workbench.v1"
 ABSOLUTE_PATH_RE = re.compile(r"(?<![\w])(?:/[^\s:]+|[A-Za-z]:\\[^\s:]+)")
 
 
@@ -39,11 +40,17 @@ def read_project_request_payload(payload: object) -> ProjectRequestPayload | Non
         raise TypeError("project.root must be a non-empty string")
     if not isinstance(manifest_path, str) or not manifest_path:
         raise TypeError("project.manifestPath must be a non-empty string")
+    manifest = Path(manifest_path)
+    root = Path(project_root)
+    if manifest.name != MANIFEST_FILENAME or manifest.parent != root:
+        raise ValueError(
+            f"project.manifestPath must be {MANIFEST_FILENAME} in project.root"
+        )
     try:
         ProjectIdentity(
             project_id=project_id,
-            project_root=Path(project_root),
-            manifest_path=Path(manifest_path),
+            project_root=root,
+            manifest_path=manifest,
         )
     except (TypeError, ValueError) as error:
         raise ValueError("project identity is invalid") from error
@@ -137,6 +144,9 @@ def _details(details) -> dict:
 
 
 def serialize_build_report(report: BuildReport) -> dict:
+    if report.schema_version != BuildReport.SCHEMA_VERSION:
+        raise ValueError(f"unsupported BuildReport schema: {report.schema_version}")
+
     def diagnostic(item) -> dict:
         return {
             "id": item.id,

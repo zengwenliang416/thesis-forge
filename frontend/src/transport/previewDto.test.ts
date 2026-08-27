@@ -293,12 +293,12 @@ describe("preview transport DTO", () => {
   ])("rejects malformed nested preview data: $name", ({ value }) => {
     expect(() =>
       readSerializedPreviewResult(value as Record<string, unknown>, true),
-    ).toThrow("无效的 ThesisForge transport 响应");
+    ).toThrow("无效的 DocForge transport 响应");
   });
 
   it("requires preview data for preview consumers", () => {
     expect(() => readSerializedPreviewResult({}, true)).toThrow(
-      "无效的 ThesisForge transport 响应",
+      "无效的 DocForge transport 响应",
     );
   });
 });

@@ -194,11 +194,11 @@ def _check_schema_version(data: dict[str, Any]) -> ValidationIssue | None:
     if version == SCHEMA_VERSION and isinstance(version, int):
         return None
     if isinstance(version, int) and version > SCHEMA_VERSION:
-        hint = "schema_version 大于宿主支持版本，请升级 ThesisForge"
+        hint = "schema_version 大于宿主支持版本，请升级 DocForge"
     else:
         hint = (
             "schema_version 缺失或低于 2：v2 加载器不解释旧模板，请运行 "
-            "`thesisforge template migrate <legacy.yaml> -o <目录>` 显式迁移（ADR-0002 D-7）"
+            "`docforge template migrate <legacy.yaml> -o <目录>` 显式迁移（ADR-0002 D-7）"
         )
     return _issue(
         "unsupported-schema-version",
@@ -445,19 +445,19 @@ def _resolve_package(
 
     chain = [self_entry, *(parent.chain if parent is not None else [])]
 
-    # 宿主兼容性（§3.2）：compatibility.thesisforge 不满足 → incompatible-thesisforge
+    # 宿主兼容性（§3.2）：compatibility.docforge 不满足 → incompatible-docforge
     compatibility = merged.get("compatibility")
     if isinstance(compatibility, dict):
-        host_range = compatibility.get("thesisforge")
+        host_range = compatibility.get("docforge")
         if isinstance(host_range, str):
             try:
                 if not version_satisfies(host_range, host_version):
                     issues.append(
                         _issue(
-                            "incompatible-thesisforge",
-                            f"宿主 ThesisForge {host_version} 不满足模板兼容区间 "
+                            "incompatible-docforge",
+                            f"宿主 DocForge {host_version} 不满足模板兼容区间 "
                             f"{host_range!r}",
-                            target="compatibility.thesisforge",
+                            target="compatibility.docforge",
                         )
                     )
             except ValueError:

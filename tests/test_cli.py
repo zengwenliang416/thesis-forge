@@ -42,6 +42,19 @@ def _write_project(
             "title": {"zh": "测试论文"},
             "authors": [{"name": "测试作者"}],
         }
+        manifest["academic"] = {
+            "student": {"name": "测试作者", "id": "20260001"},
+            "institution": {
+                "name": "示例大学",
+                "department": "计算机学院",
+            },
+            "degree": {
+                "name": "工学硕士",
+                "major": "计算机科学与技术",
+            },
+            "advisor": {"name": "指导教师", "title": "教授"},
+            "completion": {"date": "2026-05"},
+        }
     (root / "docforge.yaml").write_text(
         yaml.safe_dump(manifest, allow_unicode=True, sort_keys=False),
         encoding="utf-8",

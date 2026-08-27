@@ -1,8 +1,8 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "ThesisForge",
+  "productName": "DocForge",
   "version": "0.1.0",
-  "identifier": "com.thesisforge.workbench",
+  "identifier": "com.docforge.workbench",
   "build": {
     "beforeDevCommand": "pnpm --dir frontend dev",
     "devUrl": "http://127.0.0.1:4173",

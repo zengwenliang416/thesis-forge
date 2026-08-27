@@ -1,5 +1,8 @@
 import type { FinalPreviewDescriptor } from "./finalPreview";
-import { PROTOCOL_VERSION } from "./dto";
+import {
+  BUILD_REPORT_SCHEMA_VERSION,
+  PROTOCOL_VERSION,
+} from "./constants";
 
 export type { FinalPreviewDescriptor } from "./finalPreview";
 
@@ -105,7 +108,7 @@ export type BuildReportPreviewDescriptor = Extract<
 >;
 
 export interface BuildReport {
-  schemaVersion: "thesisforge.build-report.v2";
+  schemaVersion: typeof BUILD_REPORT_SCHEMA_VERSION;
   buildId: string;
   intent: "publish" | "live-preview";
   outcome: "succeeded" | "failed" | "canceled";
@@ -527,7 +530,7 @@ function isReport(value: unknown): value is BuildReport {
       "logs",
       "output",
     ]) ||
-    value.schemaVersion !== "thesisforge.build-report.v2" ||
+    value.schemaVersion !== BUILD_REPORT_SCHEMA_VERSION ||
     typeof value.buildId !== "string" ||
     value.buildId.length === 0 ||
     !isStringEnum(value.intent, ["publish", "live-preview"]) ||
@@ -560,7 +563,7 @@ function isReport(value: unknown): value is BuildReport {
 
 function readReport(value: unknown): BuildReport {
   if (!isReport(value)) {
-    throw new Error("无效的 ThesisForge BuildReport");
+    throw new Error("无效的 DocForge BuildReport");
   }
   return value;
 }
@@ -577,7 +580,7 @@ export function assertBuildEvent(
     (requestId !== undefined && value.requestId !== requestId) ||
     typeof value.type !== "string"
   ) {
-    throw new Error("无效的 ThesisForge 构建事件");
+    throw new Error("无效的 DocForge 构建事件");
   }
   if (
     value.type === "progress" &&
@@ -603,5 +606,5 @@ export function assertBuildEvent(
       report: readReport(value.report),
     };
   }
-  throw new Error("无效的 ThesisForge 构建事件");
+  throw new Error("无效的 DocForge 构建事件");
 }

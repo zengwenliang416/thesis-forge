@@ -1,0 +1,56 @@
+schema: docforge.project.v1
+
+project:
+  id: bachelor-thesis
+  language: zh-CN
+
+document:
+  source: document.md
+  type: academic
+
+metadata:
+  title:
+    zh: 基于结构化 Markdown 的本科论文编译系统设计
+    en: Design of a Bachelor Thesis Compiler Based on Structured Markdown
+  authors:
+    - name: 张三
+  organization: XX大学
+  keywords:
+    - Markdown
+    - 论文编译
+    - OOXML
+    - 确定性构建
+
+academic:
+  student:
+    name: 张三
+    id: "2022000001"
+  institution:
+    name: XX大学
+    department: 计算机科学与技术学院
+  degree:
+    name: 工学学士
+    major: 计算机科学与技术
+  advisor:
+    name: 李老师
+    title: 副教授
+  completion:
+    date: "2026-06"
+
+resources:
+  root: .
+  assets: images
+  bibliography: references.bib
+
+render:
+  template_id: example-university-2026
+  citation_style: GB-T-7714-2025
+
+output:
+  directory: build
+  docx: document.docx
+
+review:
+  directory: review
+  markdown: document.review.md
+  source_map: document.review-map.json

@@ -1,13 +1,13 @@
 # 摘要 {#chap:abstract-zh}
 
-本文语料覆盖 ThesisForge V2 的结构化 Markdown、富文本行内语义、模板驱动编号、
+本文语料覆盖 DocForge v1 的结构化 Markdown、富文本行内语义、模板驱动编号、
 Review 投影和可编辑 DOCX 输出。
 
 关键词：格式语料；文档编译；OpenXML
 
 # Abstract {#chap:abstract-en}
 
-This corpus exercises the complete local-first V2 document compilation path.
+This corpus exercises the complete local-first DocForge v1 document compilation path.
 
 Keywords: format corpus; document compilation; OpenXML
 

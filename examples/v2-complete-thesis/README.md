@@ -1,14 +1,14 @@
-# ThesisForge V2 完整示例项目
+# DocForge 完整示例项目
 
-这是一个可以直接被 ThesisForge V2 打开的完整论文项目，不是单独的
-Markdown 文件，也不是只提供一个生成后的 Word。
+这是一个可以直接被 DocForge 打开的完整论文项目，不是单独的 Markdown 文件，
+也不是只提供一个生成后的 Word。
 
 ## 项目结构
 
 ```text
 v2-complete-thesis/
-├── thesisforge.yaml
-├── thesis.md
+├── docforge.yaml
+├── document.md
 ├── references.bib
 ├── assets/
 │   └── architecture.png
@@ -20,12 +20,12 @@ v2-complete-thesis/
 │   ├── review-result.json
 │   ├── build-result.json
 │   ├── openxml-report.json
-│   ├── thesis.docx
-│   ├── thesis.pdf
+│   ├── document.docx
+│   ├── document.pdf
 │   └── build-report.json
 └── review/
-    ├── thesis.review.md
-    └── thesis.review-map.json
+    ├── document.review.md
+    └── document.review-map.json
 ```
 
 ## 包含的语义
@@ -49,21 +49,21 @@ v2-complete-thesis/
 ```bash
 ROOT="$(pwd)"
 
-.venv/bin/python -m thesis_forge.cli inspect \
+.venv/bin/docforge inspect \
   examples/v2-complete-thesis
 
-.venv/bin/python -m thesis_forge.cli validate \
+.venv/bin/docforge validate \
   examples/v2-complete-thesis --json
 
-.venv/bin/python -m thesis_forge.cli review \
+.venv/bin/docforge review \
   examples/v2-complete-thesis \
   --output-dir "$ROOT/examples/v2-complete-thesis/review"
 
-.venv/bin/python -m thesis_forge.cli build \
+.venv/bin/docforge build \
   examples/v2-complete-thesis \
-  -o "$ROOT/examples/v2-complete-thesis/build/thesis.docx" \
+  -o "$ROOT/examples/v2-complete-thesis/build/document.docx" \
   --report-json "$ROOT/examples/v2-complete-thesis/build/build-report.json"
 ```
 
-`thesis.md` 只保存可读论文内容，项目元数据、资源、模板和输出策略统一放在
-`thesisforge.yaml`。不要把 YAML Front Matter 或旧的 `:::` 容器放回正文。
+`document.md` 只保存可读论文内容和最小语义 ID，项目元数据、资源、模板和输出策略
+统一放在 `docforge.yaml`。不要把项目 manifest 或旧的 `:::` 容器放回正文。

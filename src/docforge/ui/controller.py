@@ -12,7 +12,9 @@ from docforge.application.contracts import (
     ProjectRequest,
     ProjectRequestIntent,
 )
+from docforge.project.constants import MANIFEST_FILENAME
 from docforge.project.loader import load_project
+from docforge.project.paths import resolve_project_paths
 
 from .filesystem import LocalWorkspaceFileSystem
 from .models import (
@@ -142,7 +144,7 @@ class WorkspaceController:
         token = self._begin_operation(OperationKind.OPEN)
         open_operation = (
             self._open_desktop_project
-            if source.is_dir() or source.name == "thesisforge.yaml"
+            if source.is_dir() or source.name == MANIFEST_FILENAME
             else self._open_desktop_workspace
         )
         self._task_runner.submit(
@@ -498,7 +500,7 @@ class WorkspaceController:
         _template: Path | None,
     ) -> _OpenedWorkspace:
         project = load_project(project_path)
-        source = project.source_path
+        source = resolve_project_paths(project).source
         saved_text = self.filesystem.read_text(source)
         identity = ProjectIdentity(
             project_id=project.manifest.project.id,

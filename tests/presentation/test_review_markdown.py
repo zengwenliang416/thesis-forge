@@ -158,18 +158,18 @@ def test_serializes_all_review_content_and_keeps_source_map_out_of_markdown() ->
 
     result = render_review_markdown(
         review,
-        source_name=Path("/private/project/thesis.md"),
+        source_name=Path("/private/project/document.md"),
         asset_links={"asset:fig": "assets/architecture.png"},
     )
 
     assert result.markdown == serialize_review_markdown(
         review,
-        source_name=Path("/private/project/thesis.md"),
+        source_name=Path("/private/project/document.md"),
         asset_links={"asset:fig": "assets/architecture.png"},
     )
     assert "GENERATED FILE" in result.markdown
     assert "read-only" in result.markdown
-    assert "Source: `thesis.md`" in result.markdown
+    assert "Source: `document.md`" in result.markdown
     assert "![图 1-1 架构图](assets/architecture.png)" in result.markdown
     assert "**加粗**" in result.markdown
     assert "*斜体*" in result.markdown

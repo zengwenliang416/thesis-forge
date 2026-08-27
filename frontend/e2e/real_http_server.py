@@ -46,7 +46,7 @@ class RealHttpAcceptanceApp:
         def wrapped(status: str, headers: list[tuple[str, str]]):
             return start_response(
                 status,
-                [*headers, ("X-ThesisForge-Adapter", "python-wsgi")],
+                [*headers, ("X-DocForge-Adapter", "python-wsgi")],
             )
 
         return wrapped

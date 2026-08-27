@@ -38,8 +38,8 @@ from docforge.renderers.docx.package import validate_docx_package
 
 ROOT = Path(__file__).resolve().parents[2]
 CORPUS = ROOT / "examples" / "v2-format-corpus"
-SOURCE = CORPUS / "thesis.md"
-CLI = ROOT / ".venv" / "bin" / "thesisforge"
+SOURCE = CORPUS / "document.md"
+CLI = ROOT / ".venv" / "bin" / "docforge"
 
 NS = {
     "m": "http://schemas.openxmlformats.org/officeDocument/2006/math",
@@ -84,7 +84,7 @@ def _review_visible_text(value: object) -> Iterable[str]:
 
 def _review_markdown(result) -> str:
     review = map_review_result(result)
-    rendered = render_review_markdown(review, source_name="thesis.md")
+    rendered = render_review_markdown(review, source_name="document.md")
     visible = "\n".join(
         text
         for block in review.blocks

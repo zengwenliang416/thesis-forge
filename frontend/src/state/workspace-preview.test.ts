@@ -1,4 +1,5 @@
 import fixture from "../../../tests/fixtures/preview-workbench-v1.json";
+import { DEFAULT_SOURCE_FILENAME } from "../transport/constants";
 import {
   createInitialWorkspaceState,
   reduceWorkspaceState,
@@ -45,7 +46,7 @@ describe("workspace preview state", () => {
       status: "populated" as const,
       source: {
         kind: "desktop" as const,
-        name: "thesis.md",
+        name: DEFAULT_SOURCE_FILENAME,
         writable: true,
       },
       outline: fixture.outline,
@@ -72,7 +73,7 @@ describe("workspace preview state", () => {
         status: "populated",
         source: {
           kind: "desktop",
-          name: "thesis.md",
+          name: DEFAULT_SOURCE_FILENAME,
           writable: true,
         },
         savedText: "# Saved\n",
@@ -94,7 +95,7 @@ describe("workspace preview state", () => {
       status: "populated" as const,
       source: {
         kind: "desktop" as const,
-        name: "thesis.md",
+        name: DEFAULT_SOURCE_FILENAME,
         writable: true,
       },
       finalPreview: {
@@ -102,7 +103,7 @@ describe("workspace preview state", () => {
         descriptor: {
           engine: "microsoft-word" as const,
           label: "Microsoft Word PDF" as const,
-          fileName: "thesis.pdf",
+          fileName: "document.pdf",
           authorizationId: "a".repeat(32),
         },
         bytes: new Uint8Array([37, 80, 68, 70, 45]),
@@ -139,7 +140,7 @@ describe("workspace preview state", () => {
         status: "populated",
         source: {
           kind: "desktop",
-          name: "thesis.md",
+          name: DEFAULT_SOURCE_FILENAME,
           writable: true,
         },
       },

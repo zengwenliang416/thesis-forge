@@ -15,7 +15,7 @@ input:
   project: qa/fixtures/e2e/figure-reference
   template: templates/schools/example-university/2026.yaml
 steps:
-  - run: thesisforge build qa/fixtures/e2e/figure-reference/thesis.md -o <tmp>.docx
+  - run: docforge build qa/fixtures/e2e/figure-reference -o <tmp>.docx
   - run: qa/tools/no_repair_open.py <tmp>.docx --json evidence.json
   - manual: WPS 结果为 pending-human-review 时人工打开确认
 expected:

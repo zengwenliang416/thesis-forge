@@ -191,7 +191,7 @@ def _windows_word_is_registered() -> bool:
 def microsoft_word_preview_root(
     platform: str | None = None,
 ) -> Path:
-    override = os.environ.get("THESISFORGE_WORD_PREVIEW_ROOT")
+    override = os.environ.get("DOCFORGE_WORD_PREVIEW_ROOT")
     if override:
         return Path(override).expanduser()
     active_platform = platform or sys.platform
@@ -203,16 +203,16 @@ def microsoft_word_preview_root(
             / "com.microsoft.Word"
             / "Data"
             / "Documents"
-            / "ThesisForgePreview"
+            / "DocForgePreview"
         )
     local_app_data = os.environ.get("LOCALAPPDATA")
     if active_platform == "win32" and local_app_data:
-        return Path(local_app_data) / "ThesisForge" / "WordPreview"
-    return Path(tempfile.gettempdir()) / "ThesisForge" / "WordPreview"
+        return Path(local_app_data) / "DocForge" / "WordPreview"
+    return Path(tempfile.gettempdir()) / "DocForge" / "WordPreview"
 
 
 def _preview_export_canceled() -> bool:
-    cancel_file = os.environ.get("THESISFORGE_CANCEL_FILE")
+    cancel_file = os.environ.get("DOCFORGE_CANCEL_FILE")
     return bool(cancel_file and Path(cancel_file).exists())
 
 
@@ -567,7 +567,7 @@ def _run_libreoffice_pdf_export(
 ) -> Path:
     temporary_root = _libreoffice_temporary_root()
     with tempfile.TemporaryDirectory(
-        prefix="thesisforge-lo-pdf-",
+        prefix="docforge-lo-pdf-",
         dir=temporary_root,
     ) as profile_name:
         profile_path = Path(profile_name).resolve()

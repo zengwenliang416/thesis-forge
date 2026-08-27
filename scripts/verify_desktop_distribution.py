@@ -19,12 +19,16 @@ if str(SCRIPT_DIRECTORY) not in sys.path:
 from build_sidecar import (
     ROOT,
     SIDECAR_DIRECTORY,
+    SIDECAR_NAME,
     ensure_native_target,
     host_target_triple,
     sidecar_binary_name,
 )
 
-PROTOCOL_VERSION = "thesisforge.workbench.v1"
+PROTOCOL_VERSION = "docforge.workbench.v1"
+BUILD_REPORT_SCHEMA_VERSION = "docforge.build-report.v2"
+BLOCK_NETWORK_ENV = "DOCFORGE_BLOCK_NETWORK"
+CANCEL_FILE_ENV = "DOCFORGE_CANCEL_FILE"
 BUILD_STAGES = ("parse", "validate", "compile", "render", "finalize")
 CANONICAL_PROJECT = ROOT / "tests" / "fixtures" / "docforge-academic"
 CANONICAL_SOURCE = "document.md"
@@ -41,9 +45,9 @@ def required_bundle_suffixes(platform: str) -> tuple[str, ...]:
 
 def managed_sidecar_name(platform: str) -> str:
     if platform == "macos":
-        return "thesisforge-sidecar"
+        return SIDECAR_NAME
     if platform == "windows":
-        return "thesisforge-sidecar.exe"
+        return f"{SIDECAR_NAME}.exe"
     raise ValueError(f"Unsupported desktop platform: {platform}")
 
 
@@ -93,7 +97,7 @@ def _offline_environment() -> dict[str, str]:
     environment.pop("PYTHONPATH", None)
     environment["PYTHONIOENCODING"] = "utf-8"
     environment["PYTHONUTF8"] = "1"
-    environment["THESISFORGE_BLOCK_NETWORK"] = "1"
+    environment[BLOCK_NETWORK_ENV] = "1"
     return environment
 
 
@@ -168,7 +172,7 @@ def _require_build_report(
         terminal.get("type") != "completed"
         or "result" in terminal
         or not isinstance(report, dict)
-        or report.get("schemaVersion") != "thesisforge.build-report.v2"
+        or report.get("schemaVersion") != BUILD_REPORT_SCHEMA_VERSION
         or report.get("outcome") != outcome
     ):
         raise RuntimeError(f"{label}: {events}")
@@ -178,7 +182,7 @@ def _require_build_report(
 def verify_sidecar(sidecar: Path) -> dict[str, object]:
     validate_sidecar_artifact(sidecar)
 
-    with tempfile.TemporaryDirectory(prefix="thesisforge-desktop-") as raw_temp:
+    with tempfile.TemporaryDirectory(prefix="docforge-desktop-") as raw_temp:
         workspace = Path(raw_temp) / "workspace"
         shutil.copytree(CANONICAL_PROJECT, workspace)
         source = workspace / CANONICAL_SOURCE
@@ -208,7 +212,7 @@ def verify_sidecar(sidecar: Path) -> dict[str, object]:
             _request("build", source, output=output),
             stream=True,
             cwd=workspace,
-            environment=environment | {"THESISFORGE_CANCEL_FILE": str(cancel_file)},
+            environment=environment | {CANCEL_FILE_ENV: str(cancel_file)},
         )
         _require_build_report(
             canceled,

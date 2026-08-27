@@ -1,0 +1,53 @@
+schema: docforge.project.v1
+
+project:
+  id: figure-reference
+  language: zh-CN
+
+document:
+  source: document.md
+  type: academic
+
+metadata:
+  title:
+    zh: 图表公式编号与交叉引用质量夹具
+  authors:
+    - name: 质量夹具
+  organization: XX大学
+  keywords:
+    - 交叉引用
+    - OpenXML
+
+academic:
+  institution:
+    name: XX大学
+    department: 计算机科学与技术
+  degree:
+    name: 工学学士
+    major: 计算机科学与技术
+  advisor:
+    name: 示例导师
+    title: 教授
+  student:
+    name: 质量夹具
+    id: "2026000001"
+  completion:
+    date: "2026-06"
+
+resources:
+  root: .
+  assets: images
+  bibliography: references.bib
+
+render:
+  template_id: example-university-2026
+  citation_style: GB-T-7714-2025
+
+output:
+  directory: build
+  docx: document.docx
+
+review:
+  directory: review
+  markdown: document.review.md
+  source_map: document.review-map.json

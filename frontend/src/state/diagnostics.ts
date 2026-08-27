@@ -46,7 +46,7 @@ export function localizedDiagnosticMessage(
         diagnostic.target ?? "",
       )}`;
     case "empty-document":
-      return "论文正文为空";
+      return "文档正文为空";
     case "invalid-id-prefix":
       return `ID 前缀无效：${diagnostic.target ?? ""}，期望 ${detail(
         diagnostic,
@@ -65,7 +65,7 @@ export function localizedDiagnosticMessage(
     case "resource-path-escape":
       return `${
         detail(diagnostic, "resource_type") === "image" ? "图片" : "参考文献"
-      }路径越出论文资源目录：${diagnostic.target ?? ""}`;
+      }路径越出文档资源目录：${diagnostic.target ?? ""}`;
     case "missing-image":
       return `图片不存在：${diagnostic.target ?? ""}`;
     case "missing-bibliography":

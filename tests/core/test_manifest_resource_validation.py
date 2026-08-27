@@ -31,7 +31,7 @@ def write_project(
 ) -> Path:
     root = tmp_path / "project"
     (root / "assets").mkdir(parents=True)
-    (root / "thesis.md").write_text("# 绪论\n", encoding="utf-8")
+    (root / "document.md").write_text("# 绪论\n", encoding="utf-8")
     (root / "assets" / "model.png").write_bytes(b"png")
     (root / "references.bib").write_text(
         bibliography or REFERENCE.read_text(encoding="utf-8"),
@@ -43,32 +43,36 @@ metadata:
   title:
     zh: 测试论文
     en: Test Thesis
-  author:
+  authors:
+    - name: 张三
+academic:
+  student:
     name: 张三
-    student_id: "20260001"
+    id: "20260001"
   institution:
-    university: 示例大学
-    college: 计算机学院
+    name: 示例大学
+    department: 计算机学院
   degree:
     name: 工学硕士
     major: 计算机科学与技术
   advisor:
     name: 李教授
     title: 教授
-  dates:
-    completed: "2026-05"
+  completion:
+    date: "2026-05"
 """
         if metadata
         else ""
     )
-    (root / "thesisforge.yaml").write_text(
+    (root / "docforge.yaml").write_text(
         f"""
-schema: thesisforge.project.v2
+schema: docforge.project.v1
 project:
   id: validation-fixture
   language: zh-CN
 document:
-  source: thesis.md
+  type: academic
+  source: document.md
 {metadata_block}
 resources:
   root: .
@@ -89,7 +93,7 @@ def test_project_manifest_controls_template_and_resource_roots(
     project_root = write_project(tmp_path)
     citation = Citation(keys=["smith2025"])
     document = ForgeDocument(
-        source_path=(project_root / "thesis.md").resolve(),
+        source_path=(project_root / "document.md").resolve(),
         blocks=[
             Paragraph(inlines=[citation]),
             Figure(
@@ -117,14 +121,24 @@ def test_project_manifest_controls_template_and_resource_roots(
         issue.target
         for issue in issues
         if issue.code == "required-metadata"
-    } == {"thesis.title", "author.name"}
+    } == {
+        "metadata.title.zh",
+        "academic.institution.name",
+        "academic.institution.department",
+        "academic.degree.name",
+        "academic.degree.major",
+        "academic.student.name",
+        "academic.student.id",
+        "academic.advisor.name",
+        "academic.completion.date",
+    }
 
 
 def test_manifest_metadata_drives_validation_and_cover_compilation(
     tmp_path: Path,
 ) -> None:
     project_root = write_project(tmp_path, metadata=True)
-    document = create_parser_backend().parse_file(project_root / "thesis.md")
+    document = create_parser_backend().parse_file(project_root / "document.md")
     document.metadata = {
         "thesis": {"title": "旧标题"},
         "author": {"name": "旧作者"},
@@ -135,16 +149,28 @@ def test_manifest_metadata_drives_validation_and_cover_compilation(
 
     assert not any(issue.code == "required-metadata" for issue in issues)
     assert document.metadata == {
-        "thesis": {
-            "title": "测试论文",
-            "title_en": "Test Thesis",
-            "degree": "工学硕士",
-            "major": "计算机科学与技术",
+        "metadata": {
+            "title": {"zh": "测试论文", "en": "Test Thesis"},
+            "authors": [{"name": "张三"}],
+            "keywords": [],
         },
-        "university": {"name": "示例大学", "college": "计算机学院"},
-        "author": {"name": "张三", "student_id": "20260001"},
-        "advisor": {"name": "李教授", "title": "教授"},
-        "dates": {"completed": "2026-05"},
+        "academic": {
+            "student": {"name": "张三", "id": "20260001"},
+            "institution": {
+                "name": "示例大学",
+                "department": "计算机学院",
+            },
+            "degree": {
+                "name": "工学硕士",
+                "major": "计算机科学与技术",
+            },
+            "advisor": {"name": "李教授", "title": "教授"},
+            "completion": {"date": "2026-05"},
+        },
+        "render": {
+            "template_id": "example-university-2026",
+            "citation_style": "GB-T-7714-2025",
+        },
     }
 
     plan = compile_document(
@@ -155,17 +181,17 @@ def test_manifest_metadata_drives_validation_and_cover_compilation(
     )
     cover = next(node for node in plan.nodes if isinstance(node, CoverInstruction))
     expected_cover = {
-        "university.name": "示例大学",
-        "university.college": "计算机学院",
-        "thesis.title": "测试论文",
-        "thesis.title_en": "Test Thesis",
-        "thesis.major": "计算机科学与技术",
-        "thesis.degree": "工学硕士",
-        "author.name": "张三",
-        "author.student_id": "20260001",
-        "advisor.name": "李教授",
-        "advisor.title": "教授",
-        "dates.completed": "2026-05",
+        "academic.institution.name": "示例大学",
+        "metadata.title.zh": "测试论文",
+        "metadata.title.en": "Test Thesis",
+        "academic.institution.department": "计算机学院",
+        "academic.degree.name": "工学硕士",
+        "academic.degree.major": "计算机科学与技术",
+        "academic.student.name": "张三",
+        "academic.student.id": "20260001",
+        "academic.advisor.name": "李教授",
+        "academic.advisor.title": "教授",
+        "academic.completion.date": "2026-05",
     }
     assert {
         field: cover.value_for(field) for field in expected_cover
@@ -178,7 +204,7 @@ def test_manifest_bibliography_overrides_document_front_matter_path(
     project_root = write_project(tmp_path)
     citation = Citation(keys=["smith2025"])
     document = ForgeDocument(
-        source_path=(project_root / "thesis.md").resolve(),
+        source_path=(project_root / "document.md").resolve(),
         bibliography=BibliographyConfig(
             path="does-not-exist.bib",
             citation_style="unsupported-style",
@@ -210,7 +236,7 @@ def test_manifest_path_escape_becomes_structured_validation_issue(
     except OSError as error:
         pytest.skip(f"symlinks unavailable: {error}")
 
-    document = ForgeDocument(source_path=(project_root / "thesis.md").resolve())
+    document = ForgeDocument(source_path=(project_root / "document.md").resolve())
     context = ValidationContext.from_document(document)
     issues = validate_document(document, context)
 
@@ -231,7 +257,7 @@ def test_invalid_manifest_bibliography_details_do_not_leak_absolute_path(
     )
     citation = Citation(keys=["broken"])
     document = ForgeDocument(
-        source_path=(project_root / "thesis.md").resolve(),
+        source_path=(project_root / "document.md").resolve(),
         blocks=[Paragraph(inlines=[citation])],
     )
 

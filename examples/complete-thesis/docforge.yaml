@@ -1,0 +1,56 @@
+schema: docforge.project.v1
+
+project:
+  id: complete-thesis
+  language: zh-CN
+
+document:
+  source: document.md
+  type: academic
+
+metadata:
+  title:
+    zh: 面向结构化学术文档的确定性论文编译系统设计
+    en: Design of a Deterministic Thesis Compiler for Structured Academic Documents
+  authors:
+    - name: 曾文亮
+  organization: 湖南工业大学
+  keywords:
+    - Markdown
+    - 论文编译
+    - OOXML
+    - 确定性构建
+
+academic:
+  student:
+    name: 曾文亮
+    id: "2024000001"
+  institution:
+    name: 湖南工业大学
+    department: 计算机学院
+  degree:
+    name: 工学硕士
+    major: 计算机科学与技术
+  advisor:
+    name: 指导教师
+    title: 教授
+  completion:
+    date: "2026-06"
+
+resources:
+  root: .
+  assets: images
+  bibliography: references.bib
+
+render:
+  template_id: hut-master-2026
+  citation_style: GB-T-7714-2025
+
+output:
+  directory: build
+  docx: document.docx
+
+review:
+  directory: review
+  markdown: document.review.md
+  source_map: document.review-map.json

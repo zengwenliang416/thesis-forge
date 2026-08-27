@@ -51,9 +51,14 @@ from docforge.application.contracts import (
 from docforge.application.services import (
     BuildStageLifecycle,
     ProjectApplicationService,
+    ensure_build_output_differs_from_source,
 )
 from docforge.core.model import Heading, ValidationIssue, inline_plain_text
 from docforge.presentation.preview import map_preview_result
+from docforge.project.constants import (
+    DEFAULT_DOCX_FILENAME,
+    MANIFEST_FILENAME,
+)
 from docforge.project.loader import load_project
 from docforge.project.model import ProjectRelativePath
 from docforge.project.paths import resolve_project_paths
@@ -75,7 +80,7 @@ PreviewService = Callable[..., PreviewResult]
 BuildEventSink = Callable[[dict], None]
 CancellationPredicate = Callable[[], bool]
 LIVE_PREVIEW_STEM_RE = re.compile(
-    r"^\.?thesisforge-live-preview-[0-9a-f]{32}$"
+    r"^\.?docforge-live-preview-[0-9a-f]{32}$"
 )
 BUILD_REPORT_CODE_RE = re.compile(r"^TF-[A-Z0-9-]+$")
 _serialize_build_report = serialize_build_report
@@ -572,10 +577,16 @@ def _project_identity_from_payload(project: object) -> ProjectIdentity:
         raise TypeError("project.root must be a string")
     if not isinstance(manifest_path, str):
         raise TypeError("project.manifestPath must be a string")
+    root = Path(project_root)
+    manifest = Path(manifest_path)
+    if manifest.name != MANIFEST_FILENAME or manifest.parent != root:
+        raise ValueError(
+            f"project.manifestPath must be {MANIFEST_FILENAME} in project.root"
+        )
     return ProjectIdentity(
         project_id=project_id,
-        project_root=Path(project_root),
-        manifest_path=Path(manifest_path),
+        project_root=root,
+        manifest_path=manifest,
     )
 
 
@@ -653,11 +664,11 @@ class WebWorkspaceRuntime:
 
     @staticmethod
     def _opaque_project_snapshot(workspace_id: str, project_id: str) -> dict:
-        root = Path("/thesisforge-web") / workspace_id
+        root = Path("/docforge-web") / workspace_id
         return {
             "id": project_id,
             "root": str(root),
-            "manifestPath": str(root / "thesisforge.yaml"),
+            "manifestPath": str(root / MANIFEST_FILENAME),
         }
 
     def _write_workspace_file(
@@ -685,13 +696,17 @@ class WebWorkspaceRuntime:
         manifest_text = manifest.get("text")
         source_name = self._relative_file_name(source.get("fileName"))
         source_text = source.get("text")
-        if manifest_name != "thesisforge.yaml":
-            raise ValueError("manifest fileName must be thesisforge.yaml")
+        if manifest_name != MANIFEST_FILENAME:
+            raise ValueError(f"manifest fileName must be {MANIFEST_FILENAME}")
         if not isinstance(manifest_text, str):
             raise TypeError("manifest.text must be a string")
         if not isinstance(source_text, str):
             raise TypeError("source.text must be a string")
-        if source_name == manifest_name or not source_name.lower().endswith(".md"):
+        if (
+            source_name == manifest_name
+            or PurePosixPath(source_name).suffix.lower()
+            not in {".md", ".markdown"}
+        ):
             raise ValueError("source.fileName must identify a Markdown source")
 
         workspace_id = uuid4().hex
@@ -733,7 +748,7 @@ class WebWorkspaceRuntime:
         workspace_id = self._workspace_id(source.get("workspaceId"))
         workspace = self._workspace_directory(workspace_id)
         loaded = load_project(workspace)
-        resolve_project_paths(loaded)
+        paths = resolve_project_paths(loaded)
         source_path = self.source_path(source)
         expected = self._opaque_project_snapshot(
             workspace_id,
@@ -743,7 +758,7 @@ class WebWorkspaceRuntime:
             requested.project_id != expected["id"]
             or str(requested.project_root) != expected["root"]
             or str(requested.manifest_path) != expected["manifestPath"]
-            or source_path.resolve() != loaded.source_path.resolve()
+            or source_path.resolve() != paths.source.resolve()
         ):
             raise ValueError("Web project identity does not match workspace manifest")
         return ProjectIdentity(
@@ -791,7 +806,7 @@ class WebWorkspaceRuntime:
             for path in active_paths
         }
         active_directories = {path.parent for path in active_paths}
-        for directory in self.root.glob("*/.thesisforge-live-previews"):
+        for directory in self.root.glob("*/.docforge-live-previews"):
             if directory.is_symlink() or not directory.is_dir():
                 continue
             for artifact in directory.iterdir():
@@ -819,8 +834,8 @@ class WebWorkspaceRuntime:
         workspace_id = self._workspace_id(source.get("workspaceId"))
         self._sweep_expired_live_previews()
         live_preview_id = uuid4().hex
-        file_name = f".thesisforge-live-preview-{live_preview_id}.docx"
-        output_directory = source_path.parent / ".thesisforge-live-previews"
+        file_name = f".docforge-live-preview-{live_preview_id}.docx"
+        output_directory = source_path.parent / ".docforge-live-previews"
         output_directory.mkdir(mode=0o700, exist_ok=True)
         output_path = output_directory / file_name
         grant = _WebLivePreviewGrant(
@@ -870,7 +885,9 @@ class WebWorkspaceRuntime:
 
     def output_path(self, output: dict) -> Path:
         workspace_id = self._workspace_id(output.get("workspaceId"))
-        file_name = self._plain_file_name(output.get("fileName") or "thesis.docx")
+        file_name = self._plain_file_name(
+            output.get("fileName") or DEFAULT_DOCX_FILENAME
+        )
         workspace = self.root / workspace_id
         if not workspace.is_dir():
             raise ValueError("web workspace does not exist")
@@ -1378,6 +1395,7 @@ class WorkbenchCommandDispatcher:
         if not isinstance(output, dict):
             raise TypeError("output must be an object")
         output_path = self._runtime.output_path(output)
+        ensure_build_output_differs_from_source(source_path, output_path)
         if intent == "live-preview":
             self._runtime.validate_live_preview_output(output, output_path)
         stages: list[str] = []
@@ -1433,6 +1451,7 @@ class WorkbenchCommandDispatcher:
         if not isinstance(output, dict):
             raise TypeError("output must be an object")
         output_path = self._runtime.output_path(output)
+        ensure_build_output_differs_from_source(source_path, output_path)
         if intent == BuildIntent.LIVE_PREVIEW.value:
             self._runtime.validate_live_preview_output(output, output_path)
         stages: list[str] = []
@@ -1486,7 +1505,7 @@ def iter_build_events(
                 on_finished()
             queue.put(None)
 
-    Thread(target=run, name="thesisforge-build-stream", daemon=True).start()
+    Thread(target=run, name="docforge-build-stream", daemon=True).start()
     while True:
         event = queue.get()
         if event is None:

@@ -38,23 +38,32 @@ PNG_BYTES = base64.b64decode(
     "+A8AAQUBAScY42YAAAAASUVORK5CYII="
 )
 
-E2E_MANIFEST = """schema: thesisforge.project.v2
+E2E_MANIFEST = """schema: docforge.project.v1
 project:
   id: qa-e2e-v2
   language: zh-CN
 document:
-  source: thesis.md
+  source: document.md
+  type: academic
 metadata:
   title:
     zh: QA E2E 结构门禁夹具
-  author:
+  authors:
+    - name: 质量夹具
+academic:
+  student:
     name: 质量夹具
+    id: "20260001"
   institution:
-    university: 示例大学
+    name: 示例大学
+    department: 质量工程系
   degree:
     name: 工学硕士
+    major: 文档工程
   advisor:
     name: 示例导师
+  completion:
+    date: "2026-08"
 resources:
   root: .
   assets: images
@@ -209,13 +218,13 @@ def _write_e2e_project(root: Path) -> Path:
         (image_root / name).write_bytes(PNG_BYTES)
     bibliography_root = root / "refs"
     bibliography_root.mkdir()
-    (root / "thesis.md").write_text(E2E_SOURCE, encoding="utf-8")
-    (root / "thesisforge.yaml").write_text(E2E_MANIFEST, encoding="utf-8")
+    (root / "document.md").write_text(E2E_SOURCE, encoding="utf-8")
+    (root / "docforge.yaml").write_text(E2E_MANIFEST, encoding="utf-8")
     (bibliography_root / "references.bib").write_text(
         BIBLIOGRAPHY_SOURCE,
         encoding="utf-8",
     )
-    return root / "thesis.md"
+    return root / "document.md"
 
 
 def _build_fixture_docx(output: Path, tmp_path: Path):

@@ -1,10 +1,36 @@
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
 import { PROTOCOL_VERSION } from "./dto";
+import {
+  BUILD_REPORT_SCHEMA_VERSION,
+  DEFAULT_DOCX_PATH,
+  DEFAULT_REVIEW_MAP_PATH,
+  DEFAULT_REVIEW_MARKDOWN_PATH,
+  DEFAULT_SOURCE_FILENAME,
+  MANIFEST_FILENAME,
+  OBSOLETE_BUILD_REPORT_SCHEMA_VERSION,
+  OBSOLETE_PROTOCOL_VERSION,
+  PROJECT_SCHEMA_VERSION,
+} from "./constants";
 import {
   assertBuildEvent,
   type BuildReport,
   type BuildStage,
   type CompletedBuildEvent,
 } from "./buildEvents";
+
+const runtimeContract = JSON.parse(
+  readFileSync(
+    resolve(process.cwd(), "..", "protocol", "runtime-contract.v1.json"),
+    "utf8",
+  ),
+) as {
+  identity: Record<string, string>;
+  command: { protocol: string };
+  obsoleteCommand: { protocol: string };
+  completedBuildEvent: unknown;
+  obsoleteBuildReportSchema: string;
+};
 
 const stages: BuildStage[] = [
   "parse",
@@ -18,7 +44,7 @@ const stages: BuildStage[] = [
 
 function report(overrides: Partial<BuildReport> = {}): BuildReport {
   return {
-    schemaVersion: "thesisforge.build-report.v2",
+    schemaVersion: BUILD_REPORT_SCHEMA_VERSION,
     buildId: "build-1",
     intent: "publish",
     outcome: "succeeded",
@@ -42,8 +68,8 @@ function report(overrides: Partial<BuildReport> = {}): BuildReport {
       },
     ],
     output: {
-      docxPath: "build/thesis.docx",
-      pdfPath: "build/thesis.pdf",
+      docxPath: "build/document.docx",
+      pdfPath: "build/document.pdf",
       previewStale: false,
       successfulBuildId: "build-1",
     },
@@ -94,10 +120,40 @@ function expectInvalidReport(
       type: "completed",
       report: value,
     }),
-  ).toThrow("无效的 ThesisForge BuildReport");
+  ).toThrow("无效的 DocForge BuildReport");
 }
 
 describe("build event DTO", () => {
+  it("matches and accepts the shared cross-runtime contract fixture", () => {
+    expect(runtimeContract.identity).toMatchObject({
+      manifest: MANIFEST_FILENAME,
+      projectSchema: PROJECT_SCHEMA_VERSION,
+      source: DEFAULT_SOURCE_FILENAME,
+      docx: DEFAULT_DOCX_PATH,
+      reviewMarkdown: DEFAULT_REVIEW_MARKDOWN_PATH,
+      reviewMap: DEFAULT_REVIEW_MAP_PATH,
+      workbenchProtocol: PROTOCOL_VERSION,
+      buildReportSchema: BUILD_REPORT_SCHEMA_VERSION,
+    });
+    expect(runtimeContract.command.protocol).toBe(PROTOCOL_VERSION);
+    expect(runtimeContract.obsoleteCommand.protocol).toBe(
+      OBSOLETE_PROTOCOL_VERSION,
+    );
+    expect(runtimeContract.obsoleteBuildReportSchema).toBe(
+      OBSOLETE_BUILD_REPORT_SCHEMA_VERSION,
+    );
+    expect(
+      assertBuildEvent(runtimeContract.completedBuildEvent),
+    ).toMatchObject({
+      protocol: PROTOCOL_VERSION,
+      type: "completed",
+      report: {
+        schemaVersion: BUILD_REPORT_SCHEMA_VERSION,
+        outcome: "succeeded",
+      },
+    });
+  });
+
   it("accepts strict progress and completed BuildReport events", () => {
     expect(
       assertBuildEvent(
@@ -125,9 +181,32 @@ describe("build event DTO", () => {
     }
     const completed: CompletedBuildEvent = terminal;
     expect(completed.report).toMatchObject({
-      schemaVersion: "thesisforge.build-report.v2",
+      schemaVersion: BUILD_REPORT_SCHEMA_VERSION,
       outcome: "succeeded",
     });
+  });
+
+  it("rejects obsolete protocol and BuildReport identities", () => {
+    const obsoleteReport = report() as unknown as Record<string, unknown>;
+    obsoleteReport.schemaVersion = OBSOLETE_BUILD_REPORT_SCHEMA_VERSION;
+
+    expect(() =>
+      assertBuildEvent({
+        protocol: PROTOCOL_VERSION,
+        requestId: "obsolete-report",
+        type: "completed",
+        report: obsoleteReport,
+      }),
+    ).toThrow("无效的 DocForge BuildReport");
+
+    expect(() =>
+      assertBuildEvent({
+        protocol: OBSOLETE_PROTOCOL_VERSION,
+        requestId: "obsolete-protocol",
+        type: "progress",
+        stage: "parse",
+      }),
+    ).toThrow("无效的 DocForge 构建事件");
   });
 
   it("accepts an unlocated LibreOffice preview descriptor", () => {
@@ -138,7 +217,7 @@ describe("build event DTO", () => {
       report: reportWithPreview({
         engine: "libreoffice",
         label: "LibreOffice PDF",
-        fileName: "thesis.preview.pdf",
+        fileName: "document.preview.pdf",
       }),
     });
     if (event.type !== "completed") {
@@ -146,7 +225,7 @@ describe("build event DTO", () => {
     }
     expect(event.report.output?.finalPreview).toMatchObject({
       engine: "libreoffice",
-      fileName: "thesis.preview.pdf",
+      fileName: "document.preview.pdf",
     });
   });
 
@@ -159,7 +238,7 @@ describe("build event DTO", () => {
         report: reportWithPreview({
           engine: "microsoft-word",
           label: "Microsoft Word PDF",
-          fileName: "thesis.preview.pdf",
+          fileName: "document.preview.pdf",
         }),
       }),
     ).toMatchObject({ type: "completed" });
@@ -174,7 +253,7 @@ describe("build event DTO", () => {
         report: reportWithPreview({
           engine: "libreoffice",
           label: "LibreOffice PDF",
-          fileName: "thesis.preview.pdf",
+          fileName: "document.preview.pdf",
           authorizationId: "a".repeat(32),
         }),
       }),
@@ -190,7 +269,7 @@ describe("build event DTO", () => {
         report: reportWithPreview({
           engine: "microsoft-word",
           label: "Microsoft Word PDF",
-          fileName: "thesis.preview.pdf",
+          fileName: "document.preview.pdf",
           authorizationId: "f".repeat(32),
         }),
       }),
@@ -206,7 +285,7 @@ describe("build event DTO", () => {
         report: reportWithPreview({
           engine: "libreoffice",
           label: "LibreOffice PDF",
-          fileName: "thesis.preview.pdf",
+          fileName: "document.preview.pdf",
           downloadId: "b".repeat(32),
         }),
       }),
@@ -222,7 +301,7 @@ describe("build event DTO", () => {
         report: reportWithPreview({
           engine: "libreoffice",
           label: "LibreOffice PDF",
-          fileName: "thesis.preview.pdf",
+          fileName: "document.preview.pdf",
           downloadId: "c".repeat(32),
           livePreviewId: "d".repeat(32),
         }),
@@ -259,8 +338,8 @@ describe("build event DTO", () => {
       reportWithPreview({
         engine: "libreoffice",
         label: "LibreOffice PDF",
-        fileName: "thesis.preview.pdf",
-        path: "/private/thesis.preview.pdf",
+        fileName: "document.preview.pdf",
+        path: "/private/document.preview.pdf",
       }),
       "preview-path",
     );
@@ -271,7 +350,7 @@ describe("build event DTO", () => {
       reportWithPreview({
         engine: "wps",
         label: "WPS PDF",
-        fileName: "thesis.preview.pdf",
+        fileName: "document.preview.pdf",
       }),
       "preview-engine",
     );
@@ -282,7 +361,7 @@ describe("build event DTO", () => {
       reportWithPreview({
         engine: "libreoffice",
         label: "Microsoft Word PDF",
-        fileName: "thesis.preview.pdf",
+        fileName: "document.preview.pdf",
       }),
       "preview-label",
     );
@@ -293,7 +372,7 @@ describe("build event DTO", () => {
       reportWithPreview({
         engine: "libreoffice",
         label: "LibreOffice PDF",
-        fileName: "thesis.preview.pdf",
+        fileName: "document.preview.pdf",
         downloadId: "invalid",
       }),
       "preview-download-id",
@@ -302,7 +381,7 @@ describe("build event DTO", () => {
       reportWithPreview({
         engine: "libreoffice",
         label: "LibreOffice PDF",
-        fileName: "thesis.preview.pdf",
+        fileName: "document.preview.pdf",
         downloadId: "e".repeat(32),
         livePreviewId: "invalid",
       }),
@@ -315,7 +394,7 @@ describe("build event DTO", () => {
       reportWithPreview({
         engine: "libreoffice",
         label: "LibreOffice PDF",
-        fileName: "thesis.preview.pdf",
+        fileName: "document.preview.pdf",
         downloadId: undefined,
       }),
       "preview-undefined-download",
@@ -327,7 +406,7 @@ describe("build event DTO", () => {
       reportWithPreview({
         engine: "libreoffice",
         label: "LibreOffice PDF",
-        fileName: "thesis.preview.pdf",
+        fileName: "document.preview.pdf",
         authorizationId: undefined,
       }),
       "preview-undefined-authorization",
@@ -339,7 +418,7 @@ describe("build event DTO", () => {
       reportWithPreview({
         engine: "libreoffice",
         label: "LibreOffice PDF",
-        fileName: "thesis.preview.pdf",
+        fileName: "document.preview.pdf",
         livePreviewId: undefined,
       }),
       "preview-undefined-live",
@@ -351,7 +430,7 @@ describe("build event DTO", () => {
       reportWithPreview({
         engine: "libreoffice",
         label: "LibreOffice PDF",
-        fileName: "thesis.preview.pdf",
+        fileName: "document.preview.pdf",
         downloadId: "e".repeat(32),
         authorizationId: "f".repeat(32),
       }),
@@ -361,7 +440,7 @@ describe("build event DTO", () => {
       reportWithPreview({
         engine: "libreoffice",
         label: "LibreOffice PDF",
-        fileName: "thesis.preview.pdf",
+        fileName: "document.preview.pdf",
         livePreviewId: "a".repeat(32),
       }),
       "preview-live-without-download",
@@ -373,7 +452,7 @@ describe("build event DTO", () => {
       reportWithPreview({
         engine: "libreoffice",
         label: "LibreOffice PDF",
-        fileName: "thesis.preview.pdf",
+        fileName: "document.preview.pdf",
         extra: true,
       }),
       "preview-extra-key",
@@ -591,7 +670,7 @@ describe("build event DTO", () => {
       reportWithDiagnostics([
         diagnostic({
           source: {
-            file: "thesis.md",
+            file: "document.md",
             startLine: 10,
             startColumn: 1,
             endLine: 5,
@@ -608,7 +687,7 @@ describe("build event DTO", () => {
       reportWithDiagnostics([
         diagnostic({
           source: {
-            file: "thesis.md",
+            file: "document.md",
             startLine: 10,
             startColumn: 10,
             endLine: 10,
@@ -628,7 +707,7 @@ describe("build event DTO", () => {
         type: "success",
         result: {},
       }),
-    ).toThrow("无效的 ThesisForge 构建事件");
+    ).toThrow("无效的 DocForge 构建事件");
   });
 
   it("rejects a legacy error terminal event", () => {
@@ -639,7 +718,7 @@ describe("build event DTO", () => {
         type: "error",
         error: { kind: "canceled", message: "构建已取消" },
       }),
-    ).toThrow("无效的 ThesisForge 构建事件");
+    ).toThrow("无效的 DocForge 构建事件");
   });
 
   it("rejects an event-level extra key", () => {
@@ -651,7 +730,7 @@ describe("build event DTO", () => {
         report: report(),
         extra: true,
       } as unknown),
-    ).toThrow("无效的 ThesisForge 构建事件");
+    ).toThrow("无效的 DocForge 构建事件");
   });
 
   it("rejects a report-level extra key", () => {
@@ -678,7 +757,7 @@ describe("build event DTO", () => {
       reportWithDiagnostics([
         diagnostic({
           source: {
-            file: "thesis.md",
+            file: "document.md",
             startLine: 1,
             startColumn: 1,
             endLine: 1,

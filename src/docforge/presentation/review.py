@@ -56,6 +56,8 @@ from docforge.core.render_plan import (
     TocInstruction,
 )
 
+from .metadata import cover_binding_label
+
 if TYPE_CHECKING:
     from docforge.application.contracts import PreviewResult
     from docforge.core.model import ValidationIssue
@@ -647,23 +649,13 @@ def _project_bibliography(
 
 
 def _project_cover(instruction: CoverInstruction) -> ReviewCoverContent:
-    fields = (
-        ("学校", instruction.university),
-        ("学院", instruction.college),
-        ("题目", instruction.title),
-        ("英文题目", instruction.title_en),
-        ("专业", instruction.major),
-        ("学位", instruction.degree),
-        ("作者", instruction.author),
-        ("学号", instruction.student_id),
-        ("导师", instruction.advisor),
-        ("导师职称", instruction.advisor_title),
-        ("完成日期", instruction.completed),
-    )
     return ReviewCoverContent(
         fields=tuple(
-            ReviewCoverField(label=label, value=_safe_plain_text(value))
-            for label, value in fields
+            ReviewCoverField(
+                label=cover_binding_label(path),
+                value=_safe_plain_text(value),
+            )
+            for path, value in instruction.bindings
             if value
         )
     )

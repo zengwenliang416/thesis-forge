@@ -224,7 +224,7 @@ def _build_template_data(
     host_major = int(_HOST_VERSION.split(".")[0])
     host_minor = _HOST_VERSION.split(".")[1] if "." in _HOST_VERSION else "0"
     data["compatibility"] = {
-        "thesisforge": f">={host_major}.{host_minor},<{host_major + 1}.0",
+        "docforge": f">={host_major}.{host_minor},<{host_major + 1}.0",
         "document_types": ["bachelor_thesis"],
         "target_apps": {"word": "primary"},
     }
@@ -965,21 +965,21 @@ review:
   verified_with:
     - TODO（例如：Word 365 / WPS / LibreOffice 版本 + 验证方式）
 notes: >
-  本包由 `thesisforge template migrate` 从 v0.3 模板 {template.id} 迁移生成；
+  本包由 `docforge template migrate` 从 v0.3 模板 {template.id} 迁移生成；
   逐字段台账见 migration-report.json。
 """
 
 
 _README_TEMPLATE = """# {name}
 
-由 `thesisforge template migrate` 从 v0.3 模板 `{legacy_id}` 迁移生成的
+由 `docforge template migrate` 从 v0.3 模板 `{legacy_id}` 迁移生成的
 Template Package v2 骨架（schema_version 2）。
 
 ## 使用说明
 
 ```bash
-thesisforge template lint <本目录>
-thesisforge template pack <本目录> -o dist/{package_id}-{version}.tftpl
+docforge template lint <本目录>
+docforge template pack <本目录> -o dist/{package_id}-{version}.tftpl
 ```
 
 ## 已知限制
@@ -999,14 +999,14 @@ _FIXTURE_MD = """# 第一章 绪论 {#chap:intro}
 # L1/L3 要求 bibliography.style_file 声明的 CSL 存在；真实样式文件为
 # manual-required（台账），此处生成最小合法 CSL 1.0.1 占位。
 _PLACEHOLDER_CSL = """<?xml version="1.0" encoding="utf-8"?>
-<!-- TODO: 由 thesisforge template migrate 生成的占位 CSL，请替换为 v0.3
+<!-- TODO: 由 docforge template migrate 生成的占位 CSL，请替换为 v0.3
      citation.style 对应的真实 CSL 1.0.1 文件，并在 provenance.yaml 记录其
      哈希与许可（SCHEMA §1.1/§3.19）。 -->
 <style xmlns="http://purl.org/net/xbiblio/csl" class="in-text" version="1.0.1"
        default-locale="zh-CN">
   <info>
     <title>TODO Placeholder Citation Style</title>
-    <id>http://www.zotero.org/styles/thesisforge-migrate-placeholder</id>
+    <id>http://www.zotero.org/styles/docforge-migrate-placeholder</id>
     <updated>2000-01-01T00:00:00+00:00</updated>
   </info>
   <citation>
@@ -1059,7 +1059,7 @@ def _write_skeleton_files(
     # （L1 missing-package-file error），故生成最小骨架并在台账标记人工补齐。
     minimal = output_dir / "fixtures" / "minimal"
     minimal.mkdir(parents=True, exist_ok=True)
-    (minimal / "thesis.md").write_text(_FIXTURE_MD, encoding="utf-8")
+    (minimal / "document.md").write_text(_FIXTURE_MD, encoding="utf-8")
 
 
 # ---------------------------------------------------------------------------
@@ -1099,7 +1099,7 @@ def migrate_template(
 
     output.mkdir(parents=True, exist_ok=True)
     header = (
-        "# 由 thesisforge template migrate 生成（v0.3 → v2，SCHEMA §8）；\n"
+        "# 由 docforge template migrate 生成（v0.3 → v2，SCHEMA §8）；\n"
         "# 台账见 migration-report.json，manual-required 项需人工核对。\n"
     )
     (output / "template.yaml").write_text(

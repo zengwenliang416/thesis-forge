@@ -45,12 +45,12 @@ describe("Workbench preview flow", () => {
       status: "populated" as const,
       source: {
         kind: "desktop" as const,
-        name: "thesis.md",
+        name: "document.md",
         writable: true,
         reference: {
           kind: "desktop" as const,
-          path: "/Users/test/thesis.md",
-          fileName: "thesis.md",
+          path: "/Users/test/document.md",
+          fileName: "document.md",
         },
       },
       savedText: "# 绪论 {#chap:intro}\n",
@@ -100,12 +100,12 @@ describe("Workbench preview flow", () => {
       status: "populated" as const,
       source: {
         kind: "desktop" as const,
-        name: "thesis.md",
+        name: "document.md",
         writable: true,
         reference: {
           kind: "desktop" as const,
-          path: "/Users/test/thesis.md",
-          fileName: "thesis.md",
+          path: "/Users/test/document.md",
+          fileName: "document.md",
         },
       },
       savedText: Array.from({ length: 14 }, (_, index) => `第${index + 1}行`).join(

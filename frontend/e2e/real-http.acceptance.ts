@@ -1,23 +1,29 @@
 import { expect, test } from "@playwright/test";
 import { readFile } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
+import {
+  DEFAULT_DOCX_FILENAME,
+  DEFAULT_SOURCE_FILENAME,
+  MANIFEST_FILENAME,
+  PROJECT_SCHEMA_VERSION,
+} from "../src/transport/constants";
 
 const workspaceRoot = fileURLToPath(
   new URL("../test-results/real-http-workspaces/", import.meta.url),
 );
-const manifestText = `schema: thesisforge.project.v2
+const manifestText = `schema: ${PROJECT_SCHEMA_VERSION}
 project:
   id: real-http-acceptance
   language: zh-CN
 document:
-  source: thesis.md
+  source: ${DEFAULT_SOURCE_FILENAME}
 metadata:
   title:
     zh: 真实 HTTP 验收
-  author:
-    name: 测试作者
+  authors:
+    - name: 测试作者
 render:
-  template_id: example-university-2026
+  template_id: docforge-standard
 `;
 const sourceText = `# 绪论 {#chap:introduction}
 
@@ -41,19 +47,19 @@ test("runs the Web workbench through the real Python HTTP adapter", async ({
   );
   await page.locator('input[type="file"]').setInputFiles([
     {
-      name: "thesisforge.yaml",
+      name: MANIFEST_FILENAME,
       mimeType: "application/yaml",
       buffer: Buffer.from(manifestText),
     },
     {
-      name: "thesis.md",
+      name: DEFAULT_SOURCE_FILENAME,
       mimeType: "text/markdown",
       buffer: Buffer.from(sourceText),
     },
   ]);
   const workspaceResponse = await workspaceResponsePromise;
   expect(workspaceResponse.status()).toBe(201);
-  expect(workspaceResponse.headers()["x-thesisforge-adapter"]).toBe(
+  expect(workspaceResponse.headers()["x-docforge-adapter"]).toBe(
     "python-wsgi",
   );
   const workspacePayload = (await workspaceResponse.json()) as {
@@ -64,7 +70,7 @@ test("runs the Web workbench through the real Python HTTP adapter", async ({
   expect(workspacePayload.project.id).toBe("real-http-acceptance");
   expect(workspacePayload.project.root).not.toContain(workspaceRoot);
   expect(workspacePayload.project.manifestPath).not.toContain(workspaceRoot);
-  expect(workspacePayload.source.fileName).toBe("thesis.md");
+  expect(workspacePayload.source.fileName).toBe(DEFAULT_SOURCE_FILENAME);
 
   const editor = page.getByRole("textbox", { name: "Markdown 文档内容" });
   await expect(editor).toHaveValue(sourceText);
@@ -110,15 +116,25 @@ test("runs the Web workbench through the real Python HTTP adapter", async ({
   await page.getByRole("button", { name: "生成 DOCX" }).click();
   expect((await buildResponsePromise).status()).toBe(200);
   await expect(page.getByText("构建完成")).toBeVisible({ timeout: 30_000 });
-  await expect(page.getByText("thesis.docx")).toBeVisible({ timeout: 30_000 });
+  await expect(page.getByText(DEFAULT_DOCX_FILENAME)).toBeVisible({
+    timeout: 30_000,
+  });
 
   expect(
-    await readFile(`${workspaceRoot}/${workspaceId}/thesis.md`, "utf8"),
+    await readFile(
+      `${workspaceRoot}/${workspaceId}/${DEFAULT_SOURCE_FILENAME}`,
+      "utf8",
+    ),
   ).toBe(savedText);
   expect(
-    await readFile(`${workspaceRoot}/${workspaceId}/thesisforge.yaml`, "utf8"),
+    await readFile(
+      `${workspaceRoot}/${workspaceId}/${MANIFEST_FILENAME}`,
+      "utf8",
+    ),
   ).toBe(manifestText);
-  const docx = await readFile(`${workspaceRoot}/${workspaceId}/thesis.docx`);
+  const docx = await readFile(
+    `${workspaceRoot}/${workspaceId}/${DEFAULT_DOCX_FILENAME}`,
+  );
   expect(docx.byteLength).toBeGreaterThan(1_000);
   expect(docx.subarray(0, 2).toString("ascii")).toBe("PK");
 });

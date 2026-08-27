@@ -114,32 +114,39 @@ V1 核心能力见[表](#tbl:capabilities)。
 
 ```python {#lst:service title="安全构建服务调用"}
 result = build_service(
-    source="thesis.md",
-    output="thesis.docx",
+    source="document.md",
+    output="document.docx",
 )
 ```
 """
 
 _COMPLETE_V2_MANIFEST = """\
-schema: thesisforge.project.v2
+schema: docforge.project.v1
 project:
   id: preview-order
   language: zh-CN
 document:
-  source: thesis.md
+  source: document.md
+  type: academic
 metadata:
   title:
     zh: Preview order
-  author:
+  authors:
+    - name: Test Author
+academic:
+  student:
     name: Test Author
+    id: "20260001"
   institution:
-    university: Test University
+    name: Test University
+    department: Computer Science
   degree:
     name: Bachelor
+    major: Document Engineering
   advisor:
     name: Test Advisor
-  dates:
-    completed: "2026-08"
+  completion:
+    date: "2026-08"
 resources:
   root: .
   assets: assets
@@ -162,8 +169,8 @@ def _complete_v2_project(tmp_path: Path) -> Path:
             / "acceptance-architecture.png"
         ).read_bytes()
     )
-    (project / "thesis.md").write_text(_COMPLETE_V2_SOURCE, encoding="utf-8")
-    (project / "thesisforge.yaml").write_text(
+    (project / "document.md").write_text(_COMPLETE_V2_SOURCE, encoding="utf-8")
+    (project / "docforge.yaml").write_text(
         _COMPLETE_V2_MANIFEST,
         encoding="utf-8",
     )
@@ -278,7 +285,7 @@ def test_complete_example_preview_preserves_compiler_order_and_numbering(
     project = _complete_v2_project(tmp_path)
     result = map_preview_result(
         application.preview_service(
-            project / "thesis.md",
+            project / "document.md",
         )
     )
 
@@ -405,7 +412,12 @@ def test_preview_mapper_covers_every_typed_instruction_and_unknown_fallback(
     ]
     plan = RenderPlan(
         nodes=[
-            CoverInstruction(title="论文标题", author="作者"),
+            CoverInstruction(
+                bindings=(
+                    ("metadata.title.zh", "文档标题"),
+                    ("metadata.authors", "作者"),
+                )
+            ),
             SectionBreakInstruction(role="front_matter"),
             TocInstruction(min_level=1, max_level=3),
             HeadingInstruction("chap:intro", 1, "绪论"),

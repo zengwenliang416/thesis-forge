@@ -21,6 +21,7 @@ from docforge.application.contracts import (
     BuildStageStatus,
 )
 from docforge.core.model import ValidationIssue
+from docforge.project.constants import DEFAULT_DOCX_FILENAME, DEFAULT_SOURCE_PATH, MANIFEST_FILENAME
 
 
 def _request(source: Path, output: Path) -> dict:
@@ -44,9 +45,9 @@ def _request(source: Path, output: Path) -> dict:
 
 
 def _dispatcher(tmp_path: Path, build) -> tuple[WorkbenchCommandDispatcher, dict]:
-    source = tmp_path / "thesis.md"
+    source = tmp_path / DEFAULT_SOURCE_PATH
     source.write_text("# 绪论\n", encoding="utf-8")
-    output = tmp_path / "thesis.docx"
+    output = tmp_path / DEFAULT_DOCX_FILENAME
     return (
         WorkbenchCommandDispatcher(
             runtime=DesktopRuntime(),
@@ -83,7 +84,7 @@ def _assert_report_shape(report: dict) -> None:
         "logs",
         "output",
     }
-    assert report["schemaVersion"] == "thesisforge.build-report.v2"
+    assert report["schemaVersion"] == BuildReport.SCHEMA_VERSION
     assert report["buildId"]
     assert report["intent"] in {"publish", "live-preview"}
     assert report["failedStage"] in {
@@ -200,7 +201,7 @@ def test_validation_failure_preserves_all_issue_fields_and_order(
             "TF-BUILD-CANCELED",
         ),
         (
-            PermissionError("/private/output/thesis.docx is not writable"),
+            PermissionError("/private/output/document.docx is not writable"),
             "parse",
             "failed",
             "permission",
@@ -325,11 +326,11 @@ def test_project_stream_failure_emits_one_canonical_completed_report(
 ) -> None:
     project_root = (tmp_path / "project").resolve()
     project_root.mkdir()
-    source = project_root / "thesis.md"
+    source = project_root / DEFAULT_SOURCE_PATH
     source.write_text("# 绪论\n", encoding="utf-8")
-    manifest = project_root / "thesisforge.yaml"
-    manifest.write_text("schema: thesisforge.project.v2\n", encoding="utf-8")
-    output = project_root / "build" / "thesis.docx"
+    manifest = project_root / MANIFEST_FILENAME
+    manifest.write_text("schema: docforge.project.v1\n", encoding="utf-8")
+    output = project_root / "build" / DEFAULT_DOCX_FILENAME
 
     class ProjectService:
         def build(self, request, *, on_progress=None, should_cancel=None):

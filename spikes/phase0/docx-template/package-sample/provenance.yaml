@@ -9,8 +9,8 @@ school:
     source_hash: sha256:0000000000000000000000000000000000000000000000000000000000000000
 
 maintainers:
-  - name: ThesisForge Community
-    contact: https://example.invalid/thesisforge
+  - name: DocForge Community
+    contact: https://example.invalid/docforge
 
 licenses:
   template_code: Apache-2.0
