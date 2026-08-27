@@ -1,0 +1,53 @@
+{
+  "schema": "specnav.verification.trusted-fact-envelope.v1",
+  "id": "trusted-fact-9f0a02b15f66eae7a42ec5ff3eb5ee110f705d83f1973cb15b248a3de59e18ee",
+  "kind": "repair_link",
+  "producer": "specnav-development-repair-bridge",
+  "payload": {
+    "schema": "specnav.verification.repair-link.v1",
+    "failure_id": "failure-f814ed028e5b2dc94e5db0219d237ceaa8e22ce664031ea163ba1fc267c95791",
+    "change_id": "docforge-project-format-v1",
+    "development_task_id": "900-verification-repair-739dccfb36c12a00",
+    "repair_kind": "test_code",
+    "status": "completed",
+    "requested_at": "2026-08-27T07:50:49.771Z",
+    "before_identity": {
+      "case_snapshot_hash": "e34e5e74c6ac469ee8bce2be6d0b6ce1e772d4e773710b8bc782cc99da337c85",
+      "code_sha": "60274f4c7bd0541d0a6346753e68eb7f5f2ae6a6",
+      "test_sha": "8898bb578306334a0f3e9e5723ac9a186ccfb90845268c19e0677fb7df12a193",
+      "environment_hash": "e70d297a62bab25e39bb4323fd1636081aac76eff129f315f3d3dbe56c04a1eb",
+      "runtime_version": "2.0.0-alpha.2",
+      "kernel_version": "2.0.0-alpha.2"
+    },
+    "scope_digest": "74af54e1d41c2bbda9e678995ea4551f50af47b540fe9800f081a280e0e45080",
+    "id": "repair-superseded-df9507399edba46cfe43e010d3639996f291ad784a9e382af84ec571b8ad3332",
+    "completed_at": "2026-08-27T13:33:29.336Z",
+    "after_identity": {
+      "case_snapshot_hash": "350e6482b5745502bf4c6d6af7af26ba568208117ba5699863f8c80861a204de",
+      "code_sha": "60274f4c7bd0541d0a6346753e68eb7f5f2ae6a6",
+      "test_sha": "b84991f223678bcfa385d82ef08148d57456f2f4c68ce945559a4313550059ec",
+      "environment_hash": "e70d297a62bab25e39bb4323fd1636081aac76eff129f315f3d3dbe56c04a1eb",
+      "runtime_version": "2.0.0-alpha.2",
+      "kernel_version": "2.0.0-alpha.2"
+    },
+    "review_evidence_ids": [
+      "human-review-fujiawei-quality-20260827-739dccfb36c12a00",
+      "human-review-lijie-spec-20260827-739dccfb36c12a00"
+    ]
+  },
+  "payload_digest": "bee9f77f318dd14434792686d5d4b9cde7773a10c841d488e8e0d4cb588c4d3b",
+  "issued_at": "2026-08-27T13:33:29.342Z",
+  "bindings": {
+    "failure_id": "failure-f814ed028e5b2dc94e5db0219d237ceaa8e22ce664031ea163ba1fc267c95791",
+    "change_id": "docforge-project-format-v1",
+    "run_id": "run-20260827064734-03b2884ca6381698",
+    "case_id": "case-a8-runtime-parity"
+  },
+  "claims": [
+    "repair-review:spec-approved",
+    "repair-review:quality-approved",
+    "repair-evidence:verified"
+  ],
+  "signature_algorithm": "hmac-sha256",
+  "signature": "93e8cc6b5e5043cc2ec8a970c05a3639e7e49fcbd66663284aac48f78014e875"
+}
