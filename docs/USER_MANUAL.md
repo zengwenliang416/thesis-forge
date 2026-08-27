@@ -1,18 +1,19 @@
-# ThesisForge 用户操作手册
+# DocForge 用户操作手册
 
 > 适用范围：Web、macOS、Windows、命令行
-> 文档基线：ThesisForge Word 优先实时 PDF 预览，2026-08-13
+> 文档基线：DocForge Word 优先实时 PDF 预览，2026-08-13
 > 核心流程：Markdown → 校验 → 学校模板 → RenderPlan → DOCX → 可选最终版式 PDF
 
-## 1. 先了解 ThesisForge
+## 1. 先了解 DocForge
 
-ThesisForge 将论文内容和学校格式分开管理：
+DocForge 将文档内容和格式分开管理：
 
-- `thesis.md` 保存题目、作者、章节、正文、图表、公式、引用等内容。
+- `document.md` 保存标题、章节、正文、图表、公式、引用等内容。
+- `docforge.yaml` 保存项目元数据、资源路径、模板选择、布局覆盖、输出和 Review 路径。
 - 学校 YAML 模板保存字体、字号、颜色、缩进、行距、页边距、目录、页码、页眉页脚等格式。
 - 构建时，系统先解析和校验 Markdown，再应用模板，最后生成可编辑的 DOCX。
 
-同一份 Markdown 可以切换不同学校模板，不需要在正文中反复手工改字体和段落。
+同一份 `document.md` 可以切换不同学校模板，不需要在正文中反复手工改字体和段落。
 
 ![空工作区](user-manual/images/01-empty-workspace.png)
 
@@ -27,23 +28,23 @@ ThesisForge 将论文内容和学校格式分开管理：
 
 ### 2.1 Web
 
-1. 使用 Chrome、Edge 或 Safari 打开部署人员提供的 ThesisForge 地址。
-2. Web 页面必须同时连接 ThesisForge Python HTTP adapter；只有 Vite 静态页面不能编译 DOCX。
-3. 点击“打开”，选择 `.md` 文件。
+1. 使用 Chrome、Edge 或 Safari 打开部署人员提供的 DocForge 地址。
+2. Web 页面必须同时连接 DocForge Python HTTP adapter；只有 Vite 静态页面不能编译 DOCX。
+3. 点击“打开”，选择包含 `docforge.yaml` 和 `document.md` 的项目目录，或直接选择 `docforge.yaml`。
 4. 浏览器会把文稿上传到一个 Web 工作区。点击“保存”保存的是工作区副本，不会覆盖电脑上的原始 Markdown。
 
 > **当前实现边界**
 >
-> Web 构建完成后，底部会显示 `thesis.docx`，但当前 HTTP adapter 没有提供下载路由，界面也没有可点击的下载按钮。需要实际取得文件时，请使用 macOS/Windows 桌面端或 CLI，或者由 Web 部署方增加工作区文件下载服务。
+> Web 构建完成后，底部会显示 `document.docx`，但当前 HTTP adapter 没有提供下载路由，界面也没有可点击的下载按钮。需要实际取得文件时，请使用 macOS/Windows 桌面端或 CLI，或者由 Web 部署方增加工作区文件下载服务。
 
 ### 2.2 macOS
 
 如果拿到的是 `.dmg`：
 
 1. 双击打开 DMG。
-2. 把 `ThesisForge.app` 拖入“应用程序”。
-3. 启动 ThesisForge。
-4. 点击“打开”，选择 `.md` 或 `.markdown`。
+2. 把 `DocForge.app` 拖入“应用程序”。
+3. 启动 DocForge。
+4. 点击“打开”，选择包含 `docforge.yaml` 的项目目录或 manifest。
 
 当前开发构建可能未签名。正式发布版本应完成 Apple Developer ID 签名、公证和装订；不要把绕过系统安全提示作为标准安装步骤。
 
@@ -53,8 +54,8 @@ ThesisForge 将论文内容和学校格式分开管理：
 
 1. 双击安装包。
 2. 按安装向导完成安装。
-3. 从开始菜单启动 ThesisForge。
-4. 点击“打开”，选择 `.md` 或 `.markdown`。
+3. 从开始菜单启动 DocForge。
+4. 点击“打开”，选择包含 `docforge.yaml` 的项目目录或 manifest。
 
 Windows 安装包必须在 Windows 原生环境构建。不能把 macOS 产物改名后当作 Windows 安装包。
 
@@ -71,18 +72,20 @@ make install
 常用命令：
 
 ```bash
-.venv/bin/thesisforge inspect thesis.md
-.venv/bin/thesisforge validate thesis.md --template template.yaml
-.venv/bin/thesisforge build thesis.md --template template.yaml -o output/thesis.docx
+.venv/bin/docforge inspect examples/complete-thesis
+.venv/bin/docforge validate examples/complete-thesis
+.venv/bin/docforge review examples/complete-thesis --output-dir /tmp/docforge-review
+.venv/bin/docforge build examples/complete-thesis \
+  -o examples/complete-thesis/build/document.docx
 ```
 
 ## 3. 工作台界面
 
-打开有效 Markdown 后，桌面宽度下分为四个主要区域：
+打开有效 DocForge 项目后，桌面宽度下分为四个主要区域：
 
-1. 左侧“论文大纲”：显示标题和稳定 ID。
-2. 中间“Markdown 编辑器”：编辑论文源文件。
-3. 右上“论文预览”：可切换快速“结构预览”和真实 PDF“最终版式”。
+1. 左侧“文档大纲”：显示标题和稳定 ID。
+2. 中间“Markdown 编辑器”：编辑 `document.md`。
+3. 右上“文档预览”：可切换快速“结构预览”和真实 PDF“最终版式”。
 4. 右下“诊断结果”：显示错误、警告、提示、行号和 target。
 
 顶部包含打开、保存、验证、构建 DOCX、构建进度和学校模板选择器。
@@ -107,34 +110,62 @@ Microsoft Word 最终分页。“最终版式”显示真实 PDF 页面：
 
 ### 3.2 为什么按钮有时不可用
 
-- 没有打开 Markdown：保存、验证、构建和模板选择不可用。
+- 没有打开 DocForge 项目：保存、验证、构建和模板选择不可用。
 - 文稿有未保存修改：验证、构建和模板切换不可用，先保存。
 - 存在错误诊断：构建不可用，先修复错误。
 - 正在执行操作：部分按钮暂时锁定。
 - 目标目录不可写：桌面端会显示权限错误，可修复权限后恢复工作区。
 
-## 4. 创建论文 Markdown
+## 4. 创建文档项目
 
 建议从仓库中的完整示例开始：
 
 ```text
-examples/complete-thesis/thesis.md
+examples/complete-thesis/
 ```
 
-一个最小文稿如下：
+一个最小项目如下：
+
+```text
+my-document/
+├── docforge.yaml
+├── document.md
+├── references.bib
+├── images/
+└── build/
+```
+
+`docforge.yaml`：
+
+```yaml
+schema: docforge.project.v1
+
+project:
+  id: my-document
+  language: zh-CN
+
+document:
+  source: document.md
+  type: academic
+
+metadata:
+  title:
+    zh: "文档题目"
+  authors:
+    - name: "张三"
+
+resources:
+  root: .
+  assets: images
+  bibliography: references.bib
+
+render:
+  template_id: example-university-2026
+```
+
+`document.md`：
 
 ```markdown
----
-document:
-  type: master_thesis
-  language: zh-CN
-thesis:
-  title: "论文题目"
-author:
-  name: "张三"
-render:
-  template_id: "hut-master-2026"
----
 
 # 绪论 {#chap:introduction}
 
@@ -145,51 +176,60 @@ render:
 这里是研究背景。
 ```
 
-### 4.1 Front Matter
+### 4.1 项目 manifest
 
-Front Matter 位于文件最前面，用两行 `---` 包围。常用字段：
+项目入口固定为 `docforge.yaml`。它必须声明项目身份、`document.md` 源文件和模板；
+元数据、资源、输出与 Review 路径也集中在该文件中。正文不再使用 Front Matter：
 
 ```yaml
-document:
-  type: master_thesis
+schema: docforge.project.v1
+
+project:
+  id: my-thesis
   language: zh-CN
-university:
-  name: "湖南工业大学"
-  college: "计算机学院"
-thesis:
-  title: "中文题目"
-  title_en: "English Title"
-  major: "计算机科学与技术"
-  degree: "工学硕士"
-author:
-  name: "张三"
-  student_id: "2024000001"
-advisor:
-  name: "李老师"
-  title: "教授"
-dates:
-  completed: "2026-06"
+
+document:
+  source: document.md
+  type: academic
+
+metadata:
+  title:
+    zh: "中文题目"
+    en: "English Title"
+  authors:
+    - name: "张三"
+  organization: "湖南工业大学"
+
+academic:
+  student:
+    name: "张三"
+    id: "2024000001"
+  institution:
+    name: "湖南工业大学"
+    department: "计算机学院"
+  degree:
+    name: "工学硕士"
+    major: "计算机科学与技术"
+  advisor:
+    name: "李老师"
+    title: "教授"
+  completion:
+    date: "2026-06"
+
+resources:
+  root: .
+  assets: images
+  bibliography: references.bib
+
 render:
   template_id: "hut-master-2026"
-  bibliography: "./references.bib"
   citation_style: "GB-T-7714-2025"
 ```
 
-封面模板当前可读取：
-
-```text
-university.name
-university.college
-thesis.title
-thesis.title_en
-thesis.major
-thesis.degree
-author.name
-author.student_id
-advisor.name
-advisor.title
-dates.completed
-```
+选择的模板可以通过 `metadata.*` 和可选的 `academic.*` 绑定读取封面信息。常见
+绑定路径包括 `metadata.title.zh`、`metadata.title.en`、`metadata.authors[].name`、
+`metadata.organization`、`academic.student.*`、`academic.institution.*`、
+`academic.degree.*`、`academic.advisor.*` 和 `academic.completion.date`。
 
 ### 4.2 标题和稳定 ID
 
@@ -231,11 +271,7 @@ lst:  代码清单
 ### 4.4 图片
 
 ```markdown
-::: figure {#fig:architecture}
-src: "./images/architecture.png"
-caption: "系统总体架构"
-width: "85%"
-:::
+![系统总体架构](images/architecture.png){#fig:architecture}
 ```
 
 正文引用：
@@ -249,15 +285,11 @@ width: "85%"
 ### 4.5 表格
 
 ```markdown
-::: table {#tbl:results}
-caption: "实验结果"
-
 | 模型 | 准确率 |
 | --- | ---: |
 | A | 91.2% |
 | B | 94.5% |
-
-:::
+: 实验结果 {#tbl:results}
 ```
 
 正文引用：
@@ -269,11 +301,10 @@ caption: "实验结果"
 ### 4.6 公式
 
 ```markdown
-::: equation {#eq:loss}
 $$
 L=-\sum_i y_i \log \hat y_i
 $$
-:::
+{#eq:loss}
 ```
 
 正文引用：
@@ -285,33 +316,28 @@ $$
 ### 4.7 算法和代码清单
 
 ````markdown
-::: algorithm {#alg:train}
-caption: "训练流程"
-
+```algorithm {#alg:train title="训练流程"}
 1. 初始化参数；
 2. 读取数据；
 3. 前向计算；
 4. 反向传播。
-:::
+```
 
-::: listing {#lst:predict}
-caption: "预测函数"
-language: "python"
-
-```python
+```python {#lst:predict title="预测函数"}
 def predict(x):
     return model(x)
 ```
-:::
 ````
 
 ### 4.8 文献引用和参考文献
 
-Front Matter：
+`docforge.yaml`：
 
 ```yaml
+resources:
+  bibliography: references.bib
+
 render:
-  bibliography: "./references.bib"
   citation_style: "GB-T-7714-2025"
 ```
 
@@ -327,9 +353,6 @@ render:
 
 ```markdown
 # 参考文献 {#chap:bibliography}
-
-::: bibliography
-:::
 ```
 
 ### 4.9 脚注
@@ -344,9 +367,9 @@ render:
 
 模板选择优先级：
 
-1. CLI 的 `--template path/to/template.yaml`。
+1. 项目 `docforge.yaml` 中的 `render.template_id`。
 2. 工作台学校模板选择器的显式选择。
-3. Markdown Front Matter 的 `render.template_id`。
+3. 安装包内置模板或项目 `templates/` 中按 ID 匹配的模板。
 
 ![切换学校模板](user-manual/images/03-template-selector.png)
 
@@ -356,7 +379,7 @@ render:
 - 示例大学 2026 模板。
 - “使用文稿声明模板”。
 
-需要使用 HUT 或项目自定义模板时，在 Front Matter 写入模板 ID，然后在界面选择“使用文稿声明模板”：
+需要使用 HUT 或项目自定义模板时，在 `docforge.yaml` 写入模板 ID，然后在界面选择“使用文稿声明模板”：
 
 ```yaml
 render:
@@ -371,7 +394,8 @@ HUT P0 YAML 是当前实现和验收使用的模板示例，不替代学校官�
 
 ```text
 my-thesis/
-├── thesis.md
+├── docforge.yaml
+├── document.md
 ├── references.bib
 ├── images/
 └── templates/
@@ -380,9 +404,9 @@ my-thesis/
             └── 2026.yaml
 ```
 
-按 ID 查找时，ThesisForge 从 Markdown 所在目录向上寻找最近的 `templates/`，再查找安装包内置模板。
+按 ID 查找时，DocForge 从项目目录向上寻找最近的 `templates/`，再查找安装包内置模板。
 
-> 工作台当前没有 YAML 模板编辑器，也没有“浏览并选择任意模板路径”的按钮。自定义模板请在项目目录中编辑，或在 CLI 中使用 `--template`。
+> 工作台当前没有 YAML 模板编辑器，也没有“浏览并选择任意模板路径”的按钮。自定义模板请在项目目录中编辑，并在 `docforge.yaml` 的 `render.template_id` 中选择。
 
 ## 6. 配置论文格式
 
@@ -636,7 +660,7 @@ heavy
 middle_dot
 ```
 
-ThesisForge 生成真实 Word TOC 字段，不用普通文字伪造目录。
+DocForge 生成真实 Word TOC 字段，不用普通文字伪造目录。
 
 ### 6.7 页码大小写和重新编号
 
@@ -831,18 +855,18 @@ citation:
 
 ### 8.2 macOS / Windows 在哪里找 DOCX
 
-桌面端默认把 DOCX 写到 Markdown 同目录，并替换扩展名：
+桌面端默认把 DOCX 写到项目 `output.directory` 指定的目录：
 
 ```text
-/path/to/thesis.md
-/path/to/thesis.docx
+/path/to/project/document.md
+/path/to/project/build/document.docx
 ```
 
-打开 Markdown 所在的 Finder 或文件资源管理器目录即可找到。
+打开项目目录或 manifest 中的输出目录即可找到。
 
 ### 8.3 Web 如何下载
 
-当前版本 Web 工作台会构建服务端工作区中的 DOCX，并返回 `thesis.docx` 文件名，但尚未实现浏览器下载端点和下载按钮。
+当前版本 Web 工作台会构建服务端工作区中的 DOCX，并返回 `document.docx` 文件名，但尚未实现浏览器下载端点和下载按钮。
 
 在下载能力补齐前，可选择：
 
@@ -850,20 +874,16 @@ citation:
 2. 使用 CLI 构建并用 `-o` 指定本地文件。
 3. 由 Web 部署人员从工作区存储中导出。
 
-不要把底部显示的 `thesis.docx` 当作浏览器已经下载完成。
+不要把底部显示的 `document.docx` 当作浏览器已经下载完成。
 
 ### 8.4 CLI 构建
 
 ```bash
-.venv/bin/thesisforge validate thesis.md \
-  --template templates/schools/my-university/2026.yaml
-
-.venv/bin/thesisforge build thesis.md \
-  --template templates/schools/my-university/2026.yaml \
-  -o output/thesis.docx
+.venv/bin/docforge validate my-thesis
+.venv/bin/docforge build my-thesis -o my-thesis/build/document.docx
 ```
 
-ThesisForge 先写同目录临时文件，校验 DOCX 包后再原子替换最终输出。取消或失败时，已有的上一份有效 DOCX 应保持不变。
+DocForge 先写同目录临时文件，校验 DOCX 包后再原子替换最终输出。取消或失败时，已有的上一份有效 DOCX 应保持不变。
 
 ### 8.5 查看最终版式 PDF
 
@@ -873,15 +893,15 @@ ThesisForge 先写同目录临时文件，校验 DOCX 包后再原子替换最�
 4. 构建完成后会读取同目录派生文件：
 
 ```text
-/path/to/thesis.docx
-/path/to/thesis.preview.pdf
+/path/to/project/build/document.docx
+/path/to/project/build/document.preview.pdf
 ```
 
 桌面界面显示 `Microsoft Word PDF` 并标记为“当前 Office 预览”。Web 自动预览仍只
 使用 LibreOffice；Web 预览只代表 Web 运行环境的排版结果。
 
-macOS 首次通过 ThesisForge 调用 Microsoft Word 时，系统可能要求一次“自动化”权限。
-允许 ThesisForge 控制 Microsoft Word 后，后续实时预览通常不再重复弹出文件授权。
+macOS 首次通过 DocForge 调用 Microsoft Word 时，系统可能要求一次“自动化”权限。
+允许 DocForge 控制 Microsoft Word 后，后续实时预览通常不再重复弹出文件授权。
 如果曾拒绝，可在“系统设置 → 隐私与安全性 → 自动化”中重新允许。
 
 如果 Microsoft Word 未生成 PDF，DOCX 仍然构建成功。请检查 macOS“自动化”权限后
@@ -890,21 +910,21 @@ macOS 首次通过 ThesisForge 调用 Microsoft Word 时，系统可能要求一
 ### 8.6 Office PDF 和过期状态
 
 在 Microsoft Word 中打开最新 DOCX，完成目录更新和人工检查后导出 PDF，再在
-ThesisForge“最终版式”中点击“选择 Office PDF”。Web 使用浏览器文件选择器，
+DocForge“最终版式”中点击“选择 Office PDF”。Web 使用浏览器文件选择器，
 macOS/Windows 桌面端使用原生 PDF 选择器。
 
 手工选择的文件标记为 `Microsoft Word PDF`。以下操作会让当前 PDF 显示“已过期”：
 
-- 修改正文或 Front Matter。
+- 修改 `document.md` 或 `docforge.yaml`。
 - 切换学校模板。
-- 打开另一份 Markdown。
+- 打开另一份 DocForge 项目。
 
 过期 PDF 仍可查看，但不能作为当前文稿的最新验收证据。重新构建后恢复为“当前构建”；
 重新选择 Office PDF 后显示“当前 Office 预览”，避免把手工关联文件误写为本次构建产物。
 
 ## 9. 自动目录和页码
 
-ThesisForge 生成真实 Word TOC 字段、PAGE 字段和节页码格式。
+DocForge 生成真实 Word TOC 字段、PAGE 字段和节页码格式。
 
 ![已刷新目录页](user-manual/images/08-docx-toc-page.png)
 
@@ -913,7 +933,7 @@ ThesisForge 生成真实 Word TOC 字段、PAGE 字段和节页码格式。
 构建服务默认尝试调用本机 LibreOffice 计算目录条目和页码：
 
 ```text
-THESISFORGE_OFFICE_REFRESH=auto
+DOCFORGE_OFFICE_REFRESH=auto
 ```
 
 如果 LibreOffice 未安装、连接失败或超时，构建仍会保留有效 DOCX 和 dirty TOC 字段，不会用损坏文件覆盖输出。
@@ -933,10 +953,10 @@ THESISFORGE_OFFICE_REFRESH=auto
 
 | 能力 | Web | macOS | Windows |
 | --- | --- | --- | --- |
-| 打开 Markdown | 浏览器文件选择 | 原生文件选择 | 原生文件选择 |
+| 打开项目 | 选择 `docforge.yaml` 项目 | 原生项目选择 | 原生项目选择 |
 | 保存 Markdown | 保存 Web 工作区副本 | 写回原始本地文件 | 写回原始本地文件 |
-| 自定义模板 ID | Front Matter | Front Matter | Front Matter |
-| 任意模板路径 | UI 未提供，CLI 支持 | UI 未提供，CLI 支持 | UI 未提供，CLI 支持 |
+| 自定义模板 ID | `docforge.yaml` | `docforge.yaml` | `docforge.yaml` |
+| 任意模板路径 | 项目 `templates/` | 项目 `templates/` | 项目 `templates/` |
 | DOCX 输出 | 服务端工作区 | Markdown 同目录 | Markdown 同目录 |
 | DOCX 直接下载 | 当前未接通 | 不需要下载 | 不需要下载 |
 | 自动最终预览 | 工作区 `LibreOffice PDF` | 本机 `Microsoft Word PDF` | 本机 `Microsoft Word PDF` |
@@ -952,7 +972,7 @@ THESISFORGE_OFFICE_REFRESH=auto
 
 ### 11.2 模板下拉框没有我的学校
 
-把模板放入项目 `templates/`，在 Front Matter 写 `render.template_id`，界面选择“使用文稿声明模板”。如果需要直接指定任意 YAML 路径，使用 CLI `--template`。
+把模板放入项目 `templates/`，在 `docforge.yaml` 写 `render.template_id`，界面选择“使用文稿声明模板”。
 
 ### 11.3 结构预览和 Word 分页不同
 
@@ -962,7 +982,7 @@ THESISFORGE_OFFICE_REFRESH=auto
 
 ### 11.4 目录是空的或页码没有更新
 
-先在 Word、WPS 或 LibreOffice 中更新整个目录。若希望构建时预填，安装兼容的 LibreOffice 和 UNO Python，并保持 `THESISFORGE_OFFICE_REFRESH=auto`。
+先在 Word、WPS 或 LibreOffice 中更新整个目录。若希望构建时预填，安装兼容的 LibreOffice 和 UNO Python，并保持 `DOCFORGE_OFFICE_REFRESH=auto`。
 
 ### 11.5 `iii` 如何改成 `III`
 
@@ -1005,11 +1025,11 @@ line_spacing:
 
 ## 12. 推荐的完整操作流程
 
-1. 复制 `examples/complete-thesis/` 作为论文项目。
-2. 修改 `thesis.md` Front Matter。
+1. 复制 `examples/complete-thesis/` 作为文档项目。
+2. 修改 `docforge.yaml` 中的元数据、资源和模板配置。
 3. 准备 `references.bib` 和 `images/`。
 4. 选择或创建学校 YAML 模板。
-5. 在工作台打开 `thesis.md`。
+5. 在工作台打开包含 `docforge.yaml` 的项目。
 6. 检查大纲和结构预览。
 7. 编辑后保存。
 8. 运行验证，清除所有错误。
@@ -1021,7 +1041,7 @@ line_spacing:
 
 ## 13. 提交前检查清单
 
-- [ ] Front Matter 中题目、作者、学院、专业、导师和日期正确。
+- [ ] `docforge.yaml` 中题目、作者、学院、专业、导师和日期正确。
 - [ ] `render.template_id` 指向正确学校模板。
 - [ ] 图、表、公式、算法、代码清单 ID 唯一。
 - [ ] 所有交叉引用都能解析。
@@ -1041,6 +1061,6 @@ line_spacing:
 
 - Markdown 语法权威说明：`docs/MARKDOWN_SPEC.md`
 - 模板字段权威说明：`docs/TEMPLATE_SPEC.md`
-- 完整论文示例：`examples/complete-thesis/thesis.md`
+- 完整文档示例：`examples/complete-thesis/document.md`
 - HUT 模板示例：`templates/schools/hunan-university-of-technology/master-2026.yaml`
 - 维护与打包：`docs/MAINTENANCE.md`

@@ -1,7 +1,7 @@
-# ThesisForge Maintenance Guide
+# DocForge Maintenance Guide
 
 This guide defines the reproducible verification and distribution path for the
-ThesisForge Python package, Web workbench, and Tauri desktop packages. Product
+DocForge Python package, Web workbench, and Tauri desktop packages. Product
 commands and packaged desktop workflows remain offline after build dependencies
 are installed.
 
@@ -44,7 +44,7 @@ uv pip compile pyproject.toml scripts/ci-python312.in \
 The CI-only input pins the backend support needed for editable installs without
 adding that implementation detail to the product's development extra. CI
 installs the compiled lock with pip `--require-hashes`, then installs
-ThesisForge editable from the checkout with `--no-deps --no-build-isolation`.
+DocForge editable from the checkout with `--no-deps --no-build-isolation`.
 Build isolation stays disabled so the editable build reuses the locked
 Hatchling and Editables versions instead of resolving build dependencies in a
 new isolated environment. Editable mode preserves source-tree resource lookup
@@ -77,7 +77,7 @@ cargo test --manifest-path src-tauri/Cargo.toml
 cargo check --manifest-path src-tauri/Cargo.toml
 .venv/bin/python scripts/build_sidecar.py
 .venv/bin/python scripts/verify_desktop_distribution.py --sidecar-only
-OPENSPEC_TELEMETRY=0 openspec validate build-thesisforge-desktop-ui --strict --no-interactive
+OPENSPEC_TELEMETRY=0 openspec validate docforge-project-format-v1 --strict --no-interactive
 git diff --check
 ```
 
@@ -97,7 +97,7 @@ For hermetic execution, the verifier copies only the installed recursive
 closure of `[project].dependencies` into the prefix, evaluates PEP 508 markers
 with no extras, and launches the generated console script through `python -S`.
 It fails if checkout paths or parent `purelib`/`platlib` appear on `sys.path`,
-or if ThesisForge, Typer, Rich, PyYAML, python-docx, lxml or Pydantic resolve
+or if DocForge, Typer, Rich, PyYAML, python-docx, lxml or Pydantic resolve
 outside the temporary prefix.
 
 ## Example Build
@@ -108,10 +108,10 @@ make validate
 make build-example
 ```
 
-The default output is `output/thesis.docx`. Build uses a same-directory
+The default output is `output/document.docx`. Build uses a same-directory
 temporary file, validates the DOCX package and atomically replaces the target
 only after all required stages succeed. After DOCX publication it may derive
-`output/thesis.preview.pdf` through LibreOffice. The PDF is signature-checked
+`output/document.preview.pdf` through LibreOffice. The PDF is signature-checked
 and atomically replaced; exporter absence, timeout or failure must not downgrade
 the valid DOCX build.
 
@@ -120,12 +120,12 @@ the valid DOCX build.
 `make package` creates:
 
 ```text
-dist/python/thesis_forge-<version>-py3-none-any.whl
-dist/python/thesis_forge-<version>.tar.gz
+dist/python/docforge-<version>-py3-none-any.whl
+dist/python/docforge-<version>.tar.gz
 ```
 
 The wheel bundles the base and example-university templates under
-`thesis_forge/template_data/`. The sdist includes source, templates, examples,
+`docforge/template_data/`. The sdist includes source, templates, examples,
 tests, specifications and maintenance scripts.
 
 These artifacts are locally installable verification distributions. The
@@ -142,7 +142,7 @@ make package-web
 
 The result is `dist/web/`. It contains only static Vite assets and does not
 embed Python or a compiler service. At runtime the Web product must use the
-configured versioned ThesisForge HTTP adapter. Browser source persistence uses
+configured versioned DocForge HTTP adapter. Browser source persistence uses
 workspace-save or download semantics and must not claim native filesystem
 paths.
 
@@ -151,7 +151,7 @@ Automatic final-preview bytes are served only through
 `application/pdf`, `no-store` and `nosniff`. The runtime rejects malformed
 workspace IDs, traversal, non-PDF names, workspace-escaping symlinks and invalid
 PDF signatures. Live-preview artifacts use a separate server-issued capability
-route and a runtime-owned `.thesisforge-live-previews/` directory; reads and
+route and a runtime-owned `.docforge-live-previews/` directory; reads and
 explicit discard consume the capability, while startup/allocation sweeps remove
 expired files left by a process restart. User-selected Office PDFs stay
 browser-local.
@@ -169,19 +169,19 @@ The builder:
 - rejects a target triple different from the native host;
 - keeps PyInstaller work in the system temporary directory so it cannot shadow
   the Python `build` package from a checkout-level `build/` directory;
-- packages `thesis_forge.adapters.sidecar` with required templates and
+- packages `docforge.adapters.sidecar` with required templates and
   python-docx data;
-- writes `src-tauri/binaries/thesisforge-sidecar-<target>`;
+- writes `src-tauri/binaries/docforge-sidecar-<target>`;
 - keeps PyInstaller in development dependencies only.
 
 The verifier removes API-key/token and proxy variables, sets
-`THESISFORGE_BLOCK_NETWORK=1`, copies the complete example outside the checkout,
+`DOCFORGE_BLOCK_NETWORK=1`, copies the complete example outside the checkout,
 and proves inspect, validate, preview, cancellation, ordered build, valid DOCX
 output, and reopen behavior. Cancellation must preserve the prior output.
 
-`THESISFORGE_SIDECAR_EXECUTABLE` and `THESISFORGE_PYTHON` are explicit
+`DOCFORGE_SIDECAR_EXECUTABLE` and `DOCFORGE_PYTHON` are explicit
 development/test overrides. A release build without those overrides resolves
-the Tauri-managed `thesisforge-sidecar` bundled beside the application.
+the Tauri-managed `docforge-sidecar` bundled beside the application.
 
 ## Native Packages
 
@@ -234,7 +234,7 @@ The primary release orchestrator is Woodpecker:
 - Linux quality and macOS release jobs install the shared Python 3.12 hash lock,
   while Cargo validation uses the committed Rust lockfile;
 - `.woodpecker/release-macos.yml` waits for that gate, then selects a
-  `darwin/arm64` local agent with `purpose=thesisforge-release` and the
+  `darwin/arm64` local agent with `purpose=docforge-release` and the
   repository-specific `repo=zengwenliang416/thesis-forge` label;
 - the macOS workflow disables Woodpecker's automatic Local-backend clone and
   fetches only `origin/main` plus the requested release tag from the fixed
@@ -262,7 +262,7 @@ and does not install release upload tooling from the network at runtime.
 The native builder must not receive the GitHub Release token. Its staging
 credentials must be limited to writing only the tag-specific release prefix;
 the Linux publisher uses a separate read-only identity. The staging bucket must
-be dedicated to ThesisForge rather than reusing another project's bucket. Use
+be dedicated to DocForge rather than reusing another project's bucket. Use
 separate `release_staging_write_endpoint` and
 `release_staging_read_endpoint` secrets because the native macOS agent reaches
 staging through a loopback SSH tunnel while the Linux publisher reaches the
@@ -272,13 +272,13 @@ A future Windows workflow must use a native `windows/amd64` agent and attach
 
 ## Installation And Launch
 
-For local macOS acceptance, open the DMG and copy `ThesisForge.app` to
+For local macOS acceptance, open the DMG and copy `DocForge.app` to
 `Applications`, or launch the generated `.app` directly. For Windows, install
 the generated MSI or NSIS executable from the native Windows job.
 
 The workbench uses native file dialogs and accepts `.md` and `.markdown`.
 Desktop source writes occur only after explicit Save / `Cmd/Ctrl+S`. Build /
-`Cmd/Ctrl+B` writes `thesis.docx` next to the source unless the transport
+`Cmd/Ctrl+B` writes `document.docx` next to the source unless the transport
 provides another output path. Web builds require the configured HTTP service
 and return browser-appropriate output identity/download behavior.
 
@@ -309,7 +309,7 @@ artifacts as production releases.
 
 ## Troubleshooting
 
-- `failed to resolve packaged ThesisForge sidecar`: rebuild the native sidecar,
+- `failed to resolve packaged DocForge sidecar`: rebuild the native sidecar,
   then rebuild the Tauri bundle with the release config.
 - Markdown is visible but cannot be opened: use `.md` or `.markdown`; other
   extensions are rejected at the Rust boundary.
@@ -318,14 +318,14 @@ artifacts as production releases.
 - Build cancellation or failure: retry from the workbench; the previous valid
   DOCX must remain intact.
 - Desktop final preview is unavailable: confirm Microsoft Word is installed,
-  allow ThesisForge under the operating system's automation permissions, then
+  allow DocForge under the operating system's automation permissions, then
   refresh or select a PDF explicitly exported by Microsoft Word.
 - Final preview is marked stale: the Markdown, template or workspace changed
   after the PDF was bound. Stop editing briefly for automatic refresh, click
   refresh, or select a new Office PDF.
 - `Bundle contains AppleDouble files`: run `dot_clean -m` on the bundle root,
   then rerun the verifier and checksums.
-- Web actions cannot reach the compiler: configure and start the ThesisForge
+- Web actions cannot reach the compiler: configure and start the DocForge
   HTTP adapter; static Vite files alone are not a compiler service.
 - Windows artifacts are missing locally on macOS: use the native Windows CI
   matrix job. Do not relabel or copy the macOS sidecar.

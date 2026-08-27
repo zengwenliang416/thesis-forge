@@ -5,34 +5,40 @@
 ```text
 CLI / Future UI
       ↓
+Project Loader (docforge.yaml)
+      ↓
 Application Services
       ↓
-Parser → ThesisDocument → Validator → Compiler → RenderPlan → DOCX Renderer
+Parser (document.md) → ForgeDocument → Validator → Compiler → RenderPlan → DOCX Renderer
                                                                ↓
                                                 optional PDF preview exporter
 ```
 
-`application` 层统一 inspect、validate、build、进度阶段、临时输出、DOCX package
-校验和原子替换。成功发布 DOCX 后可通过可注入 exporter 派生最终版式 PDF；该步骤
-失败不得改变 DOCX 成功语义。CLI 只负责参数、结构化展示和退出码；UI 复用相同服务。
+`docforge.yaml` 是项目的单一入口，负责项目身份、文档源文件、元数据、资源、模板、
+对象级布局、输出和 Review 路径。`application` 层统一 inspect、validate、build、
+进度阶段、临时输出、DOCX package 校验和原子替换。成功发布 DOCX 后可通过可注入
+exporter 派生最终版式 PDF；该步骤失败不得改变 DOCX 成功语义。CLI 只负责参数、
+结构化展示和退出码；UI 复用相同服务。
 
 ## 2. Parser
 
-职责：
+职责（输入为项目 manifest 声明的 `document.md`）：
 
-- 读取 YAML Front Matter
 - 解析 Markdown 基础结构
-- 识别 ThesisForge 扩展块
-- 识别 `@fig:* / @tbl:* / @eq:* / [@bibkey]`
+- 识别 DocForge 语义对象和 fenced blocks
+- 识别 `[label](#fig:id)` 等交叉引用、`[@bibkey]` 引用和脚注
 - 保留 source line
-- 产出 `ThesisDocument`
+- 产出 `ForgeDocument`
 
 不负责学校字体、Word 样式、最终编号与 OOXML。
 
-## 3. ThesisDocument
+项目 manifest 中的元数据、资源、模板、输出策略不进入 Markdown parser；这些配置由
+Project Loader 和 application service 注入校验与编译上下文。
+
+## 3. ForgeDocument
 
 ```text
-ThesisDocument
+ForgeDocument
 ├── Metadata
 ├── Block[]
 │   ├── Heading
@@ -136,6 +142,6 @@ parse → validate → compile → render temporary DOCX
 
 DOCX 发布前任一阶段失败时不得覆盖已有有效输出；PDF 导出失败只让最终预览不可用，
 不得回滚或伪装 DOCX 失败。wheel 将内置模板放在
-`thesis_forge/template_data/`，Template Resolver 优先使用论文最近祖先目录的
+`docforge/template_data/`，Template Resolver 优先使用项目最近祖先目录的
 `templates/`，不存在项目模板树时才使用包内模板。发行验证必须从仓库外安装 wheel
 并运行离线 inspect、validate、build，具体命令见 `docs/MAINTENANCE.md`。

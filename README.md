@@ -37,7 +37,7 @@ DOCX Renderer
 
 ### 必做
 
-- YAML Front Matter 元数据
+- `docforge.yaml` 项目 manifest 元数据
 - Markdown 标题 / 段落 / 列表
 - 图片 + 题注 + 编号
 - 表格 + 三线表样式
@@ -173,19 +173,14 @@ render:
 
 已有研究表明…… [@ref-example-1]。
 
-::: figure {#fig:model}
-src: "./images/model.png"
-caption: "模型总体结构"
-width: "85%"
-:::
+![模型总体结构](images/model.png){#fig:model}
 
-如 @fig:model 所示。
+如[图](#fig:model)所示。
 
-::: equation {#eq:loss}
 $$
 L=-\sum_{i=1}^{N} y_i \log \hat y_i
 $$
-:::
+{#eq:loss}
 ```
 
 可执行项目见 `tests/fixtures/docforge-academic/`。
@@ -225,7 +220,7 @@ templates/schools/<school>/<year>.yaml
 
 - Python 3.11+
 - Pydantic：领域模型 / 模板 Schema
-- PyYAML：模板与 Front Matter
+- PyYAML：项目 manifest、模板与配置解析
 - python-docx：DOCX 高层 API
 - lxml：OOXML 低层控制
 - Pandoc：Markdown AST/转换语义参考，可作为可选 parser backend
@@ -241,7 +236,7 @@ Tauri 或 HTTP server，仍可独立离线运行。
 
 ```text
 M0  仓库骨架 + 规范
-M1  Parser + ThesisDocument
+M1  Parser + ForgeDocument
 M2  Template + Validator
 M3  基础 DOCX（段落/标题/页面）
 M4  Figure/Table
@@ -318,8 +313,9 @@ src-tauri/target/<target>/release/bundle/
 ```
 
 桌面工作台支持 `Cmd/Ctrl+K` 聚焦编辑器、`Cmd/Ctrl+S` 显式保存、
-`Cmd/Ctrl+B` 构建 DOCX。打开源文件仅接受 `.md` 或 `.markdown`；构建结果默认
-写入项目的 `build/document.docx`，并保留临时包校验与原子替换行为。
+`Cmd/Ctrl+B` 构建 DOCX。打开入口必须是项目目录或 `docforge.yaml`，项目中的
+`document.source` 必须指向 `.md` 或 `.markdown`；构建结果默认写入项目的
+`build/document.docx`，并保留临时包校验与原子替换行为。
 
 当前本地产物未做 Apple Developer ID / Microsoft Authenticode 生产签名，也未做
 Apple notarization。它们用于本地验收和 CI 产物验证，不应直接作为公开发行包。

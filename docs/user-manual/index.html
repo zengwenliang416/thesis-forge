@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="color-scheme" content="light">
-  <title>ThesisForge 用户操作手册</title>
+  <title>DocForge 用户操作手册</title>
   <style>
     :root {
       --ink: #1f2925;
@@ -367,7 +367,7 @@
 </head>
 <body>
   <header class="hero">
-    <p class="eyebrow">ThesisForge · Illustrated Manual</p>
+    <p class="eyebrow">DocForge · Illustrated Manual</p>
     <h1>从 Markdown 到学校标准 Word</h1>
     <p class="lead">覆盖 Web、macOS、Windows 与 CLI 的完整操作路径，包含真实界面、模板参数、诊断修复、DOCX 构建和目录更新。</p>
     <div class="hero-meta">
@@ -401,7 +401,7 @@
       <section id="start">
         <p class="eyebrow">01 · Start</p>
         <h2>选择使用方式</h2>
-        <p>ThesisForge 把论文内容放在 Markdown，把学校格式放在 YAML 模板。构建链固定为：</p>
+        <p>DocForge 把文档内容放在 Markdown，把项目元数据和学校格式放在 YAML。构建链固定为：</p>
         <div class="flow">
           <span>Markdown</span><span>Validation</span><span>Template</span><span>RenderPlan</span><span>DOCX</span>
         </div>
@@ -409,15 +409,15 @@
         <div class="cards">
           <article class="card">
             <h3>Web</h3>
-            <p>适合浏览器试用和集中部署。上传后保存到服务端工作区，不覆盖电脑上的原始 Markdown。</p>
+            <p>适合浏览器试用和集中部署。上传 DocForge 项目后保存到服务端工作区，不覆盖电脑上的原始文件。</p>
           </article>
           <article class="card">
             <h3>macOS / Windows</h3>
-            <p>适合本机长期写作。桌面端直接读写本地 Markdown，默认把 DOCX 生成到同一目录。</p>
+            <p>适合本机长期写作。桌面端直接读写本地项目，默认按 manifest 的输出策略生成 DOCX。</p>
           </article>
           <article class="card">
             <h3>CLI</h3>
-            <p>适合自动化、批量构建和模板调试，可用 <code>--template</code> 和 <code>-o</code> 显式控制输入输出。</p>
+            <p>适合自动化、批量构建和模板调试，以项目目录或 <code>docforge.yaml</code> 为输入，可用 <code>-o</code> 控制输出。</p>
           </article>
           <article class="card">
             <h3>安装包</h3>
@@ -426,12 +426,12 @@
         </div>
 
         <div class="callout danger">
-          <strong>Web 下载现状：</strong>当前界面会显示 <code>thesis.docx</code> 输出名，但 HTTP adapter 尚无下载路由，界面也没有下载按钮。需要实际文件时使用桌面端、CLI，或由部署方导出工作区文件。
+          <strong>Web 下载现状：</strong>当前界面会显示 <code>document.docx</code> 输出名，但 HTTP adapter 尚无下载路由，界面也没有下载按钮。需要实际文件时使用桌面端、CLI，或由部署方导出工作区文件。
         </div>
 
         <figure>
-          <img src="images/01-empty-workspace.png" alt="ThesisForge 空工作区">
-          <figcaption>首次进入：点击右上角“打开”选择 Markdown 文稿。</figcaption>
+          <img src="images/01-empty-workspace.png" alt="DocForge 空工作区">
+          <figcaption>首次进入：点击右上角“打开”选择包含 <code>docforge.yaml</code> 的项目。</figcaption>
         </figure>
 
         <h3>CLI 快速开始</h3>
@@ -439,17 +439,19 @@
 .venv/bin/python -m pip install --upgrade pip
 make install
 
-.venv/bin/thesisforge inspect thesis.md
-.venv/bin/thesisforge validate thesis.md --template template.yaml
-.venv/bin/thesisforge build thesis.md --template template.yaml -o output/thesis.docx</code></pre>
+.venv/bin/docforge inspect examples/complete-thesis
+.venv/bin/docforge validate examples/complete-thesis
+.venv/bin/docforge review examples/complete-thesis --output-dir /tmp/docforge-review
+.venv/bin/docforge build examples/complete-thesis \
+  -o examples/complete-thesis/build/document.docx</code></pre>
       </section>
 
       <section id="workspace">
         <p class="eyebrow">02 · Workbench</p>
         <h2>认识工作台</h2>
-        <p>打开文稿后，左侧是论文大纲，中间是 Markdown 编辑器，右上是结构预览，右下是诊断结果。顶部负责打开、保存、验证、模板选择和构建。</p>
+        <p>打开项目后，左侧是文档大纲，中间是 Markdown 编辑器，右上是结构预览，右下是诊断结果。顶部负责打开、保存、验证、模板选择和构建。</p>
         <figure>
-          <img src="images/02-workbench-overview.png" alt="ThesisForge 完整工作台">
+          <img src="images/02-workbench-overview.png" alt="DocForge 完整工作台">
           <figcaption>结构预览用于检查语义和模板角色，不代表 Word 最终分页。</figcaption>
         </figure>
 
@@ -459,7 +461,7 @@ make install
             <tr><td>文稿有未保存修改</td><td>先保存，验证、模板切换和构建才会恢复。</td></tr>
             <tr><td>构建已禁用</td><td>存在错误诊断，先在右下角定位并修复。</td></tr>
             <tr><td>目标位置不可写</td><td>桌面端检查文件和目录权限，再恢复工作区。</td></tr>
-            <tr><td>构建完成</td><td>桌面端去 Markdown 同目录找 DOCX；Web 端当前只返回输出标识。</td></tr>
+            <tr><td>构建完成</td><td>桌面端按 manifest 的输出目录查找 DOCX；Web 端当前只返回输出标识。</td></tr>
           </tbody>
         </table>
 
@@ -544,7 +546,7 @@ $$
       <section id="template">
         <p class="eyebrow">04 · Template</p>
         <h2>选择学校模板</h2>
-        <p>工作台可显式选择基础本科和示例大学模板。HUT 或项目模板通过 Front Matter 声明，然后保持“使用文稿声明模板”。</p>
+        <p>工作台可显式选择基础本科和示例大学模板。HUT 或项目模板通过 <code>docforge.yaml</code> 声明，然后保持“使用文稿声明模板”。</p>
         <pre><code>render:
   template_id: "hut-master-2026"</code></pre>
         <div class="callout">
@@ -557,7 +559,8 @@ $$
 
         <h3>项目模板目录</h3>
         <pre><code>my-thesis/
-├── thesis.md
+├── docforge.yaml
+├── document.md
 ├── references.bib
 ├── images/
 └── templates/
@@ -566,7 +569,7 @@ $$
             └── 2026.yaml</code></pre>
 
         <div class="callout">
-          当前工作台没有 YAML 编辑器，也没有任意模板路径选择按钮。需要显式路径时使用 CLI：<code>--template path/to/template.yaml</code>。
+          当前工作台没有 YAML 编辑器，也没有任意模板路径选择按钮。自定义模板请放入项目 <code>templates/</code>，并在 <code>docforge.yaml</code> 的 <code>render.template_id</code> 中选择。
         </div>
       </section>
 
@@ -783,13 +786,12 @@ citation:
         </figure>
 
         <h3>桌面端输出</h3>
-        <pre><code>/path/to/thesis.md
-/path/to/thesis.docx</code></pre>
+        <pre><code>/path/to/project/document.md
+/path/to/project/build/document.docx</code></pre>
 
         <h3>CLI 输出</h3>
-        <pre><code>.venv/bin/thesisforge build thesis.md \
-  --template templates/schools/my-university/2026.yaml \
-  -o output/thesis.docx</code></pre>
+        <pre><code>.venv/bin/docforge validate my-thesis
+.venv/bin/docforge build my-thesis -o my-thesis/build/document.docx</code></pre>
 
         <div class="callout danger">
           Web 端当前没有可点击下载动作。看到文件名只表示服务端工作区已生成输出，不表示浏览器已下载。
@@ -799,7 +801,7 @@ citation:
       <section id="toc-update">
         <p class="eyebrow">08 · Office</p>
         <h2>更新自动目录和页码</h2>
-        <p>ThesisForge 生成真实 TOC 和 PAGE 字段。构建服务会尝试用本机 LibreOffice 预填目录；不可用时仍保留可在 Office 中更新的字段。桌面端最终版式预览只由 Microsoft Word 生成 PDF，不切换到其他排版引擎；Web 自动预览使用 LibreOffice。</p>
+        <p>DocForge 生成真实 TOC 和 PAGE 字段。构建服务会尝试用本机 LibreOffice 预填目录；不可用时仍保留可在 Office 中更新的字段。桌面端最终版式预览只由 Microsoft Word 生成 PDF，不切换到其他排版引擎；Web 自动预览使用 LibreOffice。</p>
         <figure class="portrait">
           <img src="images/08-docx-toc-page.png" alt="自动目录与大写罗马页码">
           <figcaption>真实目录字段，前置页使用大写罗马页码 I、II、III。</figcaption>
@@ -839,7 +841,7 @@ citation:
         </details>
         <details>
           <summary>模板下拉框没有我的学校</summary>
-          <div><p>把模板放到项目 <code>templates/</code>，在 Front Matter 写 <code>render.template_id</code>，并选择“使用文稿声明模板”。任意模板路径使用 CLI <code>--template</code>。</p></div>
+          <div><p>把模板放到项目 <code>templates/</code>，在 <code>docforge.yaml</code> 写 <code>render.template_id</code>，并选择“使用文稿声明模板”。</p></div>
         </details>
         <details>
           <summary>目录为空或页码没有更新</summary>
@@ -869,7 +871,7 @@ line_spacing:
         <p class="eyebrow">11 · Final Review</p>
         <h2>提交前检查</h2>
         <ul class="checklist">
-          <li>Front Matter 元数据完整。</li>
+          <li><code>docforge.yaml</code> 元数据完整。</li>
           <li>学校模板 ID 正确。</li>
           <li>图表公式和章节 ID 唯一。</li>
           <li>交叉引用全部可解析。</li>
@@ -887,13 +889,13 @@ line_spacing:
         <ul>
           <li><code>docs/MARKDOWN_SPEC.md</code></li>
           <li><code>docs/TEMPLATE_SPEC.md</code></li>
-          <li><code>examples/complete-thesis/thesis.md</code></li>
+          <li><code>examples/complete-thesis/document.md</code></li>
           <li><code>templates/schools/hunan-university-of-technology/master-2026.yaml</code></li>
         </ul>
       </section>
     </main>
   </div>
 
-  <footer>ThesisForge 用户操作手册 · 本地优先、确定性、模板驱动</footer>
+  <footer>DocForge 用户操作手册 · 本地优先、确定性、模板驱动</footer>
 </body>
 </html>
