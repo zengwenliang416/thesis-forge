@@ -1,0 +1,7 @@
+{
+  "schema": "specnav.verification.report-security-contract.v1",
+  "scripts": {
+    "catalog-filter": "pP2lkv1kk7eUyTCmpaLFnLwQrtQGdnBI73/ECqhmo/M="
+  },
+  "stylesheet_sha256": "c38caf81d368bb88337a343eecc7957341294c277c198fea3f68c6b756694b08"
+}

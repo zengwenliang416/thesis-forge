@@ -1,0 +1,34 @@
+{
+  "schema": "specnav.local.human-decision-proposal.v1",
+  "change_id": "docforge-project-format-v1",
+  "runtime_version": "2.0.0-alpha.2",
+  "title": "Repair the immutable test-defect completion contract in project scope",
+  "problem": {
+    "classification": "test_defect",
+    "failure_count": 10,
+    "approved_snapshot_id": "snapshot-350e6482b5745502bf4c6d6a",
+    "approved_snapshot_hash": "350e6482b5745502bf4c6d6af7af26ba568208117ba5699863f8c80861a204de",
+    "original_snapshot_hash": "e34e5e74c6ac469ee8bce2be6d0b6ce1e772d4e773710b8bc782cc99da337c85",
+    "scope_gap": "The immutable repair scope allows only case-plan-request.json, while test-defect completion requires test_sha to change and currently forbids the approved successor snapshot hash."
+  },
+  "authorized_changes": [
+    "Create a project-local SpecNav Verification plugin override; do not modify the global plugin cache.",
+    "Add a signed, append-only repair-scope supersession action that preserves every existing classification, repair request, baseline, and approval artifact.",
+    "Require an explicit human-approved supersession review bound to the original failure, original repair-link digest, replacement scope digest, current Git revision, and approved successor snapshot.",
+    "Permit a test-defect repair to bind the approved successor snapshot only when case-contract check returns approved-current and test_sha changes.",
+    "Treat regenerated case snapshot and approval archive files as derived lifecycle artifacts only after their hashes and approval lineage are validated.",
+    "Add focused contract tests for scope supersession, stale approval rejection, unauthorized file rejection, immutable-history preservation, and replay idempotency.",
+    "Use the repaired project-local tool to supersede the 10 insufficient scopes, complete independent spec and quality reviews, and continue successor generation and verification."
+  ],
+  "constraints": {
+    "project_scope_only": true,
+    "preserve_history": true,
+    "no_manual_green": true,
+    "no_fallback_receipts": true,
+    "no_global_plugin_changes": true,
+    "no_push": true,
+    "local_commits_allowed": true,
+    "application_source_changes_allowed": false
+  },
+  "approval_required": true
+}

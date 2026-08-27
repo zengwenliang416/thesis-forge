@@ -1,0 +1,149 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://specnav.dev/schemas/verification/v2/repair-scope-supersession-review.schema.json",
+  "title": "SpecNav Verification 2.0 Repair Scope Supersession Review",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "id",
+    "failure_id",
+    "change_id",
+    "classification",
+    "decision",
+    "reviewer",
+    "reviewed_at",
+    "reason",
+    "proposal_sha256",
+    "original_requested_envelope_digest",
+    "original_started_envelope_digest",
+    "original_baseline_envelope_digest",
+    "current_git_revision",
+    "replacement_scope",
+    "approved_snapshot_id",
+    "approved_snapshot_hash"
+  ],
+  "properties": {
+    "schema": {
+      "const": "specnav.verification.repair-scope-supersession-review.v1"
+    },
+    "id": {
+      "$ref": "common.schema.json#/$defs/stableId"
+    },
+    "failure_id": {
+      "$ref": "common.schema.json#/$defs/stableId"
+    },
+    "change_id": {
+      "$ref": "common.schema.json#/$defs/stableId"
+    },
+    "classification": {
+      "const": "test_defect"
+    },
+    "decision": {
+      "const": "approved"
+    },
+    "reviewer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "kind"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "common.schema.json#/$defs/stableId"
+        },
+        "kind": {
+          "const": "human"
+        }
+      }
+    },
+    "reviewed_at": {
+      "$ref": "common.schema.json#/$defs/dateTime"
+    },
+    "reason": {
+      "$ref": "common.schema.json#/$defs/nonEmptyString"
+    },
+    "proposal_sha256": {
+      "$ref": "common.schema.json#/$defs/sha256"
+    },
+    "original_requested_envelope_digest": {
+      "$ref": "common.schema.json#/$defs/sha256"
+    },
+    "original_started_envelope_digest": {
+      "$ref": "common.schema.json#/$defs/sha256"
+    },
+    "original_baseline_envelope_digest": {
+      "$ref": "common.schema.json#/$defs/sha256"
+    },
+    "current_git_revision": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{40}$"
+    },
+    "replacement_scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "allowed_files",
+        "denied_files",
+        "requires_review_on",
+        "allowed_operations"
+      ],
+      "properties": {
+        "allowed_files": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "common.schema.json#/$defs/nonEmptyString"
+          },
+          "uniqueItems": true
+        },
+        "denied_files": {
+          "type": "array",
+          "items": {
+            "$ref": "common.schema.json#/$defs/nonEmptyString"
+          },
+          "uniqueItems": true
+        },
+        "requires_review_on": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "common.schema.json#/$defs/nonEmptyString"
+          },
+          "uniqueItems": true
+        },
+        "allowed_operations": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "create",
+            "modify",
+            "delete",
+            "rename"
+          ],
+          "properties": {
+            "create": {
+              "const": true
+            },
+            "modify": {
+              "const": true
+            },
+            "delete": {
+              "const": false
+            },
+            "rename": {
+              "const": false
+            }
+          }
+        }
+      }
+    },
+    "approved_snapshot_id": {
+      "$ref": "common.schema.json#/$defs/stableId"
+    },
+    "approved_snapshot_hash": {
+      "$ref": "common.schema.json#/$defs/sha256"
+    }
+  }
+}

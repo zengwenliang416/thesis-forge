@@ -1,0 +1,378 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://specnav.dev/schemas/verification/v2/runtime-status.schema.json",
+  "title": "SpecNav Verification 2.0 Runtime Status",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "ok",
+    "readiness",
+    "runtime_version",
+    "runtime_root",
+    "runtime_scope",
+    "runtime_base",
+    "scope_selection_source",
+    "provider_scope",
+    "provider_source",
+    "provider_file",
+    "checks",
+    "blockers",
+    "warnings",
+    "actions",
+    "fallback_used"
+  ],
+  "properties": {
+    "schema": {
+      "const": "specnav.verification.runtime-status.v1"
+    },
+    "ok": {
+      "type": "boolean"
+    },
+    "readiness": {
+      "enum": [
+        "ready",
+        "blocked"
+      ]
+    },
+    "runtime_version": {
+      "anyOf": [
+        {
+          "$ref": "common.schema.json#/$defs/semver"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "runtime_root": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "runtime_scope": {
+      "enum": [
+        "project",
+        "user",
+        "explicit"
+      ]
+    },
+    "runtime_base": {
+      "$ref": "common.schema.json#/$defs/nonEmptyString"
+    },
+    "scope_selection_source": {
+      "enum": [
+        "project-config",
+        "cli",
+        "environment",
+        "runtime-argument"
+      ]
+    },
+    "provider_scope": {
+      "enum": [
+        "project",
+        "user",
+        "explicit"
+      ]
+    },
+    "provider_source": {
+      "enum": [
+        "scope-file",
+        "process-environment"
+      ]
+    },
+    "provider_file": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "requires_midscene": {
+      "type": "boolean"
+    },
+    "checks": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "lock",
+        "runtime",
+        "receipt",
+        "permissions",
+        "packages",
+        "browsers",
+        "provider"
+      ],
+      "properties": {
+        "lock": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "ok"
+          ],
+          "properties": {
+            "ok": {
+              "type": "boolean"
+            },
+            "schema": {
+              "const": "specnav.verification.runtime-lock.v1"
+            },
+            "runtime_version": {
+              "$ref": "common.schema.json#/$defs/semver"
+            }
+          }
+        },
+        "runtime": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "ok",
+            "root"
+          ],
+          "properties": {
+            "ok": {
+              "type": "boolean"
+            },
+            "root": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          }
+        },
+        "receipt": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "ok",
+            "path"
+          ],
+          "properties": {
+            "ok": {
+              "type": "boolean"
+            },
+            "path": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "module_tree_integrity_ok": {
+              "type": "boolean"
+            }
+          }
+        },
+        "authority": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "ok",
+            "path"
+          ],
+          "properties": {
+            "ok": {
+              "type": "boolean"
+            },
+            "path": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "algorithm": {
+              "type": "string"
+            },
+            "key_sha256": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{64}$"
+            },
+            "file_mode": {
+              "type": "string"
+            }
+          }
+        },
+        "permissions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "kind",
+              "file",
+              "ok"
+            ],
+            "properties": {
+              "kind": {
+                "enum": [
+                  "runtime-base",
+                  "runtime-root",
+                  "browser-executable"
+                ]
+              },
+              "file": {
+                "$ref": "common.schema.json#/$defs/nonEmptyString"
+              },
+              "ok": {
+                "type": "boolean"
+              }
+            }
+          }
+        },
+        "packages": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "name",
+              "expected_version",
+              "installed_version",
+              "lock_integrity_ok",
+              "loadable",
+              "error"
+            ],
+            "properties": {
+              "name": {
+                "$ref": "common.schema.json#/$defs/nonEmptyString"
+              },
+              "expected_version": {
+                "$ref": "common.schema.json#/$defs/semver"
+              },
+              "installed_version": {
+                "anyOf": [
+                  {
+                    "$ref": "common.schema.json#/$defs/semver"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "lock_integrity_ok": {
+                "type": "boolean"
+              },
+              "loadable": {
+                "type": "boolean"
+              },
+              "error": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          }
+        },
+        "browsers": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "name",
+              "revision",
+              "marker_exists",
+              "executable_exists",
+              "executable_allowed",
+              "probe_ok",
+              "probe_exit_status"
+            ],
+            "properties": {
+              "name": {
+                "$ref": "common.schema.json#/$defs/nonEmptyString"
+              },
+              "revision": {
+                "$ref": "common.schema.json#/$defs/nonEmptyString"
+              },
+              "marker_exists": {
+                "type": "boolean"
+              },
+              "executable_exists": {
+                "type": "boolean"
+              },
+              "executable_integrity_ok": {
+                "type": "boolean"
+              },
+              "executable_allowed": {
+                "type": "boolean"
+              },
+              "probe_ok": {
+                "type": "boolean"
+              },
+              "probe_exit_status": {
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              }
+            }
+          }
+        },
+        "provider": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "configured",
+            "model_name_present",
+            "model_family_present",
+            "credential_source",
+            "base_url_present",
+            "secret_values_exposed"
+          ],
+          "properties": {
+            "configured": {
+              "type": "boolean"
+            },
+            "model_name_present": {
+              "type": "boolean"
+            },
+            "model_family_present": {
+              "type": "boolean"
+            },
+            "credential_source": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "base_url_present": {
+              "type": "boolean"
+            },
+            "configuration_fingerprint": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "pattern": "^[a-f0-9]{64}$"
+            },
+            "secret_values_exposed": {
+              "const": false
+            }
+          }
+        }
+      }
+    },
+    "blockers": {
+      "type": "array",
+      "items": {
+        "$ref": "common.schema.json#/$defs/blocker"
+      }
+    },
+    "warnings": {
+      "type": "array",
+      "items": {
+        "$ref": "common.schema.json#/$defs/blocker"
+      }
+    },
+    "actions": {
+      "type": "array",
+      "items": {
+        "$ref": "common.schema.json#/$defs/action"
+      }
+    },
+    "fallback_used": {
+      "const": false
+    }
+  }
+}

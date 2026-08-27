@@ -1,0 +1,39 @@
+{
+  "schema": "specnav.stagePlugin.v1",
+  "plugin": "specnav-verification",
+  "stage": "verification",
+  "required": true,
+  "depends_on": [
+    "specnav-core",
+    "specnav-requirements",
+    "specnav-prototype",
+    "specnav-development"
+  ],
+  "commands": [
+    "specnav-verification",
+    "specnav-verify"
+  ],
+  "skills": [
+    "specnav-verification",
+    "specnav-verification-runtime-status",
+    "specnav-verification-runtime-setup",
+    "specnav-verify-plan",
+    "specnav-verify-facticity",
+    "specnav-verify-static",
+    "specnav-verify-unit",
+    "specnav-verify-redteam",
+    "specnav-verify-e2e",
+    "specnav-verify-sensory",
+    "specnav-verify-rerun",
+    "specnav-html-report"
+  ],
+  "contracts": {
+    "verification": "scripts/verification-v2-run.js",
+    "verification_v1_legacy": "scripts/verify-domains.js",
+    "codex_adapter": "scripts/codex-verification-adapter.js",
+    "kernel": "kernel/index.js"
+  },
+  "state_outputs": [
+    "openspec/changes/<change>/verify/"
+  ]
+}
