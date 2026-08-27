@@ -1425,6 +1425,9 @@ function evaluateState(
   const repair = effectiveRepairRecovery || repairRebind
     ? undefined
     : completedRepair || supersededRepair || requestedRepair || undefined;
+  const repairScopeSupersession = repair
+    ? scopeSupersessionHistory.value.at(-1)
+    : undefined;
   const rerunHistory = authorityLog.validate(
     paths(context, failure.id).rerunPlans,
     'rerun_plan'
@@ -1519,6 +1522,9 @@ function evaluateState(
     attempts: history.attempts,
     attempt_facts: facts,
     ...(repair ? { repair_link: repair } : {}),
+    ...(repairScopeSupersession
+      ? { repair_scope_supersession: repairScopeSupersession }
+      : {}),
     ...(effectiveRepairRecovery
       ? { repair_recovery: effectiveRepairRecovery }
       : {}),

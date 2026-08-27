@@ -16,6 +16,7 @@ const REQUEST_FIELDS = Object.freeze([
   'attempt_facts',
   'historical_artifact_loss',
   'repair_link',
+  'repair_scope_supersession',
   'repair_recovery',
   'repair_rebind',
   'rerun_plan'
@@ -40,6 +41,7 @@ const FACT_FIELDS = Object.freeze([
 const TRUSTED_PRODUCERS = Object.freeze({
   classification_result: 'specnav-failure-classifier',
   repair_link: 'specnav-development-repair-bridge',
+  repair_scope_supersession: 'specnav-repair-scope-supersession',
   repair_recovery: 'specnav-repair-lineage-recovery',
   repair_rebind: 'specnav-repair-generation-rebind',
   historical_artifact_loss: 'specnav-historical-artifact-loss-recorder',
@@ -54,6 +56,12 @@ const REQUIRED_CLAIMS = Object.freeze({
     'repair-review:spec-approved',
     'repair-review:quality-approved',
     'repair-evidence:verified'
+  ]),
+  repair_scope_supersession: Object.freeze([
+    'repair-scope-supersession:human-approved',
+    'repair-scope-supersession:git-revision-bound',
+    'repair-scope-supersession:original-history-preserved',
+    'repair-scope-supersession:successor-snapshot-approved'
   ]),
   repair_recovery: Object.freeze([
     'repair-recovery:human-approved',
@@ -762,7 +770,8 @@ function validateRepairLink(
   trustVerifier,
   packet,
   firstAttempt,
-  rawEnvelope
+  rawEnvelope,
+  rawScopeSupersession
 ) {
   const trusted = verifyEnvelope(
     schemaRegistry,
@@ -816,8 +825,53 @@ function validateRepairLink(
       )
     };
   }
+  let approvedSuccessorSnapshot = false;
+  if (rawScopeSupersession !== undefined) {
+    const trustedSupersession = verifyEnvelope(
+      schemaRegistry,
+      trustVerifier,
+      'repair_scope_supersession',
+      rawScopeSupersession,
+      {
+        failure_id: packet.id,
+        change_id: packet.change_id,
+        run_id: packet.run_id,
+        case_id: packet.case_id
+      }
+    );
+    if (trustedSupersession.blocker) return trustedSupersession;
+    const supersession = schemaValue(
+      schemaRegistry,
+      'repair-scope-supersession',
+      trustedSupersession.payload
+    );
+    const sourceLink = structuredClone(link);
+    sourceLink.status = 'in_progress';
+    delete sourceLink.completed_at;
+    delete sourceLink.after_identity;
+    delete sourceLink.review_evidence_ids;
+    approvedSuccessorSnapshot = (
+      supersession
+      && link.repair_kind === 'test_code'
+      && supersession.failure_id === packet.id
+      && supersession.change_id === packet.change_id
+      && supersession.classification === packet.classification
+      && supersession.approved_snapshot_hash
+        === link.after_identity.case_snapshot_hash
+      && canonicalJson(supersession.superseded_repair_link)
+        === canonicalJson(sourceLink)
+    );
+    if (!approvedSuccessorSnapshot) {
+      return {
+        blocker: blocker(
+          'verification-repair-loop:repair-scope-supersession-invalid',
+          rawScopeSupersession?.id || 'repair-scope-supersession'
+        )
+      };
+    }
+  }
   for (const field of [
-    'case_snapshot_hash',
+    ...(approvedSuccessorSnapshot ? [] : ['case_snapshot_hash']),
     'environment_hash',
     'runtime_version',
     'kernel_version'
@@ -1315,6 +1369,7 @@ function createRepairLoopStateMachine(options = {}) {
     if (request.historical_artifact_loss !== undefined) {
       const conflictingAuthority = [
         request.repair_link,
+        request.repair_scope_supersession,
         request.repair_recovery,
         request.repair_rebind,
         request.rerun_plan
@@ -1390,13 +1445,25 @@ function createRepairLoopStateMachine(options = {}) {
         )
       ]);
     }
+    if (
+      request.repair_scope_supersession !== undefined
+      && request.repair_link === undefined
+    ) {
+      return blocked([
+        blocker(
+          'verification-repair-loop:repair-scope-supersession-orphaned',
+          packet.id
+        )
+      ]);
+    }
     if (request.repair_link !== undefined) {
       const repair = validateRepairLink(
         schemaRegistry,
         trustVerifier,
         packet,
         first,
-        request.repair_link
+        request.repair_link,
+        request.repair_scope_supersession
       );
       if (repair.blocker) return blocked([repair.blocker]);
       repairLink = repair.link;
