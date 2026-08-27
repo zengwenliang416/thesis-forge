@@ -1,0 +1,18 @@
+{
+  "mandatory_baseline_case_ids": [
+    "case-a1-project-open",
+    "case-a10-repository-delivery",
+    "case-a2-general-project",
+    "case-a3-academic-profile",
+    "case-a4-obsolete-contracts",
+    "case-a5-neutral-default-paths",
+    "case-a6-path-security",
+    "case-a7-deterministic-docx",
+    "case-a8-runtime-parity",
+    "case-a9-installed-office"
+  ],
+  "policy_refs": [
+    "openspec/changes/docforge-project-format-v1/tasks.md",
+    "openspec/changes/docforge-project-format-v1/development/handoff-to-verify.md"
+  ]
+}
