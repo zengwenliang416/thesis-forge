@@ -1,8 +1,8 @@
 {
   "schema": "specnav.verification.case-snapshot.v1",
-  "id": "snapshot-350e6482b5745502bf4c6d6a",
+  "id": "snapshot-e34e5e74c6ac469ee8bce2be",
   "change_id": "docforge-project-format-v1",
-  "snapshot_hash": "350e6482b5745502bf4c6d6af7af26ba568208117ba5699863f8c80861a204de",
+  "snapshot_hash": "e34e5e74c6ac469ee8bce2be6d0b6ce1e772d4e773710b8bc782cc99da337c85",
   "cases": [
     {
       "schema": "specnav.verification.test-case.v1",
@@ -96,14 +96,10 @@
         "entrypoint": "/bin/sh",
         "args": [
           "-c",
-          "set -eu; PYTHONPATH=src .venv/bin/python -m pytest tests/project tests/application/test_project_services.py -q; printf '%s\\n' '{\"assertion_id\":\"a1-project-open\",\"method\":\"equal\",\"expected\":true,\"actual\":true,\"status\":\"passed\"}' >> \"$SPECNAV_VERIFICATION_ASSERTION_RESULT_FILE\""
+          "PYTHONPATH=src .venv/bin/python -m pytest tests/project tests/application/test_project_services.py -q"
         ],
         "cwd": ".",
-        "env_keys": [
-          "PATH",
-          "SPECNAV_VERIFICATION_ASSERTION_IDS",
-          "SPECNAV_VERIFICATION_ASSERTION_RESULT_FILE"
-        ],
+        "env_keys": [],
         "requires_midscene": false
       },
       "evidence_policy": {
@@ -213,14 +209,10 @@
         "entrypoint": "/bin/sh",
         "args": [
           "-c",
-          "set -eu; PYTHONPATH=src .venv/bin/python scripts/check_facticity.py --json /tmp/docforge-case-a10.json --markdown /tmp/docforge-case-a10.md; PYTHONPATH=src .venv/bin/python scripts/verify_desktop_distribution.py --platform macos --bundle-root src-tauri/target/release/bundle; PYTHONPATH=src .venv/bin/python scripts/prepare_release.py --tag v0.1.0 --validate-only; printf '%s\\n' '{\"assertion_id\":\"a10-repository-clean\",\"method\":\"equal\",\"expected\":true,\"actual\":true,\"status\":\"passed\"}' >> \"$SPECNAV_VERIFICATION_ASSERTION_RESULT_FILE\""
+          "set -eu; PYTHONPATH=src .venv/bin/python scripts/check_facticity.py --json /tmp/docforge-case-a10.json --markdown /tmp/docforge-case-a10.md; PYTHONPATH=src .venv/bin/python scripts/verify_desktop_distribution.py --platform macos --bundle-root src-tauri/target/release/bundle; PYTHONPATH=src .venv/bin/python scripts/prepare_release.py --tag v0.1.0 --validate-only"
         ],
         "cwd": ".",
-        "env_keys": [
-          "PATH",
-          "SPECNAV_VERIFICATION_ASSERTION_IDS",
-          "SPECNAV_VERIFICATION_ASSERTION_RESULT_FILE"
-        ],
+        "env_keys": [],
         "requires_midscene": false
       },
       "evidence_policy": {
@@ -330,14 +322,10 @@
         "entrypoint": "/bin/sh",
         "args": [
           "-c",
-          "set -eu; tmp=$(mktemp -d /tmp/docforge-a2.XXXXXX); trap 'rm -rf \"$tmp\"' EXIT; cp -R tests/fixtures/docforge-general \"$tmp/project\"; PYTHONPATH=src .venv/bin/python -m docforge.cli inspect \"$tmp/project\" >/dev/null; PYTHONPATH=src .venv/bin/python -m docforge.cli validate \"$tmp/project\" >/dev/null; PYTHONPATH=src .venv/bin/python -m docforge.cli review \"$tmp/project\" >/dev/null; PYTHONPATH=src .venv/bin/python -m docforge.cli build \"$tmp/project\" >/dev/null; test -s \"$tmp/project/review/document.review.md\"; test -s \"$tmp/project/review/document.review-map.json\"; test -s \"$tmp/project/build/document.docx\"; printf '%s\\n' '{\"assertion_id\":\"a2-general-flow\",\"method\":\"equal\",\"expected\":true,\"actual\":true,\"status\":\"passed\"}' >> \"$SPECNAV_VERIFICATION_ASSERTION_RESULT_FILE\""
+          "set -eu; tmp=$(mktemp -d /tmp/docforge-a2.XXXXXX); trap 'rm -rf \"$tmp\"' EXIT; cp -R tests/fixtures/docforge-general \"$tmp/project\"; PYTHONPATH=src .venv/bin/python -m docforge.cli inspect \"$tmp/project\" >/dev/null; PYTHONPATH=src .venv/bin/python -m docforge.cli validate \"$tmp/project\" >/dev/null; PYTHONPATH=src .venv/bin/python -m docforge.cli review \"$tmp/project\" >/dev/null; PYTHONPATH=src .venv/bin/python -m docforge.cli build \"$tmp/project\" >/dev/null; test -s \"$tmp/project/review/document.review.md\"; test -s \"$tmp/project/review/document.review-map.json\"; test -s \"$tmp/project/build/document.docx\""
         ],
         "cwd": ".",
-        "env_keys": [
-          "PATH",
-          "SPECNAV_VERIFICATION_ASSERTION_IDS",
-          "SPECNAV_VERIFICATION_ASSERTION_RESULT_FILE"
-        ],
+        "env_keys": [],
         "requires_midscene": false
       },
       "evidence_policy": {
@@ -447,14 +435,10 @@
         "entrypoint": "/bin/sh",
         "args": [
           "-c",
-          "set -eu; PYTHONPATH=src .venv/bin/python -m pytest tests/templates tests/compiler tests/project tests/test_distribution.py -q; printf '%s\\n' '{\"assertion_id\":\"a3-profile-isolation\",\"method\":\"equal\",\"expected\":true,\"actual\":true,\"status\":\"passed\"}' >> \"$SPECNAV_VERIFICATION_ASSERTION_RESULT_FILE\""
+          "PYTHONPATH=src .venv/bin/python -m pytest tests/templates tests/compiler tests/project tests/test_distribution.py -q"
         ],
         "cwd": ".",
-        "env_keys": [
-          "PATH",
-          "SPECNAV_VERIFICATION_ASSERTION_IDS",
-          "SPECNAV_VERIFICATION_ASSERTION_RESULT_FILE"
-        ],
+        "env_keys": [],
         "requires_midscene": false
       },
       "evidence_policy": {
@@ -564,14 +548,10 @@
         "entrypoint": "/bin/sh",
         "args": [
           "-c",
-          "set -eu; PYTHONPATH=src .venv/bin/python -m pytest tests/test_facticity.py tests/core/test_forge_document.py tests/project -q; PYTHONPATH=src .venv/bin/python scripts/check_facticity.py --json /tmp/docforge-case-a4.json --markdown /tmp/docforge-case-a4.md; printf '%s\\n' '{\"assertion_id\":\"a4-no-obsolete-contract\",\"method\":\"equal\",\"expected\":true,\"actual\":true,\"status\":\"passed\"}' >> \"$SPECNAV_VERIFICATION_ASSERTION_RESULT_FILE\""
+          "set -eu; PYTHONPATH=src .venv/bin/python -m pytest tests/test_facticity.py tests/core/test_forge_document.py tests/project -q; PYTHONPATH=src .venv/bin/python scripts/check_facticity.py --json /tmp/docforge-case-a4.json --markdown /tmp/docforge-case-a4.md"
         ],
         "cwd": ".",
-        "env_keys": [
-          "PATH",
-          "SPECNAV_VERIFICATION_ASSERTION_IDS",
-          "SPECNAV_VERIFICATION_ASSERTION_RESULT_FILE"
-        ],
+        "env_keys": [],
         "requires_midscene": false
       },
       "evidence_policy": {
@@ -681,14 +661,10 @@
         "entrypoint": "/bin/sh",
         "args": [
           "-c",
-          "set -eu; PYTHONPATH=src .venv/bin/python -m pytest tests/project tests/cli tests/contracts tests/test_desktop_distribution.py -q; printf '%s\\n' '{\"assertion_id\":\"a5-default-paths\",\"method\":\"equal\",\"expected\":true,\"actual\":true,\"status\":\"passed\"}' >> \"$SPECNAV_VERIFICATION_ASSERTION_RESULT_FILE\""
+          "PYTHONPATH=src .venv/bin/python -m pytest tests/project tests/cli tests/contracts tests/test_desktop_distribution.py -q"
         ],
         "cwd": ".",
-        "env_keys": [
-          "PATH",
-          "SPECNAV_VERIFICATION_ASSERTION_IDS",
-          "SPECNAV_VERIFICATION_ASSERTION_RESULT_FILE"
-        ],
+        "env_keys": [],
         "requires_midscene": false
       },
       "evidence_policy": {
@@ -798,14 +774,10 @@
         "entrypoint": "/bin/sh",
         "args": [
           "-c",
-          "set -eu; PYTHONPATH=src .venv/bin/python -m pytest tests/project tests/application/test_project_services.py -q; /Users/wenliang_zeng/.cargo/bin/cargo test --manifest-path src-tauri/Cargo.toml project_tests; printf '%s\\n' '{\"assertion_id\":\"a6-secure-paths\",\"method\":\"equal\",\"expected\":true,\"actual\":true,\"status\":\"passed\"}' >> \"$SPECNAV_VERIFICATION_ASSERTION_RESULT_FILE\""
+          "set -eu; PYTHONPATH=src .venv/bin/python -m pytest tests/project tests/application/test_project_services.py -q; /Users/wenliang_zeng/.cargo/bin/cargo test --manifest-path src-tauri/Cargo.toml project_tests"
         ],
         "cwd": ".",
-        "env_keys": [
-          "PATH",
-          "SPECNAV_VERIFICATION_ASSERTION_IDS",
-          "SPECNAV_VERIFICATION_ASSERTION_RESULT_FILE"
-        ],
+        "env_keys": [],
         "requires_midscene": false
       },
       "evidence_policy": {
@@ -915,14 +887,10 @@
         "entrypoint": "/bin/sh",
         "args": [
           "-c",
-          "set -eu; PYTHONPATH=src .venv/bin/python -m pytest tests/core tests/compiler tests/renderers/docx tests/application tests/test_acceptance.py tests/test_compiler.py tests/test_docx_renderer.py -q; printf '%s\\n' '{\"assertion_id\":\"a7-deterministic-pipeline\",\"method\":\"equal\",\"expected\":true,\"actual\":true,\"status\":\"passed\"}' >> \"$SPECNAV_VERIFICATION_ASSERTION_RESULT_FILE\""
+          "PYTHONPATH=src .venv/bin/python -m pytest tests/core tests/compiler tests/renderers/docx tests/application tests/test_acceptance.py tests/test_compiler.py tests/test_docx_renderer.py -q"
         ],
         "cwd": ".",
-        "env_keys": [
-          "PATH",
-          "SPECNAV_VERIFICATION_ASSERTION_IDS",
-          "SPECNAV_VERIFICATION_ASSERTION_RESULT_FILE"
-        ],
+        "env_keys": [],
         "requires_midscene": false
       },
       "evidence_policy": {
@@ -1032,14 +1000,10 @@
         "entrypoint": "/bin/sh",
         "args": [
           "-c",
-          "set -eu; PYTHONPATH=src .venv/bin/python -m pytest tests/adapters tests/application/test_build_report_contract.py tests/application/test_build_stage_lifecycle.py -q; /Users/wenliang_zeng/.nvm/versions/node/v22.19.0/bin/pnpm --dir frontend test; /Users/wenliang_zeng/.cargo/bin/cargo test --manifest-path src-tauri/Cargo.toml; printf '%s\\n' '{\"assertion_id\":\"a8-protocol-parity\",\"method\":\"equal\",\"expected\":true,\"actual\":true,\"status\":\"passed\"}' >> \"$SPECNAV_VERIFICATION_ASSERTION_RESULT_FILE\""
+          "set -eu; PYTHONPATH=src .venv/bin/python -m pytest tests/adapters tests/application/test_build_report_contract.py tests/application/test_build_stage_lifecycle.py -q; /Users/wenliang_zeng/.nvm/versions/node/v22.19.0/bin/pnpm --dir frontend test; /Users/wenliang_zeng/.cargo/bin/cargo test --manifest-path src-tauri/Cargo.toml"
         ],
         "cwd": ".",
-        "env_keys": [
-          "PATH",
-          "SPECNAV_VERIFICATION_ASSERTION_IDS",
-          "SPECNAV_VERIFICATION_ASSERTION_RESULT_FILE"
-        ],
+        "env_keys": [],
         "requires_midscene": false
       },
       "evidence_policy": {
@@ -1149,14 +1113,10 @@
         "entrypoint": "/bin/sh",
         "args": [
           "-c",
-          "set -eu; PYTHONPATH=src .venv/bin/python -c 'import hashlib,json,pathlib; root=pathlib.Path(\"openspec/changes/docforge-project-format-v1/development/tasks/006-workbench-desktop/evidence\"); r=json.loads((root/\"macos-native-acceptance.json\").read_text()); p=root/r[\"evidence\"][\"screenshot\"]; assert r[\"ok\"] is True and r[\"status\"]==\"passed\"; assert r[\"app\"][\"displayName\"]==\"DocForge\" and r[\"runtime\"][\"manifest\"]==\"docforge.yaml\" and r[\"runtime\"][\"source\"]==\"document.md\"; assert r[\"build\"][\"output\"]==\"document.docx\" and r[\"wordPreview\"][\"engine\"]==\"microsoft-word\" and r[\"wordPreview\"][\"status\"]==\"available\" and r[\"wordPreview\"][\"pdfGenerated\"] is True; assert hashlib.sha256(p.read_bytes()).hexdigest()==r[\"evidence\"][\"screenshotSha256\"]; assert r[\"bundleVerification\"][\"ok\"] is True; print(json.dumps({\"ok\":True,\"word\":r[\"wordPreview\"][\"microsoftWordVersion\"],\"screenshotSha256\":r[\"evidence\"][\"screenshotSha256\"]}))'; printf '%s\\n' '{\"assertion_id\":\"a9-installed-word-preview\",\"method\":\"equal\",\"expected\":true,\"actual\":true,\"status\":\"passed\"}' >> \"$SPECNAV_VERIFICATION_ASSERTION_RESULT_FILE\""
+          "PYTHONPATH=src .venv/bin/python -c 'import hashlib,json,pathlib; root=pathlib.Path(\"openspec/changes/docforge-project-format-v1/development/tasks/006-workbench-desktop/evidence\"); r=json.loads((root/\"macos-native-acceptance.json\").read_text()); p=root/r[\"evidence\"][\"screenshot\"]; assert r[\"ok\"] is True and r[\"status\"]==\"passed\"; assert r[\"app\"][\"displayName\"]==\"DocForge\" and r[\"runtime\"][\"manifest\"]==\"docforge.yaml\" and r[\"runtime\"][\"source\"]==\"document.md\"; assert r[\"build\"][\"output\"]==\"document.docx\" and r[\"wordPreview\"][\"engine\"]==\"microsoft-word\" and r[\"wordPreview\"][\"status\"]==\"available\" and r[\"wordPreview\"][\"pdfGenerated\"] is True; assert hashlib.sha256(p.read_bytes()).hexdigest()==r[\"evidence\"][\"screenshotSha256\"]; assert r[\"bundleVerification\"][\"ok\"] is True; print(json.dumps({\"ok\":True,\"word\":r[\"wordPreview\"][\"microsoftWordVersion\"],\"screenshotSha256\":r[\"evidence\"][\"screenshotSha256\"]}))'"
         ],
         "cwd": ".",
-        "env_keys": [
-          "PATH",
-          "SPECNAV_VERIFICATION_ASSERTION_IDS",
-          "SPECNAV_VERIFICATION_ASSERTION_RESULT_FILE"
-        ],
+        "env_keys": [],
         "requires_midscene": false
       },
       "evidence_policy": {
