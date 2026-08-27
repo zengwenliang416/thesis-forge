@@ -1,0 +1,80 @@
+{
+  "ok": true,
+  "status": "regression_required",
+  "label": "pass_after_fix",
+  "history": [
+    {
+      "kind": "initial",
+      "attempt_id": "attempt-20260827064427-7306fa24d31e2dcf",
+      "case_id": "case-a1-project-open",
+      "label": "PASS",
+      "verdict": "pass",
+      "integrity": "intact",
+      "freshness": "fresh",
+      "evidence_ids": [
+        "evidence-f8a546d6992a8b3bd6f5e48f2497e0f05d47e3bc4ae4e6da843a444a8d80b48e"
+      ],
+      "recorded_at": "2026-08-27T06:44:30.083Z"
+    },
+    {
+      "kind": "repair",
+      "repair_link_id": "repair-superseded-b88a1c4188e1f3684219d99a98e5915de51a40254dcf5cabc3103487cad1ba69",
+      "label": "REPAIR COMPLETED",
+      "recorded_at": "2026-08-27T13:43:32.489Z"
+    },
+    {
+      "kind": "retest",
+      "attempt_id": "attempt-20260827143729-5c56ae56cba8bdd7",
+      "case_id": "case-a1-project-open",
+      "label": "PASS AFTER FIX",
+      "verdict": "pass",
+      "integrity": "intact",
+      "freshness": "fresh",
+      "evidence_ids": [
+        "evidence-3538127be9871ee0aaef5be925125df7cbb5d4f169ddc2078c5d9ed1b4bc0fe0",
+        "evidence-d0d281636990c67c9776fee4b17f5592863845dbeae2d9d480f99553d4137dab"
+      ],
+      "recorded_at": "2026-08-27T14:37:32.129Z"
+    }
+  ],
+  "transition_proposal": {
+    "schema": "specnav.verification.transition-proposal.v1",
+    "failure_id": "failure-460a6bec826047df8fb5695d9f35761718afb7180740ec3edfaba7ca8b7c9c71",
+    "change_id": "docforge-project-format-v1",
+    "action": "request_regression",
+    "owner": "core",
+    "from_state": "regression_required",
+    "target_state": "regression",
+    "case_ids": [
+      "case-a10-repository-delivery",
+      "case-a2-general-project",
+      "case-a3-academic-profile",
+      "case-a4-obsolete-contracts",
+      "case-a5-neutral-default-paths",
+      "case-a6-path-security",
+      "case-a7-deterministic-docx",
+      "case-a8-runtime-parity",
+      "case-a9-installed-office"
+    ],
+    "attempt_ids": [
+      "attempt-20260827064427-7306fa24d31e2dcf",
+      "attempt-20260827143729-5c56ae56cba8bdd7"
+    ],
+    "reason_ids": [
+      "required-regression-missing:case-a10-repository-delivery",
+      "required-regression-missing:case-a2-general-project",
+      "required-regression-missing:case-a3-academic-profile",
+      "required-regression-missing:case-a4-obsolete-contracts",
+      "required-regression-missing:case-a5-neutral-default-paths",
+      "required-regression-missing:case-a6-path-security",
+      "required-regression-missing:case-a7-deterministic-docx",
+      "required-regression-missing:case-a8-runtime-parity",
+      "required-regression-missing:case-a9-installed-office"
+    ],
+    "repair_link_id": "repair-superseded-b88a1c4188e1f3684219d99a98e5915de51a40254dcf5cabc3103487cad1ba69",
+    "scope_digest": "9533863630c84367f6956b1c54808b7ebce5701253d7b475e4f0906bbd054b71",
+    "proposed_at": "2026-08-27T14:37:32.129Z",
+    "id": "transition-1e01b39317eb538f940659e8ad83663f977f249b00fc55e5ca09290252f2fa76"
+  },
+  "blockers": []
+}
