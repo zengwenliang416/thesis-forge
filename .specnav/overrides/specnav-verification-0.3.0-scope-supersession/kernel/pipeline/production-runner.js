@@ -715,18 +715,19 @@ function makeFollowupRun(context, testCase, now, options, history) {
     && rootRun.origin_run_id === null
     && rootRun.parent_run_id === null
     && rootRun.case_ids.includes(rootFailure.case_id)
-    && rootRun.generation_id === context.generationId
+    && rootRun.generation_id === context.parentGenerationId
     && parentRun.change_id === context.snapshot.change_id
-    && parentRun.generation_id === context.generationId
     && parentRun.case_ids.includes(parentAttempt.case_id);
   const kindLineageValid = kind === 'retest'
     ? commonLineageValid
       && rootFailure.case_id === testCase.id
       && parentAttempt.case_id === testCase.id
       && parentRun.id === rootRun.id
+      && parentRun.generation_id === context.parentGenerationId
       && ['initial', 'retry'].includes(parentAttempt.kind)
     : commonLineageValid
       && parentRun.kind === 'retest'
+      && parentRun.generation_id === context.generationId
       && parentRun.failure_id === rootFailure.id
       && parentRun.origin_run_id === rootRun.id
       && parentAttempt.case_id === parentRun.case_ids[0];
@@ -1323,7 +1324,8 @@ function createProductionVerificationRunner(options = {}) {
       testSha,
       environmentHash,
       kernelVersion: kernel.metadata.version,
-      generationId: generation.id
+      generationId: generation.id,
+      parentGenerationId: generation.parent_generation_id
     }, testCase, now, {
       ...executionOptions,
       repairIdentity
