@@ -81,7 +81,7 @@
     "change_id": "docforge-project-format-v1",
     "development_task_id": "900-verification-repair-41ae30e0be6d4799",
     "repair_kind": "test_code",
-    "status": "requested",
+    "status": "in_progress",
     "requested_at": "2026-08-27T07:40:32.398Z",
     "before_identity": {
       "case_snapshot_hash": "e34e5e74c6ac469ee8bce2be6d0b6ce1e772d4e773710b8bc782cc99da337c85",
