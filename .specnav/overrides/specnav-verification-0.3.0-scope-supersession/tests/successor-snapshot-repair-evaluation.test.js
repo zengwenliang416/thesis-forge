@@ -84,7 +84,13 @@ function evaluationFixture() {
     case_id: failure.case_id
   };
   const runs = readJson(`${verificationRoot}/v2/runs.json`)
-    .filter((run) => run.id === failure.run_id || run.failure_id === failure.id);
+    .filter((run) => (
+      run.id === failure.run_id
+      || (
+        run.failure_id === failure.id
+        && run.kind === 'retest'
+      )
+    ));
   const runIds = new Set(runs.map((run) => run.id));
   const attempts = readJson(`${verificationRoot}/v2/attempts.json`)
     .filter((attempt) => runIds.has(attempt.run_id));
