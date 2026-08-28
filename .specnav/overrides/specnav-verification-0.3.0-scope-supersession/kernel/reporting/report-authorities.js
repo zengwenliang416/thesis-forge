@@ -23,6 +23,10 @@ function stableEntries(records) {
   ));
 }
 
+function stableIds(values) {
+  return [...new Set(values)].sort();
+}
+
 function parseRaw(bytes) {
   if (!Buffer.isBuffer(bytes)) return null;
   const records = [];
@@ -93,12 +97,16 @@ function createReportFactAuthority(options = {}) {
   const {
     verifyIntegrity,
     verifyFreshness,
-    verifyGateFacts
+    verifyGateFacts,
+    verifyFailureState,
+    verifyRepairFacts
   } = options;
   if (
     typeof verifyIntegrity !== 'function'
     || typeof verifyFreshness !== 'function'
     || typeof verifyGateFacts !== 'function'
+    || typeof verifyFailureState !== 'function'
+    || typeof verifyRepairFacts !== 'function'
   ) {
     throw new Error('verification-report:fact-authority-config-invalid');
   }
@@ -133,6 +141,32 @@ function createReportFactAuthority(options = {}) {
         failure_state_digest: payload.failure_state_digest,
         authority_chain_digest: payload.authority_chain_digest
       });
+    },
+    verifyFailureState(payload) {
+      const ok = verifyFailureState(structuredClone(payload)) === true;
+      return Object.freeze({
+        ok,
+        change_id: payload.change_id,
+        failure_state_digest: digestValue(payload.failure_state),
+        failures_digest: digestValue(payload.failures),
+        failure_ids: stableIds(
+          (payload.failures || []).map((entry) => entry.id)
+        )
+      });
+    },
+    verifyRepairFacts(payload) {
+      const ok = verifyRepairFacts(structuredClone(payload)) === true;
+      return Object.freeze({
+        ok,
+        change_id: payload.change_id,
+        repair_links_digest: digestValue(payload.repair_links),
+        repair_link_ids: stableIds(
+          (payload.repair_links || []).map((entry) => entry.id)
+        ),
+        repair_envelope_ids: stableIds(
+          payload.repair_envelope_ids || []
+        )
+      });
     }
   });
   FACT_AUTHORITIES.add(authority);
@@ -143,7 +177,9 @@ function isReportFactAuthority(value) {
   return FACT_AUTHORITIES.has(value)
     && typeof value?.verifyIntegrity === 'function'
     && typeof value?.verifyFreshness === 'function'
-    && typeof value?.verifyGateFacts === 'function';
+    && typeof value?.verifyGateFacts === 'function'
+    && typeof value?.verifyFailureState === 'function'
+    && typeof value?.verifyRepairFacts === 'function';
 }
 
 module.exports = {

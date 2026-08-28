@@ -465,9 +465,9 @@ function verifyFactAuthority(options) {
     ))
   ) {
     blockers.push(blocker(blockerId, artifact));
-    return false;
+    return null;
   }
-  return true;
+  return result;
 }
 
 function crossReferenceBlockers(validator, input) {
@@ -538,6 +538,8 @@ function sourceBindings(input) {
     evidence,
     failures,
     repairLinks,
+    trustedFailureIds,
+    trustedRepairLinkIds,
     aggregate,
     freshness,
     gateDecision
@@ -672,6 +674,16 @@ function sourceBindings(input) {
     }
   }
   for (const failure of failures) {
+    if (trustedFailureIds.has(failure.id)) {
+      if (!cases.has(failure.case_id)) {
+        blockers.push(blocker(
+          'verification-report:source-binding-mismatch',
+          failure.id,
+          'failure-case'
+        ));
+      }
+      continue;
+    }
     const run = runsById.get(failure.run_id);
     const attempt = attemptsById.get(failure.attempt_id);
     const boundReadings = failure.reading_ids.map((id) => readingsById.get(id));
@@ -704,6 +716,16 @@ function sourceBindings(input) {
   }
   for (const repair of repairLinks) {
     const failure = failuresById.get(repair.failure_id);
+    if (trustedRepairLinkIds.has(repair.id)) {
+      if (!failure || failure.change_id !== repair.change_id) {
+        blockers.push(blocker(
+          'verification-report:source-binding-mismatch',
+          repair.id,
+          'repair-failure'
+        ));
+      }
+      continue;
+    }
     const attempt = failure
       ? attemptsById.get(failure.attempt_id)
       : null;
@@ -1398,6 +1420,42 @@ function createReportModelBuilder(options = {}) {
       artifact: changeId,
       blockers
     });
+    const failureStateVerification = verifyFactAuthority({
+      authority: factAuthority,
+      method: 'verifyFailureState',
+      payload: {
+        change_id: changeId,
+        failure_state: input.failure_state,
+        failures
+      },
+      expected: {
+        change_id: changeId,
+        failure_state_digest: digestValue(input.failure_state),
+        failures_digest: digestValue(failures),
+        failure_ids: stableIds(failures.map((entry) => entry.id))
+      },
+      blockerId: 'verification-report:failure-state-unverified',
+      artifact: changeId,
+      blockers
+    });
+    const repairFactsVerification = verifyFactAuthority({
+      authority: factAuthority,
+      method: 'verifyRepairFacts',
+      payload: {
+        change_id: changeId,
+        repair_links: repairLinks,
+        repair_envelope_ids: input.repair_envelope_ids
+      },
+      expected: {
+        change_id: changeId,
+        repair_links_digest: digestValue(repairLinks),
+        repair_link_ids: stableIds(repairLinks.map((entry) => entry.id)),
+        repair_envelope_ids: stableIds(input.repair_envelope_ids || [])
+      },
+      blockerId: 'verification-report:repair-facts-unverified',
+      artifact: changeId,
+      blockers
+    });
     verifyFactAuthority({
       authority: factAuthority,
       method: 'verifyFreshness',
@@ -1450,6 +1508,12 @@ function createReportModelBuilder(options = {}) {
       evidence,
       failures,
       repairLinks,
+      trustedFailureIds: new Set(
+        failureStateVerification?.failure_ids || []
+      ),
+      trustedRepairLinkIds: new Set(
+        repairFactsVerification?.repair_link_ids || []
+      ),
       aggregate,
       freshness: input.freshness,
       gateDecision

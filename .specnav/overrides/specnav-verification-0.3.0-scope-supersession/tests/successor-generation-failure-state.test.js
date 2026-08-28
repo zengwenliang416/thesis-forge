@@ -4,7 +4,8 @@ const assert = require('node:assert/strict');
 const test = require('node:test');
 
 const {
-  selectFailureStateLineage
+  selectFailureStateLineage,
+  selectVerifiedCompletedRepairFacts
 } = require('../kernel/pipeline/artifact-pipeline');
 
 test('failure state retains successor lineage without widening aggregation', () => {
@@ -157,4 +158,99 @@ test('failure state follows parent chains across multiple generations', () => {
     result.failures.map((entry) => entry.id),
     [failureId]
   );
+});
+
+test('completed repair facts require a matching trusted envelope', () => {
+  const failureId = `failure-${'e'.repeat(64)}`;
+  const link = {
+    id: 'repair-completed',
+    failure_id: failureId,
+    change_id: 'docforge-project-format-v1',
+    status: 'completed'
+  };
+  const envelope = {
+    id: 'trusted-repair-envelope',
+    kind: 'repair_link',
+    payload: structuredClone(link),
+    bindings: {
+      failure_id: failureId,
+      change_id: link.change_id
+    },
+    signature: 'trusted'
+  };
+
+  const result = selectVerifiedCompletedRepairFacts(
+    [link],
+    new Set([failureId]),
+    () => envelope,
+    (candidate) => candidate.signature === 'trusted'
+      ? { ok: true, envelope_id: candidate.id }
+      : { ok: false }
+  );
+
+  assert.deepEqual(result.repair_links, [link]);
+  assert.deepEqual(result.envelope_ids, [envelope.id]);
+  assert.deepEqual(result.blockers, []);
+});
+
+test('completed repair facts reject missing, untrusted, or mismatched envelopes', () => {
+  const failureId = `failure-${'f'.repeat(64)}`;
+  const link = {
+    id: 'repair-completed',
+    failure_id: failureId,
+    change_id: 'docforge-project-format-v1',
+    status: 'completed'
+  };
+  const cases = [
+    {
+      name: 'missing',
+      load: () => null
+    },
+    {
+      name: 'untrusted',
+      load: () => ({
+        id: 'unsigned-envelope',
+        kind: 'repair_link',
+        payload: structuredClone(link),
+        bindings: {
+          failure_id: failureId,
+          change_id: link.change_id
+        }
+      })
+    },
+    {
+      name: 'payload-mismatch',
+      load: () => ({
+        id: 'trusted-mismatch',
+        kind: 'repair_link',
+        payload: {
+          ...link,
+          id: 'different-repair'
+        },
+        bindings: {
+          failure_id: failureId,
+          change_id: link.change_id
+        },
+        signature: 'trusted'
+      })
+    }
+  ];
+
+  for (const testCase of cases) {
+    const result = selectVerifiedCompletedRepairFacts(
+      [link],
+      new Set([failureId]),
+      testCase.load,
+      (candidate) => candidate?.signature === 'trusted'
+        ? { ok: true, envelope_id: candidate.id }
+        : { ok: false }
+    );
+    assert.deepEqual(result.repair_links, [], testCase.name);
+    assert.deepEqual(result.envelope_ids, [], testCase.name);
+    assert.deepEqual(result.blockers, [{
+      id: 'verification-production:repair-fact-unverified',
+      artifact: link.id,
+      detail: failureId
+    }], testCase.name);
+  }
 });

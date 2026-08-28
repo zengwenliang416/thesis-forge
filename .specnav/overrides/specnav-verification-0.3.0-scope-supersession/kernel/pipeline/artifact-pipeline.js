@@ -118,6 +118,53 @@ function selectFailureStateLineage(
   };
 }
 
+function selectVerifiedCompletedRepairFacts(
+  repairLinks,
+  failureIds,
+  loadEnvelope,
+  trustVerifier
+) {
+  const blockers = [];
+  const verifiedLinks = [];
+  const envelopes = [];
+  for (const link of repairLinks.filter((entry) => (
+    entry.status === 'completed' && failureIds.has(entry.failure_id)
+  ))) {
+    let envelope;
+    let verification;
+    try {
+      envelope = loadEnvelope(link.failure_id);
+      verification = envelope ? trustVerifier(envelope) : null;
+    } catch {
+      envelope = null;
+      verification = null;
+    }
+    if (
+      verification?.ok !== true
+      || verification.envelope_id !== envelope?.id
+      || envelope?.kind !== 'repair_link'
+      || canonicalJson(envelope?.payload) !== canonicalJson(link)
+      || envelope?.bindings?.failure_id !== link.failure_id
+      || envelope?.bindings?.change_id !== link.change_id
+    ) {
+      blockers.push(blocker(
+        'verification-production:repair-fact-unverified',
+        link.id,
+        link.failure_id
+      ));
+      continue;
+    }
+    verifiedLinks.push(link);
+    envelopes.push(envelope);
+  }
+  return {
+    repair_links: verifiedLinks,
+    envelopes,
+    envelope_ids: stableIds(envelopes.map((entry) => entry.id)),
+    blockers
+  };
+}
+
 function rawFailureInventory(
   store,
   runs,
@@ -690,6 +737,18 @@ function createVerificationArtifactPipeline(options = {}) {
       ? 'valid'
       : 'invalid';
     const failureStateDigest = sha256(canonicalJson(failureState));
+    const completedRepairFacts = selectVerifiedCompletedRepairFacts(
+      repairLinks,
+      generationFailureIds,
+      (failureId) => readJson(
+        store,
+        `repairs/${failureId}/repair-link-completed-envelope.json`,
+        null,
+        []
+      ),
+      (envelope) => trustedFactAuthority.verify(envelope)
+    );
+    blockers.push(...completedRepairFacts.blockers);
     const authorityHeads = {
       transition_proposals: authorityLog.logHead(
         'v2/transition-proposals.jsonl',
@@ -792,6 +851,17 @@ function createVerificationArtifactPipeline(options = {}) {
         payload.failure_state_status === failureStateStatus
         && payload.failure_state_digest === failureStateDigest
         && payload.authority_chain_digest === authorityChainDigest
+      ),
+      verifyFailureState: (payload) => (
+        canonicalJson(payload.failure_state) === canonicalJson(failureState)
+        && canonicalJson(payload.failures)
+          === canonicalJson(failureState.effective_failures)
+      ),
+      verifyRepairFacts: (payload) => (
+        canonicalJson(payload.repair_links)
+          === canonicalJson(completedRepairFacts.repair_links)
+        && canonicalJson(stableIds(payload.repair_envelope_ids || []))
+          === canonicalJson(completedRepairFacts.envelope_ids)
       )
     });
     const builder = kernel.createReportModelBuilder({
@@ -827,8 +897,10 @@ function createVerificationArtifactPipeline(options = {}) {
       policy_facts: aggregationRequest.policy_facts,
       aggregate,
       freshness,
+      failure_state: failureState,
       failures: failureState.effective_failures,
-      repair_links: repairLinks,
+      repair_links: completedRepairFacts.repair_links,
+      repair_envelope_ids: completedRepairFacts.envelope_ids,
       failure_state_status: failureStateStatus,
       failure_state_digest: failureStateDigest,
       authority_chain_digest: authorityChainDigest,
@@ -951,5 +1023,6 @@ module.exports = {
   createVerificationArtifactPipeline,
   freshnessProjection,
   mergeIntegrity,
-  selectFailureStateLineage
+  selectFailureStateLineage,
+  selectVerifiedCompletedRepairFacts
 };
