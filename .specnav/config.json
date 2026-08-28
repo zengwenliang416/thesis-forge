@@ -1,6 +1,6 @@
 {
   "schema": "specnav.project-config.v1",
   "verification": {
-    "runtime_scope": "project"
+    "runtime_scope": "user"
   }
 }

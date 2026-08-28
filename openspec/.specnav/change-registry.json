@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-08-28T06:47:11.820Z",
+  "generated_at": "2026-08-28T07:57:42.465Z",
   "current_focus": "docforge-workbench-ui-redesign",
   "changes": [
     {
@@ -38,8 +38,8 @@
       "branch": "zwl/docforge-project-format-v1-verification",
       "created_at": null,
       "last_active_at": "2026-08-28",
-      "archived_at": "2026-08-28T06:47:11.820Z",
-      "archive_path": "openspec/changes/archive/2026-08-28-docforge-project-format-v1"
+      "archive_path": "openspec/changes/archive/2026-08-28-docforge-project-format-v1",
+      "archived_at": "2026-08-28T06:47:11.820Z"
     },
     {
       "id": "docforge-workbench-ui-redesign",
