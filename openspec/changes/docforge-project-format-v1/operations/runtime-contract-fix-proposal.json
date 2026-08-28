@@ -1,0 +1,67 @@
+{
+  "schema": "docforge.operations.runtime-contract-fix-proposal.v1",
+  "change_id": "docforge-project-format-v1",
+  "source_revision": "e0337ad94e2e643691f97a8fe6753d1f457957b8",
+  "classification": "operations_runtime_contract_defect",
+  "summary": "SpecNav Operations 0.3.0 rebuilds Verification authority with the installed pre-successor-generation kernel and validates reports against the historical full evidence index, so it rejects the approved successor generation even though project-local Verification finalize and validate are green.",
+  "evidence": {
+    "archive_dry_run_sha256": "09642a79f34345689b53756ae24a3b3705e16b3888c3bcf38dad38cc1e6ef3e1",
+    "active_generation_id": "generation-e76c93b4b729fe49301fa066",
+    "runtime_blockers": [
+      "verification-release:evidence-index-binding-mismatch",
+      "verification-release:canonical-rebuild-blocked",
+      "verification-release:canonical-failure-state-mismatch",
+      "verification-release:canonical-gate-input-mismatch",
+      "verification-release:artifact-missing:verify/v2/migration-status.json",
+      "verification-release:migration-status-invalid",
+      "verification-release:report-evidence-source-mismatch",
+      "verification-release:report-readings-mismatch"
+    ],
+    "operations_artifact_blockers": [
+      "missing-operations-artifact:readiness.md",
+      "missing-operations-artifact:readiness.json",
+      "missing-operations-artifact:release-plan.md",
+      "missing-operations-artifact:branch-finish.md",
+      "missing-operations-artifact:update-spec.json"
+    ]
+  },
+  "root_causes": [
+    "Operations resolves kernel and trusted-fact authority from the installed Verification plugin before resolving the target project, so it cannot consume the approved project-local successor-generation override.",
+    "Operations requires the complete historical evidence index to equal the current aggregation request, while the approved successor generation intentionally aggregates only generation-scoped evidence and preserves historical repair lineage through signed authority.",
+    "The required explicit migration-status artifact is absent even though migration is not required."
+  ],
+  "authorized_scope_after_approval": [
+    "Create a narrowly scoped external-worktree authorization for /Volumes/ThesisForgeCI/workspaces/thesis-forge-docforge-verify.",
+    "Create and test a project-local SpecNav Operations 0.3.0 override under .specnav/overrides; do not modify the global plugin cache.",
+    "Allow only identity-validated explicit Core and project-local Verification roots.",
+    "Rebuild and validate successor-generation failure, evidence, reading, report, and authority lineage without weakening gates.",
+    "Create deterministic migration-status, final verification receipt, readiness, release-plan, branch-finish, and update-spec artifacts.",
+    "Run focused override tests, Verification validate, Operations gate, and archive dry-run; create local semantic commits only."
+  ],
+  "invariants": [
+    "No global Runtime edits.",
+    "No DocForge product source edits.",
+    "No deletion, replacement, or hiding of historical failures, attempts, repairs, reviews, or evidence.",
+    "No schema, acceptance, signature, path-security, or fallback weakening.",
+    "No manual green.",
+    "No push.",
+    "No non-dry-run archive without a separate explicit approval."
+  ],
+  "expected_result": {
+    "archive_dry_run_ok": true,
+    "verification_fallback_used": false,
+    "open_failure_count": 0,
+    "archive_target_preview": "openspec/changes/archive/2026-08-28-docforge-project-format-v1"
+  },
+  "proposed_at": "2026-08-28T02:57:21Z",
+  "proposal_sha256": "e82a01958d72e47719260e36f62f64f32803c15f2e8027cc99a74924396c875e",
+  "approval": {
+    "decision": "approved",
+    "reviewer": {
+      "id": "zengwenliang416",
+      "kind": "human"
+    },
+    "approved_at": "2026-08-28T03:08:19Z",
+    "comment": "Approved project-local Operations override, closure evidence, validation, archive dry-run, and local commits. Real archive and push remain unauthorized."
+  }
+}

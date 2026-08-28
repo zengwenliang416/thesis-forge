@@ -1,0 +1,39 @@
+{
+  "schema": "specnav.stagePlugin.v1",
+  "plugin": "specnav-operations",
+  "stage": "operations",
+  "required": true,
+  "depends_on": [
+    "specnav-core",
+    "specnav-verification"
+  ],
+  "commands": [
+    "specnav-release",
+    "specnav-archive"
+  ],
+  "skills": [
+    "specnav-ops-readiness",
+    "specnav-release-plan",
+    "specnav-install-verify",
+    "specnav-update-policy",
+    "specnav-compatibility-matrix",
+    "specnav-branch-finish",
+    "specnav-deploy",
+    "specnav-rollback",
+    "specnav-monitor",
+    "specnav-postmortem",
+    "specnav-update-spec",
+    "specnav-promote-check"
+  ],
+  "contracts": {
+    "operations": "scripts/operations-gate.js",
+    "archive": "scripts/archive-gate.js",
+    "archive_action": "scripts/archive-change.js",
+    "verification_v2_proof": "scripts/verification-v2-proof.js",
+    "verification_v2_host_artifacts": "scripts/verification-v2-host-artifacts.js",
+    "promotion_dry_run": "scripts/promotion-dry-run.js"
+  },
+  "state_outputs": [
+    "openspec/changes/<change>/operations/"
+  ]
+}
