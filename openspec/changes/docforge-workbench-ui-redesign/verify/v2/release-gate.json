@@ -1,6 +1,6 @@
 {
   "schema": "specnav.verification.gate-decision.v1",
-  "id": "gate-93f7d0ba1ec53f67830dcefdf4eaf561458834d380bc9e78983b2fa8adf0e66c",
+  "id": "gate-99b0a713223107e445c3a459f965e11a07a14cee771f96613a35f70051e76242",
   "change_id": "docforge-workbench-ui-redesign",
   "stage": "release",
   "decision": "pass",
@@ -51,12 +51,12 @@
   "kernel_version": "2.0.0-alpha.2",
   "freshness": {
     "status": "fresh",
-    "checked_at": "2026-08-28T09:21:23.287Z",
+    "checked_at": "2026-08-28T09:41:18.163Z",
     "reasons": []
   },
   "integrity_status": "intact",
   "policy_version": "verification-v2.0",
   "blockers": [],
   "warnings": [],
-  "decided_at": "2026-08-28T09:21:23.293Z"
+  "decided_at": "2026-08-28T09:41:18.169Z"
 }

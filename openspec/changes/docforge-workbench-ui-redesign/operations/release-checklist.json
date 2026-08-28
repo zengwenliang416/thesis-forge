@@ -1,0 +1,42 @@
+{
+  "schema": "specnav.ops.releaseChecklist.v1",
+  "change": "docforge-workbench-ui-redesign",
+  "release_target": "local-only",
+  "checks": [
+    {
+      "name": "Verification V2 release and archive gates are green",
+      "status": "pass",
+      "evidence": "verify/v2/release-gate.json"
+    },
+    {
+      "name": "A1-A5 have full six-domain coverage",
+      "status": "pass",
+      "evidence": "verify/v2/aggregate.json"
+    },
+    {
+      "name": "The active generation has zero open failures",
+      "status": "pass",
+      "evidence": "verify/v2/failure-state.json"
+    },
+    {
+      "name": "Canonical zero-lineage collections are materialized",
+      "status": "pass",
+      "evidence": "verify/v2/failures.json"
+    },
+    {
+      "name": "Existing lineage history is protected from overwrite",
+      "status": "pass",
+      "evidence": ".specnav/overrides/specnav-verification-0.3.0-scope-supersession/tests/zero-lineage-initialization.test.js"
+    },
+    {
+      "name": "Migration status is explicitly not required",
+      "status": "pass",
+      "evidence": "verify/v2/migration-status.json"
+    },
+    {
+      "name": "Push and real archive remain unauthorized",
+      "status": "pass",
+      "evidence": "operations/release-plan.md"
+    }
+  ]
+}

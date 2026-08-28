@@ -1,14 +1,18 @@
 {
   "schema": "specnav.codegraph.claims_report.v1",
-  "generated_at": "2026-08-28T08:55:50.759Z",
+  "generated_at": "2026-08-28T09:42:19.863Z",
   "active_change": "docforge-workbench-ui-redesign",
   "claims_file": "openspec/changes/docforge-workbench-ui-redesign/codegraph/claims-map.json",
   "evidence_index": "openspec/changes/docforge-workbench-ui-redesign/codegraph/evidence-index.json",
-  "claims_count": 1,
+  "claims_count": 2,
   "verified_claims": [
     "development:task-001-docforge-workbench-redesign"
   ],
-  "unverified_claims": [],
+  "unverified_claims": [
+    "verification:task-001-docforge-workbench-redesign"
+  ],
   "blockers": [],
-  "warnings": []
+  "warnings": [
+    "codegraph:claim-unverified:verification:task-001-docforge-workbench-redesign"
+  ]
 }

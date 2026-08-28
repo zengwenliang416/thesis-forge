@@ -1,0 +1,21 @@
+{
+  "schema": "specnav.ops.updateSpec.v1",
+  "change": "docforge-workbench-ui-redesign",
+  "status": "written_back",
+  "learning_items": [
+    "A zero-failure Verification generation must persist empty canonical failure, repair, and authority collections instead of relying on in-memory fallbacks.",
+    "Canonical zero-lineage initialization must be idempotent and must never overwrite existing failure, repair, transition, or attempt-fact history.",
+    "A not-required migration decision must still be represented by a generation-bound migration-status artifact before Operations proof reconstruction."
+  ],
+  "unresolved_items": [],
+  "promoted_checks": [
+    {
+      "id": "verification-zero-lineage-materialization",
+      "statement": "A successful zero-failure Verification run materializes every canonical lineage file and preserves pre-existing history byte-for-byte.",
+      "verify_via": "fixture",
+      "status": "candidate",
+      "generalized": true,
+      "dry_run_ref": ".specnav/overrides/specnav-verification-0.3.0-scope-supersession/tests/zero-lineage-initialization.test.js"
+    }
+  ]
+}

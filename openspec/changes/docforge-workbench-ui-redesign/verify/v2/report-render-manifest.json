@@ -1,25 +1,25 @@
 {
   "schema": "specnav.verification.report-render-manifest.v1",
   "change_id": "docforge-workbench-ui-redesign",
-  "report_model_id": "report-model-0a12e549fb182deeeace5abf4eeec3af6fafb557bf746c4e8e911bbe0ee5a053",
-  "generated_at": "2026-08-28T09:21:23.354Z",
+  "report_model_id": "report-model-f7c39f91eb7d3c6972396cf9c6d1e37bceb299bbdb560a6b30052ec4b1810c4e",
+  "generated_at": "2026-08-28T09:41:18.257Z",
   "reports": [
     {
       "name": "overview.html",
       "path": "verify/reports/overview.html",
-      "sha256": "913c57001e7dd524f876bed5e9f00412e76b2375fb72c7e07dda5a9f1096e9d9",
+      "sha256": "8d2ba9902405a94a1d26ca66c2158e23018d53c07dfb7e6770cb6889602d7ce4",
       "size": 31088
     },
     {
       "name": "test-case-catalog.html",
       "path": "verify/reports/test-case-catalog.html",
-      "sha256": "6cf7ed3cf9a377f7e30298691428b751638690f22e23457ec5470acf1b0f952a",
+      "sha256": "cd65fafe5a3aa28b81a874a294b9e98a7a0b03dc092aeca81bfa50d5e9106169",
       "size": 28640
     },
     {
       "name": "test-case-results.html",
       "path": "verify/reports/test-case-results.html",
-      "sha256": "d633df6b0d489073fac8d3b1679b21fc3479d15440956e49156f7803730a8aeb",
+      "sha256": "86f147f3d0fae824e39635bcbf7d5ab95913eb858032bd65ec029c6cf5e2c68f",
       "size": 50531
     }
   ]

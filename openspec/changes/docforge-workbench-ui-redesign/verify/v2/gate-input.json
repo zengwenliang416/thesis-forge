@@ -1214,7 +1214,7 @@
   "authority_chain_digest": "e3349f139d5790817e9f1862fa842cfa01340961fc63944185e34480dfb5e8ce",
   "freshness": {
     "status": "fresh",
-    "checked_at": "2026-08-28T09:21:23.287Z",
+    "checked_at": "2026-08-28T09:41:18.163Z",
     "reasons": []
   },
   "integrity_status": "intact",

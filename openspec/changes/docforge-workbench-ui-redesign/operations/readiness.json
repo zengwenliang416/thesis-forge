@@ -1,0 +1,39 @@
+{
+  "schema": "specnav.ops.readiness.v1",
+  "change": "docforge-workbench-ui-redesign",
+  "release_target": "local-only",
+  "ready": true,
+  "verification": {
+    "aggregate_verdict": "green",
+    "receipt_confidence": "A",
+    "uncovered_scope": [],
+    "residual_risk": [
+      "The zero-lineage and successor-generation fixes are project-local governance overrides.",
+      "The complete Verification implementation is resolved from the existing read-only verification worktree.",
+      "The real archive transaction requires separate explicit approval."
+    ],
+    "generation_id": "generation-69b7ff5204d4f1afdb72de0f",
+    "open_failure_count": 0,
+    "fallback_used": false
+  },
+  "git": {
+    "branch": "zwl/docforge-project-format-v1",
+    "dirty": false,
+    "untracked_reviewed": true,
+    "worktree_mode": "primary-local-worktree",
+    "reviewed_untracked": [
+      "openspec/changes/docforge-workbench-ui-redesign/operations",
+      "openspec/changes/docforge-workbench-ui-redesign/verify/v2"
+    ]
+  },
+  "docs": {
+    "user_facing": false,
+    "changelog": false,
+    "release_notes": false,
+    "readme_updated": true
+  },
+  "ops": {
+    "migrations": "not_required",
+    "postmortem_required": false
+  }
+}

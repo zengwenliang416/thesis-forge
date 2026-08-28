@@ -1,6 +1,6 @@
 {
   "schema": "specnav.verification.report-model.v1",
-  "id": "report-model-0a12e549fb182deeeace5abf4eeec3af6fafb557bf746c4e8e911bbe0ee5a053",
+  "id": "report-model-f7c39f91eb7d3c6972396cf9c6d1e37bceb299bbdb560a6b30052ec4b1810c4e",
   "change_id": "docforge-workbench-ui-redesign",
   "verdict": "green",
   "sources": {
@@ -68,7 +68,7 @@
     "evidence_index_version": 10,
     "evidence_index_digest": "149b1c5040544c113b85ee31b508d9cabe377386930a086e7d61b0f0b7e198fe",
     "aggregate_id": "verification-aggregate-c3a843aba221783b9cea2d0007c4dbf53196e2f78ff40920b409eee9761c4c76",
-    "gate_decision_id": "gate-93f7d0ba1ec53f67830dcefdf4eaf561458834d380bc9e78983b2fa8adf0e66c"
+    "gate_decision_id": "gate-99b0a713223107e445c3a459f965e11a07a14cee771f96613a35f70051e76242"
   },
   "summary": {
     "lifecycle_status": "released",
@@ -92,7 +92,7 @@
     "integrity": "intact",
     "freshness": {
       "status": "fresh",
-      "checked_at": "2026-08-28T09:21:23.287Z",
+      "checked_at": "2026-08-28T09:41:18.163Z",
       "reasons": []
     },
     "repair_loop": {
@@ -2114,5 +2114,5 @@
     }
   ],
   "model_version": 2,
-  "generated_at": "2026-08-28T09:21:23.297Z"
+  "generated_at": "2026-08-28T09:41:18.173Z"
 }

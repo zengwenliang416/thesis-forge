@@ -1,15 +1,15 @@
 {
   "schema": "specnav.codegraph.guard_report.v1",
-  "generated_at": "2026-08-28T08:55:50.759Z",
+  "generated_at": "2026-08-28T09:42:19.863Z",
   "active_change": "docforge-workbench-ui-redesign",
-  "stage": "development",
+  "stage": "operations",
   "ok": true,
   "status": {
     "policy": {
       "enabled": true,
       "profile": "active_dev",
       "mode": "advisory",
-      "stage": "development",
+      "stage": "operations",
       "required_for_stage": false,
       "disabled_reason": null
     },
@@ -49,7 +49,7 @@
   },
   "decision": {
     "schema": "specnav.codegraph.decision.v1",
-    "stage": "development",
+    "stage": "operations",
     "profile": "active_dev",
     "effective_mode": "advisory",
     "required_for_stage": false,
@@ -57,7 +57,7 @@
     "result": "pass",
     "blockers": [],
     "warnings": [],
-    "explanation": "CodeGraph policy satisfied for development."
+    "explanation": "CodeGraph policy satisfied for operations."
   },
   "evidence_index": {
     "schema": "specnav.codegraph.evidence_index.v1",
@@ -95,17 +95,21 @@
   },
   "claims_report": {
     "schema": "specnav.codegraph.claims_report.v1",
-    "generated_at": "2026-08-28T08:55:50.759Z",
+    "generated_at": "2026-08-28T09:42:19.863Z",
     "active_change": "docforge-workbench-ui-redesign",
     "claims_file": "openspec/changes/docforge-workbench-ui-redesign/codegraph/claims-map.json",
     "evidence_index": "openspec/changes/docforge-workbench-ui-redesign/codegraph/evidence-index.json",
-    "claims_count": 1,
+    "claims_count": 2,
     "verified_claims": [
       "development:task-001-docforge-workbench-redesign"
     ],
-    "unverified_claims": [],
+    "unverified_claims": [
+      "verification:task-001-docforge-workbench-redesign"
+    ],
     "blockers": [],
-    "warnings": []
+    "warnings": [
+      "codegraph:claim-unverified:verification:task-001-docforge-workbench-redesign"
+    ]
   },
   "drift": {
     "schema": "specnav.codegraph.drift.v1",
@@ -114,5 +118,7 @@
     "blockers": []
   },
   "blockers": [],
-  "warnings": []
+  "warnings": [
+    "codegraph:claim-unverified:verification:task-001-docforge-workbench-redesign"
+  ]
 }
