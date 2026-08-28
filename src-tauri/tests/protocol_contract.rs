@@ -3,10 +3,11 @@ use docforge_desktop::{
     DEFAULT_REVIEW_MARKDOWN_PATH, DEFAULT_SOURCE_PATH, FinalPreviewDescriptor,
     LivePreviewOutputState, MANIFEST_FILENAME, OBSOLETE_BUILD_REPORT_SCHEMA_VERSION,
     OBSOLETE_PROTOCOL_VERSION, PROJECT_SCHEMA_VERSION, PROTOCOL_VERSION, PreviewAuthorizationState,
-    acceptance_source_override, authorize_build_preview, cleanup_live_preview_output_path,
-    cleanup_live_preview_path, derived_preview_path, live_preview_output_path, open_source_path,
-    prepare_build_preview_authorization, read_pdf_preview_path, validate_final_preview_descriptor,
-    validate_request, windows_acceptance_browser_args,
+    acceptance_project_override, acceptance_source_override, authorize_build_preview,
+    cleanup_live_preview_output_path, cleanup_live_preview_path, derived_preview_path,
+    live_preview_output_path, open_source_path, prepare_build_preview_authorization,
+    read_pdf_preview_path, validate_final_preview_descriptor, validate_request,
+    windows_acceptance_browser_args,
 };
 use serde_json::json;
 use std::path::Path;
@@ -105,6 +106,46 @@ fn opens_the_explicit_native_acceptance_source_without_a_system_picker() {
 #[test]
 fn keeps_the_native_acceptance_source_seam_disabled_by_default() {
     assert_eq!(acceptance_source_override(None).unwrap(), None);
+}
+
+#[test]
+fn opens_the_explicit_native_acceptance_project_without_a_system_picker() {
+    let directory = tempfile::tempdir().unwrap();
+    std::fs::write(
+        directory.path().join(MANIFEST_FILENAME),
+        format!("schema: {PROJECT_SCHEMA_VERSION}\nproject:\n  id: acceptance-project\n"),
+    )
+    .unwrap();
+    std::fs::write(
+        directory.path().join(DEFAULT_SOURCE_PATH),
+        "# Windows acceptance\n",
+    )
+    .unwrap();
+
+    let opened = acceptance_project_override(Some(directory.path().as_os_str()))
+        .unwrap()
+        .expect("acceptance project");
+
+    assert_eq!(opened["project"]["id"], "acceptance-project");
+    assert_eq!(opened["source"]["fileName"], DEFAULT_SOURCE_PATH);
+    assert_eq!(opened["text"], "# Windows acceptance\n");
+}
+
+#[test]
+fn keeps_the_native_acceptance_project_seam_disabled_by_default() {
+    assert_eq!(acceptance_project_override(None).unwrap(), None);
+}
+
+#[test]
+fn rejects_a_markdown_path_as_an_acceptance_project() {
+    let directory = tempfile::tempdir().unwrap();
+    let source = directory.path().join(DEFAULT_SOURCE_PATH);
+    std::fs::write(&source, "# Not a project root\n").unwrap();
+
+    let error = acceptance_project_override(Some(source.as_os_str()))
+        .expect_err("source and project overrides must remain separate");
+
+    assert!(error.contains("directory or docforge.yaml"));
 }
 
 #[test]

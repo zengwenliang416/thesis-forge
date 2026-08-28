@@ -35,6 +35,7 @@ pub const OBSOLETE_PROJECT_SCHEMA_PREFIX: &str = "thesisforge.project.";
 pub const OBSOLETE_PROTOCOL_VERSION: &str = "thesisforge.workbench.v1";
 pub const OBSOLETE_BUILD_REPORT_SCHEMA_VERSION: &str = "thesisforge.build-report.v2";
 const WINDOWS_ACCEPTANCE_CDP_PORT_ENV: &str = "DOCFORGE_WINDOWS_CDP_PORT";
+const WINDOWS_ACCEPTANCE_PROJECT_ENV: &str = "DOCFORGE_WINDOWS_ACCEPTANCE_PROJECT";
 const WINDOWS_ACCEPTANCE_SOURCE_ENV: &str = "DOCFORGE_WINDOWS_ACCEPTANCE_SOURCE";
 const SIDECAR_EXECUTABLE_ENV: &str = "DOCFORGE_SIDECAR_EXECUTABLE";
 const PYTHON_ENV: &str = "DOCFORGE_PYTHON";
@@ -371,6 +372,13 @@ pub fn acceptance_source_override(raw_path: Option<&OsStr>) -> Result<Option<Val
         return Ok(None);
     };
     open_source_path(Path::new(raw_path)).map(Some)
+}
+
+pub fn acceptance_project_override(raw_path: Option<&OsStr>) -> Result<Option<Value>, String> {
+    let Some(raw_path) = raw_path.filter(|value| !value.is_empty()) else {
+        return Ok(None);
+    };
+    open_project_path(Path::new(raw_path)).map(Some)
 }
 
 fn sidecar_command(stream: bool) -> (String, Vec<String>) {
@@ -1155,6 +1163,11 @@ async fn pick_source() -> Result<Option<Value>, String> {
 
 #[tauri::command]
 async fn pick_project() -> Result<Option<Value>, String> {
+    if let Some(opened) =
+        acceptance_project_override(env::var_os(WINDOWS_ACCEPTANCE_PROJECT_ENV).as_deref())?
+    {
+        return Ok(Some(opened));
+    }
     let handle = rfd::AsyncFileDialog::new()
         .set_title("选择 DocForge 项目")
         .pick_folder()
