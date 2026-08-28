@@ -34,6 +34,7 @@ EXAMPLE_TEMPLATE = (
     ROOT / "templates" / "schools" / "example-university" / "2026.yaml"
 )
 CLI = ROOT / ".venv" / "bin" / "docforge"
+BUNDLED_BACHELOR_PROJECT = ROOT / "examples" / "bachelor-thesis"
 
 ACCEPTANCE_SOURCE = """# 摘要 {#chap:abstract-zh}
 
@@ -298,6 +299,23 @@ def _run_cli(tmp_path: Path, *arguments: str) -> subprocess.CompletedProcess[str
         text=True,
         timeout=30,
     )
+
+
+def test_bundled_bachelor_project_validates_and_builds_offline(tmp_path: Path):
+    output = tmp_path / "bachelor-thesis.docx"
+
+    validate = _run_cli(tmp_path, "validate", str(BUNDLED_BACHELOR_PROJECT))
+    build = _run_cli(
+        tmp_path,
+        "build",
+        str(BUNDLED_BACHELOR_PROJECT),
+        "-o",
+        str(output),
+    )
+
+    assert validate.returncode == 0, validate.stderr or validate.stdout
+    assert build.returncode == 0, build.stderr or build.stdout
+    validate_docx_package(output)
 
 
 def _materialize_project(

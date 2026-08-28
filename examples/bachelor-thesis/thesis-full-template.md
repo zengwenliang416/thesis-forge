@@ -165,7 +165,7 @@ title: "表格目录"
 
 ## 技术路线 {#sec:technical-route}
 
-本文技术路线如 @fig:technical-route 所示。
+本文技术路线如[图](#fig:technical-route)所示。
 
 ::: figure {#fig:technical-route}
 src: "./images/technical-route.png"
@@ -195,7 +195,7 @@ width: "85%"
 
 ### 公式示例
 
-正文中可引用公式，如 @eq:example-equation 所示。
+正文中可引用公式，如[式](#eq:example-equation)所示。
 
 ::: equation {#eq:example-equation}
 $$
@@ -221,7 +221,7 @@ caption: "总体架构"
 width: "90%"
 :::
 
-如 @fig:architecture 所示，整体方案包括……
+如[图](#fig:architecture)所示，整体方案包括……
 
 ## 数据或研究对象 {#sec:data}
 
@@ -277,7 +277,7 @@ caption: "实验环境配置"
 
 :::
 
-实验环境如 @tbl:environment 所示。
+实验环境如[表](#tbl:environment)所示。
 
 ## 数据集与数据处理 {#sec:dataset}
 
@@ -293,7 +293,7 @@ caption: "数据集统计"
 
 :::
 
-数据集统计信息见 @tbl:dataset。
+数据集统计信息见[表](#tbl:dataset)。
 
 ## 实验参数 {#sec:parameters}
 
@@ -364,7 +364,7 @@ caption: "不同方法实验结果对比"
 
 :::
 
-根据 @tbl:main-results 可以看出……
+根据[表](#tbl:main-results)可以看出……
 
 ## 结果可视化 {#sec:visualization}
 
@@ -374,7 +374,7 @@ caption: "实验结果可视化"
 width: "80%"
 :::
 
-实验结果如 @fig:results 所示。
+实验结果如[图](#fig:results)所示。
 
 ## 对比实验 {#sec:comparison}
 
@@ -564,19 +564,19 @@ class Model:
 [@ref-example-1; @ref-example-2]
 
 图引用：
-@fig:architecture
+[图](#fig:architecture)
 
 表引用：
-@tbl:main-results
+[表](#tbl:main-results)
 
 公式引用：
-@eq:example-equation
+[式](#eq:example-equation)
 
 算法引用：
-@alg:main
+[算法](#alg:main)
 
 代码引用：
-@lst:example
+[代码](#lst:example)
 
 脚注：
 正文中的说明文字[^note-1]

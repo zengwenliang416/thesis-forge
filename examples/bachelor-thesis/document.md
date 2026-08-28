@@ -27,7 +27,7 @@ Keywords: Markdown; thesis compiler; OOXML; deterministic build
 
 ## 技术路线 {#sec:technical-route}
 
-系统总体架构如 @fig:architecture 所示。
+系统总体架构如[图](#fig:architecture)所示。
 
 ![DocForge 确定性编译架构](images/acceptance-architecture.png){#fig:architecture}
 
@@ -35,7 +35,7 @@ Keywords: Markdown; thesis compiler; OOXML; deterministic build
 
 ## 编译流水线 {#sec:pipeline}
 
-系统采用 Markdown -> ForgeDocument -> Validation -> Template -> RenderPlan -> DOCX 的单向编译链路，其抽象关系见 @eq:pipeline。
+系统采用 Markdown -> ForgeDocument -> Validation -> Template -> RenderPlan -> DOCX 的单向编译链路，其抽象关系见[式](#eq:pipeline)。
 
 $$
 D_{docx} = R(C(V(P(D_{md}))))
@@ -44,7 +44,7 @@ $$
 
 ## 能力模型 {#sec:capabilities}
 
-V1 核心能力见 @tbl:capabilities。
+V1 核心能力见[表](#tbl:capabilities)。
 
 | 能力 | 输入 | DOCX 输出 |
 | --- | --- | --- |
@@ -57,7 +57,7 @@ V1 核心能力见 @tbl:capabilities。
 
 ## 安全构建算法 {#sec:safe-build}
 
-安全构建流程见 @alg:build。
+安全构建流程见[算法](#alg:build)。
 
 ```algorithm {#alg:build title="安全构建流程"}
 1. 解析并验证本地输入；
@@ -70,7 +70,7 @@ V1 核心能力见 @tbl:capabilities。
 
 ## 应用服务接口 {#sec:application-service}
 
-核心服务接口示意见 @lst:service。
+核心服务接口示意见[代码](#lst:service)。
 
 ```python {#lst:service title="安全构建服务调用"}
 result = build_service(
@@ -87,7 +87,7 @@ result = build_service(
 
 ## Word 对象验收 {#sec:word-acceptance}
 
-验收包包含真实目录字段、图表与公式编号字段、交叉引用字段、页码字段、OMML、脚注、页眉页脚及多个节。图 @fig:architecture、表 @tbl:capabilities 和式 @eq:pipeline 均可在 Word 客户端中继续编辑。
+验收包包含真实目录字段、图表与公式编号字段、交叉引用字段、页码字段、OMML、脚注、页眉页脚及多个节。[图](#fig:architecture)、[表](#tbl:capabilities)和[式](#eq:pipeline)均可在 Word 客户端中继续编辑。
 
 # 结论与展望 {#chap:conclusion}
 
