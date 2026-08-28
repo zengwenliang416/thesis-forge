@@ -1,0 +1,28 @@
+{
+  "schema": "docforge.operations.archive-attempt.v1",
+  "attempted_at": "2026-08-28T13:21:11.304Z",
+  "change_id": "docforge-workbench-ui-redesign",
+  "head": "7dce543c41a4b2fd9f00a7546480eb369bc55eba",
+  "ok": false,
+  "phase": "archive-gate",
+  "blockers": [
+    "verification-release:canonical-rebuild-failed",
+    "verification-release:canonical-report-model-mismatch",
+    "verification-release:report-readings-mismatch",
+    "readiness-before-verification-green"
+  ],
+  "rollback": {
+    "ok": true,
+    "blockers": []
+  },
+  "root_cause": "The non-dry-run archive transaction created openspec/.specnav/archive.lock before canonical Verification reconstruction, and Git cleanliness treated the owned transient lock as an untracked worktree change.",
+  "resolution": "Ignore only /openspec/.specnav/archive.lock/ as ephemeral transaction state while retaining dirty-worktree rejection for every other path.",
+  "raw_output_sha256": "7c7e6ecc3ca3935b463559fc25c00fc633e5a25facbbc9aca18c485813a6dd03",
+  "boundaries": {
+    "real_archive_executed": false,
+    "archive_directory_created": false,
+    "source_change_restored": true,
+    "archive_lock_removed": true,
+    "push_executed": false
+  }
+}
