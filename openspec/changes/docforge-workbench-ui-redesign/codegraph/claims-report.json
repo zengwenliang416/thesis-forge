@@ -1,6 +1,6 @@
 {
   "schema": "specnav.codegraph.claims_report.v1",
-  "generated_at": "2026-08-28T09:42:19.863Z",
+  "generated_at": "2026-08-28T09:47:43.753Z",
   "active_change": "docforge-workbench-ui-redesign",
   "claims_file": "openspec/changes/docforge-workbench-ui-redesign/codegraph/claims-map.json",
   "evidence_index": "openspec/changes/docforge-workbench-ui-redesign/codegraph/evidence-index.json",
