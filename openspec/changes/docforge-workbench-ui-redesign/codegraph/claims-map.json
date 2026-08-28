@@ -1,6 +1,6 @@
 {
   "schema": "specnav.codegraph.claims.v1",
-  "generated_at": "2026-08-25T07:16:43.427Z",
+  "generated_at": "2026-08-28T08:56:07.222Z",
   "active_change": "docforge-workbench-ui-redesign",
   "claims": [
     {
@@ -26,6 +26,42 @@
       ],
       "query_ids": [
         "development:task-001-docforge-workbench-redesign:evidence"
+      ]
+    },
+    {
+      "id": "verification:task-001-docforge-workbench-redesign",
+      "kind": "verification-task-traceability",
+      "stage": "verification",
+      "task_id": "001-docforge-workbench-redesign",
+      "text": "Reframe and recompose the existing shared React workbench from the product",
+      "required": true,
+      "source": "specnav-codegraph-plan",
+      "source_paths": [
+        "openspec/changes/docforge-workbench-ui-redesign/development/tasks/001-docforge-workbench-redesign/brief.md",
+        "openspec/changes/docforge-workbench-ui-redesign/development/tasks/001-docforge-workbench-redesign/context.json"
+      ],
+      "expected_evidence": [
+        "Focused component and reducer regression tests",
+        "Frontend lint, typecheck, unit, build, browser E2E, and real HTTP E2E output",
+        "1440x1024 and 390x844 production screenshots plus design-qa.md",
+        "macOS release build and installed application evidence",
+        "Microsoft Word final preview path verification",
+        "Task report, spec review, quality review, and SpecNav verification evidence"
+      ],
+      "allowed_files": [
+        "frontend/src/components",
+        "frontend/src/styles.css",
+        "frontend/e2e",
+        "frontend/scripts",
+        "frontend/index.html",
+        "src-tauri",
+        "docs",
+        "README.md",
+        "design-qa.md",
+        "openspec/changes/docforge-workbench-ui-redesign"
+      ],
+      "query_ids": [
+        "verification:task-001-docforge-workbench-redesign:evidence"
       ]
     }
   ]

@@ -1,6 +1,6 @@
 {
   "schema": "specnav.codegraph.evidence_query_plan.v1",
-  "generated_at": "2026-08-25T07:16:43.427Z",
+  "generated_at": "2026-08-28T08:56:07.222Z",
   "active_change": "docforge-workbench-ui-redesign",
   "queries": [
     {
@@ -17,6 +17,21 @@
         "tests or verification commands"
       ],
       "command": "node \"$SPECNAV_CODEGRAPH_ROOT/scripts/codegraph-context.js\" --stage development --claim development:task-001-docforge-workbench-redesign --query \"<query>\" --write --json"
+    },
+    {
+      "id": "verification:task-001-docforge-workbench-redesign:evidence",
+      "claim_id": "verification:task-001-docforge-workbench-redesign",
+      "stage": "verification",
+      "task_id": "001-docforge-workbench-redesign",
+      "status": "planned",
+      "query": "Verify the implemented files, symbols, callers, tests, and requirement/prototype traceability for \"Reframe and recompose the existing shared React workbench from the product\" in change \"docforge-workbench-ui-redesign\". Return concrete file paths, symbols, relationships, and any missing implementation evidence.",
+      "expected_evidence": [
+        "file paths",
+        "symbols",
+        "call relationships",
+        "tests or verification commands"
+      ],
+      "command": "node \"$SPECNAV_CODEGRAPH_ROOT/scripts/codegraph-context.js\" --stage verification --claim verification:task-001-docforge-workbench-redesign --query \"<query>\" --write --json"
     }
   ]
 }

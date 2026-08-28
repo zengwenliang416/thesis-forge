@@ -1,0 +1,17 @@
+# command: pnpm frontend:lint
+# exit_status: 0
+# duration_ms: 473
+
+## stdout
+
+> docforge-workspace@ frontend:lint /Volumes/zwl/open_sources/thesis-forge
+> pnpm --dir frontend lint
+
+
+> @docforge/workbench@0.1.0 lint /Volumes/zwl/open_sources/thesis-forge/frontend
+> node scripts/lint.mjs
+
+
+
+## stderr
+(empty)

@@ -1,0 +1,17 @@
+# command: pnpm frontend:typecheck
+# exit_status: 0
+# duration_ms: 769
+
+## stdout
+
+> docforge-workspace@ frontend:typecheck /Volumes/zwl/open_sources/thesis-forge
+> pnpm --dir frontend typecheck
+
+
+> @docforge/workbench@0.1.0 typecheck /Volumes/zwl/open_sources/thesis-forge/frontend
+> tsc -b --pretty false
+
+
+
+## stderr
+(empty)

@@ -1,0 +1,265 @@
+{
+  "schema": "specnav.task-acceptance-evidence.v2",
+  "generated_by": "specnav-development/task-acceptance-evidence",
+  "task_id": "001-docforge-workbench-redesign",
+  "generated_at": "2026-08-28T08:55:36.138Z",
+  "recorded_at": "2026-08-28T08:55:04.997Z",
+  "status": "approved",
+  "reviewed_git_head": "f440a31018f9635a565346382287c965ad604ece",
+  "reviewed_git_tree": "2f336c5c420f3907c15a5577a8ac539644ebd9d6",
+  "implementation_scope": {
+    "included_patterns": [
+      "README.md",
+      "design-qa.md",
+      "docs",
+      "frontend/e2e",
+      "frontend/index.html",
+      "frontend/scripts",
+      "frontend/src/components",
+      "frontend/src/styles.css",
+      "openspec/changes/docforge-workbench-ui-redesign",
+      "src-tauri"
+    ],
+    "entries": [
+      {
+        "path": "design-qa.md",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "2f14116ad62e3ea3d2cdfc19f53cfcbcc67b8e2d"
+      },
+      {
+        "path": "frontend/index.html",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "f9b9881ef2f5c57d776ba3fa5cbaf55cf48391ee"
+      },
+      {
+        "path": "frontend/src/styles.css",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "e6f0b3c56f79a02367bcd797e7e860e7df1e8789"
+      },
+      {
+        "path": "README.md",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "462fbb29ec0022c4bda24be8045ff39274e9e251"
+      }
+    ],
+    "sha256": "38467119b5082b86afa6f57b6252e94543b0870549ce8acba35c90c38163a458"
+  },
+  "artifacts": {
+    "context": {
+      "path": "development/tasks/001-docforge-workbench-redesign/context.json",
+      "sha256": "420c7846cc820982c16aa184df0c2f3bcf0b69602e50e43065437a5cc1595e93"
+    },
+    "report": {
+      "path": "development/tasks/001-docforge-workbench-redesign/report.md",
+      "sha256": "835d70273ceb5bd1ea84ce529fad69baf4ff508ac10ab908632bcd16b48e6338",
+      "status": "DONE"
+    },
+    "spec_review": {
+      "path": "development/tasks/001-docforge-workbench-redesign/spec-review.md",
+      "sha256": "c6d0869d7fc31a573f220a947e43b0daa0c9557c0bdf01ae0462b66dccdcb81c",
+      "verdict": "approved"
+    },
+    "quality_review": {
+      "path": "development/tasks/001-docforge-workbench-redesign/quality-review.md",
+      "sha256": "3da5160cf418faa0edb725282528ee728b5b971357716b41347831d8af966b8c",
+      "verdict": "approved"
+    }
+  },
+  "test_runs": [
+    {
+      "id": "receipt-1c8728f21dee7fa1a5d2cf1327c266e267e69b985f647f76ac84f24e1b8f07da",
+      "command": "cargo test --manifest-path src-tauri/Cargo.toml",
+      "assertion_ids": [
+        "A1",
+        "A2",
+        "A3",
+        "A4",
+        "A5"
+      ],
+      "recorded_at": "2026-08-28T08:55:04.997Z",
+      "validation_receipt_sha256": "66828b80b3222085749eb56e50518d75c6286bb45c478552881aed8448251409",
+      "evidence_log": {
+        "path": "development/evidence/006-001-docforge-workbench-redesign.log",
+        "sha256": "dd62e2d87b9a780edaedd232b07ef3c0923e550bf00256f80d22fcb9302a166b",
+        "size": 7037
+      }
+    },
+    {
+      "id": "receipt-26742d27784e37dc65b734552e55a230c811ebc2e0851a91fbcede93a6aa2fb8",
+      "command": "pnpm frontend:test",
+      "assertion_ids": [
+        "A1",
+        "A2",
+        "A3",
+        "A4",
+        "A5"
+      ],
+      "recorded_at": "2026-08-28T08:54:33.977Z",
+      "validation_receipt_sha256": "e6d0c572e46288389acb27f427126ba4fa2a267ce21bc750e8960b9ae889874a",
+      "evidence_log": {
+        "path": "development/evidence/001-001-docforge-workbench-redesign.log",
+        "sha256": "abb31c447c84642392fc85f518dbc77c98f8f8ba3c89188e8f2b8ba1a0929399",
+        "size": 541
+      }
+    },
+    {
+      "id": "receipt-6cc27ae892d5302146e4770890827ff5ba9a87114296e07f4d14fe062f330b34",
+      "command": "pnpm frontend:lint",
+      "assertion_ids": [
+        "A1",
+        "A2",
+        "A3",
+        "A4",
+        "A5"
+      ],
+      "recorded_at": "2026-08-28T08:54:35.231Z",
+      "validation_receipt_sha256": "09c848af48c3ac7d09458823cee7f86d9acb3f5fc2b9c6b06c8315852b3b8468",
+      "evidence_log": {
+        "path": "development/evidence/003-001-docforge-workbench-redesign.log",
+        "sha256": "772b877268e9432967c87a7374110b489a24280ddc151824e3a895671d517e1c",
+        "size": 308
+      }
+    },
+    {
+      "id": "receipt-778377fd1035f0b2b986743bfceeef0f59a844cc5037344d6ad15e027e91f181",
+      "command": "pnpm frontend:typecheck",
+      "assertion_ids": [
+        "A1",
+        "A2",
+        "A3",
+        "A4",
+        "A5"
+      ],
+      "recorded_at": "2026-08-28T08:54:34.753Z",
+      "validation_receipt_sha256": "06606e875a320b06bc7a22ecbd82df816fba27784a139e3ca5243839815e1852",
+      "evidence_log": {
+        "path": "development/evidence/002-001-docforge-workbench-redesign.log",
+        "sha256": "36d7c6bded44e639e54a3fd1a9545f947e4926765871813ece549c2283d55cce",
+        "size": 328
+      }
+    },
+    {
+      "id": "receipt-a3623bf9116840a4537c168ea5662d4aa8b16d4f4289589964d5e4186397caef",
+      "command": "pnpm frontend:e2e",
+      "assertion_ids": [
+        "A1",
+        "A2",
+        "A3",
+        "A4",
+        "A5"
+      ],
+      "recorded_at": "2026-08-28T08:54:54.965Z",
+      "validation_receipt_sha256": "b480bb116081d6d14a96a35bc80726a1d93698f914f6968823ef4c89a0d39b98",
+      "evidence_log": {
+        "path": "development/evidence/005-001-docforge-workbench-redesign.log",
+        "sha256": "d3b666fc837a758f236f9d24b06fe0ac4af33e439933a47eb9769b6ef0f12fb0",
+        "size": 8429
+      }
+    },
+    {
+      "id": "receipt-fdb205d41b2d63137a39d8de8030e362acaa14e8b6a4e2143dbaa1c51e0808c1",
+      "command": "pnpm frontend:build",
+      "assertion_ids": [
+        "A1",
+        "A2",
+        "A3",
+        "A4",
+        "A5"
+      ],
+      "recorded_at": "2026-08-28T08:54:36.502Z",
+      "validation_receipt_sha256": "dd80661c57677e0e081645c039777eed934507fbc0cc0db27bb1f79dc4bfb987",
+      "evidence_log": {
+        "path": "development/evidence/004-001-docforge-workbench-redesign.log",
+        "sha256": "6a237641096108ea69fd97ac0347d9b1a123c980e8d8b782bff89987b6795fa9",
+        "size": 666
+      }
+    }
+  ],
+  "assertions": [
+    {
+      "id": "A1",
+      "parent_id": "A1",
+      "status": "passing",
+      "test_run_ids": [
+        "receipt-1c8728f21dee7fa1a5d2cf1327c266e267e69b985f647f76ac84f24e1b8f07da",
+        "receipt-26742d27784e37dc65b734552e55a230c811ebc2e0851a91fbcede93a6aa2fb8",
+        "receipt-6cc27ae892d5302146e4770890827ff5ba9a87114296e07f4d14fe062f330b34",
+        "receipt-778377fd1035f0b2b986743bfceeef0f59a844cc5037344d6ad15e027e91f181",
+        "receipt-a3623bf9116840a4537c168ea5662d4aa8b16d4f4289589964d5e4186397caef",
+        "receipt-fdb205d41b2d63137a39d8de8030e362acaa14e8b6a4e2143dbaa1c51e0808c1"
+      ],
+      "direct_evidence": [],
+      "reused_evidence": [],
+      "claim": "The visible product brand is DocForge and the workbench is described as a general Markdown to Word document workshop."
+    },
+    {
+      "id": "A2",
+      "parent_id": "A2",
+      "status": "passing",
+      "test_run_ids": [
+        "receipt-1c8728f21dee7fa1a5d2cf1327c266e267e69b985f647f76ac84f24e1b8f07da",
+        "receipt-26742d27784e37dc65b734552e55a230c811ebc2e0851a91fbcede93a6aa2fb8",
+        "receipt-6cc27ae892d5302146e4770890827ff5ba9a87114296e07f4d14fe062f330b34",
+        "receipt-778377fd1035f0b2b986743bfceeef0f59a844cc5037344d6ad15e027e91f181",
+        "receipt-a3623bf9116840a4537c168ea5662d4aa8b16d4f4289589964d5e4186397caef",
+        "receipt-fdb205d41b2d63137a39d8de8030e362acaa14e8b6a4e2143dbaa1c51e0808c1"
+      ],
+      "direct_evidence": [],
+      "reused_evidence": [],
+      "claim": "Open, save, validate, template selection, DOCX build, preview mode, Office PDF selection and cancellation retain their current transport behavior."
+    },
+    {
+      "id": "A3",
+      "parent_id": "A3",
+      "status": "passing",
+      "test_run_ids": [
+        "receipt-1c8728f21dee7fa1a5d2cf1327c266e267e69b985f647f76ac84f24e1b8f07da",
+        "receipt-26742d27784e37dc65b734552e55a230c811ebc2e0851a91fbcede93a6aa2fb8",
+        "receipt-6cc27ae892d5302146e4770890827ff5ba9a87114296e07f4d14fe062f330b34",
+        "receipt-778377fd1035f0b2b986743bfceeef0f59a844cc5037344d6ad15e027e91f181",
+        "receipt-a3623bf9116840a4537c168ea5662d4aa8b16d4f4289589964d5e4186397caef",
+        "receipt-fdb205d41b2d63137a39d8de8030e362acaa14e8b6a4e2143dbaa1c51e0808c1"
+      ],
+      "direct_evidence": [],
+      "reused_evidence": [],
+      "claim": "At 1440x1024 the document outline, Markdown editor, Microsoft Word preview and contextual diagnostics match the selected reference hierarchy."
+    },
+    {
+      "id": "A4",
+      "parent_id": "A4",
+      "status": "passing",
+      "test_run_ids": [
+        "receipt-1c8728f21dee7fa1a5d2cf1327c266e267e69b985f647f76ac84f24e1b8f07da",
+        "receipt-26742d27784e37dc65b734552e55a230c811ebc2e0851a91fbcede93a6aa2fb8",
+        "receipt-6cc27ae892d5302146e4770890827ff5ba9a87114296e07f4d14fe062f330b34",
+        "receipt-778377fd1035f0b2b986743bfceeef0f59a844cc5037344d6ad15e027e91f181",
+        "receipt-a3623bf9116840a4537c168ea5662d4aa8b16d4f4289589964d5e4186397caef",
+        "receipt-fdb205d41b2d63137a39d8de8030e362acaa14e8b6a4e2143dbaa1c51e0808c1"
+      ],
+      "direct_evidence": [],
+      "reused_evidence": [],
+      "claim": "The mobile breakpoint exposes outline, editor, preview and diagnostics without horizontal overflow."
+    },
+    {
+      "id": "A5",
+      "parent_id": "A5",
+      "status": "passing",
+      "test_run_ids": [
+        "receipt-1c8728f21dee7fa1a5d2cf1327c266e267e69b985f647f76ac84f24e1b8f07da",
+        "receipt-26742d27784e37dc65b734552e55a230c811ebc2e0851a91fbcede93a6aa2fb8",
+        "receipt-6cc27ae892d5302146e4770890827ff5ba9a87114296e07f4d14fe062f330b34",
+        "receipt-778377fd1035f0b2b986743bfceeef0f59a844cc5037344d6ad15e027e91f181",
+        "receipt-a3623bf9116840a4537c168ea5662d4aa8b16d4f4289589964d5e4186397caef",
+        "receipt-fdb205d41b2d63137a39d8de8030e362acaa14e8b6a4e2143dbaa1c51e0808c1"
+      ],
+      "direct_evidence": [],
+      "reused_evidence": [],
+      "claim": "No frontend UI change introduces a dependency into the parser, domain, compiler, RenderPlan or DOCX renderer."
+    }
+  ],
+  "fallback_used": false
+}

@@ -1,0 +1,97 @@
+# command: pnpm frontend:e2e
+# exit_status: 0
+# duration_ms: 18458
+
+## stdout
+
+> docforge-workspace@ frontend:e2e /Volumes/zwl/open_sources/thesis-forge
+> pnpm --dir frontend e2e && pnpm --dir frontend exec playwright test --config e2e/real-http.playwright.config.ts
+
+
+> @docforge/workbench@0.1.0 e2e /Volumes/zwl/open_sources/thesis-forge/frontend
+> playwright test
+
+
+Running 36 tests using 4 workers
+
+  ✓   3 [desktop-chromium] › e2e/workbench.spec.ts:168:1 › launches the shared workbench with keyboard-visible controls (1.9s)
+  ✓   1 [minimum-desktop-chromium] › e2e/workbench.spec.ts:168:1 › launches the shared workbench with keyboard-visible controls (2.0s)
+  -   5 [desktop-chromium] › e2e/workbench.spec.ts:195:1 › uses mobile panel navigation without horizontal overflow
+  -   6 [minimum-desktop-chromium] › e2e/workbench.spec.ts:195:1 › uses mobile panel navigation without horizontal overflow
+  -   7 [desktop-chromium] › e2e/workbench.spec.ts:219:1 › keeps the product identity and compact actions visible on mobile
+  ✓   4 [minimum-desktop-chromium] › e2e/acceptance.spec.ts:163:1 › verifies empty, disabled, keyboard-focus, contrast, resize, and reduced motion (2.2s)
+  ✓   2 [desktop-chromium] › e2e/acceptance.spec.ts:163:1 › verifies empty, disabled, keyboard-focus, contrast, resize, and reduced motion (2.2s)
+  -   8 [minimum-desktop-chromium] › e2e/workbench.spec.ts:219:1 › keeps the product identity and compact actions visible on mobile
+  -  12 [minimum-desktop-chromium] › e2e/workbench.spec.ts:242:1 › opens, edits, explicitly saves, refreshes, and builds through HTTP
+  -  11 [desktop-chromium] › e2e/acceptance.spec.ts:214:1 › saves with Ctrl+S when the minimum desktop toolbar hides secondary actions
+  -  13 [minimum-desktop-chromium] › e2e/workbench.spec.ts:371:1 › loads and refreshes a complete automatic PDF after an edit
+  -  15 [minimum-desktop-chromium] › e2e/workbench.spec.ts:481:1 › cancels an active Web build and retries without losing prior output
+  -  16 [minimum-desktop-chromium] › e2e/workbench.spec.ts:563:1 › selects a template and blocks build on an activated fatal diagnostic
+  ✓  14 [desktop-chromium] › e2e/acceptance.spec.ts:267:1 › verifies loading and permission recovery without losing the opened source (893ms)
+  ✓  10 [minimum-desktop-chromium] › e2e/acceptance.spec.ts:214:1 › saves with Ctrl+S when the minimum desktop toolbar hides secondary actions (1.2s)
+  -  19 [minimum-desktop-chromium] › e2e/acceptance.spec.ts:267:1 › verifies loading and permission recovery without losing the opened source
+  -  20 [minimum-desktop-chromium] › e2e/acceptance.spec.ts:316:1 › verifies populated, dirty, and successful output states with the complete preview
+  ✓   9 [desktop-chromium] › e2e/workbench.spec.ts:242:1 › opens, edits, explicitly saves, refreshes, and builds through HTTP (1.5s)
+  ✓  17 [minimum-desktop-chromium] › e2e/workbench.spec.ts:645:1 › preserves keyboard focus order and panel resizing at desktop widths (674ms)
+  ✓  18 [desktop-chromium] › e2e/acceptance.spec.ts:316:1 › verifies populated, dirty, and successful output states with the complete preview (969ms)
+  -  22 [mobile-chromium] › e2e/acceptance.spec.ts:163:1 › verifies empty, disabled, keyboard-focus, contrast, resize, and reduced motion
+  -  24 [mobile-chromium] › e2e/acceptance.spec.ts:214:1 › saves with Ctrl+S when the minimum desktop toolbar hides secondary actions
+  -  25 [mobile-chromium] › e2e/acceptance.spec.ts:267:1 › verifies loading and permission recovery without losing the opened source
+  -  26 [mobile-chromium] › e2e/acceptance.spec.ts:316:1 › verifies populated, dirty, and successful output states with the complete preview
+  ✓  23 [mobile-chromium] › e2e/workbench.spec.ts:168:1 › launches the shared workbench with keyboard-visible controls (562ms)
+  ✓  27 [mobile-chromium] › e2e/workbench.spec.ts:195:1 › uses mobile panel navigation without horizontal overflow (548ms)
+  ✓  28 [mobile-chromium] › e2e/workbench.spec.ts:219:1 › keeps the product identity and compact actions visible on mobile (445ms)
+  -  29 [mobile-chromium] › e2e/workbench.spec.ts:242:1 › opens, edits, explicitly saves, refreshes, and builds through HTTP
+  -  30 [mobile-chromium] › e2e/workbench.spec.ts:371:1 › loads and refreshes a complete automatic PDF after an edit
+  -  31 [mobile-chromium] › e2e/workbench.spec.ts:481:1 › cancels an active Web build and retries without losing prior output
+  -  32 [mobile-chromium] › e2e/workbench.spec.ts:563:1 › selects a template and blocks build on an activated fatal diagnostic
+  -  33 [mobile-chromium] › e2e/workbench.spec.ts:645:1 › preserves keyboard focus order and panel resizing at desktop widths
+  ✓  21 [desktop-chromium] › e2e/workbench.spec.ts:371:1 › loads and refreshes a complete automatic PDF after an edit (3.8s)
+  ✓  34 [desktop-chromium] › e2e/workbench.spec.ts:481:1 › cancels an active Web build and retries without losing prior output (618ms)
+  ✓  35 [desktop-chromium] › e2e/workbench.spec.ts:563:1 › selects a template and blocks build on an activated fatal diagnostic (469ms)
+  ✓  36 [desktop-chromium] › e2e/workbench.spec.ts:645:1 › preserves keyboard focus order and panel resizing at desktop widths (394ms)
+
+  20 skipped
+  16 passed (12.6s)
+
+Running 1 test using 1 worker
+
+  ✓  1 [real-http-chromium] › e2e/real-http.acceptance.ts:37:1 › runs the Web workbench through the real Python HTTP adapter (737ms)
+
+  1 passed (4.1s)
+
+
+## stderr
+[WebServer] (node:40051) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:40066) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+(node:40074) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:40077) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:40076) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:40075) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:41002) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:41005) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:45521) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:45577) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] 127.0.0.1 - - [28/Aug/2026 16:54:53] "GET / HTTP/1.1" 200 586
+(node:45748) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] 127.0.0.1 - - [28/Aug/2026 16:54:54] "GET / HTTP/1.1" 200 586
+[WebServer] 127.0.0.1 - - [28/Aug/2026 16:54:54] "GET /assets/index-l4RSGFh1.js HTTP/1.1" 200 275262
+[WebServer] 127.0.0.1 - - [28/Aug/2026 16:54:54] "GET /assets/index-C8Sf9Qpd.css HTTP/1.1" 200 21205
+[WebServer] 127.0.0.1 - - [28/Aug/2026 16:54:54] "POST /api/v1/workspaces HTTP/1.1" 201 407
+[WebServer] 127.0.0.1 - - [28/Aug/2026 16:54:54] "POST /api/v1/dispatch HTTP/1.1" 200 1364
+[WebServer] 127.0.0.1 - - [28/Aug/2026 16:54:54] "POST /api/v1/dispatch HTTP/1.1" 200 144
+[WebServer] 127.0.0.1 - - [28/Aug/2026 16:54:54] "POST /api/v1/dispatch HTTP/1.1" 200 1404
+[WebServer] 127.0.0.1 - - [28/Aug/2026 16:54:54] "POST /api/v1/dispatch HTTP/1.1" 200 1404
+[WebServer] 127.0.0.1 - - [28/Aug/2026 16:54:54] "POST /api/v1/build-stream HTTP/1.1" 200 1610
+

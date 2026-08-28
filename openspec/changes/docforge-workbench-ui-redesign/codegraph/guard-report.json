@@ -1,6 +1,6 @@
 {
   "schema": "specnav.codegraph.guard_report.v1",
-  "generated_at": "2026-08-25T08:42:39.706Z",
+  "generated_at": "2026-08-28T08:55:50.759Z",
   "active_change": "docforge-workbench-ui-redesign",
   "stage": "development",
   "ok": true,
@@ -34,10 +34,10 @@
       "initialized": true,
       "projectPath": "/Volumes/zwl/open_sources/thesis-forge",
       "indexPath": "/Volumes/zwl/open_sources/thesis-forge/.codegraph",
-      "lastIndexed": "2026-08-25T08:12:03.804Z",
-      "fileCount": 316,
-      "nodeCount": 6539,
-      "edgeCount": 20495,
+      "lastIndexed": "2026-08-28T08:05:26.429Z",
+      "fileCount": 481,
+      "nodeCount": 8904,
+      "edgeCount": 28943,
       "pendingChanges": {
         "added": 0,
         "modified": 0,
@@ -95,7 +95,7 @@
   },
   "claims_report": {
     "schema": "specnav.codegraph.claims_report.v1",
-    "generated_at": "2026-08-25T08:42:39.706Z",
+    "generated_at": "2026-08-28T08:55:50.759Z",
     "active_change": "docforge-workbench-ui-redesign",
     "claims_file": "openspec/changes/docforge-workbench-ui-redesign/codegraph/claims-map.json",
     "evidence_index": "openspec/changes/docforge-workbench-ui-redesign/codegraph/evidence-index.json",

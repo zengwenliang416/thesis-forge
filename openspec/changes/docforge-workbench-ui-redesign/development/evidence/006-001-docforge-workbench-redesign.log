@@ -1,0 +1,102 @@
+# command: cargo test --manifest-path src-tauri/Cargo.toml
+# exit_status: 0
+# duration_ms: 10028
+
+## stdout
+
+running 14 tests
+test project_tests::cancellation_path_uses_docforge_namespace ... ok
+test project_tests::rejects_nul_project_sources ... ok
+test project_tests::forged_live_preview_output_does_not_revoke_existing_preview_authorization ... ok
+test project_tests::omitted_source_defaults_to_document_markdown ... ok
+test project_tests::rejects_non_markdown_project_sources ... ok
+test project_tests::rejects_obsolete_manifest_paths_and_directory_entries ... ok
+test project_tests::invalid_build_operation_does_not_revoke_existing_preview_authorization ... ok
+test project_tests::explicit_symlinked_manifest_is_rejected_when_target_is_external ... ok
+test project_tests::standalone_markdown_is_rejected ... ok
+test project_tests::rejects_obsolete_project_schema_in_docforge_manifest ... ok
+test project_tests::project_directory_and_manifest_path_return_identity_and_source ... ok
+test project_tests::traversal_and_missing_source_are_rejected ... ok
+test project_tests::symlinked_manifest_is_rejected_when_it_escapes_root ... ok
+test project_tests::windows_absolute_and_uri_source_values_are_rejected_cross_platform ... ok
+
+test result: ok. 14 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 35 tests
+test accepts_only_strict_path_free_desktop_preview_descriptors ... ok
+test accepts_the_shared_versioned_request_envelope ... ok
+test accepts_the_long_markdown_extension ... ok
+test a_new_failed_or_canceled_build_revokes_the_previous_derived_authorization ... ok
+test builds_loopback_only_webview2_arguments_for_native_acceptance ... ok
+test authorization_rejects_descriptor_drift_and_revocation ... ok
+test a_new_build_revokes_authorization_after_the_old_preview_is_deleted ... ok
+test completed_report_without_preview_passes_through_and_request_drift_fails ... ok
+test derives_only_the_fixed_preview_pdf_sibling ... ok
+test authorization_rejects_a_file_replaced_by_a_symlink_at_read_time ... ok
+test keeps_the_native_acceptance_project_seam_disabled_by_default ... ok
+test keeps_the_native_acceptance_source_seam_disabled_by_default ... ok
+test keeps_webview_remote_debugging_disabled_without_the_acceptance_port ... ok
+test authorization_handles_keep_same_named_pdfs_bound_to_their_selected_paths ... ok
+test authorization_revalidates_symlinks_and_pdf_content_at_read_time ... ok
+test build_success_authorizes_only_the_derived_preview_and_injects_an_opaque_id ... ok
+test a_new_build_revokes_old_authorization_after_preview_becomes_a_symlink ... ok
+test formal_preview_authorization_never_requests_live_cleanup ... ok
+test opens_the_explicit_native_acceptance_source_without_a_system_picker ... ok
+test prepared_live_preview_output_can_be_discarded_before_build_starts ... ok
+test live_preview_output_state_rejects_forged_capabilities_and_releases_idempotently ... ok
+test completed_live_preview_authorization_marks_cleanup_after_read ... ok
+test rejects_a_request_without_an_object_payload ... ok
+test rejects_empty_request_ids_and_operations ... ok
+test live_preview_output_is_unique_and_cleanup_is_scoped_to_its_directory ... ok
+test rejects_obsolete_build_report_before_preview_authorization ... ok
+test reads_a_native_markdown_source_into_the_shared_source_dto ... ok
+test rejects_non_markdown_sources_at_the_native_boundary ... ok
+test rejects_unsafe_native_acceptance_cdp_ports ... ok
+test rejects_obsolete_event_protocol_before_preview_authorization ... ok
+test opens_the_explicit_native_acceptance_project_without_a_system_picker ... ok
+test rejects_a_markdown_path_as_an_acceptance_project ... ok
+test rejects_the_obsolete_protocol_before_spawning_python ... ok
+test rust_identity_matches_the_shared_runtime_fixture ... ok
+test reads_only_regular_pdf_signature_files ... ok
+
+test result: ok. 35 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+
+## stderr
+warning: hard linking files in the incremental compilation cache failed. copying files instead. consider moving the cache directory to a file system which supports hard linking in session dir `/Volumes/zwl/open_sources/thesis-forge/src-tauri/target/debug/incremental/build_script_build-2eqd836nc4lrh/s-hlq1nuw3pg-015ykl1-working`
+
+warning: `docforge-desktop` (build script) generated 1 warning
+   Compiling docforge-desktop v0.1.0 (/Volumes/zwl/open_sources/thesis-forge/src-tauri)
+warning: hard linking files in the incremental compilation cache failed. copying files instead. consider moving the cache directory to a file system which supports hard linking in session dir `/Volumes/zwl/open_sources/thesis-forge/src-tauri/target/debug/incremental/docforge_desktop-2mffcnpubcxyc/s-hlrd9ukrsj-02bhf1l-working`
+
+warning: hard linking files in the incremental compilation cache failed. copying files instead. consider moving the cache directory to a file system which supports hard linking in session dir `/Volumes/zwl/open_sources/thesis-forge/src-tauri/target/debug/incremental/docforge_desktop-0mmpiisd6mpav/s-hlrd9ukrsi-12p0o87-working`
+
+warning: `docforge-desktop` (lib test) generated 1 warning
+warning: `docforge-desktop` (lib) generated 1 warning
+warning: hard linking files in the incremental compilation cache failed. copying files instead. consider moving the cache directory to a file system which supports hard linking in session dir `/Volumes/zwl/open_sources/thesis-forge/src-tauri/target/debug/incremental/docforge_desktop-2oxl72j0so5gq/s-hlrd9xza5x-1azpjth-working`
+
+warning: hard linking files in the incremental compilation cache failed. copying files instead. consider moving the cache directory to a file system which supports hard linking in session dir `/Volumes/zwl/open_sources/thesis-forge/src-tauri/target/debug/incremental/docforge_desktop-22j25vpfzd0xi/s-hlrd9xza55-0xa21p9-working`
+
+warning: hard linking files in the incremental compilation cache failed. copying files instead. consider moving the cache directory to a file system which supports hard linking in session dir `/Volumes/zwl/open_sources/thesis-forge/src-tauri/target/debug/incremental/protocol_contract-085zx54knxvn2/s-hlrd9xz9cp-0jmbswc-working`
+
+warning: `docforge-desktop` (bin "docforge-desktop" test) generated 1 warning
+warning: `docforge-desktop` (bin "docforge-desktop") generated 1 warning
+warning: `docforge-desktop` (test "protocol_contract") generated 1 warning
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 9.32s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/docforge_desktop-3695d8c24da47fe5)
+     Running unittests src/main.rs (src-tauri/target/debug/deps/docforge_desktop-81f54f6f4ab44b1b)
+     Running tests/protocol_contract.rs (src-tauri/target/debug/deps/protocol_contract-1cc3bedfd7178a8e)
+   Doc-tests docforge_desktop
+
