@@ -1,6 +1,6 @@
 {
   "schema": "specnav.codegraph.evidence_index.v1",
-  "generated_at": "2026-08-27T06:36:06.629Z",
+  "generated_at": "2026-08-28T02:51:49.695Z",
   "active_change": "docforge-project-format-v1",
   "source_raw": "openspec/changes/docforge-project-format-v1/codegraph/evidence.jsonl",
   "by_claim": {},

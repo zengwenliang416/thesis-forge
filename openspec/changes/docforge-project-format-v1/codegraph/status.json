@@ -1,22 +1,22 @@
 {
   "schema": "specnav.codegraph.status.v1",
   "ok": true,
-  "generated_at": "2026-08-27T06:36:06.629Z",
+  "generated_at": "2026-08-28T02:51:49.688Z",
   "project_root": "/Volumes/ThesisForgeCI/workspaces/thesis-forge-docforge-verify",
   "active_change": "docforge-project-format-v1",
   "policy": {
     "enabled": true,
     "profile": "bootstrap",
     "mode": "observe",
-    "stage": "verification",
+    "stage": "operations",
     "required_for_stage": false,
     "disabled_reason": null
   },
   "execution_surface": "cli",
   "decision": {
-    "stage": "verification",
+    "stage": "operations",
     "result": "warn",
-    "reason": "CodeGraph policy has advisory warnings for verification."
+    "reason": "CodeGraph policy has advisory warnings for operations."
   },
   "cli": {
     "available": true,

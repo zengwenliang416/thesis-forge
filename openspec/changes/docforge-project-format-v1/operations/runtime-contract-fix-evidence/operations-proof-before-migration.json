@@ -1,0 +1,254 @@
+{
+  "ok": false,
+  "change_id": "docforge-project-format-v1",
+  "proof": {
+    "schema": "specnav.operations.verification-v2-proof.v1",
+    "id": "verification-release-proof-9fce6db365a96bb690246a21e22d3f4e2fd62a2c519b38de8ee6cc65d1293e2f",
+    "generated_at": "2026-08-28T03:15:06.924Z",
+    "change_id": "docforge-project-format-v1",
+    "ok": false,
+    "sources": {
+      "gate_input": "eddffa85cb55f97cb7bb2d4841cbb126db0cc89d164b048fde600410294d9a3c",
+      "runtime_status": "9bb156e739ed957ce2693efef9ee419be0d2456042247c0d43b8a7b60342f3f7",
+      "runtime_authority": "05e2cd3e91a21b04e232807e4ff2404d27d2375a7f525c9fd53c66c7ca633ae4",
+      "case_snapshot": "4d6e579b47866edc36e87b4d2c3e68752eb9a61ca6b2fb86c41fcae2b6b9ca22",
+      "case_approval": "2a95369b227b0aea06572701214939dce7999e98a747e1d2f2ae4064686e388a",
+      "requirements_source": "1be29996779ca103895ae82533a575d01a40c7e7fd29a66063af80881dce51c4",
+      "acceptance_source": "d501e5329e5929cbbdd3d26d2696cfb27946c2643a929d735007406c975659d3",
+      "release_gate": "780dcea2260f7ba325e70863e762be728178250aada158ff13221dc8405a3b64",
+      "archive_gate": "401412e940d6ef2d0652b22fc977c8b8bb99076381ffa4db4517e7aa9db5bd31",
+      "report_model": "ead0f73f5fd3abc2a3699442fe5ee3b60fc8b954d48f03b21f97877dae1df7a4",
+      "report_render_manifest": "2a2c4984a79ab8bc7ebfb973d8a564ae0c5fddd4b04973b94d3fa88adc8dd0ee",
+      "evidence_raw": "f1f257779d2c6c33be5e40f4248c3abb5e8052e816a98757b9a7076f70c68e2e",
+      "evidence_index": "34ad008b3b3299c9028cffc4c3de649a2f0d66bc11bb69719e966ca940444b21",
+      "migration_status": null,
+      "host_proof_pointer": null,
+      "host_installations": null,
+      "cross_host_compatibility": null
+    },
+    "case_snapshot_id": "snapshot-350e6482b5745502bf4c6d6a",
+    "case_approval_id": "approval-350e6482b5745502bf4c6d6a",
+    "case_approval_reviewer_id": "zengwenliang416",
+    "runtime_authority": {
+      "schema": "specnav.verification.runtime-authority.v1",
+      "digest": "05e2cd3e91a21b04e232807e4ff2404d27d2375a7f525c9fd53c66c7ca633ae4",
+      "runtime_version": "2.0.0-alpha.2",
+      "runtime_root": "/Volumes/ThesisForgeCI/workspaces/thesis-forge-docforge-verify/.specnav/runtime/verification/2.0.0-alpha.2",
+      "runtime_scope": "project",
+      "runtime_base": "/Volumes/ThesisForgeCI/workspaces/thesis-forge-docforge-verify/.specnav/runtime/verification",
+      "scope_selection_source": "project-config",
+      "provider_scope": "project",
+      "provider_source": "scope-file",
+      "provider_file": "/Volumes/ThesisForgeCI/workspaces/thesis-forge-docforge-verify/.specnav/secrets/verification.env",
+      "requires_midscene": false,
+      "runtime_lock_sha256": "a2e15237919eaef244adf4bfc7a7b4464e8ecb7545decc8fa3e09b26443cb306",
+      "install_receipt_sha256": "2471af8ccb386098f47ab9d862d1751b591dd800689977f38ce072e87905f832",
+      "package_lock_sha256": "66d6406677cfe66d06ef8fa86c0e819e6d90b9d50654b64eafabcd0cc511db3d",
+      "module_tree_sha256": "bbafecf064b9c7e71edb2ae66b5d5e2c03604001f324dc9f6986faebda4b14f5",
+      "browser_executables": [
+        {
+          "name": "chromium",
+          "executable": "browsers/chromium-1234/chrome-mac-arm64/Google Chrome for Testing.app/Contents/MacOS/Google Chrome for Testing",
+          "sha256": "a596b1cfc6353e987fcec8d71a23a28cd6a9e7a6b4e20b908e4c4fcffe51158e"
+        },
+        {
+          "name": "chromium-headless-shell",
+          "executable": "browsers/chromium_headless_shell-1234/chrome-headless-shell-mac-arm64/chrome-headless-shell",
+          "sha256": "7687bff7cb2db075f250e6d5848bbc8838cac3802ac3952a899c574f8eccab45"
+        },
+        {
+          "name": "ffmpeg",
+          "executable": "browsers/ffmpeg-1011/ffmpeg-mac",
+          "sha256": "662398c99429f5493ff0ff40cdcd97ea25132addcbdedafd0741389964147825"
+        }
+      ],
+      "kernel_contract_digest": "90407bc8ea9c949adf818fe0047eba9fbacff2e9739fd240d68b02be0729e476"
+    },
+    "host_proof_required": false,
+    "host_authority": null,
+    "release_gate": {
+      "id": "gate-06c9aea608721283e67287179ed7b15d0da1cce769d6f2d366d74223b133fa9e",
+      "decision": "pass",
+      "source_case_ids": [
+        "case-a1-project-open",
+        "case-a10-repository-delivery",
+        "case-a2-general-project",
+        "case-a3-academic-profile",
+        "case-a4-obsolete-contracts",
+        "case-a5-neutral-default-paths",
+        "case-a6-path-security",
+        "case-a7-deterministic-docx",
+        "case-a8-runtime-parity",
+        "case-a9-installed-office"
+      ],
+      "source_reading_ids": [
+        "reading-086c4eed0daadfbfe810c79b0cc471981996e0143b335e07d5239530f3df038d",
+        "reading-0a99c391fedd8c4be661671da096617802f49c5584a7c785befbbbc00b40e6b4",
+        "reading-0d82e3797d6a4820bb91a6db8f9d99aeab69354857f1da48d53a90acb2868128",
+        "reading-14d451fc21fb82f12f20c1e48bad355b818330138fd1f220305f2a085a25b86c",
+        "reading-1760ff47e23abb40858ed264f315481c5d6bacb959be1378476acbf71933b237",
+        "reading-1a42cc2fafc19e5b57750eff47a80bc9fe19c290bba9cf6ad6b49788a8714dcf",
+        "reading-223e174bb160299c0e0bbdd0ad1da74325ab2a2669fcf8f31f7fc55aaa0dc15f",
+        "reading-29ac568dd7cadf7231f5ef0539a2974b1f4cbf1b90d770a83d2bbe207da06d6e",
+        "reading-2a62f3013c3b98f044ee52b89978a8e4ef136fbded447d77b34742f01520eeef",
+        "reading-2b8988117c4bcb773cfb5d9c29a543ff7e6e952cfaeb2569188edad0ede6c743",
+        "reading-308a3dd8c09aa2de0d8df17194bfa5091efd220aa40239e541f5993428baa836",
+        "reading-318694ca8ab099b76691adf3c47d42443ecf44f20e863f3b319d08f9653f9b82",
+        "reading-40d8043136a75a9ab4752492c89b6433bd13b8614da02ee38f151a81144e9dd1",
+        "reading-447078b90551cfbe900054331c478a7999acd99b50150e90b4bfbb843271a463",
+        "reading-49a59dd84723ac6ef61d5e205b761bee44fbdd42349996bf67750ba1c3ea9ea2",
+        "reading-4b0daf9ccbd02f3d5453137c44de546a39ddb201dd3b5f62e5b45144b358e508",
+        "reading-4c472b0e572707030042d02547d003f765d4343bf97daa1b8d0eb84187a30143",
+        "reading-5316756e63db3eac76300d9f2ec754a511bdc620284e09b9253bd35bfdc4e5eb",
+        "reading-54ad11cc20d8ae2aa441be15624c00786a1cea7945f60bff6befcb41afc9274d",
+        "reading-576a7ea4f574d68ad190dd6bad844cbf02d8028347d46e5db15bf67adcc8a037",
+        "reading-5d9a2bfc64abe6d687b3e6c0fc2bc9f293d1d9d1d5bd3ca67be36de349a8e316",
+        "reading-5eac99aea29dc8dd80e5042ba1f67e4ae34d61b8f7d8dd68a4ad6ecae071cfcb",
+        "reading-66ec0f4ef87b218672373cc11f82d39a22c36d2f3d043ee21aeffe41b4a5dfc6",
+        "reading-6ccac5e5adb2c7b675ff28a1e8fe5f9141c7418f5b488c429f5d1df453257a5d",
+        "reading-6d34cba167f66ec890f70ad9f1707b29922e17f536e644c0b8ad766f83c2b6bc",
+        "reading-72bfd04f059a869d38acbf1eee7fa22cbf3e28439e9edd2cb33734834aff81fc",
+        "reading-77c7e57a57d90905a44c0edab86bd0a41765b0295d9790782e6179d486139620",
+        "reading-7ba4b62eb85a693250ab87051d43461b6d54391fa4da8e8d5bd22ed0594c1146",
+        "reading-7bac39fb1a4df726d7ac3b4f74824de20c6f8fa8d75571dccb046918ee05c781",
+        "reading-7d6c9629a1cc8d8721fb71e6e90314fb6c4804d9cf924b8e95699d7a9cf1132f",
+        "reading-80a215f33805c7a58fbc986ce154a6c9c59583f9d4ce091ab6878f061f85b503",
+        "reading-89f0bea58aea84294e6e5052ce2af5789980a5e6ef5bb265c5de8e8e624cd109",
+        "reading-8a1fe9e942ec8c63cfc3606fa4c6e82e68c4ff484a601cbdd3a50dab29b55167",
+        "reading-8ccd7a97acc2ffdb1f9a2d5afefe0f4b96aea30bc6779fa3b25bb5fbb198c750",
+        "reading-8f83de0b2de0156b23f5716577beb02877c82caa681ce40bf5dac1543f375d5e",
+        "reading-93123c267cf4a61521dc03e3da9cfb3efd54886c833da24fa4822e58bf7abc36",
+        "reading-9741ce9c9f0be31f5d6571dfa98ccfe0154b0475192d78edf43affd2781fd459",
+        "reading-9b240ed336c23208395b03901b64e115ec26b4fe2a29ae33be64e259404ad510",
+        "reading-a1693b29e2a7c5751b6939990d1e064dc1cdbd94a8087add73958c0f597fca85",
+        "reading-a5e86655f99e4029fc29eaa434e3f0a38d5dc79e3b7145664d79b0393f6077fe",
+        "reading-a9e9b4bdcbf529ddc986e32f18320085dab31eb0f894f2828346557856cb4ad8",
+        "reading-aa3e9628d0d46d49875f15679c104b48117fa2708d552255c2d8d3625fedda41",
+        "reading-b335f77b8743ea72c38ebcbb4d6024038509558324d68de630a924f48a721e90",
+        "reading-b4af9f6e92db6e213579ccb72afd8b4f18289b106da28e443d4cd680afbb4abd",
+        "reading-bd358f5ba1de8c5bd7ce6081ef78a8cc3455da453af80a5db7ed5ab489c2e4cc",
+        "reading-c50cf1770b4d9bcbc9fb0ebc576be63749106a4222ead87a6f958d19f7a91d58",
+        "reading-c7832240ebfe37422d030d3279fdff9980288f118dda46103166065dc7d74ab2",
+        "reading-cba078135f3388edcb05e49b44893ca2c995a3fa99003fbce5a9364046e64d6d",
+        "reading-cdd903e365f3daf83bcdb15e94026fee3ede43679d7b23b1e1e177574905d1a7",
+        "reading-d24bc717f4f8426b5fd90282967816c56fa997775c1dbe94ca694fd14b5a58bd",
+        "reading-d337e1d869b378c5855120680a60d4296711fe2f31c9286699eb28bc9d1561d5",
+        "reading-d5f10bffc51e112a644f896f781cc869892862c8ee03eca9a5b1e2c5f8caf735",
+        "reading-dbab67536bad11cf3d1a3d566f60887f198872ac95265bcd8d1e0ce68775fd64",
+        "reading-e19dc9e0d0fac13cbf9147777c22882d90fc9248fa732820d48181813f64b28a",
+        "reading-e1d0349c3ef8533763d36e53581a93a8cce07fb004a0bab86ea2c702456c8b40",
+        "reading-e8af6f34e857d37410b2e57d88a82c7f45f70816d5f123ecc10c9256c6582e8b",
+        "reading-f5c82feffd16533ad211ebcbce208a701b25443aa366598c9f20bc5a93003b65",
+        "reading-f7861daf6f4872862b075b5594a45f8adb939a8647f0cb270690a46d5f4f4a52",
+        "reading-f89c03ab63ff7a3063bc62a256e73320a5c412607e0af506a53ea9d84bf20f87",
+        "reading-fa0962bd41c1b43d2019329c26ce86049f698a665b15cd144f7002bd8ca4670d"
+      ],
+      "failure_state_status": "valid",
+      "failure_state_digest": "beec65e661c0735fcdc81a20018528f528378b4bf0f5bd2bf81655aaa6385e79",
+      "authority_chain_digest": "47584475c049d089bb83cabe5eb8e2974713863d945175c00f9ecdd44f996767",
+      "evidence_index_version": 200,
+      "runtime_version": "2.0.0-alpha.2",
+      "kernel_version": "2.0.0-alpha.2",
+      "freshness": {
+        "status": "fresh",
+        "checked_at": "2026-08-28T02:16:17.455Z",
+        "reasons": []
+      },
+      "integrity_status": "intact"
+    },
+    "archive_gate": {
+      "id": "gate-07ae53af1a80f67ff4517c87d0405796dd26a9f63ef824ad3136c033c0d272da",
+      "decision": "pass"
+    },
+    "report_model_id": "report-model-29964290c68f9b80869e3de71055a441663c0abfa8a225072103e0c6a23ac623",
+    "evidence_index": {
+      "version": 200,
+      "source_digest": "8341a3b417b8d02a5eda10acd2a5de561eae9bced5f9fd234e5782a31f52cc7d",
+      "record_count": 200,
+      "historical_version": 210,
+      "historical_source_digest": "f1f257779d2c6c33be5e40f4248c3abb5e8052e816a98757b9a7076f70c68e2e",
+      "historical_record_count": 210
+    },
+    "reports": [
+      {
+        "name": "overview.html",
+        "path": "verify/reports/overview.html",
+        "sha256": "22c31d8d6b4fcc055a3a0bc2a377a02b53bee94eca8a62e488dc0d972182c212",
+        "size": 98715
+      },
+      {
+        "name": "test-case-catalog.html",
+        "path": "verify/reports/test-case-catalog.html",
+        "sha256": "3800fef43a3528f4fffddcf1634886ae51c0876276aceb90ff0974c2cdc1d597",
+        "size": 37658
+      },
+      {
+        "name": "test-case-results.html",
+        "path": "verify/reports/test-case-results.html",
+        "sha256": "c175d914e645012b0f7ca084454265f06e24eb9daf6a8d0a84021cd52b06f0b2",
+        "size": 478286
+      }
+    ],
+    "migration": {
+      "required": null,
+      "receipt": null
+    },
+    "hosts": [],
+    "compatibility": null,
+    "blockers": [
+      {
+        "id": "verification-release:canonical-rebuild-failed",
+        "artifact": "verify/v2",
+        "detail": "verification-release:dirty-worktree"
+      },
+      {
+        "id": "verification-release:artifact-missing:verify/v2/migration-status.json",
+        "artifact": "verify/v2/migration-status.json",
+        "detail": null
+      },
+      {
+        "id": "verification-release:migration-status-invalid",
+        "artifact": "verify/v2/migration-status.json",
+        "detail": null
+      },
+      {
+        "id": "verification-release:canonical-report-model-mismatch",
+        "artifact": "verify/v2/report-model.json",
+        "detail": null
+      },
+      {
+        "id": "verification-release:report-readings-mismatch",
+        "artifact": "verify/v2/report-model.json",
+        "detail": null
+      }
+    ],
+    "fallback_used": false
+  },
+  "blockers": [
+    {
+      "id": "verification-release:canonical-rebuild-failed",
+      "artifact": "verify/v2",
+      "detail": "verification-release:dirty-worktree"
+    },
+    {
+      "id": "verification-release:artifact-missing:verify/v2/migration-status.json",
+      "artifact": "verify/v2/migration-status.json",
+      "detail": null
+    },
+    {
+      "id": "verification-release:migration-status-invalid",
+      "artifact": "verify/v2/migration-status.json",
+      "detail": null
+    },
+    {
+      "id": "verification-release:canonical-report-model-mismatch",
+      "artifact": "verify/v2/report-model.json",
+      "detail": null
+    },
+    {
+      "id": "verification-release:report-readings-mismatch",
+      "artifact": "verify/v2/report-model.json",
+      "detail": null
+    }
+  ]
+}

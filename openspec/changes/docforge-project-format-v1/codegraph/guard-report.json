@@ -1,15 +1,15 @@
 {
   "schema": "specnav.codegraph.guard_report.v1",
-  "generated_at": "2026-08-27T06:36:06.629Z",
+  "generated_at": "2026-08-28T02:51:49.750Z",
   "active_change": "docforge-project-format-v1",
-  "stage": "verification",
+  "stage": "operations",
   "ok": true,
   "status": {
     "policy": {
       "enabled": true,
       "profile": "bootstrap",
       "mode": "observe",
-      "stage": "verification",
+      "stage": "operations",
       "required_for_stage": false,
       "disabled_reason": null
     },
@@ -49,7 +49,7 @@
   },
   "decision": {
     "schema": "specnav.codegraph.decision.v1",
-    "stage": "verification",
+    "stage": "operations",
     "profile": "bootstrap",
     "effective_mode": "observe",
     "required_for_stage": false,
@@ -59,11 +59,11 @@
     "warnings": [
       "codegraph:not-indexed"
     ],
-    "explanation": "CodeGraph policy has advisory warnings for verification."
+    "explanation": "CodeGraph policy has advisory warnings for operations."
   },
   "evidence_index": {
     "schema": "specnav.codegraph.evidence_index.v1",
-    "generated_at": "2026-08-27T06:36:06.629Z",
+    "generated_at": "2026-08-28T02:51:49.695Z",
     "active_change": "docforge-project-format-v1",
     "source_raw": "openspec/changes/docforge-project-format-v1/codegraph/evidence.jsonl",
     "by_claim": {},
@@ -74,7 +74,7 @@
   },
   "claims_report": {
     "schema": "specnav.codegraph.claims_report.v1",
-    "generated_at": "2026-08-27T06:36:06.629Z",
+    "generated_at": "2026-08-28T02:51:49.750Z",
     "active_change": "docforge-project-format-v1",
     "claims_file": "openspec/changes/docforge-project-format-v1/codegraph/claims-map.json",
     "evidence_index": "openspec/changes/docforge-project-format-v1/codegraph/evidence-index.json",
