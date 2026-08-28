@@ -5,71 +5,71 @@
       "failure_id": "failure-046667276b7162f8e5ff3393bf25487fc05b2ab68270ff9e12f6f1a9c8656ee5",
       "root_failure_digest": "b22f9535bd5542653cc56fb8cbccfcae7578cd896961fa7b9a5bbc68aa00f729",
       "classification_envelope_id": "trusted-fact-0e1b66680161db161c0c986c2719b70741e8880e4e505a88987e3fa51e12da0f",
-      "logical_status": "repair_required",
-      "transition_receipt_id": null
+      "logical_status": "closed",
+      "transition_receipt_id": "transition-application-600ff72d597b14dd403c806a00796277d493299d5aff03674c92bb7ba67c5bc7"
     },
     {
       "failure_id": "failure-0b7b1bb8ae4396daaf850b9954df7a2cf108ddf9b482e412e7e118bd0f2b05bd",
       "root_failure_digest": "9e4de6c0308ac0fbd129e78a73da04e35e49be84ef8aa98dc230b612b0e39675",
       "classification_envelope_id": "trusted-fact-4a768cd395bf3b70568714df6e6c62658388b065b1a1dc084a5cc2621a001fcd",
-      "logical_status": "repair_required",
-      "transition_receipt_id": null
+      "logical_status": "closed",
+      "transition_receipt_id": "transition-application-7e1df8289a95d0e559b1f86c7cdad89321e23449cb4e2bf2b0182d5e1fb806cd"
     },
     {
       "failure_id": "failure-1ade668829948cfb896aba9e1ff2afce6c7f0604978a8b5a7cadfca7a657f7df",
       "root_failure_digest": "29b14bf4a8ef4aa4206ccf88f6f3817d7d67733b1b70f49b72ad3b79fdf14bfa",
       "classification_envelope_id": "trusted-fact-e8cc9d612197723f4e9995caa2c085aa16aa0903045f9e19f4f638c61c87418e",
-      "logical_status": "repair_required",
-      "transition_receipt_id": null
+      "logical_status": "closed",
+      "transition_receipt_id": "transition-application-54bf69d8efd8426f26fe8260dcc63a2f0e30cd18da21a4d6a1d786a304569379"
     },
     {
       "failure_id": "failure-1cf04e4a2349690194b0df450d9215c4eb41407919e34e6ed4caca28a4496546",
       "root_failure_digest": "24481021e3e2cfc0e6e618698ef57c7061da0b8a898be37a1282494280c74330",
       "classification_envelope_id": "trusted-fact-8ba7b936fbc8252b55b951506777cb46c782162cd6837d67f227033e67cc4614",
-      "logical_status": "repair_required",
-      "transition_receipt_id": null
+      "logical_status": "closed",
+      "transition_receipt_id": "transition-application-7170c71afb74a29f538d312481e3c6cd2350e3cb151817c61481e3fa2b8035b6"
     },
     {
       "failure_id": "failure-460a6bec826047df8fb5695d9f35761718afb7180740ec3edfaba7ca8b7c9c71",
       "root_failure_digest": "01ea3d0cfa23b6cd3148aa8a06679d2d07de5981da5064114675d0ca5fb3ebe2",
       "classification_envelope_id": "trusted-fact-6d8100112cb68c2d786610ffb999f8695feefc535c2def15e3ab85722c77f0ff",
-      "logical_status": "repair_required",
-      "transition_receipt_id": null
+      "logical_status": "closed",
+      "transition_receipt_id": "transition-application-eff9f92a0a6583454974a6517b695d75996ab69a0deafe73f92e54809d8831b3"
     },
     {
       "failure_id": "failure-73f8288bda2544be90b77e2d59f451a19bf1da787426f2bc7fffd960c7e7403a",
       "root_failure_digest": "cc960920a7f3e253b1993ea50b31254606965f5954098dd9541ee2673209cf20",
       "classification_envelope_id": "trusted-fact-a91dadbe886549e0a297004e6e8494c48cdad9ea165fc16c59c1bea3b9b2a91b",
-      "logical_status": "repair_required",
-      "transition_receipt_id": null
+      "logical_status": "closed",
+      "transition_receipt_id": "transition-application-4e273dff1861e3df4447953fa3b0d207de904ff7613930a2a1aa25fa436367df"
     },
     {
       "failure_id": "failure-93a392e01847eefeb57f51d044868cce536d5d29237404cc6e8729fe6847e8d5",
       "root_failure_digest": "17c1e4faa16762beb8973e2678bf2acad18075be5e466d4ef6cba890e797d670",
       "classification_envelope_id": "trusted-fact-162c217132e548e04745699b03b5314ac92dcbd8388f443eb2f89ee47bb5a630",
-      "logical_status": "repair_required",
-      "transition_receipt_id": null
+      "logical_status": "closed",
+      "transition_receipt_id": "transition-application-c54e54e9b02ad63553836e7745b244b9ce662ef3b70f7ccb8f313f75e7b1bde7"
     },
     {
       "failure_id": "failure-98298abaa9086b490c419c2829b887ae15a77d690824d18a273085cf62f64d98",
       "root_failure_digest": "2b2b9cc06493212919c5151b3c45a43e6f116994274aaa1debe0daba1bcfa99d",
       "classification_envelope_id": "trusted-fact-b6a6f581d420ca7898202f9531e18893ca375127a556555edad85954263f1ddc",
-      "logical_status": "repair_required",
-      "transition_receipt_id": null
+      "logical_status": "closed",
+      "transition_receipt_id": "transition-application-4d22e9a63506203ce06cea31db4c853ebc3e63290eeb538f986d0bdc4894b5d1"
     },
     {
       "failure_id": "failure-aea586ad3f508740227d90a29b096d0b54461caa5a1c78f1eb0bfc4871d1b02e",
       "root_failure_digest": "c347f5276995216aaaca6cb4489046ca06084d05d4cd8b8ccabee057325b12de",
       "classification_envelope_id": "trusted-fact-bebeae63a36520007f6a48e5bf8376ea61acb91e03472b90207cac14e082da50",
-      "logical_status": "repair_required",
-      "transition_receipt_id": null
+      "logical_status": "closed",
+      "transition_receipt_id": "transition-application-bfc444d9bad95de5a8a39e1cbf558a15f5e6cb78f0679ad0d64d53e6f317a637"
     },
     {
       "failure_id": "failure-f814ed028e5b2dc94e5db0219d237ceaa8e22ce664031ea163ba1fc267c95791",
       "root_failure_digest": "8677e55f316acd6f555070415cc3edc2f3155f285b03a447f2ad104e06f3468e",
       "classification_envelope_id": "trusted-fact-4ae4094b86c9ed458a58580d119087224327acf1a1195c97cdf6562f870b914b",
-      "logical_status": "repair_required",
-      "transition_receipt_id": null
+      "logical_status": "closed",
+      "transition_receipt_id": "transition-application-047ceca26881162493fc2f197af318a48712ac3da3643da5639ad4f2165f28a6"
     }
   ],
   "effective_failures": [
@@ -91,7 +91,7 @@
         "evidence-c75b197aba5440a4fb22140e9a206b5ba3f1810d57096bb43902eed1025fe654"
       ],
       "classification": "test_defect",
-      "status": "repair_required",
+      "status": "closed",
       "next_action": "repair_required",
       "summary": "The approved command runner omitted the assertion protocol and did not expose the required toolchain PATH.",
       "root_cause": "The case contract declared env_keys=[] and relied on ambient PATH, so the Runtime could neither inject SPECNAV assertion output variables nor consistently locate Rust/Node toolchains.",
@@ -121,7 +121,7 @@
         "evidence-d370d756d2e549524ff52066d23ade4c389bbaef58d8f68e5315709712c43f77"
       ],
       "classification": "test_defect",
-      "status": "repair_required",
+      "status": "closed",
       "next_action": "repair_required",
       "summary": "The approved command runner omitted the assertion protocol required to produce structured assertion_result evidence.",
       "root_cause": "The case contract declared env_keys=[], so the Runtime did not inject SPECNAV_VERIFICATION_ASSERTION_IDS or SPECNAV_VERIFICATION_ASSERTION_RESULT_FILE and no authoritative oracle result was emitted.",
@@ -151,7 +151,7 @@
         "evidence-35074758dda797b98ecc6eb036411315fa475102ab097eb7895a834581aa6b30"
       ],
       "classification": "test_defect",
-      "status": "repair_required",
+      "status": "closed",
       "next_action": "repair_required",
       "summary": "The approved command runner omitted the assertion protocol required to produce structured assertion_result evidence.",
       "root_cause": "The case contract declared env_keys=[], so the Runtime did not inject SPECNAV_VERIFICATION_ASSERTION_IDS or SPECNAV_VERIFICATION_ASSERTION_RESULT_FILE and no authoritative oracle result was emitted.",
@@ -181,7 +181,7 @@
         "evidence-311016a8c0a2a6d5ee2d9c3fd4c5165468acac882ae5c8d44200c298c149374d"
       ],
       "classification": "test_defect",
-      "status": "repair_required",
+      "status": "closed",
       "next_action": "repair_required",
       "summary": "The approved command runner omitted the assertion protocol required to produce structured assertion_result evidence.",
       "root_cause": "The case contract declared env_keys=[], so the Runtime did not inject SPECNAV_VERIFICATION_ASSERTION_IDS or SPECNAV_VERIFICATION_ASSERTION_RESULT_FILE and no authoritative oracle result was emitted.",
@@ -211,7 +211,7 @@
         "evidence-f8a546d6992a8b3bd6f5e48f2497e0f05d47e3bc4ae4e6da843a444a8d80b48e"
       ],
       "classification": "test_defect",
-      "status": "repair_required",
+      "status": "closed",
       "next_action": "repair_required",
       "summary": "The approved command runner omitted the assertion protocol required to produce structured assertion_result evidence.",
       "root_cause": "The case contract declared env_keys=[], so the Runtime did not inject SPECNAV_VERIFICATION_ASSERTION_IDS or SPECNAV_VERIFICATION_ASSERTION_RESULT_FILE and no authoritative oracle result was emitted.",
@@ -241,7 +241,7 @@
         "evidence-5867f238b67d55c85f7ceb4f3b0f27997e2ea31c5e19cc153e4c974b54f11cfb"
       ],
       "classification": "test_defect",
-      "status": "repair_required",
+      "status": "closed",
       "next_action": "repair_required",
       "summary": "The approved command runner omitted the assertion protocol required to produce structured assertion_result evidence.",
       "root_cause": "The case contract declared env_keys=[], so the Runtime did not inject SPECNAV_VERIFICATION_ASSERTION_IDS or SPECNAV_VERIFICATION_ASSERTION_RESULT_FILE and no authoritative oracle result was emitted.",
@@ -271,7 +271,7 @@
         "evidence-8eea8974843b75768840990f61c402738ff52a524b325a8c92b6dff8a9dc509a"
       ],
       "classification": "test_defect",
-      "status": "repair_required",
+      "status": "closed",
       "next_action": "repair_required",
       "summary": "The approved command runner omitted the assertion protocol required to produce structured assertion_result evidence.",
       "root_cause": "The case contract declared env_keys=[], so the Runtime did not inject SPECNAV_VERIFICATION_ASSERTION_IDS or SPECNAV_VERIFICATION_ASSERTION_RESULT_FILE and no authoritative oracle result was emitted.",
@@ -301,7 +301,7 @@
         "evidence-a98dea631fd0be3c6d337666501d1aeec730d47125d8c1b5a783ecf318ce7f24"
       ],
       "classification": "test_defect",
-      "status": "repair_required",
+      "status": "closed",
       "next_action": "repair_required",
       "summary": "The approved command runner omitted the assertion protocol and did not expose the required toolchain PATH.",
       "root_cause": "The case contract declared env_keys=[] and relied on ambient PATH, so the Runtime could neither inject SPECNAV assertion output variables nor consistently locate Rust/Node toolchains.",
@@ -331,7 +331,7 @@
         "evidence-7ac424059518b8feb579007e60e2aa292b806488cd0c5f0216cdab49509d64f4"
       ],
       "classification": "test_defect",
-      "status": "repair_required",
+      "status": "closed",
       "next_action": "repair_required",
       "summary": "The approved command runner omitted the assertion protocol required to produce structured assertion_result evidence.",
       "root_cause": "The case contract declared env_keys=[], so the Runtime did not inject SPECNAV_VERIFICATION_ASSERTION_IDS or SPECNAV_VERIFICATION_ASSERTION_RESULT_FILE and no authoritative oracle result was emitted.",
@@ -361,7 +361,7 @@
         "evidence-468d538a74e323bed10761f89a6a88444aa194bb7f09d3dffbef13ad040c5e92"
       ],
       "classification": "test_defect",
-      "status": "repair_required",
+      "status": "closed",
       "next_action": "repair_required",
       "summary": "The approved command runner omitted the assertion protocol and did not expose the required toolchain PATH.",
       "root_cause": "The case contract declared env_keys=[] and relied on ambient PATH, so the Runtime could neither inject SPECNAV assertion output variables nor consistently locate Rust/Node toolchains.",
@@ -374,17 +374,6 @@
       "id": "failure-f814ed028e5b2dc94e5db0219d237ceaa8e22ce664031ea163ba1fc267c95791"
     }
   ],
-  "open_failure_ids": [
-    "failure-046667276b7162f8e5ff3393bf25487fc05b2ab68270ff9e12f6f1a9c8656ee5",
-    "failure-0b7b1bb8ae4396daaf850b9954df7a2cf108ddf9b482e412e7e118bd0f2b05bd",
-    "failure-1ade668829948cfb896aba9e1ff2afce6c7f0604978a8b5a7cadfca7a657f7df",
-    "failure-1cf04e4a2349690194b0df450d9215c4eb41407919e34e6ed4caca28a4496546",
-    "failure-460a6bec826047df8fb5695d9f35761718afb7180740ec3edfaba7ca8b7c9c71",
-    "failure-73f8288bda2544be90b77e2d59f451a19bf1da787426f2bc7fffd960c7e7403a",
-    "failure-93a392e01847eefeb57f51d044868cce536d5d29237404cc6e8729fe6847e8d5",
-    "failure-98298abaa9086b490c419c2829b887ae15a77d690824d18a273085cf62f64d98",
-    "failure-aea586ad3f508740227d90a29b096d0b54461caa5a1c78f1eb0bfc4871d1b02e",
-    "failure-f814ed028e5b2dc94e5db0219d237ceaa8e22ce664031ea163ba1fc267c95791"
-  ],
+  "open_failure_ids": [],
   "blockers": []
 }

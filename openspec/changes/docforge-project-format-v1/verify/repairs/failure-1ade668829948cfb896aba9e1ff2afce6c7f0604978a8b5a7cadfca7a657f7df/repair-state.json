@@ -1,6 +1,6 @@
 {
   "ok": true,
-  "status": "closure_ready",
+  "status": "closed",
   "label": "pass_after_fix",
   "history": [
     {
@@ -163,46 +163,7 @@
       "recorded_at": "2026-08-27T16:31:28.611Z"
     }
   ],
-  "transition_proposal": {
-    "schema": "specnav.verification.transition-proposal.v1",
-    "failure_id": "failure-1ade668829948cfb896aba9e1ff2afce6c7f0604978a8b5a7cadfca7a657f7df",
-    "change_id": "docforge-project-format-v1",
-    "action": "close_failure",
-    "owner": "core",
-    "from_state": "closure_ready",
-    "target_state": "closed",
-    "case_ids": [
-      "case-a1-project-open",
-      "case-a10-repository-delivery",
-      "case-a2-general-project",
-      "case-a3-academic-profile",
-      "case-a4-obsolete-contracts",
-      "case-a5-neutral-default-paths",
-      "case-a6-path-security",
-      "case-a7-deterministic-docx",
-      "case-a8-runtime-parity",
-      "case-a9-installed-office"
-    ],
-    "attempt_ids": [
-      "attempt-20260827064446-2b9dc52f4d4f9ab2",
-      "attempt-20260827144211-6793841c117f6aa4",
-      "attempt-20260827161226-80dc25b33e66483b",
-      "attempt-20260827161420-90360c07b36f5a83",
-      "attempt-20260827161613-80357784e92bb334",
-      "attempt-20260827161810-e15323e4af3fc641",
-      "attempt-20260827162004-1f30b99ca6a0173d",
-      "attempt-20260827162341-3466701fc0c9282c",
-      "attempt-20260827162552-3751533e59997432",
-      "attempt-20260827162917-967c8165e005b7cd",
-      "attempt-20260827163101-0e338648a7e89cce"
-    ],
-    "reason_ids": [
-      "required-regression-passed"
-    ],
-    "repair_link_id": "repair-superseded-5c7ee1a547bede739eec7cb469863b3ffdc142fbab48991f1ca336e40beef9d9",
-    "scope_digest": "0b3e54dc9e31513abc8284ec8c3d18b4248b3d1576a0b61c65a5e9cd95401df6",
-    "proposed_at": "2026-08-27T16:31:28.611Z",
-    "id": "transition-c2b35a16d74621fc7ed8b3470d95d6fd3113881fc2a3a6b9efc0069e5a74415d"
-  },
-  "blockers": []
+  "transition_proposal": null,
+  "blockers": [],
+  "transition_receipt_id": "transition-application-54bf69d8efd8426f26fe8260dcc63a2f0e30cd18da21a4d6a1d786a304569379"
 }
