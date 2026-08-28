@@ -24,6 +24,147 @@ if (!Number.isInteger(cdpPort) || cdpPort < 1024 || cdpPort > 65_535) {
 const outputPath = sourcePath.replace(/\.(?:md|markdown)$/i, ".docx");
 const marker = "<!-- windows native acceptance -->";
 const cdpEndpoint = `http://127.0.0.1:${cdpPort}`;
+const acceptanceStartedAt = Date.now();
+const maxBrowserEvents = 200;
+
+type AcceptanceStage =
+  | "fixture"
+  | "launch"
+  | "cdp"
+  | "workbench"
+  | "open-project"
+  | "edit"
+  | "save"
+  | "validate"
+  | "build"
+  | "evidence";
+
+interface StageReading {
+  stage: AcceptanceStage;
+  capturedAt: string;
+  elapsedMs: number;
+}
+
+interface ProjectLoadSnapshot {
+  shellState: string | null;
+  statusText: string;
+  editorLength: number;
+  editorText: string;
+}
+
+let currentStage: AcceptanceStage = "fixture";
+const stageReadings: StageReading[] = [];
+const browserEvents: Array<Record<string, unknown>> = [];
+
+function enterStage(stage: AcceptanceStage): void {
+  currentStage = stage;
+  stageReadings.push({
+    stage,
+    capturedAt: new Date().toISOString(),
+    elapsedMs: Date.now() - acceptanceStartedAt,
+  });
+}
+
+function recordBrowserEvent(event: Record<string, unknown>): void {
+  if (browserEvents.length < maxBrowserEvents) {
+    browserEvents.push(event);
+  }
+}
+
+function normalizeNewlines(value: string): string {
+  return value.replace(/\r\n?/g, "\n");
+}
+
+async function findProjectRoot(source: string): Promise<string> {
+  const resolvedSource = path.resolve(source);
+  const sourceInfo = await stat(resolvedSource);
+  if (!sourceInfo.isFile()) {
+    throw new Error(`DOCFORGE_WINDOWS_SOURCE is not a file: ${resolvedSource}`);
+  }
+
+  let candidate = path.dirname(resolvedSource);
+  while (true) {
+    const manifestPath = path.join(candidate, "docforge.yaml");
+    try {
+      if ((await stat(manifestPath)).isFile()) {
+        const relativeSource = path.relative(candidate, resolvedSource);
+        if (
+          !relativeSource ||
+          relativeSource.startsWith(`..${path.sep}`) ||
+          path.isAbsolute(relativeSource)
+        ) {
+          throw new Error(
+            `Windows acceptance source is outside the project root: ${resolvedSource}`,
+          );
+        }
+        return candidate;
+      }
+    } catch (error) {
+      const code =
+        typeof error === "object" && error !== null && "code" in error
+          ? String(error.code)
+          : null;
+      if (code !== "ENOENT") {
+        throw error;
+      }
+    }
+    const parent = path.dirname(candidate);
+    if (parent === candidate) {
+      throw new Error(
+        `No docforge.yaml was found above DOCFORGE_WINDOWS_SOURCE: ${resolvedSource}`,
+      );
+    }
+    candidate = parent;
+  }
+}
+
+async function readProjectLoadSnapshot(page: Page): Promise<ProjectLoadSnapshot> {
+  return page.evaluate(() => {
+    const editor = document.querySelector(
+      '[aria-label="Markdown 文档内容"]',
+    ) as HTMLTextAreaElement | null;
+    const shell = document.querySelector(".app-shell");
+    return {
+      shellState: shell?.getAttribute("data-state") ?? null,
+      statusText:
+        document.querySelector('[aria-live="polite"]')?.textContent?.trim() ?? "",
+      editorLength: editor?.value.length ?? 0,
+      editorText: editor?.value ?? "",
+    };
+  });
+}
+
+async function waitForProjectSource(
+  page: Page,
+  expectedSource: string,
+): Promise<void> {
+  const deadline = Date.now() + 30_000;
+  let snapshot = await readProjectLoadSnapshot(page);
+
+  while (Date.now() < deadline) {
+    snapshot = await readProjectLoadSnapshot(page);
+    if (
+      normalizeNewlines(snapshot.editorText) === normalizeNewlines(expectedSource)
+    ) {
+      return;
+    }
+    if (snapshot.shellState === "error") {
+      throw new Error(
+        `Installed app rejected the acceptance project: ${snapshot.statusText || "unknown error"}`,
+      );
+    }
+    await new Promise((resolve) => setTimeout(resolve, 250));
+  }
+
+  if (snapshot.shellState === "loading" && snapshot.editorLength === 0) {
+    throw new Error(
+      "Installed app did not complete pick_project; the project picker command remained pending",
+    );
+  }
+  throw new Error(
+    `Installed app opened unexpected Markdown content: state=${snapshot.shellState ?? "missing"}, length=${snapshot.editorLength}`,
+  );
+}
 
 function captureProcessOutput(
   child: ChildProcess,
@@ -164,6 +305,7 @@ function captureWindowsProcesses(child: ChildProcess): Record<string, unknown> {
 async function captureFailureEvidence(
   page: Page | undefined,
   error: unknown,
+  projectPath: string | undefined,
 ): Promise<void> {
   const failurePath = path.join(
     evidenceDirectory,
@@ -172,6 +314,14 @@ async function captureFailureEvidence(
   const failure: Record<string, unknown> = {
     capturedAt: new Date().toISOString(),
     error: error instanceof Error ? error.stack ?? error.message : String(error),
+    stage: currentStage,
+    elapsedMs: Date.now() - acceptanceStartedAt,
+    appBinaryPath,
+    projectPath,
+    sourcePath,
+    outputPath,
+    stageReadings,
+    browserEvents,
   };
 
   if (!page || page.isClosed()) {
@@ -255,12 +405,16 @@ async function captureFailureEvidence(
 
 async function main(): Promise<void> {
   await mkdir(evidenceDirectory, { recursive: true });
+  enterStage("fixture");
+  const projectPath = await findProjectRoot(sourcePath);
+  const originalSource = await readFile(sourcePath, "utf8");
+  enterStage("launch");
   const app = spawn(appBinaryPath, [], {
     env: {
       ...process.env,
       DOCFORGE_BLOCK_NETWORK: "1",
       DOCFORGE_WINDOWS_CDP_PORT: String(cdpPort),
-      DOCFORGE_WINDOWS_ACCEPTANCE_SOURCE: sourcePath,
+      DOCFORGE_WINDOWS_ACCEPTANCE_PROJECT: projectPath,
     },
     stdio: ["pipe", "pipe", "pipe"],
     windowsHide: false,
@@ -271,6 +425,7 @@ async function main(): Promise<void> {
   let page: Page | undefined;
 
   try {
+    enterStage("cdp");
     const endpoint = await waitForCdp(app);
     await writeFile(
       path.join(evidenceDirectory, "windows-cdp-endpoint.json"),
@@ -278,7 +433,24 @@ async function main(): Promise<void> {
       "utf8",
     );
     browser = await chromium.connectOverCDP(cdpEndpoint);
+    enterStage("workbench");
     page = await waitForWorkbenchPage(browser);
+    page.on("console", (message) => {
+      recordBrowserEvent({
+        type: "console",
+        level: message.type(),
+        text: message.text(),
+        capturedAt: new Date().toISOString(),
+      });
+    });
+    page.on("pageerror", (error) => {
+      recordBrowserEvent({
+        type: "pageerror",
+        message: error.message,
+        stack: error.stack,
+        capturedAt: new Date().toISOString(),
+      });
+    });
     const tauriInternals = await page.evaluate(() => {
       const candidate = window as unknown as {
         __TAURI_INTERNALS__?: unknown;
@@ -292,18 +464,15 @@ async function main(): Promise<void> {
     assert.equal(await shell.getAttribute("data-runtime"), "tauri");
     assert.match(await shell.innerText(), /Microsoft Word 桌面/);
 
-    await page.getByRole("button", { name: "打开 Markdown 或 DocForge 项目" }).click();
+    enterStage("open-project");
+    await page
+      .getByRole("button", { name: "打开 Markdown 或 DocForge 项目" })
+      .click();
     const editor = page.getByLabel("Markdown 文档内容");
     await editor.waitFor({ state: "visible" });
-    await page.waitForFunction(
-      () =>
-        (
-          document.querySelector(
-            '[aria-label="Markdown 文档内容"]',
-          ) as HTMLTextAreaElement | null
-        )?.value.includes("thesis:") === true,
-    );
+    await waitForProjectSource(page, originalSource);
 
+    enterStage("edit");
     await page.keyboard.press("Control+k");
     assert.equal(
       await editor.evaluate((element) => element === document.activeElement),
@@ -326,6 +495,7 @@ async function main(): Promise<void> {
       () => document.querySelector(".app-shell")?.getAttribute("data-state") === "dirty",
     );
 
+    enterStage("save");
     const save = page.locator('[aria-label="保存文档"]');
     assert.equal(await save.count(), 1);
     const saveVisible = await save.isVisible();
@@ -342,6 +512,7 @@ async function main(): Promise<void> {
         "populated",
     );
 
+    enterStage("validate");
     const validate = page.locator('[aria-label="检查文档"]');
     assert.equal(await validate.count(), 1);
     const validateVisible = await validate.isVisible();
@@ -356,6 +527,7 @@ async function main(): Promise<void> {
       );
     }
 
+    enterStage("build");
     const build = page.getByRole("button", { name: "生成 DOCX" });
     assert.equal(await build.isEnabled(), true);
     await build.click();
@@ -397,6 +569,7 @@ async function main(): Promise<void> {
     assert.equal(sensory.state, "populated");
     assert.equal(sensory.reducedMotionRule, true);
 
+    enterStage("evidence");
     const screenshotPath = path.join(
       evidenceDirectory,
       "windows-native-acceptance.png",
@@ -408,6 +581,7 @@ async function main(): Promise<void> {
         {
           ok: true,
           appBinaryPath,
+          projectPath,
           sourcePath,
           outputPath,
           outputBytes: (await stat(outputPath)).size,
@@ -415,6 +589,8 @@ async function main(): Promise<void> {
           cdpEndpoint,
           tauriInternals,
           externalSocketsBlocked: true,
+          stageReadings,
+          browserEvents,
           interaction: {
             save: saveVisible ? "button" : "keyboard-shortcut",
             validate: validateVisible ? "button" : "save-refresh",
@@ -429,7 +605,7 @@ async function main(): Promise<void> {
       "utf8",
     );
   } catch (error) {
-    await captureFailureEvidence(page, error);
+    await captureFailureEvidence(page, error, projectPath);
     throw error;
   } finally {
     await writeFile(

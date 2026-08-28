@@ -966,7 +966,12 @@ def test_windows_tauri_acceptance_uses_webview2_cdp_and_real_commands() -> None:
 
     assert "WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS" not in acceptance
     assert "DOCFORGE_WINDOWS_CDP_PORT" in acceptance
-    assert "DOCFORGE_WINDOWS_ACCEPTANCE_SOURCE" in acceptance
+    assert "DOCFORGE_WINDOWS_ACCEPTANCE_PROJECT" in acceptance
+    assert "DOCFORGE_WINDOWS_ACCEPTANCE_SOURCE" not in acceptance
+    assert "findProjectRoot" in acceptance
+    assert "waitForProjectSource" in acceptance
+    assert "stageReadings" in acceptance
+    assert "browserEvents" in acceptance
     assert "chromium.connectOverCDP" in acceptance
     assert "http://127.0.0.1:" in acceptance
     assert "spawn(appBinaryPath" in acceptance
@@ -999,6 +1004,8 @@ def test_tauri_window_owner_enables_cdp_only_for_native_acceptance() -> None:
     assert "windows_acceptance_browser_args" in tauri_lib
     assert ".additional_browser_args(&browser_args)" in tauri_lib
     assert "DOCFORGE_WINDOWS_CDP_PORT" in tauri_lib
+    assert "DOCFORGE_WINDOWS_ACCEPTANCE_PROJECT" in tauri_lib
+    assert "acceptance_project_override" in tauri_lib
 
 
 def test_windows_tauri_acceptance_captures_processes_before_termination() -> None:
