@@ -1,9 +1,9 @@
 {
   "schema": "specnav.verification.gate-decision.v1",
-  "id": "gate-d7a0f5d3fde862ff5c1b4e071c619937848fb65722e943d765f99641a2d33dd1",
+  "id": "gate-07ae53af1a80f67ff4517c87d0405796dd26a9f63ef824ad3136c033c0d272da",
   "change_id": "docforge-project-format-v1",
   "stage": "archive",
-  "decision": "block",
+  "decision": "pass",
   "source_case_ids": [
     "case-a1-project-open",
     "case-a10-repository-delivery",
@@ -17,437 +17,81 @@
     "case-a9-installed-office"
   ],
   "source_reading_ids": [
-    "reading-0b2875ce6fc30606809111ae2b7a6855386d25ce0fbba8129ee8050c54cf0c30",
-    "reading-0edbc8fb1f3f88caf4ebda609e847af73efeed1c959711c6cf36936071d18be8",
-    "reading-133417b681e43b6f330dc3ebda14413ec9200c8a012297a70e9c000183a860c3",
-    "reading-13a0376b60a9ba44598904feb9305315cf4bfb876e4a048dea48836ed9b7d282",
-    "reading-149e1df62b99d781599c0c9274a4daf20b91e164a3524e307f1c46482b24ee3e",
-    "reading-1dd916797ba47b22571f289559180ce0a41bacf870c102a93ebf5f6c4c06d3ba",
-    "reading-2087aa275d27d7559f6d6cafc2f8a6936babb96097d441efdb06adef3f876dc4",
-    "reading-24bf5b36d40679241762ef5907e0b9e59bd08e36f2cc5944b0fd417e496f8006",
-    "reading-2568efa254ae91201d2ff4e96f1e4c709c7c70a8e4f490a654ae4bc6f53ee804",
-    "reading-26c74423f830fb0bb031f0dfc98431f7195ed40424b40e5e420201e2e16d4e67",
-    "reading-2a1e1c594cc5a66e032da5a5bf9758bd59f43ce2465a1652921556817bcdd10a",
-    "reading-2f1b52406571a7ee3d2744f2aabe3d23d393634e4f823b1eb0f6dd34d58b1e6b",
-    "reading-32bd03ad61694ba0a491ebff25e0ffd44352d792a05670eab06258346ad17d7d",
-    "reading-375cedfdee24cd7cf47b328c01544ba5ab665eb9bcf30688b4d22d01f864adca",
-    "reading-4468e8ded4d8e9d8d5e67fa35f21bc05f44982f4e4373324f03e4a253acc5965",
-    "reading-449c7f1a52a6a73f9298c7ad9bbb815cc926d573c966e129a3b0634dff877000",
-    "reading-464a0e16941553c0d031b04c8074544ae1b30169dcd70bcdae88a2b62f96426f",
-    "reading-46a058348ef675855f84309842365e95bcc044d974837d9d076cd24a61f8c5e7",
-    "reading-47bf8ca9c02b6e0ad4d3fabbc11e7425d32db96004afd706842c9896a00e6ebf",
-    "reading-4928fc84668d9552d0e87539daad15ecdb1f25dadb2492b2a015b076dc5d81dc",
-    "reading-4a8ef384169ac740564420e0c7c68db53d21693ab3ea29091452dd15af2090a4",
-    "reading-5413ca921f2de2ba8e4345ca821f6c43d3397d1b22103086cd9f7a7e271b66e5",
-    "reading-576e185dd9189961cffde513ebdcb89c8a05670cbfb6e14358d5faca12e17f0d",
-    "reading-58e9c645339fd9a37f710749c29874aacdbc2f0e7534490d86cb0952214c8fe5",
-    "reading-5a39c4939ead9e7f2af6e96d03d87dd9c3ac22a30e062b6b35755ce3343bfe5d",
-    "reading-5b472c349da3a58c3c42d40890e6947b798080b408605db45c00a8270bfa0e0b",
-    "reading-6279a8aa09fc215aed68b5987f176faafb2cc5bbd73faa5a66927728bfbed6aa",
-    "reading-648938b8d85f893b571fbeaf9d770198c1d2817e61c80a880e28c708bb1fb08c",
-    "reading-68438651bc614e2861a61ead07f7be265e7554545d0ee90fb8ec357ffca977e8",
-    "reading-74061bfd38880f64918f3fbd602963fd7b9024a7087baf56ded6ba0885408010",
-    "reading-7dcbf913ade776a39023ffdf7f3338225d841ce84eec7a73cac3f8a1343716cf",
-    "reading-7eb5d2486f2f1b78b27187c2d9ea5fabb26055e19c152e5906a609daf8173226",
-    "reading-7fae418f5ac9905ac35f2882ec5691ce15f6c102de2175fc2d3c131f8ff82f07",
-    "reading-808c9dfe2f5ec2d8feadb2e19029172a1f46ec5dff183888f6883dd35da99e67",
-    "reading-8b6150e9a91a3cb6c5c77e109f76e947466ced1bf04f259ee3e2d7745df88f70",
-    "reading-8bf1b3ed5f70eab416174b6fb192953fd9a4b0f9308d3fb9d610c6e72c324db7",
-    "reading-94027985c64824c046b83d678e0478988e7f0aa66f7644539950016519dd0e31",
-    "reading-9f371b926718e04dc38bc84d5b12679e5561cc1c682b37065189e3c6e22ff5e2",
-    "reading-a46d47d76d8e82ee6ec6516b8da178719bb6d29ff2f7086a7fa5b18153566b54",
-    "reading-aeae2b58971df794600053c4ea0a5cb5dea6249f61bd176613ed62a7118338fa",
-    "reading-afb77bb07c26211c304d322373ec62696602baec19b9993c8f14bace2fa1e0e9",
-    "reading-b1d6600808c7a8e687f26fd64137ccf7cc6be1d0bba25b64655a68d9c0b2c1db",
-    "reading-b67c5599235be92b807b3441b9f9a3eddf71e009f21e98ca8495ffe79f0b142d",
-    "reading-b6bc52cc8d20b2d578681c40a7e77ef6b069dc77a5e04921bcf6c746a9890b15",
-    "reading-bc7bcfabba259bad73e2a08675b5ebd5ee67f611073e58f8a86cb8ed1c2a3810",
-    "reading-bded10dd7f3351145c42e8b0b77909e425ae1bee47ee83e7e5d24beded3c9ac8",
-    "reading-bf8ebd40191219bcf4eaed7e8cc5bc1f7b3e7edf875e1d384a966956df9318f8",
-    "reading-c0c7b5fd6840ec49614227da0e05752b28c22025dd7278cb5f14f086ad798924",
-    "reading-c4e8ef7d0a45ecb189fb717dd69604a6f001ad2797301709cb6b43a47b67355b",
-    "reading-c5548acc8601dc89e26e8b6e01a663e23a368c039e95bd3224ad0df71fdfcb8a",
-    "reading-c5a5815c6dcdeda58f36813b1124a7a61419fc82ea87a097744e0cfdc8dbf82b",
-    "reading-c87006f00d28cec93a4c82566eaed39771cd85754751fcf33f3adffbf302a6ac",
-    "reading-c9554ada9076a3b98359ec8d6269a14a1fb0514367d20cfb8500dab370aba9dc",
-    "reading-cf4a111d2e7e6930aae65bde79224f480ae5cc57babecef4f5f9cbd9119f479f",
-    "reading-dedcd4a8a63f97e580b35ea817ef1b9bf1c3045ede7c98907da9c54d7f9d98f0",
-    "reading-e39873cf71f32dd23bd75907ca4ea9b7793fe3fa9f4b7cabadaae510801ea9fa",
-    "reading-e4f3bbbb7f74c0b7593bf7986bb3117679b51795d62bbbf2ee0645c94dee3cbe",
-    "reading-e85421ed4571e4ddf0712d64c2dc1f63aa5f52ce6a87cebe02c722239388de88",
-    "reading-f4b353f3b5596403af36b4c8705c60438d88d8a75e5d3d44cae0dea371feb1a3",
-    "reading-ffec365deebd9c2a671bfc56b1f3d3a78a54422ac8202f45f7702e18b4dfae9b"
+    "reading-086c4eed0daadfbfe810c79b0cc471981996e0143b335e07d5239530f3df038d",
+    "reading-0a99c391fedd8c4be661671da096617802f49c5584a7c785befbbbc00b40e6b4",
+    "reading-0d82e3797d6a4820bb91a6db8f9d99aeab69354857f1da48d53a90acb2868128",
+    "reading-14d451fc21fb82f12f20c1e48bad355b818330138fd1f220305f2a085a25b86c",
+    "reading-1760ff47e23abb40858ed264f315481c5d6bacb959be1378476acbf71933b237",
+    "reading-1a42cc2fafc19e5b57750eff47a80bc9fe19c290bba9cf6ad6b49788a8714dcf",
+    "reading-223e174bb160299c0e0bbdd0ad1da74325ab2a2669fcf8f31f7fc55aaa0dc15f",
+    "reading-29ac568dd7cadf7231f5ef0539a2974b1f4cbf1b90d770a83d2bbe207da06d6e",
+    "reading-2a62f3013c3b98f044ee52b89978a8e4ef136fbded447d77b34742f01520eeef",
+    "reading-2b8988117c4bcb773cfb5d9c29a543ff7e6e952cfaeb2569188edad0ede6c743",
+    "reading-308a3dd8c09aa2de0d8df17194bfa5091efd220aa40239e541f5993428baa836",
+    "reading-318694ca8ab099b76691adf3c47d42443ecf44f20e863f3b319d08f9653f9b82",
+    "reading-40d8043136a75a9ab4752492c89b6433bd13b8614da02ee38f151a81144e9dd1",
+    "reading-447078b90551cfbe900054331c478a7999acd99b50150e90b4bfbb843271a463",
+    "reading-49a59dd84723ac6ef61d5e205b761bee44fbdd42349996bf67750ba1c3ea9ea2",
+    "reading-4b0daf9ccbd02f3d5453137c44de546a39ddb201dd3b5f62e5b45144b358e508",
+    "reading-4c472b0e572707030042d02547d003f765d4343bf97daa1b8d0eb84187a30143",
+    "reading-5316756e63db3eac76300d9f2ec754a511bdc620284e09b9253bd35bfdc4e5eb",
+    "reading-54ad11cc20d8ae2aa441be15624c00786a1cea7945f60bff6befcb41afc9274d",
+    "reading-576a7ea4f574d68ad190dd6bad844cbf02d8028347d46e5db15bf67adcc8a037",
+    "reading-5d9a2bfc64abe6d687b3e6c0fc2bc9f293d1d9d1d5bd3ca67be36de349a8e316",
+    "reading-5eac99aea29dc8dd80e5042ba1f67e4ae34d61b8f7d8dd68a4ad6ecae071cfcb",
+    "reading-66ec0f4ef87b218672373cc11f82d39a22c36d2f3d043ee21aeffe41b4a5dfc6",
+    "reading-6ccac5e5adb2c7b675ff28a1e8fe5f9141c7418f5b488c429f5d1df453257a5d",
+    "reading-6d34cba167f66ec890f70ad9f1707b29922e17f536e644c0b8ad766f83c2b6bc",
+    "reading-72bfd04f059a869d38acbf1eee7fa22cbf3e28439e9edd2cb33734834aff81fc",
+    "reading-77c7e57a57d90905a44c0edab86bd0a41765b0295d9790782e6179d486139620",
+    "reading-7ba4b62eb85a693250ab87051d43461b6d54391fa4da8e8d5bd22ed0594c1146",
+    "reading-7bac39fb1a4df726d7ac3b4f74824de20c6f8fa8d75571dccb046918ee05c781",
+    "reading-7d6c9629a1cc8d8721fb71e6e90314fb6c4804d9cf924b8e95699d7a9cf1132f",
+    "reading-80a215f33805c7a58fbc986ce154a6c9c59583f9d4ce091ab6878f061f85b503",
+    "reading-89f0bea58aea84294e6e5052ce2af5789980a5e6ef5bb265c5de8e8e624cd109",
+    "reading-8a1fe9e942ec8c63cfc3606fa4c6e82e68c4ff484a601cbdd3a50dab29b55167",
+    "reading-8ccd7a97acc2ffdb1f9a2d5afefe0f4b96aea30bc6779fa3b25bb5fbb198c750",
+    "reading-8f83de0b2de0156b23f5716577beb02877c82caa681ce40bf5dac1543f375d5e",
+    "reading-93123c267cf4a61521dc03e3da9cfb3efd54886c833da24fa4822e58bf7abc36",
+    "reading-9741ce9c9f0be31f5d6571dfa98ccfe0154b0475192d78edf43affd2781fd459",
+    "reading-9b240ed336c23208395b03901b64e115ec26b4fe2a29ae33be64e259404ad510",
+    "reading-a1693b29e2a7c5751b6939990d1e064dc1cdbd94a8087add73958c0f597fca85",
+    "reading-a5e86655f99e4029fc29eaa434e3f0a38d5dc79e3b7145664d79b0393f6077fe",
+    "reading-a9e9b4bdcbf529ddc986e32f18320085dab31eb0f894f2828346557856cb4ad8",
+    "reading-aa3e9628d0d46d49875f15679c104b48117fa2708d552255c2d8d3625fedda41",
+    "reading-b335f77b8743ea72c38ebcbb4d6024038509558324d68de630a924f48a721e90",
+    "reading-b4af9f6e92db6e213579ccb72afd8b4f18289b106da28e443d4cd680afbb4abd",
+    "reading-bd358f5ba1de8c5bd7ce6081ef78a8cc3455da453af80a5db7ed5ab489c2e4cc",
+    "reading-c50cf1770b4d9bcbc9fb0ebc576be63749106a4222ead87a6f958d19f7a91d58",
+    "reading-c7832240ebfe37422d030d3279fdff9980288f118dda46103166065dc7d74ab2",
+    "reading-cba078135f3388edcb05e49b44893ca2c995a3fa99003fbce5a9364046e64d6d",
+    "reading-cdd903e365f3daf83bcdb15e94026fee3ede43679d7b23b1e1e177574905d1a7",
+    "reading-d24bc717f4f8426b5fd90282967816c56fa997775c1dbe94ca694fd14b5a58bd",
+    "reading-d337e1d869b378c5855120680a60d4296711fe2f31c9286699eb28bc9d1561d5",
+    "reading-d5f10bffc51e112a644f896f781cc869892862c8ee03eca9a5b1e2c5f8caf735",
+    "reading-dbab67536bad11cf3d1a3d566f60887f198872ac95265bcd8d1e0ce68775fd64",
+    "reading-e19dc9e0d0fac13cbf9147777c22882d90fc9248fa732820d48181813f64b28a",
+    "reading-e1d0349c3ef8533763d36e53581a93a8cce07fb004a0bab86ea2c702456c8b40",
+    "reading-e8af6f34e857d37410b2e57d88a82c7f45f70816d5f123ecc10c9256c6582e8b",
+    "reading-f5c82feffd16533ad211ebcbce208a701b25443aa366598c9f20bc5a93003b65",
+    "reading-f7861daf6f4872862b075b5594a45f8adb939a8647f0cb270690a46d5f4f4a52",
+    "reading-f89c03ab63ff7a3063bc62a256e73320a5c412607e0af506a53ea9d84bf20f87",
+    "reading-fa0962bd41c1b43d2019329c26ce86049f698a665b15cd144f7002bd8ca4670d"
   ],
   "failure_state_status": "valid",
-  "failure_state_digest": "7b35b48ee74b87fe4240d75aca926cfa08d57eda44f092732644e4ccdb38b666",
-  "authority_chain_digest": "68bd458b26a18e59a08ec03022aaaab31a50f62a0759224478033de5fa13fbad",
-  "evidence_index_version": 10,
+  "failure_state_digest": "beec65e661c0735fcdc81a20018528f528378b4bf0f5bd2bf81655aaa6385e79",
+  "authority_chain_digest": "47584475c049d089bb83cabe5eb8e2974713863d945175c00f9ecdd44f996767",
+  "evidence_index_version": 200,
   "runtime_version": "2.0.0-alpha.2",
   "kernel_version": "2.0.0-alpha.2",
   "freshness": {
     "status": "fresh",
-    "checked_at": "2026-08-27T14:10:07.191Z",
+    "checked_at": "2026-08-28T02:16:17.455Z",
     "reasons": []
   },
   "integrity_status": "intact",
   "policy_version": "verification-v2.0",
-  "blockers": [
-    {
-      "id": "verification-aggregation:required-reading-blocked",
-      "artifact": "case-a1-project-open:e2e",
-      "detail": null
-    },
-    {
-      "id": "verification-aggregation:required-reading-blocked",
-      "artifact": "case-a1-project-open:facticity",
-      "detail": null
-    },
-    {
-      "id": "verification-aggregation:required-reading-blocked",
-      "artifact": "case-a1-project-open:redteam",
-      "detail": null
-    },
-    {
-      "id": "verification-aggregation:required-reading-blocked",
-      "artifact": "case-a1-project-open:sensory",
-      "detail": null
-    },
-    {
-      "id": "verification-aggregation:required-reading-blocked",
-      "artifact": "case-a1-project-open:static",
-      "detail": null
-    },
-    {
-      "id": "verification-aggregation:required-reading-blocked",
-      "artifact": "case-a1-project-open:unit",
-      "detail": null
-    },
-    {
-      "id": "verification-aggregation:required-reading-blocked",
-      "artifact": "case-a10-repository-delivery:e2e",
-      "detail": null
-    },
-    {
-      "id": "verification-aggregation:required-reading-blocked",
-      "artifact": "case-a10-repository-delivery:facticity",
-      "detail": null
-    },
-    {
-      "id": "verification-aggregation:required-reading-blocked",
-      "artifact": "case-a10-repository-delivery:redteam",
-      "detail": null
-    },
-    {
-      "id": "verification-aggregation:required-reading-blocked",
-      "artifact": "case-a10-repository-delivery:sensory",
-      "detail": null
-    },
-    {
-      "id": "verification-aggregation:required-reading-blocked",
-      "artifact": "case-a10-repository-delivery:static",
-      "detail": null
-    },
-    {
-      "id": "verification-aggregation:required-reading-blocked",
-      "artifact": "case-a10-repository-delivery:unit",
-      "detail": null
-    },
-    {
-      "id": "verification-aggregation:required-reading-blocked",
-      "artifact": "case-a2-general-project:e2e",
-      "detail": null
-    },
-    {
-      "id": "verification-aggregation:required-reading-blocked",
-      "artifact": "case-a2-general-project:facticity",
-      "detail": null
-    },
-    {
-      "id": "verification-aggregation:required-reading-blocked",
-      "artifact": "case-a2-general-project:redteam",
-      "detail": null
-    },
-    {
-      "id": "verification-aggregation:required-reading-blocked",
-      "artifact": "case-a2-general-project:sensory",
-      "detail": null
-    },
-    {
-      "id": "verification-aggregation:required-reading-blocked",
-      "artifact": "case-a2-general-project:static",
-      "detail": null
-    },
-    {
-      "id": "verification-aggregation:required-reading-blocked",
-      "artifact": "case-a2-general-project:unit",
-      "detail": null
-    },
-    {
-      "id": "verification-aggregation:required-reading-blocked",
-      "artifact": "case-a3-academic-profile:e2e",
-      "detail": null
-    },
-    {
-      "id": "verification-aggregation:required-reading-blocked",
-      "artifact": "case-a3-academic-profile:facticity",
-      "detail": null
-    },
-    {
-      "id": "verification-aggregation:required-reading-blocked",
-      "artifact": "case-a3-academic-profile:redteam",
-      "detail": null
-    },
-    {
-      "id": "verification-aggregation:required-reading-blocked",
-      "artifact": "case-a3-academic-profile:sensory",
-      "detail": null
-    },
-    {
-      "id": "verification-aggregation:required-reading-blocked",
-      "artifact": "case-a3-academic-profile:static",
-      "detail": null
-    },
-    {
-      "id": "verification-aggregation:required-reading-blocked",
-      "artifact": "case-a3-academic-profile:unit",
-      "detail": null
-    },
-    {
-      "id": "verification-aggregation:required-reading-blocked",
-      "artifact": "case-a4-obsolete-contracts:e2e",
-      "detail": null
-    },
-    {
-      "id": "verification-aggregation:required-reading-blocked",
-      "artifact": "case-a4-obsolete-contracts:facticity",
-      "detail": null
-    },
-    {
-      "id": "verification-aggregation:required-reading-blocked",
-      "artifact": "case-a4-obsolete-contracts:redteam",
-      "detail": null
-    },
-    {
-      "id": "verification-aggregation:required-reading-blocked",
-      "artifact": "case-a4-obsolete-contracts:sensory",
-      "detail": null
-    },
-    {
-      "id": "verification-aggregation:required-reading-blocked",
-      "artifact": "case-a4-obsolete-contracts:static",
-      "detail": null
-    },
-    {
-      "id": "verification-aggregation:required-reading-blocked",
-      "artifact": "case-a4-obsolete-contracts:unit",
-      "detail": null
-    },
-    {
-      "id": "verification-aggregation:required-reading-blocked",
-      "artifact": "case-a5-neutral-default-paths:e2e",
-      "detail": null
-    },
-    {
-      "id": "verification-aggregation:required-reading-blocked",
-      "artifact": "case-a5-neutral-default-paths:facticity",
-      "detail": null
-    },
-    {
-      "id": "verification-aggregation:required-reading-blocked",
-      "artifact": "case-a5-neutral-default-paths:redteam",
-      "detail": null
-    },
-    {
-      "id": "verification-aggregation:required-reading-blocked",
-      "artifact": "case-a5-neutral-default-paths:sensory",
-      "detail": null
-    },
-    {
-      "id": "verification-aggregation:required-reading-blocked",
-      "artifact": "case-a5-neutral-default-paths:static",
-      "detail": null
-    },
-    {
-      "id": "verification-aggregation:required-reading-blocked",
-      "artifact": "case-a5-neutral-default-paths:unit",
-      "detail": null
-    },
-    {
-      "id": "verification-aggregation:required-reading-blocked",
-      "artifact": "case-a6-path-security:e2e",
-      "detail": null
-    },
-    {
-      "id": "verification-aggregation:required-reading-blocked",
-      "artifact": "case-a6-path-security:facticity",
-      "detail": null
-    },
-    {
-      "id": "verification-aggregation:required-reading-blocked",
-      "artifact": "case-a6-path-security:redteam",
-      "detail": null
-    },
-    {
-      "id": "verification-aggregation:required-reading-blocked",
-      "artifact": "case-a6-path-security:sensory",
-      "detail": null
-    },
-    {
-      "id": "verification-aggregation:required-reading-blocked",
-      "artifact": "case-a6-path-security:static",
-      "detail": null
-    },
-    {
-      "id": "verification-aggregation:required-reading-blocked",
-      "artifact": "case-a6-path-security:unit",
-      "detail": null
-    },
-    {
-      "id": "verification-aggregation:required-reading-blocked",
-      "artifact": "case-a7-deterministic-docx:e2e",
-      "detail": null
-    },
-    {
-      "id": "verification-aggregation:required-reading-blocked",
-      "artifact": "case-a7-deterministic-docx:facticity",
-      "detail": null
-    },
-    {
-      "id": "verification-aggregation:required-reading-blocked",
-      "artifact": "case-a7-deterministic-docx:redteam",
-      "detail": null
-    },
-    {
-      "id": "verification-aggregation:required-reading-blocked",
-      "artifact": "case-a7-deterministic-docx:sensory",
-      "detail": null
-    },
-    {
-      "id": "verification-aggregation:required-reading-blocked",
-      "artifact": "case-a7-deterministic-docx:static",
-      "detail": null
-    },
-    {
-      "id": "verification-aggregation:required-reading-blocked",
-      "artifact": "case-a7-deterministic-docx:unit",
-      "detail": null
-    },
-    {
-      "id": "verification-aggregation:required-reading-blocked",
-      "artifact": "case-a8-runtime-parity:e2e",
-      "detail": null
-    },
-    {
-      "id": "verification-aggregation:required-reading-blocked",
-      "artifact": "case-a8-runtime-parity:facticity",
-      "detail": null
-    },
-    {
-      "id": "verification-aggregation:required-reading-blocked",
-      "artifact": "case-a8-runtime-parity:redteam",
-      "detail": null
-    },
-    {
-      "id": "verification-aggregation:required-reading-blocked",
-      "artifact": "case-a8-runtime-parity:sensory",
-      "detail": null
-    },
-    {
-      "id": "verification-aggregation:required-reading-blocked",
-      "artifact": "case-a8-runtime-parity:static",
-      "detail": null
-    },
-    {
-      "id": "verification-aggregation:required-reading-blocked",
-      "artifact": "case-a8-runtime-parity:unit",
-      "detail": null
-    },
-    {
-      "id": "verification-aggregation:required-reading-blocked",
-      "artifact": "case-a9-installed-office:e2e",
-      "detail": null
-    },
-    {
-      "id": "verification-aggregation:required-reading-blocked",
-      "artifact": "case-a9-installed-office:facticity",
-      "detail": null
-    },
-    {
-      "id": "verification-aggregation:required-reading-blocked",
-      "artifact": "case-a9-installed-office:redteam",
-      "detail": null
-    },
-    {
-      "id": "verification-aggregation:required-reading-blocked",
-      "artifact": "case-a9-installed-office:sensory",
-      "detail": null
-    },
-    {
-      "id": "verification-aggregation:required-reading-blocked",
-      "artifact": "case-a9-installed-office:static",
-      "detail": null
-    },
-    {
-      "id": "verification-aggregation:required-reading-blocked",
-      "artifact": "case-a9-installed-office:unit",
-      "detail": null
-    },
-    {
-      "id": "verification-gate:open-failure",
-      "artifact": "failure-046667276b7162f8e5ff3393bf25487fc05b2ab68270ff9e12f6f1a9c8656ee5",
-      "detail": null
-    },
-    {
-      "id": "verification-gate:open-failure",
-      "artifact": "failure-0b7b1bb8ae4396daaf850b9954df7a2cf108ddf9b482e412e7e118bd0f2b05bd",
-      "detail": null
-    },
-    {
-      "id": "verification-gate:open-failure",
-      "artifact": "failure-1ade668829948cfb896aba9e1ff2afce6c7f0604978a8b5a7cadfca7a657f7df",
-      "detail": null
-    },
-    {
-      "id": "verification-gate:open-failure",
-      "artifact": "failure-1cf04e4a2349690194b0df450d9215c4eb41407919e34e6ed4caca28a4496546",
-      "detail": null
-    },
-    {
-      "id": "verification-gate:open-failure",
-      "artifact": "failure-460a6bec826047df8fb5695d9f35761718afb7180740ec3edfaba7ca8b7c9c71",
-      "detail": null
-    },
-    {
-      "id": "verification-gate:open-failure",
-      "artifact": "failure-73f8288bda2544be90b77e2d59f451a19bf1da787426f2bc7fffd960c7e7403a",
-      "detail": null
-    },
-    {
-      "id": "verification-gate:open-failure",
-      "artifact": "failure-93a392e01847eefeb57f51d044868cce536d5d29237404cc6e8729fe6847e8d5",
-      "detail": null
-    },
-    {
-      "id": "verification-gate:open-failure",
-      "artifact": "failure-98298abaa9086b490c419c2829b887ae15a77d690824d18a273085cf62f64d98",
-      "detail": null
-    },
-    {
-      "id": "verification-gate:open-failure",
-      "artifact": "failure-aea586ad3f508740227d90a29b096d0b54461caa5a1c78f1eb0bfc4871d1b02e",
-      "detail": null
-    },
-    {
-      "id": "verification-gate:open-failure",
-      "artifact": "failure-f814ed028e5b2dc94e5db0219d237ceaa8e22ce664031ea163ba1fc267c95791",
-      "detail": null
-    },
-    {
-      "id": "verification-gate:aggregate-not-pass",
-      "artifact": "verification-aggregate-270c81e3fb1c8fdefef19b9727437f40816e7216126b49d7f8ab0412129b9d8c",
-      "detail": "blocked"
-    }
-  ],
+  "blockers": [],
   "warnings": [],
-  "decided_at": "2026-08-27T14:10:07.211Z"
+  "decided_at": "2026-08-28T02:16:17.547Z"
 }

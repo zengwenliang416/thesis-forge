@@ -1,6 +1,6 @@
 {
   "ok": true,
-  "checked_at": "2026-08-27T14:10:07.191Z",
+  "checked_at": "2026-08-28T02:16:17.455Z",
   "summary": {
     "status": "fresh",
     "total": 10,
@@ -11,71 +11,71 @@
   "cases": [
     {
       "case_id": "case-a1-project-open",
-      "attempt_id": "attempt-20260827064427-7306fa24d31e2dcf",
-      "checked_at": "2026-08-27T14:10:07.191Z",
+      "attempt_id": "attempt-20260827182047-39312b02e7655e7e",
+      "checked_at": "2026-08-28T02:16:17.455Z",
       "status": "fresh",
       "reasons": []
     },
     {
       "case_id": "case-a10-repository-delivery",
-      "attempt_id": "attempt-20260827064432-f7b0f5e993e8efdd",
-      "checked_at": "2026-08-27T14:10:07.191Z",
+      "attempt_id": "attempt-20260827181848-329fe8e773cae09d",
+      "checked_at": "2026-08-28T02:16:17.455Z",
       "status": "fresh",
       "reasons": []
     },
     {
       "case_id": "case-a2-general-project",
-      "attempt_id": "attempt-20260827064441-8b4a7bb42f90f287",
-      "checked_at": "2026-08-27T14:10:07.191Z",
+      "attempt_id": "attempt-20260827182225-3807ecb6717019a5",
+      "checked_at": "2026-08-28T02:16:17.455Z",
       "status": "fresh",
       "reasons": []
     },
     {
       "case_id": "case-a3-academic-profile",
-      "attempt_id": "attempt-20260827064446-2b9dc52f4d4f9ab2",
-      "checked_at": "2026-08-27T14:10:07.191Z",
+      "attempt_id": "attempt-20260827182405-d982b2f693705291",
+      "checked_at": "2026-08-28T02:16:17.455Z",
       "status": "fresh",
       "reasons": []
     },
     {
       "case_id": "case-a4-obsolete-contracts",
-      "attempt_id": "attempt-20260827064518-8097b5c25829a2d4",
-      "checked_at": "2026-08-27T14:10:07.191Z",
+      "attempt_id": "attempt-20260827182606-39fc5b6f90150751",
+      "checked_at": "2026-08-28T02:16:17.455Z",
       "status": "fresh",
       "reasons": []
     },
     {
       "case_id": "case-a5-neutral-default-paths",
-      "attempt_id": "attempt-20260827064525-5e4db8725c20af7d",
-      "checked_at": "2026-08-27T14:10:07.191Z",
+      "attempt_id": "attempt-20260827182752-f309b45bc6f79c4f",
+      "checked_at": "2026-08-28T02:16:17.455Z",
       "status": "fresh",
       "reasons": []
     },
     {
       "case_id": "case-a6-path-security",
-      "attempt_id": "attempt-20260827064531-285da31c798070fb",
-      "checked_at": "2026-08-27T14:10:07.191Z",
+      "attempt_id": "attempt-20260827182932-1579e8f95d04fd0b",
+      "checked_at": "2026-08-28T02:16:17.455Z",
       "status": "fresh",
       "reasons": []
     },
     {
       "case_id": "case-a7-deterministic-docx",
-      "attempt_id": "attempt-20260827064704-d0c88d2a76efe074",
-      "checked_at": "2026-08-27T14:10:07.191Z",
+      "attempt_id": "attempt-20260827183218-46aea56bf0619712",
+      "checked_at": "2026-08-28T02:16:17.455Z",
       "status": "fresh",
       "reasons": []
     },
     {
       "case_id": "case-a8-runtime-parity",
-      "attempt_id": "attempt-20260827064734-03b2884ca6381698",
-      "checked_at": "2026-08-27T14:10:07.191Z",
+      "attempt_id": "attempt-20260827183412-8a25defa8b38765d",
+      "checked_at": "2026-08-28T02:16:17.455Z",
       "status": "fresh",
       "reasons": []
     },
     {
       "case_id": "case-a9-installed-office",
-      "attempt_id": "attempt-20260827064738-bcbe02a786beafa0",
-      "checked_at": "2026-08-27T14:10:07.191Z",
+      "attempt_id": "attempt-20260827183709-c4e5cedcc4ad2a7a",
+      "checked_at": "2026-08-28T02:16:17.455Z",
       "status": "fresh",
       "reasons": []
     }
