@@ -1,7 +1,7 @@
 {
   "schema": "specnav.codegraph.status.v1",
   "ok": true,
-  "generated_at": "2026-08-28T02:51:49.688Z",
+  "generated_at": "2026-08-28T03:40:44.257Z",
   "project_root": "/Volumes/ThesisForgeCI/workspaces/thesis-forge-docforge-verify",
   "active_change": "docforge-project-format-v1",
   "policy": {
