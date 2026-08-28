@@ -64,6 +64,40 @@ function canonicalJson(value) {
   return JSON.stringify(canonicalValue(value));
 }
 
+function firstDifference(left, right, currentPath = '$') {
+  if (canonicalJson(left) === canonicalJson(right)) return null;
+  if (Array.isArray(left) && Array.isArray(right)) {
+    const length = Math.max(left.length, right.length);
+    for (let index = 0; index < length; index += 1) {
+      const difference = firstDifference(
+        left[index],
+        right[index],
+        `${currentPath}[${index}]`
+      );
+      if (difference) return difference;
+    }
+  }
+  if (isRecord(left) && isRecord(right)) {
+    const keys = uniqueSorted([
+      ...Object.keys(left),
+      ...Object.keys(right)
+    ]);
+    for (const key of keys) {
+      const difference = firstDifference(
+        left[key],
+        right[key],
+        `${currentPath}.${key}`
+      );
+      if (difference) return difference;
+    }
+  }
+  return {
+    path: currentPath,
+    persisted: left ?? null,
+    canonical: right ?? null
+  };
+}
+
 function sha256(value) {
   return crypto.createHash('sha256').update(value).digest('hex');
 }
@@ -633,7 +667,12 @@ function validateReportModel(
   ) {
     blockers.push(blocker(
       'verification-release:canonical-report-model-mismatch',
-      artifact
+      artifact,
+      {
+        persisted_id: model.id,
+        canonical_id: canonicalModel?.id || null,
+        first_difference: firstDifference(model, canonicalModel)
+      }
     ));
   }
   if (model.change_id !== input.change_id || model.verdict !== 'green') {
