@@ -1,0 +1,29 @@
+{
+  "schema": "docforge.operations.real-archive-failure.v1",
+  "attempted_at": "2026-08-28T06:27:59.390Z",
+  "change_id": "docforge-project-format-v1",
+  "head_before_attempt": "ae8c20bee1a460abec192d309e34f72e6eb6b190",
+  "phase": "archive-gate",
+  "blockers": [
+    "verification-release:canonical-rebuild-failed",
+    "verification-release:canonical-report-model-mismatch",
+    "verification-release:report-readings-mismatch",
+    "readiness-before-verification-green"
+  ],
+  "rollback": {
+    "ok": true,
+    "blockers": []
+  },
+  "root_cause": {
+    "id": "archive-transaction-lock-visible-to-canonical-git-status",
+    "detail": "The real archive path acquires openspec/.specnav/archive.lock before the archive gate. The canonical Verification rebuild requires an otherwise clean git status, and the transaction-owned lock was not included in the temporary local exclude used for archive execution.",
+    "fix_scope": "Add only openspec/.specnav/archive.lock to the temporary, uncommitted Git exclude used by the approved archive command."
+  },
+  "boundaries": {
+    "archive_created": false,
+    "registry_modified": false,
+    "specs_modified": false,
+    "push_executed": false,
+    "global_runtime_modified": false
+  }
+}
