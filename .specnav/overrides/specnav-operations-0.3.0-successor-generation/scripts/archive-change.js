@@ -123,6 +123,12 @@ function commandResult(result, command) {
   };
 }
 
+function archiveCommandSucceeded(result) {
+  return !!result
+    && result.ok === true
+    && !/^Aborted\./m.test(String(result.stdout_tail || ''));
+}
+
 function withSpecNavChange(change, fn) {
   const had = Object.prototype.hasOwnProperty.call(process.env, 'SPECNAV_CHANGE');
   const previous = process.env.SPECNAV_CHANGE;
@@ -463,7 +469,7 @@ function run(options = parseArgs()) {
   const archiveArgs = ['--no-color', 'archive', change, '--yes'];
   if (options.skipSpecs) archiveArgs.push('--skip-specs');
   const archiveResult = runOpenSpec(root, archiveArgs);
-  if (!archiveResult.ok) {
+  if (!archiveCommandSucceeded(archiveResult)) {
     return failWithRollback(transaction, {
       project_root: root,
       active_change: change,
@@ -609,4 +615,9 @@ function emit(result, json) {
 
 if (require.main === module) process.exit(run());
 
-module.exports = { parseArgs, run, splitRawArgs };
+module.exports = {
+  archiveCommandSucceeded,
+  parseArgs,
+  run,
+  splitRawArgs
+};

@@ -1,0 +1,35 @@
+{
+  "schema": "docforge.operations.archive-attempt.v1",
+  "attempted_at": "2026-08-28T21:29:23Z",
+  "change_id": "docforge-workbench-ui-redesign",
+  "head": "775feb8a4e080af69d5eee1c6c4c8f3d363bfd24",
+  "ok": false,
+  "phase": "archive-discovery",
+  "blockers": [
+    "archive-output-missing"
+  ],
+  "commands": {
+    "openspec_validate": {
+      "ok": true
+    },
+    "openspec_archive": {
+      "process_ok": true,
+      "semantic_ok": false,
+      "stdout": "desktop-workbench MODIFIED failed for header \"### Requirement: Present academic workbench information\" - not found; Aborted. No files were changed."
+    }
+  },
+  "rollback": {
+    "ok": true,
+    "blockers": []
+  },
+  "root_cause": "The UI redesign delta referenced an obsolete requirement header while the current desktop-workbench base specification uses Present document workbench information. OpenSpec returned exit zero despite aborting without changes.",
+  "resolution": "Align the MODIFIED requirement header with the current base specification and reject any OpenSpec archive result whose stdout reports Aborted even when the process exits zero.",
+  "raw_output_sha256": "49c94b513318f79949104d8cb48a7519c93cf547c8fee78fc92fb52a5f4231b6",
+  "boundaries": {
+    "real_archive_executed": false,
+    "archive_directory_created": false,
+    "source_change_restored": true,
+    "archive_lock_removed": true,
+    "push_executed": false
+  }
+}

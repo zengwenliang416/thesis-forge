@@ -1,6 +1,6 @@
 ## MODIFIED Requirements
 
-### Requirement: Present academic workbench information
+### Requirement: Present document workbench information
 The shared React frontend SHALL present a general `DocForge`
 Markdown-to-Microsoft-Word document workshop rather than a thesis-only product.
 It MUST keep a compact product command bar, document outline, Markdown editor,
