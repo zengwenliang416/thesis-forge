@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-08-28T07:57:42.465Z",
-  "current_focus": "docforge-workbench-ui-redesign",
+  "generated_at": "2026-08-28T13:31:53.674Z",
+  "current_focus": "automatic-docx-toc-refresh-p1",
   "changes": [
     {
       "id": "automatic-docx-toc-refresh-p1",
@@ -43,11 +43,13 @@
     },
     {
       "id": "docforge-workbench-ui-redesign",
-      "stage": "development",
-      "status": "active",
-      "branch": null,
+      "stage": "archived",
+      "status": "archived",
+      "branch": "zwl/docforge-project-format-v1",
       "created_at": null,
-      "last_active_at": null
+      "last_active_at": "2026-08-28",
+      "archived_at": "2026-08-28T13:31:53.674Z",
+      "archive_path": "openspec/changes/archive/2026-08-28-docforge-workbench-ui-redesign"
     },
     {
       "id": "illustrated-user-manual",

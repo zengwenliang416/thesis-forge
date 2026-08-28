@@ -1,7 +1,7 @@
 {
   "schema": "specnav.operations.verification-v2-proof.v1",
   "id": "verification-release-proof-558764ffe8b423602c2c8093a10fabb332fbf99a4ac921c3e184a565579209da",
-  "generated_at": "2026-08-28T13:28:28.428Z",
+  "generated_at": "2026-08-28T13:31:43.145Z",
   "change_id": "docforge-workbench-ui-redesign",
   "ok": true,
   "sources": {

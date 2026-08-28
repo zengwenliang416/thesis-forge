@@ -1,7 +1,7 @@
 {
   "schema": "specnav.codegraph.status.v1",
   "ok": true,
-  "generated_at": "2026-08-28T13:28:29.411Z",
+  "generated_at": "2026-08-28T13:31:44.427Z",
   "project_root": "/Volumes/zwl/open_sources/thesis-forge",
   "active_change": "docforge-workbench-ui-redesign",
   "policy": {

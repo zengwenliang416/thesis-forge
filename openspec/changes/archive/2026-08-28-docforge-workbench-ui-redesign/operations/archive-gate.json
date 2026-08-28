@@ -1,6 +1,6 @@
 {
   "schema": "specnav.ops.archiveGate.v1",
-  "generated_at": "2026-08-28T09:48:50.211Z",
+  "generated_at": "2026-08-28T13:31:44.432Z",
   "active_change": "docforge-workbench-ui-redesign",
   "release_target": "local-only",
   "lane": "standard",
@@ -14,7 +14,7 @@
     "status": {
       "schema": "specnav.codegraph.status.v1",
       "ok": true,
-      "generated_at": "2026-08-28T09:48:50.208Z",
+      "generated_at": "2026-08-28T13:31:44.427Z",
       "project_root": "/Volumes/zwl/open_sources/thesis-forge",
       "active_change": "docforge-workbench-ui-redesign",
       "policy": {
@@ -117,7 +117,7 @@
     },
     "evidence_index": {
       "schema": "specnav.codegraph.evidence_index.v1",
-      "generated_at": "2026-08-25T08:27:25.225Z",
+      "generated_at": "2026-08-28T13:31:44.427Z",
       "active_change": "docforge-workbench-ui-redesign",
       "source_raw": "openspec/changes/docforge-workbench-ui-redesign/codegraph/evidence.jsonl",
       "by_claim": {
@@ -151,7 +151,7 @@
     },
     "claims_report": {
       "schema": "specnav.codegraph.claims_report.v1",
-      "generated_at": "2026-08-28T09:48:50.209Z",
+      "generated_at": "2026-08-28T13:31:44.429Z",
       "active_change": "docforge-workbench-ui-redesign",
       "claims_file": "openspec/changes/docforge-workbench-ui-redesign/codegraph/claims-map.json",
       "evidence_index": "openspec/changes/docforge-workbench-ui-redesign/codegraph/evidence-index.json",
@@ -187,7 +187,7 @@
     },
     "guard_report": {
       "schema": "specnav.codegraph.guard_report.v1",
-      "generated_at": "2026-08-28T09:48:50.209Z",
+      "generated_at": "2026-08-28T13:31:44.429Z",
       "active_change": "docforge-workbench-ui-redesign",
       "stage": "operations",
       "ok": true,
@@ -248,7 +248,7 @@
       },
       "evidence_index": {
         "schema": "specnav.codegraph.evidence_index.v1",
-        "generated_at": "2026-08-25T08:27:25.225Z",
+        "generated_at": "2026-08-28T13:31:44.427Z",
         "active_change": "docforge-workbench-ui-redesign",
         "source_raw": "openspec/changes/docforge-workbench-ui-redesign/codegraph/evidence.jsonl",
         "by_claim": {
@@ -282,7 +282,7 @@
       },
       "claims_report": {
         "schema": "specnav.codegraph.claims_report.v1",
-        "generated_at": "2026-08-28T09:48:50.209Z",
+        "generated_at": "2026-08-28T13:31:44.429Z",
         "active_change": "docforge-workbench-ui-redesign",
         "claims_file": "openspec/changes/docforge-workbench-ui-redesign/codegraph/claims-map.json",
         "evidence_index": "openspec/changes/docforge-workbench-ui-redesign/codegraph/evidence-index.json",
