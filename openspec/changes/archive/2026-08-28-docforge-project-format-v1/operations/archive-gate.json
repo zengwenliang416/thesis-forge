@@ -1,6 +1,6 @@
 {
   "schema": "specnav.ops.archiveGate.v1",
-  "generated_at": "2026-08-28T03:49:32.464Z",
+  "generated_at": "2026-08-28T06:47:07.611Z",
   "active_change": "docforge-project-format-v1",
   "release_target": "local-only",
   "lane": "standard",
@@ -30,7 +30,7 @@
     "status": {
       "schema": "specnav.codegraph.status.v1",
       "ok": true,
-      "generated_at": "2026-08-28T03:49:32.376Z",
+      "generated_at": "2026-08-28T06:47:07.497Z",
       "project_root": "/Volumes/ThesisForgeCI/workspaces/thesis-forge-docforge-verify",
       "active_change": "docforge-project-format-v1",
       "policy": {
@@ -93,7 +93,7 @@
     },
     "evidence_index": {
       "schema": "specnav.codegraph.evidence_index.v1",
-      "generated_at": "2026-08-28T03:49:32.402Z",
+      "generated_at": "2026-08-28T06:47:07.518Z",
       "active_change": "docforge-project-format-v1",
       "source_raw": "openspec/changes/docforge-project-format-v1/codegraph/evidence.jsonl",
       "by_claim": {},
@@ -104,7 +104,7 @@
     },
     "claims_report": {
       "schema": "specnav.codegraph.claims_report.v1",
-      "generated_at": "2026-08-28T03:49:32.460Z",
+      "generated_at": "2026-08-28T06:47:07.552Z",
       "active_change": "docforge-project-format-v1",
       "claims_file": "openspec/changes/docforge-project-format-v1/codegraph/claims-map.json",
       "evidence_index": "openspec/changes/docforge-project-format-v1/codegraph/evidence-index.json",
@@ -170,7 +170,7 @@
     },
     "guard_report": {
       "schema": "specnav.codegraph.guard_report.v1",
-      "generated_at": "2026-08-28T03:49:32.460Z",
+      "generated_at": "2026-08-28T06:47:07.552Z",
       "active_change": "docforge-project-format-v1",
       "stage": "operations",
       "ok": true,
@@ -233,7 +233,7 @@
       },
       "evidence_index": {
         "schema": "specnav.codegraph.evidence_index.v1",
-        "generated_at": "2026-08-28T03:49:32.402Z",
+        "generated_at": "2026-08-28T06:47:07.518Z",
         "active_change": "docforge-project-format-v1",
         "source_raw": "openspec/changes/docforge-project-format-v1/codegraph/evidence.jsonl",
         "by_claim": {},
@@ -244,7 +244,7 @@
       },
       "claims_report": {
         "schema": "specnav.codegraph.claims_report.v1",
-        "generated_at": "2026-08-28T03:49:32.460Z",
+        "generated_at": "2026-08-28T06:47:07.552Z",
         "active_change": "docforge-project-format-v1",
         "claims_file": "openspec/changes/docforge-project-format-v1/codegraph/claims-map.json",
         "evidence_index": "openspec/changes/docforge-project-format-v1/codegraph/evidence-index.json",

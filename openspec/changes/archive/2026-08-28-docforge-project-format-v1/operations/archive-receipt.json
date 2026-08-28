@@ -1,0 +1,440 @@
+{
+  "schema": "specnav.ops.archiveReceipt.v1",
+  "archived_at": "2026-08-28T06:47:11.820Z",
+  "change": "docforge-project-format-v1",
+  "archive_path": "openspec/changes/archive/2026-08-28-docforge-project-format-v1",
+  "active_change_after": "docforge-workbench-ui-redesign",
+  "skip_specs": false,
+  "tasks_md": {
+    "ok": true,
+    "command": "normalize",
+    "project_root": "/Volumes/ThesisForgeCI/workspaces/thesis-forge-docforge-verify",
+    "active_change": "docforge-project-format-v1",
+    "path": "/Volumes/ThesisForgeCI/workspaces/thesis-forge-docforge-verify/openspec/changes/docforge-project-format-v1/tasks.md",
+    "changed": false,
+    "dry_run": false,
+    "default_status": "todo",
+    "task_count": 42,
+    "checkbox_count": 42,
+    "completed_count": 42,
+    "incomplete_count": 0,
+    "normalized_count": 0,
+    "blockers": []
+  },
+  "archive_gate": {
+    "schema": "specnav.ops.archiveGate.v1",
+    "generated_at": "2026-08-28T06:47:07.611Z",
+    "active_change": "docforge-project-format-v1",
+    "release_target": "local-only",
+    "lane": "standard",
+    "verdict": "green",
+    "blockers": [],
+    "warnings": [
+      "codegraph:not-indexed",
+      "codegraph:claim-unverified:development:task-001-project-contract",
+      "codegraph:claim-unverified:development:task-002-generic-document-domain",
+      "codegraph:claim-unverified:development:task-003-python-package-cli",
+      "codegraph:claim-unverified:development:task-004-runtime-protocol",
+      "codegraph:claim-unverified:development:task-005-template-profiles",
+      "codegraph:claim-unverified:development:task-006-workbench-desktop",
+      "codegraph:claim-unverified:development:task-007-repository-delivery",
+      "codegraph:claim-unverified:development:task-008-end-to-end-verification",
+      "codegraph:claim-unverified:verification:task-001-project-contract",
+      "codegraph:claim-unverified:verification:task-002-generic-document-domain",
+      "codegraph:claim-unverified:verification:task-003-python-package-cli",
+      "codegraph:claim-unverified:verification:task-004-runtime-protocol",
+      "codegraph:claim-unverified:verification:task-005-template-profiles",
+      "codegraph:claim-unverified:verification:task-006-workbench-desktop",
+      "codegraph:claim-unverified:verification:task-007-repository-delivery",
+      "codegraph:claim-unverified:verification:task-008-end-to-end-verification"
+    ],
+    "codegraph": {
+      "ok": true,
+      "status": {
+        "schema": "specnav.codegraph.status.v1",
+        "ok": true,
+        "generated_at": "2026-08-28T06:47:07.497Z",
+        "project_root": "/Volumes/ThesisForgeCI/workspaces/thesis-forge-docforge-verify",
+        "active_change": "docforge-project-format-v1",
+        "policy": {
+          "enabled": true,
+          "profile": "bootstrap",
+          "mode": "observe",
+          "stage": "operations",
+          "required_for_stage": false,
+          "disabled_reason": null
+        },
+        "execution_surface": "cli",
+        "decision": {
+          "stage": "operations",
+          "result": "warn",
+          "reason": "CodeGraph policy has advisory warnings for operations."
+        },
+        "cli": {
+          "available": true,
+          "version": "1.3.1",
+          "path": "/Users/wenliang_zeng/.local/bin/codegraph",
+          "unsupported": false,
+          "error": null
+        },
+        "mcp": {
+          "configured": true,
+          "visible_in_current_session": false,
+          "restart_required": true,
+          "config_files": [
+            "/Users/wenliang_zeng/.claude.json",
+            "/Users/wenliang_zeng/.codex/config.toml"
+          ]
+        },
+        "index": {
+          "initialized": false,
+          "projectPath": "/Volumes/ThesisForgeCI/workspaces/thesis-forge-docforge-verify",
+          "indexPath": null,
+          "lastIndexed": null,
+          "fileCount": 0,
+          "nodeCount": 0,
+          "edgeCount": 0,
+          "pendingChanges": {
+            "added": 0,
+            "modified": 0,
+            "removed": 0
+          },
+          "reindexRecommended": false,
+          "worktreeMismatch": null
+        },
+        "blockers": [],
+        "warnings": [
+          "codegraph:not-indexed"
+        ],
+        "raw_codegraph_status": {
+          "initialized": false,
+          "version": "1.3.1",
+          "projectPath": "/Volumes/ThesisForgeCI/workspaces/thesis-forge-docforge-verify",
+          "indexPath": "/Volumes/ThesisForgeCI/workspaces/thesis-forge-docforge-verify/.codegraph",
+          "lastIndexed": null
+        }
+      },
+      "evidence_index": {
+        "schema": "specnav.codegraph.evidence_index.v1",
+        "generated_at": "2026-08-28T06:47:07.518Z",
+        "active_change": "docforge-project-format-v1",
+        "source_raw": "openspec/changes/docforge-project-format-v1/codegraph/evidence.jsonl",
+        "by_claim": {},
+        "by_stage": {},
+        "blockers": [],
+        "raw_exists": false,
+        "record_count": 0
+      },
+      "claims_report": {
+        "schema": "specnav.codegraph.claims_report.v1",
+        "generated_at": "2026-08-28T06:47:07.552Z",
+        "active_change": "docforge-project-format-v1",
+        "claims_file": "openspec/changes/docforge-project-format-v1/codegraph/claims-map.json",
+        "evidence_index": "openspec/changes/docforge-project-format-v1/codegraph/evidence-index.json",
+        "claims_count": 16,
+        "verified_claims": [],
+        "unverified_claims": [
+          "development:task-001-project-contract",
+          "development:task-002-generic-document-domain",
+          "development:task-003-python-package-cli",
+          "development:task-004-runtime-protocol",
+          "development:task-005-template-profiles",
+          "development:task-006-workbench-desktop",
+          "development:task-007-repository-delivery",
+          "development:task-008-end-to-end-verification",
+          "verification:task-001-project-contract",
+          "verification:task-002-generic-document-domain",
+          "verification:task-003-python-package-cli",
+          "verification:task-004-runtime-protocol",
+          "verification:task-005-template-profiles",
+          "verification:task-006-workbench-desktop",
+          "verification:task-007-repository-delivery",
+          "verification:task-008-end-to-end-verification"
+        ],
+        "blockers": [],
+        "warnings": [
+          "codegraph:claim-unverified:development:task-001-project-contract",
+          "codegraph:claim-unverified:development:task-002-generic-document-domain",
+          "codegraph:claim-unverified:development:task-003-python-package-cli",
+          "codegraph:claim-unverified:development:task-004-runtime-protocol",
+          "codegraph:claim-unverified:development:task-005-template-profiles",
+          "codegraph:claim-unverified:development:task-006-workbench-desktop",
+          "codegraph:claim-unverified:development:task-007-repository-delivery",
+          "codegraph:claim-unverified:development:task-008-end-to-end-verification",
+          "codegraph:claim-unverified:verification:task-001-project-contract",
+          "codegraph:claim-unverified:verification:task-002-generic-document-domain",
+          "codegraph:claim-unverified:verification:task-003-python-package-cli",
+          "codegraph:claim-unverified:verification:task-004-runtime-protocol",
+          "codegraph:claim-unverified:verification:task-005-template-profiles",
+          "codegraph:claim-unverified:verification:task-006-workbench-desktop",
+          "codegraph:claim-unverified:verification:task-007-repository-delivery",
+          "codegraph:claim-unverified:verification:task-008-end-to-end-verification"
+        ]
+      },
+      "drift": {
+        "schema": "specnav.codegraph.drift.v1",
+        "active_change": "docforge-project-format-v1",
+        "drift": [],
+        "blockers": []
+      },
+      "decision": {
+        "schema": "specnav.codegraph.decision.v1",
+        "stage": "operations",
+        "profile": "bootstrap",
+        "effective_mode": "observe",
+        "required_for_stage": false,
+        "execution_surface": "cli",
+        "result": "warn",
+        "blockers": [],
+        "warnings": [
+          "codegraph:not-indexed"
+        ],
+        "explanation": "CodeGraph policy has advisory warnings for operations."
+      },
+      "guard_report": {
+        "schema": "specnav.codegraph.guard_report.v1",
+        "generated_at": "2026-08-28T06:47:07.552Z",
+        "active_change": "docforge-project-format-v1",
+        "stage": "operations",
+        "ok": true,
+        "status": {
+          "policy": {
+            "enabled": true,
+            "profile": "bootstrap",
+            "mode": "observe",
+            "stage": "operations",
+            "required_for_stage": false,
+            "disabled_reason": null
+          },
+          "execution_surface": "cli",
+          "cli": {
+            "available": true,
+            "version": "1.3.1",
+            "path": "/Users/wenliang_zeng/.local/bin/codegraph",
+            "unsupported": false,
+            "error": null
+          },
+          "mcp": {
+            "configured": true,
+            "visible_in_current_session": false,
+            "restart_required": true,
+            "config_files": [
+              "/Users/wenliang_zeng/.claude.json",
+              "/Users/wenliang_zeng/.codex/config.toml"
+            ]
+          },
+          "index": {
+            "initialized": false,
+            "projectPath": "/Volumes/ThesisForgeCI/workspaces/thesis-forge-docforge-verify",
+            "indexPath": null,
+            "lastIndexed": null,
+            "fileCount": 0,
+            "nodeCount": 0,
+            "edgeCount": 0,
+            "pendingChanges": {
+              "added": 0,
+              "modified": 0,
+              "removed": 0
+            },
+            "reindexRecommended": false,
+            "worktreeMismatch": null
+          }
+        },
+        "decision": {
+          "schema": "specnav.codegraph.decision.v1",
+          "stage": "operations",
+          "profile": "bootstrap",
+          "effective_mode": "observe",
+          "required_for_stage": false,
+          "execution_surface": "cli",
+          "result": "warn",
+          "blockers": [],
+          "warnings": [
+            "codegraph:not-indexed"
+          ],
+          "explanation": "CodeGraph policy has advisory warnings for operations."
+        },
+        "evidence_index": {
+          "schema": "specnav.codegraph.evidence_index.v1",
+          "generated_at": "2026-08-28T06:47:07.518Z",
+          "active_change": "docforge-project-format-v1",
+          "source_raw": "openspec/changes/docforge-project-format-v1/codegraph/evidence.jsonl",
+          "by_claim": {},
+          "by_stage": {},
+          "blockers": [],
+          "raw_exists": false,
+          "record_count": 0
+        },
+        "claims_report": {
+          "schema": "specnav.codegraph.claims_report.v1",
+          "generated_at": "2026-08-28T06:47:07.552Z",
+          "active_change": "docforge-project-format-v1",
+          "claims_file": "openspec/changes/docforge-project-format-v1/codegraph/claims-map.json",
+          "evidence_index": "openspec/changes/docforge-project-format-v1/codegraph/evidence-index.json",
+          "claims_count": 16,
+          "verified_claims": [],
+          "unverified_claims": [
+            "development:task-001-project-contract",
+            "development:task-002-generic-document-domain",
+            "development:task-003-python-package-cli",
+            "development:task-004-runtime-protocol",
+            "development:task-005-template-profiles",
+            "development:task-006-workbench-desktop",
+            "development:task-007-repository-delivery",
+            "development:task-008-end-to-end-verification",
+            "verification:task-001-project-contract",
+            "verification:task-002-generic-document-domain",
+            "verification:task-003-python-package-cli",
+            "verification:task-004-runtime-protocol",
+            "verification:task-005-template-profiles",
+            "verification:task-006-workbench-desktop",
+            "verification:task-007-repository-delivery",
+            "verification:task-008-end-to-end-verification"
+          ],
+          "blockers": [],
+          "warnings": [
+            "codegraph:claim-unverified:development:task-001-project-contract",
+            "codegraph:claim-unverified:development:task-002-generic-document-domain",
+            "codegraph:claim-unverified:development:task-003-python-package-cli",
+            "codegraph:claim-unverified:development:task-004-runtime-protocol",
+            "codegraph:claim-unverified:development:task-005-template-profiles",
+            "codegraph:claim-unverified:development:task-006-workbench-desktop",
+            "codegraph:claim-unverified:development:task-007-repository-delivery",
+            "codegraph:claim-unverified:development:task-008-end-to-end-verification",
+            "codegraph:claim-unverified:verification:task-001-project-contract",
+            "codegraph:claim-unverified:verification:task-002-generic-document-domain",
+            "codegraph:claim-unverified:verification:task-003-python-package-cli",
+            "codegraph:claim-unverified:verification:task-004-runtime-protocol",
+            "codegraph:claim-unverified:verification:task-005-template-profiles",
+            "codegraph:claim-unverified:verification:task-006-workbench-desktop",
+            "codegraph:claim-unverified:verification:task-007-repository-delivery",
+            "codegraph:claim-unverified:verification:task-008-end-to-end-verification"
+          ]
+        },
+        "drift": {
+          "schema": "specnav.codegraph.drift.v1",
+          "active_change": "docforge-project-format-v1",
+          "drift": [],
+          "blockers": []
+        },
+        "blockers": [],
+        "warnings": [
+          "codegraph:not-indexed",
+          "codegraph:claim-unverified:development:task-001-project-contract",
+          "codegraph:claim-unverified:development:task-002-generic-document-domain",
+          "codegraph:claim-unverified:development:task-003-python-package-cli",
+          "codegraph:claim-unverified:development:task-004-runtime-protocol",
+          "codegraph:claim-unverified:development:task-005-template-profiles",
+          "codegraph:claim-unverified:development:task-006-workbench-desktop",
+          "codegraph:claim-unverified:development:task-007-repository-delivery",
+          "codegraph:claim-unverified:development:task-008-end-to-end-verification",
+          "codegraph:claim-unverified:verification:task-001-project-contract",
+          "codegraph:claim-unverified:verification:task-002-generic-document-domain",
+          "codegraph:claim-unverified:verification:task-003-python-package-cli",
+          "codegraph:claim-unverified:verification:task-004-runtime-protocol",
+          "codegraph:claim-unverified:verification:task-005-template-profiles",
+          "codegraph:claim-unverified:verification:task-006-workbench-desktop",
+          "codegraph:claim-unverified:verification:task-007-repository-delivery",
+          "codegraph:claim-unverified:verification:task-008-end-to-end-verification"
+        ]
+      },
+      "artifacts": {
+        "status": "openspec/changes/docforge-project-format-v1/codegraph/status.json",
+        "decision": "openspec/changes/docforge-project-format-v1/codegraph/decision.json",
+        "guard_report": "openspec/changes/docforge-project-format-v1/codegraph/guard-report.json",
+        "evidence_raw": "openspec/changes/docforge-project-format-v1/codegraph/evidence.jsonl",
+        "evidence_index": "openspec/changes/docforge-project-format-v1/codegraph/evidence-index.json",
+        "claims_map": "openspec/changes/docforge-project-format-v1/codegraph/claims-map.json",
+        "claims_report": "openspec/changes/docforge-project-format-v1/codegraph/claims-report.json",
+        "drift_report": "openspec/changes/docforge-project-format-v1/codegraph/drift-report.json",
+        "impact_report": "openspec/changes/docforge-project-format-v1/codegraph/impact-report.json"
+      },
+      "blockers": [],
+      "warnings": [
+        "codegraph:not-indexed",
+        "codegraph:claim-unverified:development:task-001-project-contract",
+        "codegraph:claim-unverified:development:task-002-generic-document-domain",
+        "codegraph:claim-unverified:development:task-003-python-package-cli",
+        "codegraph:claim-unverified:development:task-004-runtime-protocol",
+        "codegraph:claim-unverified:development:task-005-template-profiles",
+        "codegraph:claim-unverified:development:task-006-workbench-desktop",
+        "codegraph:claim-unverified:development:task-007-repository-delivery",
+        "codegraph:claim-unverified:development:task-008-end-to-end-verification",
+        "codegraph:claim-unverified:verification:task-001-project-contract",
+        "codegraph:claim-unverified:verification:task-002-generic-document-domain",
+        "codegraph:claim-unverified:verification:task-003-python-package-cli",
+        "codegraph:claim-unverified:verification:task-004-runtime-protocol",
+        "codegraph:claim-unverified:verification:task-005-template-profiles",
+        "codegraph:claim-unverified:verification:task-006-workbench-desktop",
+        "codegraph:claim-unverified:verification:task-007-repository-delivery",
+        "codegraph:claim-unverified:verification:task-008-end-to-end-verification"
+      ]
+    },
+    "verification_v2_proof_id": "verification-release-proof-8a50f84b36aa6705eb02a7a6404dfa88c368229e15b687b4cb21958ffd4bb092",
+    "operations_ready": true
+  },
+  "evidence_integrity": {
+    "ok": true,
+    "immutable": true,
+    "files": [
+      {
+        "path": "verify/evidence/raw.jsonl",
+        "sha256": "f1f257779d2c6c33be5e40f4248c3abb5e8052e816a98757b9a7076f70c68e2e"
+      },
+      {
+        "path": "verify/evidence/index.json",
+        "sha256": "34ad008b3b3299c9028cffc4c3de649a2f0d66bc11bb69719e966ca940444b21"
+      },
+      {
+        "path": "verify/evidence-index.jsonl",
+        "sha256": "1858a48b484912222532881a8696263dfb88815890687673dce542c7039807c3"
+      }
+    ],
+    "blockers": []
+  },
+  "registry": {
+    "path": "openspec/.specnav/change-registry.json",
+    "current_focus": "docforge-workbench-ui-redesign"
+  },
+  "active_change_file": {
+    "changed": true,
+    "path": "openspec/.specnav/active-change",
+    "value": "docforge-workbench-ui-redesign"
+  },
+  "commands": {
+    "openspec_validate": {
+      "ok": true,
+      "status": 0,
+      "signal": null,
+      "command": [
+        "openspec",
+        "--no-color",
+        "validate",
+        "docforge-project-format-v1",
+        "--type",
+        "change",
+        "--strict",
+        "--json",
+        "--no-interactive"
+      ],
+      "stdout_tail": "{\n  \"items\": [\n    {\n      \"id\": \"docforge-project-format-v1\",\n      \"type\": \"change\",\n      \"valid\": true,\n      \"issues\": [],\n      \"durationMs\": 65\n    }\n  ],\n  \"summary\": {\n    \"totals\": {\n      \"items\": 1,\n      \"passed\": 1,\n      \"failed\": 0\n    },\n    \"byType\": {\n      \"change\": {\n        \"items\": 1,\n        \"passed\": 1,\n        \"failed\": 0\n      }\n    }\n  },\n  \"version\": \"1.0\"\n}\n",
+      "stderr_tail": "",
+      "error": null
+    },
+    "openspec_archive": {
+      "ok": true,
+      "status": 0,
+      "signal": null,
+      "command": [
+        "openspec",
+        "--no-color",
+        "archive",
+        "docforge-project-format-v1",
+        "--yes"
+      ],
+      "stdout_tail": "\nProposal warnings in proposal.md (non-blocking):\n  ⚠ Requirement must contain SHALL or MUST keyword\n  ⚠ Requirement must contain SHALL or MUST keyword\n  ⚠ Consider splitting changes with more than 10 deltas\nTask status: ✓ Complete\n\nSpecs to update:\n  bibliography-citations: update\n  desktop-workbench: update\n  docforge-project-format: create\n  docforge-runtime-contract: create\n  document-markdown-model: create\n  generic-document-template: create\n  offline-cli-pipeline: update\n  render-plan-docx: update\n  validation-template-resolution: update\nApplying changes to openspec/specs/bibliography-citations/spec.md:\n  ~ 2 modified\nApplying changes to openspec/specs/desktop-workbench/spec.md:\n  + 1 added\n  ~ 5 modified\n  - 1 removed\nApplying changes to openspec/specs/docforge-project-format/spec.md:\n  + 6 added\nApplying changes to openspec/specs/docforge-runtime-contract/spec.md:\n  + 6 added\nApplying changes to openspec/specs/document-markdown-model/spec.md:\n  + 5 added\nApplying changes to openspec/specs/generic-document-template/spec.md:\n  + 5 added\nApplying changes to openspec/specs/offline-cli-pipeline/spec.md:\n  ~ 7 modified\nApplying changes to openspec/specs/render-plan-docx/spec.md:\n  + 2 added\nApplying changes to openspec/specs/validation-template-resolution/spec.md:\n  + 2 added\n  ~ 2 modified\n  - 2 removed\nTotals: + 27, ~ 16, - 3, → 0\nSpecs updated successfully.\nChange 'docforge-project-format-v1' archived as '2026-08-28-docforge-project-format-v1'.\n",
+      "stderr_tail": "",
+      "error": null
+    }
+  }
+}
