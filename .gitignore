@@ -19,9 +19,6 @@ tmp/
 .env
 *.local.yaml
 
-# SpecNav archive transaction lock is ephemeral runtime state.
-/openspec/.specnav/archive.lock/
-
 # Kimi assistant session exports (large dev logs, not source)
 docs/sessions/
 

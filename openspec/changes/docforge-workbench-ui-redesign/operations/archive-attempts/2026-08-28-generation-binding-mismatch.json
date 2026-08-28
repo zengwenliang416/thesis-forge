@@ -1,0 +1,34 @@
+{
+  "schema": "docforge.operations.archive-attempt.v1",
+  "attempted_at": "2026-08-28T13:25:02.234Z",
+  "change_id": "docforge-workbench-ui-redesign",
+  "head": "e9efbb47fbc793444a7a776eae68196ca0340287",
+  "ok": false,
+  "phase": "archive-gate",
+  "blockers": [
+    "verification-generation:active-binding-mismatch",
+    "verification-release:canonical-rebuild-blocked",
+    "verification-release:canonical-authority-chain-anchor-mismatch",
+    "verification-release:canonical-failure-state-mismatch",
+    "verification-release:canonical-freshness-mismatch",
+    "verification-release:canonical-gate-input-mismatch",
+    "verification-release:canonical-integrity-mismatch",
+    "verification-release:canonical-report-model-mismatch",
+    "verification-release:report-readings-mismatch",
+    "readiness-before-verification-green"
+  ],
+  "rollback": {
+    "ok": true,
+    "blockers": []
+  },
+  "root_cause": "Ignoring the archive lock through the root .gitignore changed the non-governance repository fingerprint, invalidating the approved Verification generation binding.",
+  "resolution": "Restore .gitignore and allow the exact archive lock status only when the archive transaction supplies a token that matches its safely-read owner file.",
+  "raw_output_sha256": "1adb6770152c6ed230f539006bbb3e1e9670e2b0b1218e3c7d94387c269ea3e1",
+  "boundaries": {
+    "real_archive_executed": false,
+    "archive_directory_created": false,
+    "source_change_restored": true,
+    "archive_lock_removed": true,
+    "push_executed": false
+  }
+}

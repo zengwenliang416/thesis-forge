@@ -417,7 +417,13 @@ function run(options = parseArgs()) {
       : fail(result, options.json);
   }
 
-  const gate = withSpecNavChange(change, () => writeArchiveGate(root));
+  const runGate = () => withSpecNavChange(
+    change,
+    () => writeArchiveGate(root)
+  );
+  const gate = transaction
+    ? transaction.withLockEnvironment(runGate)
+    : runGate();
   if (!gate || gate.verdict !== 'green') {
     const result = {
       project_root: root,

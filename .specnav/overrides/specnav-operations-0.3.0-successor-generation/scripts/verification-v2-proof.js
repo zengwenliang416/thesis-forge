@@ -44,6 +44,11 @@ const REQUIRED_REPORTS = Object.freeze([
   'test-case-results.html'
 ]);
 const PROOF_SCHEMA = 'specnav.operations.verification-v2-proof.v1';
+const ARCHIVE_LOCK_RELATIVE = 'openspec/.specnav/archive.lock';
+const ARCHIVE_LOCK_STATUS_LINES = new Set([
+  `?? ${ARCHIVE_LOCK_RELATIVE}/`,
+  `?? ${ARCHIVE_LOCK_RELATIVE}/owner`
+]);
 
 function isRecord(value) {
   return value !== null && typeof value === 'object' && !Array.isArray(value);
@@ -369,6 +374,31 @@ function git(projectRoot, args) {
   return result.stdout;
 }
 
+function nonTransientGitStatusLines(
+  projectRoot,
+  status,
+  env = process.env
+) {
+  const lines = String(status || '')
+    .split(/\r?\n/)
+    .filter(Boolean);
+  const token = env.SPECNAV_ARCHIVE_LOCK_TOKEN;
+  if (!/^\d+:[a-f0-9]{32}$/.test(token || '')) return lines;
+
+  let owner;
+  try {
+    owner = safeFs.readRegularFile(
+      projectRoot,
+      path.join(projectRoot, ARCHIVE_LOCK_RELATIVE, 'owner'),
+      'verification-release:archive-lock-owner-invalid'
+    );
+  } catch {
+    return lines;
+  }
+  if (!owner || owner.toString('utf8') !== `${token}\n`) return lines;
+  return lines.filter((line) => !ARCHIVE_LOCK_STATUS_LINES.has(line));
+}
+
 function resolveCurrentFingerprints(
   projectRoot,
   snapshot,
@@ -384,7 +414,7 @@ function resolveCurrentFingerprints(
     '--porcelain=v1',
     '--untracked-files=all'
   ]);
-  if (status.trim() !== '') {
+  if (nonTransientGitStatusLines(projectRoot, status).length > 0) {
     throw new Error('verification-release:dirty-worktree');
   }
   const repositoryInventory = git(projectRoot, [
@@ -2692,5 +2722,6 @@ module.exports = {
   REQUIRED_HOSTS,
   REQUIRED_REPORTS,
   createReleaseProofValidator,
+  nonTransientGitStatusLines,
   resolveCurrentFingerprints
 };

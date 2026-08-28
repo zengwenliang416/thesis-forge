@@ -1,34 +1,50 @@
 'use strict';
 
 const assert = require('node:assert/strict');
-const childProcess = require('node:child_process');
+const fs = require('node:fs');
+const os = require('node:os');
 const path = require('node:path');
 const test = require('node:test');
 
-const PROJECT_ROOT = path.resolve(__dirname, '../../../..');
+const {
+  nonTransientGitStatusLines
+} = require('../scripts/verification-v2-proof');
 
-function isIgnored(relativePath) {
-  const result = childProcess.spawnSync(
-    'git',
-    ['check-ignore', '--no-index', '--quiet', '--', relativePath],
-    {
-      cwd: PROJECT_ROOT,
-      encoding: 'utf8'
-    }
-  );
-  if (result.status !== 0 && result.status !== 1) {
-    throw new Error(result.stderr.trim() || 'git check-ignore failed');
-  }
-  return result.status === 0;
-}
+test('accepts only the owned SpecNav archive transaction lock', () => {
+  const root = fs.mkdtempSync(path.join(
+    fs.realpathSync(os.tmpdir()),
+    'ops-archive-lock-'
+  ));
+  const lock = path.join(root, 'openspec', '.specnav', 'archive.lock');
+  const token = '1234:0123456789abcdef0123456789abcdef';
+  fs.mkdirSync(lock, { recursive: true });
+  fs.writeFileSync(path.join(lock, 'owner'), `${token}\n`);
 
-test('ignores only the SpecNav archive transaction lock', () => {
-  assert.equal(
-    isIgnored('openspec/.specnav/archive.lock/owner'),
-    true
+  assert.deepEqual(
+    nonTransientGitStatusLines(
+      root,
+      '?? openspec/.specnav/archive.lock/owner\n',
+      { SPECNAV_ARCHIVE_LOCK_TOKEN: token }
+    ),
+    []
   );
-  assert.equal(
-    isIgnored('openspec/.specnav/unexpected-state/owner'),
-    false
+  assert.deepEqual(
+    nonTransientGitStatusLines(
+      root,
+      [
+        '?? openspec/.specnav/archive.lock/owner',
+        ' M src/docforge/cli.py'
+      ].join('\n'),
+      { SPECNAV_ARCHIVE_LOCK_TOKEN: token }
+    ),
+    [' M src/docforge/cli.py']
+  );
+  assert.deepEqual(
+    nonTransientGitStatusLines(
+      root,
+      '?? openspec/.specnav/archive.lock/owner\n',
+      { SPECNAV_ARCHIVE_LOCK_TOKEN: '1234:ffffffffffffffffffffffffffffffff' }
+    ),
+    ['?? openspec/.specnav/archive.lock/owner']
   );
 });

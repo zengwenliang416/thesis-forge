@@ -249,6 +249,19 @@ function createArchiveTransaction(root, changeDir, change) {
   const temporaryRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'specnav-archive-'));
   let cleaned = false;
 
+  function withLockEnvironment(fn) {
+    const key = 'SPECNAV_ARCHIVE_LOCK_TOKEN';
+    const had = Object.prototype.hasOwnProperty.call(process.env, key);
+    const previous = process.env[key];
+    process.env[key] = lock.token;
+    try {
+      return fn();
+    } finally {
+      if (had) process.env[key] = previous;
+      else delete process.env[key];
+    }
+  }
+
   function cleanup() {
     if (cleaned) return;
     cleaned = true;
@@ -369,7 +382,8 @@ function createArchiveTransaction(root, changeDir, change) {
   return {
     beforeInventory,
     cleanup,
-    rollback
+    rollback,
+    withLockEnvironment
   };
 }
 
