@@ -1,6 +1,6 @@
 {
   "schema": "specnav.codegraph.guard_report.v1",
-  "generated_at": "2026-08-28T03:40:44.303Z",
+  "generated_at": "2026-08-28T03:49:32.460Z",
   "active_change": "docforge-project-format-v1",
   "stage": "operations",
   "ok": true,
@@ -63,7 +63,7 @@
   },
   "evidence_index": {
     "schema": "specnav.codegraph.evidence_index.v1",
-    "generated_at": "2026-08-28T03:40:44.274Z",
+    "generated_at": "2026-08-28T03:49:32.402Z",
     "active_change": "docforge-project-format-v1",
     "source_raw": "openspec/changes/docforge-project-format-v1/codegraph/evidence.jsonl",
     "by_claim": {},
@@ -74,7 +74,7 @@
   },
   "claims_report": {
     "schema": "specnav.codegraph.claims_report.v1",
-    "generated_at": "2026-08-28T03:40:44.303Z",
+    "generated_at": "2026-08-28T03:49:32.460Z",
     "active_change": "docforge-project-format-v1",
     "claims_file": "openspec/changes/docforge-project-format-v1/codegraph/claims-map.json",
     "evidence_index": "openspec/changes/docforge-project-format-v1/codegraph/evidence-index.json",

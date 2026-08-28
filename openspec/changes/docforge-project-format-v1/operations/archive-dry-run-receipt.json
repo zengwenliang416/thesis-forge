@@ -1,0 +1,55 @@
+{
+  "schema": "docforge.operations.archive-dry-run-receipt.v1",
+  "recorded_at": "2026-08-28T03:51:20Z",
+  "change_id": "docforge-project-format-v1",
+  "proposal_sha256": "e82a01958d72e47719260e36f62f64f32803c15f2e8027cc99a74924396c875e",
+  "worktree": "/Volumes/ThesisForgeCI/workspaces/thesis-forge-docforge-verify",
+  "branch": "zwl/docforge-project-format-v1-verification",
+  "head_before_dry_run": "bc00274b64e2ec1b21a652c1d670f411d0b2cc14",
+  "verification_validate": {
+    "ok": true,
+    "status": "approved-current",
+    "snapshot_id": "snapshot-350e6482b5745502bf4c6d6a",
+    "snapshot_sha256": "350e6482b5745502bf4c6d6af7af26ba568208117ba5699863f8c80861a204de",
+    "case_ids": [
+      "case-a1-project-open",
+      "case-a10-repository-delivery",
+      "case-a2-general-project",
+      "case-a3-academic-profile",
+      "case-a4-obsolete-contracts",
+      "case-a5-neutral-default-paths",
+      "case-a6-path-security",
+      "case-a7-deterministic-docx",
+      "case-a8-runtime-parity",
+      "case-a9-installed-office"
+    ],
+    "blockers": [],
+    "fallback_used": false
+  },
+  "archive_dry_run": {
+    "ok": true,
+    "dry_run": true,
+    "active_change": "docforge-project-format-v1",
+    "verdict": "green",
+    "operations_ready": true,
+    "blockers": [],
+    "fallback_used": false
+  },
+  "authority": {
+    "verification_proof_id": "verification-release-proof-8a50f84b36aa6705eb02a7a6404dfa88c368229e15b687b4cb21958ffd4bb092",
+    "archive_gate_path": "operations/archive-gate.json",
+    "archive_gate_sha256": "557cfc67159c794a3e7d28b61e11ef3f6d53dd5bf963466afac9453661c4367f",
+    "archive_log_path": "operations/archive-log.jsonl",
+    "archive_log_sha256": "7619ffc7e537bf3b8f0d8ea2eb6a1fcc3ce06bfc5fa75d54e4210470ba84a788",
+    "verification_proof_path": "operations/verification-v2-proof.json",
+    "verification_proof_sha256": "31b87bde2dfe7ba62d5e5fbf103b65698272f0ab0387e5783dd05d2074dd5060"
+  },
+  "boundaries": {
+    "real_archive_executed": false,
+    "archive_directory_created": false,
+    "change_registry_modified": false,
+    "active_change_modified": false,
+    "push_executed": false,
+    "global_runtime_modified": false
+  }
+}
