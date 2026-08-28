@@ -70,6 +70,54 @@ function readOptionalJson(store, relative, blockers) {
   }
 }
 
+function selectFailureStateLineage(
+  runs,
+  failures,
+  repairLinks,
+  activeRunIds
+) {
+  const runsById = new Map(runs.map((run) => [run.id, run]));
+  const lineageRunIds = new Set(activeRunIds);
+  const pendingRunIds = [...lineageRunIds];
+
+  for (let index = 0; index < pendingRunIds.length; index += 1) {
+    const run = runsById.get(pendingRunIds[index]);
+    if (!run) continue;
+    for (const relatedRunId of [run.parent_run_id, run.origin_run_id]) {
+      if (
+        typeof relatedRunId !== 'string'
+        || lineageRunIds.has(relatedRunId)
+      ) continue;
+      lineageRunIds.add(relatedRunId);
+      pendingRunIds.push(relatedRunId);
+    }
+  }
+
+  const failureIds = new Set();
+  for (const run of runs) {
+    if (
+      lineageRunIds.has(run.id)
+      && typeof run.failure_id === 'string'
+    ) {
+      failureIds.add(run.failure_id);
+    }
+  }
+  for (const failure of failures) {
+    if (lineageRunIds.has(failure.run_id)) {
+      failureIds.add(failure.id);
+    }
+  }
+
+  return {
+    runs: runs.filter((run) => lineageRunIds.has(run.id)),
+    failures: failures.filter((failure) => failureIds.has(failure.id)),
+    repair_links: repairLinks.filter((entry) => (
+      failureIds.has(entry.failure_id)
+    )),
+    failure_ids: failureIds
+  };
+}
+
 function rawFailureInventory(
   store,
   runs,
@@ -531,17 +579,24 @@ function createVerificationArtifactPipeline(options = {}) {
         fallback_used: false
       };
     }
-    const generationRunIds = new Set(runs.filter((entry) => (
+    const allRuns = runs;
+    const allFailures = failures;
+    const allRepairLinks = repairLinks;
+    const generationRunIds = new Set(allRuns.filter((entry) => (
       entry.generation_id === activeGeneration.id
     )).map((entry) => entry.id));
-    runs = runs.filter((entry) => generationRunIds.has(entry.id));
+    const failureStateLineage = selectFailureStateLineage(
+      allRuns,
+      allFailures,
+      allRepairLinks,
+      generationRunIds
+    );
+    runs = allRuns.filter((entry) => generationRunIds.has(entry.id));
     attempts = attempts.filter((entry) => generationRunIds.has(entry.run_id));
     readings = readings.filter((entry) => generationRunIds.has(entry.run_id));
-    failures = failures.filter((entry) => generationRunIds.has(entry.run_id));
-    const generationFailureIds = new Set(failures.map((entry) => entry.id));
-    repairLinks = repairLinks.filter((entry) => (
-      generationFailureIds.has(entry.failure_id)
-    ));
+    failures = failureStateLineage.failures;
+    repairLinks = failureStateLineage.repair_links;
+    const generationFailureIds = failureStateLineage.failure_ids;
     const generationEvidence = scopedEvidenceIndex(
       evidenceIndex,
       generationRunIds,
@@ -565,7 +620,7 @@ function createVerificationArtifactPipeline(options = {}) {
     )).filter(Boolean);
     const rawFailureState = rawFailureInventory(
       store,
-      runs,
+      failureStateLineage.runs,
       blockers,
       { ignoreUnindexed: true }
     );
@@ -616,7 +671,7 @@ function createVerificationArtifactPipeline(options = {}) {
       expected_change_id: snapshot.change_id,
       failures,
       raw_failures: rawFailures,
-      runs,
+      runs: failureStateLineage.runs,
       classification_envelopes: classificationEnvelopes,
       transition_proposal_envelopes: (proposalLog.value || []).filter(
         (entry) => generationFailureIds.has(entry.bindings?.failure_id)
@@ -895,5 +950,6 @@ module.exports = {
   REPORT_FILES,
   createVerificationArtifactPipeline,
   freshnessProjection,
-  mergeIntegrity
+  mergeIntegrity,
+  selectFailureStateLineage
 };
