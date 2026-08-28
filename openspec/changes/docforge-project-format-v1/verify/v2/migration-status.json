@@ -1,0 +1,11 @@
+{
+  "schema": "specnav.verification.migration-status.v1",
+  "change_id": "docforge-project-format-v1",
+  "required": false,
+  "status": "not_required",
+  "inventory_policy": "verification-v2-native-current",
+  "inventory_checked_at": "2026-08-28T03:25:27Z",
+  "legacy_artifacts": [],
+  "source_inventory_digest": "0e74dbeefb3f4a3da73579763947eb066edc7b36b84d399f0e792dc89347d66d",
+  "fallback_used": false
+}

@@ -1,13 +1,29 @@
 {
   "schema_version": 1,
   "change_id": "docforge-project-format-v1",
-  "result": "blocked",
-  "covered_scope": [],
-  "uncovered_scope": [
-    "Replace scaffold before final receipt."
+  "result": "pass",
+  "covered_scope": [
+    "A1 project open and strict docforge.yaml contract",
+    "A2 generic document project flow",
+    "A3 academic profile isolation",
+    "A4 obsolete contract rejection",
+    "A5 neutral output and Review defaults",
+    "A6 project-relative path security",
+    "A7 deterministic DOCX pipeline",
+    "A8 Python, TypeScript, Rust, and Tauri runtime parity",
+    "A9 installed Microsoft Office final preview",
+    "A10 repository delivery, packaging, and release assets"
   ],
+  "uncovered_scope": [],
   "residual_risk": [
-    "Verification has not completed."
+    "The successor-generation Operations contract repair is project-local; the globally installed SpecNav Operations 0.3.0 plugin remains unchanged.",
+    "CodeGraph is advisory and not indexed in this verification worktree, so its warnings are retained but are not used as acceptance evidence.",
+    "The real archive transaction remains intentionally unexecuted until separate explicit approval."
   ],
-  "confidence": "C"
+  "confidence": "A",
+  "verification_generation_id": "generation-e76c93b4b729fe49301fa066",
+  "verification_proof_id": "verification-release-proof-8a50f84b36aa6705eb02a7a6404dfa88c368229e15b687b4cb21958ffd4bb092",
+  "release_gate_id": "gate-06c9aea608721283e67287179ed7b15d0da1cce769d6f2d366d74223b133fa9e",
+  "archive_gate_id": "gate-07ae53af1a80f67ff4517c87d0405796dd26a9f63ef824ad3136c033c0d272da",
+  "fallback_used": false
 }

@@ -1,0 +1,42 @@
+{
+  "schema": "specnav.ops.releaseChecklist.v1",
+  "change": "docforge-project-format-v1",
+  "release_target": "local-only",
+  "checks": [
+    {
+      "name": "Verification V2 proof is green",
+      "status": "pass",
+      "evidence": "operations/verification-v2-proof.json"
+    },
+    {
+      "name": "A1-A10 have no uncovered scope",
+      "status": "pass",
+      "evidence": "verify/receipt.json"
+    },
+    {
+      "name": "Successor generation has zero open failures",
+      "status": "pass",
+      "evidence": "verify/v2/failure-state.json"
+    },
+    {
+      "name": "Migration status is explicitly not required",
+      "status": "pass",
+      "evidence": "verify/v2/migration-status.json"
+    },
+    {
+      "name": "Historical failure and repair evidence is preserved",
+      "status": "pass",
+      "evidence": "operations/runtime-contract-fix-evidence/archive-dry-run-before.json"
+    },
+    {
+      "name": "Local dependency and session files are reviewed",
+      "status": "pass",
+      "evidence": "operations/readiness.json"
+    },
+    {
+      "name": "Push and real archive remain unauthorized",
+      "status": "pass",
+      "evidence": "operations/runtime-contract-fix-proposal.json"
+    }
+  ]
+}

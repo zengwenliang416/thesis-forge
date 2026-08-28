@@ -1,0 +1,12 @@
+{
+  "schema": "specnav.ops.updateSpec.v1",
+  "change": "docforge-project-format-v1",
+  "status": "written_back",
+  "learning_items": [
+    "Successor-generation Operations proof must validate the generation-scoped evidence index while preserving the complete historical index as separate integrity evidence.",
+    "Canonical report comparison must use the report identity semantic body and must not require generated_at timestamps from separate deterministic builds to be byte-identical.",
+    "Explicit project-local Runtime roots must be plugin-identity validated and must reject symbolic-link path components."
+  ],
+  "unresolved_items": [],
+  "promoted_checks": []
+}

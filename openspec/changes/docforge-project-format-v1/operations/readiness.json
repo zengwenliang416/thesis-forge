@@ -1,0 +1,41 @@
+{
+  "schema": "specnav.ops.readiness.v1",
+  "change": "docforge-project-format-v1",
+  "release_target": "local-only",
+  "ready": true,
+  "verification": {
+    "aggregate_verdict": "green",
+    "receipt_confidence": "A",
+    "uncovered_scope": [],
+    "residual_risk": [
+      "The Operations successor-generation fix is project-local.",
+      "CodeGraph warnings are advisory because this worktree is not indexed.",
+      "The real archive transaction requires separate explicit approval."
+    ],
+    "proof_id": "verification-release-proof-8a50f84b36aa6705eb02a7a6404dfa88c368229e15b687b4cb21958ffd4bb092",
+    "generation_id": "generation-e76c93b4b729fe49301fa066",
+    "open_failure_count": 0,
+    "fallback_used": false
+  },
+  "git": {
+    "branch": "zwl/docforge-project-format-v1-verification",
+    "dirty": true,
+    "untracked_reviewed": true,
+    "worktree_mode": "dedicated-verification-worktree",
+    "reviewed_untracked": [
+      ".venv",
+      "frontend/node_modules",
+      "openspec/.specnav/active-change"
+    ]
+  },
+  "docs": {
+    "user_facing": false,
+    "changelog": false,
+    "release_notes": false,
+    "readme_updated": true
+  },
+  "ops": {
+    "migrations": "not_required",
+    "postmortem_required": false
+  }
+}
