@@ -16,8 +16,100 @@ const REPORT_FILES = Object.freeze([
   'test-case-results.html'
 ]);
 
+const ZERO_LINEAGE_JSON_FILES = Object.freeze([
+  'v2/failures.json',
+  'v2/repair-links.json'
+]);
+
+const ZERO_LINEAGE_JSONL_FILES = Object.freeze([
+  'v2/transition-proposals.jsonl',
+  'v2/transition-receipts.jsonl',
+  'v2/attempt-facts.jsonl'
+]);
+
 function blocker(id, artifact, detail = null) {
   return { id, artifact, detail };
+}
+
+function initializeCanonicalZeroLineage(store, options = {}) {
+  const {
+    changeId,
+    currentFingerprints,
+    clock = () => new Date().toISOString()
+  } = options;
+  if (
+    !store
+    || typeof store.readBytes !== 'function'
+    || typeof store.publishJson !== 'function'
+    || typeof store.publishText !== 'function'
+    || typeof changeId !== 'string'
+    || changeId.trim() === ''
+    || !currentFingerprints
+    || typeof currentFingerprints !== 'object'
+    || Array.isArray(currentFingerprints)
+    || typeof clock !== 'function'
+  ) {
+    throw new Error('verification-production:zero-lineage-config-invalid');
+  }
+
+  const blockers = [];
+  const initialized = [];
+  const preserved = [];
+
+  function initialize(relativePath, publish) {
+    const current = store.readBytes(relativePath);
+    if (!current.ok) {
+      blockers.push(...current.blockers);
+      return;
+    }
+    if (!current.missing) {
+      preserved.push(relativePath);
+      return;
+    }
+    const result = publish();
+    if (!result.ok) {
+      blockers.push(...result.blockers);
+      return;
+    }
+    initialized.push(relativePath);
+  }
+
+  for (const relativePath of ZERO_LINEAGE_JSON_FILES) {
+    initialize(relativePath, () => store.publishJson(relativePath, []));
+  }
+  for (const relativePath of ZERO_LINEAGE_JSONL_FILES) {
+    initialize(relativePath, () => store.publishText(relativePath, ''));
+  }
+
+  const migrationStatus = {
+    schema: 'specnav.verification.migration-status.v1',
+    change_id: changeId,
+    required: false,
+    status: 'not_required',
+    inventory_policy: 'verification-v2-native-current',
+    inventory_checked_at: clock(),
+    legacy_artifacts: [],
+    source_inventory_digest: sha256(canonicalJson({
+      change_id: changeId,
+      inventory_policy: 'verification-v2-native-current',
+      fingerprints: currentFingerprints
+    })),
+    fallback_used: false
+  };
+  initialize(
+    'v2/migration-status.json',
+    () => store.publishJson('v2/migration-status.json', migrationStatus)
+  );
+
+  return {
+    ok: blockers.length === 0,
+    status: blockers.length === 0 ? 'ready' : 'blocked',
+    initialized,
+    preserved,
+    migration_status: migrationStatus,
+    blockers,
+    fallback_used: false
+  };
 }
 
 function readJson(store, relative, fallback, blockers) {
@@ -491,6 +583,14 @@ function createVerificationArtifactPipeline(options = {}) {
   function build(buildOptions = {}) {
     const persist = buildOptions.persist !== false;
     const blockers = [];
+    const zeroLineage = persist
+      ? initializeCanonicalZeroLineage(store, {
+          changeId: snapshot.change_id,
+          currentFingerprints,
+          clock
+        })
+      : null;
+    if (zeroLineage) blockers.push(...zeroLineage.blockers);
     let runs = readJson(store, 'v2/runs.json', [], blockers);
     let attempts = readJson(
       store,
@@ -1010,6 +1110,7 @@ function createVerificationArtifactPipeline(options = {}) {
       report_model: report.model,
       report_manifest: reportManifest,
       generation: activeGeneration,
+      zero_lineage: zeroLineage,
       blockers,
       fallback_used: false
     };
@@ -1020,8 +1121,11 @@ function createVerificationArtifactPipeline(options = {}) {
 
 module.exports = {
   REPORT_FILES,
+  ZERO_LINEAGE_JSON_FILES,
+  ZERO_LINEAGE_JSONL_FILES,
   createVerificationArtifactPipeline,
   freshnessProjection,
+  initializeCanonicalZeroLineage,
   mergeIntegrity,
   selectFailureStateLineage,
   selectVerifiedCompletedRepairFacts
