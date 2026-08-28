@@ -1,0 +1,22 @@
+[
+  {
+    "id": "R1",
+    "statement": "The visible product is DocForge and is presented as a general Markdown-to-Word document workbench."
+  },
+  {
+    "id": "R2",
+    "statement": "Open, save, validate, template selection, build, preview, Office PDF selection, and cancellation retain their transport behavior."
+  },
+  {
+    "id": "R3",
+    "statement": "The desktop workbench presents outline, Markdown editor, Microsoft Word preview, diagnostics, and output state in the approved hierarchy."
+  },
+  {
+    "id": "R4",
+    "statement": "The mobile workbench exposes outline, editor, preview, and diagnostics without horizontal overflow."
+  },
+  {
+    "id": "R5",
+    "statement": "The UI redesign does not introduce a dependency into parser, domain, compiler, RenderPlan, or DOCX renderer layers."
+  }
+]

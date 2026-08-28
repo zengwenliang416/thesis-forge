@@ -1,0 +1,22 @@
+[
+  {
+    "id": "A1",
+    "statement": "The visible product brand is DocForge and the workbench is described as a general Markdown to Word document workshop."
+  },
+  {
+    "id": "A2",
+    "statement": "Open, save, validate, template selection, DOCX build, preview mode, Office PDF selection and cancellation retain their current transport behavior."
+  },
+  {
+    "id": "A3",
+    "statement": "At 1440x1024 the document outline, Markdown editor, Microsoft Word preview and contextual diagnostics match the selected reference hierarchy."
+  },
+  {
+    "id": "A4",
+    "statement": "The mobile breakpoint exposes outline, editor, preview and diagnostics without horizontal overflow."
+  },
+  {
+    "id": "A5",
+    "statement": "No frontend UI change introduces a dependency into the parser, domain, compiler, RenderPlan or DOCX renderer."
+  }
+]

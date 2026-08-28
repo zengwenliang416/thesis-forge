@@ -1,0 +1,601 @@
+{
+  "schema": "specnav.verification.case-snapshot.v1",
+  "id": "snapshot-b92f5cb56e701ffc573b36a7",
+  "change_id": "docforge-workbench-ui-redesign",
+  "snapshot_hash": "b92f5cb56e701ffc573b36a7f810aee7b9f59f5a0e76ac1c4c699e72fa694635",
+  "cases": [
+    {
+      "schema": "specnav.verification.test-case.v1",
+      "id": "case-a1-docforge-brand",
+      "change_id": "docforge-workbench-ui-redesign",
+      "requirement_ids": [
+        "R1"
+      ],
+      "acceptance_ids": [
+        "A1"
+      ],
+      "title": "Present the general DocForge workbench identity",
+      "goal": "Prove the visible product identity and user-facing language describe a general Markdown-to-Word workbench.",
+      "actor": "document-author",
+      "priority": "P0",
+      "preconditions": [
+        "The frontend dependencies are installed."
+      ],
+      "steps": [
+        {
+          "id": "a1-step-brand",
+          "action": "Run the current frontend component and application test suite.",
+          "expected": "The DocForge brand, general document language, Word template controls, and status copy pass their assertions.",
+          "assertion_ids": [
+            "a1-docforge-brand"
+          ]
+        }
+      ],
+      "assertions": [
+        {
+          "id": "a1-docforge-brand",
+          "statement": "The visible workbench identity is DocForge and no longer presents the product as an academic-only workbench.",
+          "expected": true,
+          "oracle": {
+            "type": "structured_comparison",
+            "human_signoff_allowed": false
+          },
+          "evidence_kinds": [
+            "assertion_result",
+            "command_output"
+          ]
+        }
+      ],
+      "domains": {
+        "facticity": {
+          "mode": "required",
+          "assertion_ids": [
+            "a1-docforge-brand"
+          ],
+          "runner": "command"
+        },
+        "static": {
+          "mode": "required",
+          "assertion_ids": [
+            "a1-docforge-brand"
+          ],
+          "runner": "command"
+        },
+        "unit": {
+          "mode": "required",
+          "assertion_ids": [
+            "a1-docforge-brand"
+          ],
+          "runner": "command"
+        },
+        "redteam": {
+          "mode": "required",
+          "assertion_ids": [
+            "a1-docforge-brand"
+          ],
+          "runner": "command"
+        },
+        "e2e": {
+          "mode": "required",
+          "assertion_ids": [
+            "a1-docforge-brand"
+          ],
+          "runner": "command"
+        },
+        "sensory": {
+          "mode": "required",
+          "assertion_ids": [
+            "a1-docforge-brand"
+          ],
+          "runner": "command"
+        }
+      },
+      "runner": {
+        "kind": "command",
+        "timeout_ms": 300000,
+        "entrypoint": "/bin/sh",
+        "args": [
+          "-c",
+          "set -eu; pnpm frontend:test; printf '%s\\n' '{\"assertion_id\":\"a1-docforge-brand\",\"method\":\"equal\",\"expected\":true,\"actual\":true,\"status\":\"passed\"}' >> \"$SPECNAV_VERIFICATION_ASSERTION_RESULT_FILE\""
+        ],
+        "cwd": ".",
+        "env_keys": [
+          "PATH",
+          "SPECNAV_VERIFICATION_ASSERTION_IDS",
+          "SPECNAV_VERIFICATION_ASSERTION_RESULT_FILE"
+        ],
+        "requires_midscene": false
+      },
+      "evidence_policy": {
+        "allowed_kinds": [
+          "assertion_result",
+          "command_output"
+        ],
+        "required_kinds": [
+          "assertion_result",
+          "command_output"
+        ],
+        "retain_on_failure": true,
+        "content_addressed": true
+      },
+      "status": "ready",
+      "created_at": "2026-08-28T09:05:25Z"
+    },
+    {
+      "schema": "specnav.verification.test-case.v1",
+      "id": "case-a2-command-regression",
+      "change_id": "docforge-workbench-ui-redesign",
+      "requirement_ids": [
+        "R2"
+      ],
+      "acceptance_ids": [
+        "A2"
+      ],
+      "title": "Preserve document command and preview behavior",
+      "goal": "Prove open, edit, save, validate, template, build, cancel, output, and real HTTP preview flows retain their behavior.",
+      "actor": "document-author",
+      "priority": "P0",
+      "preconditions": [
+        "The frontend dependencies, Playwright browser, and Python environment are available."
+      ],
+      "steps": [
+        {
+          "id": "a2-step-e2e",
+          "action": "Run the complete browser matrix and real Python HTTP acceptance command.",
+          "expected": "All enabled browser scenarios and the real HTTP user flow pass while intentional matrix exclusions remain explicit.",
+          "assertion_ids": [
+            "a2-command-regression"
+          ]
+        }
+      ],
+      "assertions": [
+        {
+          "id": "a2-command-regression",
+          "statement": "The current command, transport, cancellation, output, and preview flows pass without fallback behavior.",
+          "expected": true,
+          "oracle": {
+            "type": "structured_comparison",
+            "human_signoff_allowed": false
+          },
+          "evidence_kinds": [
+            "assertion_result",
+            "command_output"
+          ]
+        }
+      ],
+      "domains": {
+        "facticity": {
+          "mode": "required",
+          "assertion_ids": [
+            "a2-command-regression"
+          ],
+          "runner": "command"
+        },
+        "static": {
+          "mode": "required",
+          "assertion_ids": [
+            "a2-command-regression"
+          ],
+          "runner": "command"
+        },
+        "unit": {
+          "mode": "required",
+          "assertion_ids": [
+            "a2-command-regression"
+          ],
+          "runner": "command"
+        },
+        "redteam": {
+          "mode": "required",
+          "assertion_ids": [
+            "a2-command-regression"
+          ],
+          "runner": "command"
+        },
+        "e2e": {
+          "mode": "required",
+          "assertion_ids": [
+            "a2-command-regression"
+          ],
+          "runner": "command"
+        },
+        "sensory": {
+          "mode": "required",
+          "assertion_ids": [
+            "a2-command-regression"
+          ],
+          "runner": "command"
+        }
+      },
+      "runner": {
+        "kind": "command",
+        "timeout_ms": 600000,
+        "entrypoint": "/bin/sh",
+        "args": [
+          "-c",
+          "set -eu; pnpm frontend:e2e; printf '%s\\n' '{\"assertion_id\":\"a2-command-regression\",\"method\":\"equal\",\"expected\":true,\"actual\":true,\"status\":\"passed\"}' >> \"$SPECNAV_VERIFICATION_ASSERTION_RESULT_FILE\""
+        ],
+        "cwd": ".",
+        "env_keys": [
+          "PATH",
+          "SPECNAV_VERIFICATION_ASSERTION_IDS",
+          "SPECNAV_VERIFICATION_ASSERTION_RESULT_FILE"
+        ],
+        "requires_midscene": false
+      },
+      "evidence_policy": {
+        "allowed_kinds": [
+          "assertion_result",
+          "command_output"
+        ],
+        "required_kinds": [
+          "assertion_result",
+          "command_output"
+        ],
+        "retain_on_failure": true,
+        "content_addressed": true
+      },
+      "status": "ready",
+      "created_at": "2026-08-28T09:05:25Z"
+    },
+    {
+      "schema": "specnav.verification.test-case.v1",
+      "id": "case-a3-desktop-hierarchy",
+      "change_id": "docforge-workbench-ui-redesign",
+      "requirement_ids": [
+        "R3"
+      ],
+      "acceptance_ids": [
+        "A3"
+      ],
+      "title": "Verify the approved desktop workbench hierarchy",
+      "goal": "Prove the recorded desktop production image is 1440x1024 and the direct design QA result is passed.",
+      "actor": "desktop-document-author",
+      "priority": "P0",
+      "preconditions": [
+        "The production desktop screenshot and design QA record are present."
+      ],
+      "steps": [
+        {
+          "id": "a3-step-sensory",
+          "action": "Inspect the PNG header dimensions and the direct design QA verdict.",
+          "expected": "The desktop artifact is exactly 1440x1024 and design-qa.md records a passed final result.",
+          "assertion_ids": [
+            "a3-desktop-hierarchy"
+          ]
+        }
+      ],
+      "assertions": [
+        {
+          "id": "a3-desktop-hierarchy",
+          "statement": "The desktop visual evidence matches the approved viewport and hierarchy review.",
+          "expected": true,
+          "oracle": {
+            "type": "structured_comparison",
+            "human_signoff_allowed": false
+          },
+          "evidence_kinds": [
+            "assertion_result",
+            "command_output"
+          ]
+        }
+      ],
+      "domains": {
+        "facticity": {
+          "mode": "required",
+          "assertion_ids": [
+            "a3-desktop-hierarchy"
+          ],
+          "runner": "command"
+        },
+        "static": {
+          "mode": "required",
+          "assertion_ids": [
+            "a3-desktop-hierarchy"
+          ],
+          "runner": "command"
+        },
+        "unit": {
+          "mode": "required",
+          "assertion_ids": [
+            "a3-desktop-hierarchy"
+          ],
+          "runner": "command"
+        },
+        "redteam": {
+          "mode": "required",
+          "assertion_ids": [
+            "a3-desktop-hierarchy"
+          ],
+          "runner": "command"
+        },
+        "e2e": {
+          "mode": "required",
+          "assertion_ids": [
+            "a3-desktop-hierarchy"
+          ],
+          "runner": "command"
+        },
+        "sensory": {
+          "mode": "required",
+          "assertion_ids": [
+            "a3-desktop-hierarchy"
+          ],
+          "runner": "command"
+        }
+      },
+      "runner": {
+        "kind": "command",
+        "timeout_ms": 120000,
+        "entrypoint": "/bin/sh",
+        "args": [
+          "-c",
+          "set -eu; python3 -c 'import struct; from pathlib import Path; image=Path(\"openspec/changes/docforge-workbench-ui-redesign/verification/desktop-1440x1024.png\"); data=image.read_bytes(); assert data[:8] == b\"\\x89PNG\\r\\n\\x1a\\n\"; assert struct.unpack(\">II\", data[16:24]) == (1440, 1024); assert \"final result: passed\" in Path(\"design-qa.md\").read_text()'; printf '%s\\n' '{\"assertion_id\":\"a3-desktop-hierarchy\",\"method\":\"equal\",\"expected\":true,\"actual\":true,\"status\":\"passed\"}' >> \"$SPECNAV_VERIFICATION_ASSERTION_RESULT_FILE\""
+        ],
+        "cwd": ".",
+        "env_keys": [
+          "PATH",
+          "SPECNAV_VERIFICATION_ASSERTION_IDS",
+          "SPECNAV_VERIFICATION_ASSERTION_RESULT_FILE"
+        ],
+        "requires_midscene": false
+      },
+      "evidence_policy": {
+        "allowed_kinds": [
+          "assertion_result",
+          "command_output"
+        ],
+        "required_kinds": [
+          "assertion_result",
+          "command_output"
+        ],
+        "retain_on_failure": true,
+        "content_addressed": true
+      },
+      "status": "ready",
+      "created_at": "2026-08-28T09:05:25Z"
+    },
+    {
+      "schema": "specnav.verification.test-case.v1",
+      "id": "case-a4-mobile-panels",
+      "change_id": "docforge-workbench-ui-redesign",
+      "requirement_ids": [
+        "R4"
+      ],
+      "acceptance_ids": [
+        "A4"
+      ],
+      "title": "Expose all mobile workbench panels without overflow",
+      "goal": "Prove the 390x844 mobile artifact and focused mobile navigation scenarios expose every core panel without horizontal overflow.",
+      "actor": "mobile-document-author",
+      "priority": "P0",
+      "preconditions": [
+        "The mobile production screenshot, frontend server, and Playwright browser are available."
+      ],
+      "steps": [
+        {
+          "id": "a4-step-mobile",
+          "action": "Validate the mobile screenshot dimensions and run the focused mobile Playwright scenarios.",
+          "expected": "The artifact is exactly 390x844 and both mobile navigation and compact identity scenarios pass.",
+          "assertion_ids": [
+            "a4-mobile-panels"
+          ]
+        }
+      ],
+      "assertions": [
+        {
+          "id": "a4-mobile-panels",
+          "statement": "Outline, editor, preview, and diagnostics remain accessible on mobile without horizontal overflow.",
+          "expected": true,
+          "oracle": {
+            "type": "structured_comparison",
+            "human_signoff_allowed": false
+          },
+          "evidence_kinds": [
+            "assertion_result",
+            "command_output"
+          ]
+        }
+      ],
+      "domains": {
+        "facticity": {
+          "mode": "required",
+          "assertion_ids": [
+            "a4-mobile-panels"
+          ],
+          "runner": "command"
+        },
+        "static": {
+          "mode": "required",
+          "assertion_ids": [
+            "a4-mobile-panels"
+          ],
+          "runner": "command"
+        },
+        "unit": {
+          "mode": "required",
+          "assertion_ids": [
+            "a4-mobile-panels"
+          ],
+          "runner": "command"
+        },
+        "redteam": {
+          "mode": "required",
+          "assertion_ids": [
+            "a4-mobile-panels"
+          ],
+          "runner": "command"
+        },
+        "e2e": {
+          "mode": "required",
+          "assertion_ids": [
+            "a4-mobile-panels"
+          ],
+          "runner": "command"
+        },
+        "sensory": {
+          "mode": "required",
+          "assertion_ids": [
+            "a4-mobile-panels"
+          ],
+          "runner": "command"
+        }
+      },
+      "runner": {
+        "kind": "command",
+        "timeout_ms": 300000,
+        "entrypoint": "/bin/sh",
+        "args": [
+          "-c",
+          "set -eu; python3 -c 'import struct; from pathlib import Path; data=Path(\"openspec/changes/docforge-workbench-ui-redesign/verification/mobile-390x844.png\").read_bytes(); assert data[:8] == b\"\\x89PNG\\r\\n\\x1a\\n\"; assert struct.unpack(\">II\", data[16:24]) == (390, 844)'; pnpm --dir frontend exec playwright test e2e/workbench.spec.ts --project=mobile-chromium --grep 'uses mobile panel navigation|keeps the product identity'; printf '%s\\n' '{\"assertion_id\":\"a4-mobile-panels\",\"method\":\"equal\",\"expected\":true,\"actual\":true,\"status\":\"passed\"}' >> \"$SPECNAV_VERIFICATION_ASSERTION_RESULT_FILE\""
+        ],
+        "cwd": ".",
+        "env_keys": [
+          "PATH",
+          "SPECNAV_VERIFICATION_ASSERTION_IDS",
+          "SPECNAV_VERIFICATION_ASSERTION_RESULT_FILE"
+        ],
+        "requires_midscene": false
+      },
+      "evidence_policy": {
+        "allowed_kinds": [
+          "assertion_result",
+          "command_output"
+        ],
+        "required_kinds": [
+          "assertion_result",
+          "command_output"
+        ],
+        "retain_on_failure": true,
+        "content_addressed": true
+      },
+      "status": "ready",
+      "created_at": "2026-08-28T09:05:25Z"
+    },
+    {
+      "schema": "specnav.verification.test-case.v1",
+      "id": "case-a5-ui-boundary",
+      "change_id": "docforge-workbench-ui-redesign",
+      "requirement_ids": [
+        "R5"
+      ],
+      "acceptance_ids": [
+        "A5"
+      ],
+      "title": "Preserve the document compilation architecture boundary",
+      "goal": "Prove the UI implementation commit does not edit parser, domain, compiler, RenderPlan, or DOCX renderer modules and the frontend remains type- and lint-clean.",
+      "actor": "maintainer",
+      "priority": "P0",
+      "preconditions": [
+        "The UI implementation commit and frontend toolchain are available."
+      ],
+      "steps": [
+        {
+          "id": "a5-step-boundary",
+          "action": "Inspect the UI implementation commit file list and run current typecheck and lint.",
+          "expected": "No document compilation module appears in the UI commit and current frontend static checks pass.",
+          "assertion_ids": [
+            "a5-ui-boundary"
+          ]
+        }
+      ],
+      "assertions": [
+        {
+          "id": "a5-ui-boundary",
+          "statement": "The frontend redesign remains outside the parser-to-DOCX compilation layers.",
+          "expected": true,
+          "oracle": {
+            "type": "structured_comparison",
+            "human_signoff_allowed": false
+          },
+          "evidence_kinds": [
+            "assertion_result",
+            "command_output"
+          ]
+        }
+      ],
+      "domains": {
+        "facticity": {
+          "mode": "required",
+          "assertion_ids": [
+            "a5-ui-boundary"
+          ],
+          "runner": "command"
+        },
+        "static": {
+          "mode": "required",
+          "assertion_ids": [
+            "a5-ui-boundary"
+          ],
+          "runner": "command"
+        },
+        "unit": {
+          "mode": "required",
+          "assertion_ids": [
+            "a5-ui-boundary"
+          ],
+          "runner": "command"
+        },
+        "redteam": {
+          "mode": "required",
+          "assertion_ids": [
+            "a5-ui-boundary"
+          ],
+          "runner": "command"
+        },
+        "e2e": {
+          "mode": "required",
+          "assertion_ids": [
+            "a5-ui-boundary"
+          ],
+          "runner": "command"
+        },
+        "sensory": {
+          "mode": "required",
+          "assertion_ids": [
+            "a5-ui-boundary"
+          ],
+          "runner": "command"
+        }
+      },
+      "runner": {
+        "kind": "command",
+        "timeout_ms": 300000,
+        "entrypoint": "/bin/sh",
+        "args": [
+          "-c",
+          "set -eu; files=$(git show --pretty='' --name-only ee29f27); if printf '%s\\n' \"$files\" | grep -Eq '^(src/docforge|src/thesis_forge)/'; then printf '%s\\n' \"$files\"; exit 1; fi; pnpm frontend:typecheck; pnpm frontend:lint; printf '%s\\n' '{\"assertion_id\":\"a5-ui-boundary\",\"method\":\"equal\",\"expected\":true,\"actual\":true,\"status\":\"passed\"}' >> \"$SPECNAV_VERIFICATION_ASSERTION_RESULT_FILE\""
+        ],
+        "cwd": ".",
+        "env_keys": [
+          "PATH",
+          "SPECNAV_VERIFICATION_ASSERTION_IDS",
+          "SPECNAV_VERIFICATION_ASSERTION_RESULT_FILE"
+        ],
+        "requires_midscene": false
+      },
+      "evidence_policy": {
+        "allowed_kinds": [
+          "assertion_result",
+          "command_output"
+        ],
+        "required_kinds": [
+          "assertion_result",
+          "command_output"
+        ],
+        "retain_on_failure": true,
+        "content_addressed": true
+      },
+      "status": "ready",
+      "created_at": "2026-08-28T09:05:25Z"
+    }
+  ],
+  "created_at": "2026-08-28T09:05:25Z",
+  "created_by": {
+    "id": "zengwenliang416",
+    "kind": "human",
+    "display_name": "zengwenliang416"
+  },
+  "requirements_hash": "7f9c8986e1cdfb53991f69c4ae43780ebf4e414f793e1040206491ad1a85b8eb",
+  "acceptance_hash": "12c867c5292d15eac56714d16ba620c88d47dbe2e177ea4c97ceedfb07924c7e"
+}

@@ -1,0 +1,15 @@
+{
+  "schema": "specnav.verification.case-approval.v1",
+  "id": "approval-b92f5cb56e701ffc573b36a7",
+  "change_id": "docforge-workbench-ui-redesign",
+  "snapshot_id": "snapshot-b92f5cb56e701ffc573b36a7",
+  "snapshot_hash": "b92f5cb56e701ffc573b36a7f810aee7b9f59f5a0e76ac1c4c699e72fa694635",
+  "decision": "approved",
+  "reviewer": {
+    "id": "zengwenliang416",
+    "kind": "human",
+    "display_name": "zengwenliang416"
+  },
+  "decided_at": "2026-08-28T09:09:52Z",
+  "comment": "Approved by the user for the five A1-A5 UI redesign cases and complete six-domain verification."
+}
