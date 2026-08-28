@@ -1,0 +1,330 @@
+{
+  "schema": "specnav.ops.archiveGate.v1",
+  "generated_at": "2026-08-28T09:48:50.211Z",
+  "active_change": "docforge-workbench-ui-redesign",
+  "release_target": "local-only",
+  "lane": "standard",
+  "verdict": "green",
+  "blockers": [],
+  "warnings": [
+    "codegraph:claim-unverified:verification:task-001-docforge-workbench-redesign"
+  ],
+  "codegraph": {
+    "ok": true,
+    "status": {
+      "schema": "specnav.codegraph.status.v1",
+      "ok": true,
+      "generated_at": "2026-08-28T09:48:50.208Z",
+      "project_root": "/Volumes/zwl/open_sources/thesis-forge",
+      "active_change": "docforge-workbench-ui-redesign",
+      "policy": {
+        "enabled": true,
+        "profile": "active_dev",
+        "mode": "advisory",
+        "stage": "operations",
+        "required_for_stage": false,
+        "disabled_reason": null
+      },
+      "execution_surface": "cli",
+      "decision": {
+        "stage": "operations",
+        "result": "pass",
+        "reason": "CodeGraph policy satisfied for operations."
+      },
+      "cli": {
+        "available": true,
+        "version": "1.3.1",
+        "path": "/Users/wenliang_zeng/.local/bin/codegraph",
+        "unsupported": false,
+        "error": null
+      },
+      "mcp": {
+        "configured": true,
+        "visible_in_current_session": false,
+        "restart_required": true,
+        "config_files": [
+          "/Users/wenliang_zeng/.claude.json",
+          "/Users/wenliang_zeng/.codex/config.toml"
+        ]
+      },
+      "index": {
+        "initialized": true,
+        "projectPath": "/Volumes/zwl/open_sources/thesis-forge",
+        "indexPath": "/Volumes/zwl/open_sources/thesis-forge/.codegraph",
+        "lastIndexed": "2026-08-28T08:05:26.429Z",
+        "fileCount": 481,
+        "nodeCount": 8904,
+        "edgeCount": 28943,
+        "pendingChanges": {
+          "added": 0,
+          "modified": 0,
+          "removed": 0
+        },
+        "reindexRecommended": false,
+        "worktreeMismatch": null
+      },
+      "blockers": [],
+      "warnings": [],
+      "raw_codegraph_status": {
+        "initialized": true,
+        "version": "1.3.1",
+        "projectPath": "/Volumes/zwl/open_sources/thesis-forge",
+        "indexPath": "/Volumes/zwl/open_sources/thesis-forge/.codegraph",
+        "lastIndexed": "2026-08-28T08:05:26.429Z",
+        "fileCount": 481,
+        "nodeCount": 8904,
+        "edgeCount": 28943,
+        "dbSizeBytes": 159522816,
+        "backend": "node-sqlite",
+        "journalMode": "wal",
+        "nodesByKind": {
+          "class": 510,
+          "constant": 556,
+          "file": 433,
+          "function": 3862,
+          "import": 1890,
+          "interface": 55,
+          "method": 693,
+          "property": 9,
+          "struct": 5,
+          "type_alias": 31,
+          "variable": 860
+        },
+        "languages": [
+          "javascript",
+          "python",
+          "rust",
+          "tsx",
+          "typescript",
+          "xml",
+          "yaml"
+        ],
+        "pendingChanges": {
+          "added": 0,
+          "modified": 0,
+          "removed": 0
+        },
+        "worktreeMismatch": null,
+        "index": {
+          "builtWithVersion": "1.3.1",
+          "builtWithExtractionVersion": 24,
+          "currentExtractionVersion": 24,
+          "reindexRecommended": false,
+          "state": "complete",
+          "pendingRefs": 0
+        }
+      }
+    },
+    "evidence_index": {
+      "schema": "specnav.codegraph.evidence_index.v1",
+      "generated_at": "2026-08-25T08:27:25.225Z",
+      "active_change": "docforge-workbench-ui-redesign",
+      "source_raw": "openspec/changes/docforge-workbench-ui-redesign/codegraph/evidence.jsonl",
+      "by_claim": {
+        "development:task-001-docforge-workbench-redesign": {
+          "status": "matched",
+          "evidence_ids": [
+            "ev-mt8ejd0i"
+          ],
+          "files": [
+            "frontend/src/components/WorkbenchApp.tsx",
+            "frontend/src/components/WorkbenchShell.tsx",
+            "frontend/src/components/ProductBar.tsx",
+            "frontend/src/components/PreviewPanels.tsx"
+          ],
+          "symbols": [],
+          "blockers": []
+        }
+      },
+      "by_stage": {
+        "development": {
+          "verified": 1,
+          "partial": 0,
+          "missing": 0,
+          "stale": 0,
+          "blocking": 0
+        }
+      },
+      "blockers": [],
+      "raw_exists": true,
+      "record_count": 1
+    },
+    "claims_report": {
+      "schema": "specnav.codegraph.claims_report.v1",
+      "generated_at": "2026-08-28T09:48:50.209Z",
+      "active_change": "docforge-workbench-ui-redesign",
+      "claims_file": "openspec/changes/docforge-workbench-ui-redesign/codegraph/claims-map.json",
+      "evidence_index": "openspec/changes/docforge-workbench-ui-redesign/codegraph/evidence-index.json",
+      "claims_count": 2,
+      "verified_claims": [
+        "development:task-001-docforge-workbench-redesign"
+      ],
+      "unverified_claims": [
+        "verification:task-001-docforge-workbench-redesign"
+      ],
+      "blockers": [],
+      "warnings": [
+        "codegraph:claim-unverified:verification:task-001-docforge-workbench-redesign"
+      ]
+    },
+    "drift": {
+      "schema": "specnav.codegraph.drift.v1",
+      "active_change": "docforge-workbench-ui-redesign",
+      "drift": [],
+      "blockers": []
+    },
+    "decision": {
+      "schema": "specnav.codegraph.decision.v1",
+      "stage": "operations",
+      "profile": "active_dev",
+      "effective_mode": "advisory",
+      "required_for_stage": false,
+      "execution_surface": "cli",
+      "result": "pass",
+      "blockers": [],
+      "warnings": [],
+      "explanation": "CodeGraph policy satisfied for operations."
+    },
+    "guard_report": {
+      "schema": "specnav.codegraph.guard_report.v1",
+      "generated_at": "2026-08-28T09:48:50.209Z",
+      "active_change": "docforge-workbench-ui-redesign",
+      "stage": "operations",
+      "ok": true,
+      "status": {
+        "policy": {
+          "enabled": true,
+          "profile": "active_dev",
+          "mode": "advisory",
+          "stage": "operations",
+          "required_for_stage": false,
+          "disabled_reason": null
+        },
+        "execution_surface": "cli",
+        "cli": {
+          "available": true,
+          "version": "1.3.1",
+          "path": "/Users/wenliang_zeng/.local/bin/codegraph",
+          "unsupported": false,
+          "error": null
+        },
+        "mcp": {
+          "configured": true,
+          "visible_in_current_session": false,
+          "restart_required": true,
+          "config_files": [
+            "/Users/wenliang_zeng/.claude.json",
+            "/Users/wenliang_zeng/.codex/config.toml"
+          ]
+        },
+        "index": {
+          "initialized": true,
+          "projectPath": "/Volumes/zwl/open_sources/thesis-forge",
+          "indexPath": "/Volumes/zwl/open_sources/thesis-forge/.codegraph",
+          "lastIndexed": "2026-08-28T08:05:26.429Z",
+          "fileCount": 481,
+          "nodeCount": 8904,
+          "edgeCount": 28943,
+          "pendingChanges": {
+            "added": 0,
+            "modified": 0,
+            "removed": 0
+          },
+          "reindexRecommended": false,
+          "worktreeMismatch": null
+        }
+      },
+      "decision": {
+        "schema": "specnav.codegraph.decision.v1",
+        "stage": "operations",
+        "profile": "active_dev",
+        "effective_mode": "advisory",
+        "required_for_stage": false,
+        "execution_surface": "cli",
+        "result": "pass",
+        "blockers": [],
+        "warnings": [],
+        "explanation": "CodeGraph policy satisfied for operations."
+      },
+      "evidence_index": {
+        "schema": "specnav.codegraph.evidence_index.v1",
+        "generated_at": "2026-08-25T08:27:25.225Z",
+        "active_change": "docforge-workbench-ui-redesign",
+        "source_raw": "openspec/changes/docforge-workbench-ui-redesign/codegraph/evidence.jsonl",
+        "by_claim": {
+          "development:task-001-docforge-workbench-redesign": {
+            "status": "matched",
+            "evidence_ids": [
+              "ev-mt8ejd0i"
+            ],
+            "files": [
+              "frontend/src/components/WorkbenchApp.tsx",
+              "frontend/src/components/WorkbenchShell.tsx",
+              "frontend/src/components/ProductBar.tsx",
+              "frontend/src/components/PreviewPanels.tsx"
+            ],
+            "symbols": [],
+            "blockers": []
+          }
+        },
+        "by_stage": {
+          "development": {
+            "verified": 1,
+            "partial": 0,
+            "missing": 0,
+            "stale": 0,
+            "blocking": 0
+          }
+        },
+        "blockers": [],
+        "raw_exists": true,
+        "record_count": 1
+      },
+      "claims_report": {
+        "schema": "specnav.codegraph.claims_report.v1",
+        "generated_at": "2026-08-28T09:48:50.209Z",
+        "active_change": "docforge-workbench-ui-redesign",
+        "claims_file": "openspec/changes/docforge-workbench-ui-redesign/codegraph/claims-map.json",
+        "evidence_index": "openspec/changes/docforge-workbench-ui-redesign/codegraph/evidence-index.json",
+        "claims_count": 2,
+        "verified_claims": [
+          "development:task-001-docforge-workbench-redesign"
+        ],
+        "unverified_claims": [
+          "verification:task-001-docforge-workbench-redesign"
+        ],
+        "blockers": [],
+        "warnings": [
+          "codegraph:claim-unverified:verification:task-001-docforge-workbench-redesign"
+        ]
+      },
+      "drift": {
+        "schema": "specnav.codegraph.drift.v1",
+        "active_change": "docforge-workbench-ui-redesign",
+        "drift": [],
+        "blockers": []
+      },
+      "blockers": [],
+      "warnings": [
+        "codegraph:claim-unverified:verification:task-001-docforge-workbench-redesign"
+      ]
+    },
+    "artifacts": {
+      "status": "openspec/changes/docforge-workbench-ui-redesign/codegraph/status.json",
+      "decision": "openspec/changes/docforge-workbench-ui-redesign/codegraph/decision.json",
+      "guard_report": "openspec/changes/docforge-workbench-ui-redesign/codegraph/guard-report.json",
+      "evidence_raw": "openspec/changes/docforge-workbench-ui-redesign/codegraph/evidence.jsonl",
+      "evidence_index": "openspec/changes/docforge-workbench-ui-redesign/codegraph/evidence-index.json",
+      "claims_map": "openspec/changes/docforge-workbench-ui-redesign/codegraph/claims-map.json",
+      "claims_report": "openspec/changes/docforge-workbench-ui-redesign/codegraph/claims-report.json",
+      "drift_report": "openspec/changes/docforge-workbench-ui-redesign/codegraph/drift-report.json",
+      "impact_report": "openspec/changes/docforge-workbench-ui-redesign/codegraph/impact-report.json"
+    },
+    "blockers": [],
+    "warnings": [
+      "codegraph:claim-unverified:verification:task-001-docforge-workbench-redesign"
+    ]
+  },
+  "verification_v2_proof_id": "verification-release-proof-558764ffe8b423602c2c8093a10fabb332fbf99a4ac921c3e184a565579209da",
+  "operations_ready": true
+}

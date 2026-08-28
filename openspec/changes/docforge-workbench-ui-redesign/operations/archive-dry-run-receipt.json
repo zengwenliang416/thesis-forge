@@ -1,0 +1,62 @@
+{
+  "schema": "docforge.operations.archive-dry-run-receipt.v1",
+  "recorded_at": "2026-08-28T09:48:50.211Z",
+  "change_id": "docforge-workbench-ui-redesign",
+  "authorization": {
+    "verification_generation_review_id": "generation-review-69b7ff5204d4f1afdb72de0f",
+    "verification_generation_review_sha256": "69b7ff5204d4f1afdb72de0fb5f11ade9843bf707c1171ba4a49ecf9175de188",
+    "continuation_directive": "开始吧",
+    "effective_scope": "Complete local Operations closure and archive dry-run with local commits only",
+    "excluded_actions": [
+      "real archive",
+      "push",
+      "deployment",
+      "publication"
+    ]
+  },
+  "worktree": "/Volumes/zwl/open_sources/thesis-forge",
+  "branch": "zwl/docforge-project-format-v1",
+  "head_before_dry_run": "8f890efd1c0703b4bda9ddcdccebea1053abc69b",
+  "operations_gate": {
+    "ok": true,
+    "release_target": "local-only",
+    "lane": "standard",
+    "blockers": [],
+    "warnings": [
+      "codegraph:claim-unverified:verification:task-001-docforge-workbench-redesign"
+    ]
+  },
+  "archive_dry_run": {
+    "ok": true,
+    "dry_run": true,
+    "active_change": "docforge-workbench-ui-redesign",
+    "verdict": "green",
+    "operations_ready": true,
+    "blockers": [],
+    "fallback_used": false
+  },
+  "authority": {
+    "verification_proof_id": "verification-release-proof-558764ffe8b423602c2c8093a10fabb332fbf99a4ac921c3e184a565579209da",
+    "archive_gate_path": "operations/archive-gate.json",
+    "archive_gate_sha256": "da25cbe9ddef0ee57405d2635b36a01f6483133ced230c1b2703e140fc74d2bf",
+    "archive_log_path": "operations/archive-log.jsonl",
+    "archive_log_sha256": "98f77a3a4d28e013c05ff2135627e8fe5bec22ab186813af155217771673e5f1",
+    "verification_proof_path": "operations/verification-v2-proof.json",
+    "verification_proof_sha256": "8cae57746b1bb8d70471781ff643c7068d7625abc9c0801f22d7e13d894d44b6"
+  },
+  "residual_risks": [
+    "The verification-stage CodeGraph claim remains advisory and unbound.",
+    "The project-local Verification adapter cannot load the complete kernel without the external read-only Verification root."
+  ],
+  "boundaries": {
+    "real_archive_executed": false,
+    "archive_directory_created": false,
+    "change_registry_modified": false,
+    "active_change_modified": false,
+    "push_executed": false,
+    "deployment_executed": false,
+    "publication_executed": false,
+    "global_runtime_modified": false,
+    "external_verification_worktree_modified": false
+  }
+}
