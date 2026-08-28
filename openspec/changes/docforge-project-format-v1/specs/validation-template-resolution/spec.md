@@ -35,6 +35,8 @@ academic profile fields.
 - **WHEN** an academic template declares a required academic profile field and that value is absent
 - **THEN** validation returns a template-scoped metadata issue
 
+## ADDED Requirements
+
 ### Requirement: Load strongly typed document templates
 Template loading SHALL validate page, body, heading, figure, table, equation,
 citation, section, header, footer, common metadata binding, and optional profile
@@ -56,3 +58,23 @@ Model and MUST NOT hard-code them in renderer business logic.
 #### Scenario: Switch document templates
 - **WHEN** the same `ForgeDocument` is compiled with two valid templates
 - **THEN** the resulting RenderPlans reflect each template without changing source Markdown, Parser behavior, or renderer branching
+
+## REMOVED Requirements
+
+### Requirement: Load strongly typed school templates
+Template loading SHALL validate page, body, heading, figure, table, equation,
+citation, section, header and footer rules into a strongly typed Template
+Model.
+
+#### Scenario: Valid school template
+- **WHEN** a supported school YAML template is loaded
+- **THEN** the loader returns a validated model whose defaults and explicit values are available to the Compiler
+
+### Requirement: Keep school rules outside the renderer
+School-specific fonts, sizes, margins, spacing, caption labels, numbering and
+page policies MUST come from the Template Model and MUST NOT be hard-coded in
+renderer business logic.
+
+#### Scenario: Switch school template
+- **WHEN** the same ThesisDocument is compiled with two valid school templates
+- **THEN** the resulting RenderPlans reflect each template without changing source Markdown or Parser behavior

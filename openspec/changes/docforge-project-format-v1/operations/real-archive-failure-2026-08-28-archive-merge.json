@@ -1,0 +1,37 @@
+{
+  "schema": "docforge.operations.real-archive-failure.v1",
+  "attempted_at": "2026-08-28T06:31:00Z",
+  "change_id": "docforge-project-format-v1",
+  "head_before_attempt": "a3b27d9",
+  "phase": "archive-discovery",
+  "blockers": [
+    "archive-output-missing"
+  ],
+  "commands": {
+    "openspec_validate": {
+      "ok": true,
+      "status": 0
+    },
+    "openspec_archive": {
+      "reported_status": 0,
+      "effective_result": "aborted",
+      "diagnostic": "desktop-workbench MODIFIED failed for header \"### Requirement: Present document workbench information\" - not found"
+    }
+  },
+  "rollback": {
+    "ok": true,
+    "blockers": []
+  },
+  "root_cause": {
+    "id": "openspec-requirement-rename-expressed-as-modified",
+    "detail": "The base specification contains Present academic workbench information, while the change delta declared Present document workbench information under MODIFIED. OpenSpec matches modified requirements by their existing title, so the rename could not be merged.",
+    "fix_scope": "Represent the rename as REMOVED Present academic workbench information plus ADDED Present document workbench information, preserving the complete old and new scenarios."
+  },
+  "boundaries": {
+    "archive_created": false,
+    "registry_modified": false,
+    "specs_modified": false,
+    "push_executed": false,
+    "global_runtime_modified": false
+  }
+}

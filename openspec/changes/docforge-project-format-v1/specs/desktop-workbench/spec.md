@@ -60,25 +60,6 @@ It MUST NOT treat a bare Markdown file as a complete project.
 - **WHEN** a desktop atomic save or Web workspace/download action fails
 - **THEN** the prior source or browser snapshot remains intact, dirty state remains visible, and the workbench exposes a recovery action
 
-### Requirement: Present document workbench information
-The shared React frontend SHALL implement the approved three-pane DocForge
-workbench with product bar, project and document identity, outline, Markdown
-editor, document-style structural preview, diagnostics, template selection,
-build action, progress, and output feedback. Labels and filenames SHALL use
-neutral document terminology rather than treating every project as a thesis.
-
-#### Scenario: Populated general workspace
-- **WHEN** a valid saved general project and `docforge-standard` are loaded
-- **THEN** outline, editor, preview, diagnostics, template state, and build availability are visible together without academic-only labels
-
-#### Scenario: Populated academic workspace
-- **WHEN** a valid academic project and academic template are loaded
-- **THEN** academic metadata appears only where the project and template require it
-
-#### Scenario: Required workbench states
-- **WHEN** the workspace is populated, loading, empty, error, disabled, or permission-blocked
-- **THEN** the corresponding state has visible text, non-color status cues, and an applicable recovery action
-
 ### Requirement: Build asynchronously and preserve valid output
 The workbench SHALL show ordered build stages, support cooperative cancellation,
 suppress stale results, and MUST preserve a previously valid output on
@@ -115,3 +96,40 @@ sufficient contrast, responsive layout, and practical minimum-window resizing.
 #### Scenario: Keyboard-only operation
 - **WHEN** the user operates project, template, diagnostics, panel, save, and build actions without a pointer
 - **THEN** focus order and labels make every required action reachable and understandable
+
+## ADDED Requirements
+
+### Requirement: Present document workbench information
+The shared React frontend SHALL implement the approved three-pane DocForge
+workbench with product bar, project and document identity, outline, Markdown
+editor, document-style structural preview, diagnostics, template selection,
+build action, progress, and output feedback. Labels and filenames SHALL use
+neutral document terminology rather than treating every project as a thesis.
+
+#### Scenario: Populated general workspace
+- **WHEN** a valid saved general project and `docforge-standard` are loaded
+- **THEN** outline, editor, preview, diagnostics, template state, and build availability are visible together without academic-only labels
+
+#### Scenario: Populated academic workspace
+- **WHEN** a valid academic project and academic template are loaded
+- **THEN** academic metadata appears only where the project and template require it
+
+#### Scenario: Required workbench states
+- **WHEN** the workspace is populated, loading, empty, error, disabled, or permission-blocked
+- **THEN** the corresponding state has visible text, non-color status cues, and an applicable recovery action
+
+## REMOVED Requirements
+
+### Requirement: Present academic workbench information
+The shared React frontend SHALL implement the approved academic three-pane
+workbench with product bar, outline, Markdown editor, paper-style structural
+preview, diagnostics, template selection, build action, progress, and output
+feedback.
+
+#### Scenario: Populated workspace
+- **WHEN** a valid saved source and template are loaded
+- **THEN** outline, editor, preview, diagnostics, template state, and build availability are visible together
+
+#### Scenario: Required workbench states
+- **WHEN** the workspace is populated, loading, empty, error, disabled, or permission-blocked
+- **THEN** the corresponding state has visible text, non-color status cues, and an applicable recovery action
