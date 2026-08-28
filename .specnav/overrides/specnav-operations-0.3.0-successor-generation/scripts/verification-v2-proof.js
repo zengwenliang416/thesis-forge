@@ -10,6 +10,10 @@ const {
   selectGenerationEvidence
 } = require('./generation-evidence');
 const {
+  reportSemantic,
+  sameReportSemantics
+} = require('./report-semantic');
+const {
   requireTrustedCore,
   trustedVerificationRoot
 } = require('./verification-v2-trusted-runtime');
@@ -645,16 +649,7 @@ function validateReportModel(
   );
   if (!model || !releaseGate) return model;
   const readingIds = canonicalModel?.sources?.reading_ids || [];
-  const semantic = {
-    change_id: model.change_id,
-    verdict: model.verdict,
-    sources: model.sources,
-    summary: model.summary,
-    catalog: model.catalog,
-    results: model.results,
-    blockers: model.blockers,
-    warnings: model.warnings
-  };
+  const semantic = reportSemantic(model);
   if (model.id !== `report-model-${sha256(canonicalJson(semantic))}`) {
     blockers.push(blocker(
       'verification-release:report-identity-invalid',
@@ -663,7 +658,8 @@ function validateReportModel(
   }
   if (
     !canonicalModel
-    || canonicalJson(model) !== canonicalJson(canonicalModel)
+    || model.id !== canonicalModel.id
+    || !sameReportSemantics(model, canonicalModel)
   ) {
     blockers.push(blocker(
       'verification-release:canonical-report-model-mismatch',
@@ -671,7 +667,10 @@ function validateReportModel(
       {
         persisted_id: model.id,
         canonical_id: canonicalModel?.id || null,
-        first_difference: firstDifference(model, canonicalModel)
+        first_difference: firstDifference(
+          reportSemantic(model),
+          canonicalModel ? reportSemantic(canonicalModel) : null
+        )
       }
     ));
   }
