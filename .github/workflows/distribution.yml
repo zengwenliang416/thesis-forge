@@ -153,6 +153,10 @@ jobs:
           $evidence = Join-Path $env:RUNNER_TEMP "windows-native-evidence"
           New-Item -ItemType Directory -Force -Path $workspace, $evidence | Out-Null
           Copy-Item "examples/bachelor-thesis/*" $workspace -Recurse -Force
+          python -m docforge.cli validate $workspace
+          if ($LASTEXITCODE -ne 0) {
+            throw "Windows native acceptance project validation failed"
+          }
           "DOCFORGE_WINDOWS_APP=$($app.FullName)" |
             Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
           "DOCFORGE_WINDOWS_SOURCE=$(Join-Path $workspace 'document.md')" |

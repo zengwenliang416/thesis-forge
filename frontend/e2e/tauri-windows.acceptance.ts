@@ -166,6 +166,57 @@ async function waitForProjectSource(
   );
 }
 
+async function waitForShellState(
+  page: Page,
+  expectedState: string,
+  operation: string,
+  timeoutMs = 30_000,
+): Promise<void> {
+  const deadline = Date.now() + timeoutMs;
+  let snapshot = await readProjectLoadSnapshot(page);
+
+  while (Date.now() < deadline) {
+    snapshot = await readProjectLoadSnapshot(page);
+    if (snapshot.shellState === expectedState) {
+      return;
+    }
+    if (snapshot.shellState === "error") {
+      throw new Error(
+        `${operation} failed in the installed app: ${snapshot.statusText || "unknown error"}`,
+      );
+    }
+    await new Promise((resolve) => setTimeout(resolve, 250));
+  }
+
+  throw new Error(
+    `${operation} did not reach ${expectedState}: state=${snapshot.shellState ?? "missing"}, status=${snapshot.statusText || "empty"}`,
+  );
+}
+
+async function waitForBuildCompletion(page: Page): Promise<void> {
+  const deadline = Date.now() + 90_000;
+  let snapshot = await readProjectLoadSnapshot(page);
+  let progressText = "";
+
+  while (Date.now() < deadline) {
+    snapshot = await readProjectLoadSnapshot(page);
+    progressText = await page.getByLabel("构建进度").innerText();
+    if (progressText.includes("构建完成")) {
+      return;
+    }
+    if (snapshot.shellState === "error") {
+      throw new Error(
+        `Build failed in the installed app: ${snapshot.statusText || "unknown error"}`,
+      );
+    }
+    await new Promise((resolve) => setTimeout(resolve, 250));
+  }
+
+  throw new Error(
+    `Build did not complete: state=${snapshot.shellState ?? "missing"}, progress=${progressText || "empty"}, status=${snapshot.statusText || "empty"}`,
+  );
+}
+
 function captureProcessOutput(
   child: ChildProcess,
 ): { stdout: string[]; stderr: string[] } {
@@ -506,11 +557,7 @@ async function main(): Promise<void> {
       await page.keyboard.press("Control+s");
     }
     await waitForSavedSource();
-    await page.waitForFunction(
-      () =>
-        document.querySelector(".app-shell")?.getAttribute("data-state") ===
-        "populated",
-    );
+    await waitForShellState(page, "populated", "Save");
 
     enterStage("validate");
     const validate = page.locator('[aria-label="检查文档"]');
@@ -520,21 +567,14 @@ async function main(): Promise<void> {
       assert.equal(await validate.isEnabled(), true);
       await validate.click();
       await page.waitForTimeout(50);
-      await page.waitForFunction(
-        () =>
-          document.querySelector(".app-shell")?.getAttribute("data-state") ===
-          "populated",
-      );
+      await waitForShellState(page, "populated", "Validation");
     }
 
     enterStage("build");
     const build = page.getByRole("button", { name: "生成 DOCX" });
     assert.equal(await build.isEnabled(), true);
     await build.click();
-    const progress = page.getByLabel("构建进度");
-    await progress.getByText("构建完成", { exact: false }).waitFor({
-      timeout: 90_000,
-    });
+    await waitForBuildCompletion(page);
     assert.match(await page.getByLabel("输出结果").innerText(), /document\.docx/);
 
     const output = await readFile(outputPath);

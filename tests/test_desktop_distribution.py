@@ -867,6 +867,15 @@ def test_windows_workflow_installs_and_drives_the_native_tauri_package() -> None
     assert "e2e:tauri:windows" in workflow_text
     assert "windows-native-evidence" in workflow_text
 
+    prepare_step = next(
+        step
+        for step in steps
+        if step.get("name") == "Install Windows MSI and prepare native acceptance"
+    )
+    assert 'Copy-Item "examples/bachelor-thesis/*"' in prepare_step["run"]
+    assert "python -m docforge.cli validate $workspace" in prepare_step["run"]
+    assert "Windows native acceptance project validation failed" in prepare_step["run"]
+
     assert not any(
         step.get("name") == "Probe installed Windows application"
         for step in steps
@@ -970,6 +979,9 @@ def test_windows_tauri_acceptance_uses_webview2_cdp_and_real_commands() -> None:
     assert "DOCFORGE_WINDOWS_ACCEPTANCE_SOURCE" not in acceptance
     assert "findProjectRoot" in acceptance
     assert "waitForProjectSource" in acceptance
+    assert "waitForShellState" in acceptance
+    assert "waitForBuildCompletion" in acceptance
+    assert "failed in the installed app" in acceptance
     assert "stageReadings" in acceptance
     assert "browserEvents" in acceptance
     assert "chromium.connectOverCDP" in acceptance
