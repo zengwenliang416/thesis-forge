@@ -1,0 +1,1225 @@
+{
+  "schema": "specnav.verification.release-gate-input.v1",
+  "change_id": "docforge-workbench-ui-redesign",
+  "lane": "full",
+  "case_snapshot_id": "snapshot-b92f5cb56e701ffc573b36a7",
+  "case_snapshot_hash": "b92f5cb56e701ffc573b36a7f810aee7b9f59f5a0e76ac1c4c699e72fa694635",
+  "case_approval_id": "approval-b92f5cb56e701ffc573b36a7",
+  "case_approval_reviewer_id": "zengwenliang416",
+  "generation_id": "generation-69b7ff5204d4f1afdb72de0f",
+  "aggregation_request": {
+    "change_id": "docforge-workbench-ui-redesign",
+    "case_ids": [
+      "case-a1-docforge-brand",
+      "case-a2-command-regression",
+      "case-a3-desktop-hierarchy",
+      "case-a4-mobile-panels",
+      "case-a5-ui-boundary"
+    ],
+    "readings": [
+      {
+        "schema": "specnav.verification.reading.v1",
+        "id": "reading-0bb6ea492d6d19636bb93a7e3d1cdd5c9c493fe937be2505ac1072b5c2215de6",
+        "change_id": "docforge-workbench-ui-redesign",
+        "run_id": "run-20260828092104-b37864e76dcbb630",
+        "case_id": "case-a5-ui-boundary",
+        "attempt_id": "attempt-20260828092104-b37864e76dcbb630",
+        "step_id": "a5-step-boundary",
+        "assertion_id": "a5-ui-boundary",
+        "domain": "e2e",
+        "expected": true,
+        "actual": true,
+        "oracle": {
+          "type": "structured_comparison",
+          "owner": "command-runner",
+          "deterministic": true
+        },
+        "evidence_ids": [
+          "evidence-37b09adc9842232486e76cebd9584065539489d3377eb5a13dc8b47ee29a9fe0",
+          "evidence-9a72772d2a121d11cf4529162343e0e579ee5ae85694a29f4f3367894f18f9bf"
+        ],
+        "verdict": "pass",
+        "recorded_at": "2026-08-28T09:21:05.238Z",
+        "code_sha": "2f731ff29c8e73af175ebcaa923296f3181e252d",
+        "test_sha": "7b9651c1b0dbc0ab211f15d6d7d748191ab036ca4bf2cf7a3bec00b816a3f29b"
+      },
+      {
+        "schema": "specnav.verification.reading.v1",
+        "id": "reading-1a4b8106859d979642f165fc9cfde24f0dac055bf9a82280e17786403ca82d2a",
+        "change_id": "docforge-workbench-ui-redesign",
+        "run_id": "run-20260828092100-adc2b1b3e980ce63",
+        "case_id": "case-a3-desktop-hierarchy",
+        "attempt_id": "attempt-20260828092100-adc2b1b3e980ce63",
+        "step_id": "a3-step-sensory",
+        "assertion_id": "a3-desktop-hierarchy",
+        "domain": "unit",
+        "expected": true,
+        "actual": true,
+        "oracle": {
+          "type": "structured_comparison",
+          "owner": "command-runner",
+          "deterministic": true
+        },
+        "evidence_ids": [
+          "evidence-2f1b01647784f64de9eacbe599acdad26b5dc647ba87e5e6b02b10992c1ab1ec",
+          "evidence-c1b1eccb6588900856422c468c1e2dc149b20f4d57ac8ac930eb62d2870ce179"
+        ],
+        "verdict": "pass",
+        "recorded_at": "2026-08-28T09:21:00.691Z",
+        "code_sha": "2f731ff29c8e73af175ebcaa923296f3181e252d",
+        "test_sha": "7b9651c1b0dbc0ab211f15d6d7d748191ab036ca4bf2cf7a3bec00b816a3f29b"
+      },
+      {
+        "schema": "specnav.verification.reading.v1",
+        "id": "reading-1d815bb641ea70154308ca71affa1aa10acd3602c2c0855be5197fb2d21de856",
+        "change_id": "docforge-workbench-ui-redesign",
+        "run_id": "run-20260828092104-b37864e76dcbb630",
+        "case_id": "case-a5-ui-boundary",
+        "attempt_id": "attempt-20260828092104-b37864e76dcbb630",
+        "step_id": "a5-step-boundary",
+        "assertion_id": "a5-ui-boundary",
+        "domain": "unit",
+        "expected": true,
+        "actual": true,
+        "oracle": {
+          "type": "structured_comparison",
+          "owner": "command-runner",
+          "deterministic": true
+        },
+        "evidence_ids": [
+          "evidence-37b09adc9842232486e76cebd9584065539489d3377eb5a13dc8b47ee29a9fe0",
+          "evidence-9a72772d2a121d11cf4529162343e0e579ee5ae85694a29f4f3367894f18f9bf"
+        ],
+        "verdict": "pass",
+        "recorded_at": "2026-08-28T09:21:05.238Z",
+        "code_sha": "2f731ff29c8e73af175ebcaa923296f3181e252d",
+        "test_sha": "7b9651c1b0dbc0ab211f15d6d7d748191ab036ca4bf2cf7a3bec00b816a3f29b"
+      },
+      {
+        "schema": "specnav.verification.reading.v1",
+        "id": "reading-2d03f5367c08c6327d4b63714490cfddd1db55314cc6423dc8966ab81a55ee3f",
+        "change_id": "docforge-workbench-ui-redesign",
+        "run_id": "run-20260828092100-6bc1ef43ebae19c1",
+        "case_id": "case-a4-mobile-panels",
+        "attempt_id": "attempt-20260828092100-6bc1ef43ebae19c1",
+        "step_id": "a4-step-mobile",
+        "assertion_id": "a4-mobile-panels",
+        "domain": "unit",
+        "expected": true,
+        "actual": true,
+        "oracle": {
+          "type": "structured_comparison",
+          "owner": "command-runner",
+          "deterministic": true
+        },
+        "evidence_ids": [
+          "evidence-2e3e0705a483392b09314e2a607a32b85b8f7e056ef6fc675c95e1c1e5313add",
+          "evidence-3e69e6cd44c7721930ee8420ad0e9d635f9f9b10b452e20f2329b430348b2876"
+        ],
+        "verdict": "pass",
+        "recorded_at": "2026-08-28T09:21:04.031Z",
+        "code_sha": "2f731ff29c8e73af175ebcaa923296f3181e252d",
+        "test_sha": "7b9651c1b0dbc0ab211f15d6d7d748191ab036ca4bf2cf7a3bec00b816a3f29b"
+      },
+      {
+        "schema": "specnav.verification.reading.v1",
+        "id": "reading-2fc9a5ee2224d16b80817ebe08587dfb00f5582e8e3a43efbd7b44696a0ab3a9",
+        "change_id": "docforge-workbench-ui-redesign",
+        "run_id": "run-20260828092100-adc2b1b3e980ce63",
+        "case_id": "case-a3-desktop-hierarchy",
+        "attempt_id": "attempt-20260828092100-adc2b1b3e980ce63",
+        "step_id": "a3-step-sensory",
+        "assertion_id": "a3-desktop-hierarchy",
+        "domain": "facticity",
+        "expected": true,
+        "actual": true,
+        "oracle": {
+          "type": "structured_comparison",
+          "owner": "command-runner",
+          "deterministic": true
+        },
+        "evidence_ids": [
+          "evidence-2f1b01647784f64de9eacbe599acdad26b5dc647ba87e5e6b02b10992c1ab1ec",
+          "evidence-c1b1eccb6588900856422c468c1e2dc149b20f4d57ac8ac930eb62d2870ce179"
+        ],
+        "verdict": "pass",
+        "recorded_at": "2026-08-28T09:21:00.691Z",
+        "code_sha": "2f731ff29c8e73af175ebcaa923296f3181e252d",
+        "test_sha": "7b9651c1b0dbc0ab211f15d6d7d748191ab036ca4bf2cf7a3bec00b816a3f29b"
+      },
+      {
+        "schema": "specnav.verification.reading.v1",
+        "id": "reading-311c1cf6f37455b90c13d8d8bd57da551acc3e36f4c394401dab0589e4a9f150",
+        "change_id": "docforge-workbench-ui-redesign",
+        "run_id": "run-20260828092033-fd4e462feef558cf",
+        "case_id": "case-a1-docforge-brand",
+        "attempt_id": "attempt-20260828092033-fd4e462feef558cf",
+        "step_id": "a1-step-brand",
+        "assertion_id": "a1-docforge-brand",
+        "domain": "sensory",
+        "expected": true,
+        "actual": true,
+        "oracle": {
+          "type": "structured_comparison",
+          "owner": "command-runner",
+          "deterministic": true
+        },
+        "evidence_ids": [
+          "evidence-37b95c6eec881f0a54fb23375f46adc5f9483d0e80184b84cc9625fa45bb39f7",
+          "evidence-90995b917b17e46bed8f768fac19cd09ab76bc878a02589d9ffedcc4935482d0"
+        ],
+        "verdict": "pass",
+        "recorded_at": "2026-08-28T09:20:42.990Z",
+        "code_sha": "2f731ff29c8e73af175ebcaa923296f3181e252d",
+        "test_sha": "7b9651c1b0dbc0ab211f15d6d7d748191ab036ca4bf2cf7a3bec00b816a3f29b"
+      },
+      {
+        "schema": "specnav.verification.reading.v1",
+        "id": "reading-325602aa938d0bbff51549b1e8fffd31b7bf6eded28ddd0f75213020542baae5",
+        "change_id": "docforge-workbench-ui-redesign",
+        "run_id": "run-20260828092043-e70067b9a6fcb4bc",
+        "case_id": "case-a2-command-regression",
+        "attempt_id": "attempt-20260828092043-e70067b9a6fcb4bc",
+        "step_id": "a2-step-e2e",
+        "assertion_id": "a2-command-regression",
+        "domain": "static",
+        "expected": true,
+        "actual": true,
+        "oracle": {
+          "type": "structured_comparison",
+          "owner": "command-runner",
+          "deterministic": true
+        },
+        "evidence_ids": [
+          "evidence-45dff25daa81dc6c5a50e0c0ad0de4cdb4ccc69d9d38cbcce350abe32cda2f53",
+          "evidence-dda0a90bf0d76b52a28d3fcb337b32683e7b3fcd68258602354c71dc38acd286"
+        ],
+        "verdict": "pass",
+        "recorded_at": "2026-08-28T09:21:00.485Z",
+        "code_sha": "2f731ff29c8e73af175ebcaa923296f3181e252d",
+        "test_sha": "7b9651c1b0dbc0ab211f15d6d7d748191ab036ca4bf2cf7a3bec00b816a3f29b"
+      },
+      {
+        "schema": "specnav.verification.reading.v1",
+        "id": "reading-3356f7ad177bbd3482f0a94e9dd49a8af297fe964365667fec93b0ba5548ed12",
+        "change_id": "docforge-workbench-ui-redesign",
+        "run_id": "run-20260828092104-b37864e76dcbb630",
+        "case_id": "case-a5-ui-boundary",
+        "attempt_id": "attempt-20260828092104-b37864e76dcbb630",
+        "step_id": "a5-step-boundary",
+        "assertion_id": "a5-ui-boundary",
+        "domain": "facticity",
+        "expected": true,
+        "actual": true,
+        "oracle": {
+          "type": "structured_comparison",
+          "owner": "command-runner",
+          "deterministic": true
+        },
+        "evidence_ids": [
+          "evidence-37b09adc9842232486e76cebd9584065539489d3377eb5a13dc8b47ee29a9fe0",
+          "evidence-9a72772d2a121d11cf4529162343e0e579ee5ae85694a29f4f3367894f18f9bf"
+        ],
+        "verdict": "pass",
+        "recorded_at": "2026-08-28T09:21:05.238Z",
+        "code_sha": "2f731ff29c8e73af175ebcaa923296f3181e252d",
+        "test_sha": "7b9651c1b0dbc0ab211f15d6d7d748191ab036ca4bf2cf7a3bec00b816a3f29b"
+      },
+      {
+        "schema": "specnav.verification.reading.v1",
+        "id": "reading-35283b826f5c2cb55220dbf57ecad40dd76924c2336dd54ac1caea9692920d33",
+        "change_id": "docforge-workbench-ui-redesign",
+        "run_id": "run-20260828092104-b37864e76dcbb630",
+        "case_id": "case-a5-ui-boundary",
+        "attempt_id": "attempt-20260828092104-b37864e76dcbb630",
+        "step_id": "a5-step-boundary",
+        "assertion_id": "a5-ui-boundary",
+        "domain": "static",
+        "expected": true,
+        "actual": true,
+        "oracle": {
+          "type": "structured_comparison",
+          "owner": "command-runner",
+          "deterministic": true
+        },
+        "evidence_ids": [
+          "evidence-37b09adc9842232486e76cebd9584065539489d3377eb5a13dc8b47ee29a9fe0",
+          "evidence-9a72772d2a121d11cf4529162343e0e579ee5ae85694a29f4f3367894f18f9bf"
+        ],
+        "verdict": "pass",
+        "recorded_at": "2026-08-28T09:21:05.238Z",
+        "code_sha": "2f731ff29c8e73af175ebcaa923296f3181e252d",
+        "test_sha": "7b9651c1b0dbc0ab211f15d6d7d748191ab036ca4bf2cf7a3bec00b816a3f29b"
+      },
+      {
+        "schema": "specnav.verification.reading.v1",
+        "id": "reading-366d99710e23116dcb7ccfe065ff07214ba84ce5e7d888b16337fa61b8fcbf4e",
+        "change_id": "docforge-workbench-ui-redesign",
+        "run_id": "run-20260828092043-e70067b9a6fcb4bc",
+        "case_id": "case-a2-command-regression",
+        "attempt_id": "attempt-20260828092043-e70067b9a6fcb4bc",
+        "step_id": "a2-step-e2e",
+        "assertion_id": "a2-command-regression",
+        "domain": "e2e",
+        "expected": true,
+        "actual": true,
+        "oracle": {
+          "type": "structured_comparison",
+          "owner": "command-runner",
+          "deterministic": true
+        },
+        "evidence_ids": [
+          "evidence-45dff25daa81dc6c5a50e0c0ad0de4cdb4ccc69d9d38cbcce350abe32cda2f53",
+          "evidence-dda0a90bf0d76b52a28d3fcb337b32683e7b3fcd68258602354c71dc38acd286"
+        ],
+        "verdict": "pass",
+        "recorded_at": "2026-08-28T09:21:00.485Z",
+        "code_sha": "2f731ff29c8e73af175ebcaa923296f3181e252d",
+        "test_sha": "7b9651c1b0dbc0ab211f15d6d7d748191ab036ca4bf2cf7a3bec00b816a3f29b"
+      },
+      {
+        "schema": "specnav.verification.reading.v1",
+        "id": "reading-3886868626c2088d9c0506ef4a80e7dfc6d4c7aeddb857207648d9a131b6c856",
+        "change_id": "docforge-workbench-ui-redesign",
+        "run_id": "run-20260828092100-adc2b1b3e980ce63",
+        "case_id": "case-a3-desktop-hierarchy",
+        "attempt_id": "attempt-20260828092100-adc2b1b3e980ce63",
+        "step_id": "a3-step-sensory",
+        "assertion_id": "a3-desktop-hierarchy",
+        "domain": "sensory",
+        "expected": true,
+        "actual": true,
+        "oracle": {
+          "type": "structured_comparison",
+          "owner": "command-runner",
+          "deterministic": true
+        },
+        "evidence_ids": [
+          "evidence-2f1b01647784f64de9eacbe599acdad26b5dc647ba87e5e6b02b10992c1ab1ec",
+          "evidence-c1b1eccb6588900856422c468c1e2dc149b20f4d57ac8ac930eb62d2870ce179"
+        ],
+        "verdict": "pass",
+        "recorded_at": "2026-08-28T09:21:00.691Z",
+        "code_sha": "2f731ff29c8e73af175ebcaa923296f3181e252d",
+        "test_sha": "7b9651c1b0dbc0ab211f15d6d7d748191ab036ca4bf2cf7a3bec00b816a3f29b"
+      },
+      {
+        "schema": "specnav.verification.reading.v1",
+        "id": "reading-43ad100c7fa397867b944992e419d24a4700ae6a4599b7a4b4d2933bfc3a4a94",
+        "change_id": "docforge-workbench-ui-redesign",
+        "run_id": "run-20260828092100-6bc1ef43ebae19c1",
+        "case_id": "case-a4-mobile-panels",
+        "attempt_id": "attempt-20260828092100-6bc1ef43ebae19c1",
+        "step_id": "a4-step-mobile",
+        "assertion_id": "a4-mobile-panels",
+        "domain": "facticity",
+        "expected": true,
+        "actual": true,
+        "oracle": {
+          "type": "structured_comparison",
+          "owner": "command-runner",
+          "deterministic": true
+        },
+        "evidence_ids": [
+          "evidence-2e3e0705a483392b09314e2a607a32b85b8f7e056ef6fc675c95e1c1e5313add",
+          "evidence-3e69e6cd44c7721930ee8420ad0e9d635f9f9b10b452e20f2329b430348b2876"
+        ],
+        "verdict": "pass",
+        "recorded_at": "2026-08-28T09:21:04.031Z",
+        "code_sha": "2f731ff29c8e73af175ebcaa923296f3181e252d",
+        "test_sha": "7b9651c1b0dbc0ab211f15d6d7d748191ab036ca4bf2cf7a3bec00b816a3f29b"
+      },
+      {
+        "schema": "specnav.verification.reading.v1",
+        "id": "reading-449987669a8fb7586019c4c7884a3ea882c395b27b5cf4d932ef757c7b6867f9",
+        "change_id": "docforge-workbench-ui-redesign",
+        "run_id": "run-20260828092100-adc2b1b3e980ce63",
+        "case_id": "case-a3-desktop-hierarchy",
+        "attempt_id": "attempt-20260828092100-adc2b1b3e980ce63",
+        "step_id": "a3-step-sensory",
+        "assertion_id": "a3-desktop-hierarchy",
+        "domain": "redteam",
+        "expected": true,
+        "actual": true,
+        "oracle": {
+          "type": "structured_comparison",
+          "owner": "command-runner",
+          "deterministic": true
+        },
+        "evidence_ids": [
+          "evidence-2f1b01647784f64de9eacbe599acdad26b5dc647ba87e5e6b02b10992c1ab1ec",
+          "evidence-c1b1eccb6588900856422c468c1e2dc149b20f4d57ac8ac930eb62d2870ce179"
+        ],
+        "verdict": "pass",
+        "recorded_at": "2026-08-28T09:21:00.691Z",
+        "code_sha": "2f731ff29c8e73af175ebcaa923296f3181e252d",
+        "test_sha": "7b9651c1b0dbc0ab211f15d6d7d748191ab036ca4bf2cf7a3bec00b816a3f29b"
+      },
+      {
+        "schema": "specnav.verification.reading.v1",
+        "id": "reading-4a8d8a83a534b436845529b33e394d87c2b9b794b077aae67c2ef7ba1fe238dc",
+        "change_id": "docforge-workbench-ui-redesign",
+        "run_id": "run-20260828092043-e70067b9a6fcb4bc",
+        "case_id": "case-a2-command-regression",
+        "attempt_id": "attempt-20260828092043-e70067b9a6fcb4bc",
+        "step_id": "a2-step-e2e",
+        "assertion_id": "a2-command-regression",
+        "domain": "redteam",
+        "expected": true,
+        "actual": true,
+        "oracle": {
+          "type": "structured_comparison",
+          "owner": "command-runner",
+          "deterministic": true
+        },
+        "evidence_ids": [
+          "evidence-45dff25daa81dc6c5a50e0c0ad0de4cdb4ccc69d9d38cbcce350abe32cda2f53",
+          "evidence-dda0a90bf0d76b52a28d3fcb337b32683e7b3fcd68258602354c71dc38acd286"
+        ],
+        "verdict": "pass",
+        "recorded_at": "2026-08-28T09:21:00.485Z",
+        "code_sha": "2f731ff29c8e73af175ebcaa923296f3181e252d",
+        "test_sha": "7b9651c1b0dbc0ab211f15d6d7d748191ab036ca4bf2cf7a3bec00b816a3f29b"
+      },
+      {
+        "schema": "specnav.verification.reading.v1",
+        "id": "reading-50a96717ff19630ea03dedb1b7e11b5e73f5b4c7ef36cc1f10f9c29f71de8423",
+        "change_id": "docforge-workbench-ui-redesign",
+        "run_id": "run-20260828092100-6bc1ef43ebae19c1",
+        "case_id": "case-a4-mobile-panels",
+        "attempt_id": "attempt-20260828092100-6bc1ef43ebae19c1",
+        "step_id": "a4-step-mobile",
+        "assertion_id": "a4-mobile-panels",
+        "domain": "e2e",
+        "expected": true,
+        "actual": true,
+        "oracle": {
+          "type": "structured_comparison",
+          "owner": "command-runner",
+          "deterministic": true
+        },
+        "evidence_ids": [
+          "evidence-2e3e0705a483392b09314e2a607a32b85b8f7e056ef6fc675c95e1c1e5313add",
+          "evidence-3e69e6cd44c7721930ee8420ad0e9d635f9f9b10b452e20f2329b430348b2876"
+        ],
+        "verdict": "pass",
+        "recorded_at": "2026-08-28T09:21:04.031Z",
+        "code_sha": "2f731ff29c8e73af175ebcaa923296f3181e252d",
+        "test_sha": "7b9651c1b0dbc0ab211f15d6d7d748191ab036ca4bf2cf7a3bec00b816a3f29b"
+      },
+      {
+        "schema": "specnav.verification.reading.v1",
+        "id": "reading-532dc6c2e6e7f0f97bfccd51bfe0c44af25b225e4cd87881ef74f0c7c5c09a1e",
+        "change_id": "docforge-workbench-ui-redesign",
+        "run_id": "run-20260828092043-e70067b9a6fcb4bc",
+        "case_id": "case-a2-command-regression",
+        "attempt_id": "attempt-20260828092043-e70067b9a6fcb4bc",
+        "step_id": "a2-step-e2e",
+        "assertion_id": "a2-command-regression",
+        "domain": "unit",
+        "expected": true,
+        "actual": true,
+        "oracle": {
+          "type": "structured_comparison",
+          "owner": "command-runner",
+          "deterministic": true
+        },
+        "evidence_ids": [
+          "evidence-45dff25daa81dc6c5a50e0c0ad0de4cdb4ccc69d9d38cbcce350abe32cda2f53",
+          "evidence-dda0a90bf0d76b52a28d3fcb337b32683e7b3fcd68258602354c71dc38acd286"
+        ],
+        "verdict": "pass",
+        "recorded_at": "2026-08-28T09:21:00.485Z",
+        "code_sha": "2f731ff29c8e73af175ebcaa923296f3181e252d",
+        "test_sha": "7b9651c1b0dbc0ab211f15d6d7d748191ab036ca4bf2cf7a3bec00b816a3f29b"
+      },
+      {
+        "schema": "specnav.verification.reading.v1",
+        "id": "reading-56fa6f97f3f35f2306bb6f8b26ce0cd0d026928e99c60f3d9e8a11930722684b",
+        "change_id": "docforge-workbench-ui-redesign",
+        "run_id": "run-20260828092100-adc2b1b3e980ce63",
+        "case_id": "case-a3-desktop-hierarchy",
+        "attempt_id": "attempt-20260828092100-adc2b1b3e980ce63",
+        "step_id": "a3-step-sensory",
+        "assertion_id": "a3-desktop-hierarchy",
+        "domain": "e2e",
+        "expected": true,
+        "actual": true,
+        "oracle": {
+          "type": "structured_comparison",
+          "owner": "command-runner",
+          "deterministic": true
+        },
+        "evidence_ids": [
+          "evidence-2f1b01647784f64de9eacbe599acdad26b5dc647ba87e5e6b02b10992c1ab1ec",
+          "evidence-c1b1eccb6588900856422c468c1e2dc149b20f4d57ac8ac930eb62d2870ce179"
+        ],
+        "verdict": "pass",
+        "recorded_at": "2026-08-28T09:21:00.691Z",
+        "code_sha": "2f731ff29c8e73af175ebcaa923296f3181e252d",
+        "test_sha": "7b9651c1b0dbc0ab211f15d6d7d748191ab036ca4bf2cf7a3bec00b816a3f29b"
+      },
+      {
+        "schema": "specnav.verification.reading.v1",
+        "id": "reading-572360efc2fd53f4710771536e4831b49ba75402a3d278e0dba96af54e04340e",
+        "change_id": "docforge-workbench-ui-redesign",
+        "run_id": "run-20260828092104-b37864e76dcbb630",
+        "case_id": "case-a5-ui-boundary",
+        "attempt_id": "attempt-20260828092104-b37864e76dcbb630",
+        "step_id": "a5-step-boundary",
+        "assertion_id": "a5-ui-boundary",
+        "domain": "sensory",
+        "expected": true,
+        "actual": true,
+        "oracle": {
+          "type": "structured_comparison",
+          "owner": "command-runner",
+          "deterministic": true
+        },
+        "evidence_ids": [
+          "evidence-37b09adc9842232486e76cebd9584065539489d3377eb5a13dc8b47ee29a9fe0",
+          "evidence-9a72772d2a121d11cf4529162343e0e579ee5ae85694a29f4f3367894f18f9bf"
+        ],
+        "verdict": "pass",
+        "recorded_at": "2026-08-28T09:21:05.238Z",
+        "code_sha": "2f731ff29c8e73af175ebcaa923296f3181e252d",
+        "test_sha": "7b9651c1b0dbc0ab211f15d6d7d748191ab036ca4bf2cf7a3bec00b816a3f29b"
+      },
+      {
+        "schema": "specnav.verification.reading.v1",
+        "id": "reading-5cacc1c8e0a171978fc9cc199297cc6b13bacf4c13196c819c0877485e2ebf5f",
+        "change_id": "docforge-workbench-ui-redesign",
+        "run_id": "run-20260828092100-6bc1ef43ebae19c1",
+        "case_id": "case-a4-mobile-panels",
+        "attempt_id": "attempt-20260828092100-6bc1ef43ebae19c1",
+        "step_id": "a4-step-mobile",
+        "assertion_id": "a4-mobile-panels",
+        "domain": "static",
+        "expected": true,
+        "actual": true,
+        "oracle": {
+          "type": "structured_comparison",
+          "owner": "command-runner",
+          "deterministic": true
+        },
+        "evidence_ids": [
+          "evidence-2e3e0705a483392b09314e2a607a32b85b8f7e056ef6fc675c95e1c1e5313add",
+          "evidence-3e69e6cd44c7721930ee8420ad0e9d635f9f9b10b452e20f2329b430348b2876"
+        ],
+        "verdict": "pass",
+        "recorded_at": "2026-08-28T09:21:04.031Z",
+        "code_sha": "2f731ff29c8e73af175ebcaa923296f3181e252d",
+        "test_sha": "7b9651c1b0dbc0ab211f15d6d7d748191ab036ca4bf2cf7a3bec00b816a3f29b"
+      },
+      {
+        "schema": "specnav.verification.reading.v1",
+        "id": "reading-5f67edb14f103022175cf1117850f391bb2b134e55aecd76d02647cd348fdd84",
+        "change_id": "docforge-workbench-ui-redesign",
+        "run_id": "run-20260828092100-adc2b1b3e980ce63",
+        "case_id": "case-a3-desktop-hierarchy",
+        "attempt_id": "attempt-20260828092100-adc2b1b3e980ce63",
+        "step_id": "a3-step-sensory",
+        "assertion_id": "a3-desktop-hierarchy",
+        "domain": "static",
+        "expected": true,
+        "actual": true,
+        "oracle": {
+          "type": "structured_comparison",
+          "owner": "command-runner",
+          "deterministic": true
+        },
+        "evidence_ids": [
+          "evidence-2f1b01647784f64de9eacbe599acdad26b5dc647ba87e5e6b02b10992c1ab1ec",
+          "evidence-c1b1eccb6588900856422c468c1e2dc149b20f4d57ac8ac930eb62d2870ce179"
+        ],
+        "verdict": "pass",
+        "recorded_at": "2026-08-28T09:21:00.691Z",
+        "code_sha": "2f731ff29c8e73af175ebcaa923296f3181e252d",
+        "test_sha": "7b9651c1b0dbc0ab211f15d6d7d748191ab036ca4bf2cf7a3bec00b816a3f29b"
+      },
+      {
+        "schema": "specnav.verification.reading.v1",
+        "id": "reading-651b32942e5182eda44c9bdd0b520a5e03419a24e8153a2a65b4a67797ca21ee",
+        "change_id": "docforge-workbench-ui-redesign",
+        "run_id": "run-20260828092043-e70067b9a6fcb4bc",
+        "case_id": "case-a2-command-regression",
+        "attempt_id": "attempt-20260828092043-e70067b9a6fcb4bc",
+        "step_id": "a2-step-e2e",
+        "assertion_id": "a2-command-regression",
+        "domain": "sensory",
+        "expected": true,
+        "actual": true,
+        "oracle": {
+          "type": "structured_comparison",
+          "owner": "command-runner",
+          "deterministic": true
+        },
+        "evidence_ids": [
+          "evidence-45dff25daa81dc6c5a50e0c0ad0de4cdb4ccc69d9d38cbcce350abe32cda2f53",
+          "evidence-dda0a90bf0d76b52a28d3fcb337b32683e7b3fcd68258602354c71dc38acd286"
+        ],
+        "verdict": "pass",
+        "recorded_at": "2026-08-28T09:21:00.485Z",
+        "code_sha": "2f731ff29c8e73af175ebcaa923296f3181e252d",
+        "test_sha": "7b9651c1b0dbc0ab211f15d6d7d748191ab036ca4bf2cf7a3bec00b816a3f29b"
+      },
+      {
+        "schema": "specnav.verification.reading.v1",
+        "id": "reading-8786b3eedaff89f4df9afc11dda486d02c0a9c5d531caedd23196e90dd499cbb",
+        "change_id": "docforge-workbench-ui-redesign",
+        "run_id": "run-20260828092033-fd4e462feef558cf",
+        "case_id": "case-a1-docforge-brand",
+        "attempt_id": "attempt-20260828092033-fd4e462feef558cf",
+        "step_id": "a1-step-brand",
+        "assertion_id": "a1-docforge-brand",
+        "domain": "redteam",
+        "expected": true,
+        "actual": true,
+        "oracle": {
+          "type": "structured_comparison",
+          "owner": "command-runner",
+          "deterministic": true
+        },
+        "evidence_ids": [
+          "evidence-37b95c6eec881f0a54fb23375f46adc5f9483d0e80184b84cc9625fa45bb39f7",
+          "evidence-90995b917b17e46bed8f768fac19cd09ab76bc878a02589d9ffedcc4935482d0"
+        ],
+        "verdict": "pass",
+        "recorded_at": "2026-08-28T09:20:42.990Z",
+        "code_sha": "2f731ff29c8e73af175ebcaa923296f3181e252d",
+        "test_sha": "7b9651c1b0dbc0ab211f15d6d7d748191ab036ca4bf2cf7a3bec00b816a3f29b"
+      },
+      {
+        "schema": "specnav.verification.reading.v1",
+        "id": "reading-87d0baaedb50fde78ac4acc9ee4048040dc1e4d56bbe031bddb626270ad587bc",
+        "change_id": "docforge-workbench-ui-redesign",
+        "run_id": "run-20260828092033-fd4e462feef558cf",
+        "case_id": "case-a1-docforge-brand",
+        "attempt_id": "attempt-20260828092033-fd4e462feef558cf",
+        "step_id": "a1-step-brand",
+        "assertion_id": "a1-docforge-brand",
+        "domain": "static",
+        "expected": true,
+        "actual": true,
+        "oracle": {
+          "type": "structured_comparison",
+          "owner": "command-runner",
+          "deterministic": true
+        },
+        "evidence_ids": [
+          "evidence-37b95c6eec881f0a54fb23375f46adc5f9483d0e80184b84cc9625fa45bb39f7",
+          "evidence-90995b917b17e46bed8f768fac19cd09ab76bc878a02589d9ffedcc4935482d0"
+        ],
+        "verdict": "pass",
+        "recorded_at": "2026-08-28T09:20:42.990Z",
+        "code_sha": "2f731ff29c8e73af175ebcaa923296f3181e252d",
+        "test_sha": "7b9651c1b0dbc0ab211f15d6d7d748191ab036ca4bf2cf7a3bec00b816a3f29b"
+      },
+      {
+        "schema": "specnav.verification.reading.v1",
+        "id": "reading-a52a9c71dc3ed4a94523dcd12da619b609ea674363a41de9f0d7f0cd8538545b",
+        "change_id": "docforge-workbench-ui-redesign",
+        "run_id": "run-20260828092100-6bc1ef43ebae19c1",
+        "case_id": "case-a4-mobile-panels",
+        "attempt_id": "attempt-20260828092100-6bc1ef43ebae19c1",
+        "step_id": "a4-step-mobile",
+        "assertion_id": "a4-mobile-panels",
+        "domain": "sensory",
+        "expected": true,
+        "actual": true,
+        "oracle": {
+          "type": "structured_comparison",
+          "owner": "command-runner",
+          "deterministic": true
+        },
+        "evidence_ids": [
+          "evidence-2e3e0705a483392b09314e2a607a32b85b8f7e056ef6fc675c95e1c1e5313add",
+          "evidence-3e69e6cd44c7721930ee8420ad0e9d635f9f9b10b452e20f2329b430348b2876"
+        ],
+        "verdict": "pass",
+        "recorded_at": "2026-08-28T09:21:04.031Z",
+        "code_sha": "2f731ff29c8e73af175ebcaa923296f3181e252d",
+        "test_sha": "7b9651c1b0dbc0ab211f15d6d7d748191ab036ca4bf2cf7a3bec00b816a3f29b"
+      },
+      {
+        "schema": "specnav.verification.reading.v1",
+        "id": "reading-a65f7b38eb77c1f2a284b8f10696ec45afeaeeeb757e2136f724d378cc5ed3e0",
+        "change_id": "docforge-workbench-ui-redesign",
+        "run_id": "run-20260828092033-fd4e462feef558cf",
+        "case_id": "case-a1-docforge-brand",
+        "attempt_id": "attempt-20260828092033-fd4e462feef558cf",
+        "step_id": "a1-step-brand",
+        "assertion_id": "a1-docforge-brand",
+        "domain": "unit",
+        "expected": true,
+        "actual": true,
+        "oracle": {
+          "type": "structured_comparison",
+          "owner": "command-runner",
+          "deterministic": true
+        },
+        "evidence_ids": [
+          "evidence-37b95c6eec881f0a54fb23375f46adc5f9483d0e80184b84cc9625fa45bb39f7",
+          "evidence-90995b917b17e46bed8f768fac19cd09ab76bc878a02589d9ffedcc4935482d0"
+        ],
+        "verdict": "pass",
+        "recorded_at": "2026-08-28T09:20:42.990Z",
+        "code_sha": "2f731ff29c8e73af175ebcaa923296f3181e252d",
+        "test_sha": "7b9651c1b0dbc0ab211f15d6d7d748191ab036ca4bf2cf7a3bec00b816a3f29b"
+      },
+      {
+        "schema": "specnav.verification.reading.v1",
+        "id": "reading-a8750c5d1ac68a6ccf50c4009a72fe2d3655b8b41d5a2bffee7cf1b0e6c94c12",
+        "change_id": "docforge-workbench-ui-redesign",
+        "run_id": "run-20260828092104-b37864e76dcbb630",
+        "case_id": "case-a5-ui-boundary",
+        "attempt_id": "attempt-20260828092104-b37864e76dcbb630",
+        "step_id": "a5-step-boundary",
+        "assertion_id": "a5-ui-boundary",
+        "domain": "redteam",
+        "expected": true,
+        "actual": true,
+        "oracle": {
+          "type": "structured_comparison",
+          "owner": "command-runner",
+          "deterministic": true
+        },
+        "evidence_ids": [
+          "evidence-37b09adc9842232486e76cebd9584065539489d3377eb5a13dc8b47ee29a9fe0",
+          "evidence-9a72772d2a121d11cf4529162343e0e579ee5ae85694a29f4f3367894f18f9bf"
+        ],
+        "verdict": "pass",
+        "recorded_at": "2026-08-28T09:21:05.238Z",
+        "code_sha": "2f731ff29c8e73af175ebcaa923296f3181e252d",
+        "test_sha": "7b9651c1b0dbc0ab211f15d6d7d748191ab036ca4bf2cf7a3bec00b816a3f29b"
+      },
+      {
+        "schema": "specnav.verification.reading.v1",
+        "id": "reading-d5500fa1df7a34fdec385a1175d9d56595a284ea486cd5006da495751558c661",
+        "change_id": "docforge-workbench-ui-redesign",
+        "run_id": "run-20260828092033-fd4e462feef558cf",
+        "case_id": "case-a1-docforge-brand",
+        "attempt_id": "attempt-20260828092033-fd4e462feef558cf",
+        "step_id": "a1-step-brand",
+        "assertion_id": "a1-docforge-brand",
+        "domain": "e2e",
+        "expected": true,
+        "actual": true,
+        "oracle": {
+          "type": "structured_comparison",
+          "owner": "command-runner",
+          "deterministic": true
+        },
+        "evidence_ids": [
+          "evidence-37b95c6eec881f0a54fb23375f46adc5f9483d0e80184b84cc9625fa45bb39f7",
+          "evidence-90995b917b17e46bed8f768fac19cd09ab76bc878a02589d9ffedcc4935482d0"
+        ],
+        "verdict": "pass",
+        "recorded_at": "2026-08-28T09:20:42.990Z",
+        "code_sha": "2f731ff29c8e73af175ebcaa923296f3181e252d",
+        "test_sha": "7b9651c1b0dbc0ab211f15d6d7d748191ab036ca4bf2cf7a3bec00b816a3f29b"
+      },
+      {
+        "schema": "specnav.verification.reading.v1",
+        "id": "reading-e876e819e8c828053628a1e73046a436da610634353f36fbcbc5b5a4b9a4377a",
+        "change_id": "docforge-workbench-ui-redesign",
+        "run_id": "run-20260828092043-e70067b9a6fcb4bc",
+        "case_id": "case-a2-command-regression",
+        "attempt_id": "attempt-20260828092043-e70067b9a6fcb4bc",
+        "step_id": "a2-step-e2e",
+        "assertion_id": "a2-command-regression",
+        "domain": "facticity",
+        "expected": true,
+        "actual": true,
+        "oracle": {
+          "type": "structured_comparison",
+          "owner": "command-runner",
+          "deterministic": true
+        },
+        "evidence_ids": [
+          "evidence-45dff25daa81dc6c5a50e0c0ad0de4cdb4ccc69d9d38cbcce350abe32cda2f53",
+          "evidence-dda0a90bf0d76b52a28d3fcb337b32683e7b3fcd68258602354c71dc38acd286"
+        ],
+        "verdict": "pass",
+        "recorded_at": "2026-08-28T09:21:00.485Z",
+        "code_sha": "2f731ff29c8e73af175ebcaa923296f3181e252d",
+        "test_sha": "7b9651c1b0dbc0ab211f15d6d7d748191ab036ca4bf2cf7a3bec00b816a3f29b"
+      },
+      {
+        "schema": "specnav.verification.reading.v1",
+        "id": "reading-fcdf085597f250d44c7cde5f5de5e017b6f0547a03749bb2461a11ba38e05b73",
+        "change_id": "docforge-workbench-ui-redesign",
+        "run_id": "run-20260828092033-fd4e462feef558cf",
+        "case_id": "case-a1-docforge-brand",
+        "attempt_id": "attempt-20260828092033-fd4e462feef558cf",
+        "step_id": "a1-step-brand",
+        "assertion_id": "a1-docforge-brand",
+        "domain": "facticity",
+        "expected": true,
+        "actual": true,
+        "oracle": {
+          "type": "structured_comparison",
+          "owner": "command-runner",
+          "deterministic": true
+        },
+        "evidence_ids": [
+          "evidence-37b95c6eec881f0a54fb23375f46adc5f9483d0e80184b84cc9625fa45bb39f7",
+          "evidence-90995b917b17e46bed8f768fac19cd09ab76bc878a02589d9ffedcc4935482d0"
+        ],
+        "verdict": "pass",
+        "recorded_at": "2026-08-28T09:20:42.990Z",
+        "code_sha": "2f731ff29c8e73af175ebcaa923296f3181e252d",
+        "test_sha": "7b9651c1b0dbc0ab211f15d6d7d748191ab036ca4bf2cf7a3bec00b816a3f29b"
+      },
+      {
+        "schema": "specnav.verification.reading.v1",
+        "id": "reading-fd26352c2950a0d01234f8f9f75ba42f5c6af91d7c5d0688a4f08a432d965513",
+        "change_id": "docforge-workbench-ui-redesign",
+        "run_id": "run-20260828092100-6bc1ef43ebae19c1",
+        "case_id": "case-a4-mobile-panels",
+        "attempt_id": "attempt-20260828092100-6bc1ef43ebae19c1",
+        "step_id": "a4-step-mobile",
+        "assertion_id": "a4-mobile-panels",
+        "domain": "redteam",
+        "expected": true,
+        "actual": true,
+        "oracle": {
+          "type": "structured_comparison",
+          "owner": "command-runner",
+          "deterministic": true
+        },
+        "evidence_ids": [
+          "evidence-2e3e0705a483392b09314e2a607a32b85b8f7e056ef6fc675c95e1c1e5313add",
+          "evidence-3e69e6cd44c7721930ee8420ad0e9d635f9f9b10b452e20f2329b430348b2876"
+        ],
+        "verdict": "pass",
+        "recorded_at": "2026-08-28T09:21:04.031Z",
+        "code_sha": "2f731ff29c8e73af175ebcaa923296f3181e252d",
+        "test_sha": "7b9651c1b0dbc0ab211f15d6d7d748191ab036ca4bf2cf7a3bec00b816a3f29b"
+      }
+    ],
+    "evidence": [
+      {
+        "schema": "specnav.verification.evidence.v1",
+        "id": "evidence-37b95c6eec881f0a54fb23375f46adc5f9483d0e80184b84cc9625fa45bb39f7",
+        "kind": "assertion_result",
+        "producer": "command-runner",
+        "captured_at": "2026-08-28T09:20:42.905Z",
+        "change_id": "docforge-workbench-ui-redesign",
+        "run_id": "run-20260828092033-fd4e462feef558cf",
+        "case_id": "case-a1-docforge-brand",
+        "attempt_id": "attempt-20260828092033-fd4e462feef558cf",
+        "step_id": "a1-step-brand",
+        "assertion_id": "a1-docforge-brand",
+        "code_sha": "2f731ff29c8e73af175ebcaa923296f3181e252d",
+        "test_sha": "7b9651c1b0dbc0ab211f15d6d7d748191ab036ca4bf2cf7a3bec00b816a3f29b",
+        "environment_hash": "9c78786e36218f06534a16388fb62cd2cbe8337504d5b4c19814bad8b31c3e9d",
+        "runtime_version": "2.0.0-alpha.2",
+        "kernel_version": "2.0.0-alpha.2",
+        "redaction": {
+          "status": "not_required",
+          "redacted_fields": []
+        },
+        "content_type": "application/json",
+        "result": "pass",
+        "path": "objects/c623db3dd322505644aa364f303b985fad1870782745e94b3d034a6f2819c890.json",
+        "sha256": "c623db3dd322505644aa364f303b985fad1870782745e94b3d034a6f2819c890",
+        "size": 123
+      },
+      {
+        "schema": "specnav.verification.evidence.v1",
+        "id": "evidence-90995b917b17e46bed8f768fac19cd09ab76bc878a02589d9ffedcc4935482d0",
+        "kind": "command_output",
+        "producer": "command-runner",
+        "captured_at": "2026-08-28T09:20:42.905Z",
+        "change_id": "docforge-workbench-ui-redesign",
+        "run_id": "run-20260828092033-fd4e462feef558cf",
+        "case_id": "case-a1-docforge-brand",
+        "attempt_id": "attempt-20260828092033-fd4e462feef558cf",
+        "step_id": "a1-step-brand",
+        "assertion_id": "a1-docforge-brand",
+        "code_sha": "2f731ff29c8e73af175ebcaa923296f3181e252d",
+        "test_sha": "7b9651c1b0dbc0ab211f15d6d7d748191ab036ca4bf2cf7a3bec00b816a3f29b",
+        "environment_hash": "9c78786e36218f06534a16388fb62cd2cbe8337504d5b4c19814bad8b31c3e9d",
+        "runtime_version": "2.0.0-alpha.2",
+        "kernel_version": "2.0.0-alpha.2",
+        "redaction": {
+          "status": "not_required",
+          "redacted_fields": []
+        },
+        "content_type": "text/plain",
+        "result": "pass",
+        "path": "objects/ccd8669fc8a9222a83ad3159bfda7bd1e700ff48eacbb04dca813597729e3ea7.txt",
+        "sha256": "ccd8669fc8a9222a83ad3159bfda7bd1e700ff48eacbb04dca813597729e3ea7",
+        "size": 3416
+      },
+      {
+        "schema": "specnav.verification.evidence.v1",
+        "id": "evidence-45dff25daa81dc6c5a50e0c0ad0de4cdb4ccc69d9d38cbcce350abe32cda2f53",
+        "kind": "command_output",
+        "producer": "command-runner",
+        "captured_at": "2026-08-28T09:21:00.436Z",
+        "change_id": "docforge-workbench-ui-redesign",
+        "run_id": "run-20260828092043-e70067b9a6fcb4bc",
+        "case_id": "case-a2-command-regression",
+        "attempt_id": "attempt-20260828092043-e70067b9a6fcb4bc",
+        "step_id": "a2-step-e2e",
+        "assertion_id": "a2-command-regression",
+        "code_sha": "2f731ff29c8e73af175ebcaa923296f3181e252d",
+        "test_sha": "7b9651c1b0dbc0ab211f15d6d7d748191ab036ca4bf2cf7a3bec00b816a3f29b",
+        "environment_hash": "9c78786e36218f06534a16388fb62cd2cbe8337504d5b4c19814bad8b31c3e9d",
+        "runtime_version": "2.0.0-alpha.2",
+        "kernel_version": "2.0.0-alpha.2",
+        "redaction": {
+          "status": "not_required",
+          "redacted_fields": []
+        },
+        "content_type": "text/plain",
+        "result": "pass",
+        "path": "objects/51f2fd788d9d56a6e830032810ee90e6fbcdd396d5b028c6e562c9f378223f86.txt",
+        "sha256": "51f2fd788d9d56a6e830032810ee90e6fbcdd396d5b028c6e562c9f378223f86",
+        "size": 6497
+      },
+      {
+        "schema": "specnav.verification.evidence.v1",
+        "id": "evidence-dda0a90bf0d76b52a28d3fcb337b32683e7b3fcd68258602354c71dc38acd286",
+        "kind": "assertion_result",
+        "producer": "command-runner",
+        "captured_at": "2026-08-28T09:21:00.436Z",
+        "change_id": "docforge-workbench-ui-redesign",
+        "run_id": "run-20260828092043-e70067b9a6fcb4bc",
+        "case_id": "case-a2-command-regression",
+        "attempt_id": "attempt-20260828092043-e70067b9a6fcb4bc",
+        "step_id": "a2-step-e2e",
+        "assertion_id": "a2-command-regression",
+        "code_sha": "2f731ff29c8e73af175ebcaa923296f3181e252d",
+        "test_sha": "7b9651c1b0dbc0ab211f15d6d7d748191ab036ca4bf2cf7a3bec00b816a3f29b",
+        "environment_hash": "9c78786e36218f06534a16388fb62cd2cbe8337504d5b4c19814bad8b31c3e9d",
+        "runtime_version": "2.0.0-alpha.2",
+        "kernel_version": "2.0.0-alpha.2",
+        "redaction": {
+          "status": "not_required",
+          "redacted_fields": []
+        },
+        "content_type": "application/json",
+        "result": "pass",
+        "path": "objects/41873ca81b16559c6b0489a1a1aac9a412961f486c907ab476be0432753102e0.json",
+        "sha256": "41873ca81b16559c6b0489a1a1aac9a412961f486c907ab476be0432753102e0",
+        "size": 127
+      },
+      {
+        "schema": "specnav.verification.evidence.v1",
+        "id": "evidence-2f1b01647784f64de9eacbe599acdad26b5dc647ba87e5e6b02b10992c1ab1ec",
+        "kind": "command_output",
+        "producer": "command-runner",
+        "captured_at": "2026-08-28T09:21:00.642Z",
+        "change_id": "docforge-workbench-ui-redesign",
+        "run_id": "run-20260828092100-adc2b1b3e980ce63",
+        "case_id": "case-a3-desktop-hierarchy",
+        "attempt_id": "attempt-20260828092100-adc2b1b3e980ce63",
+        "step_id": "a3-step-sensory",
+        "assertion_id": "a3-desktop-hierarchy",
+        "code_sha": "2f731ff29c8e73af175ebcaa923296f3181e252d",
+        "test_sha": "7b9651c1b0dbc0ab211f15d6d7d748191ab036ca4bf2cf7a3bec00b816a3f29b",
+        "environment_hash": "9c78786e36218f06534a16388fb62cd2cbe8337504d5b4c19814bad8b31c3e9d",
+        "runtime_version": "2.0.0-alpha.2",
+        "kernel_version": "2.0.0-alpha.2",
+        "redaction": {
+          "status": "not_required",
+          "redacted_fields": []
+        },
+        "content_type": "text/plain",
+        "result": "pass",
+        "path": "objects/62dd44a02167be8c55b97663142b00a49615a1d733f6e3fd52e068c07b63381d.txt",
+        "sha256": "62dd44a02167be8c55b97663142b00a49615a1d733f6e3fd52e068c07b63381d",
+        "size": 59
+      },
+      {
+        "schema": "specnav.verification.evidence.v1",
+        "id": "evidence-c1b1eccb6588900856422c468c1e2dc149b20f4d57ac8ac930eb62d2870ce179",
+        "kind": "assertion_result",
+        "producer": "command-runner",
+        "captured_at": "2026-08-28T09:21:00.642Z",
+        "change_id": "docforge-workbench-ui-redesign",
+        "run_id": "run-20260828092100-adc2b1b3e980ce63",
+        "case_id": "case-a3-desktop-hierarchy",
+        "attempt_id": "attempt-20260828092100-adc2b1b3e980ce63",
+        "step_id": "a3-step-sensory",
+        "assertion_id": "a3-desktop-hierarchy",
+        "code_sha": "2f731ff29c8e73af175ebcaa923296f3181e252d",
+        "test_sha": "7b9651c1b0dbc0ab211f15d6d7d748191ab036ca4bf2cf7a3bec00b816a3f29b",
+        "environment_hash": "9c78786e36218f06534a16388fb62cd2cbe8337504d5b4c19814bad8b31c3e9d",
+        "runtime_version": "2.0.0-alpha.2",
+        "kernel_version": "2.0.0-alpha.2",
+        "redaction": {
+          "status": "not_required",
+          "redacted_fields": []
+        },
+        "content_type": "application/json",
+        "result": "pass",
+        "path": "objects/e6bb613de9b29f86628d97a7215a5f5c2541b0645bbbc80e1aaabadd97b7d478.json",
+        "sha256": "e6bb613de9b29f86628d97a7215a5f5c2541b0645bbbc80e1aaabadd97b7d478",
+        "size": 126
+      },
+      {
+        "schema": "specnav.verification.evidence.v1",
+        "id": "evidence-2e3e0705a483392b09314e2a607a32b85b8f7e056ef6fc675c95e1c1e5313add",
+        "kind": "assertion_result",
+        "producer": "command-runner",
+        "captured_at": "2026-08-28T09:21:03.991Z",
+        "change_id": "docforge-workbench-ui-redesign",
+        "run_id": "run-20260828092100-6bc1ef43ebae19c1",
+        "case_id": "case-a4-mobile-panels",
+        "attempt_id": "attempt-20260828092100-6bc1ef43ebae19c1",
+        "step_id": "a4-step-mobile",
+        "assertion_id": "a4-mobile-panels",
+        "code_sha": "2f731ff29c8e73af175ebcaa923296f3181e252d",
+        "test_sha": "7b9651c1b0dbc0ab211f15d6d7d748191ab036ca4bf2cf7a3bec00b816a3f29b",
+        "environment_hash": "9c78786e36218f06534a16388fb62cd2cbe8337504d5b4c19814bad8b31c3e9d",
+        "runtime_version": "2.0.0-alpha.2",
+        "kernel_version": "2.0.0-alpha.2",
+        "redaction": {
+          "status": "not_required",
+          "redacted_fields": []
+        },
+        "content_type": "application/json",
+        "result": "pass",
+        "path": "objects/caa06c01f0d0808cfdfef407dd61e0d831f4a15b6eaac0419d41e437e793a971.json",
+        "sha256": "caa06c01f0d0808cfdfef407dd61e0d831f4a15b6eaac0419d41e437e793a971",
+        "size": 122
+      },
+      {
+        "schema": "specnav.verification.evidence.v1",
+        "id": "evidence-3e69e6cd44c7721930ee8420ad0e9d635f9f9b10b452e20f2329b430348b2876",
+        "kind": "command_output",
+        "producer": "command-runner",
+        "captured_at": "2026-08-28T09:21:03.991Z",
+        "change_id": "docforge-workbench-ui-redesign",
+        "run_id": "run-20260828092100-6bc1ef43ebae19c1",
+        "case_id": "case-a4-mobile-panels",
+        "attempt_id": "attempt-20260828092100-6bc1ef43ebae19c1",
+        "step_id": "a4-step-mobile",
+        "assertion_id": "a4-mobile-panels",
+        "code_sha": "2f731ff29c8e73af175ebcaa923296f3181e252d",
+        "test_sha": "7b9651c1b0dbc0ab211f15d6d7d748191ab036ca4bf2cf7a3bec00b816a3f29b",
+        "environment_hash": "9c78786e36218f06534a16388fb62cd2cbe8337504d5b4c19814bad8b31c3e9d",
+        "runtime_version": "2.0.0-alpha.2",
+        "kernel_version": "2.0.0-alpha.2",
+        "redaction": {
+          "status": "not_required",
+          "redacted_fields": []
+        },
+        "content_type": "text/plain",
+        "result": "pass",
+        "path": "objects/3e2bd43245d09883f03335e5b316bee16f7cc658fc5ce54241005ebae702722a.txt",
+        "sha256": "3e2bd43245d09883f03335e5b316bee16f7cc658fc5ce54241005ebae702722a",
+        "size": 375
+      },
+      {
+        "schema": "specnav.verification.evidence.v1",
+        "id": "evidence-37b09adc9842232486e76cebd9584065539489d3377eb5a13dc8b47ee29a9fe0",
+        "kind": "command_output",
+        "producer": "command-runner",
+        "captured_at": "2026-08-28T09:21:05.183Z",
+        "change_id": "docforge-workbench-ui-redesign",
+        "run_id": "run-20260828092104-b37864e76dcbb630",
+        "case_id": "case-a5-ui-boundary",
+        "attempt_id": "attempt-20260828092104-b37864e76dcbb630",
+        "step_id": "a5-step-boundary",
+        "assertion_id": "a5-ui-boundary",
+        "code_sha": "2f731ff29c8e73af175ebcaa923296f3181e252d",
+        "test_sha": "7b9651c1b0dbc0ab211f15d6d7d748191ab036ca4bf2cf7a3bec00b816a3f29b",
+        "environment_hash": "9c78786e36218f06534a16388fb62cd2cbe8337504d5b4c19814bad8b31c3e9d",
+        "runtime_version": "2.0.0-alpha.2",
+        "kernel_version": "2.0.0-alpha.2",
+        "redaction": {
+          "status": "not_required",
+          "redacted_fields": []
+        },
+        "content_type": "text/plain",
+        "result": "pass",
+        "path": "objects/dc2e417426366ebf07e49ed623051c73eae8850b3bf9a19a5973af615c4f18fc.txt",
+        "sha256": "dc2e417426366ebf07e49ed623051c73eae8850b3bf9a19a5973af615c4f18fc",
+        "size": 496
+      },
+      {
+        "schema": "specnav.verification.evidence.v1",
+        "id": "evidence-9a72772d2a121d11cf4529162343e0e579ee5ae85694a29f4f3367894f18f9bf",
+        "kind": "assertion_result",
+        "producer": "command-runner",
+        "captured_at": "2026-08-28T09:21:05.183Z",
+        "change_id": "docforge-workbench-ui-redesign",
+        "run_id": "run-20260828092104-b37864e76dcbb630",
+        "case_id": "case-a5-ui-boundary",
+        "attempt_id": "attempt-20260828092104-b37864e76dcbb630",
+        "step_id": "a5-step-boundary",
+        "assertion_id": "a5-ui-boundary",
+        "code_sha": "2f731ff29c8e73af175ebcaa923296f3181e252d",
+        "test_sha": "7b9651c1b0dbc0ab211f15d6d7d748191ab036ca4bf2cf7a3bec00b816a3f29b",
+        "environment_hash": "9c78786e36218f06534a16388fb62cd2cbe8337504d5b4c19814bad8b31c3e9d",
+        "runtime_version": "2.0.0-alpha.2",
+        "kernel_version": "2.0.0-alpha.2",
+        "redaction": {
+          "status": "not_required",
+          "redacted_fields": []
+        },
+        "content_type": "application/json",
+        "result": "pass",
+        "path": "objects/826d3b321d889a3da96e347b8e671579534365980be2facb3c6f30b03f904a74.json",
+        "sha256": "826d3b321d889a3da96e347b8e671579534365980be2facb3c6f30b03f904a74",
+        "size": 120
+      }
+    ],
+    "integrity": {
+      "ok": true,
+      "facts": {
+        "summary": {
+          "evidence_count": 10,
+          "integrity": "intact",
+          "freshness": "fresh"
+        },
+        "evidence": [
+          {
+            "evidence_id": "evidence-2e3e0705a483392b09314e2a607a32b85b8f7e056ef6fc675c95e1c1e5313add",
+            "integrity": "intact",
+            "freshness": "fresh",
+            "exists": true,
+            "hash_match": true,
+            "size_match": true,
+            "producer_recognized": true,
+            "store_record_match": true,
+            "binding_match": true,
+            "path_safe": true
+          },
+          {
+            "evidence_id": "evidence-2f1b01647784f64de9eacbe599acdad26b5dc647ba87e5e6b02b10992c1ab1ec",
+            "integrity": "intact",
+            "freshness": "fresh",
+            "exists": true,
+            "hash_match": true,
+            "size_match": true,
+            "producer_recognized": true,
+            "store_record_match": true,
+            "binding_match": true,
+            "path_safe": true
+          },
+          {
+            "evidence_id": "evidence-37b09adc9842232486e76cebd9584065539489d3377eb5a13dc8b47ee29a9fe0",
+            "integrity": "intact",
+            "freshness": "fresh",
+            "exists": true,
+            "hash_match": true,
+            "size_match": true,
+            "producer_recognized": true,
+            "store_record_match": true,
+            "binding_match": true,
+            "path_safe": true
+          },
+          {
+            "evidence_id": "evidence-37b95c6eec881f0a54fb23375f46adc5f9483d0e80184b84cc9625fa45bb39f7",
+            "integrity": "intact",
+            "freshness": "fresh",
+            "exists": true,
+            "hash_match": true,
+            "size_match": true,
+            "producer_recognized": true,
+            "store_record_match": true,
+            "binding_match": true,
+            "path_safe": true
+          },
+          {
+            "evidence_id": "evidence-3e69e6cd44c7721930ee8420ad0e9d635f9f9b10b452e20f2329b430348b2876",
+            "integrity": "intact",
+            "freshness": "fresh",
+            "exists": true,
+            "hash_match": true,
+            "size_match": true,
+            "producer_recognized": true,
+            "store_record_match": true,
+            "binding_match": true,
+            "path_safe": true
+          },
+          {
+            "evidence_id": "evidence-45dff25daa81dc6c5a50e0c0ad0de4cdb4ccc69d9d38cbcce350abe32cda2f53",
+            "integrity": "intact",
+            "freshness": "fresh",
+            "exists": true,
+            "hash_match": true,
+            "size_match": true,
+            "producer_recognized": true,
+            "store_record_match": true,
+            "binding_match": true,
+            "path_safe": true
+          },
+          {
+            "evidence_id": "evidence-90995b917b17e46bed8f768fac19cd09ab76bc878a02589d9ffedcc4935482d0",
+            "integrity": "intact",
+            "freshness": "fresh",
+            "exists": true,
+            "hash_match": true,
+            "size_match": true,
+            "producer_recognized": true,
+            "store_record_match": true,
+            "binding_match": true,
+            "path_safe": true
+          },
+          {
+            "evidence_id": "evidence-9a72772d2a121d11cf4529162343e0e579ee5ae85694a29f4f3367894f18f9bf",
+            "integrity": "intact",
+            "freshness": "fresh",
+            "exists": true,
+            "hash_match": true,
+            "size_match": true,
+            "producer_recognized": true,
+            "store_record_match": true,
+            "binding_match": true,
+            "path_safe": true
+          },
+          {
+            "evidence_id": "evidence-c1b1eccb6588900856422c468c1e2dc149b20f4d57ac8ac930eb62d2870ce179",
+            "integrity": "intact",
+            "freshness": "fresh",
+            "exists": true,
+            "hash_match": true,
+            "size_match": true,
+            "producer_recognized": true,
+            "store_record_match": true,
+            "binding_match": true,
+            "path_safe": true
+          },
+          {
+            "evidence_id": "evidence-dda0a90bf0d76b52a28d3fcb337b32683e7b3fcd68258602354c71dc38acd286",
+            "integrity": "intact",
+            "freshness": "fresh",
+            "exists": true,
+            "hash_match": true,
+            "size_match": true,
+            "producer_recognized": true,
+            "store_record_match": true,
+            "binding_match": true,
+            "path_safe": true
+          }
+        ]
+      },
+      "blockers": []
+    },
+    "policy_facts": {
+      "not_applicable_decisions": [],
+      "terminal_states": []
+    }
+  },
+  "open_failure_ids": [],
+  "failure_state_status": "valid",
+  "failure_state_digest": "0f52ed0f216edd13f140d50f095fa0ff74777b492c9fc298a116d04813dd311e",
+  "authority_chain_digest": "e3349f139d5790817e9f1862fa842cfa01340961fc63944185e34480dfb5e8ce",
+  "freshness": {
+    "status": "fresh",
+    "checked_at": "2026-08-28T09:21:23.287Z",
+    "reasons": []
+  },
+  "integrity_status": "intact",
+  "evidence_index_version": 10,
+  "runtime_version": "2.0.0-alpha.2",
+  "kernel_version": "2.0.0-alpha.2",
+  "policy_version": "verification-v2.0"
+}

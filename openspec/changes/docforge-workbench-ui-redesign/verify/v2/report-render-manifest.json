@@ -1,0 +1,26 @@
+{
+  "schema": "specnav.verification.report-render-manifest.v1",
+  "change_id": "docforge-workbench-ui-redesign",
+  "report_model_id": "report-model-0a12e549fb182deeeace5abf4eeec3af6fafb557bf746c4e8e911bbe0ee5a053",
+  "generated_at": "2026-08-28T09:21:23.354Z",
+  "reports": [
+    {
+      "name": "overview.html",
+      "path": "verify/reports/overview.html",
+      "sha256": "913c57001e7dd524f876bed5e9f00412e76b2375fb72c7e07dda5a9f1096e9d9",
+      "size": 31088
+    },
+    {
+      "name": "test-case-catalog.html",
+      "path": "verify/reports/test-case-catalog.html",
+      "sha256": "6cf7ed3cf9a377f7e30298691428b751638690f22e23457ec5470acf1b0f952a",
+      "size": 28640
+    },
+    {
+      "name": "test-case-results.html",
+      "path": "verify/reports/test-case-results.html",
+      "sha256": "d633df6b0d489073fac8d3b1679b21fc3479d15440956e49156f7803730a8aeb",
+      "size": 50531
+    }
+  ]
+}

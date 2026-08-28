@@ -1,0 +1,23 @@
+{
+  "schema": "specnav.verification.attempt.v1",
+  "id": "attempt-20260828092104-b37864e76dcbb630",
+  "run_id": "run-20260828092104-b37864e76dcbb630",
+  "change_id": "docforge-workbench-ui-redesign",
+  "case_id": "case-a5-ui-boundary",
+  "case_snapshot_hash": "b92f5cb56e701ffc573b36a7f810aee7b9f59f5a0e76ac1c4c699e72fa694635",
+  "kind": "initial",
+  "sequence": 1,
+  "runner": "command",
+  "code_sha": "2f731ff29c8e73af175ebcaa923296f3181e252d",
+  "test_sha": "7b9651c1b0dbc0ab211f15d6d7d748191ab036ca4bf2cf7a3bec00b816a3f29b",
+  "scenario_hash": "47ac3aa596f1ec0f4de25a01348c84c3f6eea220f5592e97b728be6b4f2a249d",
+  "environment_hash": "9c78786e36218f06534a16388fb62cd2cbe8337504d5b4c19814bad8b31c3e9d",
+  "browser_project": "none",
+  "test_data_snapshot": "8277ab3de62586e94cd3a994bb3ef1749be8da9ff7612f124e516e9f38b8feb9",
+  "runtime_version": "2.0.0-alpha.2",
+  "kernel_version": "2.0.0-alpha.2",
+  "status": "passed",
+  "started_at": "2026-08-28T09:21:04.074Z",
+  "completed_at": "2026-08-28T09:21:05.148Z",
+  "exit_status": 0
+}

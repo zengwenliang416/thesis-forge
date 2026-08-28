@@ -1,0 +1,133 @@
+{
+  "ok": true,
+  "facts": {
+    "summary": {
+      "evidence_count": 10,
+      "integrity": "intact",
+      "freshness": "fresh"
+    },
+    "evidence": [
+      {
+        "evidence_id": "evidence-2e3e0705a483392b09314e2a607a32b85b8f7e056ef6fc675c95e1c1e5313add",
+        "integrity": "intact",
+        "freshness": "fresh",
+        "exists": true,
+        "hash_match": true,
+        "size_match": true,
+        "producer_recognized": true,
+        "store_record_match": true,
+        "binding_match": true,
+        "path_safe": true
+      },
+      {
+        "evidence_id": "evidence-2f1b01647784f64de9eacbe599acdad26b5dc647ba87e5e6b02b10992c1ab1ec",
+        "integrity": "intact",
+        "freshness": "fresh",
+        "exists": true,
+        "hash_match": true,
+        "size_match": true,
+        "producer_recognized": true,
+        "store_record_match": true,
+        "binding_match": true,
+        "path_safe": true
+      },
+      {
+        "evidence_id": "evidence-37b09adc9842232486e76cebd9584065539489d3377eb5a13dc8b47ee29a9fe0",
+        "integrity": "intact",
+        "freshness": "fresh",
+        "exists": true,
+        "hash_match": true,
+        "size_match": true,
+        "producer_recognized": true,
+        "store_record_match": true,
+        "binding_match": true,
+        "path_safe": true
+      },
+      {
+        "evidence_id": "evidence-37b95c6eec881f0a54fb23375f46adc5f9483d0e80184b84cc9625fa45bb39f7",
+        "integrity": "intact",
+        "freshness": "fresh",
+        "exists": true,
+        "hash_match": true,
+        "size_match": true,
+        "producer_recognized": true,
+        "store_record_match": true,
+        "binding_match": true,
+        "path_safe": true
+      },
+      {
+        "evidence_id": "evidence-3e69e6cd44c7721930ee8420ad0e9d635f9f9b10b452e20f2329b430348b2876",
+        "integrity": "intact",
+        "freshness": "fresh",
+        "exists": true,
+        "hash_match": true,
+        "size_match": true,
+        "producer_recognized": true,
+        "store_record_match": true,
+        "binding_match": true,
+        "path_safe": true
+      },
+      {
+        "evidence_id": "evidence-45dff25daa81dc6c5a50e0c0ad0de4cdb4ccc69d9d38cbcce350abe32cda2f53",
+        "integrity": "intact",
+        "freshness": "fresh",
+        "exists": true,
+        "hash_match": true,
+        "size_match": true,
+        "producer_recognized": true,
+        "store_record_match": true,
+        "binding_match": true,
+        "path_safe": true
+      },
+      {
+        "evidence_id": "evidence-90995b917b17e46bed8f768fac19cd09ab76bc878a02589d9ffedcc4935482d0",
+        "integrity": "intact",
+        "freshness": "fresh",
+        "exists": true,
+        "hash_match": true,
+        "size_match": true,
+        "producer_recognized": true,
+        "store_record_match": true,
+        "binding_match": true,
+        "path_safe": true
+      },
+      {
+        "evidence_id": "evidence-9a72772d2a121d11cf4529162343e0e579ee5ae85694a29f4f3367894f18f9bf",
+        "integrity": "intact",
+        "freshness": "fresh",
+        "exists": true,
+        "hash_match": true,
+        "size_match": true,
+        "producer_recognized": true,
+        "store_record_match": true,
+        "binding_match": true,
+        "path_safe": true
+      },
+      {
+        "evidence_id": "evidence-c1b1eccb6588900856422c468c1e2dc149b20f4d57ac8ac930eb62d2870ce179",
+        "integrity": "intact",
+        "freshness": "fresh",
+        "exists": true,
+        "hash_match": true,
+        "size_match": true,
+        "producer_recognized": true,
+        "store_record_match": true,
+        "binding_match": true,
+        "path_safe": true
+      },
+      {
+        "evidence_id": "evidence-dda0a90bf0d76b52a28d3fcb337b32683e7b3fcd68258602354c71dc38acd286",
+        "integrity": "intact",
+        "freshness": "fresh",
+        "exists": true,
+        "hash_match": true,
+        "size_match": true,
+        "producer_recognized": true,
+        "store_record_match": true,
+        "binding_match": true,
+        "path_safe": true
+      }
+    ]
+  },
+  "blockers": []
+}

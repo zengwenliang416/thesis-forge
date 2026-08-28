@@ -1,0 +1,21 @@
+status=passed
+exit_status=0
+--- stdout ---
+
+> docforge-workspace@ frontend:typecheck /Volumes/zwl/open_sources/thesis-forge
+> pnpm --dir frontend typecheck
+
+
+> @docforge/workbench@0.1.0 typecheck /Volumes/zwl/open_sources/thesis-forge/frontend
+> tsc -b --pretty false
+
+
+> docforge-workspace@ frontend:lint /Volumes/zwl/open_sources/thesis-forge
+> pnpm --dir frontend lint
+
+
+> @docforge/workbench@0.1.0 lint /Volumes/zwl/open_sources/thesis-forge/frontend
+> node scripts/lint.mjs
+
+
+--- stderr ---

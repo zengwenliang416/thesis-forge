@@ -1,0 +1,676 @@
+{
+  "ok": true,
+  "status": "passed",
+  "run": {
+    "schema": "specnav.verification.run.v1",
+    "id": "run-20260828092043-e70067b9a6fcb4bc",
+    "change_id": "docforge-workbench-ui-redesign",
+    "case_snapshot_id": "snapshot-b92f5cb56e701ffc573b36a7",
+    "case_snapshot_hash": "b92f5cb56e701ffc573b36a7f810aee7b9f59f5a0e76ac1c4c699e72fa694635",
+    "case_ids": [
+      "case-a2-command-regression"
+    ],
+    "code_sha": "2f731ff29c8e73af175ebcaa923296f3181e252d",
+    "test_sha": "7b9651c1b0dbc0ab211f15d6d7d748191ab036ca4bf2cf7a3bec00b816a3f29b",
+    "environment_hash": "9c78786e36218f06534a16388fb62cd2cbe8337504d5b4c19814bad8b31c3e9d",
+    "runtime_version": "2.0.0-alpha.2",
+    "kernel_version": "2.0.0-alpha.2",
+    "generation_id": "generation-69b7ff5204d4f1afdb72de0f",
+    "status": "passed",
+    "created_at": "2026-08-28T09:20:43.023Z",
+    "started_at": "2026-08-28T09:20:43.034Z",
+    "completed_at": "2026-08-28T09:21:00.405Z",
+    "kind": "initial",
+    "origin_run_id": null,
+    "parent_run_id": null,
+    "parent_attempt_id": null,
+    "failure_id": null
+  },
+  "attempt": {
+    "schema": "specnav.verification.attempt.v1",
+    "id": "attempt-20260828092043-e70067b9a6fcb4bc",
+    "run_id": "run-20260828092043-e70067b9a6fcb4bc",
+    "change_id": "docforge-workbench-ui-redesign",
+    "case_id": "case-a2-command-regression",
+    "case_snapshot_hash": "b92f5cb56e701ffc573b36a7f810aee7b9f59f5a0e76ac1c4c699e72fa694635",
+    "kind": "initial",
+    "sequence": 1,
+    "runner": "command",
+    "code_sha": "2f731ff29c8e73af175ebcaa923296f3181e252d",
+    "test_sha": "7b9651c1b0dbc0ab211f15d6d7d748191ab036ca4bf2cf7a3bec00b816a3f29b",
+    "scenario_hash": "722d37677f9b8447442352a210fed5783957f64f3afdb476178281e748716f44",
+    "environment_hash": "9c78786e36218f06534a16388fb62cd2cbe8337504d5b4c19814bad8b31c3e9d",
+    "browser_project": "none",
+    "test_data_snapshot": "71716ee8e3f32aba3c7149426cf9e25999078b99a63421aeb18b219a5d75a476",
+    "runtime_version": "2.0.0-alpha.2",
+    "kernel_version": "2.0.0-alpha.2",
+    "status": "passed",
+    "started_at": "2026-08-28T09:20:43.034Z",
+    "completed_at": "2026-08-28T09:21:00.405Z",
+    "exit_status": 0
+  },
+  "run_states": [
+    {
+      "schema": "specnav.verification.run.v1",
+      "id": "run-20260828092043-e70067b9a6fcb4bc",
+      "change_id": "docforge-workbench-ui-redesign",
+      "case_snapshot_id": "snapshot-b92f5cb56e701ffc573b36a7",
+      "case_snapshot_hash": "b92f5cb56e701ffc573b36a7f810aee7b9f59f5a0e76ac1c4c699e72fa694635",
+      "case_ids": [
+        "case-a2-command-regression"
+      ],
+      "code_sha": "2f731ff29c8e73af175ebcaa923296f3181e252d",
+      "test_sha": "7b9651c1b0dbc0ab211f15d6d7d748191ab036ca4bf2cf7a3bec00b816a3f29b",
+      "environment_hash": "9c78786e36218f06534a16388fb62cd2cbe8337504d5b4c19814bad8b31c3e9d",
+      "runtime_version": "2.0.0-alpha.2",
+      "kernel_version": "2.0.0-alpha.2",
+      "generation_id": "generation-69b7ff5204d4f1afdb72de0f",
+      "status": "running",
+      "created_at": "2026-08-28T09:20:43.023Z",
+      "started_at": "2026-08-28T09:20:43.034Z",
+      "completed_at": null,
+      "kind": "initial",
+      "origin_run_id": null,
+      "parent_run_id": null,
+      "parent_attempt_id": null,
+      "failure_id": null
+    },
+    {
+      "schema": "specnav.verification.run.v1",
+      "id": "run-20260828092043-e70067b9a6fcb4bc",
+      "change_id": "docforge-workbench-ui-redesign",
+      "case_snapshot_id": "snapshot-b92f5cb56e701ffc573b36a7",
+      "case_snapshot_hash": "b92f5cb56e701ffc573b36a7f810aee7b9f59f5a0e76ac1c4c699e72fa694635",
+      "case_ids": [
+        "case-a2-command-regression"
+      ],
+      "code_sha": "2f731ff29c8e73af175ebcaa923296f3181e252d",
+      "test_sha": "7b9651c1b0dbc0ab211f15d6d7d748191ab036ca4bf2cf7a3bec00b816a3f29b",
+      "environment_hash": "9c78786e36218f06534a16388fb62cd2cbe8337504d5b4c19814bad8b31c3e9d",
+      "runtime_version": "2.0.0-alpha.2",
+      "kernel_version": "2.0.0-alpha.2",
+      "generation_id": "generation-69b7ff5204d4f1afdb72de0f",
+      "status": "passed",
+      "created_at": "2026-08-28T09:20:43.023Z",
+      "started_at": "2026-08-28T09:20:43.034Z",
+      "completed_at": "2026-08-28T09:21:00.405Z",
+      "kind": "initial",
+      "origin_run_id": null,
+      "parent_run_id": null,
+      "parent_attempt_id": null,
+      "failure_id": null
+    }
+  ],
+  "attempt_states": [
+    {
+      "schema": "specnav.verification.attempt.v1",
+      "id": "attempt-20260828092043-e70067b9a6fcb4bc",
+      "run_id": "run-20260828092043-e70067b9a6fcb4bc",
+      "change_id": "docforge-workbench-ui-redesign",
+      "case_id": "case-a2-command-regression",
+      "case_snapshot_hash": "b92f5cb56e701ffc573b36a7f810aee7b9f59f5a0e76ac1c4c699e72fa694635",
+      "kind": "initial",
+      "sequence": 1,
+      "runner": "command",
+      "code_sha": "2f731ff29c8e73af175ebcaa923296f3181e252d",
+      "test_sha": "7b9651c1b0dbc0ab211f15d6d7d748191ab036ca4bf2cf7a3bec00b816a3f29b",
+      "scenario_hash": "722d37677f9b8447442352a210fed5783957f64f3afdb476178281e748716f44",
+      "environment_hash": "9c78786e36218f06534a16388fb62cd2cbe8337504d5b4c19814bad8b31c3e9d",
+      "browser_project": "none",
+      "test_data_snapshot": "71716ee8e3f32aba3c7149426cf9e25999078b99a63421aeb18b219a5d75a476",
+      "runtime_version": "2.0.0-alpha.2",
+      "kernel_version": "2.0.0-alpha.2",
+      "status": "running",
+      "started_at": "2026-08-28T09:20:43.034Z",
+      "completed_at": null,
+      "exit_status": null
+    },
+    {
+      "schema": "specnav.verification.attempt.v1",
+      "id": "attempt-20260828092043-e70067b9a6fcb4bc",
+      "run_id": "run-20260828092043-e70067b9a6fcb4bc",
+      "change_id": "docforge-workbench-ui-redesign",
+      "case_id": "case-a2-command-regression",
+      "case_snapshot_hash": "b92f5cb56e701ffc573b36a7f810aee7b9f59f5a0e76ac1c4c699e72fa694635",
+      "kind": "initial",
+      "sequence": 1,
+      "runner": "command",
+      "code_sha": "2f731ff29c8e73af175ebcaa923296f3181e252d",
+      "test_sha": "7b9651c1b0dbc0ab211f15d6d7d748191ab036ca4bf2cf7a3bec00b816a3f29b",
+      "scenario_hash": "722d37677f9b8447442352a210fed5783957f64f3afdb476178281e748716f44",
+      "environment_hash": "9c78786e36218f06534a16388fb62cd2cbe8337504d5b4c19814bad8b31c3e9d",
+      "browser_project": "none",
+      "test_data_snapshot": "71716ee8e3f32aba3c7149426cf9e25999078b99a63421aeb18b219a5d75a476",
+      "runtime_version": "2.0.0-alpha.2",
+      "kernel_version": "2.0.0-alpha.2",
+      "status": "passed",
+      "started_at": "2026-08-28T09:20:43.034Z",
+      "completed_at": "2026-08-28T09:21:00.405Z",
+      "exit_status": 0
+    }
+  ],
+  "attempts": [
+    {
+      "schema": "specnav.verification.attempt.v1",
+      "id": "attempt-20260828092043-e70067b9a6fcb4bc",
+      "run_id": "run-20260828092043-e70067b9a6fcb4bc",
+      "change_id": "docforge-workbench-ui-redesign",
+      "case_id": "case-a2-command-regression",
+      "case_snapshot_hash": "b92f5cb56e701ffc573b36a7f810aee7b9f59f5a0e76ac1c4c699e72fa694635",
+      "kind": "initial",
+      "sequence": 1,
+      "runner": "command",
+      "code_sha": "2f731ff29c8e73af175ebcaa923296f3181e252d",
+      "test_sha": "7b9651c1b0dbc0ab211f15d6d7d748191ab036ca4bf2cf7a3bec00b816a3f29b",
+      "scenario_hash": "722d37677f9b8447442352a210fed5783957f64f3afdb476178281e748716f44",
+      "environment_hash": "9c78786e36218f06534a16388fb62cd2cbe8337504d5b4c19814bad8b31c3e9d",
+      "browser_project": "none",
+      "test_data_snapshot": "71716ee8e3f32aba3c7149426cf9e25999078b99a63421aeb18b219a5d75a476",
+      "runtime_version": "2.0.0-alpha.2",
+      "kernel_version": "2.0.0-alpha.2",
+      "status": "passed",
+      "started_at": "2026-08-28T09:20:43.034Z",
+      "completed_at": "2026-08-28T09:21:00.405Z",
+      "exit_status": 0
+    }
+  ],
+  "command": {
+    "exit_status": 0,
+    "signal": null,
+    "timed_out": false,
+    "canceled": false,
+    "spawn_error": null
+  },
+  "logs": {
+    "stdout": "\n> docforge-workspace@ frontend:e2e /Volumes/zwl/open_sources/thesis-forge\n> pnpm --dir frontend e2e && pnpm --dir frontend exec playwright test --config e2e/real-http.playwright.config.ts\n\n\n> @docforge/workbench@0.1.0 e2e /Volumes/zwl/open_sources/thesis-forge/frontend\n> playwright test\n\n\nRunning 36 tests using 4 workers\n\n  ✓   4 [minimum-desktop-chromium] › e2e/workbench.spec.ts:168:1 › launches the shared workbench with keyboard-visible controls (1.5s)\n  ✓   2 [desktop-chromium] › e2e/workbench.spec.ts:168:1 › launches the shared workbench with keyboard-visible controls (1.5s)\n  ✓   3 [minimum-desktop-chromium] › e2e/acceptance.spec.ts:163:1 › verifies empty, disabled, keyboard-focus, contrast, resize, and reduced motion (1.6s)\n  ✓   1 [desktop-chromium] › e2e/acceptance.spec.ts:163:1 › verifies empty, disabled, keyboard-focus, contrast, resize, and reduced motion (1.6s)\n  -   6 [desktop-chromium] › e2e/workbench.spec.ts:195:1 › uses mobile panel navigation without horizontal overflow\n  -   5 [minimum-desktop-chromium] › e2e/workbench.spec.ts:195:1 › uses mobile panel navigation without horizontal overflow\n  -   8 [desktop-chromium] › e2e/acceptance.spec.ts:214:1 › saves with Ctrl+S when the minimum desktop toolbar hides secondary actions\n  -   9 [desktop-chromium] › e2e/workbench.spec.ts:219:1 › keeps the product identity and compact actions visible on mobile\n  -  10 [minimum-desktop-chromium] › e2e/workbench.spec.ts:219:1 › keeps the product identity and compact actions visible on mobile\n  -  13 [minimum-desktop-chromium] › e2e/workbench.spec.ts:242:1 › opens, edits, explicitly saves, refreshes, and builds through HTTP\n  -  14 [minimum-desktop-chromium] › e2e/workbench.spec.ts:371:1 › loads and refreshes a complete automatic PDF after an edit\n  -  15 [minimum-desktop-chromium] › e2e/workbench.spec.ts:481:1 › cancels an active Web build and retries without losing prior output\n  ✓   7 [minimum-desktop-chromium] › e2e/acceptance.spec.ts:214:1 › saves with Ctrl+S when the minimum desktop toolbar hides secondary actions (904ms)\n  ✓  11 [desktop-chromium] › e2e/acceptance.spec.ts:267:1 › verifies loading and permission recovery without losing the opened source (779ms)\n  -  16 [minimum-desktop-chromium] › e2e/workbench.spec.ts:563:1 › selects a template and blocks build on an activated fatal diagnostic\n  -  17 [minimum-desktop-chromium] › e2e/acceptance.spec.ts:267:1 › verifies loading and permission recovery without losing the opened source\n  -  20 [minimum-desktop-chromium] › e2e/acceptance.spec.ts:316:1 › verifies populated, dirty, and successful output states with the complete preview\n  ✓  12 [desktop-chromium] › e2e/workbench.spec.ts:242:1 › opens, edits, explicitly saves, refreshes, and builds through HTTP (1.2s)\n  ✓  19 [minimum-desktop-chromium] › e2e/workbench.spec.ts:645:1 › preserves keyboard focus order and panel resizing at desktop widths (677ms)\n  ✓  18 [desktop-chromium] › e2e/acceptance.spec.ts:316:1 › verifies populated, dirty, and successful output states with the complete preview (1.1s)\n  -  23 [mobile-chromium] › e2e/acceptance.spec.ts:163:1 › verifies empty, disabled, keyboard-focus, contrast, resize, and reduced motion\n  -  24 [mobile-chromium] › e2e/acceptance.spec.ts:214:1 › saves with Ctrl+S when the minimum desktop toolbar hides secondary actions\n  -  25 [mobile-chromium] › e2e/acceptance.spec.ts:267:1 › verifies loading and permission recovery without losing the opened source\n  -  26 [mobile-chromium] › e2e/acceptance.spec.ts:316:1 › verifies populated, dirty, and successful output states with the complete preview\n  ✓  22 [mobile-chromium] › e2e/workbench.spec.ts:168:1 › launches the shared workbench with keyboard-visible controls (532ms)\n  ✓  27 [mobile-chromium] › e2e/workbench.spec.ts:195:1 › uses mobile panel navigation without horizontal overflow (497ms)\n  ✓  28 [mobile-chromium] › e2e/workbench.spec.ts:219:1 › keeps the product identity and compact actions visible on mobile (397ms)\n  -  29 [mobile-chromium] › e2e/workbench.spec.ts:242:1 › opens, edits, explicitly saves, refreshes, and builds through HTTP\n  -  30 [mobile-chromium] › e2e/workbench.spec.ts:371:1 › loads and refreshes a complete automatic PDF after an edit\n  -  31 [mobile-chromium] › e2e/workbench.spec.ts:481:1 › cancels an active Web build and retries without losing prior output\n  -  32 [mobile-chromium] › e2e/workbench.spec.ts:563:1 › selects a template and blocks build on an activated fatal diagnostic\n  -  33 [mobile-chromium] › e2e/workbench.spec.ts:645:1 › preserves keyboard focus order and panel resizing at desktop widths\n  ✓  21 [desktop-chromium] › e2e/workbench.spec.ts:371:1 › loads and refreshes a complete automatic PDF after an edit (3.8s)\n  ✓  34 [desktop-chromium] › e2e/workbench.spec.ts:481:1 › cancels an active Web build and retries without losing prior output (511ms)\n  ✓  35 [desktop-chromium] › e2e/workbench.spec.ts:563:1 › selects a template and blocks build on an activated fatal diagnostic (441ms)\n  ✓  36 [desktop-chromium] › e2e/workbench.spec.ts:645:1 › preserves keyboard focus order and panel resizing at desktop widths (417ms)\n\n  20 skipped\n  16 passed (11.3s)\n\nRunning 1 test using 1 worker\n\n  ✓  1 [real-http-chromium] › e2e/real-http.acceptance.ts:37:1 › runs the Web workbench through the real Python HTTP adapter (754ms)\n\n  1 passed (4.3s)\n",
+    "stderr": "[WebServer] 127.0.0.1 - - [28/Aug/2026 17:20:58] \"GET / HTTP/1.1\" 200 586\n[WebServer] 127.0.0.1 - - [28/Aug/2026 17:20:59] \"GET / HTTP/1.1\" 200 586\n[WebServer] 127.0.0.1 - - [28/Aug/2026 17:20:59] \"GET /assets/index-C8Sf9Qpd.css HTTP/1.1\" 200 21205\n[WebServer] 127.0.0.1 - - [28/Aug/2026 17:20:59] \"GET /assets/index-l4RSGFh1.js HTTP/1.1\" 200 275262\n[WebServer] 127.0.0.1 - - [28/Aug/2026 17:20:59] \"POST /api/v1/workspaces HTTP/1.1\" 201 407\n[WebServer] 127.0.0.1 - - [28/Aug/2026 17:20:59] \"POST /api/v1/dispatch HTTP/1.1\" 200 1364\n[WebServer] 127.0.0.1 - - [28/Aug/2026 17:20:59] \"POST /api/v1/dispatch HTTP/1.1\" 200 144\n[WebServer] 127.0.0.1 - - [28/Aug/2026 17:20:59] \"POST /api/v1/dispatch HTTP/1.1\" 200 1404\n[WebServer] 127.0.0.1 - - [28/Aug/2026 17:21:00] \"POST /api/v1/dispatch HTTP/1.1\" 200 1404\n[WebServer] 127.0.0.1 - - [28/Aug/2026 17:21:00] \"POST /api/v1/build-stream HTTP/1.1\" 200 1610\n"
+  },
+  "events": [
+    {
+      "sequence": 1,
+      "type": "run.running",
+      "at": "2026-08-28T09:20:43.035Z",
+      "run": {
+        "schema": "specnav.verification.run.v1",
+        "id": "run-20260828092043-e70067b9a6fcb4bc",
+        "change_id": "docforge-workbench-ui-redesign",
+        "case_snapshot_id": "snapshot-b92f5cb56e701ffc573b36a7",
+        "case_snapshot_hash": "b92f5cb56e701ffc573b36a7f810aee7b9f59f5a0e76ac1c4c699e72fa694635",
+        "case_ids": [
+          "case-a2-command-regression"
+        ],
+        "code_sha": "2f731ff29c8e73af175ebcaa923296f3181e252d",
+        "test_sha": "7b9651c1b0dbc0ab211f15d6d7d748191ab036ca4bf2cf7a3bec00b816a3f29b",
+        "environment_hash": "9c78786e36218f06534a16388fb62cd2cbe8337504d5b4c19814bad8b31c3e9d",
+        "runtime_version": "2.0.0-alpha.2",
+        "kernel_version": "2.0.0-alpha.2",
+        "generation_id": "generation-69b7ff5204d4f1afdb72de0f",
+        "status": "running",
+        "created_at": "2026-08-28T09:20:43.023Z",
+        "started_at": "2026-08-28T09:20:43.034Z",
+        "completed_at": null,
+        "kind": "initial",
+        "origin_run_id": null,
+        "parent_run_id": null,
+        "parent_attempt_id": null,
+        "failure_id": null
+      }
+    },
+    {
+      "sequence": 2,
+      "type": "attempt.running",
+      "at": "2026-08-28T09:20:43.035Z",
+      "attempt": {
+        "schema": "specnav.verification.attempt.v1",
+        "id": "attempt-20260828092043-e70067b9a6fcb4bc",
+        "run_id": "run-20260828092043-e70067b9a6fcb4bc",
+        "change_id": "docforge-workbench-ui-redesign",
+        "case_id": "case-a2-command-regression",
+        "case_snapshot_hash": "b92f5cb56e701ffc573b36a7f810aee7b9f59f5a0e76ac1c4c699e72fa694635",
+        "kind": "initial",
+        "sequence": 1,
+        "runner": "command",
+        "code_sha": "2f731ff29c8e73af175ebcaa923296f3181e252d",
+        "test_sha": "7b9651c1b0dbc0ab211f15d6d7d748191ab036ca4bf2cf7a3bec00b816a3f29b",
+        "scenario_hash": "722d37677f9b8447442352a210fed5783957f64f3afdb476178281e748716f44",
+        "environment_hash": "9c78786e36218f06534a16388fb62cd2cbe8337504d5b4c19814bad8b31c3e9d",
+        "browser_project": "none",
+        "test_data_snapshot": "71716ee8e3f32aba3c7149426cf9e25999078b99a63421aeb18b219a5d75a476",
+        "runtime_version": "2.0.0-alpha.2",
+        "kernel_version": "2.0.0-alpha.2",
+        "status": "running",
+        "started_at": "2026-08-28T09:20:43.034Z",
+        "completed_at": null,
+        "exit_status": null
+      }
+    },
+    {
+      "sequence": 3,
+      "type": "command.started",
+      "at": "2026-08-28T09:20:43.036Z",
+      "command": {
+        "argv": [
+          "/bin/sh",
+          "-c",
+          "set -eu; pnpm frontend:e2e; printf '%s\\n' '{\"assertion_id\":\"a2-command-regression\",\"method\":\"equal\",\"expected\":true,\"actual\":true,\"status\":\"passed\"}' >> \"$SPECNAV_VERIFICATION_ASSERTION_RESULT_FILE\""
+        ],
+        "cwd": "/Volumes/zwl/open_sources/thesis-forge",
+        "env_keys": [
+          "PATH",
+          "SPECNAV_VERIFICATION_ASSERTION_IDS",
+          "SPECNAV_VERIFICATION_ASSERTION_RESULT_FILE"
+        ],
+        "timeout_ms": 600000
+      }
+    },
+    {
+      "sequence": 4,
+      "type": "command.stdout",
+      "at": "2026-08-28T09:20:43.258Z",
+      "chunk": "\n> docforge-workspace@ frontend:e2e /Volumes/zwl/open_sources/thesis-forge\n> pnpm --dir frontend e2e && pnpm --dir frontend exec playwright test --config e2e/real-http.playwright.config.ts\n\n"
+    },
+    {
+      "sequence": 5,
+      "type": "command.stdout",
+      "at": "2026-08-28T09:20:43.479Z",
+      "chunk": "\n> @docforge/workbench@0.1.0 e2e /Volumes/zwl/open_sources/thesis-forge/frontend\n> playwright test\n\n"
+    },
+    {
+      "sequence": 6,
+      "type": "command.stdout",
+      "at": "2026-08-28T09:20:45.213Z",
+      "chunk": "\nRunning 36 tests using 4 workers\n\n"
+    },
+    {
+      "sequence": 7,
+      "type": "command.stdout",
+      "at": "2026-08-28T09:20:48.420Z",
+      "chunk": "  ✓   4 [minimum-desktop-chromium] › e2e/workbench.spec.ts:168:1 › launches the shared workbench with keyboard-visible controls (1.5s)\n"
+    },
+    {
+      "sequence": 8,
+      "type": "command.stdout",
+      "at": "2026-08-28T09:20:48.421Z",
+      "chunk": "  ✓   2 [desktop-chromium] › e2e/workbench.spec.ts:168:1 › launches the shared workbench with keyboard-visible controls (1.5s)\n"
+    },
+    {
+      "sequence": 9,
+      "type": "command.stdout",
+      "at": "2026-08-28T09:20:48.489Z",
+      "chunk": "  ✓   3 [minimum-desktop-chromium] › e2e/acceptance.spec.ts:163:1 › verifies empty, disabled, keyboard-focus, contrast, resize, and reduced motion (1.6s)"
+    },
+    {
+      "sequence": 10,
+      "type": "command.stdout",
+      "at": "2026-08-28T09:20:48.489Z",
+      "chunk": "\n"
+    },
+    {
+      "sequence": 11,
+      "type": "command.stdout",
+      "at": "2026-08-28T09:20:48.495Z",
+      "chunk": "  ✓   1 [desktop-chromium] › e2e/acceptance.spec.ts:163:1 › verifies empty, disabled, keyboard-focus, contrast, resize, and reduced motion (1.6s)\n"
+    },
+    {
+      "sequence": 12,
+      "type": "command.stdout",
+      "at": "2026-08-28T09:20:48.570Z",
+      "chunk": "  -   6 [desktop-chromium] › e2e/workbench.spec.ts:195:1 › uses mobile panel navigation without horizontal overflow\n"
+    },
+    {
+      "sequence": 13,
+      "type": "command.stdout",
+      "at": "2026-08-28T09:20:48.578Z",
+      "chunk": "  -   5 [minimum-desktop-chromium] › e2e/workbench.spec.ts:195:1 › uses mobile panel navigation without horizontal overflow\n"
+    },
+    {
+      "sequence": 14,
+      "type": "command.stdout",
+      "at": "2026-08-28T09:20:48.703Z",
+      "chunk": "  -   8 [desktop-chromium] › e2e/acceptance.spec.ts:214:1 › saves with Ctrl+S when the minimum desktop toolbar hides secondary actions\n"
+    },
+    {
+      "sequence": 15,
+      "type": "command.stdout",
+      "at": "2026-08-28T09:20:48.786Z",
+      "chunk": "  -   9 [desktop-chromium] › e2e/workbench.spec.ts:219:1 › keeps the product identity and compact actions visible on mobile\n"
+    },
+    {
+      "sequence": 16,
+      "type": "command.stdout",
+      "at": "2026-08-28T09:20:48.786Z",
+      "chunk": "  -  10 [minimum-desktop-chromium] › e2e/workbench.spec.ts:219:1 › keeps the product identity and compact actions visible on mobile\n"
+    },
+    {
+      "sequence": 17,
+      "type": "command.stdout",
+      "at": "2026-08-28T09:20:48.969Z",
+      "chunk": "  -  13 [minimum-desktop-chromium] › e2e/workbench.spec.ts:242:1 › opens, edits, explicitly saves, refreshes, and builds through HTTP\n"
+    },
+    {
+      "sequence": 18,
+      "type": "command.stdout",
+      "at": "2026-08-28T09:20:49.191Z",
+      "chunk": "  -  14 [minimum-desktop-chromium] › e2e/workbench.spec.ts:371:1 › loads and refreshes a complete automatic PDF after an edit\n"
+    },
+    {
+      "sequence": 19,
+      "type": "command.stdout",
+      "at": "2026-08-28T09:20:49.370Z",
+      "chunk": "  -  15 [minimum-desktop-chromium] › e2e/workbench.spec.ts:481:1 › cancels an active Web build and retries without losing prior output\n"
+    },
+    {
+      "sequence": 20,
+      "type": "command.stdout",
+      "at": "2026-08-28T09:20:49.406Z",
+      "chunk": "  ✓   7 [minimum-desktop-chromium] › e2e/acceptance.spec.ts:214:1 › saves with Ctrl+S when the minimum desktop toolbar hides secondary actions (904ms)\n"
+    },
+    {
+      "sequence": 21,
+      "type": "command.stdout",
+      "at": "2026-08-28T09:20:49.513Z",
+      "chunk": "  ✓  11 [desktop-chromium] › e2e/acceptance.spec.ts:267:1 › verifies loading and permission recovery without losing the opened source (779ms)\n"
+    },
+    {
+      "sequence": 22,
+      "type": "command.stdout",
+      "at": "2026-08-28T09:20:49.520Z",
+      "chunk": "  -  16 [minimum-desktop-chromium] › e2e/workbench.spec.ts:563:1 › selects a template and blocks build on an activated fatal diagnostic\n"
+    },
+    {
+      "sequence": 23,
+      "type": "command.stdout",
+      "at": "2026-08-28T09:20:49.533Z",
+      "chunk": "  -  17 [minimum-desktop-chromium] › e2e/acceptance.spec.ts:267:1 › verifies loading and permission recovery without losing the opened source\n"
+    },
+    {
+      "sequence": 24,
+      "type": "command.stdout",
+      "at": "2026-08-28T09:20:49.641Z",
+      "chunk": "  -  20 [minimum-desktop-chromium] › e2e/acceptance.spec.ts:316:1 › verifies populated, dirty, and successful output states with the complete preview\n"
+    },
+    {
+      "sequence": 25,
+      "type": "command.stdout",
+      "at": "2026-08-28T09:20:50.031Z",
+      "chunk": "  ✓  12 [desktop-chromium] › e2e/workbench.spec.ts:242:1 › opens, edits, explicitly saves, refreshes, and builds through HTTP (1.2s)\n"
+    },
+    {
+      "sequence": 26,
+      "type": "command.stdout",
+      "at": "2026-08-28T09:20:50.205Z",
+      "chunk": "  ✓  19 [minimum-desktop-chromium] › e2e/workbench.spec.ts:645:1 › preserves keyboard focus order and panel resizing at desktop widths (677ms)\n"
+    },
+    {
+      "sequence": 27,
+      "type": "command.stdout",
+      "at": "2026-08-28T09:20:50.583Z",
+      "chunk": "  ✓  18 [desktop-chromium] › e2e/acceptance.spec.ts:316:1 › verifies populated, dirty, and successful output states with the complete preview (1.1s)\n"
+    },
+    {
+      "sequence": 28,
+      "type": "command.stdout",
+      "at": "2026-08-28T09:20:51.384Z",
+      "chunk": "  -  23 [mobile-chromium] › e2e/acceptance.spec.ts:163:1 › verifies empty, disabled, keyboard-focus, contrast, resize, and reduced motion\n"
+    },
+    {
+      "sequence": 29,
+      "type": "command.stdout",
+      "at": "2026-08-28T09:20:51.465Z",
+      "chunk": "  -  24 [mobile-chromium] › e2e/acceptance.spec.ts:214:1 › saves with Ctrl+S when the minimum desktop toolbar hides secondary actions\n"
+    },
+    {
+      "sequence": 30,
+      "type": "command.stdout",
+      "at": "2026-08-28T09:20:51.598Z",
+      "chunk": "  -  25 [mobile-chromium] › e2e/acceptance.spec.ts:267:1 › verifies loading and permission recovery without losing the opened source\n"
+    },
+    {
+      "sequence": 31,
+      "type": "command.stdout",
+      "at": "2026-08-28T09:20:51.678Z",
+      "chunk": "  -  26 [mobile-chromium] › e2e/acceptance.spec.ts:316:1 › verifies populated, dirty, and successful output states with the complete preview\n"
+    },
+    {
+      "sequence": 32,
+      "type": "command.stdout",
+      "at": "2026-08-28T09:20:51.684Z",
+      "chunk": "  ✓  22 [mobile-chromium] › e2e/workbench.spec.ts:168:1 › launches the shared workbench with keyboard-visible controls (532ms)\n"
+    },
+    {
+      "sequence": 33,
+      "type": "command.stdout",
+      "at": "2026-08-28T09:20:52.189Z",
+      "chunk": "  ✓  27 [mobile-chromium] › e2e/workbench.spec.ts:195:1 › uses mobile panel navigation without horizontal overflow (497ms)\n"
+    },
+    {
+      "sequence": 34,
+      "type": "command.stdout",
+      "at": "2026-08-28T09:20:52.595Z",
+      "chunk": "  ✓  28 [mobile-chromium] › e2e/workbench.spec.ts:219:1 › keeps the product identity and compact actions visible on mobile (397ms)\n"
+    },
+    {
+      "sequence": 35,
+      "type": "command.stdout",
+      "at": "2026-08-28T09:20:52.653Z",
+      "chunk": "  -  29 [mobile-chromium] › e2e/workbench.spec.ts:242:1 › opens, edits, explicitly saves, refreshes, and builds through HTTP\n"
+    },
+    {
+      "sequence": 36,
+      "type": "command.stdout",
+      "at": "2026-08-28T09:20:52.708Z",
+      "chunk": "  -  30 [mobile-chromium] › e2e/workbench.spec.ts:371:1 › loads and refreshes a complete automatic PDF after an edit\n"
+    },
+    {
+      "sequence": 37,
+      "type": "command.stdout",
+      "at": "2026-08-28T09:20:52.772Z",
+      "chunk": "  -  31 [mobile-chromium] › e2e/workbench.spec.ts:481:1 › cancels an active Web build and retries without losing prior output\n"
+    },
+    {
+      "sequence": 38,
+      "type": "command.stdout",
+      "at": "2026-08-28T09:20:52.828Z",
+      "chunk": "  -  32 [mobile-chromium] › e2e/workbench.spec.ts:563:1 › selects a template and blocks build on an activated fatal diagnostic\n"
+    },
+    {
+      "sequence": 39,
+      "type": "command.stdout",
+      "at": "2026-08-28T09:20:52.913Z",
+      "chunk": "  -  33 [mobile-chromium] › e2e/workbench.spec.ts:645:1 › preserves keyboard focus order and panel resizing at desktop widths\n"
+    },
+    {
+      "sequence": 40,
+      "type": "command.stdout",
+      "at": "2026-08-28T09:20:53.825Z",
+      "chunk": "  ✓  21 [desktop-chromium] › e2e/workbench.spec.ts:371:1 › loads and refreshes a complete automatic PDF after an edit (3.8s)\n"
+    },
+    {
+      "sequence": 41,
+      "type": "command.stdout",
+      "at": "2026-08-28T09:20:54.343Z",
+      "chunk": "  ✓  34 [desktop-chromium] › e2e/workbench.spec.ts:481:1 › cancels an active Web build and retries without losing prior output (511ms)\n"
+    },
+    {
+      "sequence": 42,
+      "type": "command.stdout",
+      "at": "2026-08-28T09:20:54.790Z",
+      "chunk": "  ✓  35 [desktop-chromium] › e2e/workbench.spec.ts:563:1 › selects a template and blocks build on an activated fatal diagnostic (441ms)\n"
+    },
+    {
+      "sequence": 43,
+      "type": "command.stdout",
+      "at": "2026-08-28T09:20:55.213Z",
+      "chunk": "  ✓  36 [desktop-chromium] › e2e/workbench.spec.ts:645:1 › preserves keyboard focus order and panel resizing at desktop widths (417ms)\n"
+    },
+    {
+      "sequence": 44,
+      "type": "command.stdout",
+      "at": "2026-08-28T09:20:55.340Z",
+      "chunk": "\n"
+    },
+    {
+      "sequence": 45,
+      "type": "command.stdout",
+      "at": "2026-08-28T09:20:55.341Z",
+      "chunk": "  20 skipped\n  16 passed (11.3s)\n"
+    },
+    {
+      "sequence": 46,
+      "type": "command.stderr",
+      "at": "2026-08-28T09:20:58.954Z",
+      "chunk": "[WebServer] 127.0.0.1 - - [28/Aug/2026 17:20:58] \"GET / HTTP/1.1\" 200 586\n"
+    },
+    {
+      "sequence": 47,
+      "type": "command.stdout",
+      "at": "2026-08-28T09:20:58.990Z",
+      "chunk": "\nRunning 1 test using 1 worker\n"
+    },
+    {
+      "sequence": 48,
+      "type": "command.stdout",
+      "at": "2026-08-28T09:20:58.990Z",
+      "chunk": "\n"
+    },
+    {
+      "sequence": 49,
+      "type": "command.stderr",
+      "at": "2026-08-28T09:20:59.608Z",
+      "chunk": "[WebServer] 127.0.0.1 - - [28/Aug/2026 17:20:59] \"GET / HTTP/1.1\" 200 586\n"
+    },
+    {
+      "sequence": 50,
+      "type": "command.stderr",
+      "at": "2026-08-28T09:20:59.617Z",
+      "chunk": "[WebServer] 127.0.0.1 - - [28/Aug/2026 17:20:59] \"GET /assets/index-C8Sf9Qpd.css HTTP/1.1\" 200 21205\n[WebServer] 127.0.0.1 - - [28/Aug/2026 17:20:59] \"GET /assets/index-l4RSGFh1.js HTTP/1.1\" 200 275262\n"
+    },
+    {
+      "sequence": 51,
+      "type": "command.stderr",
+      "at": "2026-08-28T09:20:59.730Z",
+      "chunk": "[WebServer] 127.0.0.1 - - [28/Aug/2026 17:20:59] \"POST /api/v1/workspaces HTTP/1.1\" 201 407\n"
+    },
+    {
+      "sequence": 52,
+      "type": "command.stderr",
+      "at": "2026-08-28T09:20:59.821Z",
+      "chunk": "[WebServer] 127.0.0.1 - - [28/Aug/2026 17:20:59] \"POST /api/v1/dispatch HTTP/1.1\" 200 1364\n"
+    },
+    {
+      "sequence": 53,
+      "type": "command.stderr",
+      "at": "2026-08-28T09:20:59.861Z",
+      "chunk": "[WebServer] 127.0.0.1 - - [28/Aug/2026 17:20:59] \"POST /api/v1/dispatch HTTP/1.1\" 200 144\n"
+    },
+    {
+      "sequence": 54,
+      "type": "command.stderr",
+      "at": "2026-08-28T09:20:59.937Z",
+      "chunk": "[WebServer] 127.0.0.1 - - [28/Aug/2026 17:20:59] \"POST /api/v1/dispatch HTTP/1.1\" 200 1404\n"
+    },
+    {
+      "sequence": 55,
+      "type": "command.stderr",
+      "at": "2026-08-28T09:21:00.047Z",
+      "chunk": "[WebServer] 127.0.0.1 - - [28/Aug/2026 17:21:00] \"POST /api/v1/dispatch HTTP/1.1\" 200 1404\n"
+    },
+    {
+      "sequence": 56,
+      "type": "command.stderr",
+      "at": "2026-08-28T09:21:00.246Z",
+      "chunk": "[WebServer] 127.0.0.1 - - [28/Aug/2026 17:21:00] \"POST /api/v1/build-stream HTTP/1.1\" 200 1610\n"
+    },
+    {
+      "sequence": 57,
+      "type": "command.stdout",
+      "at": "2026-08-28T09:21:00.290Z",
+      "chunk": "  ✓  1 [real-http-chromium] › e2e/real-http.acceptance.ts:37:1 › runs the Web workbench through the real Python HTTP adapter (754ms)\n"
+    },
+    {
+      "sequence": 58,
+      "type": "command.stdout",
+      "at": "2026-08-28T09:21:00.366Z",
+      "chunk": "\n"
+    },
+    {
+      "sequence": 59,
+      "type": "command.stdout",
+      "at": "2026-08-28T09:21:00.366Z",
+      "chunk": "  1 passed (4.3s)\n"
+    },
+    {
+      "sequence": 60,
+      "type": "command.terminal",
+      "at": "2026-08-28T09:21:00.405Z",
+      "result": {
+        "exit_status": 0,
+        "signal": null,
+        "timed_out": false,
+        "canceled": false,
+        "spawn_error": null
+      }
+    },
+    {
+      "sequence": 61,
+      "type": "attempt.terminal",
+      "at": "2026-08-28T09:21:00.405Z",
+      "attempt": {
+        "schema": "specnav.verification.attempt.v1",
+        "id": "attempt-20260828092043-e70067b9a6fcb4bc",
+        "run_id": "run-20260828092043-e70067b9a6fcb4bc",
+        "change_id": "docforge-workbench-ui-redesign",
+        "case_id": "case-a2-command-regression",
+        "case_snapshot_hash": "b92f5cb56e701ffc573b36a7f810aee7b9f59f5a0e76ac1c4c699e72fa694635",
+        "kind": "initial",
+        "sequence": 1,
+        "runner": "command",
+        "code_sha": "2f731ff29c8e73af175ebcaa923296f3181e252d",
+        "test_sha": "7b9651c1b0dbc0ab211f15d6d7d748191ab036ca4bf2cf7a3bec00b816a3f29b",
+        "scenario_hash": "722d37677f9b8447442352a210fed5783957f64f3afdb476178281e748716f44",
+        "environment_hash": "9c78786e36218f06534a16388fb62cd2cbe8337504d5b4c19814bad8b31c3e9d",
+        "browser_project": "none",
+        "test_data_snapshot": "71716ee8e3f32aba3c7149426cf9e25999078b99a63421aeb18b219a5d75a476",
+        "runtime_version": "2.0.0-alpha.2",
+        "kernel_version": "2.0.0-alpha.2",
+        "status": "passed",
+        "started_at": "2026-08-28T09:20:43.034Z",
+        "completed_at": "2026-08-28T09:21:00.405Z",
+        "exit_status": 0
+      },
+      "artifact_valid": true
+    },
+    {
+      "sequence": 62,
+      "type": "run.terminal",
+      "at": "2026-08-28T09:21:00.405Z",
+      "run": {
+        "schema": "specnav.verification.run.v1",
+        "id": "run-20260828092043-e70067b9a6fcb4bc",
+        "change_id": "docforge-workbench-ui-redesign",
+        "case_snapshot_id": "snapshot-b92f5cb56e701ffc573b36a7",
+        "case_snapshot_hash": "b92f5cb56e701ffc573b36a7f810aee7b9f59f5a0e76ac1c4c699e72fa694635",
+        "case_ids": [
+          "case-a2-command-regression"
+        ],
+        "code_sha": "2f731ff29c8e73af175ebcaa923296f3181e252d",
+        "test_sha": "7b9651c1b0dbc0ab211f15d6d7d748191ab036ca4bf2cf7a3bec00b816a3f29b",
+        "environment_hash": "9c78786e36218f06534a16388fb62cd2cbe8337504d5b4c19814bad8b31c3e9d",
+        "runtime_version": "2.0.0-alpha.2",
+        "kernel_version": "2.0.0-alpha.2",
+        "generation_id": "generation-69b7ff5204d4f1afdb72de0f",
+        "status": "passed",
+        "created_at": "2026-08-28T09:20:43.023Z",
+        "started_at": "2026-08-28T09:20:43.034Z",
+        "completed_at": "2026-08-28T09:21:00.405Z",
+        "kind": "initial",
+        "origin_run_id": null,
+        "parent_run_id": null,
+        "parent_attempt_id": null,
+        "failure_id": null
+      },
+      "artifact_valid": true
+    }
+  ],
+  "blockers": []
+}

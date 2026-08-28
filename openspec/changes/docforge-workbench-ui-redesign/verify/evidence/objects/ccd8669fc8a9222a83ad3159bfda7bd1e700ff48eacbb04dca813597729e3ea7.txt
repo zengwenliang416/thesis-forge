@@ -1,0 +1,46 @@
+status=passed
+exit_status=0
+--- stdout ---
+
+> docforge-workspace@ frontend:test /Volumes/zwl/open_sources/thesis-forge
+> pnpm --dir frontend test
+
+
+> @docforge/workbench@0.1.0 test /Volumes/zwl/open_sources/thesis-forge/frontend
+> vitest run
+
+
+[1m[30m[46m RUN [49m[39m[22m [36mv4.1.10 [39m[90m/Volumes/zwl/open_sources/thesis-forge/frontend[39m
+
+ [32m✓[39m src/components/BuildOutputPanel.test.tsx [2m([22m[2m3 tests[22m[2m)[22m[33m 523[2mms[22m[39m
+ [32m✓[39m src/components/ReviewPanel.test.tsx [2m([22m[2m5 tests[22m[2m)[22m[33m 538[2mms[22m[39m
+ [32m✓[39m src/components/ProductBar.project.test.tsx [2m([22m[2m11 tests[22m[2m)[22m[33m 546[2mms[22m[39m
+ [32m✓[39m src/components/PreviewPanels.test.tsx [2m([22m[2m8 tests[22m[2m)[22m[33m 606[2mms[22m[39m
+ [32m✓[39m src/components/WorkbenchBuildFlow.test.tsx [2m([22m[2m11 tests[22m[2m)[22m[33m 1315[2mms[22m[39m
+     [33m[2m✓[22m[39m shows ordered progress and the successful output [33m 342[2mms[22m[39m
+ [32m✓[39m src/transport/WorkbenchTransport.project.test.ts [2m([22m[2m53 tests[22m[2m)[22m[32m 33[2mms[22m[39m
+ [32m✓[39m src/transport/transports-build.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 72[2mms[22m[39m
+ [32m✓[39m src/components/WorkbenchApp.project.test.tsx [2m([22m[2m11 tests[22m[2m)[22m[33m 1926[2mms[22m[39m
+     [33m[2m✓[22m[39m opens a desktop project and refreshes with the typed project identity [33m 358[2mms[22m[39m
+     [33m[2m✓[22m[39m clears diagnostics, output and final preview when switching projects [33m 337[2mms[22m[39m
+ [32m✓[39m src/components/WorkbenchApp.test.tsx [2m([22m[2m17 tests[22m[2m)[22m[33m 2049[2mms[22m[39m
+     [33m[2m✓[22m[39m renders the approved zh-CN workbench regions and empty state [33m 345[2mms[22m[39m
+ [32m✓[39m src/components/WorkbenchShell.project.test.tsx [2m([22m[2m1 test[22m[2m)[22m[32m 207[2mms[22m[39m
+ [32m✓[39m src/transport/transports.test.ts [2m([22m[2m22 tests[22m[2m)[22m[32m 25[2mms[22m[39m
+ [32m✓[39m src/components/WorkbenchPreviewFlow.test.tsx [2m([22m[2m2 tests[22m[2m)[22m[33m 476[2mms[22m[39m
+ [32m✓[39m src/transport/buildEvents.test.ts [2m([22m[2m48 tests[22m[2m)[22m[32m 10[2mms[22m[39m
+ [32m✓[39m src/state/workspace-preview.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 5[2mms[22m[39m
+ [32m✓[39m src/state/workspace.project.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 10[2mms[22m[39m
+ [32m✓[39m src/transport/finalPreview.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 8[2mms[22m[39m
+ [32m✓[39m src/transport/previewDto.test.ts [2m([22m[2m12 tests[22m[2m)[22m[32m 7[2mms[22m[39m
+ [32m✓[39m src/state/workspace-build.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 4[2mms[22m[39m
+ [32m✓[39m src/state/workspace.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 5[2mms[22m[39m
+ [32m✓[39m src/state/diagnostics.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 3[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m20 passed[39m[22m[90m (20)[39m
+[2m      Tests [22m [1m[32m245 passed[39m[22m[90m (245)[39m
+[2m   Start at [22m 17:20:34
+[2m   Duration [22m 8.37s[2m (transform 1.99s, setup 3.67s, import 9.29s, tests 8.37s, environment 29.27s)[22m
+
+
+--- stderr ---

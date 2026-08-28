@@ -1,0 +1,364 @@
+{
+  "ok": true,
+  "status": "passed",
+  "run": {
+    "schema": "specnav.verification.run.v1",
+    "id": "run-20260828092104-b37864e76dcbb630",
+    "change_id": "docforge-workbench-ui-redesign",
+    "case_snapshot_id": "snapshot-b92f5cb56e701ffc573b36a7",
+    "case_snapshot_hash": "b92f5cb56e701ffc573b36a7f810aee7b9f59f5a0e76ac1c4c699e72fa694635",
+    "case_ids": [
+      "case-a5-ui-boundary"
+    ],
+    "code_sha": "2f731ff29c8e73af175ebcaa923296f3181e252d",
+    "test_sha": "7b9651c1b0dbc0ab211f15d6d7d748191ab036ca4bf2cf7a3bec00b816a3f29b",
+    "environment_hash": "9c78786e36218f06534a16388fb62cd2cbe8337504d5b4c19814bad8b31c3e9d",
+    "runtime_version": "2.0.0-alpha.2",
+    "kernel_version": "2.0.0-alpha.2",
+    "generation_id": "generation-69b7ff5204d4f1afdb72de0f",
+    "status": "passed",
+    "created_at": "2026-08-28T09:21:04.064Z",
+    "started_at": "2026-08-28T09:21:04.074Z",
+    "completed_at": "2026-08-28T09:21:05.148Z",
+    "kind": "initial",
+    "origin_run_id": null,
+    "parent_run_id": null,
+    "parent_attempt_id": null,
+    "failure_id": null
+  },
+  "attempt": {
+    "schema": "specnav.verification.attempt.v1",
+    "id": "attempt-20260828092104-b37864e76dcbb630",
+    "run_id": "run-20260828092104-b37864e76dcbb630",
+    "change_id": "docforge-workbench-ui-redesign",
+    "case_id": "case-a5-ui-boundary",
+    "case_snapshot_hash": "b92f5cb56e701ffc573b36a7f810aee7b9f59f5a0e76ac1c4c699e72fa694635",
+    "kind": "initial",
+    "sequence": 1,
+    "runner": "command",
+    "code_sha": "2f731ff29c8e73af175ebcaa923296f3181e252d",
+    "test_sha": "7b9651c1b0dbc0ab211f15d6d7d748191ab036ca4bf2cf7a3bec00b816a3f29b",
+    "scenario_hash": "47ac3aa596f1ec0f4de25a01348c84c3f6eea220f5592e97b728be6b4f2a249d",
+    "environment_hash": "9c78786e36218f06534a16388fb62cd2cbe8337504d5b4c19814bad8b31c3e9d",
+    "browser_project": "none",
+    "test_data_snapshot": "8277ab3de62586e94cd3a994bb3ef1749be8da9ff7612f124e516e9f38b8feb9",
+    "runtime_version": "2.0.0-alpha.2",
+    "kernel_version": "2.0.0-alpha.2",
+    "status": "passed",
+    "started_at": "2026-08-28T09:21:04.074Z",
+    "completed_at": "2026-08-28T09:21:05.148Z",
+    "exit_status": 0
+  },
+  "run_states": [
+    {
+      "schema": "specnav.verification.run.v1",
+      "id": "run-20260828092104-b37864e76dcbb630",
+      "change_id": "docforge-workbench-ui-redesign",
+      "case_snapshot_id": "snapshot-b92f5cb56e701ffc573b36a7",
+      "case_snapshot_hash": "b92f5cb56e701ffc573b36a7f810aee7b9f59f5a0e76ac1c4c699e72fa694635",
+      "case_ids": [
+        "case-a5-ui-boundary"
+      ],
+      "code_sha": "2f731ff29c8e73af175ebcaa923296f3181e252d",
+      "test_sha": "7b9651c1b0dbc0ab211f15d6d7d748191ab036ca4bf2cf7a3bec00b816a3f29b",
+      "environment_hash": "9c78786e36218f06534a16388fb62cd2cbe8337504d5b4c19814bad8b31c3e9d",
+      "runtime_version": "2.0.0-alpha.2",
+      "kernel_version": "2.0.0-alpha.2",
+      "generation_id": "generation-69b7ff5204d4f1afdb72de0f",
+      "status": "running",
+      "created_at": "2026-08-28T09:21:04.064Z",
+      "started_at": "2026-08-28T09:21:04.074Z",
+      "completed_at": null,
+      "kind": "initial",
+      "origin_run_id": null,
+      "parent_run_id": null,
+      "parent_attempt_id": null,
+      "failure_id": null
+    },
+    {
+      "schema": "specnav.verification.run.v1",
+      "id": "run-20260828092104-b37864e76dcbb630",
+      "change_id": "docforge-workbench-ui-redesign",
+      "case_snapshot_id": "snapshot-b92f5cb56e701ffc573b36a7",
+      "case_snapshot_hash": "b92f5cb56e701ffc573b36a7f810aee7b9f59f5a0e76ac1c4c699e72fa694635",
+      "case_ids": [
+        "case-a5-ui-boundary"
+      ],
+      "code_sha": "2f731ff29c8e73af175ebcaa923296f3181e252d",
+      "test_sha": "7b9651c1b0dbc0ab211f15d6d7d748191ab036ca4bf2cf7a3bec00b816a3f29b",
+      "environment_hash": "9c78786e36218f06534a16388fb62cd2cbe8337504d5b4c19814bad8b31c3e9d",
+      "runtime_version": "2.0.0-alpha.2",
+      "kernel_version": "2.0.0-alpha.2",
+      "generation_id": "generation-69b7ff5204d4f1afdb72de0f",
+      "status": "passed",
+      "created_at": "2026-08-28T09:21:04.064Z",
+      "started_at": "2026-08-28T09:21:04.074Z",
+      "completed_at": "2026-08-28T09:21:05.148Z",
+      "kind": "initial",
+      "origin_run_id": null,
+      "parent_run_id": null,
+      "parent_attempt_id": null,
+      "failure_id": null
+    }
+  ],
+  "attempt_states": [
+    {
+      "schema": "specnav.verification.attempt.v1",
+      "id": "attempt-20260828092104-b37864e76dcbb630",
+      "run_id": "run-20260828092104-b37864e76dcbb630",
+      "change_id": "docforge-workbench-ui-redesign",
+      "case_id": "case-a5-ui-boundary",
+      "case_snapshot_hash": "b92f5cb56e701ffc573b36a7f810aee7b9f59f5a0e76ac1c4c699e72fa694635",
+      "kind": "initial",
+      "sequence": 1,
+      "runner": "command",
+      "code_sha": "2f731ff29c8e73af175ebcaa923296f3181e252d",
+      "test_sha": "7b9651c1b0dbc0ab211f15d6d7d748191ab036ca4bf2cf7a3bec00b816a3f29b",
+      "scenario_hash": "47ac3aa596f1ec0f4de25a01348c84c3f6eea220f5592e97b728be6b4f2a249d",
+      "environment_hash": "9c78786e36218f06534a16388fb62cd2cbe8337504d5b4c19814bad8b31c3e9d",
+      "browser_project": "none",
+      "test_data_snapshot": "8277ab3de62586e94cd3a994bb3ef1749be8da9ff7612f124e516e9f38b8feb9",
+      "runtime_version": "2.0.0-alpha.2",
+      "kernel_version": "2.0.0-alpha.2",
+      "status": "running",
+      "started_at": "2026-08-28T09:21:04.074Z",
+      "completed_at": null,
+      "exit_status": null
+    },
+    {
+      "schema": "specnav.verification.attempt.v1",
+      "id": "attempt-20260828092104-b37864e76dcbb630",
+      "run_id": "run-20260828092104-b37864e76dcbb630",
+      "change_id": "docforge-workbench-ui-redesign",
+      "case_id": "case-a5-ui-boundary",
+      "case_snapshot_hash": "b92f5cb56e701ffc573b36a7f810aee7b9f59f5a0e76ac1c4c699e72fa694635",
+      "kind": "initial",
+      "sequence": 1,
+      "runner": "command",
+      "code_sha": "2f731ff29c8e73af175ebcaa923296f3181e252d",
+      "test_sha": "7b9651c1b0dbc0ab211f15d6d7d748191ab036ca4bf2cf7a3bec00b816a3f29b",
+      "scenario_hash": "47ac3aa596f1ec0f4de25a01348c84c3f6eea220f5592e97b728be6b4f2a249d",
+      "environment_hash": "9c78786e36218f06534a16388fb62cd2cbe8337504d5b4c19814bad8b31c3e9d",
+      "browser_project": "none",
+      "test_data_snapshot": "8277ab3de62586e94cd3a994bb3ef1749be8da9ff7612f124e516e9f38b8feb9",
+      "runtime_version": "2.0.0-alpha.2",
+      "kernel_version": "2.0.0-alpha.2",
+      "status": "passed",
+      "started_at": "2026-08-28T09:21:04.074Z",
+      "completed_at": "2026-08-28T09:21:05.148Z",
+      "exit_status": 0
+    }
+  ],
+  "attempts": [
+    {
+      "schema": "specnav.verification.attempt.v1",
+      "id": "attempt-20260828092104-b37864e76dcbb630",
+      "run_id": "run-20260828092104-b37864e76dcbb630",
+      "change_id": "docforge-workbench-ui-redesign",
+      "case_id": "case-a5-ui-boundary",
+      "case_snapshot_hash": "b92f5cb56e701ffc573b36a7f810aee7b9f59f5a0e76ac1c4c699e72fa694635",
+      "kind": "initial",
+      "sequence": 1,
+      "runner": "command",
+      "code_sha": "2f731ff29c8e73af175ebcaa923296f3181e252d",
+      "test_sha": "7b9651c1b0dbc0ab211f15d6d7d748191ab036ca4bf2cf7a3bec00b816a3f29b",
+      "scenario_hash": "47ac3aa596f1ec0f4de25a01348c84c3f6eea220f5592e97b728be6b4f2a249d",
+      "environment_hash": "9c78786e36218f06534a16388fb62cd2cbe8337504d5b4c19814bad8b31c3e9d",
+      "browser_project": "none",
+      "test_data_snapshot": "8277ab3de62586e94cd3a994bb3ef1749be8da9ff7612f124e516e9f38b8feb9",
+      "runtime_version": "2.0.0-alpha.2",
+      "kernel_version": "2.0.0-alpha.2",
+      "status": "passed",
+      "started_at": "2026-08-28T09:21:04.074Z",
+      "completed_at": "2026-08-28T09:21:05.148Z",
+      "exit_status": 0
+    }
+  ],
+  "command": {
+    "exit_status": 0,
+    "signal": null,
+    "timed_out": false,
+    "canceled": false,
+    "spawn_error": null
+  },
+  "logs": {
+    "stdout": "\n> docforge-workspace@ frontend:typecheck /Volumes/zwl/open_sources/thesis-forge\n> pnpm --dir frontend typecheck\n\n\n> @docforge/workbench@0.1.0 typecheck /Volumes/zwl/open_sources/thesis-forge/frontend\n> tsc -b --pretty false\n\n\n> docforge-workspace@ frontend:lint /Volumes/zwl/open_sources/thesis-forge\n> pnpm --dir frontend lint\n\n\n> @docforge/workbench@0.1.0 lint /Volumes/zwl/open_sources/thesis-forge/frontend\n> node scripts/lint.mjs\n\n",
+    "stderr": ""
+  },
+  "events": [
+    {
+      "sequence": 1,
+      "type": "run.running",
+      "at": "2026-08-28T09:21:04.074Z",
+      "run": {
+        "schema": "specnav.verification.run.v1",
+        "id": "run-20260828092104-b37864e76dcbb630",
+        "change_id": "docforge-workbench-ui-redesign",
+        "case_snapshot_id": "snapshot-b92f5cb56e701ffc573b36a7",
+        "case_snapshot_hash": "b92f5cb56e701ffc573b36a7f810aee7b9f59f5a0e76ac1c4c699e72fa694635",
+        "case_ids": [
+          "case-a5-ui-boundary"
+        ],
+        "code_sha": "2f731ff29c8e73af175ebcaa923296f3181e252d",
+        "test_sha": "7b9651c1b0dbc0ab211f15d6d7d748191ab036ca4bf2cf7a3bec00b816a3f29b",
+        "environment_hash": "9c78786e36218f06534a16388fb62cd2cbe8337504d5b4c19814bad8b31c3e9d",
+        "runtime_version": "2.0.0-alpha.2",
+        "kernel_version": "2.0.0-alpha.2",
+        "generation_id": "generation-69b7ff5204d4f1afdb72de0f",
+        "status": "running",
+        "created_at": "2026-08-28T09:21:04.064Z",
+        "started_at": "2026-08-28T09:21:04.074Z",
+        "completed_at": null,
+        "kind": "initial",
+        "origin_run_id": null,
+        "parent_run_id": null,
+        "parent_attempt_id": null,
+        "failure_id": null
+      }
+    },
+    {
+      "sequence": 2,
+      "type": "attempt.running",
+      "at": "2026-08-28T09:21:04.074Z",
+      "attempt": {
+        "schema": "specnav.verification.attempt.v1",
+        "id": "attempt-20260828092104-b37864e76dcbb630",
+        "run_id": "run-20260828092104-b37864e76dcbb630",
+        "change_id": "docforge-workbench-ui-redesign",
+        "case_id": "case-a5-ui-boundary",
+        "case_snapshot_hash": "b92f5cb56e701ffc573b36a7f810aee7b9f59f5a0e76ac1c4c699e72fa694635",
+        "kind": "initial",
+        "sequence": 1,
+        "runner": "command",
+        "code_sha": "2f731ff29c8e73af175ebcaa923296f3181e252d",
+        "test_sha": "7b9651c1b0dbc0ab211f15d6d7d748191ab036ca4bf2cf7a3bec00b816a3f29b",
+        "scenario_hash": "47ac3aa596f1ec0f4de25a01348c84c3f6eea220f5592e97b728be6b4f2a249d",
+        "environment_hash": "9c78786e36218f06534a16388fb62cd2cbe8337504d5b4c19814bad8b31c3e9d",
+        "browser_project": "none",
+        "test_data_snapshot": "8277ab3de62586e94cd3a994bb3ef1749be8da9ff7612f124e516e9f38b8feb9",
+        "runtime_version": "2.0.0-alpha.2",
+        "kernel_version": "2.0.0-alpha.2",
+        "status": "running",
+        "started_at": "2026-08-28T09:21:04.074Z",
+        "completed_at": null,
+        "exit_status": null
+      }
+    },
+    {
+      "sequence": 3,
+      "type": "command.started",
+      "at": "2026-08-28T09:21:04.075Z",
+      "command": {
+        "argv": [
+          "/bin/sh",
+          "-c",
+          "set -eu; files=$(git show --pretty='' --name-only ee29f27); if printf '%s\\n' \"$files\" | grep -Eq '^(src/docforge|src/thesis_forge)/'; then printf '%s\\n' \"$files\"; exit 1; fi; pnpm frontend:typecheck; pnpm frontend:lint; printf '%s\\n' '{\"assertion_id\":\"a5-ui-boundary\",\"method\":\"equal\",\"expected\":true,\"actual\":true,\"status\":\"passed\"}' >> \"$SPECNAV_VERIFICATION_ASSERTION_RESULT_FILE\""
+        ],
+        "cwd": "/Volumes/zwl/open_sources/thesis-forge",
+        "env_keys": [
+          "PATH",
+          "SPECNAV_VERIFICATION_ASSERTION_IDS",
+          "SPECNAV_VERIFICATION_ASSERTION_RESULT_FILE"
+        ],
+        "timeout_ms": 300000
+      }
+    },
+    {
+      "sequence": 4,
+      "type": "command.stdout",
+      "at": "2026-08-28T09:21:04.317Z",
+      "chunk": "\n> docforge-workspace@ frontend:typecheck /Volumes/zwl/open_sources/thesis-forge\n> pnpm --dir frontend typecheck\n\n"
+    },
+    {
+      "sequence": 5,
+      "type": "command.stdout",
+      "at": "2026-08-28T09:21:04.538Z",
+      "chunk": "\n> @docforge/workbench@0.1.0 typecheck /Volumes/zwl/open_sources/thesis-forge/frontend\n> tsc -b --pretty false\n\n"
+    },
+    {
+      "sequence": 6,
+      "type": "command.stdout",
+      "at": "2026-08-28T09:21:04.860Z",
+      "chunk": "\n> docforge-workspace@ frontend:lint /Volumes/zwl/open_sources/thesis-forge\n> pnpm --dir frontend lint\n\n"
+    },
+    {
+      "sequence": 7,
+      "type": "command.stdout",
+      "at": "2026-08-28T09:21:05.072Z",
+      "chunk": "\n> @docforge/workbench@0.1.0 lint /Volumes/zwl/open_sources/thesis-forge/frontend\n> node scripts/lint.mjs\n\n"
+    },
+    {
+      "sequence": 8,
+      "type": "command.terminal",
+      "at": "2026-08-28T09:21:05.148Z",
+      "result": {
+        "exit_status": 0,
+        "signal": null,
+        "timed_out": false,
+        "canceled": false,
+        "spawn_error": null
+      }
+    },
+    {
+      "sequence": 9,
+      "type": "attempt.terminal",
+      "at": "2026-08-28T09:21:05.148Z",
+      "attempt": {
+        "schema": "specnav.verification.attempt.v1",
+        "id": "attempt-20260828092104-b37864e76dcbb630",
+        "run_id": "run-20260828092104-b37864e76dcbb630",
+        "change_id": "docforge-workbench-ui-redesign",
+        "case_id": "case-a5-ui-boundary",
+        "case_snapshot_hash": "b92f5cb56e701ffc573b36a7f810aee7b9f59f5a0e76ac1c4c699e72fa694635",
+        "kind": "initial",
+        "sequence": 1,
+        "runner": "command",
+        "code_sha": "2f731ff29c8e73af175ebcaa923296f3181e252d",
+        "test_sha": "7b9651c1b0dbc0ab211f15d6d7d748191ab036ca4bf2cf7a3bec00b816a3f29b",
+        "scenario_hash": "47ac3aa596f1ec0f4de25a01348c84c3f6eea220f5592e97b728be6b4f2a249d",
+        "environment_hash": "9c78786e36218f06534a16388fb62cd2cbe8337504d5b4c19814bad8b31c3e9d",
+        "browser_project": "none",
+        "test_data_snapshot": "8277ab3de62586e94cd3a994bb3ef1749be8da9ff7612f124e516e9f38b8feb9",
+        "runtime_version": "2.0.0-alpha.2",
+        "kernel_version": "2.0.0-alpha.2",
+        "status": "passed",
+        "started_at": "2026-08-28T09:21:04.074Z",
+        "completed_at": "2026-08-28T09:21:05.148Z",
+        "exit_status": 0
+      },
+      "artifact_valid": true
+    },
+    {
+      "sequence": 10,
+      "type": "run.terminal",
+      "at": "2026-08-28T09:21:05.148Z",
+      "run": {
+        "schema": "specnav.verification.run.v1",
+        "id": "run-20260828092104-b37864e76dcbb630",
+        "change_id": "docforge-workbench-ui-redesign",
+        "case_snapshot_id": "snapshot-b92f5cb56e701ffc573b36a7",
+        "case_snapshot_hash": "b92f5cb56e701ffc573b36a7f810aee7b9f59f5a0e76ac1c4c699e72fa694635",
+        "case_ids": [
+          "case-a5-ui-boundary"
+        ],
+        "code_sha": "2f731ff29c8e73af175ebcaa923296f3181e252d",
+        "test_sha": "7b9651c1b0dbc0ab211f15d6d7d748191ab036ca4bf2cf7a3bec00b816a3f29b",
+        "environment_hash": "9c78786e36218f06534a16388fb62cd2cbe8337504d5b4c19814bad8b31c3e9d",
+        "runtime_version": "2.0.0-alpha.2",
+        "kernel_version": "2.0.0-alpha.2",
+        "generation_id": "generation-69b7ff5204d4f1afdb72de0f",
+        "status": "passed",
+        "created_at": "2026-08-28T09:21:04.064Z",
+        "started_at": "2026-08-28T09:21:04.074Z",
+        "completed_at": "2026-08-28T09:21:05.148Z",
+        "kind": "initial",
+        "origin_run_id": null,
+        "parent_run_id": null,
+        "parent_attempt_id": null,
+        "failure_id": null
+      },
+      "artifact_valid": true
+    }
+  ],
+  "blockers": []
+}

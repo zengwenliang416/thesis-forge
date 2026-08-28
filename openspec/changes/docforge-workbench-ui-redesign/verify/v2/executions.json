@@ -1,0 +1,92 @@
+[
+  {
+    "id": "execution-attempt-20260828092033-fd4e462feef558cf",
+    "run_id": "run-20260828092033-fd4e462feef558cf",
+    "attempt_id": "attempt-20260828092033-fd4e462feef558cf",
+    "case_id": "case-a1-docforge-brand",
+    "status": "passed",
+    "assertions": [
+      {
+        "id": "a1-docforge-brand",
+        "method": "equal",
+        "expected": true,
+        "actual": true,
+        "status": "passed"
+      }
+    ],
+    "blockers": [],
+    "recorded_at": "2026-08-28T09:20:43.020Z"
+  },
+  {
+    "id": "execution-attempt-20260828092043-e70067b9a6fcb4bc",
+    "run_id": "run-20260828092043-e70067b9a6fcb4bc",
+    "attempt_id": "attempt-20260828092043-e70067b9a6fcb4bc",
+    "case_id": "case-a2-command-regression",
+    "status": "passed",
+    "assertions": [
+      {
+        "id": "a2-command-regression",
+        "method": "equal",
+        "expected": true,
+        "actual": true,
+        "status": "passed"
+      }
+    ],
+    "blockers": [],
+    "recorded_at": "2026-08-28T09:21:00.521Z"
+  },
+  {
+    "id": "execution-attempt-20260828092100-6bc1ef43ebae19c1",
+    "run_id": "run-20260828092100-6bc1ef43ebae19c1",
+    "attempt_id": "attempt-20260828092100-6bc1ef43ebae19c1",
+    "case_id": "case-a4-mobile-panels",
+    "status": "passed",
+    "assertions": [
+      {
+        "id": "a4-mobile-panels",
+        "method": "equal",
+        "expected": true,
+        "actual": true,
+        "status": "passed"
+      }
+    ],
+    "blockers": [],
+    "recorded_at": "2026-08-28T09:21:04.061Z"
+  },
+  {
+    "id": "execution-attempt-20260828092100-adc2b1b3e980ce63",
+    "run_id": "run-20260828092100-adc2b1b3e980ce63",
+    "attempt_id": "attempt-20260828092100-adc2b1b3e980ce63",
+    "case_id": "case-a3-desktop-hierarchy",
+    "status": "passed",
+    "assertions": [
+      {
+        "id": "a3-desktop-hierarchy",
+        "method": "equal",
+        "expected": true,
+        "actual": true,
+        "status": "passed"
+      }
+    ],
+    "blockers": [],
+    "recorded_at": "2026-08-28T09:21:00.711Z"
+  },
+  {
+    "id": "execution-attempt-20260828092104-b37864e76dcbb630",
+    "run_id": "run-20260828092104-b37864e76dcbb630",
+    "attempt_id": "attempt-20260828092104-b37864e76dcbb630",
+    "case_id": "case-a5-ui-boundary",
+    "status": "passed",
+    "assertions": [
+      {
+        "id": "a5-ui-boundary",
+        "method": "equal",
+        "expected": true,
+        "actual": true,
+        "status": "passed"
+      }
+    ],
+    "blockers": [],
+    "recorded_at": "2026-08-28T09:21:05.278Z"
+  }
+]

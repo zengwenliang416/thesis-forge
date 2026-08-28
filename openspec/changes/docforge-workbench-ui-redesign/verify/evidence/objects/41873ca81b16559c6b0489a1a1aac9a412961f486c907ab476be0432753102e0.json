@@ -1,0 +1,7 @@
+{
+  "actual": true,
+  "assertion_id": "a2-command-regression",
+  "expected": true,
+  "method": "equal",
+  "status": "passed"
+}

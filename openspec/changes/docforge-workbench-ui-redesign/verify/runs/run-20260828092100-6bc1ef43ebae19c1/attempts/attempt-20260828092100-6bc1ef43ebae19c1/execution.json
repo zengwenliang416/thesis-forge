@@ -1,0 +1,382 @@
+{
+  "ok": true,
+  "status": "passed",
+  "run": {
+    "schema": "specnav.verification.run.v1",
+    "id": "run-20260828092100-6bc1ef43ebae19c1",
+    "change_id": "docforge-workbench-ui-redesign",
+    "case_snapshot_id": "snapshot-b92f5cb56e701ffc573b36a7",
+    "case_snapshot_hash": "b92f5cb56e701ffc573b36a7f810aee7b9f59f5a0e76ac1c4c699e72fa694635",
+    "case_ids": [
+      "case-a4-mobile-panels"
+    ],
+    "code_sha": "2f731ff29c8e73af175ebcaa923296f3181e252d",
+    "test_sha": "7b9651c1b0dbc0ab211f15d6d7d748191ab036ca4bf2cf7a3bec00b816a3f29b",
+    "environment_hash": "9c78786e36218f06534a16388fb62cd2cbe8337504d5b4c19814bad8b31c3e9d",
+    "runtime_version": "2.0.0-alpha.2",
+    "kernel_version": "2.0.0-alpha.2",
+    "generation_id": "generation-69b7ff5204d4f1afdb72de0f",
+    "status": "passed",
+    "created_at": "2026-08-28T09:21:00.714Z",
+    "started_at": "2026-08-28T09:21:00.727Z",
+    "completed_at": "2026-08-28T09:21:03.968Z",
+    "kind": "initial",
+    "origin_run_id": null,
+    "parent_run_id": null,
+    "parent_attempt_id": null,
+    "failure_id": null
+  },
+  "attempt": {
+    "schema": "specnav.verification.attempt.v1",
+    "id": "attempt-20260828092100-6bc1ef43ebae19c1",
+    "run_id": "run-20260828092100-6bc1ef43ebae19c1",
+    "change_id": "docforge-workbench-ui-redesign",
+    "case_id": "case-a4-mobile-panels",
+    "case_snapshot_hash": "b92f5cb56e701ffc573b36a7f810aee7b9f59f5a0e76ac1c4c699e72fa694635",
+    "kind": "initial",
+    "sequence": 1,
+    "runner": "command",
+    "code_sha": "2f731ff29c8e73af175ebcaa923296f3181e252d",
+    "test_sha": "7b9651c1b0dbc0ab211f15d6d7d748191ab036ca4bf2cf7a3bec00b816a3f29b",
+    "scenario_hash": "50170806c004e648f99b9d085c0338dc59d5f252a0cd4f8fd756bb4e2bb13187",
+    "environment_hash": "9c78786e36218f06534a16388fb62cd2cbe8337504d5b4c19814bad8b31c3e9d",
+    "browser_project": "none",
+    "test_data_snapshot": "b2247c2a74ab5a8e10b390cf594befd770b8fbc0707cd0100295908a35ba9105",
+    "runtime_version": "2.0.0-alpha.2",
+    "kernel_version": "2.0.0-alpha.2",
+    "status": "passed",
+    "started_at": "2026-08-28T09:21:00.727Z",
+    "completed_at": "2026-08-28T09:21:03.968Z",
+    "exit_status": 0
+  },
+  "run_states": [
+    {
+      "schema": "specnav.verification.run.v1",
+      "id": "run-20260828092100-6bc1ef43ebae19c1",
+      "change_id": "docforge-workbench-ui-redesign",
+      "case_snapshot_id": "snapshot-b92f5cb56e701ffc573b36a7",
+      "case_snapshot_hash": "b92f5cb56e701ffc573b36a7f810aee7b9f59f5a0e76ac1c4c699e72fa694635",
+      "case_ids": [
+        "case-a4-mobile-panels"
+      ],
+      "code_sha": "2f731ff29c8e73af175ebcaa923296f3181e252d",
+      "test_sha": "7b9651c1b0dbc0ab211f15d6d7d748191ab036ca4bf2cf7a3bec00b816a3f29b",
+      "environment_hash": "9c78786e36218f06534a16388fb62cd2cbe8337504d5b4c19814bad8b31c3e9d",
+      "runtime_version": "2.0.0-alpha.2",
+      "kernel_version": "2.0.0-alpha.2",
+      "generation_id": "generation-69b7ff5204d4f1afdb72de0f",
+      "status": "running",
+      "created_at": "2026-08-28T09:21:00.714Z",
+      "started_at": "2026-08-28T09:21:00.727Z",
+      "completed_at": null,
+      "kind": "initial",
+      "origin_run_id": null,
+      "parent_run_id": null,
+      "parent_attempt_id": null,
+      "failure_id": null
+    },
+    {
+      "schema": "specnav.verification.run.v1",
+      "id": "run-20260828092100-6bc1ef43ebae19c1",
+      "change_id": "docforge-workbench-ui-redesign",
+      "case_snapshot_id": "snapshot-b92f5cb56e701ffc573b36a7",
+      "case_snapshot_hash": "b92f5cb56e701ffc573b36a7f810aee7b9f59f5a0e76ac1c4c699e72fa694635",
+      "case_ids": [
+        "case-a4-mobile-panels"
+      ],
+      "code_sha": "2f731ff29c8e73af175ebcaa923296f3181e252d",
+      "test_sha": "7b9651c1b0dbc0ab211f15d6d7d748191ab036ca4bf2cf7a3bec00b816a3f29b",
+      "environment_hash": "9c78786e36218f06534a16388fb62cd2cbe8337504d5b4c19814bad8b31c3e9d",
+      "runtime_version": "2.0.0-alpha.2",
+      "kernel_version": "2.0.0-alpha.2",
+      "generation_id": "generation-69b7ff5204d4f1afdb72de0f",
+      "status": "passed",
+      "created_at": "2026-08-28T09:21:00.714Z",
+      "started_at": "2026-08-28T09:21:00.727Z",
+      "completed_at": "2026-08-28T09:21:03.968Z",
+      "kind": "initial",
+      "origin_run_id": null,
+      "parent_run_id": null,
+      "parent_attempt_id": null,
+      "failure_id": null
+    }
+  ],
+  "attempt_states": [
+    {
+      "schema": "specnav.verification.attempt.v1",
+      "id": "attempt-20260828092100-6bc1ef43ebae19c1",
+      "run_id": "run-20260828092100-6bc1ef43ebae19c1",
+      "change_id": "docforge-workbench-ui-redesign",
+      "case_id": "case-a4-mobile-panels",
+      "case_snapshot_hash": "b92f5cb56e701ffc573b36a7f810aee7b9f59f5a0e76ac1c4c699e72fa694635",
+      "kind": "initial",
+      "sequence": 1,
+      "runner": "command",
+      "code_sha": "2f731ff29c8e73af175ebcaa923296f3181e252d",
+      "test_sha": "7b9651c1b0dbc0ab211f15d6d7d748191ab036ca4bf2cf7a3bec00b816a3f29b",
+      "scenario_hash": "50170806c004e648f99b9d085c0338dc59d5f252a0cd4f8fd756bb4e2bb13187",
+      "environment_hash": "9c78786e36218f06534a16388fb62cd2cbe8337504d5b4c19814bad8b31c3e9d",
+      "browser_project": "none",
+      "test_data_snapshot": "b2247c2a74ab5a8e10b390cf594befd770b8fbc0707cd0100295908a35ba9105",
+      "runtime_version": "2.0.0-alpha.2",
+      "kernel_version": "2.0.0-alpha.2",
+      "status": "running",
+      "started_at": "2026-08-28T09:21:00.727Z",
+      "completed_at": null,
+      "exit_status": null
+    },
+    {
+      "schema": "specnav.verification.attempt.v1",
+      "id": "attempt-20260828092100-6bc1ef43ebae19c1",
+      "run_id": "run-20260828092100-6bc1ef43ebae19c1",
+      "change_id": "docforge-workbench-ui-redesign",
+      "case_id": "case-a4-mobile-panels",
+      "case_snapshot_hash": "b92f5cb56e701ffc573b36a7f810aee7b9f59f5a0e76ac1c4c699e72fa694635",
+      "kind": "initial",
+      "sequence": 1,
+      "runner": "command",
+      "code_sha": "2f731ff29c8e73af175ebcaa923296f3181e252d",
+      "test_sha": "7b9651c1b0dbc0ab211f15d6d7d748191ab036ca4bf2cf7a3bec00b816a3f29b",
+      "scenario_hash": "50170806c004e648f99b9d085c0338dc59d5f252a0cd4f8fd756bb4e2bb13187",
+      "environment_hash": "9c78786e36218f06534a16388fb62cd2cbe8337504d5b4c19814bad8b31c3e9d",
+      "browser_project": "none",
+      "test_data_snapshot": "b2247c2a74ab5a8e10b390cf594befd770b8fbc0707cd0100295908a35ba9105",
+      "runtime_version": "2.0.0-alpha.2",
+      "kernel_version": "2.0.0-alpha.2",
+      "status": "passed",
+      "started_at": "2026-08-28T09:21:00.727Z",
+      "completed_at": "2026-08-28T09:21:03.968Z",
+      "exit_status": 0
+    }
+  ],
+  "attempts": [
+    {
+      "schema": "specnav.verification.attempt.v1",
+      "id": "attempt-20260828092100-6bc1ef43ebae19c1",
+      "run_id": "run-20260828092100-6bc1ef43ebae19c1",
+      "change_id": "docforge-workbench-ui-redesign",
+      "case_id": "case-a4-mobile-panels",
+      "case_snapshot_hash": "b92f5cb56e701ffc573b36a7f810aee7b9f59f5a0e76ac1c4c699e72fa694635",
+      "kind": "initial",
+      "sequence": 1,
+      "runner": "command",
+      "code_sha": "2f731ff29c8e73af175ebcaa923296f3181e252d",
+      "test_sha": "7b9651c1b0dbc0ab211f15d6d7d748191ab036ca4bf2cf7a3bec00b816a3f29b",
+      "scenario_hash": "50170806c004e648f99b9d085c0338dc59d5f252a0cd4f8fd756bb4e2bb13187",
+      "environment_hash": "9c78786e36218f06534a16388fb62cd2cbe8337504d5b4c19814bad8b31c3e9d",
+      "browser_project": "none",
+      "test_data_snapshot": "b2247c2a74ab5a8e10b390cf594befd770b8fbc0707cd0100295908a35ba9105",
+      "runtime_version": "2.0.0-alpha.2",
+      "kernel_version": "2.0.0-alpha.2",
+      "status": "passed",
+      "started_at": "2026-08-28T09:21:00.727Z",
+      "completed_at": "2026-08-28T09:21:03.968Z",
+      "exit_status": 0
+    }
+  ],
+  "command": {
+    "exit_status": 0,
+    "signal": null,
+    "timed_out": false,
+    "canceled": false,
+    "spawn_error": null
+  },
+  "logs": {
+    "stdout": "\nRunning 2 tests using 1 worker\n\n  ✓  1 [mobile-chromium] › e2e/workbench.spec.ts:195:1 › uses mobile panel navigation without horizontal overflow (531ms)\n  ✓  2 [mobile-chromium] › e2e/workbench.spec.ts:219:1 › keeps the product identity and compact actions visible on mobile (402ms)\n\n  2 passed (2.5s)\n",
+    "stderr": ""
+  },
+  "events": [
+    {
+      "sequence": 1,
+      "type": "run.running",
+      "at": "2026-08-28T09:21:00.727Z",
+      "run": {
+        "schema": "specnav.verification.run.v1",
+        "id": "run-20260828092100-6bc1ef43ebae19c1",
+        "change_id": "docforge-workbench-ui-redesign",
+        "case_snapshot_id": "snapshot-b92f5cb56e701ffc573b36a7",
+        "case_snapshot_hash": "b92f5cb56e701ffc573b36a7f810aee7b9f59f5a0e76ac1c4c699e72fa694635",
+        "case_ids": [
+          "case-a4-mobile-panels"
+        ],
+        "code_sha": "2f731ff29c8e73af175ebcaa923296f3181e252d",
+        "test_sha": "7b9651c1b0dbc0ab211f15d6d7d748191ab036ca4bf2cf7a3bec00b816a3f29b",
+        "environment_hash": "9c78786e36218f06534a16388fb62cd2cbe8337504d5b4c19814bad8b31c3e9d",
+        "runtime_version": "2.0.0-alpha.2",
+        "kernel_version": "2.0.0-alpha.2",
+        "generation_id": "generation-69b7ff5204d4f1afdb72de0f",
+        "status": "running",
+        "created_at": "2026-08-28T09:21:00.714Z",
+        "started_at": "2026-08-28T09:21:00.727Z",
+        "completed_at": null,
+        "kind": "initial",
+        "origin_run_id": null,
+        "parent_run_id": null,
+        "parent_attempt_id": null,
+        "failure_id": null
+      }
+    },
+    {
+      "sequence": 2,
+      "type": "attempt.running",
+      "at": "2026-08-28T09:21:00.727Z",
+      "attempt": {
+        "schema": "specnav.verification.attempt.v1",
+        "id": "attempt-20260828092100-6bc1ef43ebae19c1",
+        "run_id": "run-20260828092100-6bc1ef43ebae19c1",
+        "change_id": "docforge-workbench-ui-redesign",
+        "case_id": "case-a4-mobile-panels",
+        "case_snapshot_hash": "b92f5cb56e701ffc573b36a7f810aee7b9f59f5a0e76ac1c4c699e72fa694635",
+        "kind": "initial",
+        "sequence": 1,
+        "runner": "command",
+        "code_sha": "2f731ff29c8e73af175ebcaa923296f3181e252d",
+        "test_sha": "7b9651c1b0dbc0ab211f15d6d7d748191ab036ca4bf2cf7a3bec00b816a3f29b",
+        "scenario_hash": "50170806c004e648f99b9d085c0338dc59d5f252a0cd4f8fd756bb4e2bb13187",
+        "environment_hash": "9c78786e36218f06534a16388fb62cd2cbe8337504d5b4c19814bad8b31c3e9d",
+        "browser_project": "none",
+        "test_data_snapshot": "b2247c2a74ab5a8e10b390cf594befd770b8fbc0707cd0100295908a35ba9105",
+        "runtime_version": "2.0.0-alpha.2",
+        "kernel_version": "2.0.0-alpha.2",
+        "status": "running",
+        "started_at": "2026-08-28T09:21:00.727Z",
+        "completed_at": null,
+        "exit_status": null
+      }
+    },
+    {
+      "sequence": 3,
+      "type": "command.started",
+      "at": "2026-08-28T09:21:00.730Z",
+      "command": {
+        "argv": [
+          "/bin/sh",
+          "-c",
+          "set -eu; python3 -c 'import struct; from pathlib import Path; data=Path(\"openspec/changes/docforge-workbench-ui-redesign/verification/mobile-390x844.png\").read_bytes(); assert data[:8] == b\"\\x89PNG\\r\\n\\x1a\\n\"; assert struct.unpack(\">II\", data[16:24]) == (390, 844)'; pnpm --dir frontend exec playwright test e2e/workbench.spec.ts --project=mobile-chromium --grep 'uses mobile panel navigation|keeps the product identity'; printf '%s\\n' '{\"assertion_id\":\"a4-mobile-panels\",\"method\":\"equal\",\"expected\":true,\"actual\":true,\"status\":\"passed\"}' >> \"$SPECNAV_VERIFICATION_ASSERTION_RESULT_FILE\""
+        ],
+        "cwd": "/Volumes/zwl/open_sources/thesis-forge",
+        "env_keys": [
+          "PATH",
+          "SPECNAV_VERIFICATION_ASSERTION_IDS",
+          "SPECNAV_VERIFICATION_ASSERTION_RESULT_FILE"
+        ],
+        "timeout_ms": 300000
+      }
+    },
+    {
+      "sequence": 4,
+      "type": "command.stdout",
+      "at": "2026-08-28T09:21:02.402Z",
+      "chunk": "\nRunning 2 tests using 1 worker\n"
+    },
+    {
+      "sequence": 5,
+      "type": "command.stdout",
+      "at": "2026-08-28T09:21:02.402Z",
+      "chunk": "\n"
+    },
+    {
+      "sequence": 6,
+      "type": "command.stdout",
+      "at": "2026-08-28T09:21:03.479Z",
+      "chunk": "  ✓  1 [mobile-chromium] › e2e/workbench.spec.ts:195:1 › uses mobile panel navigation without horizontal overflow (531ms)\n"
+    },
+    {
+      "sequence": 7,
+      "type": "command.stdout",
+      "at": "2026-08-28T09:21:03.889Z",
+      "chunk": "  ✓  2 [mobile-chromium] › e2e/workbench.spec.ts:219:1 › keeps the product identity and compact actions visible on mobile (402ms)"
+    },
+    {
+      "sequence": 8,
+      "type": "command.stdout",
+      "at": "2026-08-28T09:21:03.889Z",
+      "chunk": "\n"
+    },
+    {
+      "sequence": 9,
+      "type": "command.stdout",
+      "at": "2026-08-28T09:21:03.950Z",
+      "chunk": "\n"
+    },
+    {
+      "sequence": 10,
+      "type": "command.stdout",
+      "at": "2026-08-28T09:21:03.951Z",
+      "chunk": "  2 passed (2.5s)\n"
+    },
+    {
+      "sequence": 11,
+      "type": "command.terminal",
+      "at": "2026-08-28T09:21:03.968Z",
+      "result": {
+        "exit_status": 0,
+        "signal": null,
+        "timed_out": false,
+        "canceled": false,
+        "spawn_error": null
+      }
+    },
+    {
+      "sequence": 12,
+      "type": "attempt.terminal",
+      "at": "2026-08-28T09:21:03.969Z",
+      "attempt": {
+        "schema": "specnav.verification.attempt.v1",
+        "id": "attempt-20260828092100-6bc1ef43ebae19c1",
+        "run_id": "run-20260828092100-6bc1ef43ebae19c1",
+        "change_id": "docforge-workbench-ui-redesign",
+        "case_id": "case-a4-mobile-panels",
+        "case_snapshot_hash": "b92f5cb56e701ffc573b36a7f810aee7b9f59f5a0e76ac1c4c699e72fa694635",
+        "kind": "initial",
+        "sequence": 1,
+        "runner": "command",
+        "code_sha": "2f731ff29c8e73af175ebcaa923296f3181e252d",
+        "test_sha": "7b9651c1b0dbc0ab211f15d6d7d748191ab036ca4bf2cf7a3bec00b816a3f29b",
+        "scenario_hash": "50170806c004e648f99b9d085c0338dc59d5f252a0cd4f8fd756bb4e2bb13187",
+        "environment_hash": "9c78786e36218f06534a16388fb62cd2cbe8337504d5b4c19814bad8b31c3e9d",
+        "browser_project": "none",
+        "test_data_snapshot": "b2247c2a74ab5a8e10b390cf594befd770b8fbc0707cd0100295908a35ba9105",
+        "runtime_version": "2.0.0-alpha.2",
+        "kernel_version": "2.0.0-alpha.2",
+        "status": "passed",
+        "started_at": "2026-08-28T09:21:00.727Z",
+        "completed_at": "2026-08-28T09:21:03.968Z",
+        "exit_status": 0
+      },
+      "artifact_valid": true
+    },
+    {
+      "sequence": 13,
+      "type": "run.terminal",
+      "at": "2026-08-28T09:21:03.969Z",
+      "run": {
+        "schema": "specnav.verification.run.v1",
+        "id": "run-20260828092100-6bc1ef43ebae19c1",
+        "change_id": "docforge-workbench-ui-redesign",
+        "case_snapshot_id": "snapshot-b92f5cb56e701ffc573b36a7",
+        "case_snapshot_hash": "b92f5cb56e701ffc573b36a7f810aee7b9f59f5a0e76ac1c4c699e72fa694635",
+        "case_ids": [
+          "case-a4-mobile-panels"
+        ],
+        "code_sha": "2f731ff29c8e73af175ebcaa923296f3181e252d",
+        "test_sha": "7b9651c1b0dbc0ab211f15d6d7d748191ab036ca4bf2cf7a3bec00b816a3f29b",
+        "environment_hash": "9c78786e36218f06534a16388fb62cd2cbe8337504d5b4c19814bad8b31c3e9d",
+        "runtime_version": "2.0.0-alpha.2",
+        "kernel_version": "2.0.0-alpha.2",
+        "generation_id": "generation-69b7ff5204d4f1afdb72de0f",
+        "status": "passed",
+        "created_at": "2026-08-28T09:21:00.714Z",
+        "started_at": "2026-08-28T09:21:00.727Z",
+        "completed_at": "2026-08-28T09:21:03.968Z",
+        "kind": "initial",
+        "origin_run_id": null,
+        "parent_run_id": null,
+        "parent_attempt_id": null,
+        "failure_id": null
+      },
+      "artifact_valid": true
+    }
+  ],
+  "blockers": []
+}

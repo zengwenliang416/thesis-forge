@@ -1,0 +1,7 @@
+{
+  "actual": true,
+  "assertion_id": "a1-docforge-brand",
+  "expected": true,
+  "method": "equal",
+  "status": "passed"
+}

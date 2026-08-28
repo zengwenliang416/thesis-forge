@@ -1,0 +1,37 @@
+{
+  "ok": true,
+  "facts": {
+    "summary": {
+      "evidence_count": 2,
+      "integrity": "intact",
+      "freshness": "fresh"
+    },
+    "evidence": [
+      {
+        "evidence_id": "evidence-37b09adc9842232486e76cebd9584065539489d3377eb5a13dc8b47ee29a9fe0",
+        "integrity": "intact",
+        "freshness": "fresh",
+        "exists": true,
+        "hash_match": true,
+        "size_match": true,
+        "producer_recognized": true,
+        "store_record_match": true,
+        "binding_match": true,
+        "path_safe": true
+      },
+      {
+        "evidence_id": "evidence-9a72772d2a121d11cf4529162343e0e579ee5ae85694a29f4f3367894f18f9bf",
+        "integrity": "intact",
+        "freshness": "fresh",
+        "exists": true,
+        "hash_match": true,
+        "size_match": true,
+        "producer_recognized": true,
+        "store_record_match": true,
+        "binding_match": true,
+        "path_safe": true
+      }
+    ]
+  },
+  "blockers": []
+}

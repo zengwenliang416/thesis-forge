@@ -1,0 +1,12 @@
+status=passed
+exit_status=0
+--- stdout ---
+
+Running 2 tests using 1 worker
+
+  ✓  1 [mobile-chromium] › e2e/workbench.spec.ts:195:1 › uses mobile panel navigation without horizontal overflow (531ms)
+  ✓  2 [mobile-chromium] › e2e/workbench.spec.ts:219:1 › keeps the product identity and compact actions visible on mobile (402ms)
+
+  2 passed (2.5s)
+
+--- stderr ---

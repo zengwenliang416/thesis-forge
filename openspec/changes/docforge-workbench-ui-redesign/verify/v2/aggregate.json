@@ -1,0 +1,769 @@
+{
+  "id": "verification-aggregate-c3a843aba221783b9cea2d0007c4dbf53196e2f78ff40920b409eee9761c4c76",
+  "change_id": "docforge-workbench-ui-redesign",
+  "ok": true,
+  "status": "pass",
+  "case_results": [
+    {
+      "id": "case-verdict-41ff56271884ec1a1234d27225a0eaa26cc35a5331a4dad66f5131f4a6c7123f",
+      "case_id": "case-a1-docforge-brand",
+      "status": "pass",
+      "domains": {
+        "facticity": {
+          "status": "pass",
+          "reading_ids": [
+            "reading-fcdf085597f250d44c7cde5f5de5e017b6f0547a03749bb2461a11ba38e05b73"
+          ],
+          "evidence_ids": [
+            "evidence-37b95c6eec881f0a54fb23375f46adc5f9483d0e80184b84cc9625fa45bb39f7",
+            "evidence-90995b917b17e46bed8f768fac19cd09ab76bc878a02589d9ffedcc4935482d0"
+          ],
+          "policy_fact_ids": [],
+          "blockers": []
+        },
+        "static": {
+          "status": "pass",
+          "reading_ids": [
+            "reading-87d0baaedb50fde78ac4acc9ee4048040dc1e4d56bbe031bddb626270ad587bc"
+          ],
+          "evidence_ids": [
+            "evidence-37b95c6eec881f0a54fb23375f46adc5f9483d0e80184b84cc9625fa45bb39f7",
+            "evidence-90995b917b17e46bed8f768fac19cd09ab76bc878a02589d9ffedcc4935482d0"
+          ],
+          "policy_fact_ids": [],
+          "blockers": []
+        },
+        "unit": {
+          "status": "pass",
+          "reading_ids": [
+            "reading-a65f7b38eb77c1f2a284b8f10696ec45afeaeeeb757e2136f724d378cc5ed3e0"
+          ],
+          "evidence_ids": [
+            "evidence-37b95c6eec881f0a54fb23375f46adc5f9483d0e80184b84cc9625fa45bb39f7",
+            "evidence-90995b917b17e46bed8f768fac19cd09ab76bc878a02589d9ffedcc4935482d0"
+          ],
+          "policy_fact_ids": [],
+          "blockers": []
+        },
+        "redteam": {
+          "status": "pass",
+          "reading_ids": [
+            "reading-8786b3eedaff89f4df9afc11dda486d02c0a9c5d531caedd23196e90dd499cbb"
+          ],
+          "evidence_ids": [
+            "evidence-37b95c6eec881f0a54fb23375f46adc5f9483d0e80184b84cc9625fa45bb39f7",
+            "evidence-90995b917b17e46bed8f768fac19cd09ab76bc878a02589d9ffedcc4935482d0"
+          ],
+          "policy_fact_ids": [],
+          "blockers": []
+        },
+        "e2e": {
+          "status": "pass",
+          "reading_ids": [
+            "reading-d5500fa1df7a34fdec385a1175d9d56595a284ea486cd5006da495751558c661"
+          ],
+          "evidence_ids": [
+            "evidence-37b95c6eec881f0a54fb23375f46adc5f9483d0e80184b84cc9625fa45bb39f7",
+            "evidence-90995b917b17e46bed8f768fac19cd09ab76bc878a02589d9ffedcc4935482d0"
+          ],
+          "policy_fact_ids": [],
+          "blockers": []
+        },
+        "sensory": {
+          "status": "pass",
+          "reading_ids": [
+            "reading-311c1cf6f37455b90c13d8d8bd57da551acc3e36f4c394401dab0589e4a9f150"
+          ],
+          "evidence_ids": [
+            "evidence-37b95c6eec881f0a54fb23375f46adc5f9483d0e80184b84cc9625fa45bb39f7",
+            "evidence-90995b917b17e46bed8f768fac19cd09ab76bc878a02589d9ffedcc4935482d0"
+          ],
+          "policy_fact_ids": [],
+          "blockers": []
+        }
+      },
+      "reading_ids": [
+        "reading-311c1cf6f37455b90c13d8d8bd57da551acc3e36f4c394401dab0589e4a9f150",
+        "reading-8786b3eedaff89f4df9afc11dda486d02c0a9c5d531caedd23196e90dd499cbb",
+        "reading-87d0baaedb50fde78ac4acc9ee4048040dc1e4d56bbe031bddb626270ad587bc",
+        "reading-a65f7b38eb77c1f2a284b8f10696ec45afeaeeeb757e2136f724d378cc5ed3e0",
+        "reading-d5500fa1df7a34fdec385a1175d9d56595a284ea486cd5006da495751558c661",
+        "reading-fcdf085597f250d44c7cde5f5de5e017b6f0547a03749bb2461a11ba38e05b73"
+      ],
+      "evidence_ids": [
+        "evidence-37b95c6eec881f0a54fb23375f46adc5f9483d0e80184b84cc9625fa45bb39f7",
+        "evidence-90995b917b17e46bed8f768fac19cd09ab76bc878a02589d9ffedcc4935482d0"
+      ],
+      "policy_fact_ids": [],
+      "blockers": []
+    },
+    {
+      "id": "case-verdict-f235eada4715ebcbda99c2d882b79c52a356e41d62622cc0e67d7b5385c80f3e",
+      "case_id": "case-a2-command-regression",
+      "status": "pass",
+      "domains": {
+        "facticity": {
+          "status": "pass",
+          "reading_ids": [
+            "reading-e876e819e8c828053628a1e73046a436da610634353f36fbcbc5b5a4b9a4377a"
+          ],
+          "evidence_ids": [
+            "evidence-45dff25daa81dc6c5a50e0c0ad0de4cdb4ccc69d9d38cbcce350abe32cda2f53",
+            "evidence-dda0a90bf0d76b52a28d3fcb337b32683e7b3fcd68258602354c71dc38acd286"
+          ],
+          "policy_fact_ids": [],
+          "blockers": []
+        },
+        "static": {
+          "status": "pass",
+          "reading_ids": [
+            "reading-325602aa938d0bbff51549b1e8fffd31b7bf6eded28ddd0f75213020542baae5"
+          ],
+          "evidence_ids": [
+            "evidence-45dff25daa81dc6c5a50e0c0ad0de4cdb4ccc69d9d38cbcce350abe32cda2f53",
+            "evidence-dda0a90bf0d76b52a28d3fcb337b32683e7b3fcd68258602354c71dc38acd286"
+          ],
+          "policy_fact_ids": [],
+          "blockers": []
+        },
+        "unit": {
+          "status": "pass",
+          "reading_ids": [
+            "reading-532dc6c2e6e7f0f97bfccd51bfe0c44af25b225e4cd87881ef74f0c7c5c09a1e"
+          ],
+          "evidence_ids": [
+            "evidence-45dff25daa81dc6c5a50e0c0ad0de4cdb4ccc69d9d38cbcce350abe32cda2f53",
+            "evidence-dda0a90bf0d76b52a28d3fcb337b32683e7b3fcd68258602354c71dc38acd286"
+          ],
+          "policy_fact_ids": [],
+          "blockers": []
+        },
+        "redteam": {
+          "status": "pass",
+          "reading_ids": [
+            "reading-4a8d8a83a534b436845529b33e394d87c2b9b794b077aae67c2ef7ba1fe238dc"
+          ],
+          "evidence_ids": [
+            "evidence-45dff25daa81dc6c5a50e0c0ad0de4cdb4ccc69d9d38cbcce350abe32cda2f53",
+            "evidence-dda0a90bf0d76b52a28d3fcb337b32683e7b3fcd68258602354c71dc38acd286"
+          ],
+          "policy_fact_ids": [],
+          "blockers": []
+        },
+        "e2e": {
+          "status": "pass",
+          "reading_ids": [
+            "reading-366d99710e23116dcb7ccfe065ff07214ba84ce5e7d888b16337fa61b8fcbf4e"
+          ],
+          "evidence_ids": [
+            "evidence-45dff25daa81dc6c5a50e0c0ad0de4cdb4ccc69d9d38cbcce350abe32cda2f53",
+            "evidence-dda0a90bf0d76b52a28d3fcb337b32683e7b3fcd68258602354c71dc38acd286"
+          ],
+          "policy_fact_ids": [],
+          "blockers": []
+        },
+        "sensory": {
+          "status": "pass",
+          "reading_ids": [
+            "reading-651b32942e5182eda44c9bdd0b520a5e03419a24e8153a2a65b4a67797ca21ee"
+          ],
+          "evidence_ids": [
+            "evidence-45dff25daa81dc6c5a50e0c0ad0de4cdb4ccc69d9d38cbcce350abe32cda2f53",
+            "evidence-dda0a90bf0d76b52a28d3fcb337b32683e7b3fcd68258602354c71dc38acd286"
+          ],
+          "policy_fact_ids": [],
+          "blockers": []
+        }
+      },
+      "reading_ids": [
+        "reading-325602aa938d0bbff51549b1e8fffd31b7bf6eded28ddd0f75213020542baae5",
+        "reading-366d99710e23116dcb7ccfe065ff07214ba84ce5e7d888b16337fa61b8fcbf4e",
+        "reading-4a8d8a83a534b436845529b33e394d87c2b9b794b077aae67c2ef7ba1fe238dc",
+        "reading-532dc6c2e6e7f0f97bfccd51bfe0c44af25b225e4cd87881ef74f0c7c5c09a1e",
+        "reading-651b32942e5182eda44c9bdd0b520a5e03419a24e8153a2a65b4a67797ca21ee",
+        "reading-e876e819e8c828053628a1e73046a436da610634353f36fbcbc5b5a4b9a4377a"
+      ],
+      "evidence_ids": [
+        "evidence-45dff25daa81dc6c5a50e0c0ad0de4cdb4ccc69d9d38cbcce350abe32cda2f53",
+        "evidence-dda0a90bf0d76b52a28d3fcb337b32683e7b3fcd68258602354c71dc38acd286"
+      ],
+      "policy_fact_ids": [],
+      "blockers": []
+    },
+    {
+      "id": "case-verdict-44bfb14fbd33919d27f886847a2100fd792e7993220a1112367a579b77a7f2cb",
+      "case_id": "case-a3-desktop-hierarchy",
+      "status": "pass",
+      "domains": {
+        "facticity": {
+          "status": "pass",
+          "reading_ids": [
+            "reading-2fc9a5ee2224d16b80817ebe08587dfb00f5582e8e3a43efbd7b44696a0ab3a9"
+          ],
+          "evidence_ids": [
+            "evidence-2f1b01647784f64de9eacbe599acdad26b5dc647ba87e5e6b02b10992c1ab1ec",
+            "evidence-c1b1eccb6588900856422c468c1e2dc149b20f4d57ac8ac930eb62d2870ce179"
+          ],
+          "policy_fact_ids": [],
+          "blockers": []
+        },
+        "static": {
+          "status": "pass",
+          "reading_ids": [
+            "reading-5f67edb14f103022175cf1117850f391bb2b134e55aecd76d02647cd348fdd84"
+          ],
+          "evidence_ids": [
+            "evidence-2f1b01647784f64de9eacbe599acdad26b5dc647ba87e5e6b02b10992c1ab1ec",
+            "evidence-c1b1eccb6588900856422c468c1e2dc149b20f4d57ac8ac930eb62d2870ce179"
+          ],
+          "policy_fact_ids": [],
+          "blockers": []
+        },
+        "unit": {
+          "status": "pass",
+          "reading_ids": [
+            "reading-1a4b8106859d979642f165fc9cfde24f0dac055bf9a82280e17786403ca82d2a"
+          ],
+          "evidence_ids": [
+            "evidence-2f1b01647784f64de9eacbe599acdad26b5dc647ba87e5e6b02b10992c1ab1ec",
+            "evidence-c1b1eccb6588900856422c468c1e2dc149b20f4d57ac8ac930eb62d2870ce179"
+          ],
+          "policy_fact_ids": [],
+          "blockers": []
+        },
+        "redteam": {
+          "status": "pass",
+          "reading_ids": [
+            "reading-449987669a8fb7586019c4c7884a3ea882c395b27b5cf4d932ef757c7b6867f9"
+          ],
+          "evidence_ids": [
+            "evidence-2f1b01647784f64de9eacbe599acdad26b5dc647ba87e5e6b02b10992c1ab1ec",
+            "evidence-c1b1eccb6588900856422c468c1e2dc149b20f4d57ac8ac930eb62d2870ce179"
+          ],
+          "policy_fact_ids": [],
+          "blockers": []
+        },
+        "e2e": {
+          "status": "pass",
+          "reading_ids": [
+            "reading-56fa6f97f3f35f2306bb6f8b26ce0cd0d026928e99c60f3d9e8a11930722684b"
+          ],
+          "evidence_ids": [
+            "evidence-2f1b01647784f64de9eacbe599acdad26b5dc647ba87e5e6b02b10992c1ab1ec",
+            "evidence-c1b1eccb6588900856422c468c1e2dc149b20f4d57ac8ac930eb62d2870ce179"
+          ],
+          "policy_fact_ids": [],
+          "blockers": []
+        },
+        "sensory": {
+          "status": "pass",
+          "reading_ids": [
+            "reading-3886868626c2088d9c0506ef4a80e7dfc6d4c7aeddb857207648d9a131b6c856"
+          ],
+          "evidence_ids": [
+            "evidence-2f1b01647784f64de9eacbe599acdad26b5dc647ba87e5e6b02b10992c1ab1ec",
+            "evidence-c1b1eccb6588900856422c468c1e2dc149b20f4d57ac8ac930eb62d2870ce179"
+          ],
+          "policy_fact_ids": [],
+          "blockers": []
+        }
+      },
+      "reading_ids": [
+        "reading-1a4b8106859d979642f165fc9cfde24f0dac055bf9a82280e17786403ca82d2a",
+        "reading-2fc9a5ee2224d16b80817ebe08587dfb00f5582e8e3a43efbd7b44696a0ab3a9",
+        "reading-3886868626c2088d9c0506ef4a80e7dfc6d4c7aeddb857207648d9a131b6c856",
+        "reading-449987669a8fb7586019c4c7884a3ea882c395b27b5cf4d932ef757c7b6867f9",
+        "reading-56fa6f97f3f35f2306bb6f8b26ce0cd0d026928e99c60f3d9e8a11930722684b",
+        "reading-5f67edb14f103022175cf1117850f391bb2b134e55aecd76d02647cd348fdd84"
+      ],
+      "evidence_ids": [
+        "evidence-2f1b01647784f64de9eacbe599acdad26b5dc647ba87e5e6b02b10992c1ab1ec",
+        "evidence-c1b1eccb6588900856422c468c1e2dc149b20f4d57ac8ac930eb62d2870ce179"
+      ],
+      "policy_fact_ids": [],
+      "blockers": []
+    },
+    {
+      "id": "case-verdict-a5295f04de851c5c4495e0416a594381b1f6c24b19d10f401717ddebc1249678",
+      "case_id": "case-a4-mobile-panels",
+      "status": "pass",
+      "domains": {
+        "facticity": {
+          "status": "pass",
+          "reading_ids": [
+            "reading-43ad100c7fa397867b944992e419d24a4700ae6a4599b7a4b4d2933bfc3a4a94"
+          ],
+          "evidence_ids": [
+            "evidence-2e3e0705a483392b09314e2a607a32b85b8f7e056ef6fc675c95e1c1e5313add",
+            "evidence-3e69e6cd44c7721930ee8420ad0e9d635f9f9b10b452e20f2329b430348b2876"
+          ],
+          "policy_fact_ids": [],
+          "blockers": []
+        },
+        "static": {
+          "status": "pass",
+          "reading_ids": [
+            "reading-5cacc1c8e0a171978fc9cc199297cc6b13bacf4c13196c819c0877485e2ebf5f"
+          ],
+          "evidence_ids": [
+            "evidence-2e3e0705a483392b09314e2a607a32b85b8f7e056ef6fc675c95e1c1e5313add",
+            "evidence-3e69e6cd44c7721930ee8420ad0e9d635f9f9b10b452e20f2329b430348b2876"
+          ],
+          "policy_fact_ids": [],
+          "blockers": []
+        },
+        "unit": {
+          "status": "pass",
+          "reading_ids": [
+            "reading-2d03f5367c08c6327d4b63714490cfddd1db55314cc6423dc8966ab81a55ee3f"
+          ],
+          "evidence_ids": [
+            "evidence-2e3e0705a483392b09314e2a607a32b85b8f7e056ef6fc675c95e1c1e5313add",
+            "evidence-3e69e6cd44c7721930ee8420ad0e9d635f9f9b10b452e20f2329b430348b2876"
+          ],
+          "policy_fact_ids": [],
+          "blockers": []
+        },
+        "redteam": {
+          "status": "pass",
+          "reading_ids": [
+            "reading-fd26352c2950a0d01234f8f9f75ba42f5c6af91d7c5d0688a4f08a432d965513"
+          ],
+          "evidence_ids": [
+            "evidence-2e3e0705a483392b09314e2a607a32b85b8f7e056ef6fc675c95e1c1e5313add",
+            "evidence-3e69e6cd44c7721930ee8420ad0e9d635f9f9b10b452e20f2329b430348b2876"
+          ],
+          "policy_fact_ids": [],
+          "blockers": []
+        },
+        "e2e": {
+          "status": "pass",
+          "reading_ids": [
+            "reading-50a96717ff19630ea03dedb1b7e11b5e73f5b4c7ef36cc1f10f9c29f71de8423"
+          ],
+          "evidence_ids": [
+            "evidence-2e3e0705a483392b09314e2a607a32b85b8f7e056ef6fc675c95e1c1e5313add",
+            "evidence-3e69e6cd44c7721930ee8420ad0e9d635f9f9b10b452e20f2329b430348b2876"
+          ],
+          "policy_fact_ids": [],
+          "blockers": []
+        },
+        "sensory": {
+          "status": "pass",
+          "reading_ids": [
+            "reading-a52a9c71dc3ed4a94523dcd12da619b609ea674363a41de9f0d7f0cd8538545b"
+          ],
+          "evidence_ids": [
+            "evidence-2e3e0705a483392b09314e2a607a32b85b8f7e056ef6fc675c95e1c1e5313add",
+            "evidence-3e69e6cd44c7721930ee8420ad0e9d635f9f9b10b452e20f2329b430348b2876"
+          ],
+          "policy_fact_ids": [],
+          "blockers": []
+        }
+      },
+      "reading_ids": [
+        "reading-2d03f5367c08c6327d4b63714490cfddd1db55314cc6423dc8966ab81a55ee3f",
+        "reading-43ad100c7fa397867b944992e419d24a4700ae6a4599b7a4b4d2933bfc3a4a94",
+        "reading-50a96717ff19630ea03dedb1b7e11b5e73f5b4c7ef36cc1f10f9c29f71de8423",
+        "reading-5cacc1c8e0a171978fc9cc199297cc6b13bacf4c13196c819c0877485e2ebf5f",
+        "reading-a52a9c71dc3ed4a94523dcd12da619b609ea674363a41de9f0d7f0cd8538545b",
+        "reading-fd26352c2950a0d01234f8f9f75ba42f5c6af91d7c5d0688a4f08a432d965513"
+      ],
+      "evidence_ids": [
+        "evidence-2e3e0705a483392b09314e2a607a32b85b8f7e056ef6fc675c95e1c1e5313add",
+        "evidence-3e69e6cd44c7721930ee8420ad0e9d635f9f9b10b452e20f2329b430348b2876"
+      ],
+      "policy_fact_ids": [],
+      "blockers": []
+    },
+    {
+      "id": "case-verdict-1382f50607998db8ea68cb6ba4fc87d85c72128fef3b6579b5615cda0c0d011f",
+      "case_id": "case-a5-ui-boundary",
+      "status": "pass",
+      "domains": {
+        "facticity": {
+          "status": "pass",
+          "reading_ids": [
+            "reading-3356f7ad177bbd3482f0a94e9dd49a8af297fe964365667fec93b0ba5548ed12"
+          ],
+          "evidence_ids": [
+            "evidence-37b09adc9842232486e76cebd9584065539489d3377eb5a13dc8b47ee29a9fe0",
+            "evidence-9a72772d2a121d11cf4529162343e0e579ee5ae85694a29f4f3367894f18f9bf"
+          ],
+          "policy_fact_ids": [],
+          "blockers": []
+        },
+        "static": {
+          "status": "pass",
+          "reading_ids": [
+            "reading-35283b826f5c2cb55220dbf57ecad40dd76924c2336dd54ac1caea9692920d33"
+          ],
+          "evidence_ids": [
+            "evidence-37b09adc9842232486e76cebd9584065539489d3377eb5a13dc8b47ee29a9fe0",
+            "evidence-9a72772d2a121d11cf4529162343e0e579ee5ae85694a29f4f3367894f18f9bf"
+          ],
+          "policy_fact_ids": [],
+          "blockers": []
+        },
+        "unit": {
+          "status": "pass",
+          "reading_ids": [
+            "reading-1d815bb641ea70154308ca71affa1aa10acd3602c2c0855be5197fb2d21de856"
+          ],
+          "evidence_ids": [
+            "evidence-37b09adc9842232486e76cebd9584065539489d3377eb5a13dc8b47ee29a9fe0",
+            "evidence-9a72772d2a121d11cf4529162343e0e579ee5ae85694a29f4f3367894f18f9bf"
+          ],
+          "policy_fact_ids": [],
+          "blockers": []
+        },
+        "redteam": {
+          "status": "pass",
+          "reading_ids": [
+            "reading-a8750c5d1ac68a6ccf50c4009a72fe2d3655b8b41d5a2bffee7cf1b0e6c94c12"
+          ],
+          "evidence_ids": [
+            "evidence-37b09adc9842232486e76cebd9584065539489d3377eb5a13dc8b47ee29a9fe0",
+            "evidence-9a72772d2a121d11cf4529162343e0e579ee5ae85694a29f4f3367894f18f9bf"
+          ],
+          "policy_fact_ids": [],
+          "blockers": []
+        },
+        "e2e": {
+          "status": "pass",
+          "reading_ids": [
+            "reading-0bb6ea492d6d19636bb93a7e3d1cdd5c9c493fe937be2505ac1072b5c2215de6"
+          ],
+          "evidence_ids": [
+            "evidence-37b09adc9842232486e76cebd9584065539489d3377eb5a13dc8b47ee29a9fe0",
+            "evidence-9a72772d2a121d11cf4529162343e0e579ee5ae85694a29f4f3367894f18f9bf"
+          ],
+          "policy_fact_ids": [],
+          "blockers": []
+        },
+        "sensory": {
+          "status": "pass",
+          "reading_ids": [
+            "reading-572360efc2fd53f4710771536e4831b49ba75402a3d278e0dba96af54e04340e"
+          ],
+          "evidence_ids": [
+            "evidence-37b09adc9842232486e76cebd9584065539489d3377eb5a13dc8b47ee29a9fe0",
+            "evidence-9a72772d2a121d11cf4529162343e0e579ee5ae85694a29f4f3367894f18f9bf"
+          ],
+          "policy_fact_ids": [],
+          "blockers": []
+        }
+      },
+      "reading_ids": [
+        "reading-0bb6ea492d6d19636bb93a7e3d1cdd5c9c493fe937be2505ac1072b5c2215de6",
+        "reading-1d815bb641ea70154308ca71affa1aa10acd3602c2c0855be5197fb2d21de856",
+        "reading-3356f7ad177bbd3482f0a94e9dd49a8af297fe964365667fec93b0ba5548ed12",
+        "reading-35283b826f5c2cb55220dbf57ecad40dd76924c2336dd54ac1caea9692920d33",
+        "reading-572360efc2fd53f4710771536e4831b49ba75402a3d278e0dba96af54e04340e",
+        "reading-a8750c5d1ac68a6ccf50c4009a72fe2d3655b8b41d5a2bffee7cf1b0e6c94c12"
+      ],
+      "evidence_ids": [
+        "evidence-37b09adc9842232486e76cebd9584065539489d3377eb5a13dc8b47ee29a9fe0",
+        "evidence-9a72772d2a121d11cf4529162343e0e579ee5ae85694a29f4f3367894f18f9bf"
+      ],
+      "policy_fact_ids": [],
+      "blockers": []
+    }
+  ],
+  "domain_results": [
+    {
+      "id": "domain-verdict-2cff16d110819f15c9376e5edecfe4bad36b64cf96c6f311271687ffb0773e09",
+      "domain": "facticity",
+      "status": "pass",
+      "case_ids": [
+        "case-a1-docforge-brand",
+        "case-a2-command-regression",
+        "case-a3-desktop-hierarchy",
+        "case-a4-mobile-panels",
+        "case-a5-ui-boundary"
+      ],
+      "reading_ids": [
+        "reading-2fc9a5ee2224d16b80817ebe08587dfb00f5582e8e3a43efbd7b44696a0ab3a9",
+        "reading-3356f7ad177bbd3482f0a94e9dd49a8af297fe964365667fec93b0ba5548ed12",
+        "reading-43ad100c7fa397867b944992e419d24a4700ae6a4599b7a4b4d2933bfc3a4a94",
+        "reading-e876e819e8c828053628a1e73046a436da610634353f36fbcbc5b5a4b9a4377a",
+        "reading-fcdf085597f250d44c7cde5f5de5e017b6f0547a03749bb2461a11ba38e05b73"
+      ],
+      "evidence_ids": [
+        "evidence-2e3e0705a483392b09314e2a607a32b85b8f7e056ef6fc675c95e1c1e5313add",
+        "evidence-2f1b01647784f64de9eacbe599acdad26b5dc647ba87e5e6b02b10992c1ab1ec",
+        "evidence-37b09adc9842232486e76cebd9584065539489d3377eb5a13dc8b47ee29a9fe0",
+        "evidence-37b95c6eec881f0a54fb23375f46adc5f9483d0e80184b84cc9625fa45bb39f7",
+        "evidence-3e69e6cd44c7721930ee8420ad0e9d635f9f9b10b452e20f2329b430348b2876",
+        "evidence-45dff25daa81dc6c5a50e0c0ad0de4cdb4ccc69d9d38cbcce350abe32cda2f53",
+        "evidence-90995b917b17e46bed8f768fac19cd09ab76bc878a02589d9ffedcc4935482d0",
+        "evidence-9a72772d2a121d11cf4529162343e0e579ee5ae85694a29f4f3367894f18f9bf",
+        "evidence-c1b1eccb6588900856422c468c1e2dc149b20f4d57ac8ac930eb62d2870ce179",
+        "evidence-dda0a90bf0d76b52a28d3fcb337b32683e7b3fcd68258602354c71dc38acd286"
+      ],
+      "policy_fact_ids": [],
+      "blockers": []
+    },
+    {
+      "id": "domain-verdict-d627a3d6b8487d6fe1e58faf89c58e32ae84c4ae560bc1186e7db3fc249388cd",
+      "domain": "static",
+      "status": "pass",
+      "case_ids": [
+        "case-a1-docforge-brand",
+        "case-a2-command-regression",
+        "case-a3-desktop-hierarchy",
+        "case-a4-mobile-panels",
+        "case-a5-ui-boundary"
+      ],
+      "reading_ids": [
+        "reading-325602aa938d0bbff51549b1e8fffd31b7bf6eded28ddd0f75213020542baae5",
+        "reading-35283b826f5c2cb55220dbf57ecad40dd76924c2336dd54ac1caea9692920d33",
+        "reading-5cacc1c8e0a171978fc9cc199297cc6b13bacf4c13196c819c0877485e2ebf5f",
+        "reading-5f67edb14f103022175cf1117850f391bb2b134e55aecd76d02647cd348fdd84",
+        "reading-87d0baaedb50fde78ac4acc9ee4048040dc1e4d56bbe031bddb626270ad587bc"
+      ],
+      "evidence_ids": [
+        "evidence-2e3e0705a483392b09314e2a607a32b85b8f7e056ef6fc675c95e1c1e5313add",
+        "evidence-2f1b01647784f64de9eacbe599acdad26b5dc647ba87e5e6b02b10992c1ab1ec",
+        "evidence-37b09adc9842232486e76cebd9584065539489d3377eb5a13dc8b47ee29a9fe0",
+        "evidence-37b95c6eec881f0a54fb23375f46adc5f9483d0e80184b84cc9625fa45bb39f7",
+        "evidence-3e69e6cd44c7721930ee8420ad0e9d635f9f9b10b452e20f2329b430348b2876",
+        "evidence-45dff25daa81dc6c5a50e0c0ad0de4cdb4ccc69d9d38cbcce350abe32cda2f53",
+        "evidence-90995b917b17e46bed8f768fac19cd09ab76bc878a02589d9ffedcc4935482d0",
+        "evidence-9a72772d2a121d11cf4529162343e0e579ee5ae85694a29f4f3367894f18f9bf",
+        "evidence-c1b1eccb6588900856422c468c1e2dc149b20f4d57ac8ac930eb62d2870ce179",
+        "evidence-dda0a90bf0d76b52a28d3fcb337b32683e7b3fcd68258602354c71dc38acd286"
+      ],
+      "policy_fact_ids": [],
+      "blockers": []
+    },
+    {
+      "id": "domain-verdict-2c3ce2a97035be948dcf33431fb04d7b0c917da5399140bfb0201197989a11d1",
+      "domain": "unit",
+      "status": "pass",
+      "case_ids": [
+        "case-a1-docforge-brand",
+        "case-a2-command-regression",
+        "case-a3-desktop-hierarchy",
+        "case-a4-mobile-panels",
+        "case-a5-ui-boundary"
+      ],
+      "reading_ids": [
+        "reading-1a4b8106859d979642f165fc9cfde24f0dac055bf9a82280e17786403ca82d2a",
+        "reading-1d815bb641ea70154308ca71affa1aa10acd3602c2c0855be5197fb2d21de856",
+        "reading-2d03f5367c08c6327d4b63714490cfddd1db55314cc6423dc8966ab81a55ee3f",
+        "reading-532dc6c2e6e7f0f97bfccd51bfe0c44af25b225e4cd87881ef74f0c7c5c09a1e",
+        "reading-a65f7b38eb77c1f2a284b8f10696ec45afeaeeeb757e2136f724d378cc5ed3e0"
+      ],
+      "evidence_ids": [
+        "evidence-2e3e0705a483392b09314e2a607a32b85b8f7e056ef6fc675c95e1c1e5313add",
+        "evidence-2f1b01647784f64de9eacbe599acdad26b5dc647ba87e5e6b02b10992c1ab1ec",
+        "evidence-37b09adc9842232486e76cebd9584065539489d3377eb5a13dc8b47ee29a9fe0",
+        "evidence-37b95c6eec881f0a54fb23375f46adc5f9483d0e80184b84cc9625fa45bb39f7",
+        "evidence-3e69e6cd44c7721930ee8420ad0e9d635f9f9b10b452e20f2329b430348b2876",
+        "evidence-45dff25daa81dc6c5a50e0c0ad0de4cdb4ccc69d9d38cbcce350abe32cda2f53",
+        "evidence-90995b917b17e46bed8f768fac19cd09ab76bc878a02589d9ffedcc4935482d0",
+        "evidence-9a72772d2a121d11cf4529162343e0e579ee5ae85694a29f4f3367894f18f9bf",
+        "evidence-c1b1eccb6588900856422c468c1e2dc149b20f4d57ac8ac930eb62d2870ce179",
+        "evidence-dda0a90bf0d76b52a28d3fcb337b32683e7b3fcd68258602354c71dc38acd286"
+      ],
+      "policy_fact_ids": [],
+      "blockers": []
+    },
+    {
+      "id": "domain-verdict-23383191cd0bd98528ef2fb315f561782b23367fb1ddfa8e13c9017d5f35e1e5",
+      "domain": "redteam",
+      "status": "pass",
+      "case_ids": [
+        "case-a1-docforge-brand",
+        "case-a2-command-regression",
+        "case-a3-desktop-hierarchy",
+        "case-a4-mobile-panels",
+        "case-a5-ui-boundary"
+      ],
+      "reading_ids": [
+        "reading-449987669a8fb7586019c4c7884a3ea882c395b27b5cf4d932ef757c7b6867f9",
+        "reading-4a8d8a83a534b436845529b33e394d87c2b9b794b077aae67c2ef7ba1fe238dc",
+        "reading-8786b3eedaff89f4df9afc11dda486d02c0a9c5d531caedd23196e90dd499cbb",
+        "reading-a8750c5d1ac68a6ccf50c4009a72fe2d3655b8b41d5a2bffee7cf1b0e6c94c12",
+        "reading-fd26352c2950a0d01234f8f9f75ba42f5c6af91d7c5d0688a4f08a432d965513"
+      ],
+      "evidence_ids": [
+        "evidence-2e3e0705a483392b09314e2a607a32b85b8f7e056ef6fc675c95e1c1e5313add",
+        "evidence-2f1b01647784f64de9eacbe599acdad26b5dc647ba87e5e6b02b10992c1ab1ec",
+        "evidence-37b09adc9842232486e76cebd9584065539489d3377eb5a13dc8b47ee29a9fe0",
+        "evidence-37b95c6eec881f0a54fb23375f46adc5f9483d0e80184b84cc9625fa45bb39f7",
+        "evidence-3e69e6cd44c7721930ee8420ad0e9d635f9f9b10b452e20f2329b430348b2876",
+        "evidence-45dff25daa81dc6c5a50e0c0ad0de4cdb4ccc69d9d38cbcce350abe32cda2f53",
+        "evidence-90995b917b17e46bed8f768fac19cd09ab76bc878a02589d9ffedcc4935482d0",
+        "evidence-9a72772d2a121d11cf4529162343e0e579ee5ae85694a29f4f3367894f18f9bf",
+        "evidence-c1b1eccb6588900856422c468c1e2dc149b20f4d57ac8ac930eb62d2870ce179",
+        "evidence-dda0a90bf0d76b52a28d3fcb337b32683e7b3fcd68258602354c71dc38acd286"
+      ],
+      "policy_fact_ids": [],
+      "blockers": []
+    },
+    {
+      "id": "domain-verdict-3225fa31a5e5ac45b80e4ae7881ec3fd1c70c27b39b427c2112f2fca18203d2e",
+      "domain": "e2e",
+      "status": "pass",
+      "case_ids": [
+        "case-a1-docforge-brand",
+        "case-a2-command-regression",
+        "case-a3-desktop-hierarchy",
+        "case-a4-mobile-panels",
+        "case-a5-ui-boundary"
+      ],
+      "reading_ids": [
+        "reading-0bb6ea492d6d19636bb93a7e3d1cdd5c9c493fe937be2505ac1072b5c2215de6",
+        "reading-366d99710e23116dcb7ccfe065ff07214ba84ce5e7d888b16337fa61b8fcbf4e",
+        "reading-50a96717ff19630ea03dedb1b7e11b5e73f5b4c7ef36cc1f10f9c29f71de8423",
+        "reading-56fa6f97f3f35f2306bb6f8b26ce0cd0d026928e99c60f3d9e8a11930722684b",
+        "reading-d5500fa1df7a34fdec385a1175d9d56595a284ea486cd5006da495751558c661"
+      ],
+      "evidence_ids": [
+        "evidence-2e3e0705a483392b09314e2a607a32b85b8f7e056ef6fc675c95e1c1e5313add",
+        "evidence-2f1b01647784f64de9eacbe599acdad26b5dc647ba87e5e6b02b10992c1ab1ec",
+        "evidence-37b09adc9842232486e76cebd9584065539489d3377eb5a13dc8b47ee29a9fe0",
+        "evidence-37b95c6eec881f0a54fb23375f46adc5f9483d0e80184b84cc9625fa45bb39f7",
+        "evidence-3e69e6cd44c7721930ee8420ad0e9d635f9f9b10b452e20f2329b430348b2876",
+        "evidence-45dff25daa81dc6c5a50e0c0ad0de4cdb4ccc69d9d38cbcce350abe32cda2f53",
+        "evidence-90995b917b17e46bed8f768fac19cd09ab76bc878a02589d9ffedcc4935482d0",
+        "evidence-9a72772d2a121d11cf4529162343e0e579ee5ae85694a29f4f3367894f18f9bf",
+        "evidence-c1b1eccb6588900856422c468c1e2dc149b20f4d57ac8ac930eb62d2870ce179",
+        "evidence-dda0a90bf0d76b52a28d3fcb337b32683e7b3fcd68258602354c71dc38acd286"
+      ],
+      "policy_fact_ids": [],
+      "blockers": []
+    },
+    {
+      "id": "domain-verdict-cf269a6fc4603d744c1b530e233bc912d577f3c6386dd1f491f237beca6c2d7f",
+      "domain": "sensory",
+      "status": "pass",
+      "case_ids": [
+        "case-a1-docforge-brand",
+        "case-a2-command-regression",
+        "case-a3-desktop-hierarchy",
+        "case-a4-mobile-panels",
+        "case-a5-ui-boundary"
+      ],
+      "reading_ids": [
+        "reading-311c1cf6f37455b90c13d8d8bd57da551acc3e36f4c394401dab0589e4a9f150",
+        "reading-3886868626c2088d9c0506ef4a80e7dfc6d4c7aeddb857207648d9a131b6c856",
+        "reading-572360efc2fd53f4710771536e4831b49ba75402a3d278e0dba96af54e04340e",
+        "reading-651b32942e5182eda44c9bdd0b520a5e03419a24e8153a2a65b4a67797ca21ee",
+        "reading-a52a9c71dc3ed4a94523dcd12da619b609ea674363a41de9f0d7f0cd8538545b"
+      ],
+      "evidence_ids": [
+        "evidence-2e3e0705a483392b09314e2a607a32b85b8f7e056ef6fc675c95e1c1e5313add",
+        "evidence-2f1b01647784f64de9eacbe599acdad26b5dc647ba87e5e6b02b10992c1ab1ec",
+        "evidence-37b09adc9842232486e76cebd9584065539489d3377eb5a13dc8b47ee29a9fe0",
+        "evidence-37b95c6eec881f0a54fb23375f46adc5f9483d0e80184b84cc9625fa45bb39f7",
+        "evidence-3e69e6cd44c7721930ee8420ad0e9d635f9f9b10b452e20f2329b430348b2876",
+        "evidence-45dff25daa81dc6c5a50e0c0ad0de4cdb4ccc69d9d38cbcce350abe32cda2f53",
+        "evidence-90995b917b17e46bed8f768fac19cd09ab76bc878a02589d9ffedcc4935482d0",
+        "evidence-9a72772d2a121d11cf4529162343e0e579ee5ae85694a29f4f3367894f18f9bf",
+        "evidence-c1b1eccb6588900856422c468c1e2dc149b20f4d57ac8ac930eb62d2870ce179",
+        "evidence-dda0a90bf0d76b52a28d3fcb337b32683e7b3fcd68258602354c71dc38acd286"
+      ],
+      "policy_fact_ids": [],
+      "blockers": []
+    }
+  ],
+  "release": {
+    "status": "pass",
+    "case_ids": [
+      "case-a1-docforge-brand",
+      "case-a2-command-regression",
+      "case-a3-desktop-hierarchy",
+      "case-a4-mobile-panels",
+      "case-a5-ui-boundary"
+    ],
+    "reading_ids": [
+      "reading-0bb6ea492d6d19636bb93a7e3d1cdd5c9c493fe937be2505ac1072b5c2215de6",
+      "reading-1a4b8106859d979642f165fc9cfde24f0dac055bf9a82280e17786403ca82d2a",
+      "reading-1d815bb641ea70154308ca71affa1aa10acd3602c2c0855be5197fb2d21de856",
+      "reading-2d03f5367c08c6327d4b63714490cfddd1db55314cc6423dc8966ab81a55ee3f",
+      "reading-2fc9a5ee2224d16b80817ebe08587dfb00f5582e8e3a43efbd7b44696a0ab3a9",
+      "reading-311c1cf6f37455b90c13d8d8bd57da551acc3e36f4c394401dab0589e4a9f150",
+      "reading-325602aa938d0bbff51549b1e8fffd31b7bf6eded28ddd0f75213020542baae5",
+      "reading-3356f7ad177bbd3482f0a94e9dd49a8af297fe964365667fec93b0ba5548ed12",
+      "reading-35283b826f5c2cb55220dbf57ecad40dd76924c2336dd54ac1caea9692920d33",
+      "reading-366d99710e23116dcb7ccfe065ff07214ba84ce5e7d888b16337fa61b8fcbf4e",
+      "reading-3886868626c2088d9c0506ef4a80e7dfc6d4c7aeddb857207648d9a131b6c856",
+      "reading-43ad100c7fa397867b944992e419d24a4700ae6a4599b7a4b4d2933bfc3a4a94",
+      "reading-449987669a8fb7586019c4c7884a3ea882c395b27b5cf4d932ef757c7b6867f9",
+      "reading-4a8d8a83a534b436845529b33e394d87c2b9b794b077aae67c2ef7ba1fe238dc",
+      "reading-50a96717ff19630ea03dedb1b7e11b5e73f5b4c7ef36cc1f10f9c29f71de8423",
+      "reading-532dc6c2e6e7f0f97bfccd51bfe0c44af25b225e4cd87881ef74f0c7c5c09a1e",
+      "reading-56fa6f97f3f35f2306bb6f8b26ce0cd0d026928e99c60f3d9e8a11930722684b",
+      "reading-572360efc2fd53f4710771536e4831b49ba75402a3d278e0dba96af54e04340e",
+      "reading-5cacc1c8e0a171978fc9cc199297cc6b13bacf4c13196c819c0877485e2ebf5f",
+      "reading-5f67edb14f103022175cf1117850f391bb2b134e55aecd76d02647cd348fdd84",
+      "reading-651b32942e5182eda44c9bdd0b520a5e03419a24e8153a2a65b4a67797ca21ee",
+      "reading-8786b3eedaff89f4df9afc11dda486d02c0a9c5d531caedd23196e90dd499cbb",
+      "reading-87d0baaedb50fde78ac4acc9ee4048040dc1e4d56bbe031bddb626270ad587bc",
+      "reading-a52a9c71dc3ed4a94523dcd12da619b609ea674363a41de9f0d7f0cd8538545b",
+      "reading-a65f7b38eb77c1f2a284b8f10696ec45afeaeeeb757e2136f724d378cc5ed3e0",
+      "reading-a8750c5d1ac68a6ccf50c4009a72fe2d3655b8b41d5a2bffee7cf1b0e6c94c12",
+      "reading-d5500fa1df7a34fdec385a1175d9d56595a284ea486cd5006da495751558c661",
+      "reading-e876e819e8c828053628a1e73046a436da610634353f36fbcbc5b5a4b9a4377a",
+      "reading-fcdf085597f250d44c7cde5f5de5e017b6f0547a03749bb2461a11ba38e05b73",
+      "reading-fd26352c2950a0d01234f8f9f75ba42f5c6af91d7c5d0688a4f08a432d965513"
+    ],
+    "evidence_ids": [
+      "evidence-2e3e0705a483392b09314e2a607a32b85b8f7e056ef6fc675c95e1c1e5313add",
+      "evidence-2f1b01647784f64de9eacbe599acdad26b5dc647ba87e5e6b02b10992c1ab1ec",
+      "evidence-37b09adc9842232486e76cebd9584065539489d3377eb5a13dc8b47ee29a9fe0",
+      "evidence-37b95c6eec881f0a54fb23375f46adc5f9483d0e80184b84cc9625fa45bb39f7",
+      "evidence-3e69e6cd44c7721930ee8420ad0e9d635f9f9b10b452e20f2329b430348b2876",
+      "evidence-45dff25daa81dc6c5a50e0c0ad0de4cdb4ccc69d9d38cbcce350abe32cda2f53",
+      "evidence-90995b917b17e46bed8f768fac19cd09ab76bc878a02589d9ffedcc4935482d0",
+      "evidence-9a72772d2a121d11cf4529162343e0e579ee5ae85694a29f4f3367894f18f9bf",
+      "evidence-c1b1eccb6588900856422c468c1e2dc149b20f4d57ac8ac930eb62d2870ce179",
+      "evidence-dda0a90bf0d76b52a28d3fcb337b32683e7b3fcd68258602354c71dc38acd286"
+    ],
+    "policy_fact_ids": []
+  },
+  "source_case_ids": [
+    "case-a1-docforge-brand",
+    "case-a2-command-regression",
+    "case-a3-desktop-hierarchy",
+    "case-a4-mobile-panels",
+    "case-a5-ui-boundary"
+  ],
+  "source_reading_ids": [
+    "reading-0bb6ea492d6d19636bb93a7e3d1cdd5c9c493fe937be2505ac1072b5c2215de6",
+    "reading-1a4b8106859d979642f165fc9cfde24f0dac055bf9a82280e17786403ca82d2a",
+    "reading-1d815bb641ea70154308ca71affa1aa10acd3602c2c0855be5197fb2d21de856",
+    "reading-2d03f5367c08c6327d4b63714490cfddd1db55314cc6423dc8966ab81a55ee3f",
+    "reading-2fc9a5ee2224d16b80817ebe08587dfb00f5582e8e3a43efbd7b44696a0ab3a9",
+    "reading-311c1cf6f37455b90c13d8d8bd57da551acc3e36f4c394401dab0589e4a9f150",
+    "reading-325602aa938d0bbff51549b1e8fffd31b7bf6eded28ddd0f75213020542baae5",
+    "reading-3356f7ad177bbd3482f0a94e9dd49a8af297fe964365667fec93b0ba5548ed12",
+    "reading-35283b826f5c2cb55220dbf57ecad40dd76924c2336dd54ac1caea9692920d33",
+    "reading-366d99710e23116dcb7ccfe065ff07214ba84ce5e7d888b16337fa61b8fcbf4e",
+    "reading-3886868626c2088d9c0506ef4a80e7dfc6d4c7aeddb857207648d9a131b6c856",
+    "reading-43ad100c7fa397867b944992e419d24a4700ae6a4599b7a4b4d2933bfc3a4a94",
+    "reading-449987669a8fb7586019c4c7884a3ea882c395b27b5cf4d932ef757c7b6867f9",
+    "reading-4a8d8a83a534b436845529b33e394d87c2b9b794b077aae67c2ef7ba1fe238dc",
+    "reading-50a96717ff19630ea03dedb1b7e11b5e73f5b4c7ef36cc1f10f9c29f71de8423",
+    "reading-532dc6c2e6e7f0f97bfccd51bfe0c44af25b225e4cd87881ef74f0c7c5c09a1e",
+    "reading-56fa6f97f3f35f2306bb6f8b26ce0cd0d026928e99c60f3d9e8a11930722684b",
+    "reading-572360efc2fd53f4710771536e4831b49ba75402a3d278e0dba96af54e04340e",
+    "reading-5cacc1c8e0a171978fc9cc199297cc6b13bacf4c13196c819c0877485e2ebf5f",
+    "reading-5f67edb14f103022175cf1117850f391bb2b134e55aecd76d02647cd348fdd84",
+    "reading-651b32942e5182eda44c9bdd0b520a5e03419a24e8153a2a65b4a67797ca21ee",
+    "reading-8786b3eedaff89f4df9afc11dda486d02c0a9c5d531caedd23196e90dd499cbb",
+    "reading-87d0baaedb50fde78ac4acc9ee4048040dc1e4d56bbe031bddb626270ad587bc",
+    "reading-a52a9c71dc3ed4a94523dcd12da619b609ea674363a41de9f0d7f0cd8538545b",
+    "reading-a65f7b38eb77c1f2a284b8f10696ec45afeaeeeb757e2136f724d378cc5ed3e0",
+    "reading-a8750c5d1ac68a6ccf50c4009a72fe2d3655b8b41d5a2bffee7cf1b0e6c94c12",
+    "reading-d5500fa1df7a34fdec385a1175d9d56595a284ea486cd5006da495751558c661",
+    "reading-e876e819e8c828053628a1e73046a436da610634353f36fbcbc5b5a4b9a4377a",
+    "reading-fcdf085597f250d44c7cde5f5de5e017b6f0547a03749bb2461a11ba38e05b73",
+    "reading-fd26352c2950a0d01234f8f9f75ba42f5c6af91d7c5d0688a4f08a432d965513"
+  ],
+  "source_policy_fact_ids": [],
+  "blockers": []
+}

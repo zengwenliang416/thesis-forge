@@ -1,0 +1,49 @@
+{
+  "ok": true,
+  "checked_at": "2026-08-28T09:21:23.287Z",
+  "summary": {
+    "status": "fresh",
+    "total": 5,
+    "fresh": 5,
+    "stale": 0,
+    "unknown": 0
+  },
+  "cases": [
+    {
+      "case_id": "case-a1-docforge-brand",
+      "attempt_id": "attempt-20260828092033-fd4e462feef558cf",
+      "checked_at": "2026-08-28T09:21:23.287Z",
+      "status": "fresh",
+      "reasons": []
+    },
+    {
+      "case_id": "case-a2-command-regression",
+      "attempt_id": "attempt-20260828092043-e70067b9a6fcb4bc",
+      "checked_at": "2026-08-28T09:21:23.287Z",
+      "status": "fresh",
+      "reasons": []
+    },
+    {
+      "case_id": "case-a3-desktop-hierarchy",
+      "attempt_id": "attempt-20260828092100-adc2b1b3e980ce63",
+      "checked_at": "2026-08-28T09:21:23.287Z",
+      "status": "fresh",
+      "reasons": []
+    },
+    {
+      "case_id": "case-a4-mobile-panels",
+      "attempt_id": "attempt-20260828092100-6bc1ef43ebae19c1",
+      "checked_at": "2026-08-28T09:21:23.287Z",
+      "status": "fresh",
+      "reasons": []
+    },
+    {
+      "case_id": "case-a5-ui-boundary",
+      "attempt_id": "attempt-20260828092104-b37864e76dcbb630",
+      "checked_at": "2026-08-28T09:21:23.287Z",
+      "status": "fresh",
+      "reasons": []
+    }
+  ],
+  "blockers": []
+}
