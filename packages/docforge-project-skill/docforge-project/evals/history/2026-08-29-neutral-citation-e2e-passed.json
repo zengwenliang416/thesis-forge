@@ -1,0 +1,18 @@
+{
+  "schema": "docforge.skill-regression.v1",
+  "date": "2026-08-29",
+  "skill": "docforge-project",
+  "version": "0.1.0",
+  "status": "passed",
+  "supersedes": "2026-08-29-initial-governed-baseline.json#real_docforge_e2e",
+  "evidence": {
+    "npm_tests": "11 passed",
+    "template_tests": "4 passed",
+    "trigger_cases": "16 passed; precision 1.0; recall 1.0",
+    "real_docforge_e2e": "inspect passed; validate passed; build passed",
+    "engine_source_sha256": "99f98e4f0aa6f38fc980f4afd841ec5b3f4d09bcd930563865b353b88bc9ae9a",
+    "human_review": "missing evidence",
+    "provider_eval": "missing evidence",
+    "telemetry": "missing evidence"
+  }
+}

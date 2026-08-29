@@ -1,0 +1,38 @@
+{
+  "schema": "docforge.skill-regression.v1",
+  "date": "2026-08-29",
+  "skill": "docforge-project",
+  "version": "0.1.0",
+  "status": "local-prepublication-passed",
+  "evidence": {
+    "npm_check": "passed",
+    "npm_tests": "19 passed",
+    "repository_tests": "1380 passed",
+    "ruff": "passed",
+    "openspec_strict": "passed",
+    "trigger_cases": "16 passed; precision 1.0; recall 1.0; 0 ambiguous",
+    "output_cases": "6 file-backed fixtures; near-neighbor 1; boundary 1; with-skill 100.0; baseline 0.0",
+    "real_docforge_e2e": "inspect passed; validate passed; build passed",
+    "conformance": "5 of 5 targets passed",
+    "package_verification": "153 archive entries; 4 adapters; 0 failures",
+    "install_simulation": "passed in temporary install root; 4 installer permission checks enforced",
+    "npm_tarball": "43 entries; final SHA-256 recorded in the package-external OpenSpec verification receipt",
+    "tarball_consumer": "clean install, explicit Codex install, managed update, and rollback passed in temporary roots",
+    "archive_receipt": "153 entries; final SHA-256 recorded in the package-external OpenSpec verification receipt",
+    "source_contract_receipt": "final SHA-256 recorded in the package-external OpenSpec verification receipt",
+    "provider_eval": "missing evidence",
+    "human_review": "missing evidence",
+    "target_native_permission_enforcement": "missing evidence",
+    "real_client_telemetry": "missing evidence",
+    "npm_name_availability": "missing evidence",
+    "publisher_authority": "missing evidence"
+  },
+  "release_boundary": {
+    "npm_publish": false,
+    "user_install": false,
+    "commit": false,
+    "push": false,
+    "release": false,
+    "world_class_ready": false
+  }
+}

@@ -1,0 +1,93 @@
+{
+  "ok": true,
+  "schema_version": "2.0",
+  "skill_dir": "/Volumes/zwl/open_sources/thesis-forge/packages/docforge-project-skill/docforge-project",
+  "registry_dir": "/Volumes/zwl/open_sources/thesis-forge/packages/docforge-project-skill/docforge-project/registry",
+  "package": {
+    "schema_version": "2.0",
+    "name": "docforge-project",
+    "version": "0.1.0",
+    "description": "Convert one ordinary Markdown file and confined local resources into a new, verified DocForge Project Format V1 directory. Use for creating an importable DocForge project. Do not use for direct Markdown-to-Word conversion, thesis writing, translation, summaries, format explanations, remote downloads, or editing an existing DocForge project.",
+    "targets": [
+      "openai",
+      "claude",
+      "generic",
+      "agent-skills-compatible",
+      "vscode"
+    ],
+    "maturity": "governed",
+    "owner": "DocForge maintainers",
+    "review_cadence": "monthly",
+    "trust_level": "local",
+    "license": "MIT",
+    "checksums": {
+      "package_sha256": "9f99e3b37b1266b45dc3009f4a7d5833aff004c0d1635a311dde63e094ea7972",
+      "archive_sha256": "8b9e6aa1e4e64b796e2ba684ce8d421331fe481c5aa407471d6ee0f7858fce1d"
+    },
+    "compatibility": {
+      "openai": "pass",
+      "claude": "pass",
+      "agent-skills": "pass",
+      "vscode": "pass",
+      "generic": "pass",
+      "agent-skills-compatible": "pass"
+    },
+    "source": {
+      "skill_dir": "/Volumes/zwl/open_sources/thesis-forge/packages/docforge-project-skill/docforge-project",
+      "skill_ir": "reports/skill-ir.json",
+      "ir_schema_version": "2.0.0",
+      "canonical_metadata": "agents/interface.yaml"
+    },
+    "artifacts": {
+      "overview_html": "reports/skill-overview.html",
+      "review_studio_html": "reports/review-studio.html",
+      "trust_report": "reports/security_trust_report.md",
+      "conformance_matrix": "reports/conformance_matrix.md",
+      "compiled_targets": "reports/compiled_targets.md",
+      "package_verification": "reports/package_verification.md",
+      "install_simulation": "reports/install_simulation.md",
+      "adoption_drift": "reports/adoption_drift_report.md",
+      "review_waivers": "reports/review_waivers.md",
+      "review_annotations": "reports/review_annotations.md",
+      "package_metadata": "registry/packages/docforge-project.json"
+    },
+    "distribution": {
+      "archive_verified": true,
+      "archive_sha256": "8b9e6aa1e4e64b796e2ba684ce8d421331fe481c5aa407471d6ee0f7858fce1d",
+      "package_verification": "reports/package_verification.json",
+      "install_simulated": true,
+      "install_simulation": "reports/install_simulation.json"
+    },
+    "generated_at": "2026-08-29"
+  },
+  "index": {
+    "schema_version": "2.0",
+    "generated_at": "2026-08-29",
+    "package_count": 1,
+    "packages": [
+      {
+        "name": "docforge-project",
+        "version": "0.1.0",
+        "maturity": "governed",
+        "owner": "DocForge maintainers",
+        "targets": [
+          "openai",
+          "claude",
+          "generic",
+          "agent-skills-compatible",
+          "vscode"
+        ],
+        "package_metadata": "registry/packages/docforge-project.json",
+        "package_sha256": "9f99e3b37b1266b45dc3009f4a7d5833aff004c0d1635a311dde63e094ea7972"
+      }
+    ]
+  },
+  "failures": [],
+  "warnings": [],
+  "artifacts": {
+    "index": "/Volumes/zwl/open_sources/thesis-forge/packages/docforge-project-skill/docforge-project/registry/index.json",
+    "package": "/Volumes/zwl/open_sources/thesis-forge/packages/docforge-project-skill/docforge-project/registry/packages/docforge-project.json",
+    "json": "/Volumes/zwl/open_sources/thesis-forge/packages/docforge-project-skill/docforge-project/reports/registry_audit.json",
+    "markdown": "/Volumes/zwl/open_sources/thesis-forge/packages/docforge-project-skill/docforge-project/reports/registry_audit.md"
+  }
+}

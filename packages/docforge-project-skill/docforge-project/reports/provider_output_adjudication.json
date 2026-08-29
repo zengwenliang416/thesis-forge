@@ -1,0 +1,26 @@
+{
+  "schema_version": "1.0",
+  "ok": false,
+  "status": "missing evidence",
+  "generated_at": "2026-08-29",
+  "summary": {
+    "reviewer_count": 0,
+    "pair_count": 0,
+    "judgment_count": 0,
+    "pending_count": 0,
+    "failure_count": 0
+  },
+  "quality_promotion": {
+    "status": "pending",
+    "eligible": false
+  },
+  "evidence_boundary": {
+    "independent_human_reviewers": "missing evidence",
+    "provider_blind_pairs": "missing evidence",
+    "reviewer_identity_and_independence": "missing evidence"
+  },
+  "limitations": [
+    "The local six-pair review kit remains pending and is not provider-backed.",
+    "No human judgment is inferred from generated review materials."
+  ]
+}

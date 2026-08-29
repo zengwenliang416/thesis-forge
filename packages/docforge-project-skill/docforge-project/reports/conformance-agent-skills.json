@@ -1,0 +1,61 @@
+{
+  "ok": true,
+  "skill": "docforge-project",
+  "targets": [
+    {
+      "target": "agent-skills",
+      "status": "pass",
+      "checks": [
+        "SKILL.md exists",
+        "frontmatter name exists",
+        "frontmatter description exists",
+        "description length <= 1024",
+        "name is runtime-safe",
+        "package identity derives from skill name",
+        "manifest.name exists",
+        "manifest.version exists",
+        "manifest.owner exists",
+        "manifest.status exists",
+        "manifest.maturity_tier exists",
+        "manifest.review_cadence exists",
+        "manifest declares agent-skills via agent-skills-compatible",
+        "interface.display_name exists",
+        "interface.short_description exists",
+        "interface.default_prompt exists",
+        "canonical format is agent-skills",
+        "activation mode exists",
+        "execution context exists",
+        "execution shell exists",
+        "trust source tier exists",
+        "Skill IR schema_version is 2.0.0",
+        "Skill IR name matches frontmatter",
+        "Skill IR description matches frontmatter",
+        "references resource resolves: references/diagnostics.md",
+        "references resource resolves: references/project-format-v1.md",
+        "reports resource resolves: reports/intent-context.json",
+        "reports resource resolves: reports/intent-confidence.json",
+        "reports resource resolves: reports/intent-confidence.md",
+        "reports resource resolves: reports/reference-synthesis.json",
+        "reports resource resolves: reports/reference-synthesis.md",
+        "reports resource resolves: reports/output-risk-profile.json",
+        "reports resource resolves: reports/output-risk-profile.md",
+        "reports resource resolves: reports/artifact-design-profile.json",
+        "reports resource resolves: reports/artifact-design-profile.md",
+        "reports resource resolves: reports/prompt-quality-profile.json"
+      ],
+      "failures": [],
+      "warnings": [
+        "agent-skills uses canonical Agent Skills metadata; provider-native execution transforms are not implemented in v0."
+      ]
+    }
+  ],
+  "summary": {
+    "target_count": 1,
+    "pass_count": 1,
+    "fail_count": 0
+  },
+  "artifacts": {
+    "json": "/Volumes/zwl/open_sources/thesis-forge/packages/docforge-project-skill/docforge-project/reports/conformance-agent-skills.json",
+    "markdown": "/Volumes/zwl/open_sources/thesis-forge/packages/docforge-project-skill/docforge-project/reports/conformance-agent-skills.md"
+  }
+}

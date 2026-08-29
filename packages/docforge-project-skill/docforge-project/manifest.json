@@ -1,0 +1,39 @@
+{
+  "name": "docforge-project",
+  "version": "0.1.0",
+  "owner": "DocForge maintainers",
+  "updated_at": "2026-08-29",
+  "status": "active",
+  "maturity_tier": "governed",
+  "lifecycle_stage": "governed",
+  "context_budget_tier": "governed",
+  "review_cadence": "monthly",
+  "output_contract": "One new non-overwriting docforge.project.v1 directory with bounded provenance and successful docforge inspect and validate evidence.",
+  "rollback_boundary": "The importer removes only its owned staging directory. The installer rolls back only a managed docforge-project Skill directory from its reported sibling backup.",
+  "skill_ir_source": "reports/skill-ir.json",
+  "skill_archetype": "governed",
+  "target_platforms": [
+    "openai",
+    "claude",
+    "generic",
+    "agent-skills-compatible",
+    "vscode"
+  ],
+  "factory_components": [
+    "references",
+    "scripts",
+    "evals",
+    "tests",
+    "reports"
+  ],
+  "runtime": {
+    "node": ">=20",
+    "network": "forbidden",
+    "filesystem": "explicit source boundary and new destination only",
+    "external_commands": [
+      "docforge inspect",
+      "docforge validate",
+      "docforge build when explicitly requested"
+    ]
+  }
+}

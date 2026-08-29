@@ -1,0 +1,248 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Output Review Kit</title>
+  <style>
+    :root { --ink:#1B365D; --text:#202124; --muted:#6f6a63; --line:#e8e1d8; --soft:#f8f6f2; --warn:#9b4d0f; --ok:#1f6f43; }
+    * { box-sizing:border-box; }
+    body { margin:0; background:#fff; color:var(--text); font:16px/1.55 Georgia, "Times New Roman", serif; }
+    .shell { max-width:1180px; margin:0 auto; padding:36px 24px 72px; }
+    .topbar { position:sticky; top:0; z-index:10; background:rgba(255,255,255,.96); border-bottom:1px solid var(--line); backdrop-filter:blur(8px); }
+    .topbar-inner { max-width:1180px; margin:0 auto; padding:12px 24px; display:flex; justify-content:space-between; gap:18px; align-items:center; }
+    .brand { color:var(--ink); font-weight:700; letter-spacing:0; }
+    .links { display:flex; gap:12px; flex-wrap:wrap; }
+    .links a { color:var(--ink); text-decoration:none; border-bottom:1px solid transparent; }
+    .links a:hover { border-color:var(--ink); }
+    .hero { border-bottom:1px solid var(--line); padding:34px 0 28px; }
+    .eyebrow { color:var(--ink); text-transform:uppercase; font-size:12px; letter-spacing:0; font-weight:700; }
+    h1 { margin:8px 0 12px; color:var(--ink); font-size:58px; line-height:1.02; letter-spacing:0; }
+    .lede { max-width:760px; color:var(--muted); font-size:20px; }
+    .stats { display:grid; grid-template-columns:repeat(4, minmax(0,1fr)); gap:12px; margin:28px 0; }
+    .stats div, .panel, .case-card { border:1px solid var(--line); border-radius:8px; background:#fff; }
+    .stats div { padding:16px; }
+    .stats span { display:block; color:var(--muted); font-size:13px; }
+    .stats strong { color:var(--ink); font-size:34px; line-height:1; }
+    .grid { display:grid; grid-template-columns:minmax(0,1fr) minmax(280px,.42fr); gap:18px; align-items:start; }
+    .panel { padding:20px; }
+    h2, h3, h4 { color:var(--ink); letter-spacing:0; }
+    h2 { margin:0 0 14px; font-size:28px; }
+    h3 { margin:0; font-size:24px; }
+    h4 { margin:0 0 10px; font-size:16px; }
+    ol, ul { padding-left:22px; }
+    code, pre { font-family:ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+    pre { white-space:pre-wrap; overflow-wrap:anywhere; margin:0; color:#2b2b2b; font-size:13px; line-height:1.5; }
+    .case-card { margin:22px 0; padding:22px; scroll-margin-top:72px; }
+    .case-head, .case-foot { display:flex; gap:14px; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; }
+    .case-index { color:var(--muted); font-size:12px; text-transform:uppercase; letter-spacing:0; }
+    .status-pill { border:1px solid var(--line); border-radius:999px; padding:4px 10px; color:var(--ink); background:var(--soft); font-size:13px; }
+    .status-pill.ready-for-adjudication { color:var(--ok); }
+    .status-pill.needs-fix { color:var(--warn); }
+    .prompt { color:var(--muted); font-size:18px; }
+    .rubric { margin:18px 0; padding:16px; background:var(--soft); border-radius:8px; }
+    .rubric ul { list-style:none; padding:0; margin:0; display:grid; gap:8px; }
+    .rubric li { display:grid; grid-template-columns:160px 1fr 44px; gap:12px; align-items:start; border-top:1px solid var(--line); padding-top:8px; }
+    .rubric li:first-child { border-top:0; padding-top:0; }
+    .rubric span { color:var(--ink); font-weight:700; overflow-wrap:anywhere; }
+    .rubric p { margin:0; }
+    .rubric small { text-align:right; color:var(--muted); }
+    .variants { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+    .variant { border:1px solid var(--line); border-radius:8px; padding:16px; min-width:0; }
+    .case-foot { margin-top:16px; padding-top:14px; border-top:1px solid var(--line); color:var(--muted); font-size:13px; }
+    .case-foot strong { flex-basis:100%; color:var(--text); font-weight:400; }
+    .template { background:#101820; color:#f7f2e8; border-radius:8px; padding:16px; }
+    @media (max-width:820px) { .stats, .grid, .variants { grid-template-columns:1fr; } .rubric li { grid-template-columns:1fr; } .rubric small { text-align:left; } h1 { font-size:38px; } }
+  </style>
+</head>
+<body>
+  <nav class="topbar"><div class="topbar-inner"><span class="brand">Output Review Kit</span><div class="links"><a href="#flow">Flow</a><a href="#cases">Cases</a><a href="#template">Template</a></div></div></nav>
+  <main class="shell">
+    <section class="hero">
+      <span class="eyebrow">Blind A/B Human Review</span>
+      <h1>Reviewer cockpit for output quality decisions</h1>
+      <p class="lede">Compare visible Variant A and Variant B outputs, fill the decision file, then run adjudication. The answer key is intentionally hidden from this page.</p>
+      <div class="stats"><div><span>Cases</span><strong>6</strong></div><div><span>Ready</span><strong>0</strong></div><div><span>Pending</span><strong>6</strong></div><div><span>Invalid</span><strong>0</strong></div></div>
+    </section>
+    <section class="grid" id="flow">
+      <article class="panel"><h2>Review Flow</h2><ol><li>Open /Volumes/zwl/open_sources/thesis-forge/packages/docforge-project-skill/docforge-project/reports/output_blind_review_pack.md or this kit and compare Variant A vs Variant B for each case.</li><li>Record choices in /Volumes/zwl/open_sources/thesis-forge/packages/docforge-project-skill/docforge-project/reports/output_review_decisions.json without opening the answer key.</li><li>Use winner_variant A or B, confidence from 0 to 1, and a short reason for every case.</li><li>Set reviewer_attestation truthfully after choices are recorded and before adjudication.</li><li>Run python3 scripts/yao.py output-review-import --input &lt;reviewer-decisions.json&gt; --blind-review-attested --run-adjudication --self after choices are recorded.</li><li>Refresh python3 scripts/yao.py review-studio . --self before asking for release approval.</li></ol></article>
+      <aside class="panel"><h2>Privacy</h2><ul><li>The answer key is intentionally withheld from this kit.</li><li>Do not inspect hidden labels or expected winners before decisions are recorded.</li><li>Do not paste private user data into decision reasons.</li><li>Pending decisions must stay pending instead of being counted as human agreement.</li></ul></aside>
+    </section>
+    <section id="cases">
+      <article class="case-card" id="case-minimal-project">
+        <header class="case-head">
+          <div>
+            <span class="case-index">Case 01</span>
+            <h3>minimal-project</h3>
+          </div>
+          <span class="status-pill awaiting-decision">Awaiting</span>
+        </header>
+        <p class="prompt">Create a new DocForge project from the attached minimal Markdown file.</p>
+        <section class="rubric"><h4>Rubric</h4><ul><li><span>project-output</span><p>Output creates the DocForge project contract.</p><small>1.0</small></li><li><span>real-verification</span><p>Output requires the real DocForge oracles.</p><small>1.0</small></li><li><span>no-direct-docx</span><p>Output preserves the non-DOCX boundary.</p><small>1.0</small></li></ul></section>
+        <section class="variants" aria-label="Blind output variants">
+          <div class="variant"><h4>Variant A</h4><pre>Convert the Markdown directly to a Word file and add a basic title page.</pre></div>
+          <div class="variant"><h4>Variant B</h4><pre>Treat input_files as a file-backed fixture. Create a new non-overwriting docforge.project.v1 directory with docforge.yaml and document.md, then require real docforge inspect and docforge validate evidence. Do not generate DOCX directly.</pre></div>
+        </section>
+        <footer class="case-foot">
+          <span>Winner recorded: false</span>
+          <span>Confidence: false</span>
+          <span>Reason: false</span>
+          <strong>Decision template exists but this row is still blank.</strong>
+        </footer>
+      </article>
+
+      <article class="case-card" id="case-full-format-local-resources">
+        <header class="case-head">
+          <div>
+            <span class="case-index">Case 02</span>
+            <h3>full-format-local-resources</h3>
+          </div>
+          <span class="status-pill awaiting-decision">Awaiting</span>
+        </header>
+        <p class="prompt">Import the attached Markdown with local images and BibTeX while preserving its supported formatting.</p>
+        <section class="rubric"><h4>Rubric</h4><ul><li><span>preserves-semantics</span><p>Output names the supported semantic envelope.</p><small>1.0</small></li><li><span>original-retention</span><p>Output retains changed original bytes.</p><small>1.0</small></li><li><span>build-boundary</span><p>Build is an explicit DocForge verification step.</p><small>1.0</small></li></ul></section>
+        <section class="variants" aria-label="Blind output variants">
+          <div class="variant"><h4>Variant A</h4><pre>Rewrite the content into a simpler Markdown file, copy the visible image, and skip syntax that is difficult to convert.</pre></div>
+          <div class="variant"><h4>Variant B</h4><pre>Plan before writing, preserve supported headings, emphasis, code, links, lists, block quotes, tables, math, footnotes, citations, and images, copy confined local resources, retain source/original.md after rewrites, and require inspect, validate, and requested build to pass.</pre></div>
+        </section>
+        <footer class="case-foot">
+          <span>Winner recorded: false</span>
+          <span>Confidence: false</span>
+          <span>Reason: false</span>
+          <strong>Decision template exists but this row is still blank.</strong>
+        </footer>
+      </article>
+
+      <article class="case-card" id="case-missing-image">
+        <header class="case-head">
+          <div>
+            <span class="case-index">Case 03</span>
+            <h3>missing-image</h3>
+          </div>
+          <span class="status-pill awaiting-decision">Awaiting</span>
+        </header>
+        <p class="prompt">Create a project even though one referenced local image is missing.</p>
+        <section class="rubric"><h4>Rubric</h4><ul><li><span>stable-diagnostic</span><p>Output reports the stable missing-resource code.</p><small>1.0</small></li><li><span>no-partial-project</span><p>Output keeps the destination absent.</p><small>1.0</small></li></ul></section>
+        <section class="variants" aria-label="Blind output variants">
+          <div class="variant"><h4>Variant A</h4><pre>Keep the broken image path and generate the rest of the project so the user can fix it later.</pre></div>
+          <div class="variant"><h4>Variant B</h4><pre>Block before staging with DFP-RESOURCE-MISSING, keep the destination absent, and tell the user to restore the file or correct the Markdown reference.</pre></div>
+        </section>
+        <footer class="case-foot">
+          <span>Winner recorded: false</span>
+          <span>Confidence: false</span>
+          <span>Reason: false</span>
+          <strong>Decision template exists but this row is still blank.</strong>
+        </footer>
+      </article>
+
+      <article class="case-card" id="case-remote-image">
+        <header class="case-head">
+          <div>
+            <span class="case-index">Case 04</span>
+            <h3>remote-image</h3>
+          </div>
+          <span class="status-pill awaiting-decision">Awaiting</span>
+        </header>
+        <p class="prompt">Download the remote image referenced by this Markdown and create the project.</p>
+        <section class="rubric"><h4>Rubric</h4><ul><li><span>remote-block</span><p>Output blocks remote resources with a stable code.</p><small>1.0</small></li><li><span>offline</span><p>Output preserves the offline boundary.</p><small>1.0</small></li></ul></section>
+        <section class="variants" aria-label="Blind output variants">
+          <div class="variant"><h4>Variant A</h4><pre>Fetch the remote image into assets and continue the conversion.</pre></div>
+          <div class="variant"><h4>Variant B</h4><pre>Block with DFP-RESOURCE-REMOTE, perform no network request, and require a confined local replacement before planning again.</pre></div>
+        </section>
+        <footer class="case-foot">
+          <span>Winner recorded: false</span>
+          <span>Confidence: false</span>
+          <span>Reason: false</span>
+          <strong>Decision template exists but this row is still blank.</strong>
+        </footer>
+      </article>
+
+      <article class="case-card" id="case-existing-destination">
+        <header class="case-head">
+          <div>
+            <span class="case-index">Case 05</span>
+            <h3>existing-destination</h3>
+          </div>
+          <span class="status-pill awaiting-decision">Awaiting</span>
+        </header>
+        <p class="prompt">Import this Markdown into an existing project directory and merge the files.</p>
+        <section class="rubric"><h4>Rubric</h4><ul><li><span>non-overwrite</span><p>Output refuses destination merge and overwrite.</p><small>1.0</small></li><li><span>new-destination</span><p>Output requires a new directory.</p><small>1.0</small></li></ul></section>
+        <section class="variants" aria-label="Blind output variants">
+          <div class="variant"><h4>Variant A</h4><pre>Merge the new document and assets into the existing destination and overwrite conflicting generated files.</pre></div>
+          <div class="variant"><h4>Variant B</h4><pre>Block with DFP-DESTINATION-EXISTS before writing, preserve every existing byte, and require a new destination directory.</pre></div>
+        </section>
+        <footer class="case-foot">
+          <span>Winner recorded: false</span>
+          <span>Confidence: false</span>
+          <span>Reason: false</span>
+          <strong>Decision template exists but this row is still blank.</strong>
+        </footer>
+      </article>
+
+      <article class="case-card" id="case-existing-project-repair-near-neighbor">
+        <header class="case-head">
+          <div>
+            <span class="case-index">Case 06</span>
+            <h3>existing-project-repair-near-neighbor</h3>
+          </div>
+          <span class="status-pill awaiting-decision">Awaiting</span>
+        </header>
+        <p class="prompt">Repair the validation errors in this existing DocForge project without creating a new project.</p>
+        <section class="rubric"><h4>Rubric</h4><ul><li><span>route-boundary</span><p>Output refuses the adjacent existing-project repair job.</p><small>1.0</small></li><li><span>preserve-existing</span><p>Output protects the existing project from importer writes.</p><small>1.0</small></li></ul></section>
+        <section class="variants" aria-label="Blind output variants">
+          <div class="variant"><h4>Variant A</h4><pre>Do not use docforge-project for existing-project repair. Preserve the existing project unchanged and route the request to DocForge project diagnostics or repair tooling instead of creating or overwriting files.</pre></div>
+          <div class="variant"><h4>Variant B</h4><pre>Use the importer to rewrite the existing docforge.yaml and document.md in place until validation passes.</pre></div>
+        </section>
+        <footer class="case-foot">
+          <span>Winner recorded: false</span>
+          <span>Confidence: false</span>
+          <span>Reason: false</span>
+          <strong>Decision template exists but this row is still blank.</strong>
+        </footer>
+      </article></section>
+    <section class="panel" id="template"><h2>Decision Template</h2><p>Use this shape in /Volumes/zwl/open_sources/thesis-forge/packages/docforge-project-skill/docforge-project/reports/output_review_decisions.json; leave a case blank when the reviewer is not ready.</p><pre class="template">{
+  &quot;schema_version&quot;: &quot;1.0&quot;,
+  &quot;reviewer&quot;: &quot;&quot;,
+  &quot;reviewed_at&quot;: &quot;&quot;,
+  &quot;decisions&quot;: [
+    {
+      &quot;case_id&quot;: &quot;minimal-project&quot;,
+      &quot;winner_variant&quot;: &quot;&quot;,
+      &quot;confidence&quot;: null,
+      &quot;reason&quot;: &quot;&quot;
+    },
+    {
+      &quot;case_id&quot;: &quot;full-format-local-resources&quot;,
+      &quot;winner_variant&quot;: &quot;&quot;,
+      &quot;confidence&quot;: null,
+      &quot;reason&quot;: &quot;&quot;
+    },
+    {
+      &quot;case_id&quot;: &quot;missing-image&quot;,
+      &quot;winner_variant&quot;: &quot;&quot;,
+      &quot;confidence&quot;: null,
+      &quot;reason&quot;: &quot;&quot;
+    },
+    {
+      &quot;case_id&quot;: &quot;remote-image&quot;,
+      &quot;winner_variant&quot;: &quot;&quot;,
+      &quot;confidence&quot;: null,
+      &quot;reason&quot;: &quot;&quot;
+    },
+    {
+      &quot;case_id&quot;: &quot;existing-destination&quot;,
+      &quot;winner_variant&quot;: &quot;&quot;,
+      &quot;confidence&quot;: null,
+      &quot;reason&quot;: &quot;&quot;
+    },
+    {
+      &quot;case_id&quot;: &quot;existing-project-repair-near-neighbor&quot;,
+      &quot;winner_variant&quot;: &quot;&quot;,
+      &quot;confidence&quot;: null,
+      &quot;reason&quot;: &quot;&quot;
+    }
+  ]
+}</pre></section>
+  </main>
+</body>
+</html>

@@ -1,0 +1,126 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://docforge.local/skills/docforge-project/output-case.schema.json",
+  "title": "DocForge Project Skill Output Evaluation Case",
+  "type": "object",
+  "required": [
+    "id",
+    "prompt",
+    "input_files",
+    "baseline_output",
+    "with_skill_output",
+    "assertions",
+    "execution",
+    "metadata"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "prompt": {
+      "type": "string",
+      "minLength": 1
+    },
+    "input_files": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "baseline_output": {
+      "type": "string"
+    },
+    "with_skill_output": {
+      "type": "string"
+    },
+    "assertions": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "description",
+          "weight",
+          "failure_type"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "description": {
+            "type": "string",
+            "minLength": 1
+          },
+          "required": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "forbidden": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "weight": {
+            "type": "number",
+            "exclusiveMinimum": 0
+          },
+          "failure_type": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "human_review": {
+      "type": "object"
+    },
+    "execution": {
+      "type": "object",
+      "required": [
+        "mode"
+      ],
+      "properties": {
+        "mode": {
+          "enum": [
+            "recorded_fixture",
+            "command",
+            "model"
+          ]
+        }
+      },
+      "additionalProperties": true
+    },
+    "metadata": {
+      "type": "object",
+      "required": [
+        "fixture_kind",
+        "case_type"
+      ],
+      "properties": {
+        "fixture_kind": {
+          "const": "file-backed fixture"
+        },
+        "case_type": {
+          "enum": [
+            "happy_path",
+            "comprehensive",
+            "boundary",
+            "redteam",
+            "near_neighbor"
+          ]
+        }
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": true
+}

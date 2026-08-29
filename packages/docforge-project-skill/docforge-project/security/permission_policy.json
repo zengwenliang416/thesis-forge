@@ -1,0 +1,42 @@
+{
+  "schema_version": "1.0",
+  "reviewed_at": "2026-08-29",
+  "capabilities": {
+    "file_write": {
+      "decision": "approved",
+      "reviewer": "Project owner current-task authorization",
+      "scope": "Only one new DocForge project through an owned sibling staging directory, plus explicit managed Skill installation, update, backup, and rollback paths.",
+      "reason": "The requested reusable importer must publish a new verified project and support an explicit reversible Codex Skill installation without overwriting unmanaged data.",
+      "expires_at": "2026-11-30",
+      "evidence": [
+        "references/security-boundary.md",
+        "tests/README.md",
+        "reports/output_quality_scorecard.md"
+      ],
+      "target_enforcement": {
+        "openai": "Permission metadata plus explicit CLI destination and non-overwrite checks; host enforcement is external.",
+        "claude": "Permission metadata plus explicit CLI destination and non-overwrite checks; host enforcement is external.",
+        "generic": "Permission metadata plus explicit CLI destination and non-overwrite checks; host enforcement is external.",
+        "vscode": "Workspace trust plus explicit CLI destination and non-overwrite checks."
+      }
+    },
+    "subprocess": {
+      "decision": "approved",
+      "reviewer": "Project owner current-task authorization",
+      "scope": "Local Node runtime and local docforge inspect, validate, and explicitly requested build commands using argument arrays.",
+      "reason": "The Skill delegates to one deterministic Node importer and must use the installed DocForge CLI as the real compatibility and completion oracle.",
+      "expires_at": "2026-11-30",
+      "evidence": [
+        "references/security-boundary.md",
+        "reports/trust-supplement.md",
+        "tests/README.md"
+      ],
+      "target_enforcement": {
+        "openai": "Permission metadata; the package uses fixed executables and argument arrays.",
+        "claude": "Permission metadata; the package uses fixed executables and argument arrays.",
+        "generic": "Permission metadata; the package uses fixed executables and argument arrays.",
+        "vscode": "Workspace trust plus permission metadata; the package uses fixed executables and argument arrays."
+      }
+    }
+  }
+}

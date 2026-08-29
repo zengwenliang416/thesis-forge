@@ -1,0 +1,143 @@
+{
+  "ok": true,
+  "skill_dir": "/Volumes/zwl/open_sources/thesis-forge/packages/docforge-project-skill/docforge-project",
+  "summary": {
+    "scanned_files": 23,
+    "script_count": 1,
+    "internal_module_count": 0,
+    "secret_findings": 0,
+    "dependency_files": [],
+    "network_script_count": 0,
+    "network_policy_covered_count": 0,
+    "network_policy_missing_count": 0,
+    "file_write_script_count": 0,
+    "permission_required_count": 1,
+    "permission_approved_count": 1,
+    "permission_missing_count": 0,
+    "permission_invalid_count": 0,
+    "permission_expired_count": 0,
+    "help_smoke_checked_count": 1,
+    "help_smoke_failed_count": 0,
+    "interactive_script_count": 0,
+    "package_hash_scope": "source-contract-without-generated-reports",
+    "package_hash_file_count": 23,
+    "package_sha256": "9f99e3b37b1266b45dc3009f4a7d5833aff004c0d1635a311dde63e094ea7972"
+  },
+  "failures": [],
+  "warnings": [
+    "No dependency or lock file detected"
+  ],
+  "secrets": [],
+  "scripts": [
+    {
+      "path": "scripts/docforge_project.py",
+      "interface": "cli",
+      "interface_declared": true,
+      "interface_reason": "Stable Agent Skill entrypoint delegating to the shared Node importer.",
+      "has_argparse": true,
+      "has_main_guard": true,
+      "uses_input": false,
+      "uses_network": false,
+      "uses_file_write": false,
+      "uses_subprocess": true,
+      "network_urls": [],
+      "network_hosts": []
+    }
+  ],
+  "dependencies": {
+    "present": [],
+    "pinned": [],
+    "unpinned": []
+  },
+  "network_policy": {
+    "present": true,
+    "path": "security/network_policy.json",
+    "schema_version": "1.0",
+    "network_script_count": 0,
+    "covered_scripts": [],
+    "missing_scripts": [],
+    "mismatches": [],
+    "default_policy": {
+      "require_https": true,
+      "custom_hosts": "deny",
+      "review_rule": "This Skill performs no network requests. Remote Markdown resources are blocking diagnostics."
+    }
+  },
+  "help_smoke": {
+    "enabled": true,
+    "timeout_seconds": 5.0,
+    "candidate_count": 1,
+    "checked_count": 1,
+    "passed_count": 1,
+    "failed_count": 0,
+    "skipped_count": 0,
+    "failed_scripts": [],
+    "results": [
+      {
+        "path": "scripts/docforge_project.py",
+        "command": "python3 scripts/docforge_project.py --help",
+        "returncode": 0,
+        "timed_out": false,
+        "passed": true,
+        "has_help_text": true,
+        "stdout_excerpt": "usage: docforge_project.py [-h] ...\n\nCreate or install a verified DocForge project Skill.\n\npositional arguments:\n  arguments   Arguments forwarded to docforge-project.mjs.\n\noptions:\n  -h, --help  show this help message and exit",
+        "stderr_excerpt": ""
+      }
+    ],
+    "skipped": []
+  },
+  "permission_governance": {
+    "present": true,
+    "path": "security/permission_policy.json",
+    "schema_version": "1.0",
+    "reviewed_at": "2026-08-29",
+    "required_capabilities": [
+      "subprocess"
+    ],
+    "approved_capabilities": [
+      "subprocess"
+    ],
+    "missing_capabilities": [],
+    "invalid_capabilities": [],
+    "expired_capabilities": [],
+    "approval_count": 1,
+    "required_count": 1,
+    "missing_count": 0,
+    "invalid_count": 0,
+    "expired_count": 0,
+    "approvals": [
+      {
+        "capability": "subprocess",
+        "status": "approved",
+        "scripts": [
+          "scripts/docforge_project.py"
+        ],
+        "reviewer": "Project owner current-task authorization",
+        "scope": "Local Node runtime and local docforge inspect, validate, and explicitly requested build commands using argument arrays.",
+        "reason": "The Skill delegates to one deterministic Node importer and must use the installed DocForge CLI as the real compatibility and completion oracle.",
+        "expires_at": "2026-11-30",
+        "evidence": [
+          "references/security-boundary.md",
+          "reports/trust-supplement.md",
+          "tests/README.md"
+        ],
+        "target_enforcement": {
+          "openai": "Permission metadata; the package uses fixed executables and argument arrays.",
+          "claude": "Permission metadata; the package uses fixed executables and argument arrays.",
+          "generic": "Permission metadata; the package uses fixed executables and argument arrays.",
+          "vscode": "Workspace trust plus permission metadata; the package uses fixed executables and argument arrays."
+        },
+        "validation": []
+      }
+    ]
+  },
+  "trust_metadata": {
+    "source_tier": "local",
+    "remote_inline_execution": "forbid",
+    "remote_metadata_policy": "allow-metadata-only"
+  },
+  "artifacts": {
+    "json": "/Volumes/zwl/open_sources/thesis-forge/packages/docforge-project-skill/docforge-project/reports/security_trust_report.json",
+    "markdown": "/Volumes/zwl/open_sources/thesis-forge/packages/docforge-project-skill/docforge-project/reports/security_trust_report.md"
+  }
+}

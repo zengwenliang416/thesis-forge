@@ -1,0 +1,22 @@
+{
+  "schema_version": "2.0",
+  "generated_at": "2026-08-29",
+  "package_count": 1,
+  "packages": [
+    {
+      "name": "docforge-project",
+      "version": "0.1.0",
+      "maturity": "governed",
+      "owner": "DocForge maintainers",
+      "targets": [
+        "openai",
+        "claude",
+        "generic",
+        "agent-skills-compatible",
+        "vscode"
+      ],
+      "package_metadata": "registry/packages/docforge-project.json",
+      "package_sha256": "9f99e3b37b1266b45dc3009f4a7d5833aff004c0d1635a311dde63e094ea7972"
+    }
+  ]
+}

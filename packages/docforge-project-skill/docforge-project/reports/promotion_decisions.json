@@ -1,0 +1,57 @@
+{
+  "schema_version": "1.0",
+  "ok": true,
+  "generated_at": "2026-08-29",
+  "assessment": "local-prepublication",
+  "summary": {
+    "promote": 0,
+    "keep_current": 1,
+    "blocked": 0
+  },
+  "targets": [
+    {
+      "name": "docforge-project",
+      "decision": "keep_current",
+      "current_description": "Convert one ordinary Markdown file and confined local resources into a new, verified DocForge Project Format V1 directory. Use for creating an importable DocForge project. Do not use for direct Markdown-to-Word conversion, thesis writing, translation, summaries, format explanations, remote downloads, or editing an existing DocForge project.",
+      "route_metrics": {
+        "case_count": 16,
+        "misroute_count": 0,
+        "ambiguous_case_count": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "threshold": 0.42
+      },
+      "output_metrics": {
+        "case_count": 6,
+        "file_backed_case_count": 6,
+        "near_neighbor_case_count": 1,
+        "boundary_case_count": 1,
+        "baseline_pass_rate": 0.0,
+        "with_skill_pass_rate": 100.0,
+        "regression_count": 0
+      },
+      "causes": [
+        "current description has no observed route errors",
+        "existing-project repair remains an explicit near-neighbor exclusion",
+        "no reviewed candidate has evidence that it outperforms the current description"
+      ],
+      "next_action": "Keep the current description until new route or adoption evidence justifies another candidate."
+    }
+  ],
+  "release_boundary": {
+    "local_package_implementation": "keep_current",
+    "npm_publication": "not authorized",
+    "user_level_installation": "not authorized",
+    "commit": "not authorized",
+    "push": "not authorized",
+    "release": "not authorized",
+    "provider_backed_evaluation": "missing evidence",
+    "human_blind_review": "missing evidence",
+    "target_native_permission_enforcement": "missing evidence",
+    "real_client_telemetry": "missing evidence",
+    "npm_name_availability": "missing evidence",
+    "publisher_authority": "missing evidence",
+    "world_class_ready": false,
+    "public_release_ready": false
+  }
+}

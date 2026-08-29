@@ -1,0 +1,165 @@
+{
+  "schema_version": "2.0.0",
+  "name": "docforge-project",
+  "title": "DocForge Project",
+  "job_to_be_done": "Turn one ordinary Markdown document and its local resources into a new verified DocForge Project Format V1 directory.",
+  "trigger_surface": {
+    "description": "Convert one ordinary Markdown file and confined local resources into a new, verified DocForge Project Format V1 directory. Use for creating an importable DocForge project. Do not use for direct Markdown-to-Word conversion, thesis writing, translation, summaries, format explanations, remote downloads, or editing an existing DocForge project.",
+    "should_trigger": [
+      "把这份 Markdown 和同目录图片整理成一个新的 DocForge 项目。",
+      "Convert notes.md into a DocForge Project Format V1 folder and validate it.",
+      "我只有一个 md 文件，帮我生成这个软件可以直接打开的项目目录。",
+      "Create a fresh DocForge project from this Markdown and local BibTeX file.",
+      "Use the local Markdown, copy its images safely, and produce docforge.yaml."
+    ],
+    "should_not_trigger": [
+      "把这份 Markdown 直接转换成 Word。",
+      "帮我写一篇硕士论文并生成 DOCX。",
+      "翻译这个 Markdown 文件。",
+      "总结一下这篇 Markdown。",
+      "解释 docforge.yaml 每个字段是什么意思。",
+      "修改这个已经存在的 DocForge 项目。",
+      "下载网页里的图片再生成项目。",
+      "Do not generate DOCX directly, create a thesis, merge or repair an existing DocForge project, fetch remote resources, translate, summarize, or merely explain the format."
+    ],
+    "edge_cases": [
+      "检查现有 DocForge 项目为什么 validate 失败。",
+      "把 Markdown 排版成 Office Word，但不要创建 DocForge 项目。",
+      "给我一个 DocForge 项目目录结构示例，不要创建文件。",
+      "将现有 DocForge 项目的模板换成学校模板。"
+    ]
+  },
+  "workflow": {
+    "steps": [
+      "Confirm the destination does not exist and the request is project creation,",
+      "Run a plan first:",
+      "Resolve every blocking diagnostic. Never bypass a path, encoding, remote",
+      "Import through the same script:",
+      "Add `--bibtex <local.bib>` for citations. Add `--build` only when the user",
+      "Report the new project path, project ID, rewrites, copied resources, and"
+    ],
+    "decision_points": [
+      "Infer non-core gaps visibly; ask one focused clarification only for an unresolved core job, primary output, or explicit direction conflict.",
+      "Escalate visible tradeoffs when benchmark patterns conflict with local privacy, naming, or governance constraints.",
+      "Do not silently broaden the skill into adjacent jobs just because the examples are nearby."
+    ],
+    "failure_modes": [
+      "Tables can render as dense grids with weak hierarchy or poor mobile readability.",
+      "Long bullets can make the output look complete while hiding the actual decision logic.",
+      "Screenshots can be captured from the wrong state, wrong viewport, or wrong crop.",
+      "Missing screenshots can cause the skill to invent visual references instead of declaring the gap.",
+      "Footnote markers or dense citation notes can interrupt the reading flow.",
+      "Evidence can be over-attached to obvious statements and under-attached to risky claims.",
+      "Users start invoking the skill for adjacent one-off or explanation-only requests.",
+      "Outputs remain valid but become generic, cluttered, or weakly aligned with the user's domain.",
+      "Borrowed benchmark patterns no longer fit the local job or add ceremony without payoff.",
+      "Skill usage becomes team-critical while ownership, review cadence, or rollback evidence stays informal."
+    ]
+  },
+  "resources": {
+    "references": [
+      "references/diagnostics.md",
+      "references/project-format-v1.md",
+      "references/security-boundary.md"
+    ],
+    "scripts": [
+      "scripts/docforge_project.py"
+    ],
+    "assets": [],
+    "reports": [
+      "reports/benchmark_methodology.md",
+      "reports/intent-context.json",
+      "reports/intent-confidence.json",
+      "reports/intent-confidence.md",
+      "reports/reference-synthesis.json",
+      "reports/reference-synthesis.md",
+      "reports/output-risk-profile.json",
+      "reports/output-risk-profile.md",
+      "reports/artifact-design-profile.json",
+      "reports/artifact-design-profile.md",
+      "reports/prompt-quality-profile.json",
+      "reports/prompt-quality-profile.md",
+      "reports/system-model.json",
+      "reports/system-model.md",
+      "reports/iteration-directions.json",
+      "reports/iteration-directions.md",
+      "reports/skill-overview.json",
+      "reports/skill-overview.html",
+      "reports/output_quality_scorecard.json",
+      "reports/output_quality_scorecard.md",
+      "reports/output_execution_runs.json",
+      "reports/output_execution_runs.md",
+      "reports/output_blind_review_pack.json",
+      "reports/output_blind_review_pack.md",
+      "reports/output_blind_answer_key.json",
+      "reports/output_review_adjudication.json",
+      "reports/output_review_adjudication.md",
+      "reports/review_annotations.json",
+      "reports/review_annotations.md",
+      "reports/conformance_matrix.json",
+      "reports/conformance_matrix.md",
+      "reports/security_trust_report.json",
+      "reports/security_trust_report.md",
+      "reports/runtime_permission_probes.json",
+      "reports/runtime_permission_probes.md",
+      "reports/telemetry_hook_recipes.json",
+      "reports/telemetry_hook_recipes.md",
+      "reports/skill_atlas.json",
+      "reports/skill_atlas.html",
+      "reports/skill-os-2-review.md"
+    ]
+  },
+  "eval_plan": {
+    "trigger": [
+      "evals/failure-cases.md",
+      "evals/history/2026-08-29-governed-local-prepublication.json",
+      "evals/history/2026-08-29-initial-governed-baseline.json",
+      "evals/history/2026-08-29-neutral-citation-e2e-passed.json",
+      "evals/output/cases.jsonl",
+      "evals/output/fixtures/comprehensive.md",
+      "evals/output/fixtures/minimal.md",
+      "evals/output/fixtures/missing-image.md",
+      "evals/output/fixtures/remote-image.md",
+      "evals/output/schema.json",
+      "evals/packaging_expectations.json",
+      "evals/semantic_config.json",
+      "evals/trigger_cases.json"
+    ],
+    "output": [
+      "evals/output/cases.jsonl",
+      "evals/output/fixtures/comprehensive.md",
+      "evals/output/fixtures/minimal.md",
+      "evals/output/fixtures/missing-image.md",
+      "evals/output/fixtures/remote-image.md",
+      "evals/output/schema.json"
+    ],
+    "adversarial": [],
+    "baseline": "without_skill"
+  },
+  "risk": {
+    "output_risk": "high",
+    "execution_risk": "medium",
+    "trust_boundary": "external"
+  },
+  "governance": {
+    "owner": "DocForge maintainers",
+    "maturity": "governed",
+    "review_cadence": "monthly",
+    "review_due": ""
+  },
+  "targets": [
+    "openai",
+    "claude",
+    "generic",
+    "agent-skills-compatible",
+    "vscode"
+  ],
+  "source_files": [
+    "SKILL.md",
+    "manifest.json",
+    "agents/interface.yaml",
+    "reports/intent-context.json",
+    "reports/output-risk-profile.json",
+    "reports/system-model.json"
+  ]
+}

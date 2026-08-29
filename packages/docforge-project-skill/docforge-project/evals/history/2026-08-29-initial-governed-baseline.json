@@ -1,0 +1,14 @@
+{
+  "schema": "docforge.skill-regression.v1",
+  "date": "2026-08-29",
+  "skill": "docforge-project",
+  "version": "0.1.0",
+  "status": "baseline-created",
+  "evidence": {
+    "unit_tests": "10 passed",
+    "real_docforge_e2e": "blocked before template fix: docforge-standard lacked citation style",
+    "human_review": "missing evidence",
+    "provider_eval": "missing evidence",
+    "telemetry": "missing evidence"
+  }
+}

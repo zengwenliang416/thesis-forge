@@ -1,0 +1,329 @@
+{
+  "schema_version": "1.0",
+  "ok": true,
+  "cases": "/Volumes/zwl/open_sources/thesis-forge/packages/docforge-project-skill/docforge-project/evals/output/cases.jsonl",
+  "runner": {
+    "mode": "recorded_fixture",
+    "command": [],
+    "timeout_seconds": null
+  },
+  "summary": {
+    "case_count": 6,
+    "variant_run_count": 12,
+    "command_executed_count": 0,
+    "model_executed_count": 0,
+    "recorded_fixture_count": 12,
+    "timing_observed_count": 0,
+    "token_observed_count": 0,
+    "token_estimated_count": 12,
+    "baseline_pass_rate": 0.0,
+    "with_skill_pass_rate": 100.0,
+    "delta": 100.0,
+    "regression_count": 0,
+    "failure_count": 0,
+    "gate_pass": true
+  },
+  "runs": [
+    {
+      "case_id": "minimal-project",
+      "variant": "baseline",
+      "status": "pass",
+      "execution_mode": "recorded_fixture",
+      "model_executed": false,
+      "command_executed": false,
+      "duration_ms": null,
+      "provider": "",
+      "model": "",
+      "usage": {
+        "input_tokens": 18,
+        "output_tokens": 18,
+        "total_tokens": 36,
+        "estimated": true
+      },
+      "score": 0.0,
+      "passed_count": 0,
+      "failed_count": 3,
+      "failed_assertions": [
+        "project-output",
+        "real-verification",
+        "no-direct-docx"
+      ],
+      "output_sha256": "e5c510b25720dac2999b98cbed7ac79b9d988839805b6ce1e4a9d227a12aa116",
+      "failure": ""
+    },
+    {
+      "case_id": "minimal-project",
+      "variant": "with_skill",
+      "status": "pass",
+      "execution_mode": "recorded_fixture",
+      "model_executed": false,
+      "command_executed": false,
+      "duration_ms": null,
+      "provider": "",
+      "model": "",
+      "usage": {
+        "input_tokens": 18,
+        "output_tokens": 59,
+        "total_tokens": 77,
+        "estimated": true
+      },
+      "score": 100.0,
+      "passed_count": 3,
+      "failed_count": 0,
+      "failed_assertions": [],
+      "output_sha256": "8b2a858f6c7389b9989fffe6aff67988b6b127238e175f374c41b24c647e1ad9",
+      "failure": ""
+    },
+    {
+      "case_id": "full-format-local-resources",
+      "variant": "baseline",
+      "status": "pass",
+      "execution_mode": "recorded_fixture",
+      "model_executed": false,
+      "command_executed": false,
+      "duration_ms": null,
+      "provider": "",
+      "model": "",
+      "usage": {
+        "input_tokens": 25,
+        "output_tokens": 30,
+        "total_tokens": 55,
+        "estimated": true
+      },
+      "score": 0.0,
+      "passed_count": 0,
+      "failed_count": 3,
+      "failed_assertions": [
+        "preserves-semantics",
+        "original-retention",
+        "build-boundary"
+      ],
+      "output_sha256": "ddc7fd80ff62e368d8260318b341bf56d3860a6b9996e61597ad158f0ac8890b",
+      "failure": ""
+    },
+    {
+      "case_id": "full-format-local-resources",
+      "variant": "with_skill",
+      "status": "pass",
+      "execution_mode": "recorded_fixture",
+      "model_executed": false,
+      "command_executed": false,
+      "duration_ms": null,
+      "provider": "",
+      "model": "",
+      "usage": {
+        "input_tokens": 25,
+        "output_tokens": 68,
+        "total_tokens": 93,
+        "estimated": true
+      },
+      "score": 100.0,
+      "passed_count": 3,
+      "failed_count": 0,
+      "failed_assertions": [],
+      "output_sha256": "5cecb58cf4059ec7be45828d98693884f8f40675f7125a08a3cd59c4f27be6ea",
+      "failure": ""
+    },
+    {
+      "case_id": "missing-image",
+      "variant": "baseline",
+      "status": "pass",
+      "execution_mode": "recorded_fixture",
+      "model_executed": false,
+      "command_executed": false,
+      "duration_ms": null,
+      "provider": "",
+      "model": "",
+      "usage": {
+        "input_tokens": 17,
+        "output_tokens": 23,
+        "total_tokens": 40,
+        "estimated": true
+      },
+      "score": 0.0,
+      "passed_count": 0,
+      "failed_count": 2,
+      "failed_assertions": [
+        "stable-diagnostic",
+        "no-partial-project"
+      ],
+      "output_sha256": "5e03051cf480094a1e03f6c84622e7b31e6ce4c3e27e165f1766f446605fe50e",
+      "failure": ""
+    },
+    {
+      "case_id": "missing-image",
+      "variant": "with_skill",
+      "status": "pass",
+      "execution_mode": "recorded_fixture",
+      "model_executed": false,
+      "command_executed": false,
+      "duration_ms": null,
+      "provider": "",
+      "model": "",
+      "usage": {
+        "input_tokens": 17,
+        "output_tokens": 37,
+        "total_tokens": 54,
+        "estimated": true
+      },
+      "score": 100.0,
+      "passed_count": 2,
+      "failed_count": 0,
+      "failed_assertions": [],
+      "output_sha256": "fad49c9f7906e27190916c49dbffd3dbdb92e468bdd9cffa809b32579f20bd16",
+      "failure": ""
+    },
+    {
+      "case_id": "remote-image",
+      "variant": "baseline",
+      "status": "pass",
+      "execution_mode": "recorded_fixture",
+      "model_executed": false,
+      "command_executed": false,
+      "duration_ms": null,
+      "provider": "",
+      "model": "",
+      "usage": {
+        "input_tokens": 19,
+        "output_tokens": 16,
+        "total_tokens": 35,
+        "estimated": true
+      },
+      "score": 0.0,
+      "passed_count": 0,
+      "failed_count": 2,
+      "failed_assertions": [
+        "remote-block",
+        "offline"
+      ],
+      "output_sha256": "da849964c2d1b3b00f633a49ed63315c969a02c40af531a158d125adb0ca1621",
+      "failure": ""
+    },
+    {
+      "case_id": "remote-image",
+      "variant": "with_skill",
+      "status": "pass",
+      "execution_mode": "recorded_fixture",
+      "model_executed": false,
+      "command_executed": false,
+      "duration_ms": null,
+      "provider": "",
+      "model": "",
+      "usage": {
+        "input_tokens": 19,
+        "output_tokens": 31,
+        "total_tokens": 50,
+        "estimated": true
+      },
+      "score": 100.0,
+      "passed_count": 2,
+      "failed_count": 0,
+      "failed_assertions": [],
+      "output_sha256": "6979f9db6c692a47177d0f1933c5022a07b6e39d64bafeb724593f40797aa502",
+      "failure": ""
+    },
+    {
+      "case_id": "existing-destination",
+      "variant": "baseline",
+      "status": "pass",
+      "execution_mode": "recorded_fixture",
+      "model_executed": false,
+      "command_executed": false,
+      "duration_ms": null,
+      "provider": "",
+      "model": "",
+      "usage": {
+        "input_tokens": 19,
+        "output_tokens": 26,
+        "total_tokens": 45,
+        "estimated": true
+      },
+      "score": 0.0,
+      "passed_count": 0,
+      "failed_count": 2,
+      "failed_assertions": [
+        "non-overwrite",
+        "new-destination"
+      ],
+      "output_sha256": "904e70d5f1faa4fae84f47bd58c9feffbc6d925f7068a6f3784341d2fcf9be36",
+      "failure": ""
+    },
+    {
+      "case_id": "existing-destination",
+      "variant": "with_skill",
+      "status": "pass",
+      "execution_mode": "recorded_fixture",
+      "model_executed": false,
+      "command_executed": false,
+      "duration_ms": null,
+      "provider": "",
+      "model": "",
+      "usage": {
+        "input_tokens": 19,
+        "output_tokens": 30,
+        "total_tokens": 49,
+        "estimated": true
+      },
+      "score": 100.0,
+      "passed_count": 2,
+      "failed_count": 0,
+      "failed_assertions": [],
+      "output_sha256": "460b8d13eb9eaea5df61938fc5badf3e7e215ea601d45449cd5b4d1127b1f945",
+      "failure": ""
+    },
+    {
+      "case_id": "existing-project-repair-near-neighbor",
+      "variant": "baseline",
+      "status": "pass",
+      "execution_mode": "recorded_fixture",
+      "model_executed": false,
+      "command_executed": false,
+      "duration_ms": null,
+      "provider": "",
+      "model": "",
+      "usage": {
+        "input_tokens": 24,
+        "output_tokens": 26,
+        "total_tokens": 50,
+        "estimated": true
+      },
+      "score": 0.0,
+      "passed_count": 0,
+      "failed_count": 2,
+      "failed_assertions": [
+        "route-boundary",
+        "preserve-existing"
+      ],
+      "output_sha256": "4d0d6c40df1459765806856c510bc62342f21c9efc1a53e35ba5293d4f10e7f2",
+      "failure": ""
+    },
+    {
+      "case_id": "existing-project-repair-near-neighbor",
+      "variant": "with_skill",
+      "status": "pass",
+      "execution_mode": "recorded_fixture",
+      "model_executed": false,
+      "command_executed": false,
+      "duration_ms": null,
+      "provider": "",
+      "model": "",
+      "usage": {
+        "input_tokens": 24,
+        "output_tokens": 52,
+        "total_tokens": 76,
+        "estimated": true
+      },
+      "score": 100.0,
+      "passed_count": 2,
+      "failed_count": 0,
+      "failed_assertions": [],
+      "output_sha256": "33ff7fb5f53206e8e36f63675c543a83f287e83b72fb63e7dd3dbf74c757f624",
+      "failure": ""
+    }
+  ],
+  "failures": [],
+  "artifacts": {
+    "json": "/Volumes/zwl/open_sources/thesis-forge/packages/docforge-project-skill/docforge-project/reports/output_execution_runs.json",
+    "markdown": "/Volumes/zwl/open_sources/thesis-forge/packages/docforge-project-skill/docforge-project/reports/output_execution_runs.md"
+  }
+}

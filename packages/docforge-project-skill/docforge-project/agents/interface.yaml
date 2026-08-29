@@ -1,0 +1,27 @@
+interface:
+  display_name: "DocForge Project"
+  short_description: "Create a verified DocForge project from Markdown"
+  default_prompt: "Use $docforge-project to turn one local Markdown file and its confined resources into a new DocForge Project Format V1 directory, then verify it with the installed DocForge CLI."
+compatibility:
+  canonical_format: "agent-skills"
+  adapter_targets:
+    - "openai"
+    - "claude"
+    - "generic"
+    - "vscode"
+  activation:
+    mode: "manual"
+    paths:
+      - "SKILL.md"
+  execution:
+    context: "inline"
+    shell: "bash"
+  trust:
+    source_tier: "local"
+    remote_inline_execution: "forbid"
+    remote_metadata_policy: "allow-metadata-only"
+  degradation:
+    openai: "metadata-adapter"
+    claude: "neutral-source-plus-adapter"
+    generic: "neutral-source"
+    vscode: "agent-skills-source-with-vscode-notes"

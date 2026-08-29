@@ -1,0 +1,27 @@
+{
+  "schema_version": "1.0",
+  "ok": false,
+  "status": "missing evidence",
+  "generated_at": "2026-08-29",
+  "summary": {
+    "call_count": 0,
+    "case_count": 0,
+    "failure_count": 0,
+    "model_count": 0,
+    "model_executed_count": 0,
+    "run_record_count": 0,
+    "total_tokens": 0
+  },
+  "evidence_boundary": {
+    "provider_backed_holdout": "missing evidence",
+    "provider_identity": "missing evidence",
+    "model_identity": "missing evidence",
+    "observed_tokens": "missing evidence",
+    "observed_timing": "missing evidence"
+  },
+  "runs": [],
+  "limitations": [
+    "Recorded fixtures and local commands do not count as provider-backed model execution.",
+    "No provider credential or external paid evaluation was authorized for this local prepublication assessment."
+  ]
+}

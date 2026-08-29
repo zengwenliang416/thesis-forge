@@ -1,0 +1,322 @@
+{
+  "schema_version": "1.0",
+  "ok": true,
+  "summary": {
+    "pair_count": 6,
+    "judgment_count": 0,
+    "pending_count": 6,
+    "agreement_count": 0,
+    "disagreement_count": 0,
+    "invalid_decision_count": 0,
+    "answer_revealed_count": 0,
+    "pending_answer_hidden_count": 6,
+    "agreement_rate": null,
+    "needs_review": true,
+    "reviewer_metadata_present": false,
+    "reason_required": true,
+    "blind_review_attested": false,
+    "blind_review_completed_before_answer_key": false,
+    "answer_key_not_opened_before_decisions": false,
+    "raw_content_excluded_attested": true,
+    "reviewer_reason_required_attested": true,
+    "ready_for_human_evidence": false,
+    "failure_count": 0,
+    "reviewer_checklist_count": 6,
+    "reviewer_checklist_pending_count": 6,
+    "reviewer_checklist_invalid_count": 0,
+    "reviewer_checklist_ready_count": 0
+  },
+  "reviewer": "",
+  "reviewed_at": "",
+  "review_integrity": {
+    "blind_pack_sha256": "f2bc679d5e89588dd14790c8b5fce36ea7cb772c33ddc494d28985df4791b933",
+    "case_count": 6,
+    "case_ids": [
+      "minimal-project",
+      "full-format-local-resources",
+      "missing-image",
+      "remote-image",
+      "existing-destination",
+      "existing-project-repair-near-neighbor"
+    ],
+    "prompt_sha256_by_case": {
+      "minimal-project": "8ccbc3281d62ce9814ea9031565b0b114d423026ce8e19c35d6c302f90ac98df",
+      "full-format-local-resources": "31f1f5e7bd14036baf12524819c2d5e58e2d005add7d2e9ee04297defbcbe1e9",
+      "missing-image": "dcc70a6431375c1a7f07b957a55b1f33629878544160a2e965900254b7188394",
+      "remote-image": "3b76260ea0cfeb827dae56ff7d483123158a6b77edb9db6bd18e02b2e444d7cd",
+      "existing-destination": "27b478a1dead83c62a9aa525ee387c2034f1a258055c5b13b5630d674045e9ed",
+      "existing-project-repair-near-neighbor": "542bdd05e92a5a95b7314a6a22f23ddc8cb74225f876fe400d1fe28e6a5be83c"
+    }
+  },
+  "reviewer_attestation": {
+    "blind_review_completed_before_answer_key": false,
+    "answer_key_not_opened_before_decisions": false,
+    "raw_content_excluded": true,
+    "reviewer_reason_required": true
+  },
+  "artifacts": {
+    "blind_pack": "/Volumes/zwl/open_sources/thesis-forge/packages/docforge-project-skill/docforge-project/reports/output_blind_review_pack.json",
+    "answer_key": "/Volumes/zwl/open_sources/thesis-forge/packages/docforge-project-skill/docforge-project/reports/output_blind_answer_key.json",
+    "decisions": "/Volumes/zwl/open_sources/thesis-forge/packages/docforge-project-skill/docforge-project/reports/output_review_decisions.json",
+    "json": "/Volumes/zwl/open_sources/thesis-forge/packages/docforge-project-skill/docforge-project/reports/output_review_adjudication.json",
+    "markdown": "/Volumes/zwl/open_sources/thesis-forge/packages/docforge-project-skill/docforge-project/reports/output_review_adjudication.md"
+  },
+  "template_written": false,
+  "pairs": [
+    {
+      "case_id": "minimal-project",
+      "status": "pending",
+      "expected_winner_variant": "",
+      "expected_revealed": false,
+      "reviewer_winner_variant": "",
+      "confidence": null,
+      "reason": "",
+      "prompt_sha256": "8ccbc3281d62ce9814ea9031565b0b114d423026ce8e19c35d6c302f90ac98df"
+    },
+    {
+      "case_id": "full-format-local-resources",
+      "status": "pending",
+      "expected_winner_variant": "",
+      "expected_revealed": false,
+      "reviewer_winner_variant": "",
+      "confidence": null,
+      "reason": "",
+      "prompt_sha256": "31f1f5e7bd14036baf12524819c2d5e58e2d005add7d2e9ee04297defbcbe1e9"
+    },
+    {
+      "case_id": "missing-image",
+      "status": "pending",
+      "expected_winner_variant": "",
+      "expected_revealed": false,
+      "reviewer_winner_variant": "",
+      "confidence": null,
+      "reason": "",
+      "prompt_sha256": "dcc70a6431375c1a7f07b957a55b1f33629878544160a2e965900254b7188394"
+    },
+    {
+      "case_id": "remote-image",
+      "status": "pending",
+      "expected_winner_variant": "",
+      "expected_revealed": false,
+      "reviewer_winner_variant": "",
+      "confidence": null,
+      "reason": "",
+      "prompt_sha256": "3b76260ea0cfeb827dae56ff7d483123158a6b77edb9db6bd18e02b2e444d7cd"
+    },
+    {
+      "case_id": "existing-destination",
+      "status": "pending",
+      "expected_winner_variant": "",
+      "expected_revealed": false,
+      "reviewer_winner_variant": "",
+      "confidence": null,
+      "reason": "",
+      "prompt_sha256": "27b478a1dead83c62a9aa525ee387c2034f1a258055c5b13b5630d674045e9ed"
+    },
+    {
+      "case_id": "existing-project-repair-near-neighbor",
+      "status": "pending",
+      "expected_winner_variant": "",
+      "expected_revealed": false,
+      "reviewer_winner_variant": "",
+      "confidence": null,
+      "reason": "",
+      "prompt_sha256": "542bdd05e92a5a95b7314a6a22f23ddc8cb74225f876fe400d1fe28e6a5be83c"
+    }
+  ],
+  "reviewer_checklist": [
+    {
+      "case_id": "minimal-project",
+      "readiness": "awaiting-decision",
+      "blocking_reason": "Reviewer has not selected A or B yet; answer key remains hidden.",
+      "status": "pending",
+      "reviewer_winner_variant": "",
+      "answer_key_visible": false,
+      "prompt_sha256": "8ccbc3281d62ce9814ea9031565b0b114d423026ce8e19c35d6c302f90ac98df",
+      "blind_pack_path": "/Volumes/zwl/open_sources/thesis-forge/packages/docforge-project-skill/docforge-project/reports/output_blind_review_pack.json",
+      "decisions_path": "/Volumes/zwl/open_sources/thesis-forge/packages/docforge-project-skill/docforge-project/reports/output_review_decisions.json",
+      "commands": {
+        "prepare_review_kit": "python3 scripts/yao.py output-review-kit --self",
+        "write_template": "python3 scripts/adjudicate_output_review.py --write-template",
+        "import_decisions": "python3 scripts/yao.py output-review-import --input <reviewer-decisions.json> --blind-review-attested --run-adjudication --self",
+        "adjudicate": "python3 scripts/yao.py output-review --self",
+        "refresh_review_studio": "python3 scripts/yao.py review-studio . --self"
+      },
+      "required_fields": {
+        "winner_variant": "A or B after reading only the blind review pack.",
+        "confidence": "Optional number from 0 to 1.",
+        "reason": "Required rationale; do not reveal baseline or with-skill labels before adjudication.",
+        "reviewer": "Human reviewer name or review group at the decision-file top level.",
+        "reviewed_at": "Review date or timestamp at the decision-file top level.",
+        "reviewer_attestation.blind_review_completed_before_answer_key": "True only after the reviewer has completed choices before opening the answer key.",
+        "reviewer_attestation.answer_key_not_opened_before_decisions": "True only when the answer key was not opened before decisions were recorded."
+      },
+      "privacy_contract": [
+        "Do not paste raw private user data into the decision reason.",
+        "Do not open the answer key before reviewer choices are recorded.",
+        "Leave winner_variant blank when the reviewer is not ready to decide."
+      ]
+    },
+    {
+      "case_id": "full-format-local-resources",
+      "readiness": "awaiting-decision",
+      "blocking_reason": "Reviewer has not selected A or B yet; answer key remains hidden.",
+      "status": "pending",
+      "reviewer_winner_variant": "",
+      "answer_key_visible": false,
+      "prompt_sha256": "31f1f5e7bd14036baf12524819c2d5e58e2d005add7d2e9ee04297defbcbe1e9",
+      "blind_pack_path": "/Volumes/zwl/open_sources/thesis-forge/packages/docforge-project-skill/docforge-project/reports/output_blind_review_pack.json",
+      "decisions_path": "/Volumes/zwl/open_sources/thesis-forge/packages/docforge-project-skill/docforge-project/reports/output_review_decisions.json",
+      "commands": {
+        "prepare_review_kit": "python3 scripts/yao.py output-review-kit --self",
+        "write_template": "python3 scripts/adjudicate_output_review.py --write-template",
+        "import_decisions": "python3 scripts/yao.py output-review-import --input <reviewer-decisions.json> --blind-review-attested --run-adjudication --self",
+        "adjudicate": "python3 scripts/yao.py output-review --self",
+        "refresh_review_studio": "python3 scripts/yao.py review-studio . --self"
+      },
+      "required_fields": {
+        "winner_variant": "A or B after reading only the blind review pack.",
+        "confidence": "Optional number from 0 to 1.",
+        "reason": "Required rationale; do not reveal baseline or with-skill labels before adjudication.",
+        "reviewer": "Human reviewer name or review group at the decision-file top level.",
+        "reviewed_at": "Review date or timestamp at the decision-file top level.",
+        "reviewer_attestation.blind_review_completed_before_answer_key": "True only after the reviewer has completed choices before opening the answer key.",
+        "reviewer_attestation.answer_key_not_opened_before_decisions": "True only when the answer key was not opened before decisions were recorded."
+      },
+      "privacy_contract": [
+        "Do not paste raw private user data into the decision reason.",
+        "Do not open the answer key before reviewer choices are recorded.",
+        "Leave winner_variant blank when the reviewer is not ready to decide."
+      ]
+    },
+    {
+      "case_id": "missing-image",
+      "readiness": "awaiting-decision",
+      "blocking_reason": "Reviewer has not selected A or B yet; answer key remains hidden.",
+      "status": "pending",
+      "reviewer_winner_variant": "",
+      "answer_key_visible": false,
+      "prompt_sha256": "dcc70a6431375c1a7f07b957a55b1f33629878544160a2e965900254b7188394",
+      "blind_pack_path": "/Volumes/zwl/open_sources/thesis-forge/packages/docforge-project-skill/docforge-project/reports/output_blind_review_pack.json",
+      "decisions_path": "/Volumes/zwl/open_sources/thesis-forge/packages/docforge-project-skill/docforge-project/reports/output_review_decisions.json",
+      "commands": {
+        "prepare_review_kit": "python3 scripts/yao.py output-review-kit --self",
+        "write_template": "python3 scripts/adjudicate_output_review.py --write-template",
+        "import_decisions": "python3 scripts/yao.py output-review-import --input <reviewer-decisions.json> --blind-review-attested --run-adjudication --self",
+        "adjudicate": "python3 scripts/yao.py output-review --self",
+        "refresh_review_studio": "python3 scripts/yao.py review-studio . --self"
+      },
+      "required_fields": {
+        "winner_variant": "A or B after reading only the blind review pack.",
+        "confidence": "Optional number from 0 to 1.",
+        "reason": "Required rationale; do not reveal baseline or with-skill labels before adjudication.",
+        "reviewer": "Human reviewer name or review group at the decision-file top level.",
+        "reviewed_at": "Review date or timestamp at the decision-file top level.",
+        "reviewer_attestation.blind_review_completed_before_answer_key": "True only after the reviewer has completed choices before opening the answer key.",
+        "reviewer_attestation.answer_key_not_opened_before_decisions": "True only when the answer key was not opened before decisions were recorded."
+      },
+      "privacy_contract": [
+        "Do not paste raw private user data into the decision reason.",
+        "Do not open the answer key before reviewer choices are recorded.",
+        "Leave winner_variant blank when the reviewer is not ready to decide."
+      ]
+    },
+    {
+      "case_id": "remote-image",
+      "readiness": "awaiting-decision",
+      "blocking_reason": "Reviewer has not selected A or B yet; answer key remains hidden.",
+      "status": "pending",
+      "reviewer_winner_variant": "",
+      "answer_key_visible": false,
+      "prompt_sha256": "3b76260ea0cfeb827dae56ff7d483123158a6b77edb9db6bd18e02b2e444d7cd",
+      "blind_pack_path": "/Volumes/zwl/open_sources/thesis-forge/packages/docforge-project-skill/docforge-project/reports/output_blind_review_pack.json",
+      "decisions_path": "/Volumes/zwl/open_sources/thesis-forge/packages/docforge-project-skill/docforge-project/reports/output_review_decisions.json",
+      "commands": {
+        "prepare_review_kit": "python3 scripts/yao.py output-review-kit --self",
+        "write_template": "python3 scripts/adjudicate_output_review.py --write-template",
+        "import_decisions": "python3 scripts/yao.py output-review-import --input <reviewer-decisions.json> --blind-review-attested --run-adjudication --self",
+        "adjudicate": "python3 scripts/yao.py output-review --self",
+        "refresh_review_studio": "python3 scripts/yao.py review-studio . --self"
+      },
+      "required_fields": {
+        "winner_variant": "A or B after reading only the blind review pack.",
+        "confidence": "Optional number from 0 to 1.",
+        "reason": "Required rationale; do not reveal baseline or with-skill labels before adjudication.",
+        "reviewer": "Human reviewer name or review group at the decision-file top level.",
+        "reviewed_at": "Review date or timestamp at the decision-file top level.",
+        "reviewer_attestation.blind_review_completed_before_answer_key": "True only after the reviewer has completed choices before opening the answer key.",
+        "reviewer_attestation.answer_key_not_opened_before_decisions": "True only when the answer key was not opened before decisions were recorded."
+      },
+      "privacy_contract": [
+        "Do not paste raw private user data into the decision reason.",
+        "Do not open the answer key before reviewer choices are recorded.",
+        "Leave winner_variant blank when the reviewer is not ready to decide."
+      ]
+    },
+    {
+      "case_id": "existing-destination",
+      "readiness": "awaiting-decision",
+      "blocking_reason": "Reviewer has not selected A or B yet; answer key remains hidden.",
+      "status": "pending",
+      "reviewer_winner_variant": "",
+      "answer_key_visible": false,
+      "prompt_sha256": "27b478a1dead83c62a9aa525ee387c2034f1a258055c5b13b5630d674045e9ed",
+      "blind_pack_path": "/Volumes/zwl/open_sources/thesis-forge/packages/docforge-project-skill/docforge-project/reports/output_blind_review_pack.json",
+      "decisions_path": "/Volumes/zwl/open_sources/thesis-forge/packages/docforge-project-skill/docforge-project/reports/output_review_decisions.json",
+      "commands": {
+        "prepare_review_kit": "python3 scripts/yao.py output-review-kit --self",
+        "write_template": "python3 scripts/adjudicate_output_review.py --write-template",
+        "import_decisions": "python3 scripts/yao.py output-review-import --input <reviewer-decisions.json> --blind-review-attested --run-adjudication --self",
+        "adjudicate": "python3 scripts/yao.py output-review --self",
+        "refresh_review_studio": "python3 scripts/yao.py review-studio . --self"
+      },
+      "required_fields": {
+        "winner_variant": "A or B after reading only the blind review pack.",
+        "confidence": "Optional number from 0 to 1.",
+        "reason": "Required rationale; do not reveal baseline or with-skill labels before adjudication.",
+        "reviewer": "Human reviewer name or review group at the decision-file top level.",
+        "reviewed_at": "Review date or timestamp at the decision-file top level.",
+        "reviewer_attestation.blind_review_completed_before_answer_key": "True only after the reviewer has completed choices before opening the answer key.",
+        "reviewer_attestation.answer_key_not_opened_before_decisions": "True only when the answer key was not opened before decisions were recorded."
+      },
+      "privacy_contract": [
+        "Do not paste raw private user data into the decision reason.",
+        "Do not open the answer key before reviewer choices are recorded.",
+        "Leave winner_variant blank when the reviewer is not ready to decide."
+      ]
+    },
+    {
+      "case_id": "existing-project-repair-near-neighbor",
+      "readiness": "awaiting-decision",
+      "blocking_reason": "Reviewer has not selected A or B yet; answer key remains hidden.",
+      "status": "pending",
+      "reviewer_winner_variant": "",
+      "answer_key_visible": false,
+      "prompt_sha256": "542bdd05e92a5a95b7314a6a22f23ddc8cb74225f876fe400d1fe28e6a5be83c",
+      "blind_pack_path": "/Volumes/zwl/open_sources/thesis-forge/packages/docforge-project-skill/docforge-project/reports/output_blind_review_pack.json",
+      "decisions_path": "/Volumes/zwl/open_sources/thesis-forge/packages/docforge-project-skill/docforge-project/reports/output_review_decisions.json",
+      "commands": {
+        "prepare_review_kit": "python3 scripts/yao.py output-review-kit --self",
+        "write_template": "python3 scripts/adjudicate_output_review.py --write-template",
+        "import_decisions": "python3 scripts/yao.py output-review-import --input <reviewer-decisions.json> --blind-review-attested --run-adjudication --self",
+        "adjudicate": "python3 scripts/yao.py output-review --self",
+        "refresh_review_studio": "python3 scripts/yao.py review-studio . --self"
+      },
+      "required_fields": {
+        "winner_variant": "A or B after reading only the blind review pack.",
+        "confidence": "Optional number from 0 to 1.",
+        "reason": "Required rationale; do not reveal baseline or with-skill labels before adjudication.",
+        "reviewer": "Human reviewer name or review group at the decision-file top level.",
+        "reviewed_at": "Review date or timestamp at the decision-file top level.",
+        "reviewer_attestation.blind_review_completed_before_answer_key": "True only after the reviewer has completed choices before opening the answer key.",
+        "reviewer_attestation.answer_key_not_opened_before_decisions": "True only when the answer key was not opened before decisions were recorded."
+      },
+      "privacy_contract": [
+        "Do not paste raw private user data into the decision reason.",
+        "Do not open the answer key before reviewer choices are recorded.",
+        "Leave winner_variant blank when the reviewer is not ready to decide."
+      ]
+    }
+  ],
+  "failures": []
+}

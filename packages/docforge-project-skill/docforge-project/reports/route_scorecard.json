@@ -1,0 +1,781 @@
+{
+  "schema_version": "1.0",
+  "generated_at": "2026-08-29",
+  "assessment_type": "deterministic semantic trigger evaluation",
+  "summary": {
+    "total_cases": 16,
+    "misroute_count": 0,
+    "ambiguous_case_count": 0,
+    "false_positives": 0,
+    "false_negatives": 0,
+    "precision": 1.0,
+    "recall": 1.0,
+    "threshold": 0.42
+  },
+  "bucket_stats": {
+    "should_trigger": {
+      "total": 5,
+      "passed": 5,
+      "pass_rate": 1.0
+    },
+    "should_not_trigger": {
+      "total": 7,
+      "passed": 7,
+      "pass_rate": 1.0
+    },
+    "near_neighbor": {
+      "total": 4,
+      "passed": 4,
+      "pass_rate": 1.0
+    }
+  },
+  "family_stats": {
+    "default": {
+      "total": 16,
+      "passed": 16,
+      "false_positives": 0,
+      "false_negatives": 0,
+      "pass_rate": 1.0
+    }
+  },
+  "misroutes": [],
+  "ambiguous_cases": [],
+  "evaluation": {
+    "should_trigger": [
+      {
+        "prompt": "把这份 Markdown 和同目录图片整理成一个新的 DocForge 项目。",
+        "family": "default",
+        "score": 1.0,
+        "predicted_trigger": true,
+        "expected_trigger": true,
+        "passed": true,
+        "score_detail": {
+          "mode": "semantic-intent",
+          "desired_positive_concepts": [
+            "docforge_project",
+            "markdown_input",
+            "new_project",
+            "local_resources"
+          ],
+          "matched_desired_concepts": [
+            "docforge_project",
+            "local_resources",
+            "markdown_input",
+            "new_project"
+          ],
+          "extra_positive_concepts": [],
+          "matched_negative_concepts": [],
+          "exclusive_negative_concepts": [],
+          "semantic_coverage": 1.0,
+          "support_score": 0,
+          "lexical_support": 0.4,
+          "negative_penalty": 0,
+          "coverage_boost": 0.06,
+          "concept_evidence": {
+            "positive": {
+              "docforge_project": [
+                "docforge 项目"
+              ],
+              "local_resources": [
+                "同目录图片"
+              ],
+              "markdown_input": [
+                "markdown"
+              ],
+              "new_project": [
+                "新的"
+              ]
+            },
+            "negative": {}
+          }
+        }
+      },
+      {
+        "prompt": "Convert notes.md into a DocForge Project Format V1 folder and validate it.",
+        "family": "default",
+        "score": 0.733,
+        "predicted_trigger": true,
+        "expected_trigger": true,
+        "passed": true,
+        "score_detail": {
+          "mode": "semantic-intent",
+          "desired_positive_concepts": [
+            "docforge_project",
+            "markdown_input",
+            "new_project",
+            "local_resources"
+          ],
+          "matched_desired_concepts": [
+            "docforge_project",
+            "markdown_input"
+          ],
+          "extra_positive_concepts": [],
+          "matched_negative_concepts": [],
+          "exclusive_negative_concepts": [],
+          "semantic_coverage": 0.7,
+          "support_score": 0,
+          "lexical_support": 0.615,
+          "negative_penalty": 0,
+          "coverage_boost": 0.04,
+          "concept_evidence": {
+            "positive": {
+              "docforge_project": [
+                "docforge project",
+                "docforge project format v1"
+              ],
+              "markdown_input": [
+                "notes.md"
+              ]
+            },
+            "negative": {}
+          }
+        }
+      },
+      {
+        "prompt": "我只有一个 md 文件，帮我生成这个软件可以直接打开的项目目录。",
+        "family": "default",
+        "score": 0.87,
+        "predicted_trigger": true,
+        "expected_trigger": true,
+        "passed": true,
+        "score_detail": {
+          "mode": "semantic-intent",
+          "desired_positive_concepts": [
+            "docforge_project",
+            "markdown_input",
+            "new_project",
+            "local_resources"
+          ],
+          "matched_desired_concepts": [
+            "docforge_project",
+            "markdown_input",
+            "new_project"
+          ],
+          "extra_positive_concepts": [],
+          "matched_negative_concepts": [],
+          "exclusive_negative_concepts": [],
+          "semantic_coverage": 0.88,
+          "support_score": 0,
+          "lexical_support": 0.0,
+          "negative_penalty": 0,
+          "coverage_boost": 0.06,
+          "concept_evidence": {
+            "positive": {
+              "docforge_project": [
+                "软件可以直接打开的项目目录"
+              ],
+              "markdown_input": [
+                "md 文件"
+              ],
+              "new_project": [
+                "生成"
+              ]
+            },
+            "negative": {}
+          }
+        }
+      },
+      {
+        "prompt": "Create a fresh DocForge project from this Markdown and local BibTeX file.",
+        "family": "default",
+        "score": 1.0,
+        "predicted_trigger": true,
+        "expected_trigger": true,
+        "passed": true,
+        "score_detail": {
+          "mode": "semantic-intent",
+          "desired_positive_concepts": [
+            "docforge_project",
+            "markdown_input",
+            "new_project",
+            "local_resources"
+          ],
+          "matched_desired_concepts": [
+            "docforge_project",
+            "local_resources",
+            "markdown_input",
+            "new_project"
+          ],
+          "extra_positive_concepts": [],
+          "matched_negative_concepts": [],
+          "exclusive_negative_concepts": [],
+          "semantic_coverage": 1.0,
+          "support_score": 0,
+          "lexical_support": 0.583,
+          "negative_penalty": 0,
+          "coverage_boost": 0.06,
+          "concept_evidence": {
+            "positive": {
+              "docforge_project": [
+                "docforge project"
+              ],
+              "local_resources": [
+                "local bibtex"
+              ],
+              "markdown_input": [
+                "markdown"
+              ],
+              "new_project": [
+                "fresh",
+                "create"
+              ]
+            },
+            "negative": {}
+          }
+        }
+      },
+      {
+        "prompt": "Use the local Markdown, copy its images safely, and produce docforge.yaml.",
+        "family": "default",
+        "score": 0.848,
+        "predicted_trigger": true,
+        "expected_trigger": true,
+        "passed": true,
+        "score_detail": {
+          "mode": "semantic-intent",
+          "desired_positive_concepts": [
+            "docforge_project",
+            "markdown_input",
+            "new_project",
+            "local_resources"
+          ],
+          "matched_desired_concepts": [
+            "docforge_project",
+            "local_resources",
+            "markdown_input"
+          ],
+          "extra_positive_concepts": [],
+          "matched_negative_concepts": [],
+          "exclusive_negative_concepts": [],
+          "semantic_coverage": 0.82,
+          "support_score": 0,
+          "lexical_support": 0.417,
+          "negative_penalty": 0,
+          "coverage_boost": 0.06,
+          "concept_evidence": {
+            "positive": {
+              "docforge_project": [
+                "docforge.yaml"
+              ],
+              "local_resources": [
+                "copy its images"
+              ],
+              "markdown_input": [
+                "markdown"
+              ]
+            },
+            "negative": {}
+          }
+        }
+      }
+    ],
+    "should_not_trigger": [
+      {
+        "prompt": "把这份 Markdown 直接转换成 Word。",
+        "family": "default",
+        "score": 0.0,
+        "predicted_trigger": false,
+        "expected_trigger": false,
+        "passed": true,
+        "score_detail": {
+          "mode": "semantic-intent",
+          "desired_positive_concepts": [
+            "docforge_project",
+            "markdown_input",
+            "new_project",
+            "local_resources"
+          ],
+          "matched_desired_concepts": [
+            "markdown_input"
+          ],
+          "extra_positive_concepts": [],
+          "matched_negative_concepts": [
+            "direct_word"
+          ],
+          "exclusive_negative_concepts": [
+            "direct_word"
+          ],
+          "semantic_coverage": 0.28,
+          "support_score": 0,
+          "lexical_support": 0.5,
+          "negative_penalty": 0.9,
+          "coverage_boost": 0.0,
+          "concept_evidence": {
+            "positive": {
+              "markdown_input": [
+                "markdown"
+              ]
+            },
+            "negative": {
+              "direct_word": [
+                "直接转换成 word"
+              ]
+            }
+          }
+        }
+      },
+      {
+        "prompt": "帮我写一篇硕士论文并生成 DOCX。",
+        "family": "default",
+        "score": 0.0,
+        "predicted_trigger": false,
+        "expected_trigger": false,
+        "passed": true,
+        "score_detail": {
+          "mode": "semantic-intent",
+          "desired_positive_concepts": [
+            "docforge_project",
+            "markdown_input",
+            "new_project",
+            "local_resources"
+          ],
+          "matched_desired_concepts": [
+            "new_project"
+          ],
+          "extra_positive_concepts": [],
+          "matched_negative_concepts": [
+            "direct_word",
+            "thesis_creation"
+          ],
+          "exclusive_negative_concepts": [
+            "direct_word",
+            "thesis_creation"
+          ],
+          "semantic_coverage": 0.18,
+          "support_score": 0,
+          "lexical_support": 0.0,
+          "negative_penalty": 1.75,
+          "coverage_boost": 0.0,
+          "concept_evidence": {
+            "positive": {
+              "new_project": [
+                "生成"
+              ]
+            },
+            "negative": {
+              "direct_word": [
+                "生成 docx"
+              ],
+              "thesis_creation": [
+                "写一篇硕士论文"
+              ]
+            }
+          }
+        }
+      },
+      {
+        "prompt": "翻译这个 Markdown 文件。",
+        "family": "default",
+        "score": 0.0,
+        "predicted_trigger": false,
+        "expected_trigger": false,
+        "passed": true,
+        "score_detail": {
+          "mode": "semantic-intent",
+          "desired_positive_concepts": [
+            "docforge_project",
+            "markdown_input",
+            "new_project",
+            "local_resources"
+          ],
+          "matched_desired_concepts": [
+            "markdown_input"
+          ],
+          "extra_positive_concepts": [],
+          "matched_negative_concepts": [
+            "translation"
+          ],
+          "exclusive_negative_concepts": [
+            "translation"
+          ],
+          "semantic_coverage": 0.28,
+          "support_score": 0,
+          "lexical_support": 0.333,
+          "negative_penalty": 0.85,
+          "coverage_boost": 0.0,
+          "concept_evidence": {
+            "positive": {
+              "markdown_input": [
+                "markdown"
+              ]
+            },
+            "negative": {
+              "translation": [
+                "翻译"
+              ]
+            }
+          }
+        }
+      },
+      {
+        "prompt": "总结一下这篇 Markdown。",
+        "family": "default",
+        "score": 0.0,
+        "predicted_trigger": false,
+        "expected_trigger": false,
+        "passed": true,
+        "score_detail": {
+          "mode": "semantic-intent",
+          "desired_positive_concepts": [
+            "docforge_project",
+            "markdown_input",
+            "new_project",
+            "local_resources"
+          ],
+          "matched_desired_concepts": [
+            "markdown_input"
+          ],
+          "extra_positive_concepts": [],
+          "matched_negative_concepts": [
+            "summary"
+          ],
+          "exclusive_negative_concepts": [
+            "summary"
+          ],
+          "semantic_coverage": 0.28,
+          "support_score": 0,
+          "lexical_support": 0.5,
+          "negative_penalty": 0.85,
+          "coverage_boost": 0.0,
+          "concept_evidence": {
+            "positive": {
+              "markdown_input": [
+                "markdown"
+              ]
+            },
+            "negative": {
+              "summary": [
+                "总结"
+              ]
+            }
+          }
+        }
+      },
+      {
+        "prompt": "解释 docforge.yaml 每个字段是什么意思。",
+        "family": "default",
+        "score": 0.0,
+        "predicted_trigger": false,
+        "expected_trigger": false,
+        "passed": true,
+        "score_detail": {
+          "mode": "semantic-intent",
+          "desired_positive_concepts": [
+            "docforge_project",
+            "markdown_input",
+            "new_project",
+            "local_resources"
+          ],
+          "matched_desired_concepts": [
+            "docforge_project"
+          ],
+          "extra_positive_concepts": [],
+          "matched_negative_concepts": [
+            "explanation_only"
+          ],
+          "exclusive_negative_concepts": [
+            "explanation_only"
+          ],
+          "semantic_coverage": 0.42,
+          "support_score": 0,
+          "lexical_support": 0.25,
+          "negative_penalty": 0.75,
+          "coverage_boost": 0.0,
+          "concept_evidence": {
+            "positive": {
+              "docforge_project": [
+                "docforge.yaml"
+              ]
+            },
+            "negative": {
+              "explanation_only": [
+                "解释"
+              ]
+            }
+          }
+        }
+      },
+      {
+        "prompt": "修改这个已经存在的 DocForge 项目。",
+        "family": "default",
+        "score": 0.0,
+        "predicted_trigger": false,
+        "expected_trigger": false,
+        "passed": true,
+        "score_detail": {
+          "mode": "semantic-intent",
+          "desired_positive_concepts": [
+            "docforge_project",
+            "markdown_input",
+            "new_project",
+            "local_resources"
+          ],
+          "matched_desired_concepts": [
+            "docforge_project"
+          ],
+          "extra_positive_concepts": [],
+          "matched_negative_concepts": [
+            "existing_project"
+          ],
+          "exclusive_negative_concepts": [
+            "existing_project"
+          ],
+          "semantic_coverage": 0.42,
+          "support_score": 0,
+          "lexical_support": 0.333,
+          "negative_penalty": 0.85,
+          "coverage_boost": 0.0,
+          "concept_evidence": {
+            "positive": {
+              "docforge_project": [
+                "docforge 项目"
+              ]
+            },
+            "negative": {
+              "existing_project": [
+                "已经存在的 docforge 项目",
+                "修改这个已经存在"
+              ]
+            }
+          }
+        }
+      },
+      {
+        "prompt": "下载网页里的图片再生成项目。",
+        "family": "default",
+        "score": 0.0,
+        "predicted_trigger": false,
+        "expected_trigger": false,
+        "passed": true,
+        "score_detail": {
+          "mode": "semantic-intent",
+          "desired_positive_concepts": [
+            "docforge_project",
+            "markdown_input",
+            "new_project",
+            "local_resources"
+          ],
+          "matched_desired_concepts": [
+            "new_project"
+          ],
+          "extra_positive_concepts": [],
+          "matched_negative_concepts": [
+            "remote_download"
+          ],
+          "exclusive_negative_concepts": [
+            "remote_download"
+          ],
+          "semantic_coverage": 0.18,
+          "support_score": 0,
+          "lexical_support": 0.0,
+          "negative_penalty": 0.85,
+          "coverage_boost": 0.0,
+          "concept_evidence": {
+            "positive": {
+              "new_project": [
+                "生成"
+              ]
+            },
+            "negative": {
+              "remote_download": [
+                "下载网页"
+              ]
+            }
+          }
+        }
+      }
+    ],
+    "near_neighbor": [
+      {
+        "prompt": "检查现有 DocForge 项目为什么 validate 失败。",
+        "family": "default",
+        "score": 0.0,
+        "predicted_trigger": false,
+        "expected_trigger": false,
+        "passed": true,
+        "score_detail": {
+          "mode": "semantic-intent",
+          "desired_positive_concepts": [
+            "docforge_project",
+            "markdown_input",
+            "new_project",
+            "local_resources"
+          ],
+          "matched_desired_concepts": [
+            "docforge_project"
+          ],
+          "extra_positive_concepts": [],
+          "matched_negative_concepts": [
+            "existing_project"
+          ],
+          "exclusive_negative_concepts": [
+            "existing_project"
+          ],
+          "semantic_coverage": 0.42,
+          "support_score": 0,
+          "lexical_support": 0.2,
+          "negative_penalty": 0.85,
+          "coverage_boost": 0.0,
+          "concept_evidence": {
+            "positive": {
+              "docforge_project": [
+                "docforge 项目"
+              ]
+            },
+            "negative": {
+              "existing_project": [
+                "现有 docforge 项目",
+                "检查现有"
+              ]
+            }
+          }
+        }
+      },
+      {
+        "prompt": "把 Markdown 排版成 Office Word，但不要创建 DocForge 项目。",
+        "family": "default",
+        "score": 0.0,
+        "predicted_trigger": false,
+        "expected_trigger": false,
+        "passed": true,
+        "score_detail": {
+          "mode": "semantic-intent",
+          "desired_positive_concepts": [
+            "docforge_project",
+            "markdown_input",
+            "new_project",
+            "local_resources"
+          ],
+          "matched_desired_concepts": [
+            "docforge_project",
+            "markdown_input",
+            "new_project"
+          ],
+          "extra_positive_concepts": [],
+          "matched_negative_concepts": [
+            "direct_word"
+          ],
+          "exclusive_negative_concepts": [
+            "direct_word"
+          ],
+          "semantic_coverage": 0.88,
+          "support_score": 0,
+          "lexical_support": 0.375,
+          "negative_penalty": 0.9,
+          "coverage_boost": 0.06,
+          "concept_evidence": {
+            "positive": {
+              "docforge_project": [
+                "docforge 项目"
+              ],
+              "markdown_input": [
+                "markdown"
+              ],
+              "new_project": [
+                "创建"
+              ]
+            },
+            "negative": {
+              "direct_word": [
+                "排版成 office word"
+              ]
+            }
+          }
+        }
+      },
+      {
+        "prompt": "给我一个 DocForge 项目目录结构示例，不要创建文件。",
+        "family": "default",
+        "score": 0.0,
+        "predicted_trigger": false,
+        "expected_trigger": false,
+        "passed": true,
+        "score_detail": {
+          "mode": "semantic-intent",
+          "desired_positive_concepts": [
+            "docforge_project",
+            "markdown_input",
+            "new_project",
+            "local_resources"
+          ],
+          "matched_desired_concepts": [
+            "docforge_project",
+            "new_project"
+          ],
+          "extra_positive_concepts": [],
+          "matched_negative_concepts": [
+            "explanation_only"
+          ],
+          "exclusive_negative_concepts": [
+            "explanation_only"
+          ],
+          "semantic_coverage": 0.6,
+          "support_score": 0,
+          "lexical_support": 0.25,
+          "negative_penalty": 0.75,
+          "coverage_boost": 0.04,
+          "concept_evidence": {
+            "positive": {
+              "docforge_project": [
+                "docforge 项目"
+              ],
+              "new_project": [
+                "创建"
+              ]
+            },
+            "negative": {
+              "explanation_only": [
+                "示例"
+              ]
+            }
+          }
+        }
+      },
+      {
+        "prompt": "将现有 DocForge 项目的模板换成学校模板。",
+        "family": "default",
+        "score": 0.0,
+        "predicted_trigger": false,
+        "expected_trigger": false,
+        "passed": true,
+        "score_detail": {
+          "mode": "semantic-intent",
+          "desired_positive_concepts": [
+            "docforge_project",
+            "markdown_input",
+            "new_project",
+            "local_resources"
+          ],
+          "matched_desired_concepts": [
+            "docforge_project"
+          ],
+          "extra_positive_concepts": [],
+          "matched_negative_concepts": [
+            "existing_project"
+          ],
+          "exclusive_negative_concepts": [
+            "existing_project"
+          ],
+          "semantic_coverage": 0.42,
+          "support_score": 0,
+          "lexical_support": 0.333,
+          "negative_penalty": 0.85,
+          "coverage_boost": 0.0,
+          "concept_evidence": {
+            "positive": {
+              "docforge_project": [
+                "docforge 项目"
+              ]
+            },
+            "negative": {
+              "existing_project": [
+                "现有 docforge 项目",
+                "模板换成"
+              ]
+            }
+          }
+        }
+      }
+    ]
+  }
+}

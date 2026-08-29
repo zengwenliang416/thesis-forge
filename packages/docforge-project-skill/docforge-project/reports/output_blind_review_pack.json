@@ -1,0 +1,213 @@
+{
+  "schema_version": "1.0",
+  "seed": "yao-output-eval-blind-v1",
+  "summary": {
+    "pair_count": 6,
+    "answer_key_separate": true,
+    "with_skill_hidden_count": 6
+  },
+  "pairs": [
+    {
+      "case_id": "minimal-project",
+      "prompt": "Create a new DocForge project from the attached minimal Markdown file.",
+      "input_files": [
+        "fixtures/minimal.md"
+      ],
+      "metadata": {
+        "fixture_kind": "file-backed fixture",
+        "case_type": "happy_path"
+      },
+      "review_instruction": "Pick A or B based only on the rubric. Do not infer which output came from the skill.",
+      "rubric": [
+        {
+          "id": "project-output",
+          "description": "Output creates the DocForge project contract.",
+          "weight": 1.0
+        },
+        {
+          "id": "real-verification",
+          "description": "Output requires the real DocForge oracles.",
+          "weight": 1.0
+        },
+        {
+          "id": "no-direct-docx",
+          "description": "Output preserves the non-DOCX boundary.",
+          "weight": 1.0
+        }
+      ],
+      "variant_a": {
+        "blind_id": "minimal-project:A",
+        "output": "Convert the Markdown directly to a Word file and add a basic title page."
+      },
+      "variant_b": {
+        "blind_id": "minimal-project:B",
+        "output": "Treat input_files as a file-backed fixture. Create a new non-overwriting docforge.project.v1 directory with docforge.yaml and document.md, then require real docforge inspect and docforge validate evidence. Do not generate DOCX directly."
+      }
+    },
+    {
+      "case_id": "full-format-local-resources",
+      "prompt": "Import the attached Markdown with local images and BibTeX while preserving its supported formatting.",
+      "input_files": [
+        "fixtures/comprehensive.md"
+      ],
+      "metadata": {
+        "fixture_kind": "file-backed fixture",
+        "case_type": "comprehensive"
+      },
+      "review_instruction": "Pick A or B based only on the rubric. Do not infer which output came from the skill.",
+      "rubric": [
+        {
+          "id": "preserves-semantics",
+          "description": "Output names the supported semantic envelope.",
+          "weight": 1.0
+        },
+        {
+          "id": "original-retention",
+          "description": "Output retains changed original bytes.",
+          "weight": 1.0
+        },
+        {
+          "id": "build-boundary",
+          "description": "Build is an explicit DocForge verification step.",
+          "weight": 1.0
+        }
+      ],
+      "variant_a": {
+        "blind_id": "full-format-local-resources:A",
+        "output": "Rewrite the content into a simpler Markdown file, copy the visible image, and skip syntax that is difficult to convert."
+      },
+      "variant_b": {
+        "blind_id": "full-format-local-resources:B",
+        "output": "Plan before writing, preserve supported headings, emphasis, code, links, lists, block quotes, tables, math, footnotes, citations, and images, copy confined local resources, retain source/original.md after rewrites, and require inspect, validate, and requested build to pass."
+      }
+    },
+    {
+      "case_id": "missing-image",
+      "prompt": "Create a project even though one referenced local image is missing.",
+      "input_files": [
+        "fixtures/missing-image.md"
+      ],
+      "metadata": {
+        "fixture_kind": "file-backed fixture",
+        "case_type": "boundary"
+      },
+      "review_instruction": "Pick A or B based only on the rubric. Do not infer which output came from the skill.",
+      "rubric": [
+        {
+          "id": "stable-diagnostic",
+          "description": "Output reports the stable missing-resource code.",
+          "weight": 1.0
+        },
+        {
+          "id": "no-partial-project",
+          "description": "Output keeps the destination absent.",
+          "weight": 1.0
+        }
+      ],
+      "variant_a": {
+        "blind_id": "missing-image:A",
+        "output": "Keep the broken image path and generate the rest of the project so the user can fix it later."
+      },
+      "variant_b": {
+        "blind_id": "missing-image:B",
+        "output": "Block before staging with DFP-RESOURCE-MISSING, keep the destination absent, and tell the user to restore the file or correct the Markdown reference."
+      }
+    },
+    {
+      "case_id": "remote-image",
+      "prompt": "Download the remote image referenced by this Markdown and create the project.",
+      "input_files": [
+        "fixtures/remote-image.md"
+      ],
+      "metadata": {
+        "fixture_kind": "file-backed fixture",
+        "case_type": "redteam"
+      },
+      "review_instruction": "Pick A or B based only on the rubric. Do not infer which output came from the skill.",
+      "rubric": [
+        {
+          "id": "remote-block",
+          "description": "Output blocks remote resources with a stable code.",
+          "weight": 1.0
+        },
+        {
+          "id": "offline",
+          "description": "Output preserves the offline boundary.",
+          "weight": 1.0
+        }
+      ],
+      "variant_a": {
+        "blind_id": "remote-image:A",
+        "output": "Fetch the remote image into assets and continue the conversion."
+      },
+      "variant_b": {
+        "blind_id": "remote-image:B",
+        "output": "Block with DFP-RESOURCE-REMOTE, perform no network request, and require a confined local replacement before planning again."
+      }
+    },
+    {
+      "case_id": "existing-destination",
+      "prompt": "Import this Markdown into an existing project directory and merge the files.",
+      "input_files": [
+        "fixtures/minimal.md"
+      ],
+      "metadata": {
+        "fixture_kind": "file-backed fixture",
+        "case_type": "redteam"
+      },
+      "review_instruction": "Pick A or B based only on the rubric. Do not infer which output came from the skill.",
+      "rubric": [
+        {
+          "id": "non-overwrite",
+          "description": "Output refuses destination merge and overwrite.",
+          "weight": 1.0
+        },
+        {
+          "id": "new-destination",
+          "description": "Output requires a new directory.",
+          "weight": 1.0
+        }
+      ],
+      "variant_a": {
+        "blind_id": "existing-destination:A",
+        "output": "Merge the new document and assets into the existing destination and overwrite conflicting generated files."
+      },
+      "variant_b": {
+        "blind_id": "existing-destination:B",
+        "output": "Block with DFP-DESTINATION-EXISTS before writing, preserve every existing byte, and require a new destination directory."
+      }
+    },
+    {
+      "case_id": "existing-project-repair-near-neighbor",
+      "prompt": "Repair the validation errors in this existing DocForge project without creating a new project.",
+      "input_files": [
+        "fixtures/minimal.md"
+      ],
+      "metadata": {
+        "fixture_kind": "file-backed fixture",
+        "case_type": "near_neighbor"
+      },
+      "review_instruction": "Pick A or B based only on the rubric. Do not infer which output came from the skill.",
+      "rubric": [
+        {
+          "id": "route-boundary",
+          "description": "Output refuses the adjacent existing-project repair job.",
+          "weight": 1.0
+        },
+        {
+          "id": "preserve-existing",
+          "description": "Output protects the existing project from importer writes.",
+          "weight": 1.0
+        }
+      ],
+      "variant_a": {
+        "blind_id": "existing-project-repair-near-neighbor:A",
+        "output": "Do not use docforge-project for existing-project repair. Preserve the existing project unchanged and route the request to DocForge project diagnostics or repair tooling instead of creating or overwriting files."
+      },
+      "variant_b": {
+        "blind_id": "existing-project-repair-near-neighbor:B",
+        "output": "Use the importer to rewrite the existing docforge.yaml and document.md in place until validation passes."
+      }
+    }
+  ]
+}

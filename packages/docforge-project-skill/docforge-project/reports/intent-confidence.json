@@ -1,0 +1,66 @@
+{
+  "score": 100,
+  "band": "high",
+  "gate_passed": true,
+  "authoring_ready": true,
+  "strengths": [
+    "The recurring job is concrete enough to anchor the package.",
+    "Real input shape is explicit.",
+    "The hand-back output is concrete.",
+    "Boundary exclusions are already explicit.",
+    "Operational constraints are visible."
+  ],
+  "gaps": [],
+  "follow_up_questions": [],
+  "clarification_plan": {
+    "decision": "proceed",
+    "language": "en",
+    "ambiguity_type": "",
+    "target_slot": "",
+    "direction_slot": "",
+    "question": "",
+    "rationale": "",
+    "decision_impact": "",
+    "blocking_ambiguities": [],
+    "stop_reason": "clear",
+    "inference_quality": "high"
+  },
+  "assumptions": [],
+  "anchor_sentence": "Turn one ordinary Markdown document and its local resources into a new verified DocForge Project Format V1 directory. Primary output: One new non-overwriting DocForge project directory containing docforge.yaml, document.md, confined resources, bounded diagnostics, provenance, and successful real docforge inspect and validate evidence.. Exclusions: Do not generate DOCX directly, create a thesis, merge or repair an existing DocForge project, fetch remote resources, translate, summarize, or merely explain the format..",
+  "recommended_action": "Intent is clear enough to package the first routeable version.",
+  "context": {
+    "job": "Turn one ordinary Markdown document and its local resources into a new verified DocForge Project Format V1 directory.",
+    "real_inputs": [
+      "input_files: one UTF-8 Markdown source plus optional local image assets and one optional local BibTeX file; governed evaluations treat these as a file-backed fixture."
+    ],
+    "primary_output": "One new non-overwriting DocForge project directory containing docforge.yaml, document.md, confined resources, bounded diagnostics, provenance, and successful real docforge inspect and validate evidence.",
+    "description": "Convert ordinary Markdown and local resources into a new, verified DocForge Project Format V1 directory. Use when creating an importable DocForge project; do not use for direct Markdown-to-Word conversion, thesis writing, translation, summaries, explanations, remote downloads, or editing an existing DocForge project.",
+    "exclusions": [
+      "Do not generate DOCX directly, create a thesis, merge or repair an existing DocForge project, fetch remote resources, translate, summarize, or merely explain the format."
+    ],
+    "constraints": [
+      "Operate offline; remain inside the selected source boundary and new destination; reject traversal, symlink escape, remote and device paths; preserve original bytes when rewriting; never fabricate metadata; never use npm lifecycle scripts to modify a user installation."
+    ],
+    "standards": [
+      "DocForge Project Format V1; schema docforge.project.v1; neutral general-document defaults; real docforge inspect and validate as completion oracles; deterministic atomic publication; cross-platform path safety; explicit Codex installation and rollback."
+    ],
+    "correction": "",
+    "user_references": [
+      "openspec/changes/docforge-project-skill/requirements.md"
+    ],
+    "skill_name": "",
+    "assumptions": [],
+    "clarification_state": {
+      "decision": "proceed",
+      "rounds_used": 0,
+      "max_rounds": 2,
+      "asked_ambiguities": [],
+      "resolved_ambiguities": [],
+      "correction_pending": false,
+      "blocking_ambiguities": [],
+      "stop_reason": "clear",
+      "inference_quality": "high"
+    },
+    "language": "en"
+  }
+}

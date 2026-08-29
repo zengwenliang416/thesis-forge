@@ -1,0 +1,49 @@
+{
+  "schema_version": "2.0",
+  "evidence_status": "simulated previous package; real published history: missing evidence",
+  "name": "docforge-project",
+  "version": "0.0.0",
+  "description": "Convert one ordinary Markdown file and confined local resources into a new, verified DocForge Project Format V1 directory. Use for creating an importable DocForge project. Do not use for direct Markdown-to-Word conversion, thesis writing, translation, summaries, format explanations, remote downloads, or editing an existing DocForge project.",
+  "targets": [
+    "openai",
+    "claude",
+    "generic",
+    "agent-skills-compatible",
+    "vscode"
+  ],
+  "maturity": "governed",
+  "owner": "DocForge maintainers",
+  "review_cadence": "monthly",
+  "trust_level": "local",
+  "license": "MIT",
+  "checksums": {
+    "package_sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+  },
+  "compatibility": {
+    "openai": "pass",
+    "claude": "pass",
+    "agent-skills": "pass",
+    "generic": "pass",
+    "vscode": "pass",
+    "agent-skills-compatible": "pass"
+  },
+  "source": {
+    "skill_dir": "missing evidence",
+    "skill_ir": "missing evidence",
+    "ir_schema_version": "2.0.0",
+    "canonical_metadata": "agents/interface.yaml"
+  },
+  "artifacts": {
+    "overview_html": "missing evidence",
+    "review_studio_html": "missing evidence",
+    "trust_report": "missing evidence",
+    "conformance_matrix": "missing evidence",
+    "package_metadata": "simulated fixture only"
+  },
+  "distribution": {
+    "archive_verified": false,
+    "archive_sha256": "",
+    "package_verification": "missing evidence"
+  },
+  "generated_at": "2026-08-29"
+}

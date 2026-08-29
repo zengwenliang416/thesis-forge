@@ -1,0 +1,123 @@
+{
+  "recommended_threshold": 0.42,
+  "fallback_positive_concepts": [
+    "docforge_project",
+    "markdown_input",
+    "new_project"
+  ],
+  "positive_concepts": {
+    "docforge_project": {
+      "weight": 0.42,
+      "phrases": [
+        "docforge project",
+        "docforge project format v1",
+        "docforge 项目",
+        "docforge.yaml",
+        "软件可以直接打开的项目目录"
+      ]
+    },
+    "markdown_input": {
+      "weight": 0.28,
+      "phrases": [
+        "markdown",
+        "md 文件",
+        "notes.md",
+        "input.md"
+      ]
+    },
+    "new_project": {
+      "weight": 0.18,
+      "phrases": [
+        "new",
+        "fresh",
+        "create",
+        "新的",
+        "生成",
+        "创建"
+      ]
+    },
+    "local_resources": {
+      "weight": 0.12,
+      "phrases": [
+        "local resources",
+        "local bibtex",
+        "copy its images",
+        "同目录图片",
+        "本地 bibtex",
+        "复制图片"
+      ]
+    }
+  },
+  "negative_concepts": {
+    "direct_word": {
+      "weight": 0.9,
+      "exclusive": true,
+      "phrases": [
+        "markdown-to-word",
+        "direct markdown-to-word",
+        "directly convert to word",
+        "直接转换成 word",
+        "排版成 office word",
+        "生成 docx"
+      ]
+    },
+    "thesis_creation": {
+      "weight": 0.85,
+      "exclusive": true,
+      "phrases": [
+        "write a thesis",
+        "thesis writing",
+        "写一篇硕士论文",
+        "论文生成"
+      ]
+    },
+    "translation": {
+      "weight": 0.85,
+      "exclusive": true,
+      "phrases": [
+        "translate",
+        "translation",
+        "翻译"
+      ]
+    },
+    "summary": {
+      "weight": 0.85,
+      "exclusive": true,
+      "phrases": [
+        "summarize",
+        "summary",
+        "总结"
+      ]
+    },
+    "explanation_only": {
+      "weight": 0.75,
+      "exclusive": true,
+      "phrases": [
+        "explain",
+        "示例",
+        "解释"
+      ]
+    },
+    "existing_project": {
+      "weight": 0.85,
+      "exclusive": true,
+      "phrases": [
+        "existing docforge project",
+        "现有 docforge 项目",
+        "已经存在的 docforge 项目",
+        "检查现有",
+        "修改这个已经存在",
+        "模板换成"
+      ]
+    },
+    "remote_download": {
+      "weight": 0.85,
+      "exclusive": true,
+      "phrases": [
+        "download remote",
+        "remote download",
+        "下载网页"
+      ]
+    }
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "should_trigger": [
+    "把这份 Markdown 和同目录图片整理成一个新的 DocForge 项目。",
+    "Convert notes.md into a DocForge Project Format V1 folder and validate it.",
+    "我只有一个 md 文件，帮我生成这个软件可以直接打开的项目目录。",
+    "Create a fresh DocForge project from this Markdown and local BibTeX file.",
+    "Use the local Markdown, copy its images safely, and produce docforge.yaml."
+  ],
+  "should_not_trigger": [
+    "把这份 Markdown 直接转换成 Word。",
+    "帮我写一篇硕士论文并生成 DOCX。",
+    "翻译这个 Markdown 文件。",
+    "总结一下这篇 Markdown。",
+    "解释 docforge.yaml 每个字段是什么意思。",
+    "修改这个已经存在的 DocForge 项目。",
+    "下载网页里的图片再生成项目。"
+  ],
+  "near_neighbor": [
+    "检查现有 DocForge 项目为什么 validate 失败。",
+    "把 Markdown 排版成 Office Word，但不要创建 DocForge 项目。",
+    "给我一个 DocForge 项目目录结构示例，不要创建文件。",
+    "将现有 DocForge 项目的模板换成学校模板。"
+  ]
+}
