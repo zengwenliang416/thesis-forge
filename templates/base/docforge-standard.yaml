@@ -135,6 +135,9 @@ table:
 equation:
   numbering: chapter
 
+citation:
+  style: GB-T-7714-2025
+
 sections:
   cover:
     start: new_page

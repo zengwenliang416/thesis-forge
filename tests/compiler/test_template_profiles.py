@@ -45,6 +45,9 @@ def test_docforge_standard_docx_contains_no_fabricated_academic_content(
 ) -> None:
     preview = preview_service(FIXTURES / "docforge-general" / "document.md")
     assert preview.plan is not None, preview.issues
+    assert preview.context.template is not None
+    assert preview.context.template.citation is not None
+    assert preview.context.template.citation.style == "GB-T-7714-2025"
     output = tmp_path / "document.docx"
 
     DocxRenderer().render(preview.plan, output)
