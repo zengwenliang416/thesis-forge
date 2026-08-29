@@ -1,0 +1,81 @@
+{
+  "touched_specs": [
+    "ui-design",
+    "system-architecture",
+    "frontend-backend-data-flow",
+    "component-architecture"
+  ],
+  "ui_rules": [
+    "No DocForge workbench UI change.",
+    "Keep agents/openai.yaml limited to Skill discovery metadata and a concise default prompt.",
+    "Do not introduce theme, locale, or visual prototype work."
+  ],
+  "architecture_modules": [
+    "npm-package-and-cli",
+    "yao-meta-skill-governed-authoring-engine",
+    "yao-skill-ir-and-target-compiler",
+    "yao-review-studio-and-promotion-gates",
+    "agent-skill-source",
+    "explicit-codex-installer",
+    "markdown-import-planner",
+    "markdown-compatibility-normalizer",
+    "local-resource-mapper",
+    "project-manifest-serializer",
+    "atomic-project-publisher",
+    "docforge-cli-verifier"
+  ],
+  "api_contracts": [
+    "skill:docforge-project",
+    "npm:docforge-project-skill",
+    "yao-target:packages/docforge-project-skill/docforge-project",
+    "cli:docforge-project-skill install --target codex",
+    "cli:docforge-project-skill create <markdown> --output <new-directory>",
+    "docforge inspect <project>",
+    "docforge validate <project> --json",
+    "docforge build <project>"
+  ],
+  "database_entities": [
+    "None; package and generated project state remain local files."
+  ],
+  "permissions": [
+    "Read one explicitly selected Markdown file and confined referenced local resources.",
+    "Write one explicitly selected non-existing destination and bounded sibling staging directory.",
+    "Install only after an explicit installer command into a resolved Codex Skill destination.",
+    "Execute only the explicitly resolved local docforge command.",
+    "Treat the installed Yao engine as read-only and never authorize --self.",
+    "No network, AI credential, Office automation, privilege elevation, or npm lifecycle installation."
+  ],
+  "operational_constraints": [
+    "offline-import",
+    "project-format-v1-only",
+    "general-document-default",
+    "no-direct-docx",
+    "no-academic-fabrication",
+    "no-existing-project-merge",
+    "plan-before-write",
+    "atomic-directory-publication",
+    "inspect-and-validate-before-success",
+    "explicit-install-update-and-rollback",
+    "macos-linux-windows",
+    "yao-mode:governed",
+    "skill-ir-before-target-packaging",
+    "missing-evidence-is-explicit"
+  ],
+  "data_flows": [
+    "Markdown and local resources -> import plan -> staged DocForge project -> inspect -> validate -> atomic destination.",
+    "npm package -> explicit installer -> staged Skill -> validation -> atomic Codex Skill destination.",
+    "Optional verification -> docforge build -> manifest-resolved build/document.docx."
+  ],
+  "theme_modes": [
+    "light-only",
+    "theme-toggle:none",
+    "prototype:no-ui-change"
+  ],
+  "locale_policy": [
+    "docforge-i18n:disabled",
+    "docforge-locales:zh-CN",
+    "generated-content:no-translation",
+    "diagnostic-codes:language-neutral"
+  ],
+  "unresolved_gaps": []
+}

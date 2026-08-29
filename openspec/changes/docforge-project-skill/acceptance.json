@@ -1,0 +1,76 @@
+{
+  "schema_version": 1,
+  "change_id": "docforge-project-skill",
+  "assertions": [
+    {
+      "id": "A1",
+      "statement": "The docforge-project-skill npm package explicitly installs a discoverable docforge-project Skill without npm lifecycle side effects.",
+      "verify_via": "e2e",
+      "status": "passing",
+      "evidence_ref": "packages/docforge-project-skill/tests/package-contract.test.mjs; packages/docforge-project-skill/tests/installer.test.mjs"
+    },
+    {
+      "id": "A2",
+      "statement": "A UTF-8 ordinary Markdown document becomes a new docforge.project.v1 project using general, und, document.md, and docforge-standard defaults.",
+      "verify_via": "e2e",
+      "status": "passing",
+      "evidence_ref": "packages/docforge-project-skill/tests/importer.test.mjs; packages/docforge-project-skill/tests/e2e.test.mjs"
+    },
+    {
+      "id": "A3",
+      "statement": "Headings, paragraphs, emphasis, code, links, lists, block quotes, tables, math, footnotes, citations, and local images retain supported semantic content after import.",
+      "verify_via": "unit",
+      "status": "passing",
+      "evidence_ref": "packages/docforge-project-skill/tests/fixtures/comprehensive.md; packages/docforge-project-skill/tests/e2e.test.mjs"
+    },
+    {
+      "id": "A4",
+      "statement": "Local images are copied to deterministic confined asset paths and missing IDs are normalized to stable valid fig IDs.",
+      "verify_via": "unit",
+      "status": "passing",
+      "evidence_ref": "packages/docforge-project-skill/tests/importer.test.mjs"
+    },
+    {
+      "id": "A5",
+      "statement": "Only known explicit neutral metadata is written to docforge.yaml, while unknown metadata is reported and no academic information is fabricated.",
+      "verify_via": "facticity",
+      "status": "passing",
+      "evidence_ref": "packages/docforge-project-skill/tests/importer.test.mjs"
+    },
+    {
+      "id": "A6",
+      "statement": "Existing destinations, traversal, symlink escape, absolute or device paths, remote downloads, and unsafe package entries are rejected without partial writes.",
+      "verify_via": "redteam",
+      "status": "passing",
+      "evidence_ref": "packages/docforge-project-skill/tests/importer.test.mjs; packages/docforge-project-skill/tests/installer.test.mjs; packages/docforge-project-skill/tests/package-contract.test.mjs"
+    },
+    {
+      "id": "A7",
+      "statement": "Unsupported syntax, missing local resources, citations without bibliography, invalid encoding, and missing DocForge runtime produce structured actionable diagnostics.",
+      "verify_via": "redteam",
+      "status": "passing",
+      "evidence_ref": "packages/docforge-project-skill/tests/importer.test.mjs; packages/docforge-project-skill/docforge-project/references/diagnostics.md"
+    },
+    {
+      "id": "A8",
+      "statement": "Every successful imported fixture passes docforge inspect and validate offline, and the comprehensive fixture also passes docforge build.",
+      "verify_via": "e2e",
+      "status": "passing",
+      "evidence_ref": "packages/docforge-project-skill/tests/e2e.test.mjs"
+    },
+    {
+      "id": "A9",
+      "statement": "Yao Governed gates pass for Skill IR, compiled targets, trigger and output eval, trust, conformance, permissions, package verification, install simulation, upgrade, Atlas, registry, Review Studio, promotion, and cross-platform paths.",
+      "verify_via": "compatibility",
+      "status": "failing",
+      "evidence_ref": "packages/docforge-project-skill/docforge-project/reports/skill-os-2-review.md; openspec/changes/docforge-project-skill/verification-report.md"
+    },
+    {
+      "id": "A10",
+      "statement": "Skill and package descriptions consistently promise Markdown-to-DocForge-project conversion and contain no direct DOCX or thesis-only implementation path.",
+      "verify_via": "facticity",
+      "status": "passing",
+      "evidence_ref": "packages/docforge-project-skill/tests/package-contract.test.mjs; packages/docforge-project-skill/docforge-project/SKILL.md"
+    }
+  ]
+}

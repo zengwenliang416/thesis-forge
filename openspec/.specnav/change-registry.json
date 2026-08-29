@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-08-28T13:31:53.674Z",
-  "current_focus": "automatic-docx-toc-refresh-p1",
+  "generated_at": "2026-08-29T03:44:08.028Z",
+  "current_focus": "docforge-project-skill",
   "changes": [
     {
       "id": "automatic-docx-toc-refresh-p1",
@@ -42,14 +42,22 @@
       "archived_at": "2026-08-28T06:47:11.820Z"
     },
     {
+      "id": "docforge-project-skill",
+      "stage": "requirements",
+      "status": "active",
+      "branch": null,
+      "created_at": null,
+      "last_active_at": null
+    },
+    {
       "id": "docforge-workbench-ui-redesign",
       "stage": "archived",
       "status": "archived",
       "branch": "zwl/docforge-project-format-v1",
       "created_at": null,
       "last_active_at": "2026-08-28",
-      "archived_at": "2026-08-28T13:31:53.674Z",
-      "archive_path": "openspec/changes/archive/2026-08-28-docforge-workbench-ui-redesign"
+      "archive_path": "openspec/changes/archive/2026-08-28-docforge-workbench-ui-redesign",
+      "archived_at": "2026-08-28T13:31:53.674Z"
     },
     {
       "id": "illustrated-user-manual",

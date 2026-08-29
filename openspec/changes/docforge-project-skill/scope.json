@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "change_id": "docforge-project-skill",
+  "stage": "development",
+  "allowed_roots": [
+    "packages/docforge-project-skill",
+    "package.json",
+    "pnpm-lock.yaml",
+    ".github",
+    ".woodpecker",
+    "docs",
+    "templates/base/docforge-standard.yaml",
+    "tests/compiler/test_template_profiles.py",
+    "openspec/changes/docforge-project-skill"
+  ],
+  "denied_roots": [
+    ".git",
+    ".codegraph",
+    ".venv",
+    "node_modules",
+    "dist",
+    "build",
+    "coverage",
+    "src/docforge",
+    "frontend",
+    "src-tauri",
+    "openspec/changes/archive",
+    "openspec/changes/automatic-docx-toc-refresh-p1"
+  ],
+  "requires_review_on": [
+    "package.json",
+    "pnpm-lock.yaml",
+    ".github",
+    ".woodpecker",
+    "packages/docforge-project-skill/package.json",
+    "packages/docforge-project-skill/scripts",
+    "packages/docforge-project-skill/docforge-project/manifest.json",
+    "packages/docforge-project-skill/docforge-project/scripts",
+    "packages/docforge-project-skill/docforge-project/reports",
+    "packages/docforge-project-skill/docforge-project/evals",
+    "templates/base/docforge-standard.yaml",
+    "tests/compiler/test_template_profiles.py"
+  ],
+  "allowed_operations": {
+    "create": true,
+    "modify": true,
+    "delete": true,
+    "rename": false
+  },
+  "prototype_sources": [],
+  "expires_when": "verification_started"
+}

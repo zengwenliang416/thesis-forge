@@ -1,0 +1,85 @@
+{
+  "new_components": [
+    "docforge-project Agent Skill",
+    "docforge-project-skill npm package and CLI",
+    "Yao Governed target and Skill IR evidence",
+    "Yao compiled target contracts and Review Studio",
+    "explicit Codex Skill installer",
+    "import plan and structured diagnostics",
+    "Markdown compatibility normalizer",
+    "local resource and bibliography mapper",
+    "Project Format V1 manifest serializer",
+    "atomic staged project publisher",
+    "DocForge CLI verification runner",
+    "trigger and output evaluation fixtures"
+  ],
+  "reused_components": [
+    "docforge.project.v1 manifest contract",
+    "docforge-standard bundled template",
+    "docforge inspect command",
+    "docforge validate command",
+    "docforge build command",
+    "existing neutral source, Review, and build defaults",
+    "Codex Agent Skill SKILL.md and agents/openai.yaml structure",
+    "repository pnpm toolchain and CI conventions",
+    "installed read-only Yao Meta Skill authoring engine"
+  ],
+  "extraction_triggers": [
+    "npm CLI and Agent Skill must invoke one importer implementation",
+    "installer destination resolution and update rollback must have one implementation",
+    "path confinement must be shared by analysis and copy stages",
+    "manifest constants must be centralized within the package and verified against real DocForge behavior",
+    "diagnostic serialization must be shared by CLI output and import reports"
+  ],
+  "forbidden_dependencies": [
+    "skill-package->src/docforge implementation imports",
+    "skill-package->DOCX renderer or OOXML writer",
+    "skill-package->Office automation",
+    "skill-package->AI provider",
+    "npm-lifecycle-hook->user Skill directory",
+    "importer->remote asset download",
+    "importer->existing project merge or overwrite",
+    "importer->academic metadata fabrication",
+    "Skill instructions->manual duplicate importer logic",
+    "Yao target operations->Yao engine subtree",
+    "target packaging->missing Skill IR"
+  ],
+  "hooks": [
+    "None; npm lifecycle installation hooks are explicitly forbidden.",
+    "Yao is invoked explicitly as an authoring and verification CLI, not as an npm lifecycle hook."
+  ],
+  "utilities": [
+    "cross-platform path normalization",
+    "safe relative resource resolution",
+    "content hashing and deterministic collision naming",
+    "stable semantic ID generation",
+    "YAML serialization",
+    "bounded process execution",
+    "atomic directory replacement",
+    "package-content allowlist validation"
+  ],
+  "services": [
+    "import planning service",
+    "Markdown normalization service",
+    "resource copy service",
+    "project publication service",
+    "DocForge verification service",
+    "Skill installation and rollback service"
+  ],
+  "required_component_tests": [
+    "skill-identity-and-trigger-boundary-tests",
+    "npm-lifecycle-side-effect-absence-test",
+    "explicit-install-update-backup-rollback-tests",
+    "import-plan-determinism-tests",
+    "front-matter-neutral-mapping-tests",
+    "figure-id-and-asset-rewrite-golden-tests",
+    "path-traversal-symlink-remote-redteam-tests",
+    "atomic-project-publication-and-cleanup-tests",
+    "real-docforge-inspect-validate-build-e2e-tests",
+    "npm-pack-clean-install-content-tests",
+    "macos-linux-windows-path-compatibility-tests",
+    "yao-engine-byte-identity-test",
+    "yao-skill-ir-compile-conformance-trust-review-studio-promotion-tests"
+  ],
+  "unresolved_gaps": []
+}
