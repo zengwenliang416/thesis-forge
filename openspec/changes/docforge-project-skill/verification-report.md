@@ -82,4 +82,5 @@ reclassified as product failures.
 - Real client telemetry: `missing evidence`.
 - npm name availability and publisher authority: `missing evidence`.
 - Clean committed release lock: `missing evidence`.
-- Publication, user installation, commit, push, and release: not performed.
+- At this verification snapshot, publication, user installation, commit, push,
+  and release had not been performed.

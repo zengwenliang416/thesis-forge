@@ -67,5 +67,5 @@ The following remain literal `missing evidence` and are not inferred:
 - npm publisher authority;
 - clean committed release lock.
 
-No npm publication, user-level installation, commit, push, or release was
-performed.
+At this verification snapshot, no npm publication, user-level installation,
+commit, push, or release had been performed.
